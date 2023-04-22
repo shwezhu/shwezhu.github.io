@@ -1,16 +1,12 @@
 ---
 title: "Git Branch"
 date: 2023-04-22T00:47:50-03:00
+categories:
+  - Git
+  - Basics
 tags:
   - Git
 ---
-
-1. 分支常用指令
-2. 切换分支之前要做的事
-3. 分支的概念与实例分析
-4. 
-
-<!-- more -->
 
 ## 1. Commands
 
@@ -30,8 +26,6 @@ Git鼓励大量使用分支：
 
 `git branch`列出所有本地分支, 等价于`ls ./.git/refs/heads/`
 `git branch -r`列出所有远程分支
-
----
 
 ## 2. 切换分支需要注意的事
 
@@ -170,8 +164,6 @@ Aborting
 
 所以结论是, **切换分支前, 一定要记得commit, 然后别在A分支修改你想提交到B分支的文件**.  
 
-----
-
 ## 3. master vs. origin/master vs. remotes/origin/master
 
 Take a clone of a remote repository and run `git branch -a` (to show all the branches git knows about). It will probably look something like this:
@@ -207,93 +199,9 @@ These are just two different ways of referring to the same thing (incidentally, 
 
 https://stackoverflow.com/a/10588561/16317008
 
----
-
-## 4. Example
-
-### 在Mac上操作, 
+## 4. 手动解决conflicts
 
 ```shell
-$ git init
-$ touch hello.txt
-
-$git add .
-$git commit -m "add hello.txt by Mac:Shawn"
-[main (root-commit) 87d20b9] add hello.txt by Mac:Shawn
- 1 file changed, 0 insertions(+), 0 deletions(-)
- create mode 100644 hello.txt
- 
-$git remote add origin git@github.com:shwezhu/MyProject.git
-$git push origin main
-Enumerating objects: 3, done.
-Counting objects: 100% (3/3), done.
-Writing objects: 100% (3/3), 215 bytes | 215.00 KiB/s, done.
-Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
-To github.com:shwezhu/MyProject.git
- * [new branch]      main -> main
-```
-
-### 在Server上操作,
-
-```shell
-[root@vultr GitTest]# git clone git@github.com:shwezhu/MyProject.git
-[root@vultr GitTest]# cd MyProject/
-[root@vultr MyProject]# git branch -a
-* main
-  remotes/origin/HEAD -> origin/main
-  remotes/origin/main
-
-[root@vultr MyProject]# git checkout -b dev
-Switched to a new branch 'dev'
-
-[root@vultr MyProject]# git branch -a
-* dev
-  main
-  remotes/origin/HEAD -> origin/main
-  remotes/origin/main
-
-[root@vultr MyProject]# vi hello.txt 
-[root@vultr MyProject]# cat hello.txt 
-hello, this is John
-
-[root@vultr MyProject]# git add .
-[root@vultr MyProject]# git commit -m "updated hello.txt by Server:John"
-[dev 5828ddd] updated hello.txt by Server:John
- 1 file changed, 1 insertion(+)
-
-[root@vultr MyProject]# git push origin dev
-Counting objects: 5, done.
-Writing objects: 100% (3/3), 276 bytes | 0 bytes/s, done.
-Total 3 (delta 0), reused 0 (delta 0)
-remote: Create a pull request for 'dev' on GitHub by visiting:
-remote:      https://github.com/shwezhu/MyProject/pull/new/dev
-To git@github.com:shwezhu/MyProject.git
- * [new branch]      dev -> dev
-```
-
-### 查看GitHub, 
-
-如下图, 可以看到需要手动pull request来自dev分支的东西到main分支, 我们也可以选择protect branch, 然后选择任何人都可以push. 
-
-![](a.png)
-
-等我们点击`compare & pull request`然后做了相应操作后, 可以看到原本没内容的`hello.txt`现在有了来自Server:John提交的dev分支的东西, 这也就是叫把开发的东西都push到dev或feature分支(我们一直在这些分支日常开发), 然后最后在GitHub上手动选择是否把push到dev分支的修改merge到主分支(`main`)上. 
-
- ### 在Mac上操作, 
-
-```shell
-$ git switch -c dev
-Switched to a new branch 'dev'
-
-$ vi hello.txt 
-$ cat hello.txt 
-hello, this is Shawn
-
-$ git add .
-$ git commit -m "updated hello.txt by Mac:Shawn"
-[dev a8b159b] updated hello.txt by Mac:Shawn
- 1 file changed, 1 insertion(+)
-
 $ git push origin dev 
 To github.com:shwezhu/MyProject.git
  ! [rejected]        dev -> dev (fetch first)
@@ -305,17 +213,10 @@ hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 ```
 
-推送失败，因为是Server的最新提交和Mac试图推送的提交有冲突，Git已经我们，先用`git pull`把最新的提交从`origin/dev`抓取(fetch)并在本地合并(merge)，再推送, 但是直接`git pull`并不好, 它会下载并合并更新, 但你并不知道对方做了什么改动, 所以我们先用`git fetch`把远程的改动下载下来, 看看是啥, 再决定是否合并(`git merge`或`git rebase`), 
+Git已经提示我们先用`git pull`把最新的提交从`origin/dev`抓取(fetch)并在本地合并(merge)，再推送, 但是直接`git pull`并不好(`pull` = `fetch`+无脑`merge`), 但你并不知道对方做了什么改动, 所以我们先用`git fetch`把远程的改动下载下来, 看看是啥, 再决定是否合并(`git merge`或`git rebase`), 
 
 ```shell
-$ git fetch origin dev
-remote: Enumerating objects: 5, done.
-remote: Counting objects: 100% (5/5), done.
-remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0
-Unpacking objects: 100% (3/3), 256 bytes | 85.00 KiB/s, done.
-From github.com:shwezhu/MyProject
- * [new branch]      dev        -> origin/dev
-
+$ git fetch origin origin/dev
 $ git log --graph --oneline origin/dev dev
 * a8b159b (HEAD -> dev) updated hello.txt by Mac:Shawn
 | * 5828ddd (origin/dev) updated hello.txt by Server:John
@@ -392,69 +293,4 @@ With the `-f` tag you will override the *remote branch code* with your local rep
 
 > The `-f` is actually required because of the **rebase**. Whenever you do a rebase you would need to do a force push because the remote branch cannot be **fast-forwarded** to your commit. You'd **always** want to make sure that you do a pull before pushing, but if you don't like to force push to master or dev for that matter, you can create a new branch to push to and then merge or make a PR. https://stackoverflow.com/a/39400690/16317008
 
-### 在server上操作
-
-```shell
-[root@vultr MyProject]# vi hello.txt 
-[root@vultr MyProject]# cat hello.txt
-hello, this is John
-hello, this is John again!
-
-[root@vultr MyProject]# git add .
-[root@vultr MyProject]# git commit -m "add something new in hello.txt by Server:John"
-[dev 8b81bb5] add something new in hello.txt by Server:John
- 1 file changed, 3 insertions(+), 1 deletion(-)
-[root@vultr MyProject]# git push origin dev
-To git@github.com:shwezhu/MyProject.git
- ! [rejected]        dev -> dev (fetch first)
-error: failed to push some refs to 'git@github.com:shwezhu/MyProject.git'
-hint: Updates were rejected because the remote contains work that you do
-hint: not have locally. This is usually caused by another repository pushing
-hint: to the same ref. You may want to first merge the remote changes (e.g.,
-hint: 'git pull') before pushing again.
-hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-
-[root@vultr MyProject]# git fetch origin
-remote: Enumerating objects: 5, done.
-remote: Counting objects: 100% (5/5), done.
-remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0
-Unpacking objects: 100% (3/3), done.
-From github.com:shwezhu/MyProject
- + 5828ddd...a8b159b dev        -> origin/dev  (forced update)
- 
-[root@vultr MyProject]# git log --graph --oneline origin/dev dev
-* 8b81bb5 add something new in hello.txt by Server:John
-* 5828ddd updated hello.txt by Server:John
-| * a8b159b updated hello.txt by Mac:Shawn
-|/  
-* 87d20b9 add hello.txt by Mac:Shawn
-
-[root@vultr MyProject]# git rebase origin/dev dev
-First, rewinding head to replay your work on top of it...
-Applying: updated hello.txt by Server:John
-Using index info to reconstruct a base tree...
-M	hello.txt
-Falling back to patching base and 3-way merge...
-Auto-merging hello.txt
-CONFLICT (content): Merge conflict in hello.txt
-Failed to merge in the changes.
-Patch failed at 0001 updated hello.txt by Server:John
-The copy of the patch that failed is found in:
-   /root/GitTest/MyProject/.git/rebase-apply/patch
-
-When you have resolved this problem, run "git rebase --continue".
-If you prefer to skip this patch, run "git rebase --skip" instead.
-To check out the original branch and stop rebasing, run "git rebase --abort".
-
-[root@vultr MyProject]# cat hello.txt
-<<<<<<< HEAD
-hello, this is Shawn
-=======
-hello, this is Jhon
->>>>>>> updated hello.txt by Server:John
-```
-
-看`rebase`后, 竟然覆盖了我们之前的修改, 这也是为啥说`rebase`比较危险, 初学者不建议使用, 更不能在public分支上使用, 至于为啥是因为rebase操作是把你的分支的时间点直接搬到最新的分支, 因为我们fetch回的远程仓库的dev有新的提交, 所以我们直接把自己本地的“搬”到了远程的那个位置(如果无法理解rebase请看[这个解释](https://www.atlassian.com/git/tutorials/merging-vs-rebasing))所以就没有了本地的修改, 但是有没有注意到, 明明我们修改了之前的conflict啊? 为什么fetch到的是未修改的?
-
-注意一下上面我们用的是
-
+初学者不建议使用`rebase`,  更不能在public分支上使用`rebase`, 还是使用`merge`为好,  因为rebase操作是把你的分支的时间点直接搬到最新的分支, 因为我们fetch回的远程仓库的dev有新的提交, 所以我们直接把自己本地的“搬”到了远程的那个位置(如果无法理解rebase请看[这个解释](https://www.atlassian.com/git/tutorials/merging-vs-rebasing))所以就没有了本地的修改

@@ -1,14 +1,12 @@
 ---
 title: Getting Started with Hexo
 date: 2023-04-22 16:51:47
+categories:
+  - Build Website
+  - Hexo
 tags:
  - Hexo
 ---
-
-1. 安装配置hexo
-2. 部署hexo到GitHub
-
-<!-- more -->
 
 # 1. 远程配置
 

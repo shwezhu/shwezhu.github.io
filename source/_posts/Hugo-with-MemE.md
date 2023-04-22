@@ -1,15 +1,13 @@
 ---
 title: "Hugo With MemE"
 date: 2023-04-19T23:31:57-03:00
+categories:
+  - Build Website
+  - Hugo
 tags:
   - Hugo
   - MemE
 ---
-
-1. 介绍备份博客的思路
-2. 介绍如何使用并微改MemE主题
-
-<!-- more -->
 
 ## 1. 图片插入
 

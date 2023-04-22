@@ -1,18 +1,12 @@
 ---
-title: "Merge Fetch Pull Rebase"
+title: "Origin的本质之被我们忽略的Git Remote操作(git fetch)"
 date: 2023-04-21T21:46:44-03:00
+categories:
+  - Git
+  - Collaboration
 tags:
   - Git
 ---
-
-1. git fetch 和 pull的区别
-2. git fetch 指令格式理解结合git remote
-3. 一直使用却被我们忽略的git remote
-4. 
-
-<!-- more -->
-
-In the simplest terms, [`git pull`](http://git-scm.com/docs/git-pull) does a [`git fetch`](http://git-scm.com/docs/git-fetch) followed by a [`git merge`](http://git-scm.com/docs/git-merge).
 
 ## 1. git fetch & git remote
 

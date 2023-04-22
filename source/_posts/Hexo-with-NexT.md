@@ -1,19 +1,12 @@
 ---
 title: Hexo with NexT
 date: 2023-04-18 20:02:06
+categories:
+  - Build Website
+  - Hexo
 tags:
   - Hexo
 ---
-
-1. 修改NexT主题相关的东西 包括:
-   1. footer
-   2. 社交账号
-   3. 菜单栏
-   4. 浏览进度
-   5. 文章目录配置
-   6. 代码块主题等
-
-<!-- more -->
 
 # 1. 安装NexT
 
@@ -140,6 +133,32 @@ footer:
   # Specify the year when the site was setup. If not defined, current year will be used.
   since: 2023
 ```
+
+# 9. 设置自动抽取摘要
+
+```shell
+# 在博客根目录下执行
+$ npm install hexo-excerpt --save
+```
+
+打开站点配置文件(根目录下的配置文件)，加入：
+
+```yaml
+excerpt:
+  depth: 3  #按层来算，也就是按代码块来算
+  excerpt_excludes: []
+  more_excludes: []
+  hideWholePostExcerpts: true
+```
+
+然后打开主题配置文件(`themes/next/`下的配置文件)，找到对应选项, 设置为 `true`：
+
+```yaml
+excerpt_description: true
+...
+read_more_btn: true
+```
+
 
 
 参考:

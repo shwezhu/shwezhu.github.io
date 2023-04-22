@@ -1,17 +1,13 @@
 ---
-title: Deploy Blogs with Hexo
+title: Create Blog with Hexo
+categories:
+  - Build Website
+  - Hexo
 tags:
   - Hexo
   - Build Website
 date: 2023-04-17 19:25:31
 ---
-
-1. 文件结构介绍
-2. 正确插入图片
-3. 设置文章生成唯一url
-4. 使用文章分类等
-
-<!-- more -->
 
 # 1. Folder Intro
 ```shell
