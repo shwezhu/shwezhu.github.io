@@ -1,12 +1,17 @@
 ---
 title: Hexo with NexT
-categories:
-  - - hexo
-  - - build website
 date: 2023-04-18 20:02:06
+tags:
+  - Hexo
 ---
 
-高亮文字背景修改以及设置NexT主题样式
+1. 修改NexT主题相关的东西 包括:
+   1. footer
+   2. 社交账号
+   3. 菜单栏
+   4. 浏览进度
+   5. 文章目录配置
+   6. 代码块主题等
 
 <!-- more -->
 
@@ -48,8 +53,8 @@ social:
 menu:
   home: / || fa fa-home
   #about: /about/ || fa fa-user
-  tags: /tags/ || fa fa-tags
-  #categories: /categories/ || fa fa-th
+  #tags: /tags/ || fa fa-tags
+  categories: /categories/ || fa fa-th
   archives: /archives/ || fa fa-archive
   #schedule: /schedule/ || fa fa-calendar
   #sitemap: /sitemap.xml || fa fa-sitemap
@@ -63,7 +68,7 @@ hexo new page archives
 hexo new page categories
 ```
 
-然后修改新生成页面的类型`blog/souce/categories/index.md`, 否则进入categories页面是空的
+然后修改新生成页面的类型`blog/souce/categories/index.md`, **否则进入categories页面是空的**
 
 ```toml
 ---
