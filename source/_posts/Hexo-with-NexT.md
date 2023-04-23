@@ -159,6 +159,44 @@ excerpt_description: true
 read_more_btn: true
 ```
 
+# 10. 开启LocalSearch搜索功能
+
+## 安装相关插件
+
+安装搜索插件： `hexo-generator-searchdb`
+
+在博客根目录下执行以下命令：
+
+```
+$ npm install hexo-generator-searchdb --save
+```
+
+## 配置博客
+
+编辑博客配置文件：`_config.yml`, **添加**下面这些内容
+
+```
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
+```
+
+## 配置主题
+
+Next 主题自带搜索设置，编辑主题配置文件：`_config.yml`
+
+找到文件中 Local search 的相关配置，设为 `true`
+
+```
+# Local search
+local_search:
+  enable: true
+```
+
+hexo 重新部署, 记得执行clean
+
 参考:
 
 - [NexT主题美化 | losophy](https://losophy.github.io/post/71afd747.html)
