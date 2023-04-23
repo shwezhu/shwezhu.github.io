@@ -3,7 +3,7 @@ title: 域名分级已经DNS记录的种类分析之何为www
 date: 2023-04-23 00:15:30
 categories:
 - Build Website
-- Domain
+- Basics
 tags:
 - Build Website
 - DNS Records
