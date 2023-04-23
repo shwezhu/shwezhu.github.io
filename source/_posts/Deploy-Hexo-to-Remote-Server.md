@@ -141,7 +141,7 @@ cd /etc/nginx/conf.d/
 sudo vim blog.conf
 ```
 
-`blog.conf`的内容如下(注意因为我为域名添加个A记录然后`www`作为HOSTNAME, 如果你的域名只有一个A记录然后HOSTNAME还是空, 那你就填二级域名就好了`davidzhu.xyz`这样, 不懂的话请看我的其它文章大概在Build Website分类下, 或者你可以直接搜索 )：
+`blog.conf`的内容如下(注意因为我为域名添加个A记录然后`www`作为HOSTNAME, 如果你的域名只有一个A记录然后HOSTNAME还是空, 那你就填二级域名就好了`davidzhu.xyz`这样, 不懂的话请看我的[其它文章](http://www.davidzhu.xyz/2023/04/23/Domain-Name-DNS-Records/)大概在Build Website分类下, 或者你可以直接搜索 )：
 ```zsh
 server {
     listen    80 default_server;
