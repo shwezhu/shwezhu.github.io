@@ -47,11 +47,19 @@ HOSTNAME: @, IP: 1.2.3.4
 HOSTNAME: www, IP: 1.2.3.4
 ```
 
-我查了一下谷歌, 说是可以的, 然后一般我们的域名会自带默认的DNS Records, 我们要删除他们, 不然等你又添加了一个A记录, 这时候你的域名就会被解析到多个IP(默认的和你刚添加的), 那浏览器访问你域名的时候, 选择哪个呢? 我查了一下论坛, 有人说是choose randomly, 所以如果你不删除域名所有的默认DNS Records, 那浏览器访问你域名的时候就有可能选择“错误”的ip, 
+我查了一下谷歌, 说是可以的, 然后一般我们的域名会自带默认的DNS Records, 如下图, 
+
+![](init_dns.png)
+
+所以我们买了域名之后做的第一件事就应该删除这些默认记录(你可以不删用于测试), 不然等你又添加了一个A记录, 这时候你的域名就会被解析到多个IP(默认的和你刚添加的), 那浏览器访问你域名的时候, 选择哪个呢? 我查了一下论坛, 有人说是choose randomly, 所以如果你不删除域名所有的默认DNS Records, 那浏览器访问你域名的时候就有可能选择“错误”的ip, 
 
 下面是回答个链接, 这个其实自己为域名添加俩不同的A记录用`dig`测试一下就行了, 但是我懒, 还得等半小时生效, 所以就不去验证了~
 
 > Yes you can. It is called round-robin DNS, and the browser just chooses one of them randomly. It is a well used method of getting cheap load balancing, but if one host goes down, users will still try to access it. https://serverfault.com/q/528742/761923
+
+一般我们想把域名绑定到服务器的时候, 为我们的域名添加两个A类DNS Records就行了, 不用改什么Name Server, 类似下面这个样子(注意TTL一般设置为3600s就可以啦):
+
+![](domain_to_server.png)
 
 # 2. www是干什么的
 
