@@ -16,8 +16,6 @@ tags:
 
 # 2. 本地配置
 
-本地安装hexo参考前面文章, 
-
 ```shell
 hexo init blog
 cd blog/
@@ -56,3 +54,21 @@ hexo d
 然后访问`username.github.io`即可, 别忘在仓库设置页面的pages页设置默认分支, 注意部署后可能要等大概三五分钟才能生效, 刚部署就访问可能会遇到404错误, 可以在GitHub仓库的Actions页面查看:
 
 ![](b.png)
+
+# 3. 从备份恢复
+
+如果你想使用我的主题, 请按照下面操作
+
+初始化
+
+```shell
+hexo init blog
+```
+
+ 把刚新生成的博客根目录下的`themes`, `package.json`等所有文件夹都替换成github上备份的文件, 执行npm安装之前的modules, 
+
+```
+npm install
+```
+
+然后就ok了, 
