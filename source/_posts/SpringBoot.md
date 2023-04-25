@@ -13,13 +13,13 @@ tags:
 
 刚开始接触Spring Boot， 查了查谷歌想弄明白Spring Boot是什么， 做个笔记整理一下，我会尽量标注出处（复制好多链接真的会很麻烦🥹），有的是来自已标注出处的文章，就不再重复标注。
 
-Spring Boot 是由 Pivotal 团队提供的全新框架，其设计目的是用来简化新 Spring 应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。用我的话来理解，就是 Spring Boot 其实不是什么新的框架，它默认配置了很多框架的使用方式，就像 Maven 整合了所有的 Jar 包，Spring Boot 整合了所有的框架。http://www.ityouknow.com/springboot/2016/01/06/spring-boot-quick-start.html
+Spring Boot 是由 Pivotal 团队提供的全新框架，其设计目的是用来简化新 Spring 应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。用我的话来理解，就是 Spring Boot 其实不是什么新的框架，它默认配置了很多框架的使用方式，就像 Maven 整合了所有的 Jar 包，Spring Boot 整合了所有的框架。[原文](http://www.ityouknow.com/springboot/2016/01/06/spring-boot-quick-start.html)
 
-我们在使用Spring Boot时只需要配置相应的Spring Boot就可以用所有的Spring组件，简单的说，spring boot就是整合了很多优秀的框架。https://juejin.cn/post/6983583704949981191
+我们在使用Spring Boot时只需要配置相应的Spring Boot就可以用所有的Spring组件，简单的说，spring boot就是整合了很多优秀的框架。[原文](https://juejin.cn/post/6983583704949981191)
 
-用一句话实在难以概述 Spring Boot，如果一定要为它下一个定义的话，那么 Spring Boot 可以被理解为是一个用来简化 Spring 应用创建、开发和运行的框架。https://blog.csdn.net/zzuhkp/article/details/123518033
+用一句话实在难以概述 Spring Boot，如果一定要为它下一个定义的话，那么 Spring Boot 可以被理解为是一个用来简化 Spring 应用创建、开发和运行的框架。[原文](https://blog.csdn.net/zzuhkp/article/details/123518033)
 
-Spring Boot是一个基于Spring的套件，它帮我们预组装了Spring的一系列组件，以便以尽可能少的代码和配置来开发基于Spring的Java应用程序。https://www.liaoxuefeng.com/wiki/1252599548343744/1266265175882464
+Spring Boot是一个基于Spring的套件，它帮我们预组装了Spring的一系列组件，以便以尽可能少的代码和配置来开发基于Spring的Java应用程序。[原文](https://www.liaoxuefeng.com/wiki/1252599548343744/1266265175882464)
 
 传播广的博客基本观点一致，即Spring Boot更像是一个依赖管理插件来方便管理用于Spring开发相关的依赖等，当然Spring Boot本身默认为我们配置了很多以来，省的我们一一列出。所以并不是说你学了Spring Boot就不用学Spring，Spring Boot里面的东西就是Spring的一个个部件。你学Spring Boot的时候也是在学Spring。
 
