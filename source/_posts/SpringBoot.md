@@ -228,7 +228,7 @@ Hello,Spring MVC
 
 原文: https://blog.csdn.net/zzuhkp/article/details/123518033
 
-## 基于 Spring Boot 的 Spring MVC 项目搭建
+# 基于 Spring Boot 的 Spring MVC 项目搭建
 
 总结基于 Spring Framework 的 Spring MVC 项目搭建有哪些问题呢？
 
