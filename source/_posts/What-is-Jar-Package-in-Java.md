@@ -48,7 +48,9 @@ java -jar hello.jar
 
 在大型项目中，不可能手动编写`MANIFEST.MF`文件，再手动创建zip包。Java社区提供了大量的开源构建工具，例如**Maven**，可以非常方便地创建jar包。
 
-原文: https://www.liaoxuefeng.com/wiki/1252599548343744/1260466914339296
+原文: 
+
+- https://www.liaoxuefeng.com/wiki/1252599548343744/1260466914339296
 
 ---
 
@@ -60,5 +62,6 @@ The Java launcher, `java`, initiates the Java virtual machine. The virtual machi
 - Extension classes - Classes that use the Java Extension mechanism. These are bundled as `.jar` files located in the extensions directory.
 - User classes - Classes defined by developers and third parties that do not take advantage of the extension mechanism. You identify the location of these classes using the -classpath option on the command line (the preferred method) or by using the CLASSPATH environment variable. (See Setting the Classpath for [Windows or Unix](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/classpath.html).)
 
+原文:
 
-原文: https://docs.oracle.com/javase/8/docs/technotes/tools/findingclasses.html
+- https://docs.oracle.com/javase/8/docs/technotes/tools/findingclasses.html

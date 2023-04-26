@@ -94,7 +94,9 @@ Spring Boot是一个基于Spring的套件，它帮我们预组装了Spring的一
 
 好在后来出现了一些依赖管理工具，例如 maven、gradle、ant，由于目前在 Java 开发中 maven 用的比较多，后面我们就拿 maven 举例了。尽管有了 maven 管理依赖，但是由于 Spring 是一个 bean 的容器，因此还需要将 bean 的元信息进行配置，最初的 Spring 使用业界最为流行的 xml 配置 bean，后来 JDK 5 注解出现后才逐渐将配置迁移到注解，曾经一度出现了 xml 和注解混用的场景。
 
-原文: https://blog.csdn.net/zzuhkp/article/details/123518033
+原文: 
+
+- https://blog.csdn.net/zzuhkp/article/details/123518033
 
 # 基于 Spring Framework 的 Spring MVC 项目搭建
 
@@ -226,7 +228,9 @@ Hello,Spring MVC
                 └── hello.jsp
 ```
 
-原文: https://blog.csdn.net/zzuhkp/article/details/123518033
+原文: 
+
+- https://blog.csdn.net/zzuhkp/article/details/123518033
 
 # 基于 Spring Boot 的 Spring MVC 项目搭建
 
@@ -344,7 +348,9 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 总结 Spring Boot 简化应用创建的方式为：使用 `spring-boot-starter-parent` 管理依赖版本、使用 `spring-boot-starter` 自动化配置、支持用户自定义配置覆盖默认配置。
 
-原文: https://blog.csdn.net/zzuhkp/article/details/123518033
+原文:
+
+- https://blog.csdn.net/zzuhkp/article/details/123518033
 
 # Spring Boot 是如何简化应用开发的？
 
@@ -361,7 +367,9 @@ Spring Boot 自动化配置不仅作用于用于应用创建，减少配置就�
 
 引入这个依赖后，当我们的类发生变化，Spring Boot 会自动进行重启，当然了这个重启不是完整的重启，因此速度上会快上不少。
 
-原文: https://blog.csdn.net/zzuhkp/article/details/123518033
+原文:
+
+-  https://blog.csdn.net/zzuhkp/article/details/123518033
 
 # Spring Boot 是如何简化应用运行的？
 
@@ -380,7 +388,9 @@ Spring Boot 自动化配置不仅作用于用于应用创建，减少配置就�
 
 这个插件可以将 Spring Boot 项目依赖的所有 jar 包打包到一个 jar 包中，这个 jar 也被称为 `fat jar`。
 
-原文: https://blog.csdn.net/zzuhkp/article/details/123518033
+原文: 
+
+- https://blog.csdn.net/zzuhkp/article/details/123518033
 
 # 总结
 
@@ -393,4 +403,6 @@ Spring 官网将 Spring Boot 的核心特性总结为 6 点，在我们上述的
 - 提供生产就绪功能，例如指标、健康检查和外部化配置。
 - 完全无需代码生成，无需 XML 配置。
 
-原文: https://blog.csdn.net/zzuhkp/article/details/123518033
+原文:
+
+- https://blog.csdn.net/zzuhkp/article/details/123518033
