@@ -8,9 +8,47 @@ tags:
  - Java
 ---
 
-如果有很多`.class`文件，散落在各层目录中，肯定不便于管理。如果能把目录打一个包，变成一个文件，就方便多了。
+>  JAR stands for Java ARchive. It's a file format based on the popular ZIP file format and is used for aggregating many files into one. Although JAR can be used as a general archiving tool, the **primary motivation** for its development was so that Java applets and their requisite components (.class files, images and sounds) can be downloaded to a browser in a single HTTP transaction, rather than opening a new connection for each piece. This greatly improves the speed with which an applet can be loaded onto a web page and begin functioning. [JAR File Overview](https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jarGuide.html)
 
-jar包实际上就是一个zip格式的压缩文件，而jar包相当于目录。如果我们要执行jar包的里面的某个`class`，就可以把jar包放到`classpath`中：
+上面的话是在说一些Java程序(比如一些库)会有很多`.class`文件(因为有很多源代码`.java`各种类)和其他资源文件如图片,  如果我们想用这个库, 得一个一个下载这个库用到的每个`.class`文件(依赖之类), 那这得多麻烦. 
+
+所以Java ARchive出现了, 按照Java ARchive规定的格式压缩文件后(也就是jar包), 你可以将这个jar包直接放进项目然后使用jar包中的类(注意jar包里可能还会有jar包, 比如有的库也会依赖其他的库), 依赖一般放在jar包的`BOOT-INF`文件夹的lib目录下。这是我的Spring Boot Web项目形成的Jar包大致结构(我删除了一些文件, 太多了):
+
+```shell
+.
+├── BOOT-INF
+│   ├── classes
+│   │   ├── application.properties
+│   │   ├── com
+│   │   │   └── choo
+│   │   │       └── springdemo
+│   │   │           └── SpringDemoApplication.class
+│   │   └── static
+│   │       └── index.html
+│   ├── classpath.idx
+│   └── lib
+│       ├── jackson-annotations-2.14.2.jar
+│       ├── spring-web-6.0.7.jar
+│       ├── spring-webmvc-6.0.7.jar
+│       ├── tomcat-embed-core-10.1.7.jar
+│       └── tomcat-embed-websocket-10.1.7.jar
+├── META-INF
+│   ├── MANIFEST.MF
+│   └── maven
+│       └── com.choo
+│           └── SpringDemo
+│               ├── pom.properties
+│               └── pom.xml
+└── org
+    └── springframework
+        └── boot
+            └── loader
+                ├── ClassPathIndexFile.class
+                ├── ExecutableArchiveLauncher.class
+                ├── JarLauncher.class
+```
+
+如果我们要执行jar包的里面的某个`class`，就可以把jar包放到`classpath`中：
 
 ```
 java -cp ./hello.jar abc.xyz.Hello
@@ -48,11 +86,21 @@ java -jar hello.jar
 
 在大型项目中，不可能手动编写`MANIFEST.MF`文件，再手动创建zip包。Java社区提供了大量的开源构建工具，例如**Maven**，可以非常方便地创建jar包。
 
-原文: 
+参考: 
 
 - https://www.liaoxuefeng.com/wiki/1252599548343744/1260466914339296
 
 ---
+
+**WAR –** Short for Web Archive. It's the extension of a file that packages a web application directory hierarchy in ZIP format. Java web applications are usually packaged as WAR files for deployment. These files can be created on the command line or with an IDE, like Eclipse.
+
+After deploying the WAR file, Tomcat unpacks it and stores all the project files from the *webapps* directory in a new directory named after the project.
+
+[How to Deploy a WAR File to Tomcat | Baeldung](https://www.baeldung.com/tomcat-deploy-war)
+
+
+
+
 
 **How the Java Launcher Finds Classes**
 
