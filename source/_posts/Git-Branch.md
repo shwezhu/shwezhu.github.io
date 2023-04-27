@@ -1,6 +1,6 @@
 ---
 title: "Git Branch"
-date: 2023-04-22T00:47:50-03:00
+date: 2023-04-22 00:47:50
 categories:
   - Git
   - Basics

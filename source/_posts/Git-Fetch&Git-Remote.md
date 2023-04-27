@@ -1,6 +1,6 @@
 ---
 title: "Origin的本质之被我们忽略的Git Remote操作(git fetch)"
-date: 2023-04-21T21:46:44-03:00
+date: 2023-04-21 21:46:44
 categories:
   - Git
   - Collaboration

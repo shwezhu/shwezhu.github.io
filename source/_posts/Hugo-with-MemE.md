@@ -1,6 +1,6 @@
 ---
 title: "Hugo With MemE"
-date: 2023-04-19T23:31:57-03:00
+date: 2023-04-19 23:31:57
 categories:
   - Build Website
   - Hugo
