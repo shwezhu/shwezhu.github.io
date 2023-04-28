@@ -7,6 +7,7 @@ categories:
 tags:
  - Java
  - Tomcat
+ - War Files
 ---
 
 在IDEA把webapp deploy到tomcat上的时候会看到以下设置:
@@ -60,3 +61,6 @@ tags:
 参考: 
 
 - https://blog.csdn.net/u013626215/article/details/103685304
+
+
+
