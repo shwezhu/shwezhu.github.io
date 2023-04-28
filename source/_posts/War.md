@@ -128,6 +128,79 @@ Now that Maven and Tomcat are configured, the next step is to edit the Java web 
 
 ![](g.png)
 
+然后我们对比一下生成的war与我们的源代码文件结构:
+
+```shell
+#源代码
+.
+├── pom.xml
+├── src
+│   └── main
+│       ├── java
+│       │   ├── database
+│       │   └── servlet
+│       ├── resources
+│       │   └── log4j.properties
+│       └── webapp
+│           ├── WEB-INF
+│           ├── hello.jsp
+│           └── index.jsp
+
+# War
+.
+├── META-INF
+│   ├── MANIFEST.MF
+│   ├── maven
+│   │   └── com.example
+│   │       └── ServletDemo
+│   └── war-tracker
+├── WEB-INF
+│   ├── classes
+│   │   ├── database
+│   │   │   ├── Controller.class
+│   │   │   ├── DataEntity.class
+│   │   │   ├── Database.class
+│   │   │   └── MysqlDatabase.class
+│   │   ├── log4j.properties
+│   │   ├── servlet
+│   │   │   ├── GetDataServlet$1.class
+│   │   │   └── GetDataServlet.class
+│   │   └── test
+│   ├── lib
+│   │   ├── gson-2.9.0.jar
+│   │   ├── log4j-1.2.17.jar
+│   │   ├── mysql-connector-j-8.0.32.jar
+│   │   └── protobuf-java-3.21.9.jar
+│   └── web.xml
+├── hello.jsp
+└── index.jsp
+```
+
+对于生成的War文件可以发现所有Java相关的文件都在`WEB-INF`下, 比如我们编写的Servlet字节码文件和和我们用到的依赖(gson, mysql connector, log4j). 然后仔细看源代码文件结构, 在`webapp`下也有个`WEB-INF`, 这下面放的就是我们项目的`web.xml`, 内容如下(所以这有什么联系呢), 
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <welcome-file-list>
+        <welcome-file>/index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>get-data</servlet-name>
+        <servlet-class>servlet.GetDataServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>get-data</servlet-name>
+        <url-pattern>/temperature/*</url-pattern>
+        <url-pattern>/humidity/*</url-pattern>
+    </servlet-mapping>
+</web-app>
+```
+
 # FInal Step: Verify
 
 确保你已经开启Tomcat服务(即使你关闭了IDEA, IDEA和Tomcat是两个东西, IDEA是个IDE会用到Tomcat作为web服务器来部署web app), 然后访问通过`http://localhost:8080/`访问到Tomcat主页, 这时候你可以在链接🔗后加上`/rps`即`http://localhost:8080/rps/`就可以进入到你的那个web网页, 如下:
