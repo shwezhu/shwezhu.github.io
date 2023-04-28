@@ -162,7 +162,7 @@ Now that Maven and Tomcat are configured, the next step is to edit the Java web 
     </welcome-file-list>
 ```
 
-然后怎么覆盖这个home page呢? 刚好看到了下面这个回答, 看来和我们猜想的一样(真的是后看到的这个回答😭), 如下: 
+然后怎么覆盖这个home page呢? 刚好看到了下面这个回答, 看来和我们猜想的一样, 如下: 
 
 In any web application, there will be a `web.xml` in the `WEB-INF/` folder. (别忘了我们之前学习JSP的时候可没少在这个文件夹花时间去配置servlet name和对应的jsp, 每创建一个新的servlet就要在这创建个新的servlet pattern)
 
