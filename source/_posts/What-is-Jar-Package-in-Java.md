@@ -76,7 +76,7 @@ package_sample
 
 ![](a.png)
 
-说明打包打得有问题，JVM仍然无法从jar包中查找正确的class，原因是`hong.Person`必须按`hong/Person.class`存放，而不是`bin/hong/Person.class`。
+就说明打包打得有问题，JVM仍然无法从jar包中查找正确的class，原因是`hong.Person`必须按`hong/Person.class`存放，而不是`bin/hong/Person.class`。
 
 jar包还可以包含一个特殊的`/META-INF/MANIFEST.MF`文件，`MANIFEST.MF`是纯文本，可以指定Main-Class和其它信息。JVM会自动读取这个MANIFEST.MF文件，如果存在Main-Class，我们就不必在命令行指定启动的类名，而是用更方便的命令：
 

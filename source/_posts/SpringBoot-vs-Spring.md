@@ -1,5 +1,5 @@
 ---
-title: Spring Boot和Spring框架的关系-笔记 
+title: Spring Boot与Spring框架的对比-阅读笔记
 date: 2023-04-25 12:30:22
 categories:
  - Java
@@ -11,7 +11,7 @@ tags:
 
 # 什么是Spring Boot
 
-刚开始接触Spring Boot， 查了查谷歌想弄明白Spring Boot是什么， 做个笔记整理一下，我会尽量标注出处（复制好多链接真的会很麻烦🥹），有的是来自已标注出处的文章，就不再重复标注。
+刚开始接触Spring Boot， 查了查谷歌想弄明白Spring Boot是什么， 做个笔记整理一下，有的内容是摘自相同文章就不再重复标注（复制好多链接真的会很麻烦🥹）。
 
 Spring Boot 是由 Pivotal 团队提供的全新框架，其设计目的是用来简化新 Spring 应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。用我的话来理解，就是 Spring Boot 其实不是什么新的框架，它默认配置了很多框架的使用方式，就像 Maven 整合了所有的 Jar 包，Spring Boot 整合了所有的框架。[原文](http://www.ityouknow.com/springboot/2016/01/06/spring-boot-quick-start.html)
 
@@ -27,7 +27,7 @@ Spring Boot是一个基于Spring的套件，它帮我们预组装了Spring的一
 
 - spring boot使用了默认大于配置的理念，很多集成方案已经帮你选择好了，能不配置就不配置; Spring Boot的哲学就是约定大于配置; 既然很多东西都是一样的，为什么还要去配置。
 
-可以看一下我的Spring Boot的这个maven配置文件(`pom.xml`)的内容，可能会帮助理解Spring Boot管理组件负责组装的本质, 然后也可以用来**对比**下面讲介绍的Spring框架的maven配置文件(`pom.xml`), 可以看到若我们使用Spring Boot, Maven的配置文件依赖中的前三个组件JPA, WEB以及TEST的GroupID都是SpringBoot`<groupId>org.springframework.boot</groupId>`：
+可以看一下我的Spring Boot的这个maven配置文件(`pom.xml`)的内容，可能会帮助理解Spring Boot管理组件负责组装的本质, 然后也可以用来**对比**下面讲介绍的Spring框架的maven配置文件(`pom.xml`), 可以看到在Spring Boot项目里依赖有JPA, WEB以及TEST的GroupID都是SpringBoot`<groupId>org.springframework.boot</groupId>`：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

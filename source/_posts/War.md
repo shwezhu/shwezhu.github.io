@@ -76,6 +76,16 @@ After you add the `war-deployer` user to Tomcat, register that `username` and `p
 
 # Step 3: Register the tomcat7-maven-plugin in the POM
 
+首先先把打包格式改成`war`, 即在`pom.xml`中找到`<packaging>`标签, 没有的话添加一个, 与`<dependencies>`标签并列的那种,  我故意多放了点其他的标签, 一遍辨认位置如下:
+
+```xml
+<groupId>com.example</groupId>
+<artifactId>ServletDemo</artifactId>
+<version>1.0-SNAPSHOT</version>
+<name>ServletDemo</name>
+<packaging>war</packaging>
+```
+
 Now that Maven and Tomcat are configured, the next step is to edit the Java web application's POM file to reference the Tomcat Maven plugin. 
 
 ```xml
