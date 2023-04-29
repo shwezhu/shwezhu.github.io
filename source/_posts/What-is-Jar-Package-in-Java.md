@@ -92,16 +92,6 @@ java -jar hello.jar
 
 ---
 
-**WAR –** Short for Web Archive. It's the extension of a file that packages a web application directory hierarchy in ZIP format. Java web applications are usually packaged as WAR files for deployment. These files can be created on the command line or with an IDE, like Eclipse.
-
-After deploying the WAR file, Tomcat unpacks it and stores all the project files from the *webapps* directory in a new directory named after the project.
-
-[How to Deploy a WAR File to Tomcat | Baeldung](https://www.baeldung.com/tomcat-deploy-war)
-
-
-
-
-
 **How the Java Launcher Finds Classes**
 
 The Java launcher, `java`, initiates the Java virtual machine. The virtual machine searches for and loads classes in this order:
