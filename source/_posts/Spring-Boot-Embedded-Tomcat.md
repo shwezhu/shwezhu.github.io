@@ -170,4 +170,36 @@ wget "http://localhost:8080/find/temperature?from=2023-04-01&to=2023-04-02"
 
 然后我们也就知道别人所说的那种, Spring Boot内嵌Tomcat, 然后默认项目打包成Jar而不是War到底是个什么玩意, 即就是把所有依赖和所有我们编写的源代码的字节码`.class`文件通过约定好的目录结构放到一起, 然后打包成一个jar, 上面说到的依赖比如`pom.xml`中的各种依赖以jar文件格式放到`SpringDemo-0.0.1-SNAPSHOT/BOOT-INF/lib`目录下, 然后`.class`文件都在`SpringDemo-0.0.1-SNAPSHOT/BOOT-INF/classes`下, 当然可能还包含其他的文件, 这你自己去探索吧, 
 
+最后看一下项目生成的Jar的结构(依赖太多了, 删除了一部分):
+
+```java
+.
+├── BOOT-INF
+│   ├── classes
+│   │   ├── application.properties
+│   │   ├── com
+│   │   │   └── choo
+│   │   │       └── springdemo
+│   │   │           ├── SpringDemoApplication.class
+│   │   │           ├── Temperature.class
+│   │   │           └── TemperatureRepository.class
+│   │   └── static
+│   │       └── index.html
+│   ├── classpath.idx
+│   ├── layers.idx
+│   └── lib
+│       ├── HikariCP-5.0.1.jar
+│       ├── angus-activation-2.0.0.jar
+│       ├── antlr4-runtime-4.10.1.jar
+│       ├── spring-jcl-6.0.7.jar
+│       ├── spring-jdbc-6.0.7.jar
+│       ├── spring-orm-6.0.7.jar
+│       ├── spring-tx-6.0.7.jar
+│       ├── spring-web-6.0.7.jar
+│       ├── spring-webmvc-6.0.7.jar
+│       ├── tomcat-embed-core-10.1.7.jar
+│       ├── tomcat-embed-el-10.1.7.jar
+│       ├── tomcat-embed-websocket-10.1.7.jar
+```
+
 其实有时候对于一些概念区别, 读很多文章博客不如去自己实操一遍, 读多了可能觉得自己会了理解了, 但还是会云里雾里, 因为有的说的很泛, 总之别嫌麻烦, 多动手, 
