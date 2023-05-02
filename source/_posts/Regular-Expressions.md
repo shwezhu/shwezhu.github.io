@@ -40,7 +40,36 @@ colouur
 | `*`  | 代表出現0次以上  |
 | `?`  | 代表出現0次或1次 |
 
-### 2. `\b`
+### 2. `\d`, `\w`, `\s` 
+
+- `\d` 其实就是 `[0-9]`, "任何一个数字"
+- `\D` 其实就是 `[^0-9]`, "任何一个非数字"
+- `\w` 其实就是 `[a-zA-Z0-9_]`, "任何一个文数字"
+- `\W` 其实就是 `[^a-zA-Z0-9_]`, "任何一个非文数字"
+- `\s` 其实就是 `[ \t\n]`, "任何一个空白类字符",  注意`[ \t\n]`是前面故意有个空格, 
+- `\S` 其实就是 `[^ \t\n]`, "任何一个非空白类字符"
+
+计数用, 表达 「前面的样版重复出现多少次」 的 quantifier:
+
+- `{5}` 重复 5 次
+- `{3,7}` 重复 3 到 7 次
+- `{3,}` 重复至少 3 次
+- `?` 可有可无。 相当于 `{0,1}`
+- `*` 重复出现任意次， 包含 0 次。 相当于 `{0,}`
+- `+` 重复出现任意次, 至少 1 次。 相当于 `{1,}`
+
+国内的手机号是11位, 所以要查手机号, 我们可以简单的查找大于等于11位数字的字符串, 下面用7位的举例子, 
+
+```shell
+$ printf "12345\n12345678\n123\n234567\n1234567" | egrep '\d{7}'        
+12345678
+1234567
+$ printf "12345\n12345678\n123\n234567\n1234567" | egrep '[0-9]{7}'  
+12345678
+1234567
+```
+
+### 3. `\b`
 
 想要找 "port" 与 "ports", 但又不希望找到 "export", "portable", "important" 等等一大堆不相关的单字, 该怎么办? 用 `\bports?\b` 这里的` \b` 表示 boundary, 旁边不可有其他文数字。 所谓文数字, 就是英文本母, 数字, 及底线 "_"。
 
@@ -50,7 +79,7 @@ The port is...
 There are many ports...
 ```
 
-### 3. `+`
+### 4. `+`
 
 The pattern `a+` will match one or more occurrences of the letter 'a'. It will match strings like "a", "aa", "aaa", and so on, but it will not match an empty string or a string without any 'a' characters.
 
@@ -61,21 +90,6 @@ add
 sra
 $ printf "aaa\nadd\nsra\ndfgh" | egrep '\ba+\b'
 aaa
-```
-
-### 4. `\d`
-
-`\d` A metacharacter that matches any digit from 0 to 9. 
-
-- `\D` which matches all non-digit characters. It is the opposite of `\d`
-- `\s` which matches all white spaces including the spacebar, tab, and return
-
-国内的手机号是11位, 所以要查手机号, 我们可以简单的查找大于等于11位数字的字符串, 下面用7位的举例子, 
-
-```shell
-$ printf "12345\n12345678\n123\n234567\n1234567" | egrep '\d{7}'        
-12345678
-1234567
 ```
 
 ### 5. `$` & `^`
@@ -124,8 +138,28 @@ Hell 123
 | [a-g]   | character between a & g                              |
 | [^adgf] | 代表不是a, d, g或f的字符                                |
 
+```shell
+# 忽略大小写
+$ printf "Hello\nHeal\ntold\nhello" | egrep '(?i)LL' 
+Hello
+hello
+# 找出带后缀的文件
+$ ls /etc/ | egrep '\.\w+$'  
+# 
+```
+
+
+
+
+
+
+
+
+
 参考:
 
 - [Regexp 是什么东东?](https://www.cyut.edu.tw/~ckhung/b/re/intro.php)
 
 - [Top 15 Commonly Used Regex - Digital Fortress](https://digitalfortress.tech/tips/top-15-commonly-used-regex/)
+
+- [Perl 常用的 regexp 规则列表](https://www.cyut.edu.tw/~ckhung/b/re/rules.php)
