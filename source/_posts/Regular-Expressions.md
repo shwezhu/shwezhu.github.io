@@ -35,6 +35,11 @@ $ printf "colour\ncolor\ncolouur\n" | egrep 'colou.r'
 colouur
 ```
 
+| `+`  | 代表出現1次以上  |
+| ---- | ---------------- |
+| `*`  | 代表出現0次以上  |
+| `?`  | 代表出現0次或1次 |
+
 ### 2. `\b`
 
 想要找 "port" 与 "ports", 但又不希望找到 "export", "portable", "important" 等等一大堆不相关的单字, 该怎么办? 用 `\bports?\b` 这里的` \b` 表示 boundary, 旁边不可有其他文数字。 所谓文数字, 就是英文本母, 数字, 及底线 "_"。
@@ -112,11 +117,12 @@ Hell 123
 
 可以把一个文本文件里面的所有空白列都删掉吗? 这个 regexp 可以抓出所有空白列: `^\s*$`。 在 regexp 最前面放一个 `^` 表示您只对 「出现在一列之首」 的样版有兴趣; 在 regexp 的最后面放一个 `$` 表示您只对 「出现在一列之尾」 的样版有兴趣。 `\s` 是` [\t\n]` 的简写, 意思是 「任何一个空白字符」 (包含空格, tab, 等等)。 `*` 表示 「前面的东西, 可以重复出现 0 次, 1 次, 2 次, ... 任意次」。 这个样版翻译成中文, 就是 「从头到尾都是一片空白的那种列」。
 
-| `\`    | `\` is used to escape special chars: `\*`matches `*` |
-| ------ | ---------------------------------------------------- |
-| [abc]  | any of a, b, or c                                    |
-| [^abc] | not a, b, or c                                       |
-| [a-g]  | character between a & g                              |
+| `\`     | `\` is used to escape special chars: `\*`matches `*` |
+| ------- | ---------------------------------------------------- |
+| [abc]   | any of a, b, or c                                    |
+| [^abc]  | not a, b, or c                                       |
+| [a-g]   | character between a & g                              |
+| [^adgf] | 代表不是a, d, g或f的字符                                |
 
 参考:
 
