@@ -1,0 +1,117 @@
+---
+title: 正则表达式
+date: 2023-05-01 23:14:22
+categories:
+ - Linux
+tags:
+ - Regex
+---
+
+### 1. `?`, `*`, `.`
+
+`?` The question mark indicates zero or one occurrences of the **preceding element**. For example, `colou?r` matches both "color" and "colour". 英文的 "颜色" 一字, 有两种拼法: color 及 colour。 用 regexp 表达, 可以一石两鸟: colou?r 其中的 ? 表示 「前面的字符可有可无」
+
+```shell
+$ printf "colour\ncolor\ncolouur\n" | egrep 'colou?r'
+colour
+color
+```
+
+`*` The **asterisk** indicates zero or more occurrences of the preceding element. For example, ab*c matches "ac", "abc", "abbc", "abbbc", and so on.
+
+```shell
+$ printf "colour\ncolor\ncolouur\n" | egrep 'colou*r'                          
+colour
+color
+colouur
+```
+
+`.`Matches any single character (many applications exclude newlines, and exactly which characters are considered newlines is flavor-, character-encoding-, and platform-specific, but it is safe to assume that the line feed character is included). Within POSIX bracket expressions, the dot character matches a literal dot. For example, `a.c` matches "abc", etc., but `[a.c]` matches only "a", ".", or "c".
+
+```shell
+$ printf "colour\ncolor\ncolouur\n" | egrep 'colo.r'                           
+colour
+$ printf "colour\ncolor\ncolouur\n" | egrep 'colou.r'                          
+colouur
+```
+
+### 2. `\b`
+
+想要找 "port" 与 "ports", 但又不希望找到 "export", "portable", "important" 等等一大堆不相关的单字, 该怎么办? 用 `\bports?\b` 这里的` \b` 表示 boundary, 旁边不可有其他文数字。 所谓文数字, 就是英文本母, 数字, 及底线 "_"。
+
+```shell
+$ printf "The port is...\nTo export it...\nThere are many ports...\nportable" | egrep '\bports?\b'
+The port is...
+There are many ports...
+```
+
+### 3. `+`
+
+The pattern `a+` will match one or more occurrences of the letter 'a'. It will match strings like "a", "aa", "aaa", and so on, but it will not match an empty string or a string without any 'a' characters.
+
+```shell
+$ printf "aaa\nadd\nsra\ndfgh" | egrep 'a+'
+aaa
+add
+sra
+$ printf "aaa\nadd\nsra\ndfgh" | egrep '\ba+\b'
+aaa
+```
+
+### 4. `\d`
+
+`\d` A metacharacter that matches any digit from 0 to 9. 
+
+- `\D` which matches all non-digit characters. It is the opposite of `\d`
+- `\s` which matches all white spaces including the spacebar, tab, and return
+
+国内的手机号是11位, 所以要查手机号, 我们可以简单的查找大于等于11位数字的字符串, 下面用7位的举例子, 
+
+```shell
+$ printf "12345\n12345678\n123\n234567\n1234567" | egrep '\d{7}'        
+12345678
+1234567
+```
+
+### 5. `$` & `^`
+
+`^` The pattern `hello$` will match the word "hello" only if it appears at the end of a line.
+
+```shell
+$ printf "My name is Jack\nHi Jack, this is John\nYou and Jack will come..\ndfHelloJack" | egrep 'Jack$'
+My name is Jack
+dfHelloJack
+```
+
+ `^` Can be used to match the start of a line. For instance, the pattern `^Hello` will match any line that begins with "Hello."
+
+For example, the pattern `^hello$` will only match the exact string "hello" and not "hello world" or "say hello."
+
+```shell
+$ printf "Hell 123\n123456\n123\n123 hello" | egrep '^\d+$'        
+123456
+123
+$ printf "Hell 123\n123456\n123\n123 hello" | egrep '\d{3}'        
+Hell 123
+123456
+123
+123 hello
+$ printf "Hell 123\n123456\n123\n123 hello" | egrep '\b\d{3}\b'    
+Hell 123
+123
+123 hello
+```
+
+### 6. e.g., 
+
+在一篇文章当中, 抓出所有 「看起来像是机场代码的字符串」 (例如 TPE 台北, KHH 高雄, LAX 洛杉矶, ... 等等): `\b[A-Z][A-Z][A-Z]\b`。 这里的 `[A-Z]` 是 [ABCDEFGHIJKLMNOPQRSTUVWXYZ] 的简写, 意思是 「任何一个大写字母」
+
+如何在一大片文本, 银行账号, 信用卡号... 当中, 找出看来像是移动电话号码的字符串, 例如 0912345678 或是 0912-345678 或是 0912-345-678 之类的? `09\d\d-?\d\d\d-?\d\d\d` 这里的` \d` 是 [0-9] 的简写, 这又是 [0123456789] 的简写, 意思是 「任何一个数字字符」
+
+想要找一组数字 ip (例如 168.95.1.1 或 163.17.9.176 之类的) 印象中在某个文件内曾看过, 但既不记得精确的数字, 也不记得在那个文件看过, 该怎么办? 可以搜索 `\d+\.\d+\.\d+\.\d+` 抓出所有数字 ip。 这里的` +` 表示 「前面的东西, 可以重复出现 1 次, 2 次, 3 次, ... 任意次」。 因为 . 在 regexp 当中有特殊的意义: 「任何一个字符」; 但在这里我们就是要找 "." 于是在前面加上 \ 以取消它的特殊意义。
+
+| `\`    | `\` is used to escape special chars: `\*`matches `*` |
+| ------ | ---------------------------------------------------- |
+| [abc]  | any of a, b, or c                                    |
+| [^abc] | not a, b, or c                                       |
+| [a-g]  | character between a & g                              |
