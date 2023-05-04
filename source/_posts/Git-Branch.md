@@ -3,7 +3,6 @@ title: "Git Branch"
 date: 2023-04-22 00:47:50
 categories:
   - Git
-  - Basics
 tags:
   - Git
 ---

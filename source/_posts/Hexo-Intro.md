@@ -1,5 +1,5 @@
 ---
-title: Create Blog with Hexo
+title: Hexo文件结构介绍以及文章摘要和插入图片
 categories:
   - Build Website
   - Hexo

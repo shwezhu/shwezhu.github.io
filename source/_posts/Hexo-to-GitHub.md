@@ -1,5 +1,5 @@
 ---
-title: Getting Started with Hexo
+title: Hexo部署博客到GitHub
 date: 2023-04-22 16:51:47
 categories:
   - Build Website
@@ -19,7 +19,7 @@ tags:
 ```shell
 hexo init blog
 cd blog/
-# 安装主题
+# 安装主题 NexT
 git clone https://github.com/next-theme/hexo-theme-next themes/next
 vi _config.yml
 ```
@@ -51,11 +51,11 @@ hexo g
 hexo d
 ```
 
-然后访问`username.github.io`即可, 别忘在仓库设置页面的pages页设置默认分支, 注意部署后可能要等大概三五分钟才能生效, 刚部署就访问可能会遇到404错误, 可以在GitHub仓库的Actions页面查看:
+然后访问`username.github.io`即可, 别忘在仓库设置页面的pages页设置默认分支, 注意部署后可能要等大概两三分钟才能生效, 刚部署就访问可能会遇到404错误, 可以在GitHub仓库的Actions页面查看:
 
 ![](b.png)
 
-# 3. 从备份恢复
+# 3. 备份恢复
 
 如果你想使用我的主题, 请按照下面操作
 
