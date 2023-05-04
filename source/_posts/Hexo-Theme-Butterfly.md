@@ -57,7 +57,19 @@ avatar:
 {% youtube video_id %}
 ```
 
-{% youtube https://youtu.be/DXT9dF-WK-I %}
+注意, YouTube视频的ID看它的链接参数v之后的即是ID, 如`https://www.youtube.com/watch?v=DXT9dF-WK-I&t=1960s`的ID就是`DXT9dF-WK-I&t=1960s`
+
+{% youtube DXT9dF-WK-I&t=1960s %}
+
+### 插入 Gist
+
+```shell
+{% gist gist_id %}
+```
+
+这是Gist的链接`https://gist.github.com/shwezhu/d2fa89616d8d9380e6ba66eb59920ed0`, ID即是最后那段, 即`d2fa89616d8d9380e6ba66eb59920ed0`
+
+{% gist d2fa89616d8d9380e6ba66eb59920ed0 %}
 
 ### 使用Utterances评论
 
