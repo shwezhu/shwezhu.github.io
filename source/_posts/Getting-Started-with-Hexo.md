@@ -71,4 +71,4 @@ hexo init blog
 npm install
 ```
 
-然后就ok了, 
+然后就ok了
