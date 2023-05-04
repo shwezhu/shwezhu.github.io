@@ -3,10 +3,10 @@ title: Bash Shell脚本学习
 date: 2023-05-03 17:43:59
 categories:
  - Linux
- - Script
+ - Bash
 tags:
  - Linux
- - Script
+ - Bash
 ---
 
 ### 1. Bash是什么
@@ -140,7 +140,7 @@ economic fd.sh    test.sh
 
 - [How to program with Bash: Syntax and tools | Opensource.com](https://opensource.com/article/19/10/programming-bash-syntax-tools)
 
-### 6. 其它
+### 6. `let`关键字以及`$((...))`
 
 Bash解释器的行为和平时常见的编程语言也不同, 所以你也不能凭这着直觉写, 最好参考官方文档, 看下面的赋值例子, 
 
@@ -170,7 +170,25 @@ $ a=3; b=5; let c="a+b"; echo $c
 
 - [Difference between let, expr](https://askubuntu.com/a/939299/1690738)
 
-### 7. 总结
+### 7. `""`的困惑
+
+看到[一个很好的总结](https://stackoverflow.com/a/42082956/16317008), 
+
+If we set
+
+```bash
+a=apple      # a simple variable
+arr=(apple)  # an indexed array with a single element
+```
+
+| #    | Expression    | Result      | Comments                               |
+| ---- | ------------- | ----------- | -------------------------------------- |
+| 1    | `"$a"`        | `apple`     | variables are expanded inside `""`     |
+| 2    | `'$a'`        | `$a`        | variables are not expanded inside `''` |
+| 3    | `'${arr[0]}'` | `${arr[0]}` | array access not possible inside `''`  |
+| 4    | `"${arr[0]}"` | `apple`     | array access works inside `""`         |
+
+### 8. 总结
 
 - Bash的变量是没类型的, 或者说都是字符串, 但当字符串都是数字的时候, 可以执行简单的算术运算
 - 赋值如果涉及计算, 使用类似`let c="a+b"`或者`$((...))`算数符号
@@ -179,6 +197,7 @@ $ a=3; b=5; let c="a+b"; echo $c
 - 查看对应shell版本, 切换到对应的shell然后执行 `echo "$ZSH_VERSION"`, `echo "$BASH_VERSION"`
 - 查看所有的shells`cat /etc/shells`
 - 声明一个变量为只读`declare -r var1=1`
+- Bash中, 数字与字符串相加为其本身, 即字符串值为0
 
 ```shell
 $ cat /etc/shells      
