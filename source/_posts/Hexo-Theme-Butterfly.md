@@ -57,3 +57,26 @@ avatar:
 {% youtube video_id %}
 ```
 
+{% youtube https://youtu.be/DXT9dF-WK-I %}
+
+### 使用Utterances评论
+
+首先先在Github安装Utterances, 然后授权一个仓库即可, 具体过程可谷歌, 嫌麻烦可以用这个教程, 这个用的是giscus: [hexo-butterfly主题-giscus评论系统设置 - 知乎](https://zhuanlan.zhihu.com/p/603658639)
+
+找到主题文件的对应参数, 设置如下(不用设置站点配置文件)
+
+```yaml
+comments:
+  # Up to two comments system, the first will be shown as default
+  Choose: Utterances
+  use: Utterances
+  
+# utterances
+utterances:
+  enabled: true
+  repo: shwezhu/shwezhu.github.io
+  issue_term: url
+  label: Comment
+  theme: github-light
+```
+
