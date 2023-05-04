@@ -59,7 +59,7 @@ avatar:
 
 注意, YouTube视频的ID看它的链接参数v之后的即是ID, 如`https://www.youtube.com/watch?v=DXT9dF-WK-I&t=1960s`的ID就是`DXT9dF-WK-I&t=1960s`
 
-{% youtube DXT9dF-WK-I&t=1960s %}
+{%  youtube DXT9dF-WK-I&t=1960s %}
 
 ### 插入 Gist
 
