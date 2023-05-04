@@ -55,54 +55,5 @@ avatar:
 
 ```shell
 {% youtube video_id %}
-
-nav#nav
-  span#blog_name
-    a#site-name(href=url_for('/')) #[=config.title]
-    
-  #menus
-    if (theme.algolia_search.enable || theme.local_search.enable)
-      #search-button
-        a.site-page.social-icon.search
-          i.fas.fa-search.fa-fw
-          span=' '+_p('search.title')
-  !=partial('includes/header/menu_item', {}, {cache: true})
-  #nav-right
-    if (theme.algolia_search.enable || theme.local_search.enable)
-      #search-button
-        a.site-page.social-icon.search
-          i.fas.fa-search.fa-fw
-          span=' '+_p('search.title')
-    #toggle-menu
-      a.site-page
-        i.fas.fa-bars.fa-fw
-      #toggle-menu
-        a.site-page
-          i.fas.fa-bars.fa-fw
-```
-
-原本的:
-
-```
-nav#nav
-  span#blog-info
-    a(href=url_for('/') title=config.title)
-      if theme.nav.logo
-        img.site-icon(src=url_for(theme.nav.logo))
-      if theme.nav.display_title
-        span.site-name=config.title
-    
-  #menus
-    if (theme.algolia_search.enable || theme.local_search.enable || theme.docsearch.enable)
-      #search-button
-        a.site-page.social-icon.search(href="javascript:void(0);")
-          i.fas.fa-search.fa-fw
-          span=' '+_p('search.title')
-    !=partial('includes/header/menu_item', {}, {cache: true})
-
-    #toggle-menu
-      a.site-page(href="javascript:void(0);")
-        i.fas.fa-bars.fa-fw
-
 ```
 
