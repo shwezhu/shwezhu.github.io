@@ -11,9 +11,9 @@ tags:
 
 ### 1. Bash是什么
 
->  **Bash is a Unix shell and command language** written by Brian Fox for the GNU Project as a free software replacement for the Bourne shell. [Wikipedia](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
+**Bash is a Unix shell and command language** written by Brian Fox for the GNU Project as a free software replacement for the Bourne shell. [Wikipedia](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
 
-> A **Unix shell** is both a **command interpreter** and a **programming language**. As a command interpreter, the shell provides the user interface to the rich set of GNU utilities. The programming language features allow these utilities to be combined.  [What is a shell? (Bash Reference Manual)](https://www.gnu.org/software/bash/manual/html_node/What-is-a-shell_003f.html)
+A **Unix shell** is both a **command interpreter** and a **programming language**. As a command interpreter, the shell provides the user interface to the rich set of GNU utilities. The programming language features allow these utilities to be combined.  [What is a shell? (Bash Reference Manual)](https://www.gnu.org/software/bash/manual/html_node/What-is-a-shell_003f.html)
 
 得到如下结论, 
 
@@ -193,7 +193,7 @@ arr=(apple)  # an indexed array with a single element
 - Bash的变量是没类型的, 或者说都是字符串, 但当字符串都是数字的时候, 可以执行简单的算术运算
 - 赋值如果涉及计算, 使用类似`let c="a+b"`或者`$((...))`算数符号
 - 赋值的时候`=`两侧不可以有空格
-- 切换bash和zsh, 直接输入对应名字然后回车
+- 切换bash和zsh, 直接输入对应名字然后回车, 设置默认shell, `chsh -s /bin/zsh`
 - 查看对应shell版本, 切换到对应的shell然后执行 `echo "$ZSH_VERSION"`, `echo "$BASH_VERSION"`
 - 查看所有的shells`cat /etc/shells`
 - 声明一个变量为只读`declare -r var1=1`

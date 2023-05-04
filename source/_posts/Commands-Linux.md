@@ -79,5 +79,11 @@ The `>` sign is used for redirecting the output of a program to something other 
 The `>>` **appends** to a file or creates the file if it doesn't exist.
 The `>` **overwrites** the file if it exists or creates it if it doesn't exist.
 
+### 4. 批量查找文件内容
 
+```shell
+grep -nr "ul$" themes/cactus/source/css
+```
+
+`-nr`: n显示line number行号，r是recursive，可以理解为遍历文件文件夹
 
