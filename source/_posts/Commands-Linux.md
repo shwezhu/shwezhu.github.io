@@ -87,3 +87,7 @@ grep -nr "ul$" themes/cactus/source/css
 
 `-nr`: n显示line number行号，r是recursive，可以理解为遍历文件文件夹
 
+### 5. find command
+
+可以说这个是最可以帮助我们省事的命令了,
+
