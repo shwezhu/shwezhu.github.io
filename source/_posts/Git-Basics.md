@@ -1,5 +1,5 @@
 ---
-title: "Working Directory下文件的状态之版本穿梭"
+title: "工作目录的文件状态之版本穿梭"
 date: 2023-05-05 09:31:30
 categories:
   - Git
