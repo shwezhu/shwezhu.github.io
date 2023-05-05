@@ -94,6 +94,14 @@ utterances:
 
 ### 字数统计
 
+安装
+
+```shell
+npm install hexo-wordcount --save
+```
+
+找到主题文件的对应参数, 设置如下(不用设置站点配置文件)
+
 ```yaml
 # wordcount (字數統計)
 # see https://butterfly.js.org/posts/ceeb73f/#字數統計
