@@ -59,7 +59,7 @@ avatar:
 
 注意, YouTube视频的ID看它的链接参数v之后的即是ID, 如`https://www.youtube.com/watch?v=DXT9dF-WK-I&t=1960s`的ID就是`DXT9dF-WK-I&t=1960s`
 
-{%  youtube DXT9dF-WK-I&t=1960s %}
+{%  youtube F_dGEjzRG_Y %}
 
 ### 插入 Gist
 
@@ -92,3 +92,6 @@ utterances:
   theme: github-light
 ```
 
+### 音乐播放器
+
+[Butterfly添加全局吸底Aplayer教程 | Butterfly](https://butterfly.js.org/posts/507c070f/)
