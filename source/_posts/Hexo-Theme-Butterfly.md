@@ -57,7 +57,7 @@ avatar:
 {% youtube video_id %}
 ```
 
-注意, YouTube视频的ID看它的链接参数v之后的即是ID, 如`https://www.youtube.com/watch?v=DXT9dF-WK-I&t=1960s`的ID就是`DXT9dF-WK-I&t=1960s`
+注意, YouTube视频的ID即点即视频下方的分享按钮, 如`https://youtu.be/F_dGEjzRG_Y`的ID就是`F_dGEjzRG_Y`
 
 {%  youtube F_dGEjzRG_Y %}
 
@@ -90,6 +90,18 @@ utterances:
   issue_term: url
   label: Comment
   theme: github-light
+```
+
+### 字数统计
+
+```yaml
+# wordcount (字數統計)
+# see https://butterfly.js.org/posts/ceeb73f/#字數統計
+wordcount:
+  enable: true
+  post_wordcount: true
+  min2read: true
+  total_wordcount: true
 ```
 
 ### 音乐播放器
