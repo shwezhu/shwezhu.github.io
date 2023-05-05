@@ -115,3 +115,9 @@ wordcount:
 ### 音乐播放器
 
 [Butterfly添加全局吸底Aplayer教程 | Butterfly](https://butterfly.js.org/posts/507c070f/)
+
+了解更多:
+
+- [Hexo Built-in Tag Plugins (Hexo內置標籤外掛) | Butterfly](https://butterfly.js.org/posts/39b121ef/#iframe)
+
+- [Butterfly 安裝文檔(三) 主題配置-1 | Butterfly](https://butterfly.js.org/posts/4aa8abbe/#%E5%8F%83%E6%95%B8%E8%A8%AD%E7%BD%AE)
