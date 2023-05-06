@@ -53,6 +53,5 @@ categories:
 - [最经典的卷积积分题目，完美展现卷积积分图解法_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1TK41127sT/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9)
 - [【信号与系统】卷积的三种求解办法_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Nr4y117V9/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9)
 
-{% bilibili 2c27ff6d58b80e3c8454f835acc72392 %}
-
 <iframe src="//player.bilibili.com/player.html?aid=763788609&bvid=BV1Nr4y117V9&cid=430235582&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
