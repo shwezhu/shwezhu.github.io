@@ -66,12 +66,16 @@ rect函数就是一个简单的分段函数, 只是图像是个矩形我们就�
 
 ### unit impulse function
 
+{% youtube gfckPQEmFHA?t=835 %}
+
 {% youtube lyraqtMWtGk %}
 
 {% youtube xxGcI9WVoCY%}
 
-下面是这两个视频的链接:
+下面是视频的链接:
 
 - [How to Understand the Delta Impulse Function](https://www.youtube.com/watch?v=xxGcI9WVoCY)
 
 - [Delta Function Explained](https://www.youtube.com/watch?v=lyraqtMWtGk)
+
+- [「珂学原理」No. 28「卷积为谁而生」](https://www.youtube.com/watch?v=gfckPQEmFHA&list=PLYdJCSN8wbG8F08QEPdTdx7FDPH7IGx7P&index=3)
