@@ -178,15 +178,15 @@ marked:
 
 修改之后会开启 Hexo 的文章资源文件管理功能。Hexo将会在我们每一次通过 `hexo new <title>` 命令创建新文章时自动创建一个同名文件夹，于是我们便可以将文章所引用的相关资源放到这个同名文件夹下，然后通过相对路径引用。
 
-### 安装hexo-renderer-marked插件
+### 安装hexo-asset-image插件
 
 ```shell
-npm install hexo-renderer-marked --save
+npm install hexo-asset-image --save
 ```
 
 > 注意: 安装的packages在`blog/node_modules/`下面, 备份的时候这个文件夹不用备份, 我们只用备份`package.json`文件就行
 
-一些人推荐安装hexo-asset-image插件, 这里不推荐(如果你不打算使用文章链接永久化, 那可以使用它), 因为hexo-asset-image之后, 然后又使用了文章链接永久化插件, 之后生成的img的地址是错误的, 导致无法渲染, 查看blog根目录下的public里生成的对应文章的的html文件, 看看对应图片的url到底是什么, 为什么没有被渲染出来, 如下图: 其中与html同名的文件夹`4233be2c`内存的就是图片, 但是html文件中的img的url却是`src="post/4233be2c.htm/a.png"` 咱也不知道`4233be2c.htm`多出的`htm`是什么鬼, 
+如果你不打算使用文章链接永久化, 那可以使用hexo-asset-image, 因为hexo-asset-image之后, 然后又使用了文章链接永久化插件, 之后生成的img的地址是错误的, 导致无法渲染, 查看blog根目录下的public里生成的对应文章的的html文件, 看看对应图片的url到底是什么, 为什么没有被渲染出来, 如下图: 其中与html同名的文件夹`4233be2c`内存的就是图片, 但是html文件中的img的url却是`src="post/4233be2c.htm/a.png"` 咱也不知道`4233be2c.htm`多出的`htm`是什么鬼, 
 
 ![](b.png)
 
