@@ -3,10 +3,8 @@ title: "Hugo With MemE"
 date: 2023-04-19 23:31:57
 categories:
   - Build Website
-  - Hugo
 tags:
   - Hugo
-  - MemE
 ---
 
 ## 1. 图片插入

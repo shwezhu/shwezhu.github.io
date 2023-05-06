@@ -3,10 +3,8 @@ title: 远程主机安装Nginx
 date: 2023-04-23 20:24:27
 categories:
  - Build Website
- - Basics
 tags:
  - Build Website
- - Nginx
 ---
 
 # 1. 为什么要开启Nginx服务

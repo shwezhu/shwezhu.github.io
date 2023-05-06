@@ -2,8 +2,7 @@
 title: Hexo部署博客到GitHub
 date: 2023-04-22 16:51:47
 categories:
-  - Build Website
-  - Hexo
+ - Build Website
 tags:
  - Hexo
 ---

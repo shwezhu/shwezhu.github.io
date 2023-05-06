@@ -3,7 +3,6 @@ title: Hexo NexT主题配置
 date: 2023-04-18 20:02:06
 categories:
   - Build Website
-  - Hexo
 tags:
   - Hexo
 ---

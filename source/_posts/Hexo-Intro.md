@@ -2,7 +2,6 @@
 title: Hexo文件结构介绍以及文章摘要和插入图片
 categories:
   - Build Website
-  - Hexo
 tags:
   - Hexo
   - Build Website
