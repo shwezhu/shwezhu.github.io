@@ -3,7 +3,6 @@ title: 域名分级和DNS记录之何为www
 date: 2023-04-23 00:15:30
 categories:
 - Build Website
-- Basics
 tags:
 - Build Website
 - DNS Records
