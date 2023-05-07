@@ -44,7 +44,7 @@ rect函数就是一个简单的分段函数, 只是图像是个矩形我们就�
 
 ![c](c.png)
 
-[Why are Sinc and Square a Fourier Transform Pair?](https://www.youtube.com/watch?v=ZcTWLwXGql0)
+- [Why are Sinc and Square a Fourier Transform Pair?](https://www.youtube.com/watch?v=ZcTWLwXGql0)
 
 ### unit step function
 
@@ -79,3 +79,12 @@ rect函数就是一个简单的分段函数, 只是图像是个矩形我们就�
 - [Delta Function Explained](https://www.youtube.com/watch?v=lyraqtMWtGk)
 
 - [「珂学原理」No. 28「卷积为谁而生」](https://www.youtube.com/watch?v=gfckPQEmFHA&list=PLYdJCSN8wbG8F08QEPdTdx7FDPH7IGx7P&index=3)
+
+### 为什么cos的傅立叶变换是delta函数
+
+{% youtube  McITNfo3LKc %}
+
+- [Fourier Transform of Cos](https://www.youtube.com/watch?v=McITNfo3LKc)
+
+- [What is Negative Frequency?](https://www.youtube.com/watch?v=gz6AKW-R69s)
+- [How do Complex Numbers relate to Real Signals?](https://www.youtube.com/watch?v=TLWE388JWGs)

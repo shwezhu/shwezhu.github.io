@@ -48,7 +48,15 @@ categories:
 
 你看, 显然g(t)的函数式更简单, 所以我们选择让g(t)变成那个g(t-x), 也就是让g(t)相对y轴反转然后移动讨论, 但是这个g(t)有点特殊, 反转后图像不变, 这时候我们直接考虑t就行了, 上面我们说了t的值不是固定的, 根据实际情况讨论, 判读临界点是否两图像overlap, 如下图, 当t<-2的时候, 即反转后的g(t)向右移动了至少-2个单位, 就成了下图所示的样子, 然后他们没有overlap, 所以讨论下一个临界点, 即-1<t<0, 然后求不定积分, 接着讨论....
 
-![007](007.png)具体解法参考:
+![007](007.png)
+
+下面这个视频讲的很好:
+
+{% youtube lnzXrSGWMQE %}
+
+- [「珂学原理」No.90「卷积应该怎么卷」](https://www.youtube.com/watch?v=lnzXrSGWMQE&list=PLYdJCSN8wbG8F08QEPdTdx7FDPH7IGx7P&index=9)
+
+了解更多:
 
 - [最经典的卷积积分题目，完美展现卷积积分图解法_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1TK41127sT/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9)
 - [【信号与系统】卷积的三种求解办法_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Nr4y117V9/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9)
