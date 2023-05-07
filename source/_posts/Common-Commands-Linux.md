@@ -91,3 +91,42 @@ grep -nr "ul$" themes/cactus/source/css
 
 可以说这个是最可以帮助我们省事的命令了,
 
+指定查找的文件名以及文件类型:
+
+```shell
+# -type f 指定找的是文件, -type d指定找的是文件夹
+$ find ~/blog -name clean.sh -type f       
+/Users/David/blog/clean.sh
+# Wildcard, 也可以这么用: "clean.*"
+$ find ~/blog -name "*.sh"  
+/Users/David/blog/node_modules/jake/bin/bash_completion.sh
+/Users/David/blog/backup.sh
+/Users/David/blog/clean.sh
+```
+
+忽略名字的大小写:
+
+```shell
+# case-insensitive searching
+find . -iname foo  # find foo, Foo, FOo, FOO, etc.
+```
+
+指定查找的目录:
+
+```shell
+# search multiple dirs
+find /opt /usr /var -name foo.scala -type f
+```
+
+与grep搭配:
+
+```shell
+# find files by text in the file (find + grep)
+find . -type f -name "*.java" -exec grep -l StringBuffer {} \;    # find StringBuffer in all *.java files
+find . -type f -name "*.java" -exec grep -il string {} \;         # ignore case with -i option
+find . -type f -name "*.gz" -exec zgrep 'GET /foo' {} \;          # search for a string in gzip'd files
+```
+
+参考:
+
+- [Dozens of Unix/Linux 'find' command examples | alvinalexander.com](https://alvinalexander.com/unix/edu/examples/find.shtml)
