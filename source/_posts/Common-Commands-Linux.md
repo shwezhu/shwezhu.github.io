@@ -33,7 +33,7 @@ $ curl ifconfig.me && echo
 $ gcc –c SimpleSection.c
 ```
 
-#### 1. wget
+### 1. wget
 
 ```shell
 # 下载文件并保存为指定名字
@@ -44,7 +44,7 @@ wget -qO install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 wget -O- install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 ```
 
-#### 2. sh
+### 2. sh
 
 输出`install.sh`的内容不保存, 就像pipe传给sh, 由sh执行输出的东西, 这样很省事, 不用下载了, 再赋予可执行权限, 然后执行再删除, 就很麻烦, 注意这种并不是sh去执行下载的install.sh文件, 而是执行wegt输出的内容(即install.sh的内容), 所以这种并不用赋予可执行权限. 
 
@@ -59,7 +59,7 @@ sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools
 /usr/bin/sh
 ```
 
-#### 3. `>` & `>>`
+### 3. `>` & `>>`
 
 ```shell
 echo "Hello, World" > output.txt
@@ -87,7 +87,75 @@ grep -nr "ul$" themes/cactus/source/css
 
 `-nr`: n显示line number行号，r是recursive，可以理解为遍历文件文件夹
 
-### 5. find command
+### 5. grep
+
+**5.1. 匹配单个文件:**
+
+```shell
+$ grep "string" /path/to/filename
+```
+
+**5.2. 匹配多个文件 `-r`:**
+
+```shell
+# Search for a string in your current directory and all other subdirectories
+$ grep -r "hello" *  
+a.txt:hello world
+sub/c.txt:hello, this is...
+sub/b.txt:hello, this is...
+# 如果好奇通配符*代表什么意思, 可以使用echo查看一下展开式, 如下:
+$ echo grep -r "a.txt" *        
+grep -r a.txt a.txt b.txt sub
+# 假如sub是个文件夹
+$ grep -r "hello" sub                 
+sub/c.txt:hello, this is...
+sub/b.txt:hello, this is...
+```
+
+这里想说一下`*`这个符号, 在Regex里它的意义是匹配它前面的那个字符出现0或多次, 如
+
+```shell
+$ printf "colour\ncolor\ncolouur\n" | egrep 'colou*r'                          
+colour
+color
+colouur
+```
+
+但`*`对于shell也有特殊意义, 那就是通配符Wildcard, 看到[一个回答](https://askubuntu.com/a/957504/1690738)总结的很好:
+
+> `*` has a special meaning both as a shell [globbing](http://mywiki.wooledge.org/glob) character ("wildcard") and as a regular expression [metacharacter](http://www.regular-expressions.info/characters.html). You must take both into account, though if you [quote](http://mywiki.wooledge.org/Quotes) your regular expression then you can prevent the shell from treating it specially and ensure that it passes it unchanged to [`grep`](http://manpages.ubuntu.com/manpages/xenial/en/man1/grep.1.html). 
+
+**5.3. 匹配时忽略大小写 `-i`:**
+
+```shell
+grep -i "linux" welcome.txt
+```
+
+**5.4. 输出对应行数 `-n`:**
+
+```shell
+$ grep -n "Linux" welcome.txt
+```
+
+**5.5. 匹配固定的某个单词而不是相似单词 `-w`:**
+
+```shell
+grep -w "opensource" welcome.txt
+```
+
+**5.6. 只显示符合pattern的文件名 `-l`:**
+
+```shell
+$ grep -l "hello" *.txt
+a.txt
+b.txt
+```
+
+参考:
+
+- [Grep Command in Linux/UNIX | DigitalOcean](https://www.digitalocean.com/community/tutorials/grep-command-in-linux-unix)
+
+### 6. find
 
 可以说这个是最可以帮助我们省事的命令了,
 

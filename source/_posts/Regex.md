@@ -7,6 +7,10 @@ tags:
  - Regex
 ---
 
+注意 Bash一般都是用`“ ”`来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用`‘ ’`进行quote. 
+
+>  You should always [quote](https://www.gnu.org/software/bash/manual/bash.html#Quoting) regular expressions for `grep`--and [single quotes](https://www.gnu.org/software/bash/manual/bash.html#Single-Quotes) are usually best.  来源: https://askubuntu.com/a/957504/1690738
+
 ### 1. `?`, `*`, `.`
 
 `?` The question mark indicates zero or one occurrences of the **preceding element**. For example, `colou?r` matches both "color" and "colour". 英文的 "颜色" 一字, 有两种拼法: color 及 colour。 用 regexp 表达, 可以一石两鸟: colou?r 其中的 ? 表示 「前面的字符可有可无」
