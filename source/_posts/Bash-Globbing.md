@@ -9,6 +9,10 @@ tags:
  - Bash
 ---
 
+注意 Bash一般都是用`“ ”`来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用`‘ ’`进行quote. 
+
+>  You should always [quote](https://www.gnu.org/software/bash/manual/bash.html#Quoting) regular expressions for `grep`--and [single quotes](https://www.gnu.org/software/bash/manual/bash.html#Single-Quotes) are usually best.  来源: https://askubuntu.com/a/957504/1690738
+
 ### 具有双重身份的`*`
 
 这里想说一下`*`这个符号, 在Regex里它的意义是匹配它前面的那个字符出现0或多次, 如

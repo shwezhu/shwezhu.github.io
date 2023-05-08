@@ -1,5 +1,5 @@
 ---
-title: Bash Shell脚本学习
+title: Bash Shell基础语法
 date: 2023-05-03 17:43:59
 categories:
  - Linux
@@ -170,25 +170,7 @@ $ a=3; b=5; let c="a+b"; echo $c
 
 - [Difference between let, expr](https://askubuntu.com/a/939299/1690738)
 
-### 7. `""`的困惑
-
-看到[一个很好的总结](https://stackoverflow.com/a/42082956/16317008), 
-
-If we set
-
-```bash
-a=apple      # a simple variable
-arr=(apple)  # an indexed array with a single element
-```
-
-| #    | Expression    | Result      | Comments                               |
-| ---- | ------------- | ----------- | -------------------------------------- |
-| 1    | `"$a"`        | `apple`     | variables are expanded inside `""`     |
-| 2    | `'$a'`        | `$a`        | variables are not expanded inside `''` |
-| 3    | `'${arr[0]}'` | `${arr[0]}` | array access not possible inside `''`  |
-| 4    | `"${arr[0]}"` | `apple`     | array access works inside `""`         |
-
-### 8. 总结
+### 7. 总结
 
 - Bash的变量是没类型的, 或者说都是字符串, 但当字符串都是数字的时候, 可以执行简单的算术运算
 - 赋值如果涉及计算, 使用类似`let c="a+b"`或者`$((...))`算数符号
