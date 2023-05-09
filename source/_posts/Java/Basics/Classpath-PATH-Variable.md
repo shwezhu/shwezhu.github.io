@@ -6,7 +6,6 @@ categories:
  - Basics
 tags:
  - Java
- - Classpath
 ---
 
 # 1. JDK & JRE

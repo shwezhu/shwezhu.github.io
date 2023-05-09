@@ -3,7 +3,7 @@ title: What is Jar Package in Java
 date: 2023-04-25 15:04:48
 categories:
  - Java
- - Basics
+ - Backend
 tags:
  - Java
 ---
