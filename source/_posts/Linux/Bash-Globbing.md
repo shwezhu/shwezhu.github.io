@@ -3,7 +3,6 @@ title: Shell Globbing之具有双重身份的‘*’
 date: 2023-05-07 11:30:20
 categories:
  - Linux
- - Bash
 tags:
  - Linux
  - Bash

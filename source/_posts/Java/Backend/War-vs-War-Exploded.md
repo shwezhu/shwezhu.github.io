@@ -7,7 +7,6 @@ categories:
 tags:
  - Java
  - Tomcat
- - War Files
 ---
 
 在IDEA把webapp deploy到tomcat上的时候会看到以下设置:
