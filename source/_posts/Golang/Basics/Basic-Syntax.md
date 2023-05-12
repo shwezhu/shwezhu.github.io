@@ -33,8 +33,6 @@ func main() {
 
 除了上面的基础的声明, 在声明function的时候还可以声明返回值的名字: 
 
-Go's return values may be named. If so, they are treated as variables defined at the top of the function.
-
 ```go
 // 注意哦, 这里的返回值有名字, 然后他们可以直接在函数体使用了, 如上所说, 
 func split(sum int) (x, y int) {
@@ -48,7 +46,7 @@ func main() {
 }
 ```
 
-A `return` statement without arguments returns the named return values. This is known as a "naked" return.
+Go's return values may be named. If so, they are treated as variables defined at the top of the function. A `return` statement without arguments returns the named return values. This is known as a **"naked" return**.
 
 > **Naked return** statements should be used only in short functions, as with the example shown here. They can harm readability in longer functions.
 
@@ -65,9 +63,7 @@ func main() {
 }
 ```
 
-另外声明变量时, 可以不用指定类型, 
-
-A `var` declaration can include initializers, one per variable.If an initializer is present, the type can be omitted; the variable will take the type of the initializer.
+另外声明变量时, 如果有 initializer便可以省略数据类型:
 
 ```go
 var i, j int = 1, 2
@@ -77,6 +73,8 @@ func main() {
 	fmt.Println(i, j, c, python, java)
 }
 ```
+
+A `var` declaration can include initializers, one per variable. If an initializer is present, the type can be omitted; the variable will take the type of the initializer.
 
 还有个声明符号`:=`需要注意一下, 
 
@@ -229,6 +227,7 @@ const (
 
 - 三个常用关键字`var`, `const`, `func`, 
 - 在函数中可以用`:=`来定义变量, 可以自动推断类型, 类似cpp里的`auto`
+- 声明变量时, 如果有 initializer便也可以省略数据类型
 - go里没有implicit conversion, int->float也不行, 
 - 函数声明可以对返回值命名, 相当于在函数体的顶部定义两个local variables
 - 常用移位操作, `Big = 1 << 100`, `Small = Big >> 99`
