@@ -78,8 +78,6 @@ A `var` declaration can include initializers, one per variable. If an initialize
 
 还有个声明符号`:=`需要注意一下, 
 
-Inside a function, the `:=` short assignment statement can be used in place of a `var` declaration with implicit type. Outside a function, every statement begins with a keyword (`var`, `func`, and so on) and so the `:=` construct is not available. 所以在函数体里, 就用`:=`来定义变量, 在函数外就用`var`比较好, 当然你也可以都用`var`,  你看你看到了`var`来定义变量, 那怎么定义只读呢? 答案是`const`
-
 ```go
 func main() {
 	var i, j int = 1, 2
@@ -89,6 +87,8 @@ func main() {
 	fmt.Println(i, j, k, c, python, java)
 }
 ```
+
+Inside a function, the `:=` short assignment statement can be used in place of a `var` declaration with implicit type. Outside a function, every statement begins with a keyword (`var`, `func`, and so on) and so the `:=` construct is not available. 所以在函数体里, 就用`:=`来定义变量, 在函数外就用`var`比较好, 当然你也可以都用`var`,  你看你看到了`var`来定义变量, 那怎么定义只读呢? 答案是`const`
 
 # 3. 基础数据类型
 
@@ -137,9 +137,7 @@ func main() {
 //Type: complex128 Value: (2+3i)
 ```
 
-Variables declared without an explicit initial value are given their ***zero value***.
-
-The zero value is:
+Variables declared without an explicit initial value are given their ***zero value***. The zero value is:
 
 - `0` for numeric types,
 - `false` for the boolean type, and
@@ -158,9 +156,7 @@ func main() {
 
 # 4. Type Conversions
 
-The expression `T(v)` converts the value `v` to the type `T`.
-
-Some numeric conversions:
+The expression `T(v)` converts the value `v` to the type `T`. Some numeric conversions:
 
 ```go
 var i int = 42
