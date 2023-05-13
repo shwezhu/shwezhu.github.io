@@ -1,5 +1,5 @@
 ---
-title: Golang 基础语法之函数变量声明及基础数据类型
+title: Golang基础语法之函数变量声明及基础数据类型
 date: 2023-05-12 10:00:20
 categories:
  - Golang
@@ -8,7 +8,7 @@ tags:
  - Golang
 ---
 
-# 1. 函数声明与使用
+## 1. 函数声明与使用
 
 先来看看函数相关的东西, 
 
@@ -50,7 +50,7 @@ Go's return values may be named. If so, they are treated as variables defined at
 
 > **Naked return** statements should be used only in short functions, as with the example shown here. They can harm readability in longer functions.
 
-# 2. 变量
+## 2. 变量
 
 The `var` statement declares a list of variables; as in function argument lists, the type is last. **A `var` statement can be at package or function level.**
 
@@ -90,7 +90,7 @@ func main() {
 
 Inside a function, the `:=` short assignment statement can be used in place of a `var` declaration with implicit type. Outside a function, every statement begins with a keyword (`var`, `func`, and so on) and so the `:=` construct is not available. 所以在函数体里, 就用`:=`来定义变量, 在函数外就用`var`比较好, 当然你也可以都用`var`,  你看你看到了`var`来定义变量, 那怎么定义只读呢? 答案是`const`
 
-# 3. 基础数据类型
+## 3. 基础数据类型
 
 ```go
 bool
@@ -154,7 +154,7 @@ func main() {
 //0 0 false ""
 ```
 
-# 4. Type Conversions
+## 4. Type Conversions
 
 The expression `T(v)` converts the value `v` to the type `T`. Some numeric conversions:
 
@@ -219,7 +219,7 @@ const (
 )
 ```
 
-# 5. 总结
+## 5. 总结
 
 - 三个常用关键字`var`, `const`, `func`, 
 - 在函数中可以用`:=`来定义变量, 可以自动推断类型, 类似cpp里的`auto`
