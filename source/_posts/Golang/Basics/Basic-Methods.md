@@ -1,6 +1,6 @@
 ---
 title: Golang基础之设计Methods的原因
-date: 2023-05-13 23:09:40
+date: 2023-05-14 01:10:32
 categories:
  - Golang
  - Basics
