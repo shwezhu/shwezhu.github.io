@@ -1,5 +1,5 @@
 ---
-title: Golang基础之设计Methods背后的道理
+title: Golang基础之设计Methods的原因
 date: 2023-05-13 23:09:40
 categories:
  - Golang
