@@ -8,7 +8,7 @@ tags:
  - C++
 ---
 
-#### **You have already been using classes without knowing it**
+**You have already been using classes without knowing it**
 
 It turns out that the C++ standard library is full of classes that have been created for your benefit. std::string, std::vector, and std::array are all class types! So when you create an object of any of these types, you’re instantiating a class object. And when you call a function using these objects, you’re calling a member function.
 
@@ -30,9 +30,9 @@ int main() {
 
 [13.2 — Classes and class members – Learn C++](https://www.learncpp.com/cpp-tutorial/classes-and-class-members/)
 
-----
+---
 
-#### Member initialization list
+### Member initialization list
 
 A **member initialization list** can also be used to initialize members that are classes: 
 
@@ -146,9 +146,7 @@ Cat: Destructor with parameter is called
 
 > **Member initializer lists allow us to initialize our members rather than assign values to them.** This is the only way to initialize members that require values upon initialization, such as const or reference members, and it can be more performant than assigning values in the body of the constructor. Member initializer lists work both with fundamental types and members that are classes themselves. 
 
-----
-
-#### Initializer list order
+### Initializer list order
 
 Perhaps surprisingly, variables in the initializer list are not initialized in the order that they are specified in the initializer list. Instead, **they are initialized in the order in which they are declared in the class**.
 
@@ -157,9 +155,7 @@ For best results, the following recommendations should be observed:
 1. Don’t initialize member variables in such a way that they are dependent upon other member variables being initialized first (in other words, ensure your member variables will properly initialize even if the initialization ordering is different).
 2. Initialize variables in the initializer list in the same order in which they are declared in your class. This isn’t strictly required so long as the prior recommendation has been followed, but your compiler may give you a warning if you don’t do so and you have all warnings turned on.
 
----
-
-#### Constructor notes
+### Constructor notes
 
 Many new programmers are confused about whether constructors create the objects or not. They do not -- the compiler sets up the memory allocation for the object prior to the constructor call.
 
@@ -170,9 +166,9 @@ Constructors actually serve two purposes.
 
 However, much like it is a best practice to initialize all local variables, it’s also a best practice to initialize all member variables on creation of the object. This can be done via a constructor or via non-static member initialization.
 
-----
+---
 
-#### Use the `default` keyword to tell the compiler to create a default constructor:
+**Use the `default` keyword to tell the compiler to create a default constructor:**
 
 ```c++
 class Date {
