@@ -1,5 +1,5 @@
 ---
-title: Java内存结构探索
+title: Java内存结构
 date: 2023-05-14 21:50:26
 categories:
  - Java
@@ -8,7 +8,7 @@ tags:
  - Java
 ---
 
-
+请先阅读(若链接无效可以搜索站内文章): [Java中变量(Variables)和引用(References)的区别 | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/14/Java/Basics/Variables-vs-References/)
 
 ## 1. JVM Run-Time Data Areas
 
