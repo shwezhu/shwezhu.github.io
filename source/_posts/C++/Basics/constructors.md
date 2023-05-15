@@ -8,7 +8,7 @@ tags:
  - C++
 ---
 
-## Member initialization list
+## 1. Member initialization list
 
 A **member initialization list** can also be used to initialize members that are classes: 
 
@@ -122,7 +122,7 @@ Cat: Destructor with parameter is called
 
 > **Member initializer lists allow us to initialize our members rather than assign values to them.** This is the only way to initialize members that require values upon initialization, such as const or reference members, and it can be more performant than assigning values in the body of the constructor. Member initializer lists work both with fundamental types and members that are classes themselves. 
 
-## Initializer list order
+## 2. Initializer list order
 
 Perhaps surprisingly, variables in the initializer list are not initialized in the order that they are specified in the initializer list. Instead, **they are initialized in the order in which they are declared in the class**.
 
@@ -131,7 +131,7 @@ For best results, the following recommendations should be observed:
 1. Don’t initialize member variables in such a way that they are dependent upon other member variables being initialized first (in other words, ensure your member variables will properly initialize even if the initialization ordering is different).
 2. Initialize variables in the initializer list in the same order in which they are declared in your class. This isn’t strictly required so long as the prior recommendation has been followed, but your compiler may give you a warning if you don’t do so and you have all warnings turned on.
 
-## Constructor notes
+## 3. Constructor notes
 
 Many new programmers are confused about whether constructors create the objects or not. They do not -- the compiler sets up the memory allocation for the object prior to the constructor call.
 

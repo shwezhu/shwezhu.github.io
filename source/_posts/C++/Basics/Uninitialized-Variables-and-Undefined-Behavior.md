@@ -8,7 +8,7 @@ tags:
  - C++
 ---
 
-## Uninitialized variables
+## 1. Uninitialized variables
 
 Uninitialized variables就是你定义它了但是却没有给它赋过值(即通过assignment操作或者initialization操作), 如下`a`就是个uninitialized variable:
 
@@ -69,7 +69,7 @@ int main() {
 
 In this case, the computer will assign some unused memory to *x*. It will then send the value residing in that memory location to *std::cout*, which will print the value (interpreted as an integer). But what value will it print? The answer is “who knows!”, and the answer may (or may not) change every time you run the program. When the author ran this program in Visual Studio, *std::cout* printed the value `7177728` one time, and `5277592` the next. Feel free to compile and run the program yourself (your computer won’t explode).
 
-## Undefined behavior
+## 2. Undefined behavior
 
 Using the value from an uninitialized variable is our first example of undefined behavior. **Undefined behavior** (often abbreviated **UB**) is the result of executing code whose behavior is not well-defined by the C++ language. In this case, the C++ language doesn’t have any rules determining what happens if you use the value of a variable that has not been given a known value. Consequently, if you actually do this, undefined behavior will result.
 

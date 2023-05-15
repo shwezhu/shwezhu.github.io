@@ -36,7 +36,7 @@ int main() {
 }
 ```
 
-## Initialization of Fundamental Types
+## 1. Initialization of Fundamental Types
 
 上面的这个代码也可以当作参考, 比如上面的`int m_numerator {};`, 并不是`int m_numerator;`我们在上一篇文章即[C++变量初始化Assignment & Initialization](https://davidzhu.xyz/2023/05/14/C++/Basics/Basics-Initialization/)中介绍了, 前者是value-initialization, 后者是default initialization, 其实还有一个叫zero-initilization即`int m_numerator {0};`关于什么时候应该用哪个, 我们在上篇文章也有说到, **注意我们此时讨论的是针对fundamental types**即`int`, `char`, `double`这种类型, 而不是自定义类型,  
 
@@ -75,7 +75,7 @@ private:
 
 这段使用value-initialization而不是default initialization或zero-initilization, 就很好理解, 使用default initialization会可能会导致变量未定义(至于为什么可能会导致为定义行为接下面会讨论), 然后一般在构造函数中我们会给予成员变量新的值, 所以采用value initialization.
 
-## Initialization of User-Defined Types
+## 2. Initialization of User-Defined Types
 
 讨论完了fundamental types的初始化, 我们再来讨论自定义类型的初始化, In the above program, we initialized our class object using value-initialization:
 
