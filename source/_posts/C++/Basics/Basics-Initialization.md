@@ -100,7 +100,7 @@ The modern way to initialize objects in C++ is to use a form of initialization t
 ```c++
 int width {5};    // direct list initialization of value 5 into variable width
 int height = {6}; // copy list initialization of value 6 into variable height
-int depth {};       // value initialization (see next section)
+int depth {};     // value initialization (see next section)
 ```
 
 List initialization has an added benefit: it disallows “narrowing conversions”. This means that if you try to brace initialize a variable using a value that the variable can not safely hold, the compiler will produce an error. For example:
