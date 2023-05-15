@@ -85,11 +85,11 @@ Code implementing undefined behavior may exhibit *any* of the following symptoms
 
 Or, your code may actually produce the correct behavior anyway.
 
-One of the most common types of comment we get from readers says, “You said I couldn’t do X, but I did it anyway and my program works! Why?”.
-
-There are two common answers. The most common answer is that your program is actually exhibiting undefined behavior, but that undefined behavior just happens to be producing the result you wanted anyway… for now. Tomorrow (or on another compiler or machine) it might not.
-
-Alternatively, sometimes compiler authors take liberties with the language requirements when those requirements may be more restrictive than needed. For example, the standard may say, “you must do X before Y”, but a compiler author may feel that’s unnecessary, and make Y work even if you don’t do X first. This shouldn’t affect the operation of correctly written programs, but may cause incorrectly written programs to work anyway. So an alternate answer to the above question is that your compiler may simply be not following the standard! It happens. You can avoid much of this by making sure you’ve turned compiler extensions off, as described in lesson [0.10 -- Configuring your compiler: Compiler extensions](https://www.learncpp.com/cpp-tutorial/configuring-your-compiler-compiler-extensions/). 
+> One of the most common types of comment we get from readers says, “You said I couldn’t do X, but I did it anyway and my program works! Why?”.
+>
+> There are two common answers. The most common answer is that your program is actually exhibiting undefined behavior, but that undefined behavior just happens to be producing the result you wanted anyway… for now. Tomorrow (or on another compiler or machine) it might not.
+>
+> Alternatively, sometimes compiler authors take liberties with the language requirements when those requirements may be more restrictive than needed. For example, the standard may say, “you must do X before Y”, but a compiler author may feel that’s unnecessary, and make Y work even if you don’t do X first. This shouldn’t affect the operation of correctly written programs, but may cause incorrectly written programs to work anyway. So an alternate answer to the above question is that your compiler may simply be not following the standard! It happens. You can avoid much of this by making sure you’ve turned compiler extensions off, as described in lesson [0.10 -- Configuring your compiler: Compiler extensions](https://www.learncpp.com/cpp-tutorial/configuring-your-compiler-compiler-extensions/). 
 
 参考:
 
