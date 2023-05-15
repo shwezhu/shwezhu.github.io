@@ -14,7 +14,7 @@ tags:
 
 然后看看define, assignment和initialization的区别,
 
-### 1. Define
+## 1. Define
 
 这是define:
 
@@ -23,7 +23,7 @@ int x;    // define an integer variable named x
 int y, z; // define two integer variables, named y and z
 ```
 
-### 2. Variable Assignment
+## 2. Variable Assignment
 
 然后来看看assignment, after a variable has been defined, you can give it a value (in a separate statement) using the *= operator*. This process is called **copy assignment** (or just **assignment**) for short:
 
@@ -48,7 +48,7 @@ int main() {
 
 When we assign value 7 to variable *width*, the value 5 that was there previously is **overwritten**. Normal variables can only hold one value at a time. 注意这里的overwritten, 在Java里, 对于primitive类型的数据来说赋值的时候也是这种overwritten,  但是Java里Reference的赋值行为只是改变指向, 且所有的对象(不论是否local)都是存在Heap的, 而只有primitive和reference存储在stack, 而c/c++里则不是, 具体Java行为请参考这篇文章(链接失效可在站内搜索文章名): [Java中变量(Variables)和引用(References)的区别 | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/14/Java/Basics/Variables-vs-References/). 哦, 注意在Java里一个字符串常量就是个String对象, 而不是单纯的“值”, 
 
-### 3. Initialization
+## 3. Initialization
 
 接下来看看initialization, 
 
@@ -69,7 +69,7 @@ int e = {8};   // initializer in braces after equals sign (copy list initializat
 int f {};     // initializer is empty braces (value initialization)
 ```
 
-#### 3.1. Default Initialization
+### 3.1. Default Initialization
 
 When no initialization value is provided (such as for variable *a* above), this is called **default initialization**. In most cases, default initialization leaves a variable with an indeterminate value.
 
@@ -79,7 +79,7 @@ int a;         // no initializer (default initialization)
 
 We’ll discuss this case further in lesson ([1.6 -- Uninitialized variables and undefined behavior](https://www.learncpp.com/cpp-tutorial/uninitialized-variables-and-undefined-behavior/)).
 
-#### 3.2. Copy Initialization
+### 3.2. Copy Initialization
 
 When an initializer is provided after an equals sign, this is called **copy initialization**. This form of initialization was inherited from C. 
 
@@ -93,7 +93,7 @@ Copy initialization had fallen out of favor in modern C++ due to being less effi
 
 > Copy initialization is also used whenever values are implicitly copied or converted, such as when passing arguments to a function by value, returning from a function by value, or catching exceptions by value.
 
-#### 3.3. List Initialization
+### 3.3. List Initialization
 
 The modern way to initialize objects in C++ is to use a form of initialization that makes use of curly braces: **list initialization** (also called **uniform initialization** or **brace initialization**). List initialization comes in three forms:
 
@@ -109,7 +109,7 @@ List initialization has an added benefit: it disallows “narrowing conversions�
 int width { 4.5 }; // error: a number with a fractional value can't fit into an int
 ```
 
-#### 3.4. Value Initialization and Zero Initialization
+### 3.4. Value Initialization and Zero Initialization
 
 When a variable is list initialized using empty braces, **value initialization** takes place. In most cases, **value initialization** will initialize the variable to zero (or empty, if that’s more appropriate for a given type). In such cases where zeroing occurs, this is called **zero initialization**.
 
@@ -133,7 +133,7 @@ int x {};      // value initialization
 std::cin >> x; // we're immediately replacing that value
 ```
 
-### 4. **Initializing Multiple Variables**
+## 4. **Initializing Multiple Variables**
 
 In the last section, we noted that it is possible to define multiple variables *of the same type* in a single statement by separating the names with a comma:
 
@@ -153,7 +153,7 @@ int g = { 9 }, h = { 10 }; // copy brace initialization
 int i {}, j {};            // value initialization
 ```
 
-### 5. Summary
+## 5. Summary
 
 - Default initialization, Copy initialization, List Initialization
 - Copy initialization is also used whenever values are implicitly copied or converted, such as when passing arguments to a function by value, returning from a function by value, or catching exceptions by value.
