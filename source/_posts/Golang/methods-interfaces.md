@@ -1,9 +1,8 @@
 ---
-title: Golang基础之设计Methods的原因
+title: Golang Methods与Interface结合实现多态
 date: 2023-05-14 01:10:32
 categories:
  - Golang
- - Basics
 tags:
  - Golang
 ---
@@ -203,25 +202,7 @@ func main() {
 
 ----
 
-最后还要补充一下, 因为go里面也有指针的概念, 所以关于method的*receiver argument*或者是function的参数, 我们就要考虑尽量传递指针, 
-
-There are two reasons to use a pointer receiver. The first is so that the method can modify the value that its receiver points to. The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.  
-
----
-
-另外, 像Java里又个`Object`类, 是所有类的父类, 那关于go里没有类似的东西呢? 当然有, 就是一个空的interface, 与Java的类`Object`比起来, 一个空的interface更像个wildcard, 
-
-The interface type that specifies zero methods is known as the *empty interface*:
-
-```go
-interface{}
-```
-
-An empty interface may hold values of any type. **Empty interfaces are used by code that handles values of unknown type**. For example, `fmt.Print` takes any number of arguments of type `interface{}`.
-
----
-
-这里再举个例子, 比如我们可以通过实现接口`fmt.Stringer`来自定义打印一个自定类型时的行为, 
+这里再举个例子, 比如我们可以通过实现接口`fmt.Stringer`来自定义打印一个自定类型的行为, 
 
 One of the most ubiquitous interfaces is [`Stringer`](https://go.dev/pkg/fmt/#Stringer) defined by the [`fmt`](https://go.dev/pkg/fmt/) package. A `Stringer` is a type that can describe itself as a string. The `fmt` package (and many others) look for this interface to print values.
 
