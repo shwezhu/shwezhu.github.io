@@ -88,17 +88,3 @@ func main() {
 ```
 
 那我们就说`Circle`就是interface `Shape`的underlying type, 当然`Circle`也就是上面所谓的concrete type. 
-
----
-
-另外, 像Java里又个`Object`类, 是所有类的父类, 那关于go里没有类似的东西呢? 当然有, 就是一个空的interface, 与Java的类`Object`比起来, 一个空的interface更像个wildcard, 
-
-The interface type that specifies zero methods is known as the *empty interface*:
-
-```go
-interface{}
-```
-
-An empty interface may hold values of any type. **Empty interfaces are used by code that handles values of unknown type**. For example, `fmt.Print` takes any number of arguments of type `interface{}`.
-
----
