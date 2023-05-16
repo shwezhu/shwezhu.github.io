@@ -3,6 +3,7 @@ title: Golang Methods实践中的一些用法
 date: 2023-05-16 18:03:05
 categories:
  - Golang
+ - Basics
 tags:
  - Golang
 ---

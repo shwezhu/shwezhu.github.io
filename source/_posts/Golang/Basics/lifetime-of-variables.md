@@ -3,6 +3,7 @@ title: 关于Golang函数返回局部变量的地址的问题
 date: 2023-05-15 22:52:03
 categories:
  - Golang
+ - Basics
 tags:
  - Golang
 ---

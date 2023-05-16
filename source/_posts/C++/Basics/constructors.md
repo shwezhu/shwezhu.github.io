@@ -196,10 +196,7 @@ int main() {
 
 > Use the struct keyword for data-only structures. Use the class keyword for objects that have both data and functions.
 
-原文:
-
-[13.2 — Classes and class members – Learn C++](https://www.learncpp.com/cpp-tutorial/classes-and-class-members/)
-
 参考:
 
 - [13.5 — Constructors – Learn C++](https://www.learncpp.com/cpp-tutorial/constructors/)
+- [13.2 — Classes and class members – Learn C++](https://www.learncpp.com/cpp-tutorial/classes-and-class-members/)
