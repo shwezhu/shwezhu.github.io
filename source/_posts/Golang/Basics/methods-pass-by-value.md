@@ -46,7 +46,7 @@ foo2: 0x140000a8018
 
 可以看出, 确实我们在使用struct value `person`调用`foo1`的时候并不是它调用的, 而是它的复制本, 在这注意下Go里面的名字, 即我们把一个struct的instance叫 struct value, 而不是object, Go里面没有object的概念. 
 
-这里还要说一些slice和map, 在[Golang容器之Array & Slice & Map](https://davidzhu.xyz/2023/05/13/Golang/Basics/Basic-Collections/)中我们提到 Slices are like references to arrays. **A slice does not store any data, it just describes a section of an underlying array**. 也举了一些例子, 官方[FAQs Doc](https://go.dev/doc/faq)里有细节介绍, 我们拷贝过来一些查看一下:
+这里还要说一些slice和map, 在[Golang容器之Array & Slice & Map](https://davidzhu.xyz/2023/05/13/Golang/Basics/basic-collections/)中我们提到 Slices are like references to arrays. **A slice does not store any data, it just describes a section of an underlying array**. 也举了一些例子, 官方[FAQs Doc](https://go.dev/doc/faq)里有细节介绍, 我们拷贝过来一些查看一下:
 
 > Map and slice values behave like pointers: they are descriptors that contain pointers to the underlying map or slice data. Copying a map or slice value doesn't copy the data it points to. Copying an **interface value** makes a copy of the thing stored in the interface value. If the interface value holds a struct, copying the interface value makes a copy of the struct. If the interface value holds a pointer, copying the interface value makes a copy of the pointer, but again not the data it points to.
 >
