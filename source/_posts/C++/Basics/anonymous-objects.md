@@ -79,6 +79,69 @@ In this case, the expression `5 + 3` is evaluated to produce the result 8, which
 
 Note how much cleaner this keeps our code -- we don’t have to litter the code with temporary variables that are only used once.
 
+---
+
+这里做个验证, 
+
+```c++
+#pragma once
+
+class Cat {
+private:
+    int age{};
+    std::string name{};
+public:
+    Cat() : age(0){
+        std::cout << "Cat: Default constructor is called" << std::endl;
+    };
+    Cat(int age, std::string name) : age(age), name(std::move(name)) {
+        std::cout << "Cat: Constructor with two parameter is called" << std::endl;
+    }
+    Cat(const Cat& other) {
+        std::cout << "Cat: Copy Constructor called" << std::endl;
+    }
+    ~Cat() {
+        std::cout << "Cat: Destructor is called" << std::endl;
+    }
+};
+```
+
+```c++
+#include "Cat.h"
+
+Cat getCat() {
+    Cat cat{1, "Kitty"};
+    return cat;
+}
+
+int main() {
+    Cat cat = getCat();
+    return 0;
+}
+```
+
+注意编译的时候应该设置取消返回值RVO优化, 不知道RVO可以参考: [Return value optimization (RVO) | sigcpp](https://sigcpp.github.io/2020/06/08/return-value-optimization):
+
+```c++
+$ g++ --std=c++11 main.cpp -o main -fno-elide-constructors
+$ ./main 
+Cat: Constructor with two parameter is called
+Cat: Copy Constructor called
+Cat: Destructor is called
+Cat: Copy Constructor called
+Cat: Destructor is called
+Cat: Destructor is called
+```
+
+如果我们用匿名对象:
+
+```c++
+$ ./main                                                  
+
+```
+
+这里使用匿名对象后输出与原输出一样 等待之后找到原因再来补充~
+
 ----
 
 In C++, anonymous objects are primarily used either to pass or return values without having to create lots of temporary variables to do so. Memory allocated dynamically is also done so anonymously (which is why its address must be assigned to a pointer, otherwise we’d have no way to refer to it).
