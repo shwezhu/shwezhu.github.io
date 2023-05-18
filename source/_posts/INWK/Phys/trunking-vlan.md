@@ -18,6 +18,10 @@ Using the `Switchport mode access` command forces the port to be an access port 
 
 Using the `Switchport mode trunk` command forces the port to be trunk port.
 
+![](d.png)
+
+![](e.png)
+
 ## Terminologies
 
 **DTP, Dynamic Trunking Protocol,** is a trunking protocol that is developed and proprietary to Cisco which is used to automatically negotiate trunks between Cisco switches. Trunk negotiations are managed by DTP only if the port is directly connected to each other.
@@ -39,6 +43,18 @@ DTP允许交换机之间进行协商, 具体协商的什么呢, 看看:
 1. Trunking Protocol: Switches need to determine which trunking protocol to use for establishing the trunk link. Different trunking protocols, such as IEEE 802.1Q or ISL (Inter-Switch Link), may be supported by switches. The negotiation process helps switches identify compatible protocols and agree on a common protocol to use for trunking.
 2. Trunking Mode: Switches need to negotiate the trunking mode, which determines how the trunk link will be formed. There are different modes like desirable, auto, or on. The negotiation process helps switches agree on the appropriate mode to establish the trunk link successfully.
 3. VLAN Configuration: The negotiation process involves comparing the VLAN configurations of both switches and reaching a consensus on which VLANs should be allowed over the trunk link. If there are VLANs that are not present or configured differently on both switches, the negotiation process helps reconcile these differences and establish a common set of VLANs that can traverse the trunk.
+
+---
+
+## IEEE 802.1Q 和 ISL
+
+下面这几张图很好的解释了IEEE 802.1Q 和 ISL协议的作用, 
+
+![](a.png)
+
+![](b.png)
+
+![](c.png)
 
 References:
 
