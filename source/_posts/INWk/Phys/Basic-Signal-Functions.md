@@ -6,7 +6,7 @@ categories:
  - Phys
 ---
 
-### 几个基础函数
+## 几个基础函数 
 
 做傅立叶相关计算题的时候遇到几个奇怪的函数, 
 
@@ -20,7 +20,7 @@ categories:
 
 ![a00](a00.png)
 
-求傅立叶逆变换:
+求傅立叶逆变换: 
 
 ![a01](a01.png)
 
@@ -28,7 +28,7 @@ categories:
 
 ![a03](a03.png)
 
-### rect function
+## rect function
 
 rect函数就是一个简单的分段函数, 只是图像是个矩形我们就这么称呼它而已, 没有其它特殊的东西, 如下图:
 
@@ -46,7 +46,7 @@ rect函数就是一个简单的分段函数, 只是图像是个矩形我们就�
 
 - [Why are Sinc and Square a Fourier Transform Pair?](https://www.youtube.com/watch?v=ZcTWLwXGql0)
 
-### unit step function
+## unit step function
 
 函数定义式:
 
@@ -80,7 +80,7 @@ rect函数就是一个简单的分段函数, 只是图像是个矩形我们就�
 
 - [「珂学原理」No. 28「卷积为谁而生」](https://www.youtube.com/watch?v=gfckPQEmFHA&list=PLYdJCSN8wbG8F08QEPdTdx7FDPH7IGx7P&index=3)
 
-### 为什么cos的傅立叶变换是delta函数
+## 为什么cos的傅立叶变换是delta函数
 
 {% youtube  McITNfo3LKc %}
 

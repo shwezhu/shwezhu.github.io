@@ -7,9 +7,9 @@ tags:
  - Hexo
 ---
 
-# 1. 安装Nginx和git (服务器端)
+## 1. 安装Nginx和git (服务器端)
 
-## 1.1. Installing the Nginx Web Server
+### 1.1. Installing the Nginx Web Server
 
 ```zsh
 sudo yum install nginx
@@ -18,7 +18,7 @@ sudo systemctl enable nginx
 sudo systemctl start nginx
 ```
 
-## 1.2. Adjusting Firewall Rules
+### 1.2. Adjusting Firewall Rules
 
 Run the following command to permanently enable HTTP connections on port 80:
 
@@ -56,7 +56,7 @@ To apply the changes, you’ll need to reload the firewall service:
 sudo firewall-cmd --reload
 ```
 
-# 2. 创建新的用户 `git` (服务端)
+## 2. 创建新的用户 `git` (服务端)
 
 ```zsh
 useradd git
@@ -71,7 +71,7 @@ git ALL=(ALL) ALL
 chmod 400 /etc/sudoers
 ```
 
-## 2.1. 添加公钥认证
+### 2.1. 添加公钥认证
 
 ```
 su git
@@ -86,7 +86,7 @@ chmod 700 ~/.ssh
 vim ~/.ssh/authorized_keys    
 ```
 
-## 2.2. git-hooks 自动部署
+### 2.2. git-hooks 自动部署
 
 注意, 现在服务器有两个用户`git`和`root`, 然后他们只有自己的home目录是独立的, 而根目录下的比如`/etc/`, `/usr`这都是他们两个用户共享的, 看下面的输出你就知道什么意思了, 
 
@@ -132,14 +132,14 @@ sudo chown -R git:git /var/www/hexo
 sudo chmod +x post-update
 ```
 
-# 3. 配置Nginx
+## 3. 配置Nginx
 
 ```zsh
 cd /etc/nginx/conf.d/
 sudo vim blog.conf
 ```
 
-`blog.conf`的内容如下(注意因为我为域名添加个A记录然后`www`作为HOSTNAME, 如果你的域名只有一个A记录然后HOSTNAME还是空, 那你就填二级域名就好了`davidzhu.xyz`这样, 不懂的话请看我的[其它文章](http://www.davidzhu.xyz/2023/04/23/Domain-Name-DNS-Records/)大概在Build Website分类下, 或者你可以直接搜索 )：
+`blog.conf`的内容如下(注意因为我为域名添加个A记录然后`www`作为HOSTNAME, 如果你的域名只有一个A记录然后HOSTNAME还是空, 那你就填二级域名就好了`davidzhu.xyz`这样, 不懂的话请看我的[域名分级和DNS记录之何为www](https://www.davidzhu.xyz/2023/04/23/Build-Website/Domain-Name-DNS-Records/)：
 ```zsh
 server {
     listen    80 default_server;
@@ -157,7 +157,7 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 nginx -s reload
 ```
 
-# 4. 在本地安装Hexo
+## 4. 在本地安装Hexo
 
 Installing Hexo is quite easy and only requires the following beforehand:
 
@@ -165,9 +165,9 @@ Installing Hexo is quite easy and only requires the following beforehand:
 - Git
 - `node -v`查看是否安装了node
 
-## 4.1 Install Node.js
+### 4.1 Install Node.js
 
-### 4.1.1. Install nvm
+#### 4.1.1. Install nvm
 
 ```zsh
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
@@ -181,7 +181,7 @@ source ~/.zshrc
 
 We strongly recommend using a Node version manager like nvm to install `Node.js` and `npm`. We do not recommend using a Node installer, since the Node installation process installs npm in a directory with local permissions and can cause permissions errors when you run npm packages globally.
 
-### 4.1.2. Install node
+#### 4.1.2. Install node
 
 ```
 nvm install node # "node" is an alias for the latest version
@@ -196,7 +196,7 @@ nvm install 16.0.0
 - [install nvm](https://github.com/nvm-sh/nvm)
 - [Downloading and installing Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
-## 4.2. 安装Hexo
+### 4.2. 安装Hexo
 
 安装hexo以及相关插件, 
 
@@ -204,17 +204,17 @@ nvm install 16.0.0
 sudo npm install hexo-cli hexo-server hexo-deployer-git -g
 ```
 
-# 5. 在本地配置hexo
+## 5. 在本地配置hexo
 
-## 5.1. 初始化hexo
+### 5.1. 初始化hexo
 
 ```zsh
 hexo init ~/blog
 ```
 
-## 5.2. 配置hexo
+### 5.2. 配置hexo
 
-### 5.2.1 设置主题和deploy
+#### 5.2.1 设置主题和deploy
 
 ```
 cd ~/blog
@@ -261,7 +261,7 @@ npm install hexo-deployer-git --save
 # 将本地静态页面目录部署到云服务器
 hexo deploy
 ```
-# 6. 修改git用户默认shell环境
+## 6. 修改git用户默认shell环境
 
 ```zsh
 vim /etc/passwd
@@ -269,7 +269,7 @@ vim /etc/passwd
 # 将/bin/bash修改为/usr/bin/git-shell
 ```
 
-# 7. bug总结
+## 7. bug总结
 
 首先, `/Users/shaowen/blog/_config.yml`里的内容, delopy那部分, 不可以填错, master分支是master, 不是main, 也可以是main但是现在没空研究具体怎么操作, 
 
