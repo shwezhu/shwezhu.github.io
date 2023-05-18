@@ -10,7 +10,7 @@ tags:
 
 ## 1. Uninitialized variables
 
-Uninitialized variables就是你定义它了但是却没有给它赋过值(即通过assignment操作或者initialization操作), 如下`a`就是个uninitialized variable:
+Uninitialized variables就是你定义它了但是却没有给它赋过值(即通过assignment操作或者initialization操作), 如下`a`就是个uninitialized variable: 
 
 ```c++
 int a; 
