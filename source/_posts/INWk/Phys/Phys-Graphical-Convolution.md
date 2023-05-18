@@ -1,6 +1,6 @@
 ---
 title: 卷积 Graphical Convolution
-date: 2023-05-05 22:04:06
+date: 2023-05-05 22:04:08
 categories:
  - INWK
  - Phys
