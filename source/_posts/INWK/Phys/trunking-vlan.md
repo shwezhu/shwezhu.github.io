@@ -64,9 +64,101 @@ DTP叫动态中继协议，两个交换机接口间通信接口必须为Trunk(�
 
 封装模式：
 
-- ISL交换机间链路：思科的私有标记方法，只支持1024个VLAN。
+- ISL交换机间链路：思科的私有标记方法，只支持1024个VLAN
 
-- 802.1Q：公有的标记方法，支持4096个VLAN。
+- 802.1Q：公有的标记方法，支持4096个VLAN
+
+----
+
+VTP modes
+
+- Server – default mode. Sends VLAN information to other switches.
+- Client – receives VLAN information and forwards it to other switches.
+- Transparent – forward VTP traffic but do not originate or use it. They can have their own VLANs, not shared with other switches.
+
+----
+
+为对比DTP的mode, 我们看看静态手动怎么设置:
+
+![h](h.png)
+
+![i](i.png)
+
+然后再看看有了DTP是怎么设置的:
+
+![k](k.png)
+
+![l](l.png)
+
+----
+
+一些常用命令:
+
+```
+# No attempt to perform a DNS resolution/lookup:
+no ip domain-lookup
+#-------------------------------------------------#
+# 为interface设置ip和子网掩码
+R1> en
+R1# conf t
+R1(config)# interface fa0/0
+R1(config-if)# ip address 192.168.10.1 255.255.255.0
+R1(config-if)# no shutdown
+R1(config-if)# exit
+#-------------------------------------------------#
+# 为路由器或交换机设置默认网关
+Sx(config)#ip default-gateway 10.1.1.10
+
+#----------设置路由器subinterface的ip以及为其赋予归属vlan---------#
+# 这一步是把物理接口设置无ip 然后no shutdown, 然后才能设置子接口
+R1(config)#interface f0/0 
+R1(config-if)#no ip address 
+R1(config-if)#no shutdown
+# 设置子接口
+R1(config)#interface f0/0.100 # 一般这里的0.100与其归属的vlan id一样
+R1(config-subif)#encapsulation dot1Q 100  # 这是设置该接口属于vlan 100
+R1(config-subif)#ip add 100.1.1.1 255.255.255.0 
+R1(config-if)#no shutdown
+
+R1(config)#interface f0/0.200 
+R1(config-subif)#encapsulation dot1Q 200 
+R1(config-subif)#ip add 200.1.1.1 255.255.255.0 
+R1(config-if)#no shutdown
+#---------------------设置Trunk, 指定VLAN可以通过----------------------------#
+# Configure Sw1 and Sw2 to allow VLAN 100 and VLAN 200 on their trunk interface. 
+S1(config)#interface f0/10
+S1(config-if)#switchport trunk allowed vlan 100,200 
+
+S2(config)#interface f0/10
+S2(config-if)#switchport trunk allowed vlan 100,200
+
+#-----------在交换机为不同Ports设置Vlan-------------------#
+# 首先创建VLAN
+Sx(config)#vlan 100 
+Sx(config-vlan)#name A 
+# 设置指定接口mode并设置归属vlan
+S1(config)#interface f0/1 
+S1(config-if)#switchport mode access 
+S1(config-if)#switchport access vlan 100
+# 也可以批量设置
+S1(config)# interface rang f0/11-12, f0/14-15 
+S1(config-if-range)#....
+
+#--------------------------其它--------------------------#
+# Configure IEEE 802.1Q encapsulation between S1 & S2
+S1(config)#interface f0/10
+S1(config-if)#switchport trunk encapsulation dot1q 
+S1(config-if)#switchport mode trunk
+
+S2(config)#interface f0/10
+S2(config-if)#switchport trunk encapsulation dot1q 
+S2(config-if)#switchport mode trunk
+
+```
+
+
+
+
 
 
 References:
