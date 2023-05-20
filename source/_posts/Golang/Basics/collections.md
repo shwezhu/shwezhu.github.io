@@ -118,6 +118,29 @@ func main() {
 [false false false false][false false false false][false false false false][false false false false]
 ```
 
+根据输出可以看到, 二维数组就是多个并列的数组, 访问第3个数组的第2个元素即`board[2][1]`:
+
+```go
+func main() {
+	board := make([][]bool, height)
+	for i := range board {
+		board[i] = make([]bool, width)
+	}
+	board[2][1] = true
+	for y := range board{
+		for _, v := range board[y] {
+			fmt.Printf("%v ", v)
+		}
+		println()
+	}
+}
+
+false false false 
+false false false 
+false true false 
+false false false 
+```
+
 ## 3. Maps
 
 The `make` function returns a map of the given type, initialized and ready for use.

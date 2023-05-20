@@ -1,5 +1,5 @@
 ---
-title: Golang基础语法之函数变量声明及基础数据类型
+title: Golang函数变量以及基础数据类型
 date: 2023-05-12 10:00:20
 categories:
  - Golang
@@ -49,6 +49,25 @@ func main() {
 Go's return values may be named. If so, they are treated as variables defined at the top of the function. A `return` statement without arguments returns the named return values. This is known as a **"naked" return**.
 
 > **Naked return** statements should be used only in short functions, as with the example shown here. They can harm readability in longer functions.
+
+然后再介绍个高级用法, 就是当函数是匿名函数的时候, 我们可以直接在函数体后加`()`进行调用该函数, 
+
+```go
+// 直接调用是匿名函数 有几种场景会这么使用比如 defer、go
+defer func() {
+		err := keyboard.Close()
+		if err != nil {
+			return
+		}
+	}()
+```
+
+刚开到就很好奇, 最后的那个`()`, 它就是调用匿名函数, 你可以这么理解:
+
+```go
+var b = func a() { ... }
+b() //调用函数
+```
 
 ## 2. 变量
 
@@ -227,6 +246,7 @@ const (
 - go里没有implicit conversion, int->float也不行, 
 - 函数声明可以对返回值命名, 相当于在函数体的顶部定义两个local variables
 - 常用移位操作, `Big = 1 << 100`, `Small = Big >> 99`
+- 调用匿名函数可以直接在函数体后加`()`
 
 拓展阅读, 
 
