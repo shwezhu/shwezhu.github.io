@@ -68,36 +68,54 @@ func main() {
 }
 ```
 
-- len & cap
+- Slice of slices
 
-The length and capacity of a slice `s` can be obtained using the expressions `len(s)` and `cap(s)`.
+二维数组即一个数组里的元素也是数组, 在Go里用make生成:
+
+```go
+var board = make([][]bool, height)
+```
+
+这就是个二维数组了, 只不过这个数组现在看起来还是个“1维”的, 它的元素是空的(本来应该是每个元素都是另一个数组):
 
 ```go
 func main() {
-	s := []int{2, 3, 5, 7, 11, 13}
-	printSlice(s)
+  height : = 4
+	boards := make([][]bool, height)
+	for y, _ := range boards {
+		fmt.Printf("%v", boards[y])
+	}
+}
+// 打印:
+[][][][]
+```
 
-	// Slice the slice to give it zero length.
-	s = s[:0]
-	printSlice(s)
+这时候我们需要为其每个元素再几个数组:
 
-	// Extend its length.
-	s = s[:4]
-	printSlice(s)
+```go
+func main() {
+  hetght := 4
+  width  := 4
+  // 创建二维数组
+	boards := make([][]bool, height)
+	for y, _ := range boards {
+		fmt.Printf("%v", boards[y])
+	}
+  
+  // 指定数组的每个元素是一个长度为width的数组
+	for i, _ := range boards {
+		boards[i] = make([]bool, width)
+	}
 
-	// Drop its first two values.
-	s = s[2:]
-	printSlice(s)
+	fmt.Printf("\n")
+
+	for y, _ := range boards {
+		fmt.Printf("%v", boards[y])
+	}
 }
 
-func printSlice(s []int) {
-	fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
-}
-
-len=6 cap=6 [2 3 5 7 11 13]
-len=0 cap=6 []
-len=4 cap=6 [2 3 5 7]
-len=2 cap=4 [5 7]
+[][][][]
+[false false false false][false false false false][false false false false][false false false false]
 ```
 
 ## 3. Maps
