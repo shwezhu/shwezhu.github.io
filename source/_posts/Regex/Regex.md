@@ -68,8 +68,12 @@ colouur
 $ printf "12345\n12345678\n123\n234567\n1234567" | egrep '\d{7}'        
 12345678
 1234567
-$ printf "12345\n12345678\n123\n234567\n1234567" | egrep '[0-9]{7}'  
-12345678
+```
+
+如果想要查找就是7位的数字呢?
+
+```shell
+$ printf "12345\n12345678\n123\n234567\n1234567" | ggrep -E '\b[0-9]{7}\b' 
 1234567
 ```
 
@@ -98,7 +102,7 @@ aaa
 
 ### 5. `$` & `^`
 
-`^` The pattern `hello$` will match the word "hello" only if it appears at the end of a line.
+`$` The pattern `hello$` will match the word "hello" only if it appears at the end of a line.
 
 ```shell
 $ printf "My name is Jack\nHi Jack, this is John\nYou and Jack will come..\ndfHelloJack" | egrep 'Jack$'
