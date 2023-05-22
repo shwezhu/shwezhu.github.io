@@ -147,7 +147,7 @@ $ go get github.com/eiannone/keyboard
 
 然后项目里就会多出`go.mod`和`mod.sum`文件, 里面保存了第三方库的版本, 有点像Java里的maven`pom.xml`, 或者是npm的`package.json`, 当然肯定是不一样的他们, 最近作业有点多, 还没仔细研究, 另外注意, 如果是在Goland上开发, 可能会报错`$GOPATH/go.mod exists but should not exist`, 这个原因是你项目设置了`Project GOPATH`, 在Goland设置里删除就好了, 以上这些和包相关的问题可以参考这篇文章 [Golang模块module和包package的使用之导入自定义包](https://davidzhu.xyz/2023/05/21/Golang/Basics/go-modules/)
 
-最后是关于线程, goroutine, 这个改天再研究, 
+最后是关于线程, goroutine, 这个改天再研究, 研究了一下怎么关闭线程, 可以参考:[Golang Goroutine和Select](https://davidzhu.xyz/2023/05/21/Golang/Basics/goroutines-select/)
 
 源码如下:
 
@@ -256,32 +256,45 @@ func update() {
 	}
 }
 
-func handleInput() {
+func handleInput(quit chan bool) {
 	for {
-		char, _, err := keyboard.GetSingleKey()
-		if err != nil {
-			panic(err)
-		}
+		select {
+		case <- quit:
+			close(quit)
+			return
+		default:
+      // 每次退出游戏后 需要再按一次按键才能退出就是因为这个GetKey
+      // 你按下q之后, gameOver确实被改成了true
+      // 且在main中执行到了quit <- true
+      // 但handleInput是个无限循环, 在‘quit <- true’和main的无限循环退出之间
+      // handleInput又开始了下一次循环, 即此时quit还没被写入数据, 所以跳到了下面这段代码
+      // keyboard.GetSingleKey(), 所以程序卡住了, 你需要多按一次按键才能游戏结束, 
+      // 还没想到合适的办法解决
+			char, _, err := keyboard.GetSingleKey()
+			if err != nil {
+				panic(err)
+			}
 
-		switch char {
-		case 'w', 'W':
-			if direction != down {
-				direction = up
+			switch char {
+			case 'w', 'W':
+				if direction != down {
+					direction = up
+				}
+			case 'a', 'A':
+				if direction != right {
+					direction = left
+				}
+			case 's', 'S':
+				if direction != up {
+					direction = down
+				}
+			case 'd', 'D':
+				if direction != left {
+					direction = right
+				}
+			case 'q', 'Q':
+				gameOver = true
 			}
-		case 'a', 'A':
-			if direction != right {
-				direction = left
-			}
-		case 's', 'S':
-			if direction != up {
-				direction = down
-			}
-		case 'd', 'D':
-			if direction != left {
-				direction = right
-			}
-		case 'q', 'Q':
-			gameOver = true
 		}
 	}
 }
@@ -306,13 +319,15 @@ func main() {
 		}
 	}()
 
-	go handleInput()
+	quit := make(chan bool)
+	go handleInput(quit)
 
 	for !gameOver {
 		update()
 		time.Sleep(refreshRate)
 	}
-
+	
+	quit <- true
 	fmt.Printf("Game Over!\n")
 }
 ```
