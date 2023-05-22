@@ -155,6 +155,4 @@ func main() {
 }
 ```
 
-原文:
-
-- [Go (Golang) Channels Tutorial with Examples | golangbot.com](https://golangbot.com/channels/)
+原文: [Go (Golang) Channels Tutorial with Examples | golangbot.com](https://golangbot.com/channels/)
