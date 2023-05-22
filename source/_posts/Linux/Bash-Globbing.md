@@ -48,9 +48,7 @@ Bash expands globs which appear **unquoted** in commands, by matching filenames 
 tar xvf *.tar
 # 删除目录下所有以.txt结尾的文件
 rm *.txt
-## 删除类似filecjbd.txt, fileabssc.txt的文件
-$ rm file*.txt
-# 使用quote 就不会展开
+# 使用quote就不会展开
 $ rm "*.txt"
 rm: *.txt: No such file or directory
 ```
@@ -147,6 +145,10 @@ grep -r a.txt a.txt b.txt sub
 - 使用参数时为了避免引起歧义, 应该尽量使用`"My backup folder is: ${HOME}backup"`, 而不是`"I like $fruit"`
 
 - 查看展开式 `echo rm *.txt`
+
+- 双引号里 只有`$`和backquote保留其原有意思, `*`在双引号里并不会展开
+
+- 单引号中, 所有特殊字符都失去其本身意义
 
 参考:
 

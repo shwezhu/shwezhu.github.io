@@ -32,7 +32,7 @@ $ curl ifconfig.me && echo
 $ gcc –c SimpleSection.c
 ```
 
-### 1. wget
+## 1. wget
 
 ```shell
 # 下载文件并保存为指定名字
@@ -43,7 +43,7 @@ wget -qO install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 wget -O- install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 ```
 
-### 2. sh
+## 2. sh
 
 输出`install.sh`的内容不保存, 就像pipe传给sh, 由sh执行输出的东西, 这样很省事, 不用下载了, 再赋予可执行权限, 然后执行再删除, 就很麻烦, 注意这种并不是sh去执行下载的install.sh文件, 而是执行wegt输出的内容(即install.sh的内容), 所以这种并不用赋予可执行权限. 
 
@@ -58,7 +58,7 @@ sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools
 /usr/bin/sh
 ```
 
-### 3. `>` & `>>`
+## 3. `>` & `>>`
 
 ```shell
 echo "Hello, World" > output.txt
@@ -78,7 +78,7 @@ The `>` sign is used for redirecting the output of a program to something other 
 The `>>` **appends** to a file or creates the file if it doesn't exist.
 The `>` **overwrites** the file if it exists or creates it if it doesn't exist.
 
-### 4. 批量查找文件内容
+## 4. 批量查找文件内容
 
 ```shell
 grep -nr "ul$" themes/cactus/source/css
@@ -86,7 +86,7 @@ grep -nr "ul$" themes/cactus/source/css
 
 `-nr`: n显示line number行号，r是recursive，可以理解为遍历文件文件夹
 
-### 5. grep
+## 5. grep
 
 **5.1. 匹配单个文件:**
 
@@ -154,7 +154,7 @@ b.txt
 
 - [Grep Command in Linux/UNIX | DigitalOcean](https://www.digitalocean.com/community/tutorials/grep-command-in-linux-unix)
 
-### 6. find
+## 6. find
 
 可以说这个是最可以帮助我们省事的命令了,
 
@@ -185,15 +185,63 @@ find . -iname foo  # find foo, Foo, FOo, FOO, etc.
 find /opt /usr /var -name foo.scala -type f
 ```
 
-与grep搭配:
+## 7. find & xargs
+
+> **xargs** takes input and runs the commands provided as arguments with the data it reads from the input. 
 
 ```shell
-# find files by text in the file (find + grep)
-find . -type f -name "*.java" -exec grep -l StringBuffer {} \;    # find StringBuffer in all *.java files
-find . -type f -name "*.java" -exec grep -il string {} \;         # ignore case with -i option
-find . -type f -name "*.gz" -exec zgrep 'GET /foo' {} \;          # search for a string in gzip'd files
+xargs <options> <command>
+```
+
+**e.g., Find out all the `.png` images and archive them using `tar`.**
+
+先看下`tar`怎么用的: This command creates a tar file called file.tar.gz which is the Archive of `.c` files:
+
+```shell
+$ tar cvzf file.tar.gz *.c
+```
+
+了解更多关于`tar`: [tar command](https://www.geeksforgeeks.org/tar-command-linux-examples/). 
+
+```shell
+$ find Pictures/tecmint/ -name "*.png" -type f -print0 | xargs -0 tar -cvzf images.tar.gz
+```
+
+还记得在之前的文章中讨论过, bash quote相关的, 比如双引号里`$`会被展开而`*`并不会, 那在这里`*.png`充当的就是bash里面的wildcard而不是正则表达式里的metacharacter, 所以这里有双引号, 应该是find命令本身规定的, 为了防止有的文件名里有空格, 这样就不好确定到底是一个文件还是两个, 所以加个双引号, 然后find收到后, 会再把双引号去掉, 
+
+```
+find -name "*.c" -print
+Print out a list of all the files whose names end in .c
+```
+
+## 8. `find -print0` & `xargs -0`
+
+看find命令的时候总是看到`-print0`这个option, 查查资料学习一下: 
+
+> The `find` command prints results to standard output by default, so the `-print` option is normally not needed, but `-print0` separates the filenames with a 0 (NULL) byte **so that names containing spaces or newlines can be interpreted correctly**.
+
+上面这段话提到的`0(null)` byte是一个escape sequence characters, 即`\0`在c语言里也是代表字符串的结束, 即在每个文件名后面都加个结束符, 为什么要加呢? 如果我们单用`find`指令, 确实没什么必要, 但有时候我们把`find`的输出作为另一个指令比如`xargs`的输入的时候, 就有必要了. 这是因为命令行指令一般把空格whitespace/blankspace作为参数分隔符, 而有一些文件名里含有空格, 所以, 你想`find`输出的一个文件名是`my project`, 那`xargs`就是会把`my project`看成俩参数即`my`, `project`, 这肯定就错了, 
+
+所以在每个文件名的尾巴那加个结束符, 然后再通过`xargs -0`或者`xargs -null`告诉`xargs`不要把whitespace/blankspace作为参数分隔符, 把结束符即`\0`作为分隔符, 这样就可以保证正确运行了, 了解关于escape character可以到:[Escape Sequence Characters](https://davidzhu.xyz/2023/05/22/Linux/Escape-Characters/). 
+
+> `xargs: -null`: Input items are terminated by a **null character** instead  of  by  **whitespace**,  and  the  quotes  and backslash  are not special (every character is taken literally).  Disables the end of file string, which is treated like any other argument.  Useful when input  items  might  contain  white  space, quote marks, or backslashes.  The GNU find `-print0` option produces input suitable for this mode.  `xargs: -null`=`xargs: -0`
+
+> `find -print0`: print  the  full file name on the standard output, **followed by a null character (instead of the newline character** that -print uses).  This allows file names that contain newlines  or  other types  of  white space to be correctly interpreted by programs that process the find output. This option corresponds to the -0 option of xargs.
+
+```shell
+bash-3.2$ find .
+.
+./CCABELD.mdx
+./CCABELD.css
+./vocabulary.css
+
+bash-3.2$ find . -print0
+../CCABELD.mdx./CCABELD.css./vocabulary.css
 ```
 
 参考:
 
 - [Dozens of Unix/Linux 'find' command examples | alvinalexander.com](https://alvinalexander.com/unix/edu/examples/find.shtml)
+- [linux - What's meaning of -print0 in following command - Stack Overflow](https://stackoverflow.com/questions/56221518/whats-meaning-of-print0-in-following-command)
+- [shell - What's the usage of -exec xargs and -print0? - Super User](https://superuser.com/questions/118639/whats-the-usage-of-exec-xargs-and-print0)
+- [explainshell.com - find / -type f -print0 | xargs -0 grep heythere](https://explainshell.com/explain?cmd=find+/+-type+f+-print0+%7C+xargs+-0+grep+heythere)
