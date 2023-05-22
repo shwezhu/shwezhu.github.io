@@ -39,6 +39,8 @@ false true false
 false false false 
 ```
 
+----
+
 **打印蛇🐍身体**
 
 蛇的身体由多个节点组成, 节点是个struct类型, 如下:
@@ -86,6 +88,8 @@ func update() {
 }
 ```
 
+---
+
 **让蛇动起来**
 
 让蛇动起来的方法有多种, 在这里比如每次reset地图`board`的数据为false, 然后再根据蛇的身体`snake`更新`board`, 但这样效率稍低, 因为每次我们都需要遍历board去reset, 仔细想一下蛇每次移动, 其实就是最前面的头往前移动一格, 尾巴往前移动一格, 中间的身体**看着**是不变的, 所以我们在实现的时候也是有三步:
@@ -123,6 +127,8 @@ if length > 1 {
 
 即这样只遍历了`snake`(一维数组)来实现更新地图, 具体吃食物增加节点就不介绍了, 逻辑很容易, 
 
+----
+
 **总结**
 
 这次的小应用, 熟悉了slice的用法, 也熟悉了很多语法比如`:=`和`var`, 尤其是遍历slice以及loop的写法, 比如无限循环可写成:
@@ -139,7 +145,7 @@ for {
 $ go get github.com/eiannone/keyboard
 ```
 
-然后项目里就会多出`go.mod`和`mod.sum`文件, 里面保存了第三方库的版本, 有点像Java里的maven`pom.xml`, 或者是npm的`package.json`, 当然肯定是不一样的他们, 最近作业有点多, 还没仔细研究, 另外注意, 如果是在Goland上开发, 可能会报错`$GOPATH/go.mod exists but should not exist`, 这个原因是你项目设置了`Project GOPATH`, 在Goland设置里删除就好了, 
+然后项目里就会多出`go.mod`和`mod.sum`文件, 里面保存了第三方库的版本, 有点像Java里的maven`pom.xml`, 或者是npm的`package.json`, 当然肯定是不一样的他们, 最近作业有点多, 还没仔细研究, 另外注意, 如果是在Goland上开发, 可能会报错`$GOPATH/go.mod exists but should not exist`, 这个原因是你项目设置了`Project GOPATH`, 在Goland设置里删除就好了, 以上这些和包相关的问题可以参考这篇文章 [Golang模块module和包package的使用之导入自定义包](https://davidzhu.xyz/2023/05/21/Golang/Basics/go-modules/)
 
 最后是关于线程, goroutine, 这个改天再研究, 
 

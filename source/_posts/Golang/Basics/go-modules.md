@@ -255,7 +255,15 @@ $ go install my_module_name
 package my_project is not in GOROOT (/Users/David/sdk/go1.20.4/src/my_project)
 ```
 
- ## 5. 总结
+## 5. Goland
+
+另外Go Modules新的依赖管理方法, 之前用的都是GOPATH, 他们两个不能同时存在, Goland默认设置了GOPATH, 如果你使用了Go Modules即`go mod init xxx`, 那你需要删除Goland上面的Project GOPATH, 如下:
+
+![a](a.png)
+
+> Go 1.11 introduces a new dependency mangement system, *Go modules* (That’s why Go uses the environment variable name `GO111MODULE`: indicating to use Go 1.11 module). Google introduced Go module as *an alternative to GOPATH for versioning and package distribution*. At first I did not understand what it means specifically. 
+
+ ## 6. 总结
 
 - `go install`, `go run` 要区分开, 平时常用的是`go run`
 - `go install`运行前需要执行`go mod init my_project`
