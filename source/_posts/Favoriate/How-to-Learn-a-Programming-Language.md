@@ -15,7 +15,7 @@ tags:
 
 上面我们提到了几个概念, dynamically checking和statically checking, 以及compiled language和interpreted language, 这些是什么呢?
 
-翻了一下以前记的笔记, 找不到出处了, 实在抱歉, 
+翻了一下以前记的笔记, 找不到出处了, 
 
 > Programming languages are for humans to read and understand. The program (source code) must be translated into machine language so that the computer can execute the program. **The time when this translation occurs** depends on whether the programming language is a compiled language or an interpreted language. Instead of translating the source code into machine language **before the executable file is created**, an interpreter converts the source code into machine language **at the same time** the program runs. So you can't say a language doesn’t have compilation step, because any language needs to be translated to machine code.  
 
