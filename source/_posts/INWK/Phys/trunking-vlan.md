@@ -94,10 +94,33 @@ VTP modes
 
 一些常用命令:
 
-```
+```shell
+#---------------------查看命令-----------------------#
+show ip interface brief
+show interfaces trunk
+show interfaces f0/10 switchport
+sh ip route
+show vtp status
+show vtp password
+
 # No attempt to perform a DNS resolution/lookup:
 no ip domain-lookup
-#-------------------------------------------------#
+
+#---------------------密码相关-----------------------#
+# 配置enable密码
+S1(config)#enable password inwk
+# 远程配置密码
+R1(config)# line con 0
+R1(config-line)# password abc
+R1(config-line)# login
+
+# 配置ssh密码
+R1(config)#line vty 0 4
+R1(config-line)# password inwk // 这个密码是当用telnet/ssh远程连接成功之后, 第一次需要输入的密码
+R1(config-line)#transport input ssh/telnet
+R1(config-line)# login
+
+#-----------------------设置IP--------------------------#
 # 为interface设置ip和子网掩码
 R1> en
 R1# conf t
@@ -105,15 +128,26 @@ R1(config)# interface fa0/0
 R1(config-if)# ip address 192.168.10.1 255.255.255.0
 R1(config-if)# no shutdown
 R1(config-if)# exit
-#-------------------------------------------------#
+
+# 为Vlan设置ip, 注意子网掩码24位的时候的数值
+要求: 10.1.1.1/24
+S1(config)#interface vlan 1
+S1(config-if)#ip address 10.1.1.1 255.255.255.0 
+S1(config-if)#no shutdown
+
 # 为路由器或交换机设置默认网关
 Sx(config)#ip default-gateway 10.1.1.10
 
-#----------设置路由器subinterface的ip以及为其赋予归属vlan---------#
+#----------跨vlan交换信息---------#
+#As we know, there should be at least one L3 device; that is, a router or L3-capable switch. 
+# So we are using R1 to perform inter-VLAN routing for VLAN 100 and VLAN 200. 
+# Make sure that the switchport connected to R1 is configured as static trunk because a router does not support DTP. 
+# Additionally, we must configure sub-interfaces on R1 on the basis of which VLANs we are trying to route to each other.
 # 这一步是把物理接口设置无ip 然后no shutdown, 然后才能设置子接口
 R1(config)#interface f0/0 
 R1(config-if)#no ip address 
 R1(config-if)#no shutdown
+
 # 设置子接口
 R1(config)#interface f0/0.100 # 一般这里的0.100与其归属的vlan id一样
 R1(config-subif)#encapsulation dot1Q 100  # 这是设置该接口属于vlan 100
@@ -124,13 +158,10 @@ R1(config)#interface f0/0.200
 R1(config-subif)#encapsulation dot1Q 200 
 R1(config-subif)#ip add 200.1.1.1 255.255.255.0 
 R1(config-if)#no shutdown
-#---------------------设置Trunk, 指定VLAN可以通过----------------------------#
-# Configure Sw1 and Sw2 to allow VLAN 100 and VLAN 200 on their trunk interface. 
-S1(config)#interface f0/10
-S1(config-if)#switchport trunk allowed vlan 100,200 
 
-S2(config)#interface f0/10
-S2(config-if)#switchport trunk allowed vlan 100,200
+# Because we are using routers as the hosts, we must disable "ip routing" first and set the default gateway accordingly.
+R2(config)#no ip routing
+R2(config)#ip default-gateway 100.1.1.1
 
 #-----------在交换机为不同Ports设置Vlan-------------------#
 # 首先创建VLAN
@@ -144,7 +175,8 @@ S1(config-if)#switchport access vlan 100
 S1(config)# interface rang f0/11-12, f0/14-15 
 S1(config-if-range)#....
 
-#--------------------------其它--------------------------#
+#--------------------------设置静态Trunk--------------------------#
+# 配置两个交换机接口链路为trunk且encapsulation为802.1Q
 # Configure IEEE 802.1Q encapsulation between S1 & S2
 S1(config)#interface f0/10
 S1(config-if)#switchport trunk encapsulation dot1q 
@@ -154,11 +186,57 @@ S2(config)#interface f0/10
 S2(config-if)#switchport trunk encapsulation dot1q 
 S2(config-if)#switchport mode trunk
 
+# 指定VLAN可以通过某个Trunk
+# Configure Sw1 and Sw2 to allow VLAN 100 and VLAN 200 on their trunk interface:
+S1(config)#interface f0/10
+S1(config-if)#switchport trunk allowed vlan 100,200 
+
+S2(config)#interface f0/10
+S2(config-if)#switchport trunk allowed vlan 100,200
+
+#--------------------------动态Trunk DTP--------------------------#
+# 注意配置顺序其实和上面是相同的 只是 这个mode不是简单的trunk而是dynamic desirable 
+# 另外的三个mode在上面有介绍, dynamic auto等
+# Configure S1 with DTP dynamic desirable mode for both trunk ports.
+S1(config)#interface f0/10
+S1(config-if)#switchport mode dynamic desirable 
+S1(config-if)#switchport trunk encapsulation dot1q 
+S1(config)#interface f0/13
+S1(config-if)#switchport mode dynamic desirable 
+S1(config-if)#switchport trunk encapsulation dot1q
+# Configure S2 with DTP dynamic auto mode on its trunk port:
+S2(config)#interface f0/10
+S2(config-if)#switchport mode dynamic auto 
+S2(config-if)#switchport trunk encapsulation dot1q
+
+#--------------------------设置VTP--------------------------#
+1. Create VLAN 300 on Sw2. 
+S2(config)#vlan 300
+
+2. Configure Sw2 as the VTP server. 
+S2(config)#vtp mode server
+
+3. Configure VTP parameters as follows on all switches (S1, S2 and S3): 
+VTP version: 2
+VTP domain: inwk
+VTP password: inwk 
+Sx(config)#vtp version 2 
+Sx(config)#vtp domain inwk 
+Sx(config)#vtp password inwk
+
+4. Configure Sw1 in VTP transparent mode and create VLAN 300. 
+S1(config)#vtp mode transparent
+S1(config)#vlan 300
+
+5. Configure Sw3 in VTP client mode.
+S3(config)#vtp mode client
+
+6. Assign VLAN 300 on the ports connected to R3 and R4. 
+S2(config)#interface f0/4
+S2(config-if)#switchport access vlan 300 
+S3(config)#interface f0/3
+S3(config-if)#switchport access vlan 300
 ```
-
-
-
-
 
 
 References:
