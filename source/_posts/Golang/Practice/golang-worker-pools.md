@@ -1,5 +1,5 @@
 ---
-title: 用Go实现Worker Pool
+title: Go并发学习之实现一个Worker Pool
 date: 2023-05-25 14:13:13
 categories:
  - Golang

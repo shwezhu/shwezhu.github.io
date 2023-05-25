@@ -210,7 +210,7 @@ $ find Pictures/tecmint/ -name "*.png" -type f -print0 | xargs -0 tar -cvzf imag
 还记得在之前的文章中讨论过, bash quote相关的, 比如双引号里`$`会被展开而`*`并不会, 那在这里`*.png`充当的就是bash里面的wildcard而不是正则表达式里的metacharacter, 所以这里有双引号, 应该是find命令本身规定的, 为了防止有的文件名里有空格, 这样就不好确定到底是一个文件还是两个, 所以加个双引号, 然后find收到后, 会再把双引号去掉, 
 
 ```
-find -name "*.c" -print
+find . -name "*.c" -print
 Print out a list of all the files whose names end in .c
 ```
 
