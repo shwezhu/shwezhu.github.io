@@ -1,5 +1,5 @@
 ---
-title: Golang Goroutine和Channel
+title: Golang并发学习之Goroutine和Channel
 date: 2023-05-21 20:06:10
 categories:
  - Golang

@@ -181,10 +181,12 @@ S1(config-if-range)#....
 S1(config)#interface f0/10
 S1(config-if)#switchport trunk encapsulation dot1q 
 S1(config-if)#switchport mode trunk
+S1(config-if-range)#no shutdown
 
-S2(config)#interface f0/10
+S2(config)#interface range f0/10-12, f0/16-18
 S2(config-if)#switchport trunk encapsulation dot1q 
 S2(config-if)#switchport mode trunk
+S2(config-if-range)#no shutdown
 
 # 指定VLAN可以通过某个Trunk
 # Configure Sw1 and Sw2 to allow VLAN 100 and VLAN 200 on their trunk interface:
@@ -236,6 +238,12 @@ S2(config)#interface f0/4
 S2(config-if)#switchport access vlan 300 
 S3(config)#interface f0/3
 S3(config-if)#switchport access vlan 300
+
+#--------------------------配置spanning tree--------------------------#
+show spanning-tree vlan 3
+# Configure S1 as root bridge, S2 as backup root bridge for VLAN 
+S1(config)#spanning-tree vlan 1 root primary 
+S2(config)#spanning-tree vlan 1 root secondary
 ```
 
 
