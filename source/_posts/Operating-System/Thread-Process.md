@@ -1,5 +1,5 @@
 ---
-title: 并发学习之线程进程及Thread Stack
+title: 并发学习之线程进程及Hyper-Threading
 date: 2023-05-27 18:05:16
 categories:
  - OS
@@ -8,7 +8,7 @@ tags:
  - Concurrency
 ---
 
-相关文章: 
+相关文章: [并发学习之 Context Switching | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/27/Operating-System/Context-Switching/)
 
 ## 1. Thread
 
@@ -30,13 +30,21 @@ A program is a set of instructions. It is stored on a disk of a computer and hen
 
 A CPU core is a physical processing unit in a computer’s central processing unit (CPU) that can execute instructions independently. A thread, on the other hand, is a unit of execution within a process, which represents a sequence of instructions that can be executed independently by a CPU.
 
-In general, the number of threads that can be executed simultaneously on a CPU is limited by the number of cores available in the CPU. Each core can execute one thread at a time, so having multiple cores allows for multiple threads to be executed in parallel, potentially leading to improved performance.
+In general, the number of threads that can be executed simultaneously on a CPU is limited by the number of cores available in the CPU. Each core can execute one thread at a time, so having multiple cores allows for multiple threads to be executed in parallel, potentially leading to improved performance. 
 
 However, the relationship between threads and CPU cores is more complex than just one-to-one mapping.
 
 In modern computer systems, threads can be scheduled dynamically on different cores by the operating system, and a single core can switch between multiple threads in order to maximize the utilization of available resources and CPU cores.
 
-Additionally, some systems may also use techniques such as hyper-threading, where a single physical core is treated as multiple virtual cores, potentially allowing for even more threads to be executed simultaneously.
+Additionally, some systems may also use techniques such as **hyper-threading**, where a single physical core is treated as multiple virtual cores, potentially allowing for even more threads to be executed simultaneously.
+
+## 4. Hyper-Threading
+
+
+
+
+
+从这也可以看出本科那些基础课程的重要性, 计算机组成原理比如讲了CPU的架构, 寄存器, 总线, 内存结构, 如何读取命令, 而这都为我们之后学习操作系统理解系统管理资源如内存, 硬盘提供了基础, 更是为以后并发编程, 比如现在我们学习线程, 进程都是操作系统里的, 然后到了hyper-threading如果你不清楚CPU怎么处理指令, 等待总线发送数据, 那操作系统之后的中断什么你怎么理解的好呢? 现在Golang很火, 它很擅长并发, 里面的协程(Goroutine)很轻量, 可是为啥轻量呢? 面试的时候可能会问这种问题吧? 而这些涉及到了上下文切换, 即切换线程的cost问题, 不学好上面的你也就无法理解为啥goroutine那么牛, 当然这只是其中的一个例子, 仅仅是并发问题, 你看涉及到了多少东西和课程, 剩下的比如计网, 编译原理, 都很重要学了这些东西不会起到立竿见影的效果, 但是他们将会是未来支撑你代码万丈高楼最坚实的地基, 
 
 参考:
 

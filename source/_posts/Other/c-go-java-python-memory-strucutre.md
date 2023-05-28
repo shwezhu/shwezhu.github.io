@@ -55,11 +55,16 @@ C 与 Java对待heap上内容的处理方式可以说是完全不同, 前者必�
 
 相对C, Java不仅有 GC 而且引入了 reference 的概念, 有人可能会说 C 里不也有引用吗那个`&`, 不好意思那是C++的, 
 
-Java里可谓是万物皆对象, 且对象与变量分离, 即变量只是指向对象的一个引用reference, 变量存储在stack上, 所有对象存在heap上, 比如`String str = "hello world"`中`"hello worl":`就是个对象, 而变量`str`只是个引用, 引用在stack上, 这就与C类似了即创建该引用的函数返回时stack上的该函数的stack frame被pop出去, 即变量`str`被自动清理, 但对象`"hello world"`呢? 对象在heap上, 函数返回, 函数的stack frame被清理但heap上的对象还没有被清理, 这个时候就是GC出马了, GC会看`"hello world"`是不是reachable, 即看看它的引用计数是否为零, In fact the rules for garbage collecting objects in the string pool are the same as for other `String` objects: indeed all objects. They will be garbage collected if the GC finds them to be unreachable. 当然涉及到GC对Java heap的管理很复杂, 有不同的算法, 比如G1把heap分成Young Generation, Old Generation 两部分, 不是几句话可以说清楚, 感兴趣可以参考: [Choosing a GC Algorithm in Java](https://www.baeldung.com/java-choosing-gc-algorithm). 
+Java里可谓是万物皆对象, 且对象与变量分离, 即变量只是指向对象的一个引用reference, 变量存储在stack上, 所有对象存在heap上, 比如`String str = "hello world"`中`"hello worl":`就是个对象, 而变量`str`只是个引用, 引用在stack上, 这就与C类似了即创建该引用的函数返回时stack上的该函数的stack frame被pop出去, 即变量`str`被自动清理, 但对象`"hello world"`呢? 对象在heap上, 函数返回, 函数的stack frame被清理但heap上的对象还没有被清理, 这个时候就是GC出马了, 常见GC一种方法是看对象的引用计数是否为零, 但是这种又容易引起cyclic references的问题, 所以像JVM, C#, Ruby, JavaScript, Golang采用的是另一种GC即Mark & Sweep GC, 但CPython的GC采用的主要是reference counting方法, 由于内容太多, 具体CPython采用此方法的原因以及如何解决circular reference的方法请参考官方文档: [Garbage Collector Design](https://devguide.python.org/internals/garbage-collector/)
 
->  注意: Java里的变量分为两种, primitive 和 reference, 具体参考 [Java内存结构](https://davidzhu.xyz/2023/05/14/Java/Basics/Memory-Structure/)
+>  Java里的变量分为两种: primitive 和 reference, 具体参考 [Java内存结构](https://davidzhu.xyz/2023/05/14/Java/Basics/Memory-Structure/)
+>
+>  两种GC: Mark & Sweep GC 和 Reference counting GC
+>
+>  JVM对于对象的处理, 以String对象为例: In fact the rules for garbage collecting objects in the string pool are the same as for other String objects: indeed all objects. They will be garbage collected if the GC finds them to be unreachable. 
+>
 
-对于 stack, Java 和 C 其实是几乎一样的(这里用几乎是为了严谨, 我也不知道有啥不同, 也懒得查了), 都是自动清理, 局部变量存在的地方, 至于 thread stack 这里不讨论, 也暂时没研究JVM的线程管理, 另外还有相关话题即pass by value还是pass by reference的问题, 这里我们留在后面与Python和Golang一起讨论, 接下来看看 Golang, 
+对于 stack, Java 和 C 其实是几乎一样的, 他们都有stack frame的概念, 即每个函数单独一个frame, 只在头部进行push或者pop, 这也是stack比heap快的原因, 不需要任何的look up, 除此之外因为stack的内存是连续的, 我们每次都是push到其头部, 就像摞箱子, 所以在编译期就需要知道其size, 不然怎么知道下一块放到内存的哪个地址呢? 至于 thread stack 这里不讨论, 也暂时没研究JVM的线程管理, 另外还有相关话题即pass by value还是pass by reference的问题, 这里我们留在后面与Python和Golang一起讨论, 接下来看看 Golang, 
 
 ## 2. Golang
 
@@ -280,3 +285,5 @@ Final address of n: 140562586057840
 - [methods - Is Java "pass-by-reference" or "pass-by-value"? - Stack Overflow](https://stackoverflow.com/a/73021/16317008)
 - [Stack vs heap allocation of structs in Go, and how they relate to garbage collection - Stack Overflow](https://stackoverflow.com/questions/10866195/stack-vs-heap-allocation-of-structs-in-go-and-how-they-relate-to-garbage-collec)
 - [python - How do I pass a variable by reference? - Stack Overflow](https://stackoverflow.com/questions/986006/how-do-i-pass-a-variable-by-reference)
+- [Garbage Collector Design](https://devguide.python.org/internals/garbage-collector/)
+- [🚀 Demystifying memory management in modern programming languages | Technorage](https://deepu.tech/memory-management-in-programming/)
