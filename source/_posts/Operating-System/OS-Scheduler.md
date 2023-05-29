@@ -1,5 +1,5 @@
 ---
-title: 文章阅读 - 并发学习之OS Scheduler再次理解Context Switch
+title: 文章阅读 - OS Scheduler 再次理解Context Switch
 date: 2023-05-28 17:48:19
 categories:
  - OS
