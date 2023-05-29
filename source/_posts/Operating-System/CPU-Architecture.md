@@ -1,5 +1,5 @@
 ---
-title: 多核 CPU 之 Hyper Threading
+title: 多核CPU和Hyper Threading
 date: 2023-05-28 15:47:18
 categories:
  - OS

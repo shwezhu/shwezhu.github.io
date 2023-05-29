@@ -81,4 +81,5 @@ However, certain special instructions require [system calls](https://en.wikipedi
 - [Thread control block](https://en.wikipedia.org/wiki/Thread_control_block)
 - [Program counter](https://en.wikipedia.org/wiki/Program_counter)
 - [Context Switch in Operating System - GeeksforGeeks](https://www.geeksforgeeks.org/context-switch-in-operating-system/)
+- [Scheduling In Go : Part I - OS Scheduler](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part1.html)
 
