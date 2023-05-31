@@ -74,7 +74,7 @@ VTP modes
 
 - Server – default mode. Sends VLAN information to other switches.
 - Client – receives VLAN information and forwards it to other switches.
-- Transparent – forward VTP traffic but do not originate or use it. They can have their own VLANs, not shared with other switches.
+- Transparent – forward VTP traffic but do not originate or use it. They can have their own VLANs, not shared with other switches. 
 
 ----
 
@@ -96,15 +96,53 @@ VTP modes
 
 ```shell
 #---------------------查看命令-----------------------#
-show ip interface brief
+show vlan brief
 show interfaces trunk
 show interfaces f0/10 switchport
+show ip interface brief
 sh ip route
+
+# VTP相关
 show vtp status
 show vtp password
+# spanning tree 相关
+show spanning-tree detail 
+show spanning-tree vlan <vlan_value>
 
-# No attempt to perform a DNS resolution/lookup:
+# No attempt to perform a DNS resolution/lookup
 no ip domain-lookup
+
+# 删除Vlan
+no vlan 2
+
+#--------------------------配置spanning tree--------------------------#
+# 查看相关信息
+S1(config)#show spanning-tree vlan 3
+
+# Configure S1 as root bridge, S2 as backup root bridge for VLAN 
+S1(config)#spanning-tree vlan 1 root primary 
+S2(config)#spanning-tree vlan 1 root secondary
+
+# Change the path of traffic for VLAN 1 from S2 to S1 through S3 
+S2(config)#interface rang f0/10-12
+S2(config-if-range)#spanning-tree vlan 1 cost 40
+
+# Change the path of traffic for VLAN 1 from S2 to S1 through S3 
+# 即让 S1 和 S2之间的接口都blocked, 这样从S2发出的package才能过S3到S1, 如下图
+# 另外注意, 一个VLAN有一个独立的spanning tree, 即把多个VLAN看成相对spanning tree互不干涉的很多层
+S2(config)#interface rang f0/10-12
+S2(config-if-range)#spanning-tree vlan 1 cost 40
+```
+
+![a](a-5409600.png)
+
+![m](m.png)
+
+```shell
+# 接上...
+# Change the root port on S2 for VLAN 1. (root port from F0/16 to F0/18) 
+S3(config)#int f0/18
+S3(config-if)#spanning-tree vlan 1 port-priority 64
 
 #---------------------密码相关-----------------------#
 # 配置enable密码
@@ -139,7 +177,7 @@ S1(config-if)#no shutdown
 Sx(config)#ip default-gateway 10.1.1.10
 
 #----------跨vlan交换信息---------#
-#As we know, there should be at least one L3 device; that is, a router or L3-capable switch. 
+# As we know, there should be at least one L3 device; that is, a router or L3-capable switch. 
 # So we are using R1 to perform inter-VLAN routing for VLAN 100 and VLAN 200. 
 # Make sure that the switchport connected to R1 is configured as static trunk because a router does not support DTP. 
 # Additionally, we must configure sub-interfaces on R1 on the basis of which VLANs we are trying to route to each other.
@@ -238,14 +276,7 @@ S2(config)#interface f0/4
 S2(config-if)#switchport access vlan 300 
 S3(config)#interface f0/3
 S3(config-if)#switchport access vlan 300
-
-#--------------------------配置spanning tree--------------------------#
-show spanning-tree vlan 3
-# Configure S1 as root bridge, S2 as backup root bridge for VLAN 
-S1(config)#spanning-tree vlan 1 root primary 
-S2(config)#spanning-tree vlan 1 root secondary
 ```
-
 
 References:
 

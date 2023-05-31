@@ -53,7 +53,7 @@ Date:   Thu May 4 17:14:59 2023 -0300
 
 ### The Three Trees
 
-Git[文档](https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified)里的这个概念很好, 其实很多时候都会涉及到这三个常用的Tree, 
+Git[文档](https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified)里的这个概念很好, 很多时候都会涉及到这三个常用的Tree, 
 
 Git as a system manages and manipulates three trees in its normal operation:
 
@@ -66,6 +66,8 @@ Git as a system manages and manipulates three trees in its normal operation:
 上面的Index的role是`Proposed next commit snapshot`, 然后HEAD是`Last commit snapshot, next parent`, 好像是一个在未来, 一个在从前, 说HEAD在从前是正确的, 上面我们已经讨论, HEAD就是上一次提交的snapshot, 但是Index其实说它是现在更贴切, 因为Index就是Staging Area, 即我们staged文件都在这个地方, 准备使用commit提交, 即所谓的Proposed next commit snapshot. 
 
 The Git index is a critical data structure in Git. It serves as the “staging area” between the files you have on your filesystem and your commit history. When you run `git add`, the files from your working directory are hashed and stored as objects in the index, leading them to be “staged changes”. When you run `git commit`, the staged changes as stored in the index are used to create that new commit.
+
+HEAD在上面已经解释, 至于 working directory 已经在: [Git基础文件状态之版本穿梭 | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/05/Git/Git-Basics/) 提到,  在这不再赘述, 
 
 ### The Workflow
 
