@@ -29,9 +29,9 @@ func (e *errorString) Error() string {
 }
 ```
 
-就这些东西, 里面有个函数`New()`用来返回一个`errorString`value的引用, 然后就是一个自定义类型`errorString`和它的一个method`Error()`, 当然这个`Error()`就是Go内置的`error`接口的函数, 所以`errorString`属于`error`, 我们看到一个函数应该注意它有没有receiver, 如果有里面的type就是这个函数的归属类, 没有, 那么这个函数就属于所在的包, 
+一个函数 `New()`用来返回 `errorString` value 的引用, 一个自定义类型 `errorString` 和它的一个 method `Error()`, 当然这个 `Error()`就是Go内置的 `error` 接口的函数, 所以 `errorString` 属于 `error`, 我们看到一个函数应该注意它有没有 receiver, 如果有里面的 type就是这个函数的归属类, 没有, 那么这个函数就属于所在的包, 
 
-errors包的内容很简单, 主要就是用于我们不想定义自己的错误类型了那就用它, errors里也说了, "errorString is a trivial implementation of error." 最常见的就是下面这样使用:
+errors 包的内容很简单, 主要就是用于我们不想定义自己的错误类型了那就用它, errors 里也说了, "errorString is a trivial implementation of error." 最常见的就是下面这样使用: 
 
 ```go
 func Sqrt(f float64) (float64, error) {
@@ -47,9 +47,9 @@ func main() {
 }
 ```
 
-那如果我们不想使用`errorString`呢? 那我们就要自定义一个type然后实现接口`error`, 刚开始学习, 我们也不知道是什么标准, 不妨借鉴一下Go官方是怎么处理错误的, 
+那如果我们不想使用 `errorString` 呢? 那我们就要自定义一个 type 然后实现接口 `error`, 刚开始学习, 我们也不知道是什么标准, 不妨借鉴一下 Go 官方是怎么处理错误的, 
 
-下面TCP连接相关的代码:
+下面 TCP 连接相关的代码:
 
 ```go
 func main() {
@@ -113,6 +113,9 @@ type SyscallError struct {
 	Err     error
 }
 
+// 这里也可以发现, 自定义一个错误类型必须实现接口 `Error() string`, 
+// 直接打印该错误的一个实例, 就是打印该错误在实现 `Error() string` 时返回的内容, 
+// 即 SyscallError sError, println(sError) 就是打印的 return e.Syscall + ": " + e.Err.Error()
 func (e *SyscallError) Error() string { return e.Syscall + ": " + e.Err.Error() }
 ```
 
@@ -133,6 +136,8 @@ func (e *errorString) Error() string {
 ummm, 如果`errorString`是注释中所说的那样, 那难道`SyscallError`不是一个trivial implementation of error吗?
 
 到了这, 相信对于Go的错误处理机制也有个简单的概念, 你可以使用简单的`errors`里面的人家预先帮你实现好的`error`, 你也可以自己定一个自己的error, 就像`SyscallError`那样, 
+
+如果我们想自己实现一个呢, 请参考: [Learn how to handle errors in Go (Golang) | golangbot.com](https://golangbot.com/error-handling/)
 
 ----
 
