@@ -5,7 +5,6 @@ categories:
  - Other
 tags:
  - Golang
- - Language Design
 ---
 
 最近看线程总是看到 goroutine managed by go runtime, ... runtime, 也看到问题 Does Go has a runtime? 刚好Go在官方FAQs有回答, 就在这记录一下, 

@@ -27,7 +27,7 @@ print(id(a))
 
 因此每次修改(添加空格)都会重新重建一个新的string, 考虑到文章有的内容也不短, 那开销会不小, 具体做法分析参考: https://stackoverflow.com/q/1228299/16317008
 
-### 2. Unicode vs UTF-8
+### 2. 编码
 
 另外是关于编码的问题, Unicode和utf-8, 
 
@@ -97,7 +97,26 @@ Binary format of bytes in sequence
 
 最后需要注意, 如果你直接把utf-8编码的文件转为其它编码比如gbk, 那转换之后你的文件肯定是乱码, 因为在你写入一些内容比如`汉`到你的文本文件, 此时这个文件的编码方式为`utf-8`, 那你保存此文件后, 此文件的内容已经是经过utf-8编码的unicode code, 即:`11100110 10110001 10001001`也就是`e6b1 89`就是上面的汉字`汉`, 此时你硬要把文件的编码方式改为gbk, 而gbk采用完全与utf-8不同的编码方式(2字节1个字符),  此时当其他软件是图打开你这个文本文件时, 就会查看你文件的编码信息, 他们看到是gbk编码, 那就会把`11100110 10110001 10001001`即`e6b1 89`中的前两个字节解释为一个字符, 然后他们查找`11100110 10110001`即`e6b1`, 那肯定匹配不到`汉`, 就会把`11100110 10110001`解释为不可打印字符或者英文或者其它语言,,,
 
-一些工具可以实现不同编码的安全转换, 一个思路是, 我们知道这个文件是用的utf-8编码, 所以我们先把该文件的字符转换为unicode code, 然后再利用gbk进行编码这些unicode code, 你看中间总要有个标准对照, 
+一些工具可以实现不同编码的安全转换, 一个思路是, 我们知道这个文件是用的utf-8编码, 所以我们先把该文件的字符转换为unicode code, 然后再利用gbk进行编码这些unicode code, 具体做法如下:
+
+```python
+import sys
+
+file_path = 'article_1.md'
+with open(file_path, encoding="utf-8") as f:
+    utf_8_str = f.read()
+    if utf_8_str is None:
+        print("Contents of Text cannot be None!")
+        sys.exit()
+    else:
+        gbk_str = utf_8_str.encode("gbk")
+
+with open("article_2.md", "wb") as f:
+    f.write(gbk_str)
+    f.encoding = "gbk"
+```
+
+注意, 上面代码`utf_8_str = f.read()`, 此时`utf_8_str`已经是unicode code, 第二我们写如文件时, 要以二进制写入, 不然你写入的就是长得像16进制数的字符串, 而不是真正的写入二进制数据, 
 
 ### 3. 实现
 
