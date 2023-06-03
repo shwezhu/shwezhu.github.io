@@ -19,7 +19,16 @@ SSH 采用了公钥加密, 过程如下：
 
 （3）Remote Host 用自己的私钥, 解密信息, 验证密码是否正确
 
-这个过程存在一个漏洞：如果有人截获了用户的登录请求，然后冒充 Remote Host，将伪造的公钥发给用户，那么用户很难辨别真伪。这就是 Man-in-the-middle attack, SSH 如何应对的呢, 看来面的例子, 在Mac上通过ssh连接远程的服务器, 第一次连接的时候会问下面提示:
+这个过程存在一个漏洞：如果有人截获了用户的登录请求，然后冒充 Remote Host，将伪造的公钥发给用户，那么用户很难辨别真伪。这就是 Man-in-the-middle attack, 应对方法有两种:
+
+- 利用公钥指纹人工进行对比验证, 
+- 上传公钥实现免密登录
+
+接下来我们一一介绍这两种方法, 
+
+### 2. 利用公钥指纹人工进行对比验证
+
+看来面的例子, 在Mac上通过ssh连接远程的服务器, 第一次连接的时候会问下面提示:
 
 ```shell
 ssh root@144.202.16.29        
@@ -64,7 +73,8 @@ ED25519 key fingerprint is SHA256:sa5vDYS0yhdMRXO6CgMrp9AcQoVQRiDw6TnzTKesnzQ.
 
 另外, 该公钥指纹是由 SHA256 hash function 生成的, 另外常见的 hash function 还有md5, 
 
-## 2. 验证公私钥位置
+#### 2.1. 验证公私钥位置
+
 这个时候我们在电脑终端输入yes, 然后就会提示输入密码 (比如root用户对应的密码), 然后系统会提示如下: 
 
 ```shell
@@ -114,7 +124,7 @@ ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHP5xEl1
 - ecdsa-sha2-nistp256: Specifies the ECDSA algorithm with 256-bit key strength
 - rsa: Specifies the public key algorithm rsa
 
-### 3. Public Key Authentication (公钥免密登陆)
+### 3. Public Key Authentication (上传公钥实现免密登陆)
 
 #### 3.1. 过程分析
 
@@ -127,7 +137,12 @@ ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHP5xEl1
 5. The client sends the digital signature back to the server as a response to the challenge.
 6. The server verifies the signature using the client's registered public key. If the signature is validated, the server knows the client has proven possession of the corresponding private key and grants it access.
 
-注意关于验证过程, 不同 ssh 版本可能会有不同的实现, 但有的人说远程主机用用户的公钥进行解密验证, 这显然是不对的, 公钥只能用来加密, 不可以用来解密, 不然就不叫公钥了, 所以是远程主机用 用户的公钥进行用户的验证数字签名, 
+注意关于验证过程, 不同 ssh 版本可能会有不同的实现, 你可能会看到有人说远程主机用 用户的公钥进行解密验证, 其实公钥并不可以用来解密, 别人指的应该是公钥可以用来验证数字签名, 即这种情况下私钥加密其实应该是私钥签名。 私钥 “加密” 以后，谁用公钥都可以打开，就已经失去了加密的意义，所以它只能起到一个“签名”的效果，来达到-大家知道这条信息是我，而且只有我发出的。
+
+记住公钥只能用来加密, 不可以用来解密, 不然就不叫公钥了, 所以是远程主机用 用户的公钥进行用户的验证数字签名, 总结公钥有俩功能:
+
+- 加密
+- 验证数字签名
 
 #### 3.2. 具体操作
 

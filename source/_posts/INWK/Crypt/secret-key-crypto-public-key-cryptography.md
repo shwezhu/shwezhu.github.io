@@ -1,6 +1,6 @@
 ---
 title: 对称加密和非对称加密
-date: 2023-06-03 11:45:27
+date: 2023-06-03 19:26:27
 categories:
   - INWK
   - Crypt
@@ -59,13 +59,11 @@ ECDSA = Elliptic Curve Digital Signature Algorithm, a specific cryptographic sch
 
 ### 3. Man-in-the-middle attack
 
-SSH 登录过程中采用的非对称的加密方式, 这里会有一个问题, 如果有人截取了登录请求, 冒充主机, 将自己伪造的公钥给到用户, 用户可能分不清楚了
+SSH 登录过程中采用的非对称的加密方式, 这里会有一个问题, 如果有人截取了登录请求, 冒充主机, 将自己伪造的公钥给到用户, 用户可能分不清楚了一般有两种处理方式, 分别是: 公钥指纹和上传公钥 (免密登陆)
 
-一般有两种处理方式, 分别是: 公钥指纹和上传公钥
+#### 3.1. 公钥指纹
 
-1. **公钥指纹**
-
-"公钥指纹" 是指对公钥进行MD5计算, 将它变成一个128位的指纹, 并且将该指纹公布, 由于进行了MD5加密(不可逆) 也就不存在推测出公钥指纹的值, 第一次使用 ssh 连接服务器时, 就会提醒我们比对公钥指纹, 以防止中间人攻击:
+"公钥指纹" 是指对公钥进行MD5计算, 或者使用其它 hash 函数, 第一次使用 ssh 连接服务器时, 就会提醒我们比对公钥指纹, 以防止中间人攻击: 
 
 ![c](c.png)
 
@@ -73,7 +71,16 @@ ED25519 是一种 Digital Signature 算法. 注意DS算法只能用于验证身�
 
 > DSA stands for "Digital Signature Algorithm" - and is specifically designed to produce digital signatures, **not perform encryption**. https://crypto.stackexchange.com/a/2586
 
-关于ED25519以及SSH相关的不在这赘述, 感兴趣到另一篇博客有介绍: 
+关于ED25519以及SSH相关的不在这赘述, 感兴趣到另一篇博客有介绍: [通过 SSH 实现免密登陆以及分析 SSH 如何验证真实性](https://davidzhu.xyz/2023/06/03/Other/ssh/)
 
+#### 3.2. 上传公钥 
 
+“上传公钥”的方式其实我们操作过，github上，我们就经常会这么做，把自己的公钥复制到仓库中，这样登录就不再需要输入密码了, 具体原理和方法请参考: [通过 SSH 实现免密登陆以及分析 SSH 如何验证真实性](https://davidzhu.xyz/2023/06/03/Other/ssh/)
 
+### 4. Authentication 过程
+
+- Alice can use public key cryptography to verifying Bob’s identity if Alice knows Bob’s public key.
+- Alice chooses a random number `r`, encrypts it using Bob’s public key, and sends the result to Bob.
+- Bob proves he knows `dB` by decrypting the message and sending `r` back to Alice.
+- The advantage of **public key authentication** is that Alice does not need to keep any secret information to verify Bob.
+- So if Alice is a computer system, stealing the computer won’t compromise any secrets.
