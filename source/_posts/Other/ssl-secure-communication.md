@@ -132,6 +132,19 @@ However, from your Python code's perspective, you're just using the ssl module's
 
 ![b](b.png)
 
+所以呢上面这个错误是在说, urllib3 的 2.0版本仅支持 OpenSSL 1.1.1+, 但是我们电脑上的 ssl 库 使用的是 LibreSSL 2.8.3., (别忘了上面我们输入`openssl version` 的时候输出的是LibreSSL), 在这 OpenSSL 和 LibreSSL等价, 因为作用相同, 都是用来编译 ssl 库的, 既然 urllib3的2.0版本不支持我们电脑上的LibreSSL, 那我们就换个 urllib3 的版本咯, 
+
+```shell
+pip3 uninstall urllib3 
+pip3 install 'urllib3<2.0' 
+```
+
+或者换我们电脑上的 LibreSSL 的版本, 
+
+```python
+$ brew install openssl@1.1
+```
+
 参考:
 
 - [Why is HTTP not secure? | HTTP vs. HTTPS | Cloudflare](https://www.cloudflare.com/learning/ssl/why-is-http-not-secure/)
@@ -143,3 +156,4 @@ However, from your Python code's perspective, you're just using the ssl module's
 - [彻底搞懂HTTPS的加密原理 - 知乎](https://zhuanlan.zhihu.com/p/43789231)
 - [Why You Should Use LibreSSL Instead of OpenSSL](https://www.youtube.com/watch?v=n1uaoJyBwHk)
 - https://youtu.be/wzbf9ldvBjM
+- [Fixing ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+ | Level Up Coding](https://levelup.gitconnected.com/fixing-importerror-urllib3-v2-0-5fbfe8576957)
