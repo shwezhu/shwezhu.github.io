@@ -1,6 +1,6 @@
 ---
 title: 利用ChatGPT接口实现一个AI Bot (一)
-date: 2023-06-03 10:51:25
+date: 2023-06-03 22:28:25
 categories:
   - Python
 tags:
@@ -73,9 +73,7 @@ print(response['choices'][0]['message']['content'])
 ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with LibreSSL 2.8.3. See: https://github.com/urllib3/urllib3/issues/2168
 ```
 
-信息量有点大, 一点一点分析, 
-
-[urllib3](https://urllib3.readthedocs.io/en/stable/) 就是python用来发http请求的package, 即http客户端, 用法如下:
+一点一点分析, [urllib3](https://urllib3.readthedocs.io/en/stable/) 就是python用来发http请求的package, 即http客户端, 用法如下:
 
 ```python
 >>> import urllib3
@@ -86,7 +84,7 @@ ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the 'ssl' modu
 b"User-agent: *\nDisallow: /deny\n"
 ```
 
-[OpenSSL](https://www.openssl.org/) 就是用来加密通信的: for general-purpose cryptography and secure communication. 本来http是纯文本通信的, 之后有了https即你发送的数据都是被加密的, 
+关于OpenSSL请参考我另一篇文章: 
 
 
 
