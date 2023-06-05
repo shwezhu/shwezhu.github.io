@@ -10,16 +10,12 @@ categories:
 
 ![001](001-3335443.png)
 
-注意区分复合函数求导, 图片来源: [分部积分法（integration by parts） - 知乎](https://zhuanlan.zhihu.com/p/41545813)
+注意区分复合函数求导, 求不定积分步骤: 
 
-求不定积分步骤: 
-
-1. 选出 `u` 和 `v`, 求出 `du`, `dv`, 选择的时候要考虑 `v` 的原函数好不好求, 
+1. 选出 `u` 和 `v`, 求出 `du`, `dv`, 选择的时候要考虑 `v` 的原函数好不好找, 
 2. 再根据以上公式, 带入  `u`, `v`,  `du`, `dv`,
 
-例子:
-
-![a](graphical-convolution/a.png)
+![a](a.png)
 
 -----
 
@@ -31,10 +27,6 @@ categories:
 
 ![004](004.png)
 
-[分部积分法[高等数学23]_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1DS4y1D7n5/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9)
-
-[从∫e^x*sinxdx出发——积分随想（I） - 知乎](https://zhuanlan.zhihu.com/p/32850408)
-
 -----
 
 ## 2. 图解法求卷积
@@ -45,13 +37,17 @@ categories:
 
 其中, 在进行图解法的时候, 我们经常对一个简单的信号图像进行反转, 这个反转也没固定的范围, 比如要求你一定要把图像反转到具体哪, 这个具体位置是需要我们讨论的(判断两个图像是否overlap, 讨论t的范围, 注意是讨论t的范围, 而不是上面定义式中的tao)
 
-因为打不出来tao, 所以这里用x代替tao, 
+**打不出来tao所以下文用`x`代替tao,** 接下来我们利用图像分析一下上面公式中的 `f(t-x)`是 `f(t)` 怎么平移得到的 *(`f(t-x)` 中的 `x` 是 `tao` )*,  具体可以分成如下三步: 
 
-其实根据定义式也能看出来是什么意思了, f(t-x), 注意这里自变量是x, 过程是: 本来是f(t)然后变成了f(x), 这其实就是换个符号而已, 图像不变, 但若是从f(t)变成了f(-x), 这就是原图像相对y轴反转了, 然后又变成f(-(x-t)), 那这就是图像相对y轴反转后, 还要右移t个单位. 注意哦, 当t<0的时候我们右移t个单位的时候我们的函数图像其实是左移了, 
+首先 `f(t)` -> `f(x)`, 这就是换个符号, 图像不变, 
 
-所以我们做题讨论t的时候, 先把图像相对y反转, 之后再t的取值范围(根据t>0就是右移, t<0就是左移)判断是否overlap, 如当2<t<4时, 两图像重叠, 其实就是动的那个图再反转之后, 右移2-4个单位的时候, 他们又重叠,
+第二步 `f(x)`  -> `f(-x)`, 这就是原图像相对y轴反转了, 
 
-举个例子, 下面是两个待卷积函数的图像:
+第三步 `f(-x)` ->  `f(-(x-t))`,  这就是图像相对y轴反转后, 还要右移 t 个单位. 注意, 当 t<0 的时, 右移 t 个单位函数图像其实是左移了, 
+
+所以做题讨论 t 的时候, 先把图像相对 y 反转, 之后再根据 t 的取值范围 (根据t>0就是右移, t<0就是左移) 判断是否overlap, 如当2<t<4时, 两图像重叠, 其实就是动的那个图再反转之后, 右移2-4个单位的时候, 他们又重叠, 
+
+举例, 下面是两个待卷积函数的图像:
 
 ![006](006.png)
 
@@ -63,9 +59,14 @@ categories:
 
 {% youtube lnzXrSGWMQE %}
 
-- [「珂学原理」No.90「卷积应该怎么卷」](https://www.youtube.com/watch?v=lnzXrSGWMQE&list=PLYdJCSN8wbG8F08QEPdTdx7FDPH7IGx7P&index=9)
+参考: 
 
-了解更多:
+- [分部积分法（integration by parts） - 知乎](https://zhuanlan.zhihu.com/p/41545813)
+- [xlnx的不定积分 - 知乎](https://zhuanlan.zhihu.com/p/447504951)
+- [分部积分法[高等数学23]_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1DS4y1D7n5/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9)
+- [从∫e^x*sinxdx出发——积分随想（I） - 知乎](https://zhuanlan.zhihu.com/p/32850408)
+
+- [珂学原理 No.90 卷积应该怎么卷](https://www.youtube.com/watch?v=lnzXrSGWMQE&list=PLYdJCSN8wbG8F08QEPdTdx7FDPH7IGx7P&index=9)
 
 - [最经典的卷积积分题目，完美展现卷积积分图解法_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1TK41127sT/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9)
 - [【信号与系统】卷积的三种求解办法_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Nr4y117V9/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9)
