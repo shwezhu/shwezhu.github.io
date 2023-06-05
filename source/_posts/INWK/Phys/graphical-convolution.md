@@ -1,5 +1,5 @@
 ---
-title: 卷积 Graphical Convolution
+title: 不定积分和卷积Graphical Convolution
 date: 2023-05-05 22:04:08
 categories:
  - INWK
@@ -10,7 +10,16 @@ categories:
 
 ![001](001-3335443.png)
 
-[分部积分法（integration by parts） - 知乎](https://zhuanlan.zhihu.com/p/41545813)
+注意区分复合函数求导, 图片来源: [分部积分法（integration by parts） - 知乎](https://zhuanlan.zhihu.com/p/41545813)
+
+求不定积分步骤: 
+
+1. 选出 `u` 和 `v`, 求出 `du`, `dv`, 选择的时候要考虑 `v` 的原函数好不好求, 
+2. 再根据以上公式, 带入  `u`, `v`,  `du`, `dv`,
+
+例子:
+
+![a](graphical-convolution/a.png)
 
 -----
 

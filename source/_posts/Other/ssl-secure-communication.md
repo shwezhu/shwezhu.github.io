@@ -2,10 +2,9 @@
 title: HTTPS 连接过程分析以及 SSL 证书和 OpenSSL 介绍
 date: 2023-06-03 20:32:26
 categories:
-  - Others
+  - Other
 tags:
   - Python
-  - Practice
   - Cryptography
   - Build Website
 ---

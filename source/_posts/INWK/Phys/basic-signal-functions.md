@@ -64,7 +64,7 @@ rect函数就是一个简单的分段函数, 只是图像是个矩形我们就�
 
 ![e](e.png)
 
-### unit impulse function
+## unit impulse function
 
 {% youtube gfckPQEmFHA?t=835 %}
 
@@ -83,6 +83,8 @@ rect函数就是一个简单的分段函数, 只是图像是个矩形我们就�
 ## 为什么cos的傅立叶变换是delta函数
 
 {% youtube  McITNfo3LKc %}
+
+> The fourier transform is a frequency representation of a function. A cos wave has one frequency only, hence the delta finction. https://www.reddit.com/r/askmath/comments/wsk5ml/how_does_the_fourier_transformation_of_cosx_go_to/
 
 - [Fourier Transform of Cos](https://www.youtube.com/watch?v=McITNfo3LKc)
 

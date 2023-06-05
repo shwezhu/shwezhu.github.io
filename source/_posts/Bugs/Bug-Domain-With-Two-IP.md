@@ -5,6 +5,7 @@ categories:
  - Bugs
 tags:
  - Bugs
+ - Build Website
 ---
 
 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, 
