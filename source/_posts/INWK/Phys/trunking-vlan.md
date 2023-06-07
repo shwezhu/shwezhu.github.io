@@ -278,6 +278,35 @@ S3(config)#interface f0/3
 S3(config-if)#switchport access vlan 300
 ```
 
+其它
+
+```
+查看trunk相关协议
+show interfaces trunk 
+show interfaces f0/10 switchport 
+查看vtp domain
+show vtp status
+查看vtp密码
+show vtp password
+查看默认网关
+sh ip route
+查看接口信息
+show interface brief
+
+查看spanning tree的root, 看bridge ID, 如果相同就看MAC地址, 看root ID下面的mac address是谁：
+show spanning-tree vlan 3
+每个vlan都有一个spanning tree
+
+Change the path of traffic for VLAN 1 from S2 to S1 through S3 ，意思是对于vlan 1，从s2的到s1的包 必须过s3 所以你就要想办法增加s2与s1相连接口的cost 使其block 这样 便可以从s3过 而不是直接到s1
+interface rang f0/10-12 
+spanning-tree vlan 1 cost 40 
+
+修改上游的对应接口，即看先用 show spanning tree vlan 2 在下游路由器查看它的root port，然后再用下面的指令在上游路由器修改对应port，
+Change the root port on S2 for VLAN 1. (root port from F0/16 to F0/18)
+S3(config)#int f0/18
+S3(config-if)#spanning-tree vlan 1 port-priority 64
+```
+
 References:
 
 - [Switchport Access Mode vs Trunk Mode - IP With Ease](https://ipwithease.com/switchport-trunk-mode-vs-access-mode/)
