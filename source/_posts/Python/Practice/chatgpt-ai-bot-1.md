@@ -134,8 +134,8 @@ pip3 install openai
 import openai
 
 openai.api_key = "YOUR_API_KEY"
-// 这里 openai.ChatCompletion 其实就是我们上面的任务类型选择, 显然这里选择的是 Chat, 
-// 即目的 url 是 https://api.openai.com/v1/chat/completions
+# 这里 openai.ChatCompletion 其实就是我们上面的任务类型选择, 显然这里选择的是 Chat, 
+# 即目的 url 是 https://api.openai.com/v1/chat/completions
 response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     temperature=1,
