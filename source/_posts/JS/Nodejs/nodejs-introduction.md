@@ -15,7 +15,7 @@ NodeJS 不是语言而是 Javascript 的运行环境, 所以就不能像研究�
 
 > Node. js is not a programming language. Rather, it's a `runtime environment` that's used to run JavaScript outside the browser. For example on the `server` or in the `command line`.
 
-突然想到之前学JS的时候记的一段话, 介绍JS engine的: 
+突然想到之前学JS的时候记的一段话, 介绍 JS engine 的: 
 
 > The use of JavaScript engines is not limited to browsers. For example, the **V8 engine is a `core component` of the [Node.js](https://www.webopedia.com/definitions/node-js/)**. V8 is the Javascript engine **inside of** node.js that parses and runs your Javascript. The same V8 engine is used **inside of** Chrome to run javascript in the Chrome browser. Both `chrome browser` and `node.js` have `v8` inside.
 
@@ -61,7 +61,7 @@ server.listen(port, hostname, () => {
 });
 ```
 
-#### 4. 了解更多
+#### 4. Find More
 
 A Node.js app runs in a `single process`, without creating a new thread for every request. Node.js provides a set of asynchronous I/O primitives in its standard library that prevent JavaScript code from blocking and generally, libraries in Node.js are written using non-blocking paradigms, making blocking behavior the exception rather than the norm.
 
