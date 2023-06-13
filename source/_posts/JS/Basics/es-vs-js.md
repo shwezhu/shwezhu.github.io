@@ -1,5 +1,5 @@
 ---
-title: ECMAScript vs JavaScript
+title: ECMAScript vs JavaScript & CommonJS vs ES Modules
 date: 2023-06-13 10:36:28
 categories:
   - JavaScript
@@ -7,6 +7,8 @@ categories:
 tags:
   - JavaScript
 ---
+
+## ECMAScript vs JavaScript
 
 **ECMAScript = ES:**
 
@@ -52,3 +54,38 @@ tags:
 - You write TypeScript or CoffeeScript then the transpiler transforms it into ES5 JavaScript.
 
 原文: https://stackoverflow.com/a/33748400/16317008
+
+## CommonJS vs ES Modules
+
+**CommonJS** is an older module system for JavaScript that was designed for server-side JavaScript development with Node.js. It was later adopted by the front-end community as well (this way you don't need a gazillion script tags in your HTML). 
+
+```javascript
+// my-module.js
+module.exports = {
+  myValue: 42
+};
+
+// main.js
+const myModule = require('./my-module.js');
+console.log(myModule.myValue); // 42
+```
+
+ES modules are a standardized module system for JavaScript that was introduced in ES6. It provides a way to organize and reuse code in a modular and maintainable manner. 
+
+```javascript
+// my-module.js
+export const myValue = 42;
+
+// main.js
+import { myValue } from './my-module.js';
+console.log(myValue); // 42
+```
+
+### Advantages of ES Modules over CommonJS
+
+1. Static Analysis: ES modules are designed to be statically analyzable, while CommonJS modules are not. This means that the import and export statements can be analyzed at build time, enabling tools to optimize the code and generate smaller, more efficient bundles.
+2. Native Support in Browsers: ES modules are natively supported in modern browsers, while CommonJS modules are not. This means that there's no need for additional build tools or plugins to use ES modules in the browser.
+3. Better Performance: ES modules are designed to be loaded statically, while CommonJS modules are mainly loaded dynamically and synchronously. This can lead to slower performance and a blocking of the main thread. Static analysis refers to the process of analyzing code without executing it, and dynamic imports introduce runtime behavior into a module system. This means that the exact module that will be imported cannot be determined until the code is executed, making it difficult to analyze the module dependencies and relationships ahead of time (AOT).
+4. Improved Code Organization: ES modules provide a way to specify the dependencies between different parts of your code, making it easier to understand and maintain your codebase.
+
+原文: https://dev.to/costamatheus97/es-modules-and-commonjs-an-overview-1i4b
