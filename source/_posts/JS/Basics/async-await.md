@@ -1,5 +1,5 @@
 ---
-title: Async & Await Functions in JavaScript
+title: Javascript 中的 Promise 对象和异步函数
 date: 2023-06-16 00:34:29
 categories:
   - JavaScript
@@ -13,7 +13,7 @@ tags:
 想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下, 
 
 ```javascript
-// 创建一个 Promise 对象, 注意看参数, 以及参数的参数, 😂
+// 创建一个 Promise 对象, 注意参数, 以及参数的参数, 😂
 const myPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
         resolve('Hi, World!');
@@ -150,7 +150,7 @@ async function getData() {
 
 getData().then((value) => {
     console.log(value)
-});
+})
 
 // 打印 获取到的html文件的内容
 ```
