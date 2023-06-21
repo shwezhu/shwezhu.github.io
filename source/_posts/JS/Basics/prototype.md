@@ -146,7 +146,7 @@ a1.__proto__ = A.prototype;
 
 ## 3. 为什么要有 Prototype Chain
 
-假如你要访问一个对象的 name 属性,或者是调用一个对象的函数, 如果这个对象没有你要调用的函数或者要访问的属性, 那就会自动搜索这个对象的prototype(prototype本身也是个对象)的函数和属性, 一直找到prototype chain的末端. ummm,感觉有点熟悉? 是不是想到了java,cpp里的继承机制. 没错, prototype chain这种机制正式帮助javascript实现了对象之间的继承,而不是类之间的继承, 所以它是prototypal inheritance而不是classical inheritance, 具体会放到`MyNotes/javascript/prototypal Inheritance`里讲. 
+假如你要访问一个对象的 name 属性,或者是调用一个对象的函数, 如果这个对象没有你要调用的函数或者要访问的属性, 那就会自动搜索这个对象的prototype(prototype本身也是个对象)的函数和属性, 一直找到prototype chain的末端. ummm,感觉有点熟悉? 是不是想到了java,cpp里的继承机制. 没错, prototype chain这种机制正式帮助javascript实现了对象之间的继承,而不是类之间的继承, 所以它是prototypal inheritance而不是classical inheritance, 具体会放到 [JS 继承之 Prototype Chain 的意义](https://davidzhu.xyz/2023/06/21/JS/Basics/prototypal-inheritance/) 讨论
 
 参考: 
 

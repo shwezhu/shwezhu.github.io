@@ -1,5 +1,5 @@
 ---
-title: JS Prototype Chain 的意义之继承
+title: JS 继承之 Prototype Chain 的意义
 date: 2023-06-21 11:08:32
 categories:
   - JavaScript
@@ -58,7 +58,7 @@ If you know Java or C++, you should be familiar with the inheritance concept. **
 
 In prototypal inheritance, an object “inherits” properties from another object via the `prototype` linkage.
 
-**在 Prototype 那一篇说到** JS 的每个对象都有个 prototype 属性, 我们可以通过以下两种方式引用一个对象的 prototype: 
+在 [说说 JS 中的 Prototype](https://davidzhu.xyz/2023/06/20/JS/Basics/prototype/) 中提到 JS 的每个对象都有个 prototype 属性, 我们可以通过以下两种方式引用一个对象的 prototype: 
 
 ```javascript
 const person = {
@@ -201,7 +201,7 @@ console.log(typeof Person); //function
 
 > Unlike other programming languages such as Java and C#, JavaScript classes are syntactic sugar over the **prototypal inheritance**. In other words, ES6 classes are just special functions. 但是 class declarations are not **hoisted** like function declarations. 
 
-**`Mynote/javascript/prototype chain`** 中提到的 `obj.prototype` 和 `obj.__proto__` 不是一回事, 当定义一个普通的对象之后 (不是函数) 它们的 `obj.prototype` 是 `undefined`, 而当定义一个函数之后, 这个函数的`func.prototype`会被自动创建, 并且值为一个空对象`{}`:
+[说说 JS 中的 Prototype](https://davidzhu.xyz/2023/06/20/JS/Basics/prototype/)  中提到的 `obj.prototype` 和 `obj.__proto__` 不是一个东西, 当定义一个普通的对象之后 (不是函数) 它们的 `obj.prototype` 是 `undefined`, 而当定义一个函数之后, 这个函数的`func.prototype`会被自动创建, 并且值为一个空对象`{}`:
 
 ```js
 const func = function () {
