@@ -68,8 +68,6 @@ https://flask.palletsprojects.com/en/2.0.x/api/#:~:text=is%20timezone%2Daware.-,
     }
 ```
 
-
-
 一直无法返回cookie, 是因时区问题, 即浏览器时间比本地时间早了几个小时, 然后每次的cookie expiry time都是设置的两分钟, 这就导致每次发送请求的时候浏览器检查cookie发现过期, 直接丢弃, 
 
 你可能会好奇, 为什么浏览器使用 Date: Tue, 20 Jun 2023 01:18:03 GMT, 即GMT时区而不是本地时区呢?
