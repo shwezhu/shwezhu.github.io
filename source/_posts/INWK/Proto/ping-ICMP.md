@@ -1,6 +1,6 @@
 ---
-title: Ping & ICMP 
-date: 2023-06-21 19:49:33
+title: Ping & ICMP Message
+date: 2023-06-22 19:49:33
 categories:
  - INWK
  - Proto
@@ -49,7 +49,7 @@ round-trip min/avg/max/stddev = 23.043/26.978/32.361/3.939 ms
 
 可以看到有 3 次回应, 
 
-想用 tcpdump 监控一下 ping 数据包, 看看实际发送收到的什么, 然后就查了一下 ping 的端口号, 就像 ftp, http 应用层协议一般都有自己的默认端口, ping 也是工作在应用层的, 但是, 它没有端口号, 因为 ping 用的是 IP 层的 ICMP 协议, 而端口号和IP地址是属于 TCP层的, 
+想用 tcpdump 监控一下 ping 数据包, 看看实际发送收到的什么, 然后就查了一下 ping 的端口号, 就像 ftp, http 应用层协议一般都有自己的默认端口, ping 也是工作在应用层的, 但是, 它没有端口号, 因为 ping 用的是 IP 层的 ICMP 协议, 而端口号和IP地址是属于 TCP层的, 这是在说 ping 不使用在传输层的 UDP 或 TCP, 直接跳过, 
 
 不仅会想, 应用层的每个应用接收信息都是监控的某个端口, 如一个应用推特只用监控手机上的某个特定端口所有的数据便可以收到信息, 但若 ping 没有端口号, 它是怎么知道来的数据包是属于它的呢? 
 
@@ -160,59 +160,3 @@ So in more detail:
 - The ping program, running as a userspace application, is using the operating system's ICMP APIs. When an echo reply is received by the operating system, it notifies the ping program via those APIs.
 
 - The ping program then correlates the received echo reply packet to the original echo request it sent based on the sequence number, and knows a response was received.
-
-## Traceroute
-
-Traceroute can use either UDP packets OR ICMP packets as the probes that it sends with incrementing TTL values.
-
-- When traceroute uses UDP packets as probes:
-  - When the UDP packet's TTL expires at a router, that router will send an ICMP Time Exceeded message back to the traceroute source.
-  - Traceroute then observes this ICMP timeout message to detect that the UDP probe timed out, allowing it to identify the router at that hop.
-- When traceroute uses ICMP packets as probes:
-  - When the ICMP packet's TTL expires at a router, that router will send another ICMP Time Exceeded message back to the traceroute source.
-  - Again, traceroute observes this ICMP timeout message to detect that the ICMP probe timed out, identifying the router at that hop.
-
-
-
-1. **Routers decrement the TTL**, they do not increment it. When a router receives a packet, it decrements the TTL field by 1. If the TTL reaches 0 after decrementing, the router will drop the packet and send an ICMP Time Exceeded message.
-2. **Traceroute itself increments the TTL** with each probe it sends. So for example:
-
-- For the first probe, traceroute will set the TTL to 1
-- It will send that probe, and the first router will decrement TTL to 0, drop the probe, and send an ICMP message.
-- Traceroute then knows the first hop is that router.
-- For the second probe, traceroute will set the TTL to 2
-- The second router will decrement TTL to 1, then to 0, drop the probe, and send an ICMP message.
-- Traceroute then knows the second hop is that router.
-
-
-
-```shell
-ping -c2 hostA1 # -c2 means send 2 ping requests
-ping -R houstA # The -R flag with ping is used for record route
-```
-
-e.g., 
-
-1. The ping command is executed in the terminal or command prompt. This is an application layer request.
-2. The ping application creates an ICMP Echo Request packet. This is the ICMP message it wants to send.
-3. The ICMP Echo Request packet is encapsulated in a UDP header, since ping typically uses the UDP transport protocol.
-4. The ICMP/UDP packet is then encapsulated in an IP packet, with the IP header containing the source and destination IP addresses.
-5. The ICMP/UDP/IP packet is given to the network interface card driver, which encapsulates it in a link layer frame. For ethernet, this would be an Ethernet frame with Ethernet header.
-6. The Ethernet frame is transmitted over the physical medium, such as copper wire or fiber optic cable, using electrical signals for copper and optical signals for fiber.
-
-
-
-One rule of UDP is that if it receives a UDP datagram and the destination port does not correspond to a port that some process has in use, UDP responds with an ICMP port unreachable. We can force a port unreachable using the TFTP client. 
-
-The well-known UDP port for the TFTP server to be reading from is 69. But most TFTP client programs allow us to specify a different port using the connect command. We use this to specify a port of 8888:
-
-
-
-Process of Sending UDP:
-
-1. The application sends a UDP datagram to the IP layer, specifying the destination IP address.
-2. The IP layer looks up the destination IP address in its ARP cache. There are 3 possibilities:
-
-- The ARP cache has a mapping for that IP address. In this case, the IP layer can send the datagram directly using the cached MAC address, without needing to send an ARP request.
-- The ARP cache has an expired mapping for that IP address. In this case, the IP layer will first send an ARP request to update the MAC address, and then send the datagram.
-- The ARP cache has no mapping for that IP address. In this case, the IP layer will first send an ARP request, get the MAC address in the ARP reply, and then send the datagram.
