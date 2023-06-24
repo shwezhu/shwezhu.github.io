@@ -1,5 +1,5 @@
 ---
-title: 通过 Cookie 实现有状态的 HTTP Session
+title: HTTP Cookie 获取与设置
 date: 2023-06-23 22:51:35
 categories:
   - Python
