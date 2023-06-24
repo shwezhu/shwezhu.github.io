@@ -16,29 +16,29 @@ ping -c1 google.ca
 
 捕捉结果如下, 一个 request 一个 reply, 
 
-![a](wireshark/a.png)
+![a](a.png)
 
 根据输出可以看出, 应用层直接使用的是 ICMP 数据包装, 然后再加上 IP header, 之后是 ethernet, 中间并没有用到传输层的 TCP 或 UDP, 
 
 ICMP 头部的第 1 字节是 type, 第二字节是 code, type+code 决定信息类型, 具体可以在维基百科查看, echo request 的 type = 8, code = 0, echo reply 的 type = 0, code = 0:
 
-![b](wireshark/b.png)
+![b](b.png)
 
 ICMP 信息格式如下:
 
-![c](wireshark/c.png)
+![c](c.png)
 
 在 Wireshark 打开数据包查看细节, 可以看到具体 header 里都是有什么内容:
 
-![d](wireshark/d.png)
+![d](d.png)
 
 然后接着协议栈往下看, 看 IP 包, 先看一下 IP 包的格式:
 
-![e](wireshark/e.png)
+![e](e.png)
 
 在 wireshark 展开刚 ICMP 上面的 IP 部分, 
 
-![f](wireshark/f.png)
+![f](f.png)
 
 这里注意一下, 根据上图 IP header 的长度为 20 bytes, 但是实际值是 0101, 大概是因为这个数字被编码成 32-bit words, 即值为 1, 则就是 4 byes, 这里放上一个解释, 供参考:
 
