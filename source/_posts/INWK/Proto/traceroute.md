@@ -79,19 +79,44 @@ The times listed in the RTT columns are the main thing you want to look at when 
 
 The time-to-live (TTL) value, also known as hop limit, is used in determining the intermediate routers being traversed towards the destination. Traceroute sends packets with TTL values that gradually increase from packet to packet, starting with TTL value of one. Routers decrement TTL values of packets by one when routing and discard packets whose TTL value has reached zero, returning the ICMP error message ICMP Time Exceeded.[10] For the first set of packets, the first router receives the packet, decrements the TTL value and drops the packet because it then has TTL value zero. The router sends an ICMP Time Exceeded message back to the source. The next set of packets are given a TTL value of two, so the first router forwards the packets, but the second router drops them and replies with ICMP Time Exceeded. Proceeding in this way, traceroute uses the returned ICMP Time Exceeded messages to build a list of routers that packets traverse, until the destination is reached and returns an ICMP Destination Unreachable message if UDP packets are being used or an ICMP Echo Reply message if ICMP Echo messages are being used. 
 
-举例:
-
-1. **Routers decrement the TTL**, they do not increment it. When a router receives a packet, it decrements the TTL field by 1. If the TTL reaches 0 after decrementing, the router will drop the packet and send an ICMP Time Exceeded message.
-2. **Traceroute itself increments the TTL** with each probe it sends. So for example:
-
-- For the first probe, traceroute will set the TTL to 1
-- It will send that probe, and the first router will decrement TTL to 0, drop the probe, and return an ICMP Time Exceeded message.
-- Traceroute then knows the first hop is that router.
-- For the second probe, traceroute will set the TTL to 2
-- The second router will decrement TTL to 1, then to 0, drop the probe, and return an ICMP Time Exceeded message.
-- Traceroute then knows the second hop is that router.
+#### Linux traceroute 实现原理
 
 ![a](a.png)
+
+1. 从源地址发出一个UDP探测包到目的地址，并将TTL设置为1；
+2. 到达路由器时，将TTL减1；
+3. 当TTL变为0时，包被丢弃，路由器向源地址发回一个ICMP超时通知（ICMP Time Exceeded Message），内含发送IP包的源地址，IP包的所有内容及路由器的IP地址；
+4. 当源地址收到该ICMP包时，显示这一跳路由信息；
+5. 重复1～5，并每次设置TTL加1；
+6. 直至目标地址收到探测数据包，并返回端口不可达通知（ICMP Port Unreachable）；
+7. 当源地址收到ICMP Port Unreachable包时停止traceroute。
+
+> 注：
+>
+> 1. Linux和Mac OS等系统使用UDP包进行探测，目标端口号默认为33434，每次探测目标端口号加1。Traceroute故意使用了一个大于 30000 的目标端口号，以保证目标地址收到数据包后能够返回一个“端口不可达”的 ICMP 报文，于是源地址就可将端口不可达报文当作跟踪结束的标志。
+>
+> 2. Traceroute每跳默认发送3个探测包（发包的数量可通过-q进行设置），探测包的返回会受到网络情况的影响。如果防火墙封掉了ICMP的返回信息，那么相应的延时位置会以*显示。如果某台网关阻塞或者某台DNS出现问题，那么相应行的延时会变长。可以加-n 参数来避免DNS解析，以IP格式输出数据。
+> 3. 每个探测包都有唯一的标识号，使得Traceroute能够识别返回的包。UDP数据包使用递增的目标端口号进行标识。
+
+#### Windows tracert 实现原理
+
+![b](b.png)
+
+1. 从源地址发出一个ICMP请求回显（ICMP Echo Request）数据包到目的地址，并将TTL设置为1；
+2. 到达路由器时，将TTL减1；
+3. 当TTL变为0时，包被丢弃，路由器向源地址发回一个ICMP超时通知（ICMP Time Exceeded Message），内含发送IP包的源地址，IP包的所有内容及路由器的IP地址；
+4. 当源地址收到该ICMP包时，显示这一跳路由信息；
+5. 重复1～5，并每次设置TTL加1；
+6. 直至目标地址收到探测数据包，并返回ICMP回应答复（ICMPEcho Reply）；
+7. 当源地址收到ICMP Echo Reply包时停止tracert。
+
+> 注：
+>
+> 1. Windows系统使用ICMP请求回显（ICMP Echo Request）数据包进行探测，源地址以目的地址返回的ICMP回应答复（ICMP Echo Reply）作为跟踪结束标志。
+>
+> 2. Traceroute每跳默认发送3个探测包。在未能到达路由器或未返回ICMP超时通知的情况下，相应的延时位置会以*显示。
+>
+> 3. 每个探测包都有唯一的标识号，ICMP数据包使用seq进行标识
 
 参考: 
 
@@ -103,3 +128,4 @@ The time-to-live (TTL) value, also known as hop limit, is used in determining th
 - [How to Read a Traceroute: Step By Step Tutorial](https://www.catchpoint.com/network-admin-guide/how-to-read-a-traceroute)
 - [Meaning of * * * in the Output of traceroute | Baeldung on Linux](https://www.baeldung.com/linux/traceroute-three-stars)
 - [traceroute命令详解 - 马昌伟 - 博客园](https://www.cnblogs.com/machangwei-8/p/10353279.html)
+- [Working of Traceroute using Wireshark - Hacking Articles](https://www.hackingarticles.in/working-of-traceroute-using-wireshark/)
