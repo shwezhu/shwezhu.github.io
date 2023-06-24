@@ -102,3 +102,4 @@ The time-to-live (TTL) value, also known as hop limit, is used in determining th
 - [看懂tracert数据 - 简书](https://www.jianshu.com/p/30b064a8b07c)
 - [How to Read a Traceroute: Step By Step Tutorial](https://www.catchpoint.com/network-admin-guide/how-to-read-a-traceroute)
 - [Meaning of * * * in the Output of traceroute | Baeldung on Linux](https://www.baeldung.com/linux/traceroute-three-stars)
+- [traceroute命令详解 - 马昌伟 - 博客园](https://www.cnblogs.com/machangwei-8/p/10353279.html)
