@@ -31,7 +31,26 @@ npm install <package-name>
 pip install <package-name>
 ```
 
+使用步骤;
+
+```shell
+npm init
+
+npm install xxx --save
+```
+
 ### 3. Install
+
+两个方法, 推荐第一个, 问好卸载, 
+
+```
+# 会安装 node 和 npm
+brew install node
+# 卸载
+brew uninstall node
+```
+
+第二种方法, 
 
 在 [Download | Node.js](https://nodejs.org/en/download) 下载对应 OS 安装包, 安装的时候, 显示:
 
