@@ -12,7 +12,19 @@ tags:
 
 卸载 node 和 npm 重装依旧不能解决, 
 
-最后删除了  `~/node_modules/` 文件夹和 `~/` 下的所有 npm 相关文件夹, 然后重新运行 `npm install xxx` 后本地文件夹自动创建 `node_modules`, 安装成功. 
+最后删除了  `~/node_modules/` 文件夹和 `~/` 下的所有 npm 相关文件夹, 然后进入项目文件夹, 重新运行 `npm install xxx` 后本地文件夹自动创建 `node_modules`, 安装成功. 
+
+```shell
+$ mkdir jslearn && cd jslearn
+
+$ npm install cors
+added 3 packages in 466ms
+
+$ ls
+node_modules      package-lock.json package.json
+
+# 你看不用 npm init
+```
 
 在知乎看到的回答:
 
