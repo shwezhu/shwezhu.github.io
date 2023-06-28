@@ -1,5 +1,5 @@
 ---
-title: Traceroute Command
+title: Ping & Traceroute Command
 date: 2023-06-23 16:15:34
 categories:
  - INWK

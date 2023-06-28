@@ -30,3 +30,6 @@ node_modules      package-lock.json package.json
 
 > npm的原理大概就是从当前目录往上找，找到哪个目录有node_modules就认为这才是真正的项目目录，所以东西全给装那里面去, 所以不仅仅是User根目录的问题，你得保证从你当前的目录开始一直到根目录都没有node_modules，npm才会“正常”地把东西放到当前目录下的node_modules里 [原文](https://www.zhihu.com/question/33302274/answer/56276831)
 
+另外: 
+
+> `-S` is shorthand for `--save`, and it adds the package you're installing to the dependencies in your `package.json` file (which can be created with `npm init`). However, `--save` or `-S` is totally unnecessary if you're using npm 5 or above since it's done by default. https://stackoverflow.com/a/58475949/16317008

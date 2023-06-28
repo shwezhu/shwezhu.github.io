@@ -160,3 +160,15 @@ So in more detail:
 - The ping program, running as a userspace application, is using the operating system's ICMP APIs. When an echo reply is received by the operating system, it notifies the ping program via those APIs.
 
 - The ping program then correlates the received echo reply packet to the original echo request it sent based on the sequence number, and knows a response was received.
+
+总结一下, Ping 利用 ICMP, 看一下当信息类型为 ICMP echo reply 或 echo request 时, ICMP 的格式, 可以看到此时 type 为 0 或 8:
+
+![b1](ping-icmp/b1.png)
+
+## ICMP Redirect Messages
+
+[Understand ICMP Redirect Messages - Cisco](https://www.cisco.com/c/en/us/support/docs/ios-nx-os-software/nx-os-software/213841-understanding-icmp-redirect-messages.html)
+
+这个讲的很好: [wireshark分析icmp协议常见范例 - 知乎](https://zhuanlan.zhihu.com/p/286199789)
+
+[ICMP协议及应用实例（ping，traceroute） - 掘金](https://juejin.cn/post/6844903878752747528)
