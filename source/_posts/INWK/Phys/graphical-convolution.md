@@ -1,5 +1,5 @@
 ---
-title: 不定积分和卷积Graphical Convolution
+title: 不定积分和卷积 Graphical Convolution - 课堂笔记
 date: 2023-05-05 22:04:08
 categories:
  - INWK

@@ -1,5 +1,5 @@
 ---
-title: 傅立叶变换之rect, sinc, delta 函数
+title: 傅立叶变换之rect, sinc, delta 函数 - 课堂笔记
 date: 2023-05-06 15:30:06
 categories:
  - INWK
