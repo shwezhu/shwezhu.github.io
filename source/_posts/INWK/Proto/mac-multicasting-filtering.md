@@ -1,5 +1,5 @@
 ---
-title: IGMP - 课堂笔记
+title: 大小端 & Multicasting & MAC地址 & filtering - 课堂笔记
 date: 2023-06-30 22:43:36
 categories:
  - INWK
@@ -52,7 +52,7 @@ First, the **interface card** sees every frame that passes by on the cable and *
 
 > Note that, most interfaces can be placed into a promiscuous mode whereby they receive a copy of every frame. This mode is used by tcpdump, for example.
 
-![a](broad/a.png)
+![a](a.png)
 
 Today most interfaces can also be configured to receive frames whose destination address is a multicast address, or some subset of multicast addresses. On an Ethernet, a multicast address has the low-order bit of the high-order byte turned on. In hexadecimal this bit looks like 01:00:00:00:00:00. (We can consider the Ethernet broadcast address, ff:ff:ff:ff:ff:ff as a special case of the Ethernet multicast address.)
 
