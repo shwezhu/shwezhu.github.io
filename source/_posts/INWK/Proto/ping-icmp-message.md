@@ -163,11 +163,27 @@ So in more detail:
 
 总结一下, Ping 利用 ICMP, 看一下当信息类型为 ICMP echo reply 或 echo request 时, ICMP 的格式, 可以看到此时 type 为 0 或 8:
 
-![b1](ping-icmp/b1.png)
+![b1](b1.png)
 
-## ICMP Redirect Messages
+## ICMP
 
-[Understand ICMP Redirect Messages - Cisco](https://www.cisco.com/c/en/us/support/docs/ios-nx-os-software/nx-os-software/213841-understanding-icmp-redirect-messages.html)
+### ICMP 的类别
+
+ICMP消息大体有两类：双向消息和单向消息。
+
+双向消息，如常用的ping消息，用来测试网络的可达性。发起方是源设备，应答方是终端设备或者数据传输路径中的节点路由器。
+
+单向消息一般为告警报错消息（type 3)，或Redirect消息（ type 5)，由于单向的消息是通知源主机出错。发起方都是数据包经过节点路由器。
+
+ICMP 报文大致可分为两类：差错报文、查询报文。差错报文是单向的，查询报文是双向的。
+
+### ICMP 差错报文
+
+----ICMP 回送消息：用于进行通信的主机或路由之间，判断发送数据包是否成功到达对端的消息。可以向对端主机发送回送请求消息，也可以接收对端主机回来的回送应答消息。
+
+----ICMP 地址掩码消息：主要用于主机或路由想要了解子网掩码的情况。可以向那些主机或路由器发送 ICMP 地址掩码请求消息，然后通过接收 ICMP 地址掩码应答消息获取子网掩码信息。
+
+----ICMP 时间戳消息：可以向那些主机或路由器发送 ICMP 时间戳请求消息，然后通过接收 ICMP 时间戳应答消息获取时间信息。
 
 这个讲的很好: [wireshark分析icmp协议常见范例 - 知乎](https://zhuanlan.zhihu.com/p/286199789)
 

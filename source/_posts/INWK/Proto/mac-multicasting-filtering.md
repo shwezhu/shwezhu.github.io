@@ -10,7 +10,7 @@ categories:
 
 A big-endian system stores the most significant byte of a word at the smallest memory address and the least significant byte at the largest. A little-endian system, in contrast, stores the least-significant byte at the smallest address. 只要记住小端是低字节存储在低地址就好了, 注意顺序以字节为单位, 而不是完全倒回来, 如图:
 
-![a](a-8172453.png)
+![b](b.png)
 
 首先，为什么会有小端字节序？
 
