@@ -1,5 +1,5 @@
 ---
-title: OSI Model & ARP Format - 课堂笔记
+title: OSI Model & ARP Format & RARP - 课堂笔记
 date: 2023-06-27 19:39:36
 categories:
  - INWK
@@ -66,7 +66,28 @@ The Address Resolution Protocol is a data link layer protocol used to map MAC ad
 
 ![a](a.png)
 
+## RARP
+
+RARP协议的产生原因
+
+ARP（地址解析协议）是设备通过自己知道的IP地址来获得自己不知道的物理地址的协议。假如一个设备不知道它自己的IP地址，但是知道自己的物理地址，网络上的无盘工作站就是这种情况，设备知道的只是网络接口卡上的物理地址。这种情况下应该怎么办呢？RARP（逆地址解析协议）正是针对这种情况的一种协议。
+
+RARP以与ARP相反的方式工作。RARP发出要反向解析的物理地址并希望返回其对应的IP地址，应答包括由能够提供所需信息的RARP服务器发出的IP地址。虽然发送方发出的是广播信息，RARP规定只有RARP服务器能产生应答。许多网络指定多个RARP服务器，这样做既是为了平衡负载也是为了作为出现问题时的备份。
+
+RARP协议的工作原理
+
+（1）源主机发送一个本地的RARP广播，在此广播包中，声明自己的MAC地址并且请求任何收到此请求的RARP服务器分配一个IP地址；
+
+（2）本地网段上的RARP服务器收到此请求后，检查其RARP列表，查找该MAC地址对应的IP地址；
+
+（3）如果存在，RARP服务器就给源主机发送一个响应数据包并将此IP地址提供给对方主机使用；
+
+（4）如果不存在，RARP服务器对此不做任何的响应；
+
+（5）源主机收到从RARP服务器的响应信息，就利用得到的IP地址进行通讯；如果一直没有收到RARP服务器的响应信息，表示初始化失败。
+
 参考:
 
 - [Address Resolution Protocol (ARP) - IBM Documentation](https://www.ibm.com/docs/en/zos-basic-skills?topic=3-address-resolution-protocol-arp)
 - [ARP Protocol Packet Format - GeeksforGeeks](https://www.geeksforgeeks.org/arp-protocol-packet-format/)
+- [网络：简述对ARP与RARP协议的认识 - 知乎](https://zhuanlan.zhihu.com/p/107445582)

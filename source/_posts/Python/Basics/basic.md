@@ -7,7 +7,7 @@ tags:
   - Python
 ---
 
-关于dict
+关于 dict,
 
 ```python
 dict = {'a': 1}
@@ -19,4 +19,15 @@ print(dict['b'])
 print(dict.get('b', 0)) # Print 0
 ```
 
+关于 slice, 
+
+```python
+arr = [1, 2, 3, 4]
+print(arr[-1])
+// 4
+
+for i in range(3):
+    print(i)
+// 0 1 2
+```
 
