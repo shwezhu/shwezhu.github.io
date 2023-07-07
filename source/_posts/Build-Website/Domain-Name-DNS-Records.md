@@ -10,13 +10,21 @@ tags:
 
 # 1. DNS Records: A和CNAME
 
-购买域名后, 肯定要在域名设置页面为自己的域名添加`A`, `CNAME`或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地址或者其他的hostname(比如把我们的域名绑定到GitHub Pages), 
+购买域名后, 肯定要在域名设置页面为自己的域名添加`A`, `CNAME`或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地址, 
 
-有时添加DNS Records要求指定**HOSTNAME**和**IP**(添加`A`类记录的时候), 有时需要指定**HOSTNAME**和**target hostname**(添加`CNAME记录`), 其中添加`A`记录是最常见的, 我们把域名绑定到服务器IP就需要为我们的域名添加个A记录(即指定ip). 刚开始你连接服务器肯定是`ssh root@144.202.102.3`这种之类的命令, 这就是你的服务器ip. 下图是添加`CNAME`记录的例子:
+把域名和服务器IP关联就需要为域名添加 `A` 记录, 需要指定 HOSTNAME 和 IP, 其中 `HOSTNAME` 可以填`@`或者`www`, 或者不填, `@`代表空即不填或者填`@`都是一个意思 (还有个概念叫wildcard, 即你可以这么填`*.example.com`) 
+
+![a](a-8733304.png)
+
+添加 `CNAME记录` 需要指定**HOSTNAME**和**target hostname**, 
+
+![b](b-8733375.png)
+
+下图是添加 `CNAME` 记录的例子:
 
 ![](a.png)
 
-添加之后, 等大概半小时就会生效, 可以使用`dig`命令查看:
+添加之后, 等大概半小时就会生效, 可以使用 `dig` 命令查看:
 
 ```shell
 $ dig www.shaowenzhu.top +nostats +nocomments +nocmd
@@ -30,23 +38,18 @@ shwezhu.github.io.	1937	IN	A	185.199.110.153
 shwezhu.github.io.	1937	IN	A	185.199.111.153
 ```
 
->  注意添加A记录的时候Hostname可以不填, 也可以填`@`或者`www`这种, 其中`@`代表空, 也就是说你不填或者填`@`都是一个意思(还有个概念叫wildcard, 即你可以这么填`*.example.com`) 如下图
+添加 `A` 记录时, 相同 IP 可以有不同的 `HOSTNAME`:
 
-![](b.png)
+![c](Domain-Name-DNS-Records/c-8734697.png)
 
-说了这么多, 想到一个问题, 一个域名可以拥有多个A记录吗? 首先肯定可以为一个域名添加多个HOSTNAME不同DNS Records(IP相同), 类似下面这样:
+一个域名也可以拥有多个 ip 地址不同的 `A` 记录, 如下: 
+
 ```shell
 HOSTNAME: @, IP: 1.2.3.4
-HOSTNAME: www, IP: 1.2.3.4
+HOSTNAME: www, IP: 6.7.8.5
 ```
 
-那可以像下面这样吗:
-```shell
-HOSTNAME: @, IP: 1.2.3.4
-HOSTNAME: www, IP: 1.2.3.4
-```
-
-我查了一下谷歌, 说是可以的, 然后一般我们的域名会自带默认的DNS Records, 如下图, 
+一般我们的域名会自带默认的DNS Records, 如下图, 
 
 ![](init_dns.png)
 
