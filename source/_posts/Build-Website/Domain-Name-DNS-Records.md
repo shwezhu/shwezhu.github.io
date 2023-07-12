@@ -40,7 +40,7 @@ shwezhu.github.io.	1937	IN	A	185.199.111.153
 
 添加 `A` 记录时, 相同 IP 可以有不同的 `HOSTNAME`:
 
-![c](Domain-Name-DNS-Records/c-8734697.png)
+![c](c-8734697.png)
 
 一个域名也可以拥有多个 ip 地址不同的 `A` 记录, 如下: 
 
