@@ -1,0 +1,18 @@
+---
+title: 英语阅读(一)
+date: 2023-07-14 18:50:37
+categories:
+ - Other
+---
+
+During today’s press conference in which Hollywood actors confirmed that **they were going on strike**, Duncan Crabtree-Ireland, SAG-AFTRA’s chief negotiator, revealed a proposal from Hollywood studios that sounds ripped right out of a Black Mirror episode.
+
+A **groundbreaking** AI proposal that ....
+
+SAG strike live updates: Hollywood actors join LA and NYC **picket lines** as union begins first day of **strike**. 这里 picket lines 其实就是一行抗议的人在街上, 像线一样, 加入 picket lines 就是加入抗议
+
+<u>LOS ANGELES</u>, July 14 (Reuters) - Striking Hollywood actors joined <u>film and television writers on picket lines</u> on Friday, the first day of a dual work <u>stoppage</u> that has forced U.S. studios to <u>shutter</u> productions as workers battle over pay in the streaming TV era. 
+
+- LOS ANGELES: 洛杉矶
+- Stoppage: 罢工
+
