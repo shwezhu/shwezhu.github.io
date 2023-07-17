@@ -16,3 +16,23 @@ SAG strike live updates: Hollywood actors join LA and NYC **picket lines** as un
 - LOS ANGELES: 洛杉矶
 - Stoppage: 罢工
 
+Global temperatures **were soaring to** historic highs as the world's two biggest carbon emitters, the United States and China, **sought** on Monday to **reignite** talks on climate change. 
+
+- sought: seek
+
+With scientists saying the target of keeping global warming within 1.5 degrees Celsius of pre-industrial levels **is moving beyond reach**, evidence of the crisis was everywhere.
+
+**Prolonged** high temperatures in China are **threatening** power grids and crops and **raising** concerns about a repeat of last year's drought, the most severe in 60 years.
+
+- Prolonged: Something prolonged is long and drawn-out — it's taking longer than it should. A prolonged wait is usually annoying.
+
+Moscow **halts** grain deal after bridge to Crimea struck
+
+...., just hours after a **blast** knocked out Russia's bridge to Crimea in what Moscow called a **strike** by Ukrainian **sea drones**.
+
+- strike: 侵袭, 罢工
+
+
+
+
+

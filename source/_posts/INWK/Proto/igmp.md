@@ -41,15 +41,15 @@ IGMP works directly on top of the Internet Protocol (IP). Each IGMP packet has b
 
 > A **multicast group** is a group of computers (more specifically, network interfaces) interested in receiving a particular stream of data. Multicast groups does not require to be located in a local network segment. Multicast groups can be located in any different network segments connected together with routers those can forward multicast traffic. Computers can join a multicast group or leave a multicast group using a protocol called as IGMP (Internet Group Management Protocol).
 
-![a](igmp/a.png)
+![a](a.png)
 
 看一下 IGMPV2 Message Format, 
 
-![b](igmp/b-8156690.png)
+![b](b-8156690.png)
 
 该信息中的 Group Address Field 解释如下: 
 
-![b](igmp/b.png)
+![b](b.png)
 
 注意上面提到的 IP destination address 并不是放到 IGMP Message 里的 Group Address Field 不是一个东西, 
 
