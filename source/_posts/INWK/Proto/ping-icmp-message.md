@@ -221,13 +221,13 @@ The Port Unreachable message is generated when an incoming datagram is destined 
 
 We can illustrate the operation of ICMPv4 Port Unreachable messages using the *Trivial File Transfer Protocol* (TFTP) [RFC1350] client on Windows or Linux while watching the packet exchange using tcpdump. The well-known UDP port for the TFTP service is 69. However, while the TFTP client is available on many systems, most systems do not run TFTP servers. Therefore, it is easy to see what happens when we try to access a nonexistent server. In the example shown in Listing 8-1, we execute the TFTP client, called tftp, on a Windows machine and attempt to fetch a file from a Linux machine. The –s option for tcpdump causes 1500 bytes to be captured per packet; the –i eth1 option tells tcpdump to monitor traffic on the Ethernet interface named eth1; the –vv option causes additional descriptive output to be included; and the expression icmp or port tftp causes traffic matching either the TFTP port (69) or the ICMPv4 protocol to be included in the output.
 
-![a](ping-icmp-message/a-8403295.png)
+![a](a-8403295.png)
 
 Here we see a set of seven requests grouped very close to each other in time. The initial request (identified as RRQ for file /foo) comes from UDP port 3871, destined for the TFTP service (port 69). An ICMPv4 Port Unreachable message is immediately returned (packet 2), but the TFTP client appears to ignore the mes- sage, sending another UDP datagram right away. This continues immediately six more times. After waiting about another 8s, the client tries one last time and finally gives up.
 
 Note that the ICMPv4 messages are sent without any port number designa- tion, and each 16-byte TFTP packet is from a specific port (3871) and to a specific port (TFTP, equal to 69). The number 16 at the end of each TFTP read request (RRQ) line is the length of the data in the UDP datagram. In this example, 16 is the sum of the TFTP’s 2-byte opcode, the 5-byte null-terminated name /foo, and the 9-byte null-terminated string netascii. The full ICMPv4 Unreachable message is depicted in Figure 8-5. It is 52 bytes long (not including the IPv4 header): 4 bytes for the basic ICMPv4 header, followed by 4 unused bytes, the 20-byte offending IPv4 header, 8 bytes for the UDP header, and finally the remaining 16 bytes from the original tftp application request (4 + 4 + 20 + 8 + 16 = 52).
 
-![a](ping-icmp-message/a-8403409.png)
+![a](a-8403409.png)
 
 ##### 2.1.3. Redirect (ICMPv4 Type 5)
 
@@ -235,7 +235,7 @@ If a router receives a datagram from a host and can determine that it is not the
 
 In Figure 8-7, a network segment has a host and two routers, R1 and R2. When the host sends a datagram incorrectly through router R2, R2 responds by sending the Redirect message to the host, while forwarding the datagram to R1. Although hosts may be configured to update their forwarding tables based on ICMP redi- rects, routers are discouraged from doing so under the assumption that rout- ers should already know the best next-hop nodes for all reachable destinations because they are using dynamic routing protocols.
 
-![a](ping-icmp-message/a-8409179.png)
+![a](a-8409179.png)
 
 
 
