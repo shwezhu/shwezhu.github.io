@@ -12,6 +12,8 @@ tags:
 简单的命令会直接记录使用方法, 另外一个指令的 `--help`参数基本都是help页面, 或者使用`man your-command`
 
 ```shell
+# 查看 ip
+$ ipconfig getifaddr en0
 # 赋予可执行权限
 $ chmod u+x test.sh
 # 追踪域名DNS

@@ -32,7 +32,9 @@ Moscow **halts** grain deal after bridge to Crimea struck
 
 - strike: 侵袭, 罢工
 
+----
 
+> Tesla’s revenue soars amid rampant price cutting
 
 
 
