@@ -99,7 +99,7 @@ HOSTNAME.SLD.TLD.root
 
 > An **apex domain** is a custom domain that does not contain a **subdomain**, such as `example.com`. Apex domains are also known as base, bare, naked, root apex, or zone apex domains. 
 
-### 2.3. DNS 查询过程
+## 3. DNS 查询过程
 
 > DNS 中的域名都是用**句点**来分隔的，比如 `www.server.com`，这里的句点代表了不同层次之间的**界限**。在域名中，**越靠右**的位置表示其层级**越高**。毕竟域名是外国人发明，所以思维和中国人相反，比如说一个城市地点的时候，外国喜欢从小到大的方式顺序说起（如 XX 街道 XX 区 XX 市 XX 省），而中国则喜欢从大到小的顺序（如 XX 省 XX 市 XX 区 XX 街道）。根域是在最顶层，它的下一层就是 com 顶级域，再下面是 server.com。
 
@@ -118,11 +118,11 @@ HOSTNAME.SLD.TLD.root
 
 ![33](33.webp)
 
-## 3. 阅读实践
+## 4. 阅读实践
 
 其实我们完整度以下[Github这篇文档](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages)即如何为GitHub pages设置自定义域名, 你就懂了, 学了知识要实践的嘛, 我复制一部分到下面了, 
 
-### 3.1. About custom domains and GitHub Pages
+### 4.1. About custom domains and GitHub Pages
 
 GitHub Pages supports using custom domains, or changing the root of your site's URL from the default, like octocat.github.io, to any domain you own. 
 
@@ -140,19 +140,19 @@ We recommend always using a `www` subdomain, even if you also use an apex domain
 
 After you configure a custom domain for a user or organization site, the custom domain will replace the `<user>.github.io` or `<organization>.github.io` portion of the URL for any project sites owned by the account that do not have a custom domain configured. For example, if the custom domain for your user site is `www.octocat.com`, and you have a project site with no custom domain configured that is published from a repository called `octo-project`, the GitHub Pages site for that repository will be available at `www.octocat.com/octo-project`. For more information about each type of site and handling custom domains, see "[About GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#types-of-github-pages-sites)."
 
-### 3.2. Using a subdomain for your GitHub Pages site
+### 4.2. Using a subdomain for your GitHub Pages site
 
 A subdomain is the part of a URL before the root domain. You can configure your subdomain as `www` or as a distinct section of your site, like `blog.example.com`.
 
 Subdomains are configured with a `CNAME` record through your DNS provider. For more information, see "[Managing a custom domain for your GitHub Pages site](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-a-subdomain)."
 
-#### 3.2.1. `www` subdomains
+#### 4.2.1. `www` subdomains
 
 A `www` subdomain is the most commonly used type of subdomain. For example, `www.example.com` includes a `www` subdomain.
 
 `www` subdomains are the most stable type of custom domain because `www` subdomains are not affected by changes to the IP addresses of GitHub's servers.
 
-#### 3.2.2. Custom subdomains
+#### 4.2.2. Custom subdomains
 
 A custom subdomain is a type of subdomain that doesn't use the standard `www` variant. Custom subdomains are mostly used when you want two distinct sections of your site. For example, you can create a site called `blog.example.com` and customize that section independently from `www.example.com`.
 
