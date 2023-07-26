@@ -21,7 +21,7 @@ tags:
 
 有很多疑问比如war和war exploded是什么, update resources和update classes and resources的区别是什么, 这都是干啥的?
 
-# War & War exploded
+## War & War exploded
 
 在使用 IDEA 开发Java Web项目部署 Tomcat 的时候通常会出现下面的情况:
 
@@ -38,7 +38,7 @@ tags:
 
 所以现在知道上面为啥选择war的话, 在on frame deactivation diaglog就不会有update resources选项了吧. 
 
-# Update Resources & Update Classes and Resources
+## Update Resources & Update Classes and Resources
 
 ![](e.png)
 

@@ -9,11 +9,9 @@ tags:
  - Tomcat
 ---
 
-**Web application resources or web application archives are commonly called WAR files.** A WAR file is used to deploy a Java EE web application in an application server. Inside a WAR file, all the web components are packed into one single unit. These include **JAR files**, **JavaServer Pages**, **Java servlets**, Java class files, XML files, HTML files, and other resource files that we need for web applications. 
+Web application resources or web application archives are commonly called WAR files. A WAR file is used to deploy a Java EE web application in an application server. Inside a WAR file, all the web components are packed into one single unit. These include JAR files, JavaServer Pages, Java servlets, Java class files, XML files, HTML files, and other resource files that we need for web applications. We can use the Maven WAR plugin to build our project as a [WAR](https://www.baeldung.com/java-jar-war-packaging#war) file. 
 
-[Maven](https://www.baeldung.com/maven) is a popular build management tool that is widely used in Java EE projects to handle build tasks like compilation, packaging, and artifact management. We can **use the Maven WAR plugin to build the project as a [WAR](https://www.baeldung.com/java-jar-war-packaging#war) file**. [Generate a WAR File in Maven | Baeldung](https://www.baeldung.com/maven-generate-war-file)
-
-# Step 1: Add a new user with deployment rights to Tomcat
+## Step 1: Add a new user with deployment rights to Tomcat
 
 To perform a Maven Tomcat deploy of a `WAR` file you must first set up a **user** in Tomcat with the appropriate rights. You can do this with an edit of the `tomcat-users.xml` file, which can be found in Tomcat's `conf` sub-directory. Add the following entry **inside** the `tomcat-users` tag:
 
@@ -23,21 +21,31 @@ To perform a Maven Tomcat deploy of a `WAR` file you must first set up a **user*
 
 Save the tomcat-users.xml file and restart the server to have the changes take effect.
 
-重启Tomcat就是进到Tomcat的`bin`目录下, 执行`startup.sh`, `./shutdown.sh`, 其实你直接使用`startup.sh`命令开启Tomcat服务就会加载配置文件了, 上面说的重启是默认你的Tomcat一直处于运行状态. 现在你也应该启动Tomcat服务了, 启动后尝试访问`http://localhost:8080/`, 看看能不能正确访问Tomcat主页, 我在这一步就出现了问题, 访问的总是我以前的JSP应用, 我用IDEA开发的, 但我都没打开IDEA, 仍然可以访问到, 真是奇了怪了, 如下:
+重启Tomcat就是进到Tomcat的`bin`目录下, 执行`startup.sh`, `./shutdown.sh`, 其实你直接使用`startup.sh`命令开启Tomcat服务就会加载配置文件了, 上面说的重启是默认你的Tomcat一直处于运行状态. 现在你也应该启动Tomcat服务了, 启动后尝试访问`http://localhost:8080/`, 
+
+![](d.png)
+
+点击后输入上面的`username`和对应的`password`, 即可进入管理页面如下:
+
+![](e.png)
+
+### 无法访问 tomcat 主页问题
+
+我在访问Tomcat主页出现了问题, 访问的总是我以前的JSP应用, 我用IDEA开发的, 但我都没打开IDEA, 仍然可以访问到, 真是奇了怪了, 如下:
 
 ![](a.png)
 
-然后我就[查到了一个博客](https://www.cnblogs.com/yayazi/p/7920257.html)说需要将Tomcat的首页的工程部署到Tomcat服务器上，部署步骤如下：
+然后我就[查到了一个博客](https://www.cnblogs.com/yayazi/p/7920257.html)说需要将Tomcat的首页的工程部署到Tomcat服务器上，我们通过IDEA来操作, 部署步骤如下：
 
-选择菜单栏“Run-->Edit Configuration...-->Deployment”, 选择右上角绿色“+”，选择“External Source...”，将Apache-tomcat的`webapps`目录下的ROOT文件夹选中，点击OK，及完成Tomcat的首页的工程的部署。选择ROOT文件后右侧Application Context 不填写。然后删除多余的`ROOT`下面的那个`ServletDemo:war exploded`, 如下图:
+选择菜单栏“Run-->Edit Configuration...-->Deployment”, 选择右上角绿色“+”，选择“External Source...”，将Apache-tomcat的`webapps`目录下的ROOT文件夹添加进来, 下面的Application Context 空着, 删除 `ROOT` 下面的那个`ServletDemo:war exploded`, 如下图:
 
 ![](b.png)
 
-然后我的还有个问题, 就是我IDEA上选择的Tomcat服务器不是我现在用的, 就是说我有个旧的Tomcat服务器, 我不知道, 然后IDEA用的一直是那个旧的(但我在上面部署位置的`ROOT`文件夹选择的是新的Tomcat下的文件), 所以就导致就算部署项目后, 我依然无法访问Tomcat的主页. 所以检查一下你是否选择了正确的Tomcat服务器, 
+然后我IDEA上选择的Tomcat服务器不是我现在用的, 我有个旧的Tomcat服务器, 我不知道, 然后IDEA用的一直是那个旧的(但我在上面部署位置的`ROOT`文件夹选择的是新的Tomcat下的文件), 所以就导致就算部署项目后, 我依然无法访问Tomcat的主页. 所以检查一下你是否选择了正确的Tomcat服务器, 
 
 ![](c.png)
 
-这样配置好后再在IDEA点击运行, 就可以访问到Tomcat的主页了, 之后你关闭IDEA, 就可以直接进入Tomcat根目录的`bin`下通过执行`startup.sh`来启动Tomcat. 
+这样配置好后再在IDEA点击运行, 就可以通过`http://localhost:8080/`访问 Tomcat 主页了, 之后你关闭IDEA, 直接进入Tomcat根目录的`bin`下通过执行`startup.sh`来启动Tomcat. 
 
 有时候你会遇到其他情况, 比如8080端口被占用, 这时候解决办法也很简单
 
@@ -50,7 +58,7 @@ kill -9 PID
 
 说了那么多终于要进行下一步了, 
 
-# Step 2: Tell Maven about the Tomcat deploy user
+## Step 2: Tell Maven about the Tomcat deploy user
 
 After you add the `war-deployer` user to Tomcat, register that `username` and `password` in Maven, along with a named reference to the server. The Maven-Tomcat plugin will use this information when it tries to [connect to the application server](https://www.theserverside.com/feature/Is-Apache-Tomcat-the-right-Java-application-server-for-you). Edit the `settings.xml` file and add the following entry **within** the `<server>` tag to create the named reference to the server:
 
@@ -64,18 +72,12 @@ After you add the `war-deployer` user to Tomcat, register that `username` and `p
 ```
 
 > 注意, 上面提到的`settings.xml`文件在`Downloads/apache-maven-3.9.1/conf`下, 根据你的maven安装目录查找, 
+>
+> 另外这里加的账号密码就是上面在Tomcat添加用户时候的账号密码, 这是因为你进入Tomcat管理页面的时候需要,如果你不提供(下面配置`pom.xml`也会说到), 那生成war文件的时候maven就会报错, 
 
-另外这里加的账号密码就是上面在Tomcat添加用户时候的账号密码, 这是因为你进入Tomcat管理页面的时候需要,如果你不提供(下面配置`pom.xml`也会说到), 那生成war文件的时候maven就会报错, 
+## Step 3: Register the tomcat7-maven-plugin in the POM
 
-![](d.png)
-
-点击后输入上面的`username`和对应的`password`, 即可进入管理页面如下:
-
-![](e.png)
-
-# Step 3: Register the tomcat7-maven-plugin in the POM
-
-首先先把打包格式改成`war`, 即在`pom.xml`中找到`<packaging>`标签, 没有的话添加一个, 与`<dependencies>`标签并列的那种,  我故意多放了点其他的标签, 一遍辨认位置如下:
+把打包格式改成`war`, 即在`pom.xml`中找到`<packaging>`标签, 没有的话添加一个, 与`<dependencies>`标签并列:
 
 ```xml
 <groupId>com.example</groupId>
@@ -111,7 +113,7 @@ Now that Maven and Tomcat are configured, the next step is to edit the Java web 
 [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
 ```
 
-如下加入上面我们在Tomcat Users里配置的账号密码(修改`pom.xml`后记得更新`pom.xml`), 如下: 
+加入我们在Tomcat Users里配置的账号密码: 
 
 ```xml
 <plugin>
@@ -127,6 +129,8 @@ Now that Maven and Tomcat are configured, the next step is to edit the Java web 
 </plugin>
 ```
 
+> 注意: 修改`pom.xml`后需要更新`pom.xml`
+>
 > 提示: 点击IDEA软件的右上角有个浮动的更新小按钮即更新, 或者你可以查查命令行maven怎么更新`pom.xml`文件. 
 
 然后重新运行`mvn install tomcat7:deploy`, 成功:
@@ -210,15 +214,24 @@ Now that Maven and Tomcat are configured, the next step is to edit the Java web 
 </web-app>
 ```
 
-# FInal Step: Verify
+## FInal Step: Verify
 
 确保你已经开启Tomcat服务(即使你关闭了IDEA, IDEA和Tomcat是两个东西, IDEA是个IDE会用到Tomcat作为web服务器来部署web app), 然后访问通过`http://localhost:8080/`访问到Tomcat主页, 这时候你可以在链接🔗后加上`/rps`即`http://localhost:8080/rps/`就可以进入到你的那个web网页, 如下:
 
 ![](h.png)
 
-# 思考总结
+## 思考总结
 
-这时候其实我们也就知道了什么是根目录和url中神秘的路径问题, 你看我们若想访问`manager`页面, 这个页面的url是`http://localhost:8080/manager/`, 我们访问我们刚部署的页面是`http://localhost:8080/rps/`, 你看最后的这个路径及`/manager`, `/rps`都是tomcat的`webapps`目录下的文件, 所以`webapp`就是所谓的根目录, 我们访问什么都是根据它来的, 根据上图我们可以看到, `webapps`目录下还有`examples`等文件夹, 所以我们可以直接通过`http://localhost:8080/example/`访问. 但是又有个问题, Tomcat的主页也就是是`http://localhost:8080/`具体在哪呢? 按理说`webapps`下应该有个`index.html`文件呀, 可是却空空, 这是怎么回事, 怎么没有按我们上面推导的路径来呢?
+这时候其实我们也就知道了什么是根目录和url中神秘的路径问题, 你看我们若想访问`manager`页面, 这个页面的url是`http://localhost:8080/manager/`, 我们访问我们刚部署的页面是`http://localhost:8080/rps/`, 你看最后的这个路径及`/manager`, `/rps`都是tomcat的`webapps`目录下的文件, 如下:
+
+```shell
+# David @ tc0db in ~/Downloads/Programs/apache-tomcat-9.0.73/webapps
+$ ls
+ROOT         examples     manager      rps.war
+docs         host-manager rps
+```
+
+所以`webapp`就是所谓的根目录, 我们访问什么都是根据它来的, 可以看到, `webapps`目录下还有`examples`等文件夹, 所以我们可以直接通过`http://localhost:8080/example/`访问. 但是又有个问题, Tomcat的主页也就是是`http://localhost:8080/`具体在哪呢? 按理说`webapps`下应该有个`index.html`文件呀, 可是却空空, 这是怎么回事, 怎么没有按我们上面推导的路径来呢?
 
 还记不记得当时学习servlet的时候有个`web.xml`文件, 我们在这个文件里可以配置个welcome标签, 通过这个标签我们就可以直接指定一个html文件作为我们的主页而不是根目录下的`index.tml`文件, 同样, Tomcat当然也有这个文件 `TOMCAT_HOME/conf/web.xml`, 搜索`welcome`找到啦(在`tomcat/webapps/ROOT/index.jsp`):
 
@@ -271,4 +284,5 @@ Further Reading: [How do I override the default home page loaded by Tomcat?](htt
 - [Step-by-step Maven Tomcat WAR file deploy example | TheServerSide](https://www.theserverside.com/video/Step-by-step-Maven-Tomcat-WAR-file-deploy-example)
 - [tomcat启动成功浏览器却无法访问 - 掘金](https://juejin.cn/post/7133755807253921829)
 - [web applications - How does Tomcat find the HOME PAGE of my Web App? - Stack Overflow](https://stackoverflow.com/a/3976385/16317008)
+- [Generate a WAR File in Maven | Baeldung](https://www.baeldung.com/maven-generate-war-file)
 

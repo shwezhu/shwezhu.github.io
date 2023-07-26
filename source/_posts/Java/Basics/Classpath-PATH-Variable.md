@@ -53,6 +53,11 @@ On most systems (Linux, Mac OS, UNIX, etc) the colon character (`:`) is the clas
 > 其实PATH就是告诉terminal可执行指令的位置信息, 而CLASSPATH是用来告诉JRE相关程序 用户自定义类 的位置信息 
 
 # 3. CLASSPATH
+
+从Java5开始CLASSPATH默认就是当前路径, 一般情况下就不需要再设定了, 
+
+
+
 > 与PATH相同(PATH是terminal用来找可执行命令的一个环境变量), classpath是JVM用到的一个环境变量，它用来指示JVM如何搜索class。
 
 因为Java是编译型语言，源码文件是`.java`，而编译后的`.class`文件才是真正可以被JVM执行的字节码。因此，如果要加载一个`abc.xyz.Hello`的类，JVM需要知道应该去哪搜索对应的`Hello.class`文件。所以，classpath就是一组目录的集合，它设置的搜索路径与操作系统相关。例如，在Windows系统上，用`;`分隔，带**空格的目录**用`""`括起来，可能长这样：

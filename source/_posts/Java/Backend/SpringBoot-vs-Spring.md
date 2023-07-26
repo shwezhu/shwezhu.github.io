@@ -9,25 +9,15 @@ tags:
  - Spring Boot
 ---
 
-# 什么是Spring Boot
+## 什么是Spring Boot
 
-刚开始接触Spring Boot， 查了查谷歌想弄明白Spring Boot是什么， 做个笔记整理一下，有的内容是摘自相同文章就不再重复标注（复制好多链接真的会很麻烦🥹）。
+> Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that you can "just run". [Spring Boot](https://spring.io/projects/spring-boot)
 
-Spring Boot 是由 Pivotal 团队提供的全新框架，其设计目的是用来简化新 Spring 应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。用我的话来理解，就是 Spring Boot 其实不是什么新的框架，它默认配置了很多框架的使用方式，就像 Maven 整合了所有的 Jar 包，Spring Boot 整合了所有的框架。[原文](http://www.ityouknow.com/springboot/2016/01/06/spring-boot-quick-start.html)
+> Spring Boot是一个基于Spring的套件，它帮我们预组装了Spring的一系列组件，以便以尽可能少的代码和配置来开发基于Spring的Java应用程序。[原文](https://www.liaoxuefeng.com/wiki/1252599548343744/1266265175882464)
 
-我们在使用Spring Boot时只需要配置相应的Spring Boot就可以用所有的Spring组件，简单的说，spring boot就是整合了很多优秀的框架。[原文](https://juejin.cn/post/6983583704949981191)
+即 Spring Boot 是用来方便管理 Spring 相关组件的一个东西, 所以并不是说学了Spring Boot就不用学Spring, Spring Boot里面的东西就是Spring的一个个部件, 学Spring Boot的时候也是在学Spring。
 
-用一句话实在难以概述 Spring Boot，如果一定要为它下一个定义的话，那么 Spring Boot 可以被理解为是一个用来简化 Spring 应用创建、开发和运行的框架。[原文](https://blog.csdn.net/zzuhkp/article/details/123518033)
-
-Spring Boot是一个基于Spring的套件，它帮我们预组装了Spring的一系列组件，以便以尽可能少的代码和配置来开发基于Spring的Java应用程序。[原文](https://www.liaoxuefeng.com/wiki/1252599548343744/1266265175882464)
-
-传播广的博客基本观点一致，即Spring Boot更像是一个依赖管理插件来方便管理用于Spring开发相关的依赖等，当然Spring Boot本身默认为我们配置了很多以来，省的我们一一列出。所以并不是说你学了Spring Boot就不用学Spring，Spring Boot里面的东西就是Spring的一个个部件。你学Spring Boot的时候也是在学Spring。
-
-- Spring boot是Spring的引导，就是用于启动Spring的。
-
-- spring boot使用了默认大于配置的理念，很多集成方案已经帮你选择好了，能不配置就不配置; Spring Boot的哲学就是约定大于配置; 既然很多东西都是一样的，为什么还要去配置。
-
-可以看一下我的Spring Boot的这个maven配置文件(`pom.xml`)的内容，可能会帮助理解Spring Boot管理组件负责组装的本质, 然后也可以用来**对比**下面讲介绍的Spring框架的maven配置文件(`pom.xml`), 可以看到在Spring Boot项目里依赖有JPA, WEB以及TEST的GroupID都是SpringBoot`<groupId>org.springframework.boot</groupId>`：
+可以看下 Spring Boot 的maven配置文件(`pom.xml`)的内容，可能会帮助理解Spring Boot负责组装部件的本质：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -84,21 +74,9 @@ Spring Boot是一个基于Spring的套件，它帮我们预组装了Spring的一
 </project>
 ```
 
-# Spring Boot 是如何简化应用创建的？
 
-关于简化应用创建，最近几年刚学编程的同学可能并没有太大的感触，5 年前的 Spring 项目搭建可真是一个痛苦的过程。
 
-最初的 Java 项目如果依赖了第三方的库，是直接将 jar 包添加到类路径中的，每次创建一个项目都需要重复这个过程，如果依赖的第三方库比较少还好，如果依赖的比较多，依赖的 jar 包发生了相互依赖，并且版本还不同，那可就头痛了。
-
-以 Spring 为例，如果我们引入了 `spring-webmvc` 模块，我们还要紧跟着把 `spring-webmvc` 模块依赖的 `spring-bean` 模块加入到类路径，由于 `spring-bean` 模块依赖了 `spring-core` 模块，还要添加 `spring-core `添加到类路径，而我们只是想用 `spring-webmvc` 模块而已。
-
-好在后来出现了一些依赖管理工具，例如 maven、gradle、ant，由于目前在 Java 开发中 maven 用的比较多，后面我们就拿 maven 举例了。尽管有了 maven 管理依赖，但是由于 Spring 是一个 bean 的容器，因此还需要将 bean 的元信息进行配置，最初的 Spring 使用业界最为流行的 xml 配置 bean，后来 JDK 5 注解出现后才逐渐将配置迁移到注解，曾经一度出现了 xml 和注解混用的场景。
-
-原文: 
-
-- https://blog.csdn.net/zzuhkp/article/details/123518033
-
-# 基于 Spring Framework 的 Spring MVC 项目搭建
+## 基于 Spring Framework 的 Spring MVC 项目搭建
 
 由于 Spring 主要应用于 Web 开发，下面看下 Spring Boot 出现前是如何搭建 Spring MVC 项目的。
 
@@ -232,7 +210,7 @@ Hello,Spring MVC
 
 - https://blog.csdn.net/zzuhkp/article/details/123518033
 
-# 基于 Spring Boot 的 Spring MVC 项目搭建
+## 基于 Spring Boot 的 Spring MVC 项目搭建
 
 总结基于 Spring Framework 的 Spring MVC 项目搭建有哪些问题呢？
 
@@ -299,11 +277,9 @@ Spring Boot 项目由于使用 jar 包启动，因此需要提供一个主类，
 ```java
 @SpringBootApplication
 public class MvcApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(MvcApplication.class, args);
     }
-
 }
 ```
 
@@ -348,30 +324,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 总结 Spring Boot 简化应用创建的方式为：使用 `spring-boot-starter-parent` 管理依赖版本、使用 `spring-boot-starter` 自动化配置、支持用户自定义配置覆盖默认配置。
 
-原文:
-
-- https://blog.csdn.net/zzuhkp/article/details/123518033
-
-# Spring Boot 是如何简化应用开发的？
-
-Spring Boot 自动化配置不仅作用于用于应用创建，减少配置就是减少开发工作量，因此对开发效率的提升也有一定帮助。除此之外，Spring Boot 还提供了一个模块 `spring-boot-devtools` 用于支持 Spring Boot 项目开发时的**热部署**，可以通过如下的方式进行引入。
-
-```xml
-<dependency>
-	<groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot-devtools</artifactId>
-	<scope>runtime</scope>
-	<optional>true</optional>
-</dependency>
-```
-
-引入这个依赖后，当我们的类发生变化，Spring Boot 会自动进行重启，当然了这个重启不是完整的重启，因此速度上会快上不少。
-
-原文:
-
--  https://blog.csdn.net/zzuhkp/article/details/123518033
-
-# Spring Boot 是如何简化应用运行的？
+## Spring Boot 是如何简化应用运行的？
 
 对于应用运行的简化，主要提现在内嵌 Servlet 容器，能够将我们的应用自动打成 jar 包启动。上面的示例是我们在 IDE 中运行的，为了打成 jar 包，我们需要引入一个 Spring Boot 专有的插件。
 
@@ -388,20 +341,16 @@ Spring Boot 自动化配置不仅作用于用于应用创建，减少配置就�
 
 这个插件可以将 Spring Boot 项目依赖的所有 jar 包打包到一个 jar 包中，这个 jar 也被称为 `fat jar`。
 
-原文: 
-
-- https://blog.csdn.net/zzuhkp/article/details/123518033
-
-# 总结
+## 总结
 
 Spring 官网将 Spring Boot 的核心特性总结为 6 点，在我们上述的例子中也基本有体现：
 
-- 创建独立的 Spring 应用程序。
-- 内嵌 Tomcat、Jetty 或 Undertow （无需部署 war 文件)。
-- 提供 starter 简化配置。
-- 尽量进行 Spring 和第三方库的自动化配置。
-- 提供生产就绪功能，例如指标、健康检查和外部化配置。
-- 完全无需代码生成，无需 XML 配置。
+- Create stand-alone Spring applications
+- Embed Tomcat, Jetty or Undertow directly (no need to deploy WAR files)
+- Provide opinionated 'starter' dependencies to simplify your build configuration
+- Automatically configure Spring and 3rd party libraries whenever possible
+- Provide production-ready features such as metrics, health checks, and externalized configuration
+- Absolutely no code generation and no requirement for XML configuration
 
 原文:
 
