@@ -8,7 +8,7 @@ tags:
  - Java
 ---
 
-## 1. PATH
+## PATH
 You should set the `PATH` variable if you want to be able to run the executables (javac, java, javadoc, and so on) from any directory without having to type the full path of the command. If you do not set the PATH variable, you need to specify the full path to the executable every time you run it, such as:
 
 ```bash
@@ -32,31 +32,16 @@ On most systems (Linux, Mac OS, UNIX, etc) the colon character (`:`) is the clas
 
 > 其实PATH就是告诉terminal可执行指令的位置信息, 而CLASSPATH是用来告诉JRE相关程序 用户自定义类 的位置信息 
 
-## 2. CLASSPATH
+## CLASSPATH
 
-阅读此节前, 先了解什么是Class Loader: 
+阅读此节前, 可先参考: [手动编译运行Java程序之JVM加载类的顺序](https://davidzhu.xyz/2023/07/26/Java/Basics/how-jvm-find-class/)
 
 > Similar to the classic dynamic loading behavior, when executing Java programs, the Java Virtual Machine finds and loads classes lazily (it loads the bytecode of a class only when the class is first used). The classpath tells Java where to look in the filesystem for files defining these classes. - [Wiki](https://en.wikipedia.org/wiki/Classpath)
 
-The virtual machine searches for and loads classes in this order:
+> 注意: **从 Java5 开始 CLASSPATH 默认就是当前路径, 一般情况下就不需要再设定了**, 
 
+下面我们就介绍一下 CLASSPATH 的用, 以便对CLASSPATH有更加深入的理解: 因为Java是编译型语言，源码文件是`.java`，而编译后的`.class`文件才是真正可以被JVM执行的字节码。因此，如果要加载一个`abc.xyz.Hello`的类，JVM需要知道应该去哪搜索对应的`Hello.class`文件。所以，classpath就是一组目录的集合，它设置的搜索路径与操作系统相关。例如，在Windows系统上，用`;`分隔，带**空格的目录**用`""`括起来，可能长这样：
 
-
-
-
-PATH是terminal用来找可执行命令的一个环境变量, CLASSPATH是用来指示JVM如何搜索class
-
-
-
-
-
-> 注意: 从 Java5 开始 CLASSPATH 默认就是当前路径, 一般情况下就不需要再设定了, 
-
-
-
-
-
-因为Java是编译型语言，源码文件是`.java`，而编译后的`.class`文件才是真正可以被JVM执行的字节码。因此，如果要加载一个`abc.xyz.Hello`的类，JVM需要知道应该去哪搜索对应的`Hello.class`文件。所以，classpath就是一组目录的集合，它设置的搜索路径与操作系统相关。例如，在Windows系统上，用`;`分隔，带**空格的目录**用`""`括起来，可能长这样：
 ```
 C:\work\project1\bin;C:\shared;"D:\My Documents\project1\bin"
 ```
@@ -119,14 +104,19 @@ You can check value of classpath in java inside your application by looking at f
 System.getProperty("java.class.path")
 ```
 
-## 3.1. Set Classpath
+## Set Classpath
 
 ```shell
 export CLASSPATH=$PATH:/home/myaccount/myproject/lib/CoolFramework.jar:/home/myaccount/myproject/output/
 ```
 
-这只是举个例子, 更好的做法就是用第二种方法, 就是启动JVM的通过`-cp`来指定classpath, 不要在环境变量中设置classpath！默认的当前目录`.`对于绝大多数情况都够用了。
+这只是举个例子, 更好的做法就是用第二种方法, 就是启动JVM的通过`-cp`来指定classpath, 不要在环境变量中设置classpath！默认的当前目录`.`对于绝大多数情况都够用了
 
 ```
 C:\work> java -cp . com.example.Hello
 ```
+
+参考:
+
+- [classpath和jar - 廖雪峰的官方网站](https://www.liaoxuefeng.com/wiki/1252599548343744/1260466914339296)
+
