@@ -1,5 +1,5 @@
 ---
-title: How Classes are Found - 阅读笔记
+title: 手动编译运行Java Code之How Classes are Found - 阅读笔记
 date: 2023-07-26 17:52:40
 categories:
  - Java
@@ -8,7 +8,27 @@ tags:
  - Java
 ---
 
+## java & javac
+
+两个指令
+
+- Technically, `javac` is the program that translates Java code into bytecode (.class file) - an intermediate format which is understandable by the Java Virtual Machine (JVM).
+
+- And `java` is the program that starts the **JVM**, which in turn, loads the `.class` file, verifies the bytecode and executes it.
+  - `-classpath` *classpath*, or `-cp` *classpath*, specifies a list of directories, JAR files, and ZIP archives to search for **class files**.
+
+  - On Windows, semicolons (`;`) separate entities in this list; on other platforms it is a colon (`:`).
+
+  - Specifying *classpath* overrides any setting of the `CLASSPATH` environment variable. If the class path option isn't used and *classpath* isn't set, then the user class path consists of the current directory (`.`).
+
+> 注意上面说的, java 启动 JVM, 然后 JVM 导入字节码文件, 别理解错了, 至于 -cp 就是用来告诉 JVM 去哪搜索用程序中到的类的字节码文件`.calss`, 
+
+
+
+
+
 ## How the Java Launcher Finds Classes
+
 The Java launcher, java, initiates the Java virtual machine. The virtual machine searches for and loads classes in this order:
 
 - Bootstrap classes - Classes that comprise the Java platform, including the classes in `rt.jar` and several other important jar files.
@@ -18,6 +38,8 @@ The Java launcher, java, initiates the Java virtual machine. The virtual machine
 - User classes - Classes defined by developers and third parties that do not take advantage of the extension mechanism. You identify the location of these classes using the `-classpath` option on the command line (the preferred method) or by using the CLASSPATH environment variable. 
 
 In general, you only have to specify the location of user classes. Bootstrap classes and extension classes are found "automatically".
+
+> 注意这里说的其实就是类加载的过程, 即 JVM 怎么查找并加载类对应的每个字节码文件, 而不是 java launcher, 它只是负责启动 JVM 的, 
 
 ### How the Java Launcher Finds Bootstrap Classes
 

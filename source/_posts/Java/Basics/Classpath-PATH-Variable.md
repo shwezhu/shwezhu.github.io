@@ -1,5 +1,5 @@
 ---
-title: Classpath和PATH Variable的概念以及推荐的设置方法
+title: CLASSPATH & PATH
 date: 2023-04-25 14:53:30
 categories:
  - Java
@@ -8,36 +8,16 @@ tags:
  - Java
 ---
 
-# 1. JDK & JRE
-我的电脑有两个jdk, 一个是我自己下载的jdk17, 一个是电脑预安装的jdk 19:
-
-```shell
-ls /Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/Home/
-LICENSE bin     include legal   man README  conf    jmods   lib     release
-
-ls ~/Downloads/Programs/jdk-17-0-3-1/Home/
-LICENSE README  bin     conf    include jmods   legal   lib     release
-```
-
-都说JDK包括JRE, 然后JRE里面有JVM, 但是现在新版本的JDK里没有JRE文件夹了, JRE被单独安装了, 那么现在对于新版本的JDK来说, JRE是不是仍然属于JDK呢? 知道这个问题和现实就行了, 至于属不属于无所谓, 想怎么说就怎么说呗, 关键是我们得是找, 什么是JVM, 什么是JDK才是重要的. 
-
-
-- In macOS, the JDK installation path is/Library/Java/JavaVirtualMachines/jdk-10.jdk/Contents/Home.
-- In macOS, the JRE installation path is/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/.
-
-但是我去找jre却没找到, 官方说 When you install JDK 10, the public JRE (Release 10) also gets installed automatically. 他说的这种安装是下载dmg文件, 而我下的是免安装版本的zip包, 解压出来就用了, 所以ummmm, 具体也不清楚以后再想吧...
-
-# 2. PATH Variable
+## 1. PATH
 You should set the `PATH` variable if you want to be able to run the executables (javac, java, javadoc, and so on) from any directory without having to type the full path of the command. If you do not set the PATH variable, you need to specify the full path to the executable every time you run it, such as:
 
 ```bash
 /usr/local/jdk1.7.0/bin/javac MyClass.java
 ```
 
-怎么设置PATH呢, 也就是win里面说的怎么添加环境变量呢? 编辑`~/.bashrc`或者`.zshrc`, 看你用的什么bash, 默认用的都是bash, 我是自己用的zsh
+怎么设置PATH呢, 也就是怎么添加环境变量呢? 编辑`~/.bashrc`或者`.zshrc`, 看你用的什么shell, 默认的是bash, 我用的是zsh
 
-```
-# 填进文件里,
+```shell
 export PATH=$PATH:/place/with/the/file
 ```
 
@@ -52,13 +32,29 @@ On most systems (Linux, Mac OS, UNIX, etc) the colon character (`:`) is the clas
 
 > 其实PATH就是告诉terminal可执行指令的位置信息, 而CLASSPATH是用来告诉JRE相关程序 用户自定义类 的位置信息 
 
-# 3. CLASSPATH
+## 2. CLASSPATH
 
-从Java5开始CLASSPATH默认就是当前路径, 一般情况下就不需要再设定了, 
+阅读此节前, 先了解什么是Class Loader: 
+
+> Similar to the classic dynamic loading behavior, when executing Java programs, the Java Virtual Machine finds and loads classes lazily (it loads the bytecode of a class only when the class is first used). The classpath tells Java where to look in the filesystem for files defining these classes. - [Wiki](https://en.wikipedia.org/wiki/Classpath)
+
+The virtual machine searches for and loads classes in this order:
 
 
 
-> 与PATH相同(PATH是terminal用来找可执行命令的一个环境变量), classpath是JVM用到的一个环境变量，它用来指示JVM如何搜索class。
+
+
+PATH是terminal用来找可执行命令的一个环境变量, CLASSPATH是用来指示JVM如何搜索class
+
+
+
+
+
+> 注意: 从 Java5 开始 CLASSPATH 默认就是当前路径, 一般情况下就不需要再设定了, 
+
+
+
+
 
 因为Java是编译型语言，源码文件是`.java`，而编译后的`.class`文件才是真正可以被JVM执行的字节码。因此，如果要加载一个`abc.xyz.Hello`的类，JVM需要知道应该去哪搜索对应的`Hello.class`文件。所以，classpath就是一组目录的集合，它设置的搜索路径与操作系统相关。例如，在Windows系统上，用`;`分隔，带**空格的目录**用`""`括起来，可能长这样：
 ```
