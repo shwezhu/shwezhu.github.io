@@ -115,7 +115,7 @@ The `spring-boot-starter-web` auto-configures the below things required for the 
 
 首先得先打包我们的项目吧, 在Spring Boot根目录运行`mvn clean install`
 
-然后报错(就知道不会一点岔子不出, 编程嘛, 就这样), 
+然后报错 (不出一点岔子就不正常了, 写代码嘛), 
 
 ```xml
 [ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.3.5.RELEASE:repackage (repackage) on project SpringDemo: Execution repackage of goal org.springframework.boot:spring-boot-maven-plugin:2.3.5.RELEASE:repackage failed: Unsupported class file major version 61 -> [Help 1]
@@ -166,7 +166,7 @@ java -jar SpringDemo-0.0.1-SNAPSHOT.jar
 wget "http://localhost:8080/find/temperature?from=2023-04-01&to=2023-04-02"
 ```
 
-总结下, 这次讨论我们理解了Jar是什么, 也知道了什么是所谓的内嵌Tomcat, 可以看到运行Jar包并不是像[之前讨论War](https://davidzhu.xyz/2023/04/27/War/)那样, 还得把War部署到Tomcat的`webapps`目录下, 然后启动Tomcat, 再去访问对应url, 我们直接一个`java -jar`便可以运行我们的Java Web项目, 可谓是很方便, 但是需要注意如果你的应用用到了数据库, 那你仍需要在你执行该应用的机器上开启对应的数据库服务以及创建对应的表, 这跟tomcat没关系, SpringBoot只是内嵌了Tomcat并不是内嵌了你的数据库啥的, 
+总结下, 这次讨论我们理解了Jar是什么, 也知道了什么是所谓的内嵌Tomcat, 可以看到运行Jar包并不是像[之前讨论War](https://davidzhu.xyz/2023/04/27/Java/Backend/War/)那样, 还得把War部署到Tomcat的`webapps`目录下, 然后启动Tomcat, 再去访问对应url, 我们直接一个`java -jar`便可以运行我们的Java Web项目, 可谓是很方便, 但是需要注意如果你的应用用到了数据库, 那你仍需要在你执行该应用的机器上开启对应的数据库服务以及创建对应的表, 这跟tomcat没关系, SpringBoot只是内嵌了Tomcat并不是内嵌了你的数据库啥的, 
 
 然后我们也就知道别人所说的那种, Spring Boot内嵌Tomcat, 然后默认项目打包成Jar而不是War到底是个什么玩意, 即就是把所有依赖和所有我们编写的源代码的字节码`.class`文件通过约定好的目录结构放到一起, 然后打包成一个jar, 上面说到的依赖比如`pom.xml`中的各种依赖以jar文件格式放到`SpringDemo-0.0.1-SNAPSHOT/BOOT-INF/lib`目录下, 然后`.class`文件都在`SpringDemo-0.0.1-SNAPSHOT/BOOT-INF/classes`下, 当然可能还包含其他的文件, 这你自己去探索吧, 
 
