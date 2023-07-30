@@ -1,5 +1,5 @@
 ---
-title: 创建第一个Spring Boot项目及注意事项
+title: 第一个Spring Boot项目及错误处理
 date: 2023-07-29 16:47:46
 categories:
  - Java
@@ -87,9 +87,30 @@ public record Greeting(long id, String content) { }
 
 >When using JSON format, Spring Boot will use an *ObjectMapper* instance to **serialize responses and deserialize requests**. [Spring Boot: Jackson ObjectMapper](https://www.baeldung.com/spring-boot-customize-jackson-objectmapper)
 
-## 源码
+## 源码解释
 
  项目创建过程可参考: [Getting Started | Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
+
+```java
+// MyApplicaiton.java
+package com;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MyAppApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MyAppApplication.class, args);
+    }
+}
+```
+
+ ```java
+// Greeting.java
+package com.restservice;
+public record Greeting(long id, String content) { }
+ ```
 
 ```java
 // GreetingController.java
@@ -112,23 +133,22 @@ public class GreetingController {
 }
 ```
 
-```java
-// Greeting.java
-package com.restservice;
-public record Greeting(long id, String content) { }
+- The `@GetMapping` annotation ensures that HTTP GET requests to `/greeting` are mapped to the `greeting()` method.
+- There are companion annotations for other HTTP verbs (e.g. `@PostMapping` for POST). There is also a `@RequestMapping` annotation that they all derive from, and can serve as a synonym (e.g. `@RequestMapping(method=GET)`).
+- `@RequestParam` binds the value of the query string parameter `name` into the `name` parameter of the `greeting()` method. If the `name` parameter is absent in the request, the `defaultValue` of `World` is used.
+- This code uses Spring [`@RestController`](https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/bind/annotation/RestController.html) annotation, which marks the class as a controller where every method returns a domain object instead of a view. It is shorthand for including both `@Controller` and `@ResponseBody`.
+- The `Greeting` object must be converted to JSON. Thanks to Spring’s HTTP message converter support, you need not do this conversion manually. Because [Jackson 2](https://github.com/FasterXML/jackson) is on the classpath, Spring’s [`MappingJackson2HttpMessageConverter`](https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/http/converter/json/MappingJackson2HttpMessageConverter.html) is automatically chosen to convert the `Greeting` instance to JSON.
+- `@SpringBootApplication` is a convenience annotation that adds all of the following:
+  - `@Configuration`: Tags the class as a source of bean definitions for the application context.
+  - `@EnableAutoConfiguration`: Tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings. For example, if `spring-webmvc` is on the classpath, this annotation flags the application as a web application and activates key behaviors, such as setting up a `DispatcherServlet`.
+  - `@ComponentScan`: Tells Spring to look for other components, configurations, and services in the `com/example` package, letting it find the controllers.
+
+最后一个没怎么看明白, 也不打算现在弄明白, 想着随着学习的深入, 慢慢的对 spring 有个更清晰的认识的时候, 就慢慢懂了, 
+
+If you use Maven, you can run the application by using `./mvnw spring-boot:run`. Alternatively, you can build the JAR file with `./mvnw clean package` and then run the JAR file, as follows:
+
+```
+java -jar target/gs-rest-service-0.1.0.jar
 ```
 
-```java
-// MyApplicaiton.java
-package com;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class MyAppApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(MyAppApplication.class, args);
-    }
-}
-```
+Now that the service is up, visit `http://localhost:8080/greeting`

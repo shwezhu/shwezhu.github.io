@@ -1,5 +1,5 @@
 ---
-title: 手动部署War包到Tomcat上之何为War
+title: 手动部署War包到Tomcat之何为War
 date: 2023-04-27 21:30:48
 categories:
  - Java
