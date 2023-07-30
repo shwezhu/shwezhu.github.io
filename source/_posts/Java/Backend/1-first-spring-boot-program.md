@@ -1,16 +1,17 @@
 ---
-title: 第一个Spring Boot项目及错误处理
+title: 第一个Spring Boot项目及踩坑总结 Spring学习(一)
 date: 2023-07-29 16:47:46
 categories:
  - Java
  - Backend
 tags:
  - Java
+ - Spring Boot
 ---
 
 ## 错误总结
 
-(1) 所有Java代码都要在`java`目录下, 即不可删除`java`目录, 否则, 运行`./mvnw clean package`报错, 你可以自己试试
+**(1) 所有Java代码**都要在`java`目录下, 即不可删除`java`目录, 否则, 运行`./mvnw clean package`报错, 你可以自己试试
 
 ```shell
 ├── pom.xml
@@ -24,7 +25,7 @@ tags:
 │   │   │           └── GreetingController.java
 ```
 
-(2) controller 等组件所在文件夹需要在主类的同级或者次级目录, 否则运行程序访问`http://localhost:8080/greeting`会出现错误:
+**(2) controller** 等组件所在文件夹需要在主类的同级或者次级目录, 否则运行程序访问`http://localhost:8080/greeting`会出现错误:
 
 ```shell
 Whitelabel Error Page 

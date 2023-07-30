@@ -6,7 +6,6 @@ categories:
  - Backend
 tags:
  - Java
- - Tomcat
 ---
 
 在IDEA把webapp deploy到tomcat上的时候会看到以下设置:
