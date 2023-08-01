@@ -141,9 +141,9 @@ We have known what is JDBC in the paragraph above, let's look at what is JPA.
 
 JPA is a standard for Object Relational Mapping (ORM). This is a technology which allows you to map between **objects** in code and **database tables**. This can **hide** the SQL from the developer so that all they deal with are Java classes, and the provider allows you to save them and load them magically. Mostly, XML mapping files or annotations on getters and setters can be used to tell the JPA provider which fields on your object map to which fields in the DB. The most famous JPA provider is [Hibernate](https://hibernate.org/), so it's a good place to start for concrete examples. 
 
-> Under the hood, Hibernate and most other providers for JPA write SQL and use JDBC API to read and write from and to the DB. Simply think, JPA is a Java ORM, and Hibernate implements JPA using JDBC API, 
-
 所以JPA只是个Java的ORM标准, 而Hibernate实现了JPA, 
+
+> Under the hood, Hibernate and most other providers for JPA write SQL and use JDBC API to read and write from and to the DB. Simply think, JPA is a Java ORM, and Hibernate implements JPA using JDBC API, 
 
 参考:
 

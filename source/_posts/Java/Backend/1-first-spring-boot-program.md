@@ -67,16 +67,11 @@ Tue Jun 30 17:24:02 CST 2023 There was an unexpected error (type=Not Found, stat
 
 ## 新概念 Record Class
 
-`Greeting` 与传统的类不同, 没有构造函数, 更像是个函数, `Greeting.java`:
+参照 `Greeting.java` 源码发现 `Greeting` 与传统的类不同, 没有构造函数, 更像是个函数, 
 
-```java
-package com.restservice;
-public record Greeting(long id, String content) { }
-```
+> One of the main advantages of **records over POJOs** is that they reduce the amount of boilerplate code needed to define a class. For example, a POJO might require a constructor, getters, setters, equals, hashCode, and toString methods, all of which must be manually defined. With records, all of these methods are automatically generated based on the record’s fields.  - [Java Records vs POJO](https://shixseyidrin.medium.com/java-records-vs-pojo-bb7dd26f43f0)
 
-这是Java14的新特性, 具体参考: [Java Records vs POJO](https://shixseyidrin.medium.com/java-records-vs-pojo-bb7dd26f43f0)
-
-这里有个新概念叫 *POJO* Class: [What Is a Pojo Class? | Baeldung](https://www.baeldung.com/java-pojo-class)
+*POJO* Class: [What Is a Pojo Class? | Baeldung](https://www.baeldung.com/java-pojo-class)
 
 ## Jackson 
 
@@ -122,6 +117,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+// 此类被@RestController修饰, 当其所有methods返回一个类的对象时, spring将自动处理被返回的对象, 转为json格式返回
+// @RestController = @Controller + @ResponseBody
 @RestController
 public class GreetingController {
     private static final String template = "Hello, %s!";
@@ -129,6 +126,7 @@ public class GreetingController {
 
     @GetMapping("/greeting")
     public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+        // 返回的Greeting会被spring自动转为json对象
         return new Greeting(counter.incrementAndGet(), String.format(template, name));
     }
 }
@@ -137,7 +135,7 @@ public class GreetingController {
 - The `@GetMapping` annotation ensures that HTTP GET requests to `/greeting` are mapped to the `greeting()` method.
 - There are companion annotations for other HTTP verbs (e.g. `@PostMapping` for POST). There is also a `@RequestMapping` annotation that they all derive from, and can serve as a synonym (e.g. `@RequestMapping(method=GET)`).
 - `@RequestParam` binds the value of the query string parameter `name` into the `name` parameter of the `greeting()` method. If the `name` parameter is absent in the request, the `defaultValue` of `World` is used.
-- This code uses Spring [`@RestController`](https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/bind/annotation/RestController.html) annotation, which marks the class as a controller where every method returns a domain object instead of a view. It is shorthand for including both `@Controller` and `@ResponseBody`.
+- This code uses Spring `@RestController` annotation, which marks the class as a controller where every method returns a **domain object** instead of a **view**. `@RestController` =  `@Controller` + `@ResponseBody`. `@Controller` is used to declare common web controllers which can return HTTP response but `@RestController` is used to create controllers for REST APIs which can return JSON. 
 - The `Greeting` object must be converted to JSON. Thanks to Spring’s HTTP message converter support, you need not do this conversion manually. Because [Jackson 2](https://github.com/FasterXML/jackson) is on the classpath, Spring’s [`MappingJackson2HttpMessageConverter`](https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/http/converter/json/MappingJackson2HttpMessageConverter.html) is automatically chosen to convert the `Greeting` instance to JSON.
 - `@SpringBootApplication` is a convenience annotation that adds all of the following:
   - `@Configuration`: Tags the class as a source of bean definitions for the application context.
