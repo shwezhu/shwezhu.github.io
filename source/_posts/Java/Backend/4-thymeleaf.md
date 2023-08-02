@@ -150,6 +150,3 @@ public class MainController {
 在HTML标签插入一些属性就成了Thymeleaf模板也就是项目中的 `index.html`, 如`<span th:text="${cat.name}" />`, 而controller通过设置`Model` 对象属性向`index.html`插入数据, 进而形成内容不同的 `index.html` 返回给客户端, 像是在搭积木, 
 
 注意上面我们提到的 controller 只是个泛指, 实际上 controller 就是个普通的类, 被注解`@Controller`, `@RestController`, 修饰的就是 controller class, 然后该类的method一般被 `@GetMapping("/cat")`, `@PostMapping("/cat/add")` 等注解修饰, 来处理不同的http请求, 即真正处理http请求并返回html文件的是 controller class的method, 
-
-
-

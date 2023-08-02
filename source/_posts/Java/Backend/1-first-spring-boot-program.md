@@ -144,6 +144,8 @@ public class GreetingController {
 
 最后一个没怎么看明白, 也不打算现在弄明白, 想着随着学习的深入, 慢慢的对 spring 有个更清晰的认识的时候, 就慢慢懂了, 
 
+上面关于 `@RestController` 的解释: ... *every method returns a **domain object** instead of a **view***, 这里的view指的是返回html文件, 也就是说若你想提供处理restful api然后返回简单的json数据服务, 那就用 `@RestController` 修饰该 controller, 然后让该controller的每个方法都返回一个对象, 剩下的交给 spring 框架, 它会自动帮你把返回的对象转为json对象然后返回给客户端, 
+
 If you use Maven, you can run the application by using `./mvnw spring-boot:run`. Alternatively, you can build the JAR file with `./mvnw clean package` and then run the JAR file, as follows:
 
 ```
