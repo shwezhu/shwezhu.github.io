@@ -6,7 +6,7 @@ categories:
  - Backend
 tags:
  - Java
- - Database
+ - Spring Boot
 ---
 
 ## 实现功能
@@ -124,6 +124,8 @@ public class MainController {
 大概就是这个过程, 但细节应该不是, 比如插入数据的时候是spring做的还是thymeleaf, 这个感兴趣可以去谷歌, 这里只是叙述大致的处理过程, 以便编写thymeleaf代码有思路, 
 
 所以你懂了吗? controller方法通过返回字符串来指定要返回的html文件, 而我们想要插入到html中的数据则通过调用`model.addAttribute()`来指定, 这个过程就相当于制造零件, 而零件的组装, 也就是汽车的样子, 就是我们编写的“特殊的”`index.html`文件,  也就是所谓的模板, 大概就是这么个过程, 希望可以帮助到你, 
+
+其他内容可参考: [Introduction to Using Thymeleaf in Spring | Baeldung](https://www.baeldung.com/thymeleaf-in-spring-mvc#evaluation)
 
 ## 总结
 

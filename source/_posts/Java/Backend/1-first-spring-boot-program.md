@@ -1,5 +1,5 @@
 ---
-title: 第一个Spring Boot项目及踩坑总结 Spring学习(一)
+title: 创建Spring Boot项目及踩坑总结 Spring学习(一)
 date: 2023-07-29 16:47:46
 categories:
  - Java
