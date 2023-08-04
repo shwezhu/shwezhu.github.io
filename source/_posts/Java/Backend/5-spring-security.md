@@ -140,7 +140,7 @@ public class WebSecurityConfig {
 
 此时才是 *secure by default:* *expose some specific endpoints, and secure everything*, 你再访问 http://localhost:8080/foo , 就会跳转到登录页面, 
 
-## 4. Single sign-on (SSO) 可以忽略这一步
+## 4. Single sign-on (SSO) 可跳过
 
 Using SSO enables we can use open ID, 比如平时登录按钮下的 sign in with Google, 这种, 就是依靠的 Open ID, 在 spring 实现这个很简单, 
 
@@ -201,10 +201,46 @@ spring:
   - The identity of the principal being authenticated. In the case of an authentication request with username and password, this would be the username. 
 - `getCredentials()`
   - The credentials that prove the principal is correct. This is usually a password, but could be anything relevant to the `AuthenticationManager`.
+  - 一个Credentials输出: `org.springframework.security.core.userdetails.User [Username=david, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_user]]`
 
+对于 Authentication, 我们可以简单的认为它是 the identity of the user, 修改前面定义的 Controller 了, inject Authentication object to the `/private` endpoint, 
 
+```java
+@RestController
+public class WebController {
+    @GetMapping("/")
+    public String publicPage() {
+        return "Hello David~";
+    }
 
+    @GetMapping("/private")
+    public String privatePage(Authentication authentication) {
+        return "Hi ~["
+                + authentication.getName()
+                + "]~, you've logged in. 🎉";
+    }
+}
+```
 
+然后运行项目, 登录后得到输出: 
+
+```
+Hi ~[david]~, you've logged in. 🎉
+```
+
+## 6. 通过 debug 查看 `Authentication Object`
+
+设置断点, 
+
+![8](8.png)
+
+访问 `/private` 页面输入密码登录, 返回 IDE, 
+
+![9](9.png)
+
+下面是通过 ouath Google 登录之后的 Authentication 信息, 
+
+![10](10.png)
 
 ## 几个重要的类
 
