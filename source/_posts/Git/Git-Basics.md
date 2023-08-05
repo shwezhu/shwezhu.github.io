@@ -133,7 +133,7 @@ Changes to be committed:
 
 The next time you commit, the file will be gone and no longer tracked. If you modified the file or had already added it to the staging area, you must force the removal with the `-f` option. This is a safety feature to prevent accidental removal of data that hasn’t yet been recorded in a snapshot and that can’t be recovered from Git.
 
-Another useful thing you may want to do is to keep the file in your working tree but remove it from your staging area. In other words, you may want to keep the file on your hard drive but not have Git track it anymore. This is particularly useful if you forgot to add something to your `.gitignore` file and accidentally staged it, like a large log file or a bunch of `.a` compiled files. To do this, use the `--cached` option:
+Another useful thing you may want to do is to keep the file in your working tree but remove it from your staging area. In other words, **you may want to keep the file on your hard drive but not have Git track it anymore**. This is particularly useful if you forgot to add something to your `.gitignore` file and accidentally staged it, like a large log file or a bunch of `.a` compiled files. To do this, use the `--cached` option:
 
 ```shell
 $ git rm --cached a.txt
@@ -167,6 +167,10 @@ $ git rm --
 --dry-run             -- do not actually remove the files, just show if they exist
 --force               -- override the up-to-date check
 ```
+
+这里有个应用, 即如果之前 a.txt 已经被 git tracked, 那么之后你再把此文件的名字添加到 `.gitignore` 也不行, 还是会被继续 track, 因此需要使用如下命令: 
+
+> `.gitignore` only ignores files that are not part of the repository yet. If you already `git add`ed some files, their changes will still be tracked. To remove those files from your repository (but not from your file system) use `git rm --cached` on them. https://stackoverflow.com/a/45400404/16317008
 
 ### 总结
 

@@ -1,5 +1,5 @@
 ---
-title: Spring Security, Spring学习(五)
+title: Spring Security (1), Spring学习(五)
 date: 2023-08-04 19:16:49
 categories:
  - Java
@@ -12,7 +12,18 @@ tags:
 ## 0. 项目结构
 
 ```shell
-
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── david
+    │   │       └── zhu
+    │   │           ├── SpringSecurityDemoApplication.java
+    │   │           ├── WebController.java
+    │   │           └── WebSecurityConfig.java
+    │   └── resources
+    │       ├── application.yaml
+    │       ├── static
+    │       └── templates
 ```
 
 ## 1. 创建一个简单的 spring boot 项目 - `Controller` 类
@@ -241,20 +252,3 @@ Hi ~[david]~, you've logged in. 🎉
 下面是通过 ouath Google 登录之后的 Authentication 信息, 
 
 ![10](10.png)
-
-## 几个重要的类
-
-AuthenticationManager
-
-```java
-public interface AuthenticationManager {
-  Authentication authenticate(Authentication authentication) throws AuthenticationException;
-}
-```
-
-- ProviderManager
-- AuthenticationProviders
-
-
-
-本文主要参考: https://youtu.be/iJ2muJniikY
