@@ -21,7 +21,8 @@ tags:
 
 - 若想定义一个方法, 且这个方法的参数也是一个方法, 就可以考虑使用 functional interface
 - All a Lambda is, is a shorcut to define an implementation of a functional interface. 
-- Functional interface 只可以有一个 abstract method, 最好使用注解` @FunctionalInterface` , 它告诉编译器相关信息, 若接口有多个 abstract methods, 那编译器就会报错, 
+- Functional interface 只可以有一个 abstract method, 但可以有多个 default, static methods, 
+- 最好使用注解` @FunctionalInterface` , 它告诉编译器相关信息, 若接口有多个 abstract methods, 那编译器就会报错, 
 - 常见的 functional interface 有: Runnable, ActionListener, and Comparable, 
 
 举个例子, Java 创建线程一般如下:
@@ -73,3 +74,7 @@ public interface Runnable {
 具体参考[下面这个视频](https://youtu.be/), 讲的很好:
 
 {% youtube tj5sLSFjVj4 %}
+
+细品这句话: 
+
+> One of the most welcome changes in Java 8 was the introduction of [lambda expressions](https://www.baeldung.com/java-8-lambda-expressions-tips), as these allow us to forego anonymous classes, greatly reducing boilerplate code and improving readability.  [Method References in Java](https://www.baeldung.com/java-method-references)
