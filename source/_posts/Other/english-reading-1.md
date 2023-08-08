@@ -32,9 +32,8 @@ Moscow **halts** grain deal after bridge to Crimea struck
 
 - strike: 侵袭, 罢工
 
-----
+Tesla’s revenue soars amid rampant price cutting
 
-> Tesla’s revenue soars amid rampant price cutting
+- rampant price cutting
 
-
-
+> If you do that, you're essentially saying,  "Air travel in the United Stated is a weak link problem." We're limited by how good are appalling New York airports are more than by how good are best airports are.

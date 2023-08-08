@@ -78,3 +78,32 @@ public interface Runnable {
 细品这句话: 
 
 > One of the most welcome changes in Java 8 was the introduction of [lambda expressions](https://www.baeldung.com/java-8-lambda-expressions-tips), as these allow us to forego anonymous classes, greatly reducing boilerplate code and improving readability.  [Method References in Java](https://www.baeldung.com/java-method-references)
+
+Back in ye olden times before Java 8, we had to use the clunky old [anonymous class syntax](https://docs.oracle.com/javase/tutorial/java/javaOO/anonymousclasses.html#syntax-of-anonymous-classes) for this sort of thing, leading to code that looked something like this:
+
+```java
+object.gimmeFunction(new SingleMethodInterface(){
+     @Override 
+     public bool really(int n){
+        return n=="really".hashCode();
+    }
+});
+
+Collections.sort(emplyeesList, new Comparator() {
+ public int compare(Employee a1, Employee a2){
+  return a1.getId().compareTo(a2.getId());
+ }});
+
+File[] hiddenFiles = new File("directory_name").listFiles(new FileFilter() {
+ public boolean accept(File file) {
+  return file.getName().endsWith(".xml");
+ }});
+// With lambda: 
+File[] hiddenFiles = new File("directory_name").listFiles( file -> file.getName().endsWith(".xml"));
+```
+
+了解更多: 
+
+- [lambda - What did Java programmers do before Java 8 if they wanted to pass a function around? - Stack Overflow](https://stackoverflow.com/questions/38416701/what-did-java-programmers-do-before-java-8-if-they-wanted-to-pass-a-function-aro)
+
+- [Lambda Expressions Before And After Java 8 - Java Code Geeks - 2023](https://www.javacodegeeks.com/2020/05/lambda-expressions-before-and-afterjava-8.html)

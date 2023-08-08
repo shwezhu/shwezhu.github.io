@@ -80,7 +80,7 @@ public class GreetingController {
 }
 ```
 
-> 该controller是个简单的 restful api, 用来返回简单的json数据, 若不理解此段代码可以到[第一个Spring Boot项目及踩坑总结 Spring学习(一) ](https://davidzhu.xyz/2023/07/29/Java/Backend/1-first-spring-boot-program/)查看相关注解的解释, 
+> 该controller是个简单的 restful api, 用来返回简单的json数据, 若不理解此段代码可以到[第一个Spring Boot项目及踩坑总结 Spring学习(一) ](https://davidzhu.xyz/2023/07/29/Java/Backend/001-first-spring-boot-program/)查看相关注解的解释, 
 
 通过thymeleaf向html插入数据, 此时的controller如下, 
 

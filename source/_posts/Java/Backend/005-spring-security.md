@@ -1,5 +1,5 @@
 ---
-title: Spring Security (1), Spring学习(五)
+title: Spring Security Authentication, Spring学习(五)
 date: 2023-08-04 19:16:49
 categories:
  - Java
@@ -26,9 +26,11 @@ tags:
     │       └── templates
 ```
 
+例子地址: https://github.com/shwezhu/springboot-learning/tree/master/spring-security-get-started-demo
+
 ## 1. 创建一个简单的 spring boot 项目 - `Controller` 类
 
-创建一个 spring 项目思路, 首先要想到创建的一个类是 Controller, 因为我们要处理不同的 endpoints, 比如叫 `WebController.java`, 名子无所谓, 只要加上 `@Controller/@RestController` 的类都是 Controller, 然后考虑你的这个 Controller 是要返回简单的 json 对象还是 web 页面, 前者的话就选择 `@RestController` 修饰你的 Controller, 至于这两个注解的区别, 可以参考: [Spring Boot项目及踩坑总结 Spring学习(一)](https://davidzhu.xyz/2023/07/29/Java/Backend/1-first-spring-boot-program/) 
+创建一个 spring 项目思路, 首先要想到创建的一个类是 Controller, 因为我们要处理不同的 endpoints, 比如叫 `WebController.java`, 名子无所谓, 只要加上 `@Controller/@RestController` 的类都是 Controller, 然后考虑你的这个 Controller 是要返回简单的 json 对象还是 web 页面, 前者的话就选择 `@RestController` 修饰你的 Controller, 至于这两个注解的区别, 可以参考: [Spring Boot项目及踩坑总结 Spring学习(一)](https://davidzhu.xyz/2023/07/29/Java/Backend/001-first-spring-boot-program/) 
 
 创建一个简单的 spring boot 项目, 依赖只选择 spring web, 之后慢慢添加各种依赖, 创建一个简单的 Controller, 如下:
 
@@ -202,11 +204,32 @@ spring:
 
 ## 5. 获取登录用户信息 - `Authentication Object`
 
-这里就要提到一个重要的对象, 即 Authentication Object, 它代表的其实就是个 request 实体, 我们可以用它来获取用户名密码等信息, 这也是第三个重要的类, 只不过这个类不是我们自定义的, 而是 spring 平台的, 了解更多: [Authentication (Spring Security 3.0.8.RELEASE API)](https://docs.spring.io/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/Authentication.html)
+这里就要提到一个重要的对象, 即 Authentication Object, 它代表的其实就是个 request 实体, 其实也就是个 user, 
+
+- Authentication: represents the user. Contains:
+  - ﻿﻿Principal: user "identity" (name, email...)
+  - ﻿﻿GrantedAuthorities: "permissions" (roles,..)
+  - isAuthenticated(): almost always true, 如果不是 true, 那这个 request 基本会被 blocked, 那我们也无法获得这个 Authentication 了, 因为 SecurityFilterChain 的这个代码: `authorizeHttp.anyRequest().authenticated()`, 即除了那几个 endpoints 的请求不需要认证, 其他的都需要 authenticated, 
+  - ﻿﻿details: details about the request
+  - ﻿﻿(Credentials): "password", often null
+
+了解更多关于 Authentication: [Servlet Authentication Architecture :: Spring Security](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html)
+
+我们可以通过 Authentication object 来获取用户名密码等信息, 这也是第三个重要的类, 只不过这个类不是我们自定义的, 而是 spring 平台的, 了解更多: [Authentication (Spring Security 3.0.8.RELEASE API) ](https://docs.spring.io/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/Authentication.html)
 
 > Authentication Object: Represents the token for an authentication request or for an authenticated principal once the request has been processed by the [`AuthenticationManager.authenticate(Authentication)`](https://docs.spring.io/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/AuthenticationManager.html#authenticate(org.springframework.security.core.Authentication)) method. Once the request has been authenticated, the `Authentication` will usually be stored in a thread-local `SecurityContext` managed by the [`SecurityContextHolder`](https://docs.spring.io/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/context/SecurityContextHolder.html) by the authentication mechanism which is being used. In Spring Security, the term "authenticated principal" refers to the authenticated user or entity. It represents the currently logged-in user or entity who has successfully completed the authentication process. In most cases, **the framework transparently takes care of managing the security context and authentication objects for you.** [Authentication](https://docs.spring.io/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/Authentication.html)
 
-随便看看这个对象的几个方法, 就知道他是啥了, 
+> 注意, authentication object 就在 `SecurityContext`, 它是 thread-local, 所以比如你的服务器 tomcat 有100个线程来处理 request, 每个线程内的 `SecurityContext`都不一样, 而且  `SecurityContext` global static, 除此之外, when a request comes in, runs on a thread, and when it's done, some other request is going to use this thread, and the `SecurityContext` will be clean before this, 
+>
+> 所以你可以在任何地方获取它, 即如果有时候你有个 Controller, 然后有四五个方法 nested, 不用像下面那样通过参数 inject authentication object, 太麻烦了, 可以直接获得, 
+>
+> `var authentication = SecurityContextHolder.getContext().getAuthentication();` 
+>
+> https://youtu.be/iJ2muJniikY?t=2085
+
+![a](a.png)
+
+看看 authentication 对象的方法: 
 
 - `getPrincipal()`
   - The identity of the principal being authenticated. In the case of an authentication request with username and password, this would be the username. 
@@ -214,7 +237,7 @@ spring:
   - The credentials that prove the principal is correct. This is usually a password, but could be anything relevant to the `AuthenticationManager`.
   - 一个Credentials输出: `org.springframework.security.core.userdetails.User [Username=david, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_user]]`
 
-对于 Authentication, 我们可以简单的认为它是 the identity of the user, 修改前面定义的 Controller 了, inject Authentication object to the `/private` endpoint, 
+修改前面定义的 Controller, inject Authentication object to the `/private` endpoint, 
 
 ```java
 @RestController
@@ -239,7 +262,38 @@ public class WebController {
 Hi ~[david]~, you've logged in. 🎉
 ```
 
-## 6. 通过 debug 查看 `Authentication Object`
+## 6. 查看 OpenID 用户邮箱 
+
+修改 Controller 代码, 新加一个自定义方法, getName()
+
+``` java
+@RestController
+public class WebController {
+    @GetMapping("/")
+    public String publicPage() {
+        return "Hello David~";
+    }
+
+    @GetMapping("/private")
+    public String privatePage(Authentication authentication) {
+        return "Hi ~["
+                + getName(authentication)
+                + "]~, you've logged in. 🎉";
+    }
+
+    private static String getName(Authentication authentication) {
+        return Optional.of(authentication.getPrincipal())
+                .filter(OidcUser.class::isInstance)
+                .map(OidcUser.class::cast)
+                .map(OidcUser::getEmail)
+                .orElseGet(authentication::getName);
+    }
+}
+```
+
+运行后选择谷歌登录, 输出: Hi ~[shehu@gmail.com]~, you've logged in. 🎉
+
+## 7. 通过 debug 查看 `Authentication Object`
 
 设置断点, 
 
@@ -252,3 +306,11 @@ Hi ~[david]~, you've logged in. 🎉
 下面是通过 ouath Google 登录之后的 Authentication 信息, 
 
 ![10](10.png)
+
+## 8. 总结
+
+总结大概从 25:00 左右开始, 
+
+{% youtube iJ2muJniikY %}
+
+本文主要参考: https://youtu.be/iJ2muJniikY
