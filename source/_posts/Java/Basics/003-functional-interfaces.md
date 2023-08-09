@@ -102,6 +102,24 @@ File[] hiddenFiles = new File("directory_name").listFiles(new FileFilter() {
 File[] hiddenFiles = new File("directory_name").listFiles( file -> file.getName().endsWith(".xml"));
 ```
 
+另外 Functional Interface 也多用在返回值, 如下:
+
+```java
+@FunctionalInterface
+public interface ApplicationListener<E extends ApplicationEvent> extends EventListener {...};
+
+@Bean
+// ApplicationListener<AuthenticationSuccessEvent> 是个 functional interface
+// 所以该方法返回的是个 lambda expression
+public ApplicationListener<AuthenticationSuccessEvent> successListener() {
+		return event -> System.out.printf(
+				"\uD83C\uDF89 Success [%s] %s %n",
+				event.getAuthentication().getClass().getName(),
+				event.getAuthentication().getName()
+		);
+}
+```
+
 了解更多: 
 
 - [lambda - What did Java programmers do before Java 8 if they wanted to pass a function around? - Stack Overflow](https://stackoverflow.com/questions/38416701/what-did-java-programmers-do-before-java-8-if-they-wanted-to-pass-a-function-aro)

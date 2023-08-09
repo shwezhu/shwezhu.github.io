@@ -1,5 +1,5 @@
 ---
-title: Spring Security Filter Chian, Spring学习(五)
+title: Spring Security Filter Chian 自定义 RobotFilter, Spring学习(五)
 date: 2023-08-07 20:58:53
 categories:
  - Java
@@ -16,7 +16,7 @@ tags:
 {% youtube iJ2muJniikY %}
 
 - 关于 authentication object, 可以参考[上一篇](https://davidzhu.xyz/2023/08/04/Java/Backend/005-spring-security/)或者观看[视频 33:00](https://youtu.be/iJ2muJniikY), 
-- 关于 filter chain, 可参考视频 39:15, 
+- 关于 filter chain, 可参考视频 39:15, 或参考: [FIlter Architecture Spring Security](https://docs.spring.io/spring-security/reference/servlet/architecture.html)
 ![1](1.png)
 
 ## 功能陈述
@@ -26,7 +26,7 @@ tags:
 
 ## 项目结构
 
-此文章所用代码在上一篇文章基础上编写, 本篇文章代码地址: https://github.com/shwezhu/springboot-learning/tree/master/spring-security-chain-demo
+此文章所用代码在上一篇文章基础上编写, 本篇文章代码地址: https://github.com/shwezhu/springboot-learning/tree/master/spring-mr-robot-filter-demo
 
 ```
 └── david
@@ -38,9 +38,7 @@ tags:
           └── WebSecurityConfig.java
 ```
 
-主要是为了理解 FilterChian 是一个 list 结构, 即有多个 filter, 然后每个 filter 都有 doFilter 方法, 他们是在方法体里被调用的 而不是 for loop 结构被循环调用, 这样的好处是我们可以决定在方法体的哪部分进行 doFilter 调用, doFilter 就是进入下一个 filter, **视频: ` 1:15:12` 是本例子的 Recap,** 
-
- ![3](3.png)
+主要是为了理解 FilterChian 是一个 list 结构, 即有多个 filter, 然后每个 filter 都有 doFilter 方法, 他们是在方法体里被调用的 而不是 for loop 结构被循环调用, 这样的好处是我们可以决定在方法体的哪部分进行 doFilter 调用, doFilter 就是进入下一个 filter, 这里说的不准确, 深入理解参考: [FIlter Architecture Spring Security](https://docs.spring.io/spring-security/reference/servlet/architecture.html)
 
 ## 自定义 Filter - `RobotFilter`类
 
@@ -128,18 +126,6 @@ Hello David~%
 - 因为访问的页面需要 authenticated, 因此创建特殊 RobotFilter 时, 需要新建一个 authentication object `RobotAuthentication` 来表示 robot 用户
 - 在账号密码登录认证 filter 前添加我们刚自定义的 `RobotFilter`, 通过修改 `WebSecurityConfig::securityFilterChain` 方法实现
 
-## 几个重要的类
 
-- AuthenticationManager
-
-```java
-public interface AuthenticationManager {
-  Authentication authenticate(Authentication authentication) throws AuthenticationException;
-}
-```
-
-- ProviderManager, [`ProviderManager`](https://docs.spring.io/spring-security/site/docs/6.1.2/api/org/springframework/security/authentication/ProviderManager.html) is the most commonly used implementation of [`AuthenticationManager`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authenticationmanager). 
-- AuthenticationProviders, [AuthenticationProvider](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authenticationprovider) - used by `ProviderManager` to perform a specific type of authentication.
 
 本文主要参考: [Spring Security, demystified by Daniel Garnier Moiroux](https://www.youtube.com/watch?v=iJ2muJniikY&list=PLn7Fivb51OvJLdfD8KrhgiawFINb94j9X&index=2&t=3741s)
-

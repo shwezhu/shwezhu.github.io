@@ -1,5 +1,5 @@
 ---
-title: Type Safety from Why Rusy, Jim Blandy
+title: Type Safety from Why Rusy - Jim Blandy
 date: 2023-08-05 18:32:53
 categories:
   - Other

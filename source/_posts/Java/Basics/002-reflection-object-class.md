@@ -77,7 +77,7 @@ public class Main {
 public final Class<?> getClass()
 ```
 
-这个返回值 `Class<?>` 代表什么? 代表方法可以返回 `getClass()` 任何类型的对象, 如 `Class<Integer>`, `Class<String>`, or `Class<Object>`. 你可能会反驳, 不是任何类型的对象啊, 你看你返回的是 `Class<Integer>` 而不可以返回 `Integer` 的对象, ummm, 别忘了前面说的, `java.klang.CLass` 是作为一个类额包装器存在的, 为什么需要这样的一个类包装器? 因为反射机制, 
+这个返回值 `Class<?>` 代表什么? 代表方法可以返回 `getClass()` 任何类型的对象, 如 `Class<Integer>`, `Class<String>`, or `Class<Object>`. 你可能会反驳, 不是任何类型的对象啊, 你看你返回的是 `Class<Integer>` 而不可以返回 `Integer` 的对象, ummm, 别忘了前面说的, `java.klang.Class` 是作为一个类额包装器存在的, 为什么需要这样的一个类包装器? 因为反射机制, 
 
 > Every time JVM creates an object , it also creates a `java.lang.Class` object that describes the type of the object . All instances of the same class share the same  `java.lang.Class`  object and you can obtain the  `java.lang.Class`  object by calling the `getClass()` method of the object. This method is inherited from `java.lang.Object` class . 这里说的很晕各种 object, 比如一个类 Cat, 当你第一次创建 Cat 的对象时, 如 cat_1, 此时一个  `java.lang.Class`  的对象就会被创建, 类型是 `Class<Cat>` 用来描述类 Cat, 之后你想获得刚被创建的这个 `java.lang.Class`  的对象(类型为`Class<Cat>` ) , 你可以调用 `getClass()` 方法, 即  `cat_1.getClass()`, 此时刚好说明了泛型 wildcard 的重要性, 即 `getClass()` 的返回值类型只能是 `Class<?>` , 否则当你再创建一个类的对象如 Dog 的时候, 难道还要再另重载个 `getClass()` 函数吗?  即: `public final Class<Cat> getClass()`, `public final Class<Dog> getClass()`, 这也太离谱了, 
 

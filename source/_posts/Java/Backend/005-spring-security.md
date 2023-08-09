@@ -204,7 +204,7 @@ spring:
 
 ## 5. 获取登录用户信息 - `Authentication Object`
 
-这里就要提到一个重要的对象, 即 Authentication Object, 它代表的其实就是个 request 实体, 其实也就是个 user, 
+这里就要提到一个重要的对象, 即 Authentication Object, 它代表 **either the request to login or the result of a successful login request** , 
 
 - Authentication: represents the user. Contains:
   - ﻿﻿Principal: user "identity" (name, email...)
