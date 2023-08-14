@@ -10,26 +10,12 @@ tags:
 
 ## 1. Declare & Init Array
 
-- Declaring an Array
-
 ```go
 // Declaring an Array
 var arr [10]int
-```
-
-- Initializing an Array with an Array Literal
-
-```go
-x := [5]int{10, 20, 30, 40, 50}   // Intialized with values
-var y [5]int = [5]int{10, 20, 30} // Partial assignment
-```
-
-- Initializing an Array with ellipses`...`
-
-```go
-func main() {
-	x := [...]int{10, 20, 30}
-}
+// Initialize
+x := [5]int{}
+x := [...]int{10, 20, 30}
 ```
 
 > **Note:** An array's length is part of its type, so arrays cannot be resized. 
@@ -50,8 +36,7 @@ var strSlice []string
 Slice can be created using the built-in function `make()`:
 
 ```go
-var intSlice = make([]int, 10)        // when length and capacity is same
-var strSlice = make([]string, 10, 20) // when length and capacity is different
+var intSlice = make([]int, 10)
 ```
 
 - Nil slices

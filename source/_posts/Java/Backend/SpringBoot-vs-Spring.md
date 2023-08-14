@@ -74,8 +74,6 @@ tags:
 </project>
 ```
 
-
-
 ## 基于 Spring Framework 的 Spring MVC 项目搭建
 
 由于 Spring 主要应用于 Web 开发，下面看下 Spring Boot 出现前是如何搭建 Spring MVC 项目的。

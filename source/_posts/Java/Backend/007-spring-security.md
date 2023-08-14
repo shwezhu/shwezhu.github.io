@@ -1,5 +1,5 @@
 ---
-title: CSRF Filter & ProviderManager & AuthenticationProviders, Spring学习(六)
+title: CSRF Filter & ProviderManager & AuthenticationProviders, Spring学习(七)
 date: 2023-08-08 20:58:54
 categories:
  - Java
@@ -183,7 +183,7 @@ logging:
 
 ![7](7.png)
 
-![8](007-spring-security/9.png)
+![8](9.png)
 
 从图中可以看出 使用如下登录, 则会匹配到我们的 DavidAuthenticationProvider, 
 
@@ -191,7 +191,7 @@ logging:
 $ curl -u "david:asd" http://localhost:8080/private -v
 ```
 
-![9](007-spring-security/8.png)
+![9](8.png)
 
 若使用正常用户密码登录, 则会跳过 DavidAuthenticationProvider, 使用 DaoAuthenticationProvider 验证, 
 
@@ -235,4 +235,70 @@ Found username 'david' in Basic Authorization header
 
 #### `2:01:35`  Configurers - "navigate Spring Security"
 
+> Configurers are an abstraction that allows you to configure the filter chain and do multiple operations on the the HTTP builder(), 
+
 ![12](12.png)
+
+![13](13.png)
+
+`RobotLoginConfigurer.java`
+
+```java
+public class RobotLoginConfigurer extends AbstractHttpConfigurer<RobotLoginConfigurer, HttpSecurity> {
+
+    private final List<String> passwords = new ArrayList<>();
+
+    @Override
+    public void init(HttpSecurity builder) throws Exception {
+        // step 1
+        // initializes a bunch of objects
+        // -> AuthenticationProviders
+        // all the AuthenticationProviders are populated at init() they're put in the builder,
+        builder.authenticationProvider(new RobotAuthenticationProvider(passwords));
+    }
+
+    @Override
+    public void configure(HttpSecurity builder) throws Exception {
+        // step 2
+        // this also initializes objects, but can reuse objects from step 1, even from other configurers
+        // -> Filters
+        // each filter chain may have their own AuthenticationManager
+        var authenticationManager = builder.getSharedObject(AuthenticationManager.class);
+        builder.addFilterBefore(new RobotFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    public RobotLoginConfigurer password(String password) {
+        this.passwords.add(password);
+        return this;
+    }
+}
+```
+
+`WebSecurityConfig.java`
+
+```java
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .authorizeHttpRequests(authorizeConfig -> {
+                    authorizeConfig.requestMatchers("/").permitAll();
+                    authorizeConfig.requestMatchers("/error").permitAll();
+                    authorizeConfig.requestMatchers("/favicon.ico").permitAll();
+                    authorizeConfig.anyRequest().authenticated();
+                })
+        .formLogin(withDefaults())
+        // By calling httpBasic(), an instance of the BasicAuthenticationFilter is added to the filter chain.
+        // https://stackoverflow.com/a/57577530/16317008
+        // 为了实现通过 curl -u "user:password" http://localhost:8080/private 登录
+        .httpBasic(withDefaults())
+        .oauth2Login(withDefaults()) // return HttpSecurity
+        .authenticationProvider(new DavidAuthenticationProvider()) // return HttpSecurity
+        .apply(new RobotLoginConfigurer()) // return Configurer
+        .password("beep-boop") // return Configurer
+        .password("boop-beep");
+    return http.build();
+}
+```
+
+#### `2:10:40` Lambda DSL
+

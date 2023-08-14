@@ -10,7 +10,7 @@ tags:
 
 ## For
 
-Unlike other languages like C, Java, or JavaScript there are no parentheses surrounding the three components of the `for` statement and the braces `{ }` are always required.
+There are no **parentheses** surrounding the three components of the `for` statement and the braces `{ }` are always required.
 
 ```go
 func main() {
@@ -47,17 +47,6 @@ Like `for`, the `if` statement can start with a short statement to execute befor
 func pow(x, n, lim float64) float64 {
 	if v := math.Pow(x, n); v < lim {
 		return v
-	}
-	return lim
-}
-```
-
-Variables declared inside an `if` short statement are also available inside any of the `else` blocks.
-
-```go
-func pow(x, n, lim float64) float64 {
-	if v := math.Pow(x, n); v < lim {
-		return v
 	} else {
 		fmt.Printf("%g >= %g\n", v, lim)
 	}
@@ -68,20 +57,20 @@ func pow(x, n, lim float64) float64 {
 
 ## Switch
 
-A `switch` statement is a shorter way to write a sequence of `if - else` statements. **It runs the first case whose value is equal to the condition expression**. Go's switch cases need not be constants, and the values involved need not be integers.
+A `switch` statement is a shorter way to write a sequence of `if - else` statements. 
 
 ```go
 func main() {
 	fmt.Print("Go runs on ")
 	switch os := runtime.GOOS; os {
-	case "darwin":
-		fmt.Println("OS X.")
-	case "linux":
-		fmt.Println("Linux.")
-	default:
-		// freebsd, openbsd,
-		// plan9, windows...
-		fmt.Printf("%s.\n", os)
+		case "darwin":
+			fmt.Println("OS X.")
+		case "linux":
+			fmt.Println("Linux.")
+		default:
+			// freebsd, openbsd,
+			// plan9, windows...
+			fmt.Printf("%s.\n", os)
 	}
 }
 ```
@@ -97,7 +86,7 @@ case f():
 
 ## Defer
 
-A defer statement defers the execution of a function until the surrounding function returns. The deferred call's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.
+A defer statement defers the execution of a function until the surrounding function returns. 
 
 ```go
 func main() {

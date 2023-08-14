@@ -14,8 +14,8 @@ tags:
 
 Go类似C, 即程序的入口是个`main`函数, 没有它, 你的程序是无法运行的, 但与C还有不同, 如果某个源文件`hello_world.go`你想直接运行它, 那它的第一行必须是`package main`, 所以一个可执行go源文件有两个要求
 
-- 在源文件声明属于main package
-- 具有main函数
+- 在源文件声明属于 main package
+- 具有 main 函数
 
 如下:
 
@@ -104,7 +104,7 @@ $ tree -L 2
 └── hello_world.go
 ```
 
-注意, 我们的项目文件夹叫`my_project`, 然后我们创建的module名也叫`my_project`, 一般他俩设置同名, 你也可以把module名设置其他的, `go mod init my_project`执行后多个文件`go.mod`, 我们来看看内容是啥:
+项目文件夹是 `my_project`, 创建的module名也叫`my_project`, 一般他俩设置同名, `go mod init my_project` :
 
 ```go
 $ cat go.mod 
@@ -113,34 +113,34 @@ module my_project
 go 1.20
 ```
 
-可以看到`go.mod`的第一行就是我们上面指定的module name`module my_project`, 初始化之后, 我们便可以编译go了:
+第一行就是上面指定的 module name, 初始化之后, 我们便可以编译go了:
 
 ```shell
 $ go install      
 ```
 
-这还和C不同, 编译好的可执行文件在`~/go/bin`目录下而不是在当前项目下, 很奇怪哎, 
+编译好的可执行文件在`~/go/bin`目录下, 
 
 ## 3. Go Modules 
 
-看完上面的你肯定有疑惑, `go mod init my_project`是干嘛的, 为什么编译一个小小的源代码, 还需要"初始化"? 
+看完上面的你肯定有疑惑, `go mod init my_project` 是干嘛的, 为什么编译一个小小的源代码, 还需要"初始化"? 
 
-其实也可以不用“初始化”, 上面的例子不使用`go install`进行编译, 直接运行源代码就可以了:
+其实也可以不用“初始化”, 上面的例子不使用 `go install` 进行编译, 直接运行源代码就可以了:
 
 ```shell
 $ go run hello_world.go 
 hello world
 ```
 
-所以这个`go install`绝对不仅仅是编译, 肯定还干了其他的, 不然为啥`go run hello_world.go `可以直接运行(这中间肯定发生了编译)一个go源文件而不用像`go install`那样需要先创建modules呢?
+所以这个 `go install` 绝对不仅仅是编译, 
 
 - The [`go build` command](https://go.dev/cmd/go/#hdr-Compile_packages_and_dependencies) compiles the packages, along with their dependencies, but it doesn't install the results.
 - The [`go install` command](https://go.dev/ref/mod#go-install) compiles and installs the packages.
 - The command [`go run`](https://www.digitalocean.com/community/tutorials/how-to-write-your-first-program-in-go#step-2-—-running-a-go-program) to automatically compile your source code and run the resulting executable.
 
-有了`go run hello_world.go`, 对于简单的项目我们一般就不会用到`go mod init my_project`来“初始化”了, 很省事. 但是什么时候我们需要用到`go mod init my_project`来“初始化”我们的项目呢? 
+什么时候我们需要用到 `go mod init my_project` “初始化” 项目呢? 
 
-答案是当我们用到**custom package**的时候, 这就会到了文章开头遇到的问题, 现在我演示一下如何导入**custom package**, 
+答案是当我们用到 **custom package** 的时候, 这就会到了文章开头遇到的问题, 现在我演示一下如何导入 **custom package**, 
 
 创建个空文件夹`my_project`, 并在里面编写两个go源文件,一个是`hello_world.go`, `tools/math.go`然后让前者为`main` package用于执行, 后者为`tools` package用于被`hello_world.go`调用,  项目结构如下如下:
 
@@ -197,9 +197,7 @@ hello world
 5
 ```
 
-这里一下, `tools/`就是我们自定义的package, 然后`tools/math.go`通过其第一行代码`package tools`声明其属于package `tools`, 我们在`hello_world.go`调用package里的函数的语法是`import module_name/package_name`, 所以我们`hello_world.go`的第一行是`import "my_project/tools"`, 你看调用自定义包只与package name和module name有关, 与文件名`tools/math.go`无关. 
-
-然后`hello_world.go`属于`main` package, 所以你你知道了吧, module和package的关系了吧: A Go Module is nothing but a collection of Go packages.
+`tools/` 是自定义的 package, `tools/math.go` 通过其第一行代码 `package tools` 声明其属于 package `tools`, 我们在 `hello_world.go` 调用package里的函数的语法是`import module_name/package_name`, 所以我们`hello_world.go`的第一行是`import "my_project/tools"`, 
 
 现在看看下面这段话, 是不是觉得很多概念都清晰了呢:
 
@@ -255,13 +253,20 @@ $ go install my_module_name
 package my_project is not in GOROOT (/Users/David/sdk/go1.20.4/src/my_project)
 ```
 
-## 5. Goland
+## 5. GOPATH vs Go Modules
 
-另外Go Modules新的依赖管理方法, 之前用的都是GOPATH, 他们两个不能同时存在, Goland默认设置了GOPATH, 如果你使用了Go Modules即`go mod init xxx`, 那你需要删除Goland上面的Project GOPATH, 如下:
+> Go 1.11 introduces a new dependency mangement system, *Go modules* (That’s why Go uses the environment variable name `GO111MODULE`: indicating to use Go 1.11 module). Google introduced *Go module* as an alternative to *GOPATH* for versioning and dependency management to the Go ecosystem. 
+
+```shell
+$ echo $GOPATH
+/Users/David/sdk
+```
+
+Go Modules 是 Golang 新的依赖管理方法, 之前用的都是 GOPATH, 他们两个不能同时存在, Goland 默认设置了 GOPATH, 如果你使用了Go Modules 即 `go mod init xxx`, 那你需要删除 Goland 上面的 Project GOPATH, 如下:
 
 ![a](a.png)
 
-> Go 1.11 introduces a new dependency mangement system, *Go modules* (That’s why Go uses the environment variable name `GO111MODULE`: indicating to use Go 1.11 module). Google introduced Go module as *an alternative to GOPATH for versioning and package distribution*. At first I did not understand what it means specifically. 
+了解 GOPATH: https://golangr.com/what-is-gopath
 
  ## 6. 总结
 

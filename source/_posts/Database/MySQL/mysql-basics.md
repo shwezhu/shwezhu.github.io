@@ -6,24 +6,38 @@ categories:
 tags:
  - Database
 ---
+## 0. 常用语句
+
+```mysql
+show tables;
+
+show columns from user;
+
+ALTER TABLE user
+ADD COLUMN email VARCHAR(50) UNIQUE NOT NULL AFTER password;
+
+ALTER TABLE user
+DROP COLUMN email;
+```
+
 ## 1. Naming Conventions
 
 **General**
 
-1. Using lowercase will help speed typing, avoid mistakes as MYSQL is case sensitive. 
+1. **Using lowercase** will help speed typing, avoid mistakes as MYSQL is case sensitive. 
 
-2. Space replaced with Underscore — Using space between words is not advised.
+2. **Space replaced with Underscore** — Using space between words is not advised.
 
 3. Numbers are not for names — While naming, it is essential that it contains only Alpha English alphabets.
 
 **Table**
 
-1. Table names are lower case, uses underscores to separate words, and are singular (e.g. `foo`, `foo_bar`, etc.
+1. Table names are lower case, uses underscores to separate words, and are **singular** (e.g. `foo`, `foo_bar`, etc.
 
 **Columns**
 
-1. Always use the **singular name.**
-2. Always use **lowercase** except where it may make sense not to such as proper nouns.
+1. Always use the singular name.
+2. Always use lowercase except where it may make sense not to such as proper nouns.
 3. Where possible **avoid simply using `id`** as the primary identifier for the table.
 4. Do not add a column with the same name as its table and vice versa.
 5. I generally (not always) have a auto increment PK. I use the following convention: `tablename_id` (e.g. `foo_id`, `foo_bar_id`, etc.).
