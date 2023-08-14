@@ -8,9 +8,9 @@ tags:
  - Golang
 ---
 
-第一次接触Golang这种语法, 很容易就绕进圈子里, 刚开始竟然愣是没看懂错误处理是怎么搞的, 最迷惑的是奇怪的接口实现方式, 然后导致每次看定义的时候就总是忽略了function, 总是觉得所有的都是method, 看来以后需要多多练习实践,  不能只是看单纯的教程博客, 现在基础语法看的差不多还差泛型和线程以及网络相关的, 可这又是Go主要用到的东西, ummm, 之后看看用这些单纯的小语法能写个什么, 
+第一次接触Golang这种语法, 很容易就绕进圈子里, 刚开始竟然愣是没看懂错误处理是怎么搞的, 最迷惑的是奇怪的接口实现方式, 然后导致每次看定义的时候就总是忽略了 function, 总是觉得所有的都是 method, 
 
-好了不说了, 进入正题, 首先Go有个包叫errors, 里面的内容很简单, 
+进入正题, 首先Go有个包叫 errors, 里面的内容很简单, 
 
 ```go
 package errors
@@ -29,9 +29,7 @@ func (e *errorString) Error() string {
 }
 ```
 
-一个函数 `New()`用来返回 `errorString` value 的引用, 一个自定义类型 `errorString` 和它的一个 method `Error()`, 当然这个 `Error()`就是Go内置的 `error` 接口的函数, 所以 `errorString` 属于 `error`, 我们看到一个函数应该注意它有没有 receiver, 如果有里面的 type就是这个函数的归属类, 没有, 那么这个函数就属于所在的包, 
-
-errors 包的内容很简单, 主要就是用于我们不想定义自己的错误类型了那就用它, errors 里也说了, "errorString is a trivial implementation of error." 最常见的就是下面这样使用: 
+errors 包的内容很简单, 主要就是用于我们不想自定义错误类型的时候, 即 *"errorString is a trivial implementation of error."* 最常见的使用例子: 
 
 ```go
 func Sqrt(f float64) (float64, error) {
@@ -143,13 +141,12 @@ ummm, 如果`errorString`是注释中所说的那样, 那难道`SyscallError`不
 
 在知乎看到[一个回答](https://www.zhihu.com/question/330263279/answer/726217922), 总结的很好, 摘一段在这当个笔记:
 
-Golang 中的错误处理的哲学和C 语言一样，函数通过返回错误类型(error)或者 bool 类型(不需要区分多种错误状态时)表明函数的执行结果，调用检查返回的错误类型值是否是nil 来判断调用结果。
+Golang 中的错误处理的哲学和 C 语言一样, 函数通过返回错误类型 `error` 或者 `bool` 类型(不需要区分多种错误状态时) 表明函数的执行结果, 调用检查返回的错误类型值是否是 `nil` 来判断调用结果, 
 
-这个设计一直被吐槽太繁琐，作为主要用GO的攻城狮Q，经常写 if err!=nil，但是如果想偷懒，少带了上下文信息，直接写 if err!=nil { return err了 或者 fmt.Errorf 携带的上下文信息太少了的话，看到错误日志也会一脸懵逼，难以定位问题。
+这个设计一直被吐槽太繁琐, 作为主要用GO的攻城狮, 经常写 `if err!=nil`, 但是如果想偷懒, 少带了上下文信息, 直接写 `if err != nil { return err }`了 或者 `fmt.Errorf` 携带的上下文信息太少了的话, 看到错误日志也会一脸懵逼, 难以定位问题
 
 官方在 2011 年就发过[一篇博客](https://go.dev/blog/error-handling-and-go)教大家如何在Go中处理error, error 是一个内建的 interface， 鼓励大家用好自定义错误类型，常用的范式有三种：
 
-- ﻿一是用 errors. New(str string）定义错误常量Q，让调用方去判断返回的err 是否等于这个常量，来进行区分处理；
-- ﻿二是用 fmt.Errorf(fmt string, args. .. interface{}）增加一些上下文信息，用文字的方式告诉调用方哪里出错了，让调用方打错误日志出来;
-- ﻿三是自定义struct type，实现 error 接口，调用方用类型断言转成特定的 struct type， 拿到更结构
-   化的错误信息.
+- ﻿一是用 `errors.New(str string)` 定义错误常量Q, 让调用方去判断返回的err 是否等于这个常量, 来进行区分处理
+- ﻿二是用 `fmt.Errorf(fmt string, args. .. interface{})`增加一些上下文信息, 用文字的方式告诉调用方哪里出错了, 让调用方打错误日志出来
+- ﻿三是自定义 struct type, 实现 error 接口, 调用方用类型断言转成特定的 struct type, 拿到更结构化的错误信息
