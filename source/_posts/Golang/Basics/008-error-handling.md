@@ -8,44 +8,82 @@ tags:
  - Golang
 ---
 
-第一次接触Golang这种语法, 很容易就绕进圈子里, 刚开始竟然愣是没看懂错误处理是怎么搞的, 最迷惑的是奇怪的接口实现方式, 然后导致每次看定义的时候就总是忽略了 function, 总是觉得所有的都是 method, 
+## 1.`error` interface
 
-进入正题, 首先Go有个包叫 errors, 里面的内容很简单, 
+The `error` type is an interface type. An `error` variable represents any value that **can** describe itself as a string.
 
 ```go
-package errors
-
-func New(text string) error {
-	return &errorString{text}
-}
-
-// errorString is a trivial implementation of error.
-type errorString struct {
-	s string
-}
-
-func (e *errorString) Error() string {
-	return e.s
+type error interface {
+    Error() string
 }
 ```
 
-errors 包的内容很简单, 主要就是用于我们不想自定义错误类型的时候, 即 *"errorString is a trivial implementation of error."* 最常见的使用例子: 
+接口 error 是 built-in type, the `error` type, as with all built in types, is [predeclared](https://go.dev/doc/go_spec.html#Predeclared_identifiers) in the [universe block](https://go.dev/doc/go_spec.html#Blocks). 
+
+The most commonly-used `error` implementation is the [errors](https://go.dev/pkg/errors/) package’s **unexported** `errorString` type.
+
+```go
+// errorString is a trivial implementation of error.
+type errorString struct {
+    s string
+}
+
+func (e *errorString) Error() string {
+    return e.s
+}
+```
+
+ ` error`  是 interface, 故不可有 instance, ` errorString` 实现了 `error`, 它在 errors package 里, 但首字母是小写因此是私有, 所以不可在其他 package 直接创建  ` errorString` 的 instance, 但是 package errors 里提供了公有方法, 可以用来创建  ` errorString` 的 instance, 
+
+``` go
+// New returns an error that formats as the given text.
+func New(text string) error {
+    return &errorString{text}
+}
+```
+
+这里有个问题, New 的返回类型是 error, 但是该函数返回的一个地址, 这没问题吗? 可参考: 
+
+## 2. `fmt` package 
+
+> The [fmt](https://go.dev/pkg/fmt/) package formats an `error` value by calling its `Error() string` method. 
+
+若某类型是 error 子类型, 则可以直接打印, 因为实现接口 error 的类型必须实现其函数 `Error() string` , 而 ` fmt` package 里面的函数遇到 error 类型的错误, 会掉用其 `Error()  string` 函数, 打印对应字符串, 
 
 ```go
 func Sqrt(f float64) (float64, error) {
 	if f < 0 {
 		return 0, errors.New("math: square root of negative number")
 	}
-	return math.Sqrt(f), nil
+	return 1, nil
 }
 
 func main() {
-	res, err := Sqrt(-64.0)
-	fmt.Printf("res: %v, err: %v", res, err)
+	_, err := Sqrt(-1)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 ```
 
-那如果我们不想使用 `errorString` 呢? 那我们就要自定义一个 type 然后实现接口 `error`, 刚开始学习, 我们也不知道是什么标准, 不妨借鉴一下 Go 官方是怎么处理错误的, 
+## 3. `fmt.Errorf()`
+
+`fmt.Errorf()` formats a string according to `Printf`’s rules and returns it as an `error` created by `errors.New`.
+
+```go
+func Sqrt(f float64) (float64, error) {
+    if f < 0 {
+        return 0, fmt.Errorf("math: square root of negative number %g", f)
+    }
+    // implementation
+}
+```
+
+参考: https://go.dev/blog/error-handling-and-go 另外此文章关于 Simplifying repetitive error handling 写的很好, 可以参考
+
+## 4. 错误处理
+
+借鉴一下 Go 官方是怎么处理错误的, 
 
 下面 TCP 连接相关的代码:
 
@@ -68,7 +106,7 @@ func main() {
 }
 ```
 
-我们看看Go是怎么使用error的, 比如`net.Listen("tcp", addr)`返回了err, 我们看看一些相关实现, 顺着这个函数查找, 嵌套了好多函数, 终于找到了下面这个直接返回err的函数(为了方便看, 我删除了很多代码, 只保留了部分):
+`net.Listen("tcp", addr)`返回了err, 顺着这个函数查找, 找到了返回 err 的函数 (为了方便看, 我删除了很多代码, 只保留了部分):
 
 ```go
 func setDefaultSockopts(s, family, sotype int, ipv6only bool) error {
@@ -80,7 +118,7 @@ func setDefaultSockopts(s, family, sotype int, ipv6only bool) error {
 }
 ```
 
-这个函数的返回值类型是`error`, 就是Go的内置接口`error`, 在IDE里面按下cmd然后点击该函数的返回值`error`, 便可看到error在一个叫`builtin.go`的package里:
+该函数的返回值是 `error`, 注意 `error` 是内置接口, 不要因为 error 是小写 就不知道它是什么了: 
 
 ```go
 // The error built-in interface type is the conventional interface for
@@ -90,7 +128,7 @@ type error interface {
 }
 ```
 
-没错error就这么简单, 它就是个接口, 上面的代码返回的是`os.NewSyscallError(...)`, 然后我们来看看`os.NewSyscallError(...)`具体的实现:
+上面的代码返回的是`os.NewSyscallError(...)`, 看看`os.NewSyscallError(...)`具体的实现:
 
 ```go
 func NewSyscallError(syscall string, err error) error {
@@ -101,9 +139,9 @@ func NewSyscallError(syscall string, err error) error {
 }
 ```
 
-终于找到源头, `os.NewSyscallError(...)`返回值是`error`类型, 然后它返回的是`&SyscallError{syscall, err}`, 这个语法你可以简单理解为该函数返回了一个匿名对象的引用(Go里没有对象的概念哦, 这样说是方便理解), 然后Go有GC, 所以这个匿名对象并不会在函数返回的时候被清理掉, 具体原因可以看[关于Golang函数返回局部变量的地址的问题](https://davidzhu.xyz/2023/05/15/Golang/Basics/lifetime-of-variables/), 
+终于找到源头, `os.NewSyscallError(...)` 返回值是 `error` 类型, 然后它返回的是 `&SyscallError{syscall, err}`, 这个语法你可以简单理解为该函数返回了一个匿名对象的引用 (Go里没有对象的概念哦, 这样说是方便理解), 这个匿名对象不会在函数返回后被清理掉, 具体可参考: [关于Golang函数返回局部变量的地址的问题](https://davidzhu.xyz/2023/05/15/Golang/Basics/004-lifetime-of-variables/), 
 
-显然`SyscallError`也实现了接口`error`, 这样它才能属于`error`, 就像我们最开始介绍的那个`errors`包里的`errorString`, 然后我们来看看`SyscallError`, 
+显然 `SyscallError` 也实现了接口 `error`, 这样它才能属于 `error`, 就像最开始介绍的那个 `errors` 包里的 `errorString`, 看看 `SyscallError`:
 
 ```go
 type SyscallError struct {
@@ -117,7 +155,7 @@ type SyscallError struct {
 func (e *SyscallError) Error() string { return e.Syscall + ": " + e.Err.Error() }
 ```
 
-唔~, 终于找到你了, 再来看看上面那个“简单的”`errorString`的实现:
+唔~, 终于找到你了, 再来看看上面那个“简单的” `errorString `的实现:
 
 ```go
 // errors.go
@@ -131,7 +169,7 @@ func (e *errorString) Error() string {
 }
 ```
 
-ummm, 如果`errorString`是注释中所说的那样, 那难道`SyscallError`不是一个trivial implementation of error吗?
+ummm, 如果 `errorString` 是注释中所说的那样, 那难道`SyscallError` 不是 a trivial implementation of error 吗?
 
 到了这, 相信对于Go的错误处理机制也有个简单的概念, 你可以使用简单的`errors`里面的人家预先帮你实现好的`error`, 你也可以自己定一个自己的error, 就像`SyscallError`那样, 
 

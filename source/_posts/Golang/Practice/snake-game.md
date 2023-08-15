@@ -14,7 +14,7 @@ Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉�
 
 **地图**
 
-地图就是个二维数组`board`, 在Go里面叫Slice of slices, 不清楚可以看这篇[Golang容器之Array & Slice & Map ](https://davidzhu.xyz/2023/05/13/Golang/Basics/collections/), 该地图(二维数组)存储bool类型, 定义如下和结构如下:
+地图就是个二维数组`board`, 在Go里面叫Slice of slices, 不清楚可以看这篇[Golang容器之Array & Slice & Map ](https://davidzhu.xyz/2023/05/13/Golang/Basics/003-collections/), 该地图(二维数组)存储bool类型, 定义如下和结构如下:
 
 ```go
 // height = 4, width = 3
@@ -146,9 +146,9 @@ for {
 $ go get github.com/eiannone/keyboard
 ```
 
-然后项目里就会多出`go.mod`和`mod.sum`文件, 里面保存了第三方库的版本, 有点像Java里的maven`pom.xml`, 或者是npm的`package.json`, 当然肯定是不一样的他们, 最近作业有点多, 还没仔细研究, 另外注意, 如果是在Goland上开发, 可能会报错`$GOPATH/go.mod exists but should not exist`, 这个原因是你项目设置了`Project GOPATH`, 在Goland设置里删除就好了, 以上这些和包相关的问题可以参考这篇文章 [Golang模块module和包package的使用之导入自定义包](https://davidzhu.xyz/2023/05/21/Golang/Basics/go-modules/)
+然后项目里就会多出`go.mod`和`mod.sum`文件, 里面保存了第三方库的版本, 有点像Java里的maven`pom.xml`, 或者是npm的`package.json`, 当然肯定是不一样的他们, 最近作业有点多, 还没仔细研究, 另外注意, 如果是在Goland上开发, 可能会报错`$GOPATH/go.mod exists but should not exist`, 这个原因是你项目设置了`Project GOPATH`, 在Goland设置里删除就好了, 以上这些和包相关的问题可以参考这篇文章 [Golang模块module和包package的使用之导入自定义包](https://davidzhu.xyz/2023/05/21/Golang/Basics/005-go-modules/)
 
-最后是关于线程, goroutine, 这个改天再研究, 研究了一下怎么关闭线程, 可以参考:[Golang Goroutine和Select](https://davidzhu.xyz/2023/05/21/Golang/Basics/goroutines-select/)
+最后是关于线程, goroutine, 这个改天再研究, 研究了一下怎么关闭线程, 可以参考:[Golang Goroutine和Select](https://davidzhu.xyz/2023/05/21/Golang/Basics/011-goroutines-select/)
 
 [源码](https://gist.github.com/shwezhu/3def0433eb5656deebf07dc32e6eecc1)如下:
 

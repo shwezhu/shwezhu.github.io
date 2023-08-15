@@ -30,7 +30,7 @@ func main() {
 }
 ```
 
-可是在[Golang Goroutine和Channel](https://davidzhu.xyz/2023/05/21/Golang/Basics/goroutines-channels/)介绍了channel是阻塞的, 也就是说`handleInput(quit chan bool) `会卡在第一行即等待channel `quit`那头有数据发过来, 这样显然无法实现我们想要达到的目的, 
+可是在[Golang Goroutine和Channel](https://davidzhu.xyz/2023/05/21/Golang/Basics/010-goroutine-channels/)介绍了channel是阻塞的, 也就是说`handleInput(quit chan bool) `会卡在第一行即等待channel `quit`那头有数据发过来, 这样显然无法实现我们想要达到的目的, 
 
 这个时候就要介绍一下select, 做linux网络编程可能会比较熟悉这个, select不是多路复用里面的概念吗, poll, epoll, 概念类似即阻塞轮训监听, 使用select的default case, 便可以实现我们想要的:
 

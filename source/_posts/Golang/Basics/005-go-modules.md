@@ -274,8 +274,8 @@ Go Modules 是 Golang 新的依赖管理方法, 之前用的都是 GOPATH, 他�
 - `go install`运行前需要执行`go mod init my_project`
 - 需要使用custom package的时候, 要使用go module, 即`go mod init your_module_name`, module name往往和我们项目名相同, 但你也可以使用其他的名字, 
 - 创建自定义package即在项目根目录下创建一个文件夹, 然后在里面写go源代码, 注意package里面的源文件的第一行必须声明其属于该package: `package xxx`
-- 创建自定义package的时候, 里面的函数变量必须要首字母大写, 否则那个函数就属于私有了, 具体参考: [A Tour of Go](https://go.dev/tour/basics/3)
-- 注意区分package和module的概念, 他们是不同的: A Go Module is nothing but a collection of Go packages. 
+- 创建自定义package的时候, 里面的函数变量必须要**首字母大写**, 否则那个函数就属于私有了, 具体参考: [A Tour of Go](https://go.dev/tour/basics/3)
+- 注意区分 package 和 module 的概念, 他们是不同的: A Go Module is nothing but a collection of Go packages. 
 - `go install` 后面的参数是当前的模块名
 
 参考:

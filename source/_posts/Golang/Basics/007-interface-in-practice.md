@@ -52,3 +52,4 @@ func main() {
 
 ## 3. 错误处理
 
+可参考: https://davidzhu.xyz/2023/05/17/Golang/Basics/008-error-handling/
