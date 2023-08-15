@@ -1,5 +1,5 @@
 ---
-title: Pointer Receiver vs Value Receiver
+title: Pointer Receiver vs Value Receiver in Golang
 date: 2023-08-15 17:18:20
 categories:
  - Golang
@@ -108,6 +108,21 @@ There are two reasons to use a pointer receiver:
 
 - The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
 
-But you should notice that *value receivers* are concurrency safe, while *pointer receivers* are not concurrency safe. 
+But you should notice that *value receivers* are concurrency safe, while *pointer receivers* are not concurrency safe. So if there is no a lot copy, and you don't need modify any field of the value, try to use value receiver, I find a snippet in go source code, e.g.,
+
+```go
+type Handler interface {
+	ServeHTTP(ResponseWriter, *Request)
+}
+
+type HandlerFunc func(ResponseWriter, *Request)
+
+// 1. We don't need to modify any filed of HandlerFunc, it's just a function
+// 2. There is no a lot copies
+// So choose value receiver, not pointer
+func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
+	f(w, r)
+}
+```
 
 Source: [A Tour of Go](https://go.dev/tour/methods/8)

@@ -7,6 +7,15 @@ tags:
   - Git
 ---
 
+## 总结
+
+- origin 是远程仓库 url 的别名, 可以改成其他的, 如 repo, 但是之后push代码时, 需要使用命令 `git push repo master`
+  -  添加远程仓库时指定 url 别名 origin:`git remote add origin git@github.com:shwezhu/MyProject.git`
+  - `git remote add <name> <url>` 
+  - 可以用 ` git remote` 查看当前 url 别名
+- ` git fetch <remote>` 中的 `<remote>`  就是远程仓库的 url, 可以用 url 别名代替 如 origin, repo
+- 配置信息在 ` .git/config ` 
+
 ## 1. git fetch & git remote
 
 The `git fetch` command downloads commits, files, and refs from a remote repository into your local repo. Fetching is what you do when you want to see what everybody else has been working on. **Git isolates fetched content from existing local content; it has absolutely no effect on your local development work**. 
@@ -29,7 +38,9 @@ git fetch <remote> <branch>
 
 想要理解这个`<remote>`到底是什么, 还是得知道另一个常用命令`git remote`, 熟悉吧, 这就是我们每次链接远程仓库必用的指令, 我们的流程在GitHub创建个仓库, 然后在本地创建个同名文件夹, 进入文件夹先使用`git remote add origin git@github.com:shwezhu/MyProject.git`, 最后使用 `git init`等指令, 一套操作行云流水, 直接push到远程仓库. 
 
-其实有没有想过上面的指令`git remote add origin git@github.com:shwezhu/MyProject.git`, 其中的`git remote`是什么? 以及`add`后的`origin`又是什么? 其实`git remote`就是一个git 指令我们很常用, 然后`origin`就是后面的url的别名, 你也可以改成其他的, 什么`repo`都可以的, 只不过那时候你再向远程push东西就得是`git push repo master`之类的指令了, 而不是`git push origin master`. 
+有没有想过上面的指令`git remote add origin git@github.com:shwezhu/MyProject.git`, 其中的`git remote`是什么? 以及`add`后的`origin`又是什么? 
+
+`git remote`就是 git 指令, `origin` 就是后面的url的别名, 你也可以改成其他的, 什么`repo`都可以的, 只不过那时候你再向远程push东西就得是`git push repo master`之类的指令了, 而不是`git push origin master`. 
 
 我们先来看一下`git remote`, 
 
@@ -90,7 +101,7 @@ $ cat .git/config
 	fetch = +refs/heads/*:refs/remotes/repo/*
 	
 # 等价于 git fetch git@github.com:shwezhu/MyProject.git
-# 其实在这种什么都没得文件夹fetch也等价于你直接git clone ..., 区别是你不用自己git init和创建项目文件夹了
+# 在什么都没得文件夹fetch也等价于你直接git clone ..., 区别是你不用自己git init和创建项目文件夹了
 $ git fetch repo 
 remote: Enumerating objects: 16, done.
 remote: Counting objects: 100% (16/16), done.

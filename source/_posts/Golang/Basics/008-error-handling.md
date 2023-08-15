@@ -42,7 +42,7 @@ func New(text string) error {
 }
 ```
 
-这里有个问题, New 的返回类型是 error, 但是该函数返回的一个地址, 这没问题吗? 可参考: 
+这里有个问题, New 的返回类型是 error, 但是该函数返回的一个地址, 这没问题吗? 可参考: [Pointer Receiver vs Value Receiver](https://davidzhu.xyz/2023/08/15/Golang/Basics/013-pointer-receiver/)
 
 ## 2. `fmt` package 
 
@@ -81,7 +81,7 @@ func Sqrt(f float64) (float64, error) {
 
 参考: https://go.dev/blog/error-handling-and-go 另外此文章关于 Simplifying repetitive error handling 写的很好, 可以参考
 
-## 4. 错误处理
+## 4. 分析Go错误处理
 
 借鉴一下 Go 官方是怎么处理错误的, 
 
@@ -175,7 +175,7 @@ ummm, 如果 `errorString` 是注释中所说的那样, 那难道`SyscallError` 
 
 如果我们想自己实现一个呢, 请参考: [Learn how to handle errors in Go (Golang) | golangbot.com](https://golangbot.com/error-handling/)
 
-----
+## 5. 推荐的错误处理方法
 
 在知乎看到[一个回答](https://www.zhihu.com/question/330263279/answer/726217922), 总结的很好, 摘一段在这当个笔记:
 

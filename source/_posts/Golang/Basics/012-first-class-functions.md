@@ -130,113 +130,43 @@ func main() {
 
 > A closure is a persistent scope which holds on to local variables even after the code execution has moved out of that block.  [Closure - Stackoverflow](https://stackoverflow.com/a/7464475/16317008)
 
-## 5. 
+Credit: [First-Class Functions in Golang](https://levelup.gitconnected.com/first-class-functions-in-golang-ef2a5001bb4f) 
 
-
-
-
+## 5. a Confusion in initilizing function type
 
 ```go
-type Handler interface {
-	ServeHTTP(ResponseWriter, *Request)
+// struct declaring
+type Cat struct {
+	name string
+	age uint
 }
 
-// The HandlerFunc type is an adapter to allow the use of
-// ordinary functions as HTTP handlers. If f is a function
-// with the appropriate signature, HandlerFunc(f) is a
-// Handler that calls f.
-type HandlerFunc func(ResponseWriter, *Request)
-
-// ServeHTTP calls f(w, r).
-func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
-	f(w, r)
-}
+// funciton declaring
+type MathOperation func(l float32, r float32) (float32, error)
 ```
 
-
-
-
-
-
-
-
-
-参考:
-
-- [First-Class Functions in Golang. In Go, you can assign functions to… | by Radhakishan Surwase | Level Up Coding](https://levelup.gitconnected.com/first-class-functions-in-golang-ef2a5001bb4f)
-- 
-
-
-
-
-
-In this example, the `HandlerFunc` type is defined as a function type that takes a `ResponseWriter` and a pointer to a `Request` and returns an `error`. The `MyHandler` function matches this signature and can be assigned to a variable of type `HandlerFunc`. 
+Initilize a struct, we use `{}`, e.g.,
 
 ```go
-type HandlerFunc func(ResponseWriter, *Request) error
-
-func MyHandler(w ResponseWriter, r *Request) error {
-    // Implementation of the handler function
-    return nil
-}
-
-func main() {
-    var handler HandlerFunc
-    handler = MyHandler
-
-    // Call the handler
-    err := handler(w, r)
-    if err != nil {
-        // Handle the error
-    }
-}
+cat := Cat{name: "Kitten", age: 1}
 ```
 
+But initilize a function type, we use `()`
 
-
-主要应用如下:
-
-```go
-// http.HandlerFunc 原型: type HandlerFunc func(ResponseWriter, *Request)
-func demo(fn http.HandlerFunc) {}
-
-func handler(w http.ResponseWriter, r *http.Request) {}
-
-func main() {
-  demo(handler)
-}
-```
-
-想想为什么 demo 可以接受 handler() function, 
-
-
-
-```go
-func helloHandler(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var name string
-		// Execute the query.
-		row := db.QueryRow("SELECT myname FROM mytable")
-		if err := row.Scan(&name); err != nil {
-			http.Error(w, err.Error(), 500)
-			return
+``` go
+divideOperation := MathOperation(func(l float32, r float32) (float32, error) {
+		if r == 0 {
+			return 0, errors.New("denominator cannot be 0")
 		}
-		// Write it back to the client.
-		fmt.Fprintf(w, "hi %s!\n", name)
+		return l/r, nil
 	})
-}
 ```
 
+## 6. Wrapper
 
+There is a advanced use case for function, called wrapper, you can learn more by visiting these blogs:
 
-```go
-type HandlerFunc func(ResponseWriter, *Request)
-
-// ServeHTTP calls f(w, r).
-func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
-	f(w, r)
-}
-
-
-```
+- [The http.Handler wrapper technique in #golang UPDATED | by Mat Ryer | Medium](https://medium.com/@matryer/the-http-handler-wrapper-technique-in-golang-updated-bc7fbcffa702)
+- [Error handling and Go - The Go Programming Language](https://go.dev/blog/error-handling-and-go), at the *Simplifying repetitive error handling* part
+- [Structuring Applications in Go. How I organize my applications in Go | by Ben Johnson | Medium](https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091)
 
