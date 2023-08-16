@@ -7,24 +7,35 @@ tags:
   - Git
 ---
 
-## 1. Commands
+## 1. Common Commands
 
-Git鼓励大量使用分支：
+List branches:
 
-查看分支：`git branch`
+- `git branch`,  local, equals to `ls ./.git/refs/heads/`
+- `git branch -r`, remote
+- `git branch -a`, all
+- you can add `-v` option, `git branch -v -a`
 
-创建分支：`git branch <name>`
+Check which branch you are on:
 
-切换分支：`git switch <name>`或`git checkout <name>`
+- `git status`
 
-创建+切换分支：`git switch -c <name>`或`git checkout -b <name>`
+Create branch:
 
-合并某分支到当前分支：`git merge <name>`
+- `git branch <name>`
 
-删除分支：`git branch -d <name>`
+Switch branch:
 
-`git branch`列出所有本地分支, 等价于`ls ./.git/refs/heads/`
-`git branch -r`列出所有远程分支
+- `git switch <name>`, only can switch to the branches on your local repository
+- ``git checkout <name>`
+
+Delete branch:
+
+- `git branch -d <name>`
+
+Merge benach `issue003` into current branch：
+
+- `git merge <issue003>`
 
 ## 2. 切换分支需要注意的事
 
@@ -161,7 +172,7 @@ Please move or remove them before you switch branches.
 Aborting
 ```
 
-所以结论是, **切换分支前, 一定要记得commit, 然后别在A分支修改你想提交到B分支的文件**.  
+所以结论是, **切换分支前, 一定要记得commit, 别在A分支修改你想提交到B分支的文件**.  
 
 ## 3. master vs. origin/master vs. remotes/origin/master
 
@@ -212,7 +223,7 @@ hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 ```
 
-Git已经提示我们先用`git pull`把最新的提交从`origin/dev`抓取(fetch)并在本地合并(merge)，再推送, 但是直接`git pull`并不好(`pull` = `fetch`+无脑`merge`), 但你并不知道对方做了什么改动, 所以我们先用`git fetch`把远程的改动下载下来, 看看是啥, 再决定是否合并(`git merge`或`git rebase`), 
+Git 提示我们先用`git pull`把最新的提交从`origin/dev`抓取(fetch)并在本地合并(merge)，再推送, 但是直接`git pull`并不好(`pull` = `fetch` + `merge`), 但你并不知道对方做了什么改动, 所以我们先用`git fetch`把远程的改动下载下来, 看看是啥, 再决定是否合并(`git merge `或 `git rebase`), 
 
 ```shell
 $ git fetch origin origin/dev

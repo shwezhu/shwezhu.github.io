@@ -7,6 +7,20 @@ tags:
   - Git
 ---
 
+## 总结
+
+综上, 工作目录下的文件有很多状态, Untracked, Tracked, Unmodified, Modified, Staged, 然后我们使用下面的命令进行版本穿梭, 
+
+- `git add`modified->staged
+
+- `git commit` staged->unmodifed
+- `git rm`注意这个命令有参数用来告诉从哪删除如` git rm --cached h.txt`, 从tracked->untracked(此时会真正删除文件, 但你也可以恢复), 从staged->modified, 
+- `git restore`,  从staged->modified, 从modified->unmodified都可以使用这个命令
+
+当然还有其它命令没提到, 如`git reset`等...也可用于版本穿梭, 这个文章只是想阐述一些基础的概念, 如Git的index就是staging area, working directory等概念, 以便在查找资料的时候可以看懂别人在说什么. 
+
+## 状态之间的切换
+
 学习Git的时候发现一些基础的概念很是模糊, 于是读了一下[文档](https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository), 在这记录一下, 
 
 Remember that each file in your **working directory** can be in one of **two states**: *tracked* or *untracked*. Tracked files are files that were in the last **snapshot**, as well as any newly **staged files**; they can be unmodified, modified, or staged. In short, tracked files are files that Git knows about. As you edit files, Git sees them as modified, because you’ve changed them since your last commit. As you work, you selectively stage these modified files and then commit all those staged changes, and the cycle repeats.
@@ -100,7 +114,7 @@ On branch main
 nothing to commit, working tree clean
 ```
 
-### Tracked -> Untracked
+## Tracked -> Untracked
 
 To remove a file from Git, you have to remove it from your tracked files (more accurately, remove it from your staging area) and then commit. The `git rm` command does that, and also removes the file from your working directory so you don’t see it as an untracked file the next time around.
 
@@ -171,15 +185,3 @@ $ git rm --
 这里有个应用, 即如果之前 a.txt 已经被 git tracked, 那么之后你再把此文件的名字添加到 `.gitignore` 也不行, 还是会被继续 track, 因此需要使用如下命令: 
 
 > `.gitignore` only ignores files that are not part of the repository yet. If you already `git add`ed some files, their changes will still be tracked. To remove those files from your repository (but not from your file system) use `git rm --cached` on them. https://stackoverflow.com/a/45400404/16317008
-
-### 总结
-
-综上, 工作目录下的文件有很多状态, Untracked, Tracked, Unmodified, Modified, Staged, 然后我们使用下面的命令进行版本穿梭, 
-
-- `git add`modified->staged
-
-- `git commit` staged->unmodifed
-- `git rm`注意这个命令有参数用来告诉从哪删除如` git rm --cached h.txt`, 从tracked->untracked(此时会真正删除文件, 但你也可以恢复), 从staged->modified, 
-- `git restore`,  从staged->modified, 从modified->unmodified都可以使用这个命令
-
-当然还有其它命令没提到, 如`git reset`等...也可用于版本穿梭, 这个文章只是想阐述一些基础的概念, 如Git的index就是staging area, working directory等概念, 以便在查找资料的时候可以看懂别人在说什么. 

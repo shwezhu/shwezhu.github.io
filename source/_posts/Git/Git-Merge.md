@@ -1,15 +1,20 @@
 ---
-title: "Git Merge实例分析之fast-forward和three-way merge"
+title: "Git Merge实例分析之fast-forward & three-way merge"
 date: 2023-04-21 09:44:39
 categories:
   - Git
 tags:
   - Git
 ---
+## 总结
 
-# 1. `fast-forward`和`three-way merge`
+- 是否可以 fast-forward 取决于主分支是否在被合并分支的祖先分支上
+- git merge 输出提示存在 conflicts 时, 就需要进行 three-way merge
+  - 此时在输出中找到存在 conflict 的文件, 手动解决 conflict 后进行 commit: ` git commit -m "fixed conflicts"` 
+  - 然后便可安全删除次分支
+  - 可以使用 git log 查看提交历史
 
-我们通过实例来分析一下什么是`fast-forward`和`three-way merge`. 
+## 实验
 
 ```shell
 # 初次在main提交 添加个新功能
@@ -60,7 +65,7 @@ $ git commit -m "invoke add function"
 $ git switch -c issue01
 ```
 
-现在我们的分支结构类似下图(我们在`git branch`那一节讲过, 新建的分支`issue01`含有`main`分支已存在的commit history), 
+现在我们的分支结构类似下图(在 [`git branch` ](https://davidzhu.xyz/2023/04/22/Git/Git-Branch/)讲过, 新建的分支`issue01`含有`main`分支已存在的commit history), 
 
 ![](a.png)
 
@@ -91,7 +96,7 @@ Please commit your changes or stash them before you switch branches.
 Aborting
 ```
 
-现在我们的分支结构如下图, 
+现在分支结构如下, 
 
 ![](b.png)
 
@@ -150,7 +155,7 @@ Date:   Sat Apr 22 20:28:56 2023 -0300
 
 ```
 
-现在我们在`main`新建另一个分支`hotfix`,  并修改源文件, 然后进行一个commit
+在`main`新建另一个分支`hotfix`,  并修改源文件, 然后进行一个commit
 
 ```shell
 $ git switch main   
@@ -160,7 +165,7 @@ $ git add .
 $ git commit -m "delete hello wrld"
 ```
 
-然后分支结构类似如下图, 
+然后分支结构如下图, 
 
 ![](c.png) 
 
@@ -168,7 +173,7 @@ $ git commit -m "delete hello wrld"
 
 ```shell
 $ git switch main
-# 可以看出这次是Fast-forward合并
+# 根据输出知是 Fast-forward merge
 $ git merge hotfix
 Updating d64cbe3..8c9302c
 Fast-forward
@@ -190,11 +195,11 @@ Date:   Sat Apr 22 20:35:05 2023 -0300
 ...
 ```
 
-通过上面的输出我们可以看到, 在分支`main`merge分支`hotfix`后, 连带着commit历史一起merge了, 现在结构如下:
+merge `hotfix`后, 连带着commit历史一起merge了, 现在结构如下:
 
 ![](d.png)
 
-然后我们就可以安全的删除`hotfix`分支了, 
+现在可以安全删除`hotfix`分支了, 
 
 ```shell
 $ git branch -d hotfix
@@ -205,7 +210,7 @@ Deleted branch hotfix (was 8c9302c).
 
 ![](e.png)
 
-假设现在我们bug修好了, 准备把分支`issue01`合并到分支`main`上, 如下:
+假设bug修好了, 准备把分支`issue01`合并到分支`main`上, 如下:
 
 ```shell
 $ git merge issue01 
@@ -229,13 +234,13 @@ int main() {
 }
 ```
 
-可以看到我们合并失败了, 需要手动解决conflicts, 这次失败而上次合并`hotfix`分支并没有失败的的原因是因为`main`没有在分支`issue01`的祖先分支上, **而`main`在`hotfix`的祖先分支上(类似下图, `main`和`issue1`没在一条线上), 所以可以进行fast-forward合并`hotfix`分支**, 但合并分支`issue01`的时候却不能进行fast-forward合并. 
+合并失败了, 需要手动解决conflicts, 这次失败而上次合并`hotfix`分支并没有失败的的原因是`main`没有在分支`issue01`的祖先分支上, **而`main`在`hotfix`的祖先分支上(类似下图, `main`和`issue1`没在一条线上), 所以可以进行fast-forward合并`hotfix`分支**, 但合并分支`issue01`的时候却不能进行fast-forward合并. 
 
 ![](f.png)
 
 > This looks a bit different than the `hotfix` merge you did earlier. In this case, your development history has diverged from some older point. Because the commit on the branch you’re on isn’t a direct ancestor of the branch you’re merging in, Git has to do some work. In this case, Git does a simple **three-way merge, using the two snapshots pointed to by the branch tips and the common ancestor of the two**.
 
-不能进行fast-forward合并的话怎么办呢? 那就进行另一种合并, 叫`three-way merge`, 看上面的图标出了两个snapshots. 然后我们再手动合并, 手动解决冲突再提交后大致结构如下图所示:
+不能 fast-forward 合并就需要 three-way merge, 手动解决冲突再提交后大致结构如下图所示:
 
 ![](g.png)
 
