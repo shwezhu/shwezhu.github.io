@@ -67,7 +67,7 @@ Git as a system manages and manipulates three trees in its normal operation:
 
 The Git index is a critical data structure in Git. It serves as the “staging area” between the files you have on your filesystem and your commit history. When you run `git add`, the files from your working directory are hashed and stored as objects in the index, leading them to be “staged changes”. When you run `git commit`, the staged changes as stored in the index are used to create that new commit.
 
-HEAD在上面已经解释, 至于 working directory 已经在: [Git基础文件状态之版本穿梭 | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/05/Git/Git-Basics/) 提到,  在这不再赘述, 
+HEAD在上面已经解释, 至于 working directory 已经在: [Git基础文件状态之版本穿梭 | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/05/Git/001-Git-Basics/) 提到,  在这不再赘述, 
 
 ### The Workflow
 
