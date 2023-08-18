@@ -2,7 +2,7 @@
 title: 说说编码
 date: 2023-06-01 22:13:25
 categories:
-  - Other
+  - CS Basics
 tags:
   - Python
   - Reflection

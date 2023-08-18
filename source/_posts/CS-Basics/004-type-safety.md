@@ -2,7 +2,7 @@
 title: Type Safety from Why Rusy - Jim Blandy
 date: 2023-08-05 18:32:53
 categories:
-  - Other
+  - CS Basics
 ---
 
 关于 type safety, 一直没有一个确切的定义, 每个语言的作者对 type safety 都可能有不同的理解, 我比较喜欢的是维基百科对 type safety 的定义, 即 type safety 阻止或者使 type errors 不容易发生, 而什么是 type errors 在下面这段话里也给出了定义: 

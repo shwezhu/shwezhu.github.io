@@ -2,7 +2,7 @@
 title: Cookie & Session
 date: 2023-08-17 07:39:56
 categories:
- - CS-Basics
+ - CS Basics
 ---
 
 众所周知，HTTP 是一个无状态协议，所以客户端每次发出请求时，下一次请求无法得知上一次请求所包含的状态数据，如何能把一个用户的状态数据关联起来呢？
@@ -92,3 +92,8 @@ session 可以存放在:
 
 - https://gist.github.com/HellMagic/6e49af318d45311ee2860ac7d7bf09f6
 - [Go Session - Go语言中文网 - Golang中文社区](https://studygolang.com/articles/34361)
+
+了解更多:
+
+- [Go 每日一库之 gorilla/securecookie - 大俊的博客](https://darjun.github.io/2021/07/23/godailylib/gorilla/securecookie/)
+- [Go 每日一库之 gorilla/sessions - 大俊的博客](https://darjun.github.io/2021/07/25/godailylib/gorilla/sessions/)
