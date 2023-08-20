@@ -101,17 +101,19 @@ There are many ways to save sessions, in-memory, file, database and Redis, if yo
 
 For data that is frequently needed or retrieved by app users, a [cache](https://redislabs.com/redis-enterprise/use-cases/) would serve as a temporary data store for quick and fast retrieval without the need for extra database round trips. 
 
-![2](2.png)
+- **Cache-Aside Pattern,** 
 
-Some pattern:
+Here is the explanation of the Cache-Aside Pattern:
 
-- Cache-Aside Pattern
-- Read/Write Through Pattern
-- Write Behind Caching Pattern
-
-Cache-Aside Pattern: 
+1. Cache hit. The service read data from cache. If there is the data wanted, it will return the data and the process stops here.
+2. Cache miss. If the data is not stored in the cache, the service will read the data from the database.
+3. Once the data is obtained, the service then stores the data to cache for future request.
 
 ![1](1.png)
+
+- **Read/Write Through Pattern,**
+
+- **Write Behind Caching Pattern**
 
 References: 
 

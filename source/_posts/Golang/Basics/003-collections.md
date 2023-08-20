@@ -8,6 +8,17 @@ tags:
  - Golang
 ---
 
+## Conclusion
+
+- The type `[n]T` is an array of `n` values of type `T`.
+  - An array's length is part of its type, so arrays cannot be resized.
+- The type `[]T` is a slice with elements of type `T`.
+  - An array has a fixed size. A slice, on the other hand, is a dynamically-sized,
+  - A slice does not store any data, it just describes a section of an underlying array.
+  - Changing the elements of a slice modifies the corresponding elements of its underlying array.
+
+learn more: [A Tour of Go](https://go.dev/tour/moretypes/7)
+
 ## 1. Declare & Init Array
 
 ```go
@@ -22,7 +33,7 @@ x := [...]int{10, 20, 30}
 
 ## 2. Declare & Init Slice
 
-An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices have a **capacity** and **length** property. In practice, slices are much more common than arrays.
+An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices have a **capacity** and **length** property. 
 
 - Create Empty Slice
 
