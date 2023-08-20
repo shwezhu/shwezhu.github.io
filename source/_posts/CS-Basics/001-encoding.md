@@ -1,6 +1,6 @@
 ---
-title: 说说编码
-date: 2023-06-01 22:13:25
+title: 说说编码 - encoding
+date: 2023-06-01 22:13:25 
 categories:
   - CS Basics
 tags:
@@ -10,7 +10,7 @@ tags:
 
 编码问题很常见, 比如要读文件有时候打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 
 
-### 1. ASCII vs Unicode
+## 1. ASCII vs Unicode
 
 先来看看ASCII, 说到编码最开始肯定就是ASCII了, 电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的, 即用电脑磁盘存储数据, 刚开始电脑没有普及, 也就限制在少部分人用, 而他们说英语, 所以他们就做了个表, 规定数字`65`代表字符`A`, `66`代表字符`B`依次类推, 然后一些标点符号比如`#`由数字`35`代表, 具体细节可以查看ASCII表内容, 然后十进制数字转为二进制就可以存储在电脑了, 这些字符刚好128个, 其实也不是刚好他们应该是故意凑成128个的, 也就是刚好可以用1字节的数据来表示, 1字节8位二进制, 即1^8 = 128, 所以ASCII表其实就是一个map, 把字符匹配到一个二进制数(编码 encoding), 或者把一个8位二进制数解释为一个字符(decoding, 解码), 
 
@@ -18,9 +18,9 @@ tags:
 
 接着说, 到后来计算机普及, .. 所以我们需要一个标准, 全世界都遵守的那种, 这样我们才能无差错沟通, 我发送一串二进制在我这代表字符`A`, 你的软件收到这串二进制后翻译出的也是字符`A`, 而不是`B`或者`C`, 
 
-这时候Unicode就出来了, 它就是使用`0~0x10FFFF`的数字来表示世界上所有的字符, 如汉子 `在` 的Unicode值是 `0x5728`, 注意`0x`代表值`5728`是十六进制, 又如字符`A`的Unicode值是`0x41`, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的, 
+这时候Unicode就出来了, 它就是使用`0~0x10FFFF`的数字来表示世界上所有的字符, 如汉字 `在` 的Unicode值是 `0x5728`, 注意`0x`代表值`5728`是十六进制, 又如字符 `A` 的Unicode值是`0x41`, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的, 
 
-> 注意`0~0x10FFFF`我写成了十六进制的形式, 你也可以转为十进制写上, 或者二进制八进制, 无所谓, 数字而已
+> 注意`0~0x10FFFF`我写成了十六进制的形式, 你也可以转为十进制写上, 或者二进制八进制, 无所谓数字而已
 
 来看看[文档](https://docs.python.org/3/howto/unicode.html)怎么表述的:
 
@@ -32,9 +32,9 @@ A Unicode string is a sequence of code points, which are numbers from 0 through 
 
 > Python’s string type uses the Unicode Standard for representing characters, which lets Python programs work with all the characters from the world. [Source](https://docs.python.org/3/howto/unicode.html)
 
-### 2. Unicode vs UTF-8
+## 2. Unicode vs UTF-8
 
-Unicode是个表就像ASCII表一样, 提供给不同的encoding scheme参考, 而utf-8编码就是把一个字符的Unicode的code points编码成其它二进制数, 
+Unicode 是个表就, 像ASCII表一样, 提供给不同的 encoding scheme 参考, 而 utf-8 encoding 就是把一个字符的Unicode的code points编码成其它二进制数, 
 
 > UTF-8 is an encoding system for Unicode. It can translate any Unicode character to a matching unique binary string, and can also translate the binary string back to a Unicode character. This is the meaning of “UTF”, or “Unicode Transformation Format.”
 
@@ -49,7 +49,7 @@ Binary format of bytes in sequence
 11110xxx    10xxxxxx    10xxxxxx    10xxxxxx    (3+6+6+6)=21          10FFFF hex (1,114,111)
 ```
 
-汉字`汉`的Unicode值是两字节即 `6C49`, 二进制为: `0110 1100 0100 1001` 根据上标经过utf-8编码变成 `11100110 10110001 10001001`, 成了三字节, 这也是为啥说汉字在utf-8编码里占3字节 (gbk编码里, 一个汉字占2字节), 注意哦, 最终写入文件的是三字节的 `11100110 10110001 10001001`, 而不是`0110 1100 0100 1001` , 我们可以使用`xxd`来查看,
+汉字`汉`的Unicode值是两字节即 `6C49`, 二进制为: `0110 1100 0100 1001` 根据上标经过utf-8编码变成 `11100110 10110001 10001001`, 成了三字节, 汉字在 utf-8 编码里占3字节 (gbk编码里, 一个汉字占2字节), 注意, 最终写入文件的是其三字节的 utf-8 encoding `11100110 10110001 10001001`, 而不是其Unicode `0110 1100 0100 1001` , 可以使用 `xxd` 查看,
 
 ```shell
 $ xxd text.md
@@ -58,15 +58,15 @@ $ file text.md
 text.md: Unicode text, UTF-8 text
 ```
 
-`xxd`可以以16进制输出文件的内容, `e6b1 89` 的二进制就是`11100110 10110001 10001001`, 所以你知道了utf-8是怎么根据Unicode把code points编码成另一个二进制, 也知道了编码的意义, 体现在了文件的实际内容里, 解码decoding就是encoding的反过程了, 现在utf-8和Unicode的区别应该很清楚了吧, 当然其他的编码还有utf-16, utf-32这些编码的参照物都是Unicode
+`xxd`可以以16进制格式输出文件内容, `e6b1 89` 的二进制是`11100110 10110001 10001001`, 所以你知道了utf-8是怎么根据Unicode把code points编码成另一个二进制, 也知道了编码的意义, 体现在了文件的实际内容里, 解码 decoding 就是 encoding 的反过程了,
 
-> 注意: 有时候也说ASCII编码, 其实意思就是告诉你你看到字符`A`, 那他的数值就是`0x41`, 不要太纠结到底ASCII是编码方式, 还是啥, 弄清楚本质就好了, 
+> 注意: 有时候也说ASCII编码, 其实意思就是告诉你你看到字符`A`, 那他的数值就是`0x41`, 不要太纠结到底ASCII是编码方式, 还是其他, 弄清楚本质就好了, 
 
-> 注意: encoding=编码, scheme不知道咋翻译比较准确, 所以以后都说encoding scheme
+> 注意: encoding=编码, scheme 不知道咋翻译比较准确, 所以以后都说 encoding scheme
 
 > 注意: “编码就是把字符对应的数值以一定的规则编码成二进制” 是我自己对utf-8的理解, 普遍的理解是map, 即把字符`A`对应到数字`0x41`的过程就是编码, encoding, 我在这这么说是为了区分Unicode在编码中的作用角色, 
 
-这里读到[一篇文章](http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html), 总结的很好 分享片段:
+读到[一篇文章](http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html)总结的很好 分享片段:
 
 在Unicode出现之前，所有的字符集都是和具体编码方案绑定在一起的，都是直接将字符和最终字节流绑定死了，例如ASCII编码系统规定使用7比特来编码ASCII字符集；GB2312以及GBK字符集，限定了使用最多2个字节来编码所有字符，并且规定了字节序。这样的编码系统通常用简单的查表，也就是通过代码页就可以直接将字符映射为存储设备上的字节流了。例如下面这个例子：
 

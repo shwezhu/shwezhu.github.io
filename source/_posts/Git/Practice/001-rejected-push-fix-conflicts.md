@@ -1,5 +1,5 @@
 ---
-title: git push rejected - solved
+title: push to github get rejected - solved
 date: 2023-08-15 22:18:50
 categories:
   - Git
