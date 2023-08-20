@@ -8,12 +8,15 @@ tags:
  - Golang
 ---
 
-
-
 ## 1. encoding/json
 
 - `Marshal()` → to encode GO values to JSON in string format
 - `Unmarshal()` → to decode JSON data to GO values
+
+```go
+func Marshal(v interface{}) ([]byte, error)
+func Unmarshal(data []byte, v interface{}) error
+```
 
 ### 1.1. `json.Marshal()`
 
@@ -49,3 +52,22 @@ func main() {
 
 > ⚠️Note: *Channel*, complex, and *function* values cannot be encoded in JSON. Attempting to encode such a value causes *Marshal* to return an UnsupportedTypeError. [json package - encoding/json - Go Packages](https://pkg.go.dev/encoding/json)
 
+## 1.2. `json.Marshal()`
+
+```go
+func main() {
+	data, _ := json.Marshal(Cat{
+		Name: "Kitten",
+		Age: 2,
+		IsAdult: true,
+	})
+
+	cat := Cat{}
+	 _ = json.Unmarshal(data, &cat)
+	fmt.Println(cat)
+}
+----------------------------------
+{Kitten 2 true}
+```
+
+## 2. encoding/gob

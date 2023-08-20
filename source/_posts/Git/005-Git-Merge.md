@@ -1,5 +1,5 @@
 ---
-title: "Git Merge实例分析之fast-forward & three-way merge"
+title: Git Merge实例分析之fast-forward & three-way merge
 date: 2023-04-21 09:44:39
 categories:
   - Git
@@ -300,55 +300,6 @@ Date:   Sat Apr 22 20:28:56 2023 -0300
 
     feat print hello world
 ```
-
-注意, 上面的例子中需要手动解决冲突, 有时候并不需要手动解决, git会自动解决, 具体可以参考文章下面的链接, 讲的很详细, 我在这复制一部分, 
-
-Occasionally, this process doesn’t go smoothly. If you changed the same part of the same file differently in the two branches you’re merging, Git won’t be able to merge them cleanly. If your fix for issue #53 modified the same part of a file as the `hotfix` branch, you’ll get a merge conflict that looks something like this:
-
-```console
-$ git merge iss53
-Auto-merging index.html
-CONFLICT (content): Merge conflict in index.html
-Automatic merge failed; fix conflicts and then commit the result.
-```
-
-Git hasn’t automatically created a new merge commit. It has paused the process while you resolve the conflict. If you want to see which files are unmerged at any point after a merge conflict, you can run `git status`:
-
-```console
-$ git status
-On branch master
-You have unmerged paths.
-  (fix conflicts and run "git commit")
-
-Unmerged paths:
-  (use "git add <file>..." to mark resolution)
-
-    both modified:      index.html
-
-no changes added to commit (use "git add" and/or "git commit -a")
-```
-
-Anything that has merge conflicts and hasn’t been resolved is listed as unmerged. Git adds standard conflict-resolution markers to the files that have conflicts, so you can open them manually and resolve those conflicts. Your file contains a section that looks something like this:
-
-```html
-<<<<<<< HEAD:index.html
-<div id="footer">contact : email.support@github.com</div>
-=======
-<div id="footer">
- please contact us at support@github.com
-</div>
->>>>>>> iss53:index.html
-```
-
-This means the version in `HEAD` (your `master` branch, because that was what you had checked out when you ran your merge command) is the top part of that block (everything above the `=======`), while the version in your `iss53` branch looks like everything in the bottom part. In order to resolve the conflict, you have to either choose one side or the other or merge the contents yourself. For instance, you might resolve this conflict by replacing the entire block with this:
-
-```html
-<div id="footer">
-please contact us at email.support@github.com
-</div>
-```
-
-This resolution has a little of each section, and the `<<<<<<<`, `=======`, and `>>>>>>>` lines have been completely removed. After you’ve resolved each of these sections in each conflicted file, run `git add` on each file to mark it as resolved. Staging the file marks it as resolved in Git.
 
 参考:
 

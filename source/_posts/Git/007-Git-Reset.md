@@ -7,7 +7,7 @@ tags:
   - Git
 ---
 
-前置: [Git撤销提交之The Three Trees | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/04/Git/Git-Three-Trees/)
+前置: [Git撤销提交之The Three Trees | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/04/Git/006-Git-Three-Trees/)
 
 原文: [Git - Reset Demystified](https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified#_git_reset)
 
