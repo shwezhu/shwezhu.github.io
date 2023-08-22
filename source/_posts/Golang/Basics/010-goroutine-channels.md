@@ -45,8 +45,6 @@ a <- data // write to channel a
 
 Sends and receives to a channel are blocking by default. What does this mean? When data is sent to a channel, the control is blocked in the send statement until some other Goroutine reads from that channel. Similarly, when data is read from a channel, the read is blocked until some Goroutine writes data to that channel.
 
-This property of channels is what helps Goroutines communicate effectively without the use of explicit locks or conditional variables that are quite common in other programming languages.
-
 ## 4. Example Program
 
 没有channel的话, 如果我们想让主程序等待子线程执行完毕再执行, 需要像下面这么写:

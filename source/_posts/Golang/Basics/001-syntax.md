@@ -166,25 +166,37 @@ u := uint(f)
 
 Unlike in C, in Go assignment between items of different type requires an explicit conversion, 这增加了golang的type safety, 了解更多: [Type Safety from Why Rusy ](https://davidzhu.xyz/2023/08/05/Other/type-safety)
 
-另外补充创建比较大的数字或者其它, 要想到用移位操作, 如下:
+## 5. Type Assertions
+
+一般在 value 为 `interface{}` 类型时会用到, 用来告诉编译器 value 的类型, 如下:
 
 ```go
-const (
-	// Create a huge number by shifting a 1 bit left 100 places.
-	// In other words, the binary number that is 1 followed by 100 zeroes.
-	Big = 1 << 100
-	// Shift it right again 99 places, so we end up with 1<<1, or 2.
-	Small = Big >> 99
-)
+str := value.(string)
 ```
 
-## 5. 打印
+But if it turns out that the value does not contain a string, the program will crash with a run-time error. To guard against that, use the "comma, ok" idiom to test, safely, whether the value is a string:
 
 ```go
-func main() {
-  ...
-  fmt.Println(i, j)
-	fmt.Printf("Type: %T Value: %v\n", i, j)
+str, ok := value.(string)
+if ok {
+    fmt.Printf("string value is: %q\n", str)
+} else {
+    fmt.Printf("value is not a string\n")
+}
+```
+
+类似的语法还有 map 通过 key 获取值, 
+
+```go
+users := make(map[string]int)
+users["jack"] = 13
+users["john"] = 15
+
+user, ok := users["milo"]
+if ok {
+	fmt.Println(user)
+} else {
+	fmt.Println("no such user")
 }
 ```
 
