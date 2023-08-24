@@ -9,15 +9,17 @@ tags:
  - Concurrency
 ---
 
-实现并发通常有两种方法:
+## 1.  two styles of concurrent programming
 
-第一种其实就是Java, C++, Python等语言中的多线程。他们线程间通信都是通过共享内存的方式来进行的。非常典型的方式就是，在访问共享数据（例如数组、Map、或者某个结构体或对象）的时候，通过锁来访问，因此，在很多时候，衍生出一种方便操作的数据结构，叫做“线程安全的数据结构”。例如Java提供的包”java.util.concurrent”中的数据结构。
+Go enables two styles of concurrent programming.
 
-另外一种是Go语言特有的，也是Go语言推荐的：CSP（communicating sequential processes）并发模型, 不同于传统的多线程通过共享内存来通信，CSP讲究的是“以通信的方式来共享内存”, Go的CSP并发模型，是通过`goroutine`和`channel`来实现的, channel 可以防止多个 goroutine 访问同一数据时发生资源争抢的问题, 
+- *communicating sequential processes* or *CSP*
+  - goroutines and channels
+- *shared memory multithreading*
+  - traditional model
+  - multiple threads
 
-**Do not communicate by sharing memory; instead, share memory by communicating.** This approach can be taken too far. Reference counts may be best done by putting a mutex around an integer variable, for instance. But as a high-level approach, using channels to control access makes it easier to write clear, correct programs.
-
-----
+## 2. Goroutine Model
 
 首先, go-routines are **user-space threads** not **kernel threads**, kernel threads由OS创建并管理 (sleep, wait, running), OS并不知道user-space threads的存在, Go的做法是把user-space threads映射到kernel threads来执行, 
 
@@ -33,15 +35,13 @@ kernel threads进行context switch时操作系统需要保存其PC, Register等�
 
 无论语言层面何种并发模型, 到了操作系统一定是运行在kernel thread上的, 上面我们说到Go的做法是把多个user-space threads映射到一个kernel thread, 以减少kernel thread切换时带来的消耗, 那其他语言怎么做的呢? 在C++里, 是通过syscall直接调用OS的kernel thread，线程所有的行为如创建, 终止, 切换等操作都由内核来完成, 一个用户态的线程对应一个系统线程, 这时候C++在频繁创建删除thread的时候就要考虑上下文切换的开销了, 因为操作的直接是kernel thread, 比如来一个tcp连接就创建一个thread, 这开销太大了, 所以这时候就出现了线程池, 说到底我们就是想要减少kernel thread创建切换的次数, 以减少开销,  你看无论C++还是Go都有自己的解决办法, 前者是通过thread pool来对kernel thread重复利用, 而后者因为通过map 多个goroutine到较少个kernel thread, 实现对kernel thread的重复利用, 减少上下文切换的次数, 减少开销, 
 
----
-
-### Why goroutines instead of threads?
+## 3. Why goroutines instead of threads?
 
 Goroutines are part of making concurrency easy to use. The idea, which has been around for a while, is to multiplex independently executing functions—coroutines—onto a set of threads. When a coroutine blocks, such as by calling a blocking system call, the run-time automatically moves other coroutines on the same operating system thread to a different, runnable thread so they won't be blocked. The programmer sees none of this, which is the point. The result, which we call goroutines, can be very cheap: they have little overhead beyond the memory for the stack, which is just a few kilobytes. 
 
 To make the stacks small, Go's run-time uses resizable, bounded stacks. A newly minted goroutine is given a few kilobytes, which is almost always enough. When it isn't, the run-time grows (and shrinks) the memory for storing the stack automatically, allowing many goroutines to live in a modest amount of memory. The CPU overhead averages about three cheap instructions per function call. It is practical to create hundreds of thousands of goroutines in the same address space. If goroutines were just threads, system resources would run out at a much smaller number.
 
-### Why is there no goroutine ID?
+## 4. Why is there no goroutine ID?
 
 Goroutines do not have names; they are just anonymous workers. They expose no unique identifier, name, or data structure to the programmer. Some people are surprised by this, expecting the `go` statement to return some item that can be used to access and control the goroutine later.
 

@@ -11,9 +11,16 @@ tags:
 
 原文: [Git - Reset Demystified](https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified#_git_reset)
 
----
+## Conclusion
 
-### 1. The Workflow
+- HEAD points to branch, branch point to the last commit, 
+  - so HEAD point the last commit, 
+  - when you make HEAD point other commit by using `git reset`, it actually makes current branch point to that commit
+- The first thing `reset` will do is move what HEAD points to. This isn’t the same as changing HEAD itself (which is what `checkout` does); `reset` moves the branch that HEAD is pointing to. This means if HEAD is set to the `master` branch (i.e. you’re currently on the `master` branch), running `git reset 9e5e6a4` will start by making `master` point to `9e5e6a4`
+- Three Tree: HEAD, index, work tree
+- `git reset` will do three things, Move HEAD (update HEAD), Updating the Index, Updating the work tree with `--hard`, 
+
+## 1. The Workflow 
 
 **Git’s typical workflow** is to record snapshots of your project by manipulating these three trees: 
 
@@ -51,7 +58,7 @@ Now `git status` will give us no output, because all three trees are the same ag
 
 Switching branches or cloning goes through a similar process. When you checkout a branch, it changes **HEAD** to point to the new branch ref, populates your **index** with the snapshot of that commit, then copies the contents of the **index** into your **working directory**. 这里的 *"populates your index with..."*可以理解为把新的分支的最新的snapshot的内容拷贝到index即staging area, 也就是说每次你切换分支, 其实也是在三棵树间拷贝...只不过是在一个新的分支上操作, 
 
-### 2. The Role of Reset
+## 2. The Role of Reset
 
 The `reset` command makes more sense when viewed in this context.
 
@@ -59,7 +66,7 @@ For the purposes of these examples, let’s say that we’ve modified `file.txt`
 
 ![h](h.png)
 
-#### 2.1. Step 1: Move HEAD
+### 2.1. Step 1: Move HEAD
 
 The first thing `reset` will do is move what HEAD points to. This isn’t the same as changing HEAD itself (which is what `checkout` does); `reset` moves the branch that HEAD is pointing to. This means if HEAD is set to the `master` branch (i.e. you’re currently on the `master` branch), running `git reset 9e5e6a4` will start by making `master` point to `9e5e6a4`. 所以`reset`在这一步做的就是移动master分支的指向, 即在同一个分支上的版本穿梭, 注意看下图, 三个tree, 只有HEAD的内容变了, 
 
@@ -69,7 +76,7 @@ No matter what form of `reset` with a commit you invoke, this is the first thing
 
 Now take a second to look at that diagram and realize what happened: it essentially undid the last `git commit` command. When you run `git commit`, Git creates a new commit and moves the branch that HEAD points to up to it. When you `reset` back to `HEAD~` (the parent of HEAD), you are moving the branch back to where it was, without changing the index or working directory. You could now update the index and run `git commit` again to accomplish what `git commit --amend` would have done (see [Changing the Last Commit](https://git-scm.com/book/en/v2/ch00/_git_amend)).
 
-#### 2.2. Step 2: Updating the Index (`--mixed`)
+### 2.2. Step 2: Updating the Index (`--mixed`)
 
 Note that if you run `git status` now you’ll see in green the difference between the index and what the new HEAD is.
 
@@ -81,7 +88,7 @@ If you specify the `--mixed` option, `reset` will stop at this point. This is al
 
 Now take another second to look at that diagram and realize what happened: it still undid your last `commit`, but also *unstaged* everything. You rolled back to before you ran all your `git add` and `git commit` commands. 相当于`--mixed`是`git reste`的默认操作且比`--soft`多做一步, 
 
-#### 2.3. Step 3: Updating the Working Directory (`--hard`)
+### 2.3. Step 3: Updating the Working Directory (`--hard`)
 
 The third thing that `reset` will do is to make the working directory look like the index. If you use the `--hard` option, it will continue to this stage.
 
@@ -91,7 +98,7 @@ The third thing that `reset` will do is to make the working directory look like 
 
 It’s important to note that this flag (`--hard`) is the only way to make the `reset` command dangerous, and one of the very few cases where Git will actually destroy data. Any other invocation of `reset` can be pretty easily undone, but the `--hard` option cannot, since it forcibly overwrites files in the working directory. In this particular case, we still have the **v3** version of our file in a commit in our Git DB, and we could get it back by looking at our `reflog`, but if we had not committed it, Git still would have overwritten the file and it would be unrecoverable. 
 
-### 3. Reset With a Path
+## 3. Reset With a Path
 
 That covers the behavior of `reset` in its basic form, but you can also provide it with a path to act upon. If you specify a path, `reset` will skip step 1, and limit the remainder of its actions to a specific file or set of files. This actually sort of makes sense — HEAD is just a pointer, and you can’t point to part of one commit and part of another. But the index and working directory *can* be partially updated, so reset proceeds with steps 2 and 3.
 

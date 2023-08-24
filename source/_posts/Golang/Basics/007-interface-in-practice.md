@@ -1,6 +1,6 @@
 ---
 title: Golang Interface & Interface in Web App
-date: 2023-05-16 18:03:05
+date: 2023-08-22 13:03:05
 categories:
  - Golang
  - Basics

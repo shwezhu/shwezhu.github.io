@@ -11,7 +11,7 @@ tags:
 
 原文: [Scheduling In Go : Part II - Go Scheduler](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part2.html)
 
-注意并发和并行不是一个概念: Parallelism is about multiple tasks or subtasks of the same task that literally run at the same time on a hardware with multiple computing resources like multi-core processor, while concurrency is about multiple tasks which start, run, and complete in overlapping time periods, in no specific order. 
+并发和并行不是一个概念: Parallelism is about multiple tasks or subtasks of the same task that literally run at the same time on a hardware with multiple computing resources like multi-core processor, while concurrency is about multiple tasks which start, run, and complete in overlapping time periods, in no specific order. 
 
 ----
 
