@@ -1,6 +1,6 @@
 ---
-title: Golang并发学习之Goroutine和Channel
-date: 2023-08-24 20:06:10
+title: Goroutine & Channel - Go
+date: 2023-08-24 10:06:10
 categories:
  - Golang
  - Basics
