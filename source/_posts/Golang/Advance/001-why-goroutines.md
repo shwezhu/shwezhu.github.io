@@ -1,5 +1,5 @@
 ---
-title: Goroutines Model 
+title: Goroutines Model - Go Advanced
 date: 2023-08-24 14:58:18
 categories:
  - Golang
@@ -18,6 +18,14 @@ Go enables two styles of concurrent programming.
 - *shared memory multithreading*
   - traditional model
   - multiple threads
+
+## 2. Goroutines and Threads
+
+
+
+
+
+
 
 ## 2. goroutine model
 

@@ -1,5 +1,5 @@
 ---
-title: Goroutine & Channel - Go
+title: Goroutine & Channel - Go Basics
 date: 2023-08-24 10:06:10
 categories:
  - Golang
@@ -9,7 +9,30 @@ tags:
  - Concurrency
 ---
 
-## channels
+## 1. goroutines
+
+When a program starts, its only goroutine is the one that calls the `main` function, so we call it the *main goroutine*. The `go` statement itself completes immediately:
+
+```go
+f()    // call f(); wait for it to return
+go f() // create a new goroutine that calls f(); don't wait
+```
+
+The code below will just print `helllo`, this because when `main` function returns, all goroutines are abruptly terminated and the program exits. 
+
+```go
+func main() {
+	go func() {
+		time.Sleep(time.Millisecond * 100)
+		fmt.Println("hello form another goroutine")
+	}()
+	fmt.Println("hello")
+}
+```
+
+Other than (除了) by returning from `main` or exiting the program, there is no programmatic way for one goroutine to stop another, but there are ways to communicate with a goroutine to request that it stop itself.
+
+## 2. channels
 
 A Go channel is a means of communication that enables data sharing between goroutines. Each channel has a type associated with it. 
 
@@ -18,7 +41,7 @@ data := <- a // read from channel a
 a <- data // write to channel a  
 ```
 
-### 1.1. unbuffered channel 
+### 2.1. unbuffered channel 
 
 This creates an unbuffered channel of type `int`. An unbuffered channel is one that can only hold one value at a time. 
 
@@ -56,7 +79,7 @@ func main() {
 }
 ```
 
-### 1.2. buffered channel
+### 2.2. buffered channel
 
 You can also specify the buffer size of a channel when creating it. A buffered channel allows for multiple values to be stored in the channel at once before they shall be read.
 
@@ -64,7 +87,7 @@ You can also specify the buffer size of a channel when creating it. A buffered c
 ch := make(chan int, 3)
 ```
 
-### 1.3. buffered channel vs unbuffered channel 
+### 2.3. buffered channel vs unbuffered channel 
 
 `ch := make(chan int, 1)` is totally different from `ch := make(chan int)`, the code below won't get deadlock error: 
 
@@ -78,9 +101,9 @@ func main() {
 }
 ```
 
-## 2. uses of go channels
+## 3. uses of go channels
 
-### 2.1. synchronization between goroutines
+### 3.1. synchronization between goroutines
 
 Traditional threading models (commonly used when writing Java, C++, and Python programs, for example) require the programmer to communicate between threads using shared memory. Typically, shared data structures are protected by locks, and threads will contend over those locks to access the data. 
 
