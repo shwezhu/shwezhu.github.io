@@ -9,7 +9,14 @@ tags:
  - Concurrency
 ---
 
-## 1.  two styles of concurrent programming
+## Conclusion
+
+- OS thread has a fixed-size block of memory (as large as 2MB) for its *stack*.
+- A goroutine starts life with a small stack, typically 2KB but goroutine’s stack is not fixed. 
+- Thread stack holds the local variables of active and suspended function calls.
+- OS threads are scheduled by the OS kernel, Go runtime contains its own scheduler that uses a technique known as ***m:n scheduling***, goroutine is much cheaper than rescheduling a thread. 
+
+## 1.  Two Styles of Concurrent Programming
 
 Go enables two styles of concurrent programming.
 
@@ -21,19 +28,37 @@ Go enables two styles of concurrent programming.
 
 ## 2. Goroutines and Threads
 
+### 2.1. Growable Stacks
 
+Each OS thread has a fixed-size block of memory (often as large as 2MB) for its *stack*, the work area where it saves the local variables of function calls that are in progress or temporarily suspended while another function is called. This fixed-size stack is simultaneously too much and too little. A 2MB stack would be a huge waste of memory for a little goroutine, such as one that merely waits for a `WaitGroup` then closes a channel. It’s not uncommon for a Go program to create hundreds of thousands of goroutines at one time, which would be impossible with stacks this large. Yet despite their size, fixed-size stacks are not always big enough for the most complex and deeply recursive of functions. Changing the fixed size can improve space efficiency and allow more threads to be created, or it can enable more deeply recursive functions, but it cannot do both.
 
+In contrast, a goroutine starts life with a small stack, typically 2KB. A goroutine’s stack, like the stack of an OS thread, holds the local variables of active and suspended function calls, but unlike an OS thread, a goroutine’s stack is not fixed; it grows and shrinks as needed. The size limit for a goroutine stack may be as much as 1GB, orders of magnitude larger than a typical fixed-size thread stack, though of course few goroutines use that much.
 
+### 2.2. Goroutine Scheduling
 
+OS threads are scheduled by the OS kernel. Every few milliseconds, a hardware timer interrupts the processor, which causes a kernel function called the *scheduler* to be invoked. This function suspends the currently executing thread and saves its registers in memory, looks over the list of threads and decides which one should run next, restores that thread’s registers from memory, then resumes the execution of that thread. Because OS threads are scheduled by the kernel, passing control from one thread to another requires a full *context switch*, that is, saving the state of one user thread to memory, restoring the state of another, and updating the scheduler’s data structures. This operation is slow, due to its poor locality and the number of memory accesses required, and has historically only gotten worse as the number of CPU cycles required to access memory has increased.
 
+The Go runtime contains its own scheduler that uses a technique known as ***m:n scheduling***, because it multiplexes (or schedules) *m* goroutines on *n* OS threads. The job of the Go scheduler is analogous to that of the kernel scheduler, but it is concerned only with the goroutines of a single Go program. 
 
-## 2. goroutine model
+Unlike the operating system’s thread scheduler, the Go scheduler is not invoked periodically by a hardware timer, but implicitly by certain Go language constructs. For example, when a goroutine calls `time.Sleep` or blocks in a channel or mutex operation, the scheduler puts it to sleep and runs another goroutine until it is time to wake the first one up. Because it doesn’t need a switch to kernel context, rescheduling a goroutine is much cheaper than rescheduling a thread.
 
-首先, go-routines are **user-space threads** not **kernel threads**, kernel threads由OS创建并管理 (sleep, wait, running), OS并不知道user-space threads的存在, Go的做法是把user-space threads映射到kernel threads来执行, 
+### 2.3. Goroutines Have No Identity
 
-kernel threads进行context switch时操作系统需要保存其PC, Register等相关信息然后再加载另一个kernel thread, 这又需要导入这个新的thread的上下文信息, 这就是所谓的开销, 但是user-space threads对于OS来说是透明的, 我们可以在退出一个user-space threads的时候不kill掉运行该user-space thread的kernel threads, 而是让其sleep, 等待下一个新的user-space threads被创建, 这样我们就减少了重复创建kernel threads的次数, 也减少了context switch的开销, Go就是这么做的, 具体如何映射goroutine到kernel thread, 这里面有两个重要的东西, 一个是Go Scheduler, 一个是runqueue, 每个kernel thread维护一个runqueue, runqueue保存的是待执行的groutine, 因为一个kernel thread一次只能执行一个goroutine, 所以多余的比如有的在等待io, 即blocked或者sleep状态的goroutine都在runqueue里, 等着被kernel thread拿出来, 至于goroutine的状态则由go scheduler来管理, 具体可参考: https://youtu.be/YHRO5WQGh0k
+In most operating systems and programming languages that support multithreading, the current thread has a distinct identity that can be easily obtained as an ordinary value, typically an integer or pointer. This makes it easy to build an abstraction called *thread-local storage*, which is essentially a global map keyed by thread identity, so that each thread can store and retrieve values independent of other threads.
 
-在这可能会疑惑physical thread和kernel thread的区别, physical thread其实是未来理解CPU core提出来的概念, 就是一个独立执行的thread, 像一根线, 真正干活的还是 CPU core, 然后软件层面就是kernel thread了, kernel thread 运行在 CPU core上:
+Goroutines have no notion of identity that is accessible to the programmer. This is by design, since thread-local storage tends to be abused. For example, in a web server implemented in a language with thread-local storage, it’s common for many functions to find information about the HTTP request on whose behalf they are currently working by looking in that storage. However, just as with programs that rely excessively on global variables, this can lead to an unhealthy “action at a distance” in which the behavior of a function is not determined by its arguments alone, but by the identity of the thread in which it runs. Consequently, if the identity of the thread should change—some worker threads are enlisted to help, say—the function misbehaves mysteriously.
+
+Go encourages a simpler style of programming in which parameters that affect the behavior of a function are explicit. Not only does this make programs easier to read, but it lets us freely assign subtasks of a given function to many different goroutines without worrying about their identity.
+
+## 3. Goroutine Model
+
+go-routines are **user-space threads** not **kernel threads**, kernel threads created and managed by OS (sleep, wait, running), OS doesn't know user-space threads exist, Go shcduler multiplexes (or schedules) *m* goroutines on *n* OS threads, which is known as ***m:n scheduling***. 
+
+Learn how goroutine works:
+
+{% youtube YHRO5WQGh0k %}
+
+### 3.1. Physical Thread vs Kernel Thread
 
 > A "hardware thread" is just a confusing name for a logical core, aka execution context. It has nothing to do with software threads or kernel threads. One physical core may support more than 1 logical core, e.g. via hyperthreading or other SMT. 
 >
@@ -41,15 +66,17 @@ kernel threads进行context switch时操作系统需要保存其PC, Register等�
 >
 > --[multithreading - Kernel threads VS CPU threads - Stack Overflow](https://stackoverflow.com/questions/73308353/kernel-threads-vs-cpu-threads)
 
-无论语言层面何种并发模型, 到了操作系统一定是运行在kernel thread上的, 上面我们说到Go的做法是把多个user-space threads映射到一个kernel thread, 以减少kernel thread切换时带来的消耗, 那其他语言怎么做的呢? 在C++里, 是通过syscall直接调用OS的kernel thread，线程所有的行为如创建, 终止, 切换等操作都由内核来完成, 一个用户态的线程对应一个系统线程, 这时候C++在频繁创建删除thread的时候就要考虑上下文切换的开销了, 因为操作的直接是kernel thread, 比如来一个tcp连接就创建一个thread, 这开销太大了, 所以这时候就出现了线程池, 说到底我们就是想要减少kernel thread创建切换的次数, 以减少开销,  你看无论C++还是Go都有自己的解决办法, 前者是通过thread pool来对kernel thread重复利用, 而后者因为通过map 多个goroutine到较少个kernel thread, 实现对kernel thread的重复利用, 减少上下文切换的次数, 减少开销, 
+无论语言层面何种并发模型, 到了操作系统一定是运行在 kernel thread 上的, 上面我们说到Go的做法是把多个 user-space threads 映射到一个 kernel thread, 以减少kernel thread切换时带来的消耗, 那其他语言怎么做的呢? 在C++里, 是通过syscall直接调用OS的kernel thread, 线程所有的行为如创建, 终止, 切换等操作都由内核来完成, 一个用户态的线程对应一个系统线程, 这时候C++在频繁创建删除thread的时候就要考虑上下文切换的开销了, 因为操作的直接是kernel thread, 比如来一个tcp连接就创建一个thread, 开销太大了, 所以这时候就出现了线程池, 说到底我们就是想要减少kernel thread创建切换的次数, 以减少开销,  你看无论C++还是Go都有自己的解决办法, 前者是通过thread pool来对kernel thread重复利用, 而后者因为通过map 多个goroutine到较少个kernel thread, 实现对kernel thread的重复利用, 减少上下文切换的次数, 减少开销, 
 
-## 3. why goroutines instead of threads?
+## 4. Frequently Asked Questions (FAQ)
+
+### 4.1. why goroutines instead of threads?
 
 Goroutines are part of making concurrency easy to use. The idea, which has been around for a while, is to multiplex independently executing functions—coroutines—onto a set of threads. When a coroutine blocks, such as by calling a blocking system call, the run-time automatically moves other coroutines on the same operating system thread to a different, runnable thread so they won't be blocked. The programmer sees none of this, which is the point. The result, which we call goroutines, can be very cheap: they have little overhead beyond the memory for the stack, which is just a few kilobytes. 
 
 To make the stacks small, Go's run-time uses resizable, bounded stacks. A newly minted goroutine is given a few kilobytes, which is almost always enough. When it isn't, the run-time grows (and shrinks) the memory for storing the stack automatically, allowing many goroutines to live in a modest amount of memory. The CPU overhead averages about three cheap instructions per function call. It is practical to create hundreds of thousands of goroutines in the same address space. If goroutines were just threads, system resources would run out at a much smaller number.
 
-## 4. why is there no goroutine ID?
+### 4.2. why is there no goroutine ID?
 
 Goroutines do not have names; they are just anonymous workers. They expose no unique identifier, name, or data structure to the programmer. Some people are surprised by this, expecting the `go` statement to return some item that can be used to access and control the goroutine later.
 
@@ -63,6 +90,8 @@ For those cases where a particular goroutine is truly special, the language prov
 
 参考:
 
+- [9.8 Goroutines and Threads | The Go Programming Language](https://learning.oreilly.com/library/view/the-go-programming/9780134190570/ebook_split_094.html)
+- [Frequently Asked Questions (FAQ) - The Go Programming Language](https://go.dev/doc/faq)
 - [GopherCon 2018: Kavya Joshi - The Scheduler Saga](https://www.youtube.com/watch?v=YHRO5WQGh0k)
 - [multithreading - Kernel threads VS CPU threads - Stack Overflow](https://stackoverflow.com/questions/73308353/kernel-threads-vs-cpu-threads)
 - 书籍《Go并发编程实战》

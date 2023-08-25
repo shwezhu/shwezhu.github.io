@@ -1,11 +1,13 @@
 ---
-title: 多核CPU和Hyper Threading
+title: Hyper-Threading & Physical Threads
 date: 2023-05-28 15:47:18
 categories:
  - OS
 tags:
  - OS
 ---
+
+## 1. CPU 结构
 
 单核CPU的基本结构如下:
 
@@ -17,9 +19,7 @@ tags:
 
 ![b](b.png)
 
-----
-
-说完多核, 来说一下Hyper-threading和Physical threads概念: 
+## 2. Hyper-Threading & Physical Threads
 
 A single physical CPU core with hyper-threading or simultaneous multithreading appears as two logical CPUs to an operating system. The CPU is still a single CPU, so it’s a little bit of a cheat. While the operating system sees two CPUs for each core, the actual CPU hardware only has a single set of execution resources for each core. The CPU pretends it has more cores than it does, and it uses its own logic to speed up program execution. In other words, the operating system is tricked into seeing two CPUs for each actual CPU core.
 
