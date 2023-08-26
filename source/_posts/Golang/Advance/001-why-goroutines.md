@@ -66,6 +66,8 @@ Learn how goroutine works:
 >
 > --[multithreading - Kernel threads VS CPU threads - Stack Overflow](https://stackoverflow.com/questions/73308353/kernel-threads-vs-cpu-threads)
 
+Learn more [Hyper-Threading & Physical Threads ](https://davidzhu.xyz/2023/05/28/Operating-System/001-cpu-architecture/) 
+
 无论语言层面何种并发模型, 到了操作系统一定是运行在 kernel thread 上的, 上面我们说到Go的做法是把多个 user-space threads 映射到一个 kernel thread, 以减少kernel thread切换时带来的消耗, 那其他语言怎么做的呢? 在C++里, 是通过syscall直接调用OS的kernel thread, 线程所有的行为如创建, 终止, 切换等操作都由内核来完成, 一个用户态的线程对应一个系统线程, 这时候C++在频繁创建删除thread的时候就要考虑上下文切换的开销了, 因为操作的直接是kernel thread, 比如来一个tcp连接就创建一个thread, 开销太大了, 所以这时候就出现了线程池, 说到底我们就是想要减少kernel thread创建切换的次数, 以减少开销,  你看无论C++还是Go都有自己的解决办法, 前者是通过thread pool来对kernel thread重复利用, 而后者因为通过map 多个goroutine到较少个kernel thread, 实现对kernel thread的重复利用, 减少上下文切换的次数, 减少开销, 
 
 ## 4. Frequently Asked Questions (FAQ)

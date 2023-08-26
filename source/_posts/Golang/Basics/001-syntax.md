@@ -200,6 +200,14 @@ if ok {
 }
 ```
 
+channel 值读取也可用类似语法判断是否状态为 closed, 
+
+```go
+ele, ok:= <- channel_name
+```
+
+If the value of `ok` is true, this indicates that the channel is open and read operations can be done. 
+
 ## 6. 总结
 
 - 三个常用关键字 `var`, `const`, `func`, 

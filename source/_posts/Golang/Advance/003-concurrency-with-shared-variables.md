@@ -14,7 +14,9 @@ tags:
 - ***concurrent*** envolves two or more threads, and it's all about the *unpredictable* order of the execution. 
 -  ***concurrency-safe type*** if that all its accessible methods and operations are concurrency-safe.
 - A ***data race*** occurs whenever two goroutines access the same variable ***concurrently*** and at least one of the accesses is a write. 
+  - data race can cause data lost, the bank example 
   - when there is data race, you'd better use ***Mutual Exclusion***: `sync.RWMutex`,  `sync.Mutex`
+  
 - Mutex vs Semaphore
 - A ***race condition*** is a flaw that occurs when the timing or ordering of events affects a program’s correctness.
 

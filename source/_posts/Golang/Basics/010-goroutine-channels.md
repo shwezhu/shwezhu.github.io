@@ -101,6 +101,54 @@ func main() {
 }
 ```
 
+### 2.4. operations on channel
+
+We can also check whether a channel is open or closed with the help of the given syntax:
+
+```go
+ele, ok:= <- channel_name
+```
+
+If the value of `ok` is true, this indicates that the channel is open and read operations can be done. 
+
+An attempt to send value to a ***closed channel*** will panic.
+
+```go
+ch = make(chan bool)
+ch <- true
+close(ch)
+// this will get a panic
+ch <- true
+```
+
+An attempt to send value to a ***nil channel*** will block that goroutine forerver.
+
+```go
+func main() {
+	s := make(chan bool, 1)
+	s<- true
+	<-s
+	go func() {
+		s = nil
+		s<- true
+		fmt.Println("hello from goroutine 2")
+	}()
+	fmt.Println("hello from goroutine 1")
+	time.Sleep(time.Second * 3)
+	fmt.Println("hi from goroutine 1 after seconds")
+}
+---------------------------------------
+
+hello from goroutine 1
+hi from goroutine 1 after seconds
+```
+
+> If you don't know whether a channel is closed or not and blindly write to it, then you have a badly designed program. Redesign it so that there is no way to write into it after it is closed. [A comment from Stack Overflow](https://stackoverflow.com/questions/39213230/how-to-test-if-a-channel-is-close-and-only-send-to-it-when-its-not-closed)
+
+How to know if a channel is closed only by sending value to it? Answer: You can't. 
+
+learn more: https://stackoverflow.com/a/61101887/16317008
+
 ## 3. uses of go channels
 
 ### 3.1. synchronization between goroutines
@@ -185,3 +233,4 @@ References:
 
 - [Share Memory By Communicating - The Go Programming Language](https://go.dev/blog/codelab-share)
 - [Understanding Go Channels: An Overview for Beginners](https://www.atatus.com/blog/go-channels-overview/)
+- [Closing the Channel in Golang - Scaler Topics](https://www.scaler.com/topics/golang/closing-the-channel-in-golang/)
