@@ -104,26 +104,6 @@ bash-3.2$ `a`
 bash: a: command not found
 ```
 
-## Shell Expansions
-
-Expansion is performed on the command line after it has been split into `token`s. There are seven kinds of expansion performed:
-
-- brace expansion
-- tilde expansion
-- parameter and variable expansion
-- command substitution
-- arithmetic expansion
-- word splitting
-- filename expansion
-
-了解更多: [Shell Expansions (Bash Reference Manual)](https://www.gnu.org/software/bash/manual/html_node/Shell-Expansions.html#Shell-Expansions)
-
-总结: 
-
-- 双引号里 只有`$`和backquote保留其原有意思, `*`在双引号里并不会展开
-
-- 单引号中, 所有特殊字符都失去其本身意义
-
 参考:
 
 - [Unix / Linux - Shell Quoting Mechanisms](https://www.tutorialspoint.com/unix/unix-quoting-mechanisms.htm)

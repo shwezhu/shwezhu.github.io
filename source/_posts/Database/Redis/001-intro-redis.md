@@ -101,7 +101,7 @@ There are many ways to save sessions, in-memory, file, database and Redis, if yo
 
 For data that is frequently needed or retrieved by app users, a [cache](https://redislabs.com/redis-enterprise/use-cases/) would serve as a temporary data store for quick and fast retrieval without the need for extra database round trips. 
 
-- **Cache-Aside Pattern,** 
+- **Cache-Aside Pattern** 
 
 Here is the explanation of the Cache-Aside Pattern:
 

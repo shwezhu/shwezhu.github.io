@@ -17,7 +17,18 @@ A `select` blocks until one of its cases can run, then it executes that case. It
 // This goroutine will sleep forever
 s := make(chan int)
 select {
-case s <- 1:
+// write to an unbuffered channel operation 
+// will block unitl the value stored in the channel get read 
+case s<- 1:
+	fmt.Println("write 1 to s")
+case <-s:
+	fmt.Println("read from s")
+}
+
+// This goroutine won't sleep
+s := make(chan int, 1)
+select {
+case s<- 1:
 	fmt.Println("write 1 to s")
 case <-s:
 	fmt.Println("read from s")

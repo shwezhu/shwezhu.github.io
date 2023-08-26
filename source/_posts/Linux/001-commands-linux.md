@@ -7,13 +7,17 @@ tags:
  - Linux
 ---
 
-平时常用的命令总是会忘, 一些参数查起来也挺费事时间, 记录一下~ 😁
+## 1. 常见指令
 
-简单的命令会直接记录使用方法, 另外一个指令的 `--help`参数基本都是help页面, 或者使用`man your-command`
+使用 `--help `, `man your-command` 查看用法
 
 ```shell
-# 查看 ip
-$ ipconfig getifaddr en0
+# `-nr`: n显示line number行号, r是recursive, 可以理解为遍历文件文件夹
+$ grep -nr "ul$" themes/cactus/source/css
+# Mac下查看本地IP
+$ ipconfig getifaddr en0 
+# 查看自己的Public IP, Mac和Linux皆可
+$ curl ifconfig.me && echo
 # 赋予可执行权限
 $ chmod u+x test.sh
 # 追踪域名DNS
@@ -26,15 +30,13 @@ $ du  -sh  *
 $ df -l
 # 把指定文件转换为16进制输出
 $ xxd a.class
-# Mac下查看本地IP
-$ ipconfig getifaddr en0 
-# 查看自己的Public IP, Mac和Linux皆可
-$ curl ifconfig.me && echo
-# -c 表示只编译不链接
-$ gcc –c SimpleSection.c
+# specify header with curl
+$ curl localhost:8080/private -H "x-robot-password: beep-boo" -v
+# post request with cookie in curl
+$ curl localhost:8080/chat/gpt-3 -d "message=tell me more about him" --cookie "session-id=MTY5Mj..."
 ```
 
-## 1. wget
+## 2. wget
 
 ```shell
 # 下载文件并保存为指定名字
@@ -45,9 +47,9 @@ wget -qO install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 wget -O- install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 ```
 
-## 2. sh
+## 3. sh -c
 
-输出`install.sh`的内容不保存, 就像pipe传给sh, 由sh执行输出的东西, 这样很省事, 不用下载了, 再赋予可执行权限, 然后执行再删除, 就很麻烦, 注意这种并不是sh去执行下载的install.sh文件, 而是执行wegt输出的内容(即install.sh的内容), 所以这种并不用赋予可执行权限. 
+网络上的脚本下载之后再执行需要下载后再赋予可执行权限, 有点麻烦, 分享一个简单执行脚本的方法, 使用 sh 配合 wget 直接拉去网上脚本内容然后执行, 即此处 sh 执行 wegt 的输出, 
 
 ```shell
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -60,7 +62,9 @@ sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools
 /usr/bin/sh
 ```
 
-## 3. `>` & `>>`
+> 注意这样不安全, 因为你要确定网上的脚本没有人任何安全问题, 若执行时需要赋予管理员权限, 就要认真看看脚本内容了, 别把整个磁盘给删了, 
+
+## 4. `>` & `>>`
 
 ```shell
 echo "Hello, World" > output.txt
@@ -79,82 +83,6 @@ The `>` sign is used for redirecting the output of a program to something other 
 
 The `>>` **appends** to a file or creates the file if it doesn't exist.
 The `>` **overwrites** the file if it exists or creates it if it doesn't exist.
-
-## 4. 批量查找文件内容
-
-```shell
-grep -nr "ul$" themes/cactus/source/css
-```
-
-`-nr`: n显示line number行号，r是recursive，可以理解为遍历文件文件夹
-
-## 5. grep
-
-**5.1. 匹配单个文件:**
-
-```shell
-$ grep "string" /path/to/filename
-```
-
-**5.2. 匹配多个文件 `-r`:**
-
-```shell
-# Search for a string in your current directory and all other subdirectories
-$ grep -r "hello" *  
-a.txt:hello world
-sub/c.txt:hello, this is...
-sub/b.txt:hello, this is...
-# 如果好奇通配符*代表什么意思, 可以使用echo查看一下展开式, 如下:
-$ echo grep -r "a.txt" *        
-grep -r a.txt a.txt b.txt sub
-# 假如sub是个文件夹
-$ grep -r "hello" sub                 
-sub/c.txt:hello, this is...
-sub/b.txt:hello, this is...
-```
-
-这里想说一下`*`这个符号, 在Regex里它的意义是匹配它前面的那个字符出现0或多次, 如
-
-```shell
-$ printf "colour\ncolor\ncolouur\n" | egrep 'colou*r'                          
-colour
-color
-colouur
-```
-
-但`*`对于shell也有特殊意义, 那就是通配符Wildcard, 看到[一个回答](https://askubuntu.com/a/957504/1690738)总结的很好:
-
-> `*` has a special meaning both as a shell [globbing](http://mywiki.wooledge.org/glob) character ("wildcard") and as a regular expression [metacharacter](http://www.regular-expressions.info/characters.html). You must take both into account, though if you [quote](http://mywiki.wooledge.org/Quotes) your regular expression then you can prevent the shell from treating it specially and ensure that it passes it unchanged to [`grep`](http://manpages.ubuntu.com/manpages/xenial/en/man1/grep.1.html). 
-
-**5.3. 匹配时忽略大小写 `-i`:**
-
-```shell
-grep -i "linux" welcome.txt
-```
-
-**5.4. 输出对应行数 `-n`:**
-
-```shell
-$ grep -n "Linux" welcome.txt
-```
-
-**5.5. 匹配固定的某个单词而不是相似单词 `-w`:**
-
-```shell
-grep -w "opensource" welcome.txt
-```
-
-**5.6. 只显示符合pattern的文件名 `-l`:**
-
-```shell
-$ grep -l "hello" *.txt
-a.txt
-b.txt
-```
-
-参考:
-
-- [Grep Command in Linux/UNIX | DigitalOcean](https://www.digitalocean.com/community/tutorials/grep-command-in-linux-unix)
 
 ## 6. find
 

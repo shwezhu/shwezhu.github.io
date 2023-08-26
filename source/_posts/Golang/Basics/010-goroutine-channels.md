@@ -101,7 +101,26 @@ func main() {
 }
 ```
 
-### 2.4. operations on channel
+### 2.4. read & send on closed channel
+
+#### 2.4.1 read on a closed channel
+
+A closed channel returns its default value as many times as it is called:
+
+```go
+func main() {
+	c := make(chan bool, 1)
+	c <- true
+	fmt.Println(<-c)
+	close(c)
+	fmt.Println(<-c)
+  fmt.Println(<-c)
+}
+------------------------------
+true
+false
+false
+```
 
 We can also check whether a channel is open or closed with the help of the given syntax:
 
@@ -111,7 +130,9 @@ ele, ok:= <- channel_name
 
 If the value of `ok` is true, this indicates that the channel is open and read operations can be done. 
 
-An attempt to send value to a ***closed channel*** will panic.
+#### 2.4.2 send on a closed channel
+
+An attempt to **send** value to a ***closed channel*** will panic.
 
 ```go
 ch = make(chan bool)
@@ -121,7 +142,9 @@ close(ch)
 ch <- true
 ```
 
-An attempt to send value to a ***nil channel*** will block that goroutine forerver.
+### 2.5. read & send on a nil channel
+
+An attempt to **send/read** value on a ***nil channel*** will block that goroutine forerver.
 
 ```go
 func main() {
@@ -229,8 +252,11 @@ func Poller(in, out chan *Resource) {
 
 There are many omissions from the above code snippets. For a walkthrough of a complete, idiomatic Go program that uses these ideas, see the Codewalk [*Share Memory By Communicating*](https://go.dev/doc/codewalk/sharemem/).
 
+A great bolg: [Share memory by communicating · The Ethically-Trained Programmer](https://blog.carlmjohnson.net/post/share-memory-by-communicating/)
+
 References:
 
 - [Share Memory By Communicating - The Go Programming Language](https://go.dev/blog/codelab-share)
 - [Understanding Go Channels: An Overview for Beginners](https://www.atatus.com/blog/go-channels-overview/)
 - [Closing the Channel in Golang - Scaler Topics](https://www.scaler.com/topics/golang/closing-the-channel-in-golang/)
+- [Share memory by communicating · The Ethically-Trained Programmer](https://blog.carlmjohnson.net/post/share-memory-by-communicating/)
