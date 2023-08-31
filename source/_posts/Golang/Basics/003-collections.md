@@ -8,17 +8,6 @@ tags:
  - Golang
 ---
 
-## Conclusion
-
-- The type `[n]T` is an array of `n` values of type `T`.
-  - An array's length is part of its type, so arrays cannot be resized.
-- The type `[]T` is a slice with elements of type `T`.
-  - An array has a fixed size. A slice, on the other hand, is a dynamically-sized,
-  - A slice does not store any data, it just describes a section of an underlying array.
-  - Changing the elements of a slice modifies the corresponding elements of its underlying array.
-
-learn more: [A Tour of Go](https://go.dev/tour/moretypes/7)
-
 ## 1. Declare & Init Array
 
 ```go
@@ -159,7 +148,32 @@ func main() {
 }
 ```
 
-## 4. Slice 补充
+> ⚠️ **Like slices**, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller. So like slices, when a function return or accept, don't need to take a pointer to map, [source](https://go.dev/doc/effective_go#maps)
+
+### 3.1. Copy Map
+
+Find a [blog](https://web.archive.org/web/20171006194258/https://stackoverflow.com/documentation/go/732/maps/9834/copy-a-map#t=20171006194258443316) talks copy map, share it here:
+
+Like slices, maps hold **references** to an underlying data structure. So by assigning its value to another variable, only the reference will be passed. To copy the map, it is necessary to create another map and copy each value:
+
+```go
+// Create the original map
+originalMap := make(map[string]int)
+originalMap["one"] = 1
+originalMap["two"] = 2
+
+// Create the target map
+targetMap := make(map[string]int)
+
+// Copy from the original map to the target map
+for key, value := range originalMap {
+  targetMap[key] = value
+}
+```
+
+Same as slice, copy a map have deep copy and shallow copy, for deep copy a map, visit: [dictionary - How to deep copy a map and then clear the original? - Stack Overflow ](https://stackoverflow.com/questions/23057785/how-to-deep-copy-a-map-and-then-clear-the-original)
+
+## 4. Slice 
 
 Slices are like references to arrays. **A slice does not store any data, it just describes a section of an underlying array**. Changing the elements of a slice modifies the corresponding elements of its underlying array. Other slices that share the same underlying array will see those changes. 
 
@@ -215,3 +229,13 @@ func main() {
 }
 ```
 
+## 6. Conclusion
+
+- The type `[n]T` is an array of `n` values of type `T`.
+  - An array's length is part of its type, so arrays cannot be resized.
+- The type `[]T` is a slice with elements of type `T`.
+  - An array has a fixed size. A slice, on the other hand, is a dynamically-sized,
+  - A slice does not store any data, it just describes a section of an underlying array.
+  - Changing the elements of a slice modifies the corresponding elements of its underlying array.
+
+learn more: [A Tour of Go](https://go.dev/tour/moretypes/7)

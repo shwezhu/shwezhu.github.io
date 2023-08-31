@@ -94,7 +94,7 @@ The `>` **overwrites** the file if it exists or creates it if it doesn't exist.
 # -type f 指定找的是文件, -type d指定找的是文件夹
 $ find ~/blog -name clean.sh -type f       
 /Users/David/blog/clean.sh
-# Wildcard, 也可以这么用: "clean.*"
+# globs 也可以这么用: "clean.*"
 $ find ~/blog -name "*.sh"  
 /Users/David/blog/node_modules/jake/bin/bash_completion.sh
 /Users/David/blog/backup.sh

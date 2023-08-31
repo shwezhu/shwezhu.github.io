@@ -2,9 +2,9 @@
 title: Hyper-Threading & Physical Threads
 date: 2023-05-28 15:47:18
 categories:
- - OS
+ - CS Basics
 tags:
- - OS
+ - Concurrency
 ---
 
 ## 1. CPU 结构

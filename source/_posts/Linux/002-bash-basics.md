@@ -18,7 +18,7 @@ A **Unix shell** is both a **command interpreter** and a **programming language*
 
 - Bash=Unix Shell
 
-- Unix Shell 有两个身份**command interpreter**和**programming language**
+- Unix Shell 有两个身份 **command interpreter** 和 **programming language**
 
 ## 2. Specify Interpreter
 

@@ -29,8 +29,6 @@ code: │   name:                │Hex to integer:
 \"    │  # Double quote        │  Hex 22 = 34
 ```
 
-这里注意, 空格也就是Blank Space就是`' '`, 不像其它的如换行符`\n`, 或结束符`\0`是这种表示, 
-
 ![a](a.png)
 
 参考:

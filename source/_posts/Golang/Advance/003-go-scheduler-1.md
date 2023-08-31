@@ -5,7 +5,6 @@ categories:
  - Golang
  - Advance
 tags:
- - OS
  - Concurrency
  - Goalng
 ---

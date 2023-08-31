@@ -60,7 +60,7 @@ b := []byte{'g', 'o', 'l', 'a', 'n', 'g'}
 s := b[1:4] 
 ```
 
-## Slice is just a Struct
+### 3.1. Slice is just a Struct
 
 Note that new slice shares the same storage as `b`, namely, same underlying array, why?  Let me show you, 
 
@@ -111,7 +111,7 @@ A slice cannot be grown beyond its capacity. Attempting to do so will cause a ru
 
 > Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array. If a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array. A `Read` function can therefore accept a slice argument rather than a pointer and a count;  `func (f *File) Read(buf []byte) (n int, err error)` [Effective Go - The Go Programming Language](https://go.dev/doc/effective_go#slices)
 
-## Growing slices (the copy and append functions)
+### 3.2. Growing slices (the copy and append functions)
 
 To increase the capacity of a slice one must create a new, larger slice and copy the contents of the original slice into it. This technique is how dynamic array implementations from other languages work behind the scenes. The next example doubles the capacity of `s` by making a new slice, `t`, copying the contents of `s` into `t`, and then assigning the slice value `t` to `s`:
 
@@ -129,7 +129,23 @@ The looping piece of this common operation is made easier by the built-in copy f
 func copy(dst, src []T) int
 ```
 
+## 4. strings
+
+In Go, a string is in effect a read-only slice of bytes. 
+
+## 5. Conclusion
+
+- It’s important to understand that even though a slice contains a pointer, it is itself a value. Under the covers, it is a struct value holding a pointer and a length. It is *not* a pointer to a struct.
+- A slice does not store any data, it just describes a section of an underlying array. 
+  - Therefore, your function can return a slice directly or accept a slice as a argument. 
+  - You don't need to return a pointer to a slice. 
+- In Go, a string is in effect a read-only slice of bytes. 
+  - Only use `*string` if you have to distinguish an empty string from no strings.
+
+
 References:
 
 - [Go Slices: usage and internals - The Go Programming Language](https://go.dev/blog/slices-intro)
 - [A Tour of Go](https://go.dev/tour/moretypes/7)
+- [Arrays, slices (and strings): The mechanics of 'append' - The Go Programming Language](https://go.dev/blog/slices)
+- [Strings, bytes, runes and characters in Go - The Go Programming Language](https://go.dev/blog/strings)

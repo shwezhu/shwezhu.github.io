@@ -115,6 +115,8 @@ Here is the explanation of the Cache-Aside Pattern:
 
 - **Write Behind Caching Pattern**
 
+learn more: [Cache vs. Session Store | Redis](https://redis.com/blog/cache-vs-session-store/)
+
 References: 
 
 - [Install Redis on macOS | Redis](https://redis.io/docs/getting-started/installation/install-redis-on-mac-os/)

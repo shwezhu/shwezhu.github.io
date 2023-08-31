@@ -1,26 +1,23 @@
 ---
-title: 并发学习之 Context Switching
+title: Context Switching
 date: 2023-05-27 16:29:15
 categories:
- - OS
+ - CS Basics
 tags:
- - OS
  - Concurrency
 ---
 
-## Context Switch
+## 1. Context Switch
 
-In a CPU, the term "context" refers to the data in the registers and program counter at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the **address of the instruction** to be executed immediately after the current one.
+In a CPU, the term "context" refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the **address of the instruction** to be executed immediately after the current one.
 
-In computing, a context switch is the process of storing the state of a process or thread, so that it can be restored and resume execution at a later point, and then restoring a different, previously saved, state. 注意分两步, 先存一个线程或进程的state然后再恢复另一个的state去执行. 
+In computing, a context switch is the process of storing the state of a process or thread, so that it can be restored and resume execution at a later point, and then restoring a different, previously saved, state. 分两步, 先存一个线程或进程的state然后再恢复另一个的state去执行. 
 
-The **program counter (PC)** is a **processor register** that indicates where a computer is in its program sequence. 
-
-### 1. Two Data Structure: PCB & TCB
+## 2. Two Data Structure: PCB & TCB
 
 上面说的state就是线程进程相关的信息, 分别在PCB (Process) 和TCB (Thread) 中, 
 
-#### 1.1 Process Control Block (PCB)
+### 2.1 Process Control Block (PCB)
 
 A process control block (PCB) contains information about the process, i.e. registers, PID, priority, etc. The process table is an array of PCBs, that means logically contains a PCB for all of the current processes in the system. 
 
@@ -31,7 +28,7 @@ A process control block (PCB) contains information about the process, i.e. regis
 - Program Counter (PC) – a pointer to the address of the next instruction to be executed for this process;
 - CPU Registers – register set where process needs to be stored for execution for running state;
 
-#### 1.2 **Thread Control Block** (**TCB**)
+### 2.2 **Thread Control Block** (**TCB**)
 
 An example of information contained within a TCB is:
 
@@ -42,7 +39,7 @@ An example of information contained within a TCB is:
 - Thread's register values
 - Pointer to the Process control block (PCB) of the process that the thread lives on
 
-### 2. Cost of Context Switch
+## 3. Cost of Context Switch
 
 Switching from one process to another requires a certain amount of time for doing the administration – saving and loading registers and memory maps, updating various tables and lists, etc. 
 
@@ -50,21 +47,21 @@ For example, in the Linux kernel, context switching involves ***loading the corr
 
 Furthermore, analogous context switching happens between [user threads](https://en.wikipedia.org/wiki/User_thread), notably [green threads](https://en.wikipedia.org/wiki/Green_thread), and is often very lightweight, saving and restoring minimal context. In extreme cases, such as switching between goroutines in [Go](https://en.wikipedia.org/wiki/Go_(programming_language)), a context switch is equivalent to a [coroutine](https://en.wikipedia.org/wiki/Coroutine) yield, which is only marginally more expensive than a [subroutine](https://en.wikipedia.org/wiki/Subroutine) call.
 
-### 3. When Context Switch Happens
+## 4. When Context Switch Happens
 
-#### 3.1. System Calls
+### 4.1. System Calls
 
  When a process makes any system calls, the OS switches the mode of the kernel and saves that process in context, and executes the system call.
 
-#### 3.2. Interrupt Handling
+### 4.2. Interrupt Handling
 
 Modern architectures are [interrupt](https://en.wikipedia.org/wiki/Interrupt) driven. This means that if the CPU requests data from a disk, for example, it does not need to [busy-wait](https://en.wikipedia.org/wiki/Busy-wait) until the read is over; it can issue the request (to the I/O device) and continue with some other task. When the read is over, the CPU can be *interrupted* (by a hardware in this case, which sends interrupt request to [PIC](https://en.wikipedia.org/wiki/Programmable_interrupt_controller)) and presented with the read. For interrupts, a program called an *[interrupt handler](https://en.wikipedia.org/wiki/Interrupt_handler)* is installed, and it is the interrupt handler that handles the interrupt from the disk.
 
-#### 3.3. User and Kernel Mode Switching
+### 4.3. User and Kernel Mode Switching
 
 This trigger is used when the OS needed to switch between the user mode and kernel mode.
 
-### 4. Performance
+## 5. Performance
 
 Context switching itself has a cost in performance, due to running the task scheduler, **TLB flushes**, and indirectly due to sharing the CPU cache between multiple tasks. **Switching between threads of a single process can be faster than between two separate processes, because threads share the same virtual memory maps, so a TLB flush is not necessary**.
 
@@ -73,6 +70,14 @@ The time to switch between two separate processes is called the process switchin
 Considering a general arithmetic addition operation A = B+1. The instruction is stored in the [instruction register](https://en.wikipedia.org/wiki/Instruction_register) and the [program counter](https://en.wikipedia.org/wiki/Program_counter) is incremented. A and B are read from memory and are stored in registers R1, R2 respectively. In this case, B+1 is calculated and written in R1 as the final answer. This operation as there are sequential reads and writes and there's no waits for [function calls](https://en.wikipedia.org/wiki/Subroutine) used, hence no context switch/wait takes place in this case.
 
 However, certain special instructions require [system calls](https://en.wikipedia.org/wiki/System_call) that require context switch to wait/sleep processes.  A system call handler is used for context switch to kernel mode. A display(data x) function may require data x from the Disk and a device driver in kernel mode, hence the display() function goes to sleep and waits on the READ operation to get the value of x from the disk, causing the program to wait and a wait for function call to the released setting the current statement to go to sleep and wait for the syscall to wake it up. 
+
+## 6. Conclusion 
+
+- program counter (PC): processor register, stores the address of next instruction to be executed.
+- context switch: store state, restore state
+- cause context siwtch
+  - system call
+  -  interrupt handling: CPU requests data from a disk
 
 参考:
 

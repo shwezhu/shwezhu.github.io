@@ -9,17 +9,19 @@ categories:
 
 比如在淘宝的某个页面中，你进行了登陆操作。当你跳转到商品页时，服务端如何知道你是已经登陆的状态？
 
-## cookie
+## 1. cookie
 
-首先产生了 cookie 这门技术来解决这个问题，cookie 是 http 协议的一部分，它的处理分为如下几步：
+首先产生了 cookie 这门技术来解决这个问题, cookie 是 http 协议的一部分, 它的处理分为如下几步:
 
-- 服务器向客户端发送 cookie。
-  - 通常使用 HTTP 协议规定的 set-cookie 头操作。
-  - 规范规定 cookie 的格式为 name = value 格式，且必须包含这部分。
-- 浏览器将 cookie 保存。
-- 每次请求浏览器都会将 cookie 发向服务器。
+- 服务器向客户端发送 cookie
+  - 通常使用 HTTP 协议规定的 set-cookie 头操作
+  - 规范规定 cookie 的格式为 name=value 格式, 且必须包含这部分
+- 浏览器将 cookie 保存
+- 每次请求浏览器都会将 cookie 发向服务器
 
-> 注意上面说的是浏览器可以自动发送 cookie, 即不用在前端写 js 代码手动发送, 服务器返回 cookie 的时一般需加上一个 expires time/MaxAge 参数, 客户端浏览器收到 response 后(也包括 cookie), 若 cookie 的 MaxAge 时间已过, 则浏览器会自动设置此 cookie 为 invalid, 之后发送请求并不会带上该 cookie,
+> 浏览器可以自动发送 cookie, 即不用在前端写 js 代码手动发送, 服务器返回 cookie 的时需指定 Expires/MaxAge 参数, 客户端浏览器收到 response 后(也包括 cookie), 若 cookie 的 MaxAge 时间已过, 则浏览器会自动设置此 cookie 为 invalid, 之后发送请求并不会带上该 cookie, 另外 Expires/MaxAge只用指定其一, 但是未来兼容一些老浏览器如 IE, 有时候会同时设置 MaxAge 和 Expires 
+>
+> 了解更多: https://stackoverflow.com/a/35729939/16317008
 
 其他可选的 cookie 参数会影响将 cookie 发送给服务器端的过程，主要有以下几种：
 
@@ -56,7 +58,7 @@ def index():
 >
 > *Both GMT and UTC display the same time*. 
 
-## session
+## 2. session
 
 > Session和Cookie的目的相同, 都是为了弥补HTTP协议无状态的缺陷, Session和Cookie都是用来保存客户端状态信息的手段, 不同之处在于Cookie是存储在客户端浏览器方便客户端请求时使用, Session是存储在服务端用于存储客户端连接状态信息的, 从存储的数据类型来看, Cookie仅支持存储字符串, Session可支持多种数据类型 [source](https://studygolang.com/articles/34361)
 
@@ -73,7 +75,7 @@ cookie 在服务器端产生, 之后在客户端和服务器之间往返发送, 
 
 所以 cookie 就是用来传递 session_id 的东西, 而 session_id 则用来唯一标识 session, 即会话, session 就是个数据结构, 用来临时存储一个会话的信息, 如客户端A, B, 与 服务器 S 之间,则有两个 session, A - S, B - S
 
-### session 存储
+## 3. session 存储
 
 Session在服务端是如何存储的呢？
 

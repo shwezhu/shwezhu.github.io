@@ -9,15 +9,6 @@ tags:
  - Concurrency
 ---
 
-## Conclusion
-
-- OS thread has a fixed-size block of memory (as large as 2MB) for its *stack*.
-- A goroutine starts life with a small stack, typically 2KB but goroutine’s stack is not fixed. 
-- Thread stack holds the local variables of active and suspended function calls.
-- OS threads are scheduled by the OS kernel, Go runtime contains its own scheduler that uses a technique known as ***m:n scheduling***, goroutine is much cheaper than rescheduling a thread. 
-
-A great bolg: [Share memory by communicating · The Ethically-Trained Programmer](https://blog.carlmjohnson.net/post/share-memory-by-communicating/)
-
 ## 1.  Two Styles of Concurrent Programming
 
 Go enables two styles of concurrent programming.
@@ -91,6 +82,15 @@ Here is an illustration of the difficulties. Once one names a goroutine and cons
 Moreover, experience with libraries such as those for graphics systems that require all processing to occur on the "main thread" has shown how awkward and limiting the approach can be when deployed in a concurrent language. The very existence of a special thread or goroutine forces the programmer to distort the program to avoid crashes and other problems caused by inadvertently operating on the wrong thread.
 
 For those cases where a particular goroutine is truly special, the language provides features such as channels that can be used in flexible ways to interact with it.
+
+## 5. Conclusion
+
+- OS thread has a fixed-size block of memory (as large as 2MB) for its *stack*.
+- A goroutine starts life with a small stack, typically 2KB but goroutine’s stack is not fixed. 
+- Thread stack holds the local variables of active and suspended function calls.
+- OS threads are scheduled by the OS kernel, Go runtime contains its own scheduler that uses a technique known as ***m:n scheduling***, goroutine is much cheaper than rescheduling a thread. 
+
+A great bolg: [Share memory by communicating · The Ethically-Trained Programmer](https://blog.carlmjohnson.net/post/share-memory-by-communicating/)
 
 参考:
 
