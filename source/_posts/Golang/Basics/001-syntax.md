@@ -8,7 +8,7 @@ tags:
  - Golang
 ---
 
-## 1. 函数声明与使用
+## 1. Function Declearation
 
 先来看看函数相关的东西, 
 
@@ -67,7 +67,7 @@ var b = func a() { ... }
 b() //调用函数
 ```
 
-## 2. 变量
+## 2. Varibale
 
 ### 2.1. `var`
 
@@ -107,7 +107,7 @@ func main() {
 
 The `:=` short assignment statement can **only** be used in inside a function, outside a function, every statement begins with `var`, `func`, and so on. 
 
-## 3. 基础数据类型
+## 3. Basic Type
 
 ```go
 bool
@@ -127,7 +127,7 @@ float32 float64
 complex64 complex128
 ```
 
-### 3.1. 默认值
+### 3.1. Default Value
 
 Variables declared without an explicit initial value are given their ***zero value***. The zero value is:
 
@@ -168,7 +168,7 @@ Unlike in C, in Go assignment between items of different type requires an explic
 
 ## 5. Type Assertions
 
-一般在 value 为 `interface{}` 类型时会用到, 用来告诉编译器 value 的类型, 如下:
+A *type assertion* provides access to an **interface value's** underlying concrete value. 
 
 ```go
 str := value.(string)
@@ -203,13 +203,37 @@ if ok {
 channel 值读取也可用类似语法判断是否状态为 closed, 
 
 ```go
-ele, ok:= <- channel_name
+ele, ok:= <-channel_name
 ```
 
 If the value of `ok` is true, this indicates that the channel is open and read operations can be done. 
 
-## 6. 总结
+### 5.1. Type Assertion Use Case
 
+Type assertion only can be used when value's type is interface, 
+
+```go
+var m map[interface{}]interface{}
+_, isMap := m.(map[interface{}]interface{}) 
+```
+
+The snippet above will cause error: `Invalid type assertion: m.(map[interface{}]interface{}) (non-interface type map[interface{}]interface{} on the left`. 
+
+The code below works fine:
+
+```go
+var m map[interface{}]interface{}
+var t interface{}
+t = m
+_, isMap := t.(map[interface{}]interface{})
+fmt.Println(isMap)
+// print: true
+```
+
+## 6. Conclusion
+
+- ‼️ `ele, ok:= <-channel_name`, `user, ok := users["milo"]`, `str, ok := value.(string)` 
+- ‼️ type assertions only can be used by interface type
 - 三个常用关键字 `var`, `const`, `func`, 
 - 在函数中可以用 `:=` 来定义变量, 可以自动推断类型, 类似cpp里的`auto`
 - 声明变量时, 如果有 initializer 便也可以省略数据类型
