@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Git基础文件状态之版本穿梭 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="总结 git add modified -&amp;gt; staged, untracked -&amp;gt; tracked git commit staged -&amp;gt; unmodifed git rm --cached &amp;lt;filename&amp;gt;, tracked-&amp;gt;untracked, git rm &amp;lt;filname&amp;gt; 真实删除文件, git rm is about removing some file(s) from somewhere. git restore --staged &amp;lt;filename&amp;gt; staged-&amp;gt;modified, git restore &amp;lt;filename&amp;gt; 真实修改文件 git restore is about copying some file(s) from somewhere to somewhere. index = staging area, git add" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/git/001-git-basics/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Git基础文件状态之版本穿梭" />
+<meta property="og:description" content="总结 git add modified -&gt; staged, untracked -&gt; tracked git commit staged -&gt; unmodifed git rm --cached &lt;filename&gt;, tracked-&gt;untracked, git rm &lt;filname&gt; 真实删除文件, git rm is about removing some file(s) from somewhere. git restore --staged &lt;filename&gt; staged-&gt;modified, git restore &lt;filename&gt; 真实修改文件 git restore is about copying some file(s) from somewhere to somewhere. index = staging area, git add" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/git/001-git-basics/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-05T09:31:30+00:00" />
+<meta property="article:modified_time" content="2023-05-05T09:31:30+00:00" />
+<meta itemprop="name" content="Git基础文件状态之版本穿梭">
+<meta itemprop="description" content="总结 git add modified -&gt; staged, untracked -&gt; tracked git commit staged -&gt; unmodifed git rm --cached &lt;filename&gt;, tracked-&gt;untracked, git rm &lt;filname&gt; 真实删除文件, git rm is about removing some file(s) from somewhere. git restore --staged &lt;filename&gt; staged-&gt;modified, git restore &lt;filename&gt; 真实修改文件 git restore is about copying some file(s) from somewhere to somewhere. index = staging area, git add"><meta itemprop="datePublished" content="2023-05-05T09:31:30+00:00" />
+<meta itemprop="dateModified" content="2023-05-05T09:31:30+00:00" />
+<meta itemprop="wordCount" content="1183">
+<meta itemprop="keywords" content="Git," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Git基础文件状态之版本穿梭"/>
+<meta name="twitter:description" content="总结 git add modified -&gt; staged, untracked -&gt; tracked git commit staged -&gt; unmodifed git rm --cached &lt;filename&gt;, tracked-&gt;untracked, git rm &lt;filname&gt; 真实删除文件, git rm is about removing some file(s) from somewhere. git restore --staged &lt;filename&gt; staged-&gt;modified, git restore &lt;filename&gt; 真实修改文件 git restore is about copying some file(s) from somewhere to somewhere. index = staging area, git add"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Git基础文件状态之版本穿梭</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-05 </span>
+        <div class="post-category">
+            <a href="/categories/git/"> Git </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#总结">总结</a></li>
+        <li><a href="#状态之间的切换">状态之间的切换</a>
+          <ul>
+            <li><a href="#modified---unmodified">Modified -&gt; Unmodified</a></li>
+            <li><a href="#staged---modified">Staged -&gt; Modified</a></li>
+          </ul>
+        </li>
+        <li><a href="#tracked---untracked">Tracked -&gt; Untracked</a></li>
+        <li><a href="#git-restore-vs-git-rm">git restore vs git rm</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="总结">总结</h2>
+<ul>
+<li>
+<p><code>git add</code> modified -&gt; staged, untracked -&gt; tracked</p>
+</li>
+<li>
+<p><code>git commit</code> staged -&gt; unmodifed</p>
+</li>
+<li>
+<p><code> git rm --cached &lt;filename&gt;</code>, tracked-&gt;untracked, <code>git rm &lt;filname&gt;</code> 真实删除文件,</p>
+</li>
+<li>
+<p><code>git rm</code> is about <em>removing</em> some file(s) from somewhere.</p>
+</li>
+<li>
+<p><code> git restore --staged &lt;filename&gt;</code> staged-&gt;modified, <code>git restore &lt;filename&gt;</code>  真实修改文件</p>
+</li>
+<li>
+<p><code>git restore</code> is about <em>copying</em> some file(s) from somewhere to somewhere.</p>
+</li>
+<li>
+<p>index = staging area, <code>git add &lt;filename&gt;</code>: stage the file</p>
+</li>
+<li>
+<p>working directory / working tree 就是项目文件夹</p>
+</li>
+</ul>
+<h2 id="状态之间的切换">状态之间的切换</h2>
+<p>学习Git的时候发现一些基础的概念很是模糊, 于是读了一下<a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">文档</a>, 在这记录一下,</p>
+<p>Remember that each file in your <strong>working directory</strong> can be in one of <strong>two states</strong>: <em><code>tracked</code></em> or <em><code>untracked</code></em>. Tracked files are files that were in the last <strong>snapshot</strong>, as well as any newly <strong>staged files</strong>; they can be <code>unmodified</code>, <code>modified</code>, or <code>staged</code>. In short, tracked files are files that Git knows about. As you edit files, Git sees them as modified, because you’ve changed them since your last commit. As you work, you selectively stage these modified files and then commit all those staged changes, and the cycle repeats.</p>
+<p><img src="a.png" alt=""></p>
+<h3 id="modified---unmodified">Modified -&gt; Unmodified</h3>
+<p>早上接到老板的命令, 把昨天实现的功能再修改一下, 然后还没吃早饭你的开始各种操作, 俩小时整好了, 正准备add, commit,  然后突然老板打电话说客户又不想要了(WTF?), 然后你要一行一行把代码修改回之前的的内容吗?  不要怕, git可以帮助你,</p>
+<p>理论不如实践, 我们修改一下<code>a.txt</code>(注意<code>a.txt</code>已经是tracked file), 然后观察它的状态:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="s2">&#34;hello&#34;</span> &gt; a.txt 
+</span></span><span class="line"><span class="cl">$ git status 
+</span></span><span class="line"><span class="cl">On branch main
+</span></span><span class="line"><span class="cl">Changes not staged <span class="k">for</span> commit:
+</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git add &lt;file&gt;...&#34;</span> to update what will be committed<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git restore &lt;file&gt;...&#34;</span> to discard changes in working directory<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	modified:   a.txt
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">no changes added to commit <span class="o">(</span>use <span class="s2">&#34;git add&#34;</span> and/or <span class="s2">&#34;git commit -a&#34;</span><span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Git提示了很多, <code>git restore &lt;file&gt;...</code>就是撤销刚刚的修改<code>a.txt</code>,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ git restore a.txt 
+</span></span><span class="line"><span class="cl">$ git status
+</span></span><span class="line"><span class="cl">On branch main
+</span></span><span class="line"><span class="cl">nothing to commit, working tree clean
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果修改一个untracked file, git 没保存过它之前的内容, 也就不存在 <code>git restore</code> 这一说, 如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ touch e.txt 
+</span></span><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="s2">&#34;hello&#34;</span> &gt; e.txt 
+</span></span><span class="line"><span class="cl">$ git status       
+</span></span><span class="line"><span class="cl">On branch main
+</span></span><span class="line"><span class="cl">Untracked files:
+</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git add &lt;file&gt;...&#34;</span> to include in what will be committed<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	e.txt
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">nothing added to commit but untracked files present <span class="o">(</span>use <span class="s2">&#34;git add&#34;</span> to track<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>只是提示我们去使用<code>git add</code>去track这个文件</p>
+<h3 id="staged---modified">Staged -&gt; Modified</h3>
+<p>如果你老板在你刚stage文件到staging area的时候给你打电话(还没commit), 那你应该怎么把文件从staged变回没修改之前呢?</p>
+<p>分两步:</p>
+<ul>
+<li>Staged-&gt;Modified</li>
+<li>Modified-&gt;Unmodified 上面我们已经讨论过</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="s2">&#34;hi&#34;</span> &gt; a.txt 
+</span></span><span class="line"><span class="cl">$ git add a.txt 
+</span></span><span class="line"><span class="cl">$ git status
+</span></span><span class="line"><span class="cl">On branch main
+</span></span><span class="line"><span class="cl">Changes to be committed:
+</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git restore --staged &lt;file&gt;...&#34;</span> to unstage<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	modified:   a.txt
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 根据提示从staged-&gt;modified</span>
+</span></span><span class="line"><span class="cl">$ git restore --staged a.txt 
+</span></span><span class="line"><span class="cl">$ git status
+</span></span><span class="line"><span class="cl">On branch main
+</span></span><span class="line"><span class="cl">Changes not staged <span class="k">for</span> commit:
+</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git add &lt;file&gt;...&#34;</span> to update what will be committed<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git restore &lt;file&gt;...&#34;</span> to discard changes in working directory<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	modified:   a.txt
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">no changes added to commit <span class="o">(</span>use <span class="s2">&#34;git add&#34;</span> and/or <span class="s2">&#34;git commit -a&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 根据提示从modified-&gt;unmodified</span>
+</span></span><span class="line"><span class="cl">$ git restore a.txt 
+</span></span><span class="line"><span class="cl">$ git status
+</span></span><span class="line"><span class="cl">On branch main
+</span></span><span class="line"><span class="cl">nothing to commit, working tree clean
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="tracked---untracked">Tracked -&gt; Untracked</h2>
+<p>To remove a file from Git, you have to remove it from your tracked files (more accurately, remove it from your staging area) and then commit. The <code>git rm</code> command does that, and also removes the file from your working directory so you don’t see it as an untracked file the next time around.</p>
+<p>If you modified the file or had already added it to the <strong>staging area</strong>, you must force the removal with the <code>-f</code> option. This is a safety feature to prevent accidental removal of data that hasn’t yet been recorded in a snapshot and that can’t be recovered from Git.</p>
+<p>Another useful thing you may want to do is to keep the file in your <strong>working tree</strong> but remove it from your staging area. In other words, <strong>you may want to keep the file on your hard drive but not have Git track it anymore</strong>. This is particularly useful if you forgot to add something to your <code>.gitignore</code> file and accidentally staged it, like a large log file or a bunch of <code>.a</code> compiled files. To do this, use the <code>--cached</code> option:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ git rm --cached a.txt
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="git-restore-vs-git-rm">git restore vs git rm</h2>
+<p>Because <code>git restore</code> is about <em>copying</em> a file or files, it needs to know <em>where to get the files</em>. There are three possible sources:</p>
+<ul>
+<li>the current, or <code>HEAD</code>, commit (which must exist); or</li>
+<li>any arbitrary commit that you specify (which must exist); or</li>
+<li>Git&rsquo;s <em>index</em> aka <em>staging area</em>.</li>
+</ul>
+<p>Because <code>git rm</code> is about <em>removing</em> a file or files, it only needs to know the name(s) of the file(s) to remove. Adding <code>--cached</code> tells <code>git rm</code> to remove these files <em>only</em> from <strong>Git&rsquo;s index aka <em>staging area</em>.</strong></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/git/">Git</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/inwk/phys/graphical-convolution/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">不定积分和卷积 Graphical Convolution - 课堂笔记</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/git/006-git-three-trees/">
+            <span class="next-text nav-default">Three Trees &amp; HEAD in Git</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
