@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Javascript 中的 Promise 对象和异步函数 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Promise 想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下, 1 2 3 4 5 6 7 8 9 10 11 12 // 创建一个 Promise 对象, 注意参数, 以及参数的" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/js/basics/async-await/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Javascript 中的 Promise 对象和异步函数" />
+<meta property="og:description" content="1. Promise 想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下, 1 2 3 4 5 6 7 8 9 10 11 12 // 创建一个 Promise 对象, 注意参数, 以及参数的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/js/basics/async-await/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-06-16T00:34:29+00:00" />
+<meta property="article:modified_time" content="2023-06-16T00:34:29+00:00" />
+<meta itemprop="name" content="Javascript 中的 Promise 对象和异步函数">
+<meta itemprop="description" content="1. Promise 想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下, 1 2 3 4 5 6 7 8 9 10 11 12 // 创建一个 Promise 对象, 注意参数, 以及参数的"><meta itemprop="datePublished" content="2023-06-16T00:34:29+00:00" />
+<meta itemprop="dateModified" content="2023-06-16T00:34:29+00:00" />
+<meta itemprop="wordCount" content="2379">
+<meta itemprop="keywords" content="JavaScript," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Javascript 中的 Promise 对象和异步函数"/>
+<meta name="twitter:description" content="1. Promise 想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下, 1 2 3 4 5 6 7 8 9 10 11 12 // 创建一个 Promise 对象, 注意参数, 以及参数的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Javascript 中的 Promise 对象和异步函数</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-06-16 </span>
+        <div class="post-category">
+            <a href="/categories/javascript/"> JavaScript </a>
+            <a href="/categories/basics/"> Basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-promise">1. Promise</a></li>
+        <li><a href="#2-async--await">2. async &amp; await</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-promise">1. Promise</h2>
+<p>想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// 创建一个 Promise 对象, 注意参数, 以及参数的参数, 😂
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">myPromise</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;Hi, World!&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span> <span class="mi">100</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myPromise</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myPromise</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="mi">200</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>打印如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Promise { &lt;pending&gt; }
+</span></span><span class="line"><span class="cl">Promise { &#39;Hi, World!&#39; }
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到, 刚开始 <code>myPromise</code> 的状态是 pending, 过了 100ms 之后调用了 <code>resolve()</code> , 使 promise 变成非 pending 状态, 此时打印 <code>myPromise</code> 可以看到其值就是 <code>resolve()</code> 的参数, 这样很麻烦, 因为我们还得故意让程序睡眠 200ms 才能打印出其值,</p>
+<p>我们知道每个 promise 对象都有一个 <code>then()</code> 方法, 该方法在 promise 对象的状态为 not pending 的时候会被自动调用, 所以上面的代码可以改进一下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">myPromise</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;Hi, World!&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span> <span class="mi">100</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">myPromise</span><span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Hi, World!
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里注意, <code>then()</code> 的参数是一个函数(假设改函数叫 func), 则函数 func 只可接受一个参数, 这个参数就是 <code>then()</code> 用来传递 promise 对象的值的, 在这里也就是字符串 <code>'Hi, World!'</code>, 所以你看这里, 当 <code>myPromise</code> 状态为 not pending 时, 其函数 <code>then()</code> 才会被调用, 然后<code>then()</code> 会把 <code>myPromise</code> 的值这里也就是 <code>'Hi, World!'</code> 当作参数传递给那个 callback function, 这一点很重要, 即 <code>then()</code> 会自动把其所属的 promise 对象的值作为参数传递给其 callback function,</p>
+<p>另外注意, <code>then()</code> 并不会阻塞程序, 就好像是 JS 引擎会持续监控处于 pending 状态的 promise 对象, 当这些 promise 对象状态为 not pending 时, 他们的 <code>then()</code> 函数就会被自动调用,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">myPromise</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;Hi, World!&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span> <span class="mi">100</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">myPromise</span><span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myPromise</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面这段代码会打印:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nb">Promise</span> <span class="p">{</span> <span class="o">&lt;</span><span class="nx">pending</span><span class="o">&gt;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Hi</span><span class="p">,</span> <span class="nx">World</span><span class="o">!</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>证明 <code>then()</code> 并不会阻塞程序, 经过了这个例子你知道了 Promise 对象是什么吧? 有两个状态, pending 和 not pending, js 引擎会根据 promise 对象的状态来调用其 <code>then()</code> 函数, 怎么改变一个 promise 对象的状态呢?  调用创建 promise 对象的时候穿进来的两个参数即 <code>resolve()</code> 或 <code>reject()</code>,</p>
+<p>来看看专业描述:</p>
+<p>A promise in JavaScript is an object that may <strong>produce</strong> a single value in the future: either a resolved value, or a reason that it&rsquo;s not resolved (e.g., a network error occurred). It will be in one of 3 possible states:</p>
+<ul>
+<li><strong>Fulfilled:</strong> e.g., <code>resolve()</code> was called</li>
+<li><strong>Rejected:</strong> e.g., <code>reject()</code> was called</li>
+<li><strong>Pending:</strong> not yet fulfilled or rejected</li>
+</ul>
+<p>Each promise object has a <code>then()</code> method, and the <em>eventual state</em> of a <em>pending promise</em> can either be <em><strong>fulfilled</strong></em> with a value or <em><strong>rejected</strong></em> with a reason (error).</p>
+<h2 id="2-async--await">2. async &amp; await</h2>
+<p>知道了什么是 Promise 对象后, 再来看异步函数,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;https://example.com&#39;</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">response</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">text</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里注意 callback 参数名字可以随意取, 之所以第一个 callback 的参数叫 <code>response</code> 是因为 <code>fetch()</code> 返回的是一个 promise 对象, 该 promise 的值是一个 Response 对象, 至于第二个 callback 也是, 叫 <code>text</code> 的原因是 Response 对象的 <code>text()</code> 函数返回一个值为字符串的 promise 对象, 因为 <code>fetch()</code> 和 <code>response.text()</code> 都返回一个 promise 对象, 所以我们才可以连续调用 <code>then()</code>, 别忘了 <code>then()</code> 是promise 对象的函数, 如果不考虑 readability 我们可以改成如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;https://example.com&#39;</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">value</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>又因为 arrow function的特性, 即不用 <code>{}</code> 包裹函数体, 则默认返回第一行代码, 即</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="p">()</span> <span class="p">=&gt;</span> <span class="s1">&#39;hello world&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 等价于
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="s1">&#39;hello world&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>所以上面代码又可以简写为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;https://example.com&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">response</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">text</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">text</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">text</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意以下两点:</p>
+<ul>
+<li>每个 Promise 对象都有一个 <code>then()</code> 和 <code>catch()</code> 方法,</li>
+<li>每个异步函数都会返回一个 promise,  explicitly or implicitly,</li>
+</ul>
+<p>所以上面我们可以写成 <code>fetch().then(...)</code> 的原因是 <code>fetch()</code> 是个异步函数, 所以它也会返回一个 promise 对象, 因此 <code>fetch()</code> 后面的<code>.then()</code> 调用的其实是 <code>fetch()</code> 所返回的 promise 对象的 <code>then()</code> 函数,</p>
+<p>另外需要注意的是, 调用 <code>fetch()</code> 后, <code>fetch()</code> <strong>立即</strong>就返回了个 promise 对象, 只是这时该 promise 对象的状态为 pending, 当 <code>fetch()</code> 的操作完成, 即当 <code>resolve()</code> 或 <code>reject()</code> 被调用的时候, 该 promise 对象的状态 变为 not pending, 此时此 promise 的函数 <code>then()</code> 将会被自动调用,</p>
+<p>前面我们说到, 调用异步函数会立即返回一个处于 pending 状态的 promise 对象, 主程序接着往下执行, 至于返回的那个 promise 对象, js 引擎会在其状态变为 not pending 的时候调用其 <code>then()</code> 函数, 有时候我们的下一步操作需要前一步的结果, 这时候我们可以用 <code>then()</code> 进行嵌套, 但我们不可能把之后所有的代码都嵌套在 <code>then()</code> 吧, 这样可读性也不好, 这个时候就需要用到 <code>await</code>, <code>await</code> 可以阻塞主程序, 知道其修饰的异步函数执行完成,</p>
+<p>当然 <code>await</code> 还附加一个功能, 就是本来一个异步函数返回的是一个 promise 对象, 对于一个 promise 对象, 我们肯定需要调用其 <code>then()</code> 函数, 不然执行完了, 那值没有用, 还调用那个异步函数干嘛呢? 若我们调用异步函数的时候在前修饰 <code>await</code>, 此时该异步函数就<strong>不会立即返回</strong>, 而是执行完后才会返回, 且返回的是 promise 对象的值, 而不是一个 promise 对象, 这里我们看段代码, 分析一下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">getData</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;https://example.com&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kr">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">getData</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 打印 获取到的html文件的内容
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>根据上面的分析, 因为前面加了 <code>await</code>,  <code>await fetch('https://example.com')</code> 返回的是一个 promise 对象的值, 并不是一个 promise 对象, 那这个值是什么呢? 是个字符串还是个整数, 又或者是其它类的对象?</p>
+<p>想回答这个问题, 我们需要知道当没有被 <code>await</code> 修饰的时候 <code>fetch()</code> 返回的是什么呢? 当然是一个 promise 对象, 什么样的 promise 对象呢? 我的意思是这个 promise 对像的值是什么?  答: <code>fetch()</code> returns a promise that resolves with a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response"><code>Response</code></a> object.</p>
+<p>所以我们知道了, <code>await fetch('https://example.com')</code> 返回的是一个 Response 对象, 那为什么我们之后的代码 <code>response.text()</code> 又用 <code>await</code> 修饰呢? 原因很简单, <code>response.text()</code> 返回的也是个 promise 对象, 我们不想在获取到其 text 之前让主程序继续执行, 所以使用 await 进行阻塞, 我们来看看文档描述:</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Response/json"><code>Response.json()</code></a>: Returns a promise that resolves with the result of parsing the response body text as <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON"><code>JSON</code></a>.</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Response/text"><code>Response.text()</code></a>: Returns a promise that resolves with a text representation of the response body.</p>
+<p>验证了我们的猜想, 且可能细心的同学会发现函数 <code>getData()</code>  最后返回的是 <code>await response.text()</code>, 虽然 <code>response.text()</code> 返回的是一个 promise 对象, 但因为修饰了 <code>await</code> 此时返回的是 promise 对象的值, 根据上面 <code>Response.text()</code> 描述, 此时返回的就是个字符串, 那为什么我们可以使用<code>getData().then(...)</code>呢?</p>
+<p>答案是: Async functions always return a promise. If the return value of an async function is not explicitly a promise, <strong>it will be implicitly wrapped in a promise</strong>.</p>
+<p>所以</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>会被转换为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Promise.resolve(1) 创建一个 promise 对象, 值为 1
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>所以, 你知道为什么我们可以使用 <code>getData().then(...)</code> 了吧, 假如 <code>return await response.text()</code> 返回的是 <code>'hello world'</code>, 那最后一行代码就会变为 <code>return Promise.resolve('hello world')</code> , 再之后的事, <code>then()</code> 是怎么把 promise 的值当作参数传给 callback function的过程, 前面已经介绍, 不再赘述,</p>
+<p>另外注意, 异步函数 <code>getData()</code> 必须要有 return 语句, 否则其返回的 promise 对象的值为 undefined, 即:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">getData</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;https://example.com&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">txt</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">txt</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">getData</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 打印: undefined
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>另外还想加一点,</p>
+<p>The <code>then()</code> function returns a <strong>new promise</strong>, different from the original:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">doSomething</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">promise2</span> <span class="o">=</span> <span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">successCallback</span><span class="p">,</span> <span class="nx">failureCallback</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The arguments of <code>then</code> are optional, for instance,  <code>catch(failureCallback)</code> is short for <code>then(null, failureCallback)</code></p>
+<p>也就是说我们上面调用的 promise 对象的 <code>then()</code> 函数, 其实是有两个参数的, 即第一个参数是当 promise 对象状态为 <code>Fulfilled</code> 的时候调用的, 第二个参数是当该 promise 对象的状态为 <code>Rejected</code> 也就是执行失败的时候调用的, 一般我们写成 <code>.catch(failureCallback)</code> 而不是 <code>.then(null, failureCallback)</code></p>
+<p>参考:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises">Using promises - JavaScript | MDN</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">async function - JavaScript | MDN</a></li>
+<li><a href="https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-promise-27fc71e77261">Master the JavaScript Interview: What is a Promise? | by Eric Elliott | JavaScript Scene | Medium</a></li>
+<li><a href="https://www.freecodecamp.org/news/what-is-promise-in-javascript-for-beginners/">What is a Promise? JavaScript Promises for Beginners</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-06-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/javascript/">JavaScript</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/python/basics/basic/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Python 基础</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/other/modules-golang-python-javascript/">
+            <span class="next-text nav-default">Python Golang Javascript中的模块对比以及Python中的__name__</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

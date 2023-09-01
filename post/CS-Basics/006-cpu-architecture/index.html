@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Hyper-Threading &amp; Physical Threads - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. CPU 结构 单核CPU的基本结构如下: 可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register &#43; Cache), 然后由通过总线进行IO与Main Memory进行通信, 那么多" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/cs-basics/006-cpu-architecture/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Hyper-Threading &amp; Physical Threads" />
+<meta property="og:description" content="1. CPU 结构 单核CPU的基本结构如下: 可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register &#43; Cache), 然后由通过总线进行IO与Main Memory进行通信, 那么多" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/cs-basics/006-cpu-architecture/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-28T15:47:18+00:00" />
+<meta property="article:modified_time" content="2023-05-28T15:47:18+00:00" />
+<meta itemprop="name" content="Hyper-Threading &amp; Physical Threads">
+<meta itemprop="description" content="1. CPU 结构 单核CPU的基本结构如下: 可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register &#43; Cache), 然后由通过总线进行IO与Main Memory进行通信, 那么多"><meta itemprop="datePublished" content="2023-05-28T15:47:18+00:00" />
+<meta itemprop="dateModified" content="2023-05-28T15:47:18+00:00" />
+<meta itemprop="wordCount" content="497">
+<meta itemprop="keywords" content="Concurrency," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hyper-Threading &amp; Physical Threads"/>
+<meta name="twitter:description" content="1. CPU 结构 单核CPU的基本结构如下: 可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register &#43; Cache), 然后由通过总线进行IO与Main Memory进行通信, 那么多"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Hyper-Threading &amp; Physical Threads</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-28 </span>
+        <div class="post-category">
+            <a href="/categories/cs-basics/"> CS Basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-cpu-结构">1. CPU 结构</a></li>
+        <li><a href="#2-hyper-threading--physical-threads">2. Hyper-Threading &amp; Physical Threads</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-cpu-结构">1. CPU 结构</h2>
+<p>单核CPU的基本结构如下:</p>
+<p><img src="a.png" alt="a"></p>
+<p>可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register + Cache), 然后由通过总线进行IO与Main Memory进行通信,</p>
+<p>那么多核CPU即有多个这种独立的核心(ALU, CU, Memory (Register + Cache))执行命令, 最后的结果交给与CPU相连的总线进行处理, 多核CPU架构如下:</p>
+<p><img src="b.png" alt="b"></p>
+<h2 id="2-hyper-threading--physical-threads">2. Hyper-Threading &amp; Physical Threads</h2>
+<p>A single physical CPU core with hyper-threading or simultaneous multithreading appears as two logical CPUs to an operating system. The CPU is still a single CPU, so it’s a little bit of a cheat. While the operating system sees two CPUs for each core, the actual CPU hardware only has a single set of execution resources for each core. The CPU pretends it has more cores than it does, and it uses its own logic to speed up program execution. In other words, the operating system is tricked into seeing two CPUs for each actual CPU core.</p>
+<p>Hyper-threading allows the two logical CPU cores to share physical execution resources. This can speed things up somewhat — if one virtual CPU is stalled and waiting, the other virtual CPU can borrow its execution resources. Hyper-threading can speed your system up, but it’s nowhere near as good as having actual additional cores.</p>
+<p>Most processors can use a process called simultaneous multithreading or, if it’s an Intel processor, <strong>Hyper-threading</strong> (the two terms mean the same thing) to <strong>split a core into virtual cores, which are called threads</strong>. For example, AMD CPUs with four cores use simultaneous multithreading to provide eight threads, and most Intel CPUs with two cores use Hyper-threading to provide four threads.</p>
+<p>Some apps take better advantage of multiple threads than others. Lightly-threaded apps, like games, don&rsquo;t benefit from a lot of cores, while most video editing and animation programs can run much faster with extra threads.</p>
+<blockquote>
+<p><strong>Note:</strong> Strictly speaking, <em>only</em> Intel processors have hyper-threading, however, the term is sometimes used colloquially to refer to any kind of simultaneous multithreading.</p>
+</blockquote>
+<p>The Windows Task Manager shows this fairly well. Here, for example, you can see that this system has one actual CPU (socket) and 8 cores. Simultaneous multithreading makes each core look like two CPUs to the operating system, so it shows 16 logical processors.</p>
+<p><img src="c.png" alt="c"></p>
+<p>参考:</p>
+<ul>
+<li><a href="https://www.howtogeek.com/194756/cpu-basics-multiple-cpus-cores-and-hyper-threading-explained/">CPU Basics: What Are Cores, Hyper-Threading, and Multiple CPUs?</a></li>
+<li><a href="https://www.baeldung.com/cs/core-vs-cpu">Differences Between Core and CPU | Baeldung on Computer Science</a></li>
+<li><a href="https://www.tomshardware.com/news/cpu-core-definition,37658.html">What Is a CPU Core? A Basic Definition | Tom&rsquo;s Hardware</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/concurrency/">Concurrency</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/advance/003-go-scheduler-1/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go Scheduler (2) - Go Advanced</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/other/c-go-java-python-memory-strucutre/">
+            <span class="next-text nav-default">C Go Java Python内存结构及对比</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Shell Expansion - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Shell Expansion When the shell receives a command, either from the user typing at the keyboard, or from a shell script, it breaks it up into words. After this happens, the shell performs seven operations on the words, which can change how they are interpreted. There are seven operations are collectively known as &amp;lsquo;shell expansion&amp;rsquo;. The seven operations that the shell performs are: Brace Expansion - expanding values between" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/linux/003-shell-expansion/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Shell Expansion" />
+<meta property="og:description" content="1. Shell Expansion When the shell receives a command, either from the user typing at the keyboard, or from a shell script, it breaks it up into words. After this happens, the shell performs seven operations on the words, which can change how they are interpreted. There are seven operations are collectively known as &lsquo;shell expansion&rsquo;. The seven operations that the shell performs are: Brace Expansion - expanding values between" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/linux/003-shell-expansion/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-08-26T11:30:20+00:00" />
+<meta property="article:modified_time" content="2023-08-26T11:30:20+00:00" />
+<meta itemprop="name" content="Shell Expansion">
+<meta itemprop="description" content="1. Shell Expansion When the shell receives a command, either from the user typing at the keyboard, or from a shell script, it breaks it up into words. After this happens, the shell performs seven operations on the words, which can change how they are interpreted. There are seven operations are collectively known as &lsquo;shell expansion&rsquo;. The seven operations that the shell performs are: Brace Expansion - expanding values between"><meta itemprop="datePublished" content="2023-08-26T11:30:20+00:00" />
+<meta itemprop="dateModified" content="2023-08-26T11:30:20+00:00" />
+<meta itemprop="wordCount" content="1049">
+<meta itemprop="keywords" content="Linux,Bash," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Shell Expansion"/>
+<meta name="twitter:description" content="1. Shell Expansion When the shell receives a command, either from the user typing at the keyboard, or from a shell script, it breaks it up into words. After this happens, the shell performs seven operations on the words, which can change how they are interpreted. There are seven operations are collectively known as &lsquo;shell expansion&rsquo;. The seven operations that the shell performs are: Brace Expansion - expanding values between"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Shell Expansion</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-08-26 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> Linux </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-shell-expansion">1. Shell Expansion</a></li>
+        <li><a href="#2-wildcard-pattern">2. Wildcard Pattern</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-shell-expansion">1. Shell Expansion</h2>
+<p>When the shell receives a command, either from the user typing at the keyboard, or from a shell script, it breaks it up into words. After this happens, the shell performs seven operations on the words, which can change how they are interpreted. There are seven operations are collectively known as &lsquo;shell expansion&rsquo;.</p>
+<p>The seven operations that the shell performs are:</p>
+<ol>
+<li>Brace Expansion - expanding values between braces, such as <code>file{1..3}</code> into <code>file1 file2 file3</code></li>
+<li>Tilde Expansion - expanding the <code>~</code> tilde symbol for the home directory into the path to the home directory, such as <code>~/effective-shell</code> into <code>/home/dwmkerr/effective-shell</code></li>
+<li>Parameter Expansion - expanding terms that start with a <code>$</code> symbol into parameter values, such as <code>$HOME</code> into the value of the variable named <code>HOME</code></li>
+<li>Command Substitution - evaluation of the contents of <code>$(command)</code> sequences, which are used to run commands and return the results to the shell command line</li>
+<li>Arithmetic Expansion - evaluation of the contents of <code>$((expression))</code> sequences, which are used to perform basic mathematical operations</li>
+<li>Word Splitting - once all of the previous operations are run, the shell splits the command up into &lsquo;words&rsquo;, which are the units of text that you can run loops over</li>
+<li>Pathname Expansion - the shell expands wildcards and special characters in pathnames, such as <code>*.txt</code> into the set of files that are matched by the sequence</li>
+</ol>
+<p><strong>Brace Expansion</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mkdir /tmp/<span class="o">{</span>one,two,three<span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># The line above is expanded to:</span>
+</span></span><span class="line"><span class="cl">mdkir /tmp/one /tmp/two /tmp/three
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">touch file<span class="o">{</span>1..5<span class="o">}</span>.txt
+</span></span><span class="line"><span class="cl"><span class="c1"># The line above is expanded to:</span>
+</span></span><span class="line"><span class="cl">touch file1.txt file2.txt file3.txt file4.txt file5.txt
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> x in <span class="o">{</span>0..10..2<span class="o">}</span><span class="p">;</span> <span class="k">do</span> print <span class="nv">$x</span><span class="p">;</span> <span class="k">done</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># The line above is expanded to:</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> x in <span class="m">0</span> <span class="m">2</span> <span class="m">4</span> <span class="m">6</span> <span class="m">8</span> 10<span class="p">;</span> <span class="k">do</span> print <span class="nv">$x</span><span class="p">;</span> <span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Parameter Expansion</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nv">fruit</span><span class="o">=</span>apples
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;I like </span><span class="nv">$fruit</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># The line above is expanded to:</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;I like apples&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When using parameter expansion it is generally preferable to surround the name of the parameter with braces - this allows you to tell the shell unambiguously what the name of the parameter is. For example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;My backup folder is: </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">backup&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># The line above is expanded to:</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;My backup folder is: /home/dwmkerrbackup&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>应该尽量使用<code>&quot;My backup folder is: ${HOME}backup&quot;</code>, 而不是<code>&quot;I like $fruit&quot;</code></p>
+<p><strong>Tilde Expansion</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">cd</span> ~/effective-shell
+</span></span><span class="line"><span class="cl"><span class="c1"># The line above is expanded to:</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> <span class="nv">$HOME</span>/effective-shell
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里在插一段, 如果我们想看实际的expansion, 就像上面的例子那样, 我们怎么看呢? 通过<code>echo</code>就可以看到了,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ls
+</span></span><span class="line"><span class="cl">one.txt
+</span></span><span class="line"><span class="cl">two.txt
+</span></span><span class="line"><span class="cl">three.dat
+</span></span><span class="line"><span class="cl">$ <span class="nb">echo</span> rm *.txt
+</span></span><span class="line"><span class="cl">rm one.txt two.txt
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>假如刚开始我不知道<code>*</code>代表什么, 那我现在就可以这样查看展开后的指令:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ tree -L <span class="m">2</span>
+</span></span><span class="line"><span class="cl">.
+</span></span><span class="line"><span class="cl">├── a.txt
+</span></span><span class="line"><span class="cl">├── b.txt
+</span></span><span class="line"><span class="cl">└── sub
+</span></span><span class="line"><span class="cl">    └── a.txt
+</span></span><span class="line"><span class="cl">$ <span class="nb">echo</span> grep -r <span class="s2">&#34;a.txt&#34;</span> *        
+</span></span><span class="line"><span class="cl">grep -r a.txt a.txt b.txt sub
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="2-wildcard-pattern">2. Wildcard Pattern</h2>
+<p>A string is a <em><strong>wildcard pattern</strong></em> if it contains one of the characters <code>?</code>, <code>*</code>, or <code>[</code>,  Globbing is the operation that expands a wildcard pattern into the list of <strong>pathnames</strong> matching the pattern.  Matching is defined by:</p>
+<ul>
+<li>A <code>?</code> (not between brackets) matches any single character.</li>
+<li>A <code>*</code> (not between brackets) matches any string, including the empty string.</li>
+</ul>
+<p>在上面已经提到,在 shell 中 <code>*</code> 会被 interpreter 展开, 前提是它不能在双引号里, 否则无特殊意义,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># Expands to: tar xvf file1.tar file2.tar file42.tar ...</span>
+</span></span><span class="line"><span class="cl">tar xvf *.tar
+</span></span><span class="line"><span class="cl"><span class="c1"># 删除目录下所有以.txt结尾的文件</span>
+</span></span><span class="line"><span class="cl">rm *.txt
+</span></span><span class="line"><span class="cl"><span class="c1"># 使用quote就不会展开</span>
+</span></span><span class="line"><span class="cl">$ rm <span class="s2">&#34;*.txt&#34;</span>
+</span></span><span class="line"><span class="cl">rm: *.txt: No such file or directory
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Bash expands globs which appear <strong>unquoted</strong> in commands, by matching filenames relative to the current directory.</p>
+</blockquote>
+<p>Note that wildcard patterns are not regular expressions, although they are a bit similar.  First of all, <strong>they match filenames, rather than text</strong>, and secondly, the conventions are not the same: for example, in a regular expression &lsquo;*&rsquo; means zero or more copies of the preceding thing.</p>
+<p><code>*</code> 在 Regex 里的意义是匹配它前面的字符出现 0 或多次:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;colour\ncolor\ncolouur\n&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;colou*r&#39;</span>                          
+</span></span><span class="line"><span class="cl">colour
+</span></span><span class="line"><span class="cl">color
+</span></span><span class="line"><span class="cl">colouur
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Wildcard Pattern 例子, 使用 grep 查找文件内容:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># Search for a string in your current directory and all other subdirectories</span>
+</span></span><span class="line"><span class="cl">$ grep -r ‘hello’ *  
+</span></span><span class="line"><span class="cl">a.txt:hello world
+</span></span><span class="line"><span class="cl">sub/c.txt:hello, this is...
+</span></span><span class="line"><span class="cl">sub/b.txt:hello, this is...
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果好奇通配符*代表什么意思, 可以使用echo查看一下展开式, 如下:</span>
+</span></span><span class="line"><span class="cl">$ <span class="nb">echo</span> grep -r ‘hello’ *
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="conclusion">Conclusion</h2>
+<ul>
+<li>Bash一般用 <code>“ ”</code> quote 字符串, 为了防止 bash 解释错误, 写 Regex 表达式用 <code>‘ ’</code> 来 quote,
+<ul>
+<li>You should always <a href="https://www.gnu.org/software/bash/manual/bash.html#Quoting">quote</a> regular expressions for <code>grep</code>&ndash;and <a href="https://www.gnu.org/software/bash/manual/bash.html#Single-Quotes">single quotes</a> are usually best.  <a href="https://askubuntu.com/a/957504/1690738">source</a></li>
+</ul>
+</li>
+<li>单引号中, 所有特殊字符都失去其本身意义</li>
+<li>Bash expands globs which appear <strong>unquoted</strong> in commands. <code>rm &quot;*.txt&quot;</code> won&rsquo;t expand.</li>
+<li>应该尽量使用<code>&quot;My backup folder is: ${HOME}backup&quot;</code>, 而不是 <code>&quot;I like $fruit&quot;</code></li>
+</ul>
+<p>参考:</p>
+<ul>
+<li>
+<p><a href="https://man7.org/linux/man-pages/man7/glob.7.html">glob(7) - Linux manual page</a></p>
+</li>
+<li>
+<p><a href="https://effective-shell.com/part-6-advanced-techniques/understanding-shell-expansion/">Understanding Shell Expansion | Effective Shell</a></p>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-08-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/linux/">Linux</a>
+          <a href="/tags/bash/">Bash</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/practice/tricks/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">os.Getenv() function</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/advance/002-concurrency-with-shared-variables/">
+            <span class="next-text nav-default">Concurrency with Shared Variables - Go Advanced</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>正则表达式常用符号 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="注意 Bash一般都是用“ ”来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用‘ ’进行quote. You should always" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/regex/regex/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="正则表达式常用符号" />
+<meta property="og:description" content="注意 Bash一般都是用“ ”来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用‘ ’进行quote. You should always" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/regex/regex/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-01T23:14:22+00:00" />
+<meta property="article:modified_time" content="2023-05-01T23:14:22+00:00" />
+<meta itemprop="name" content="正则表达式常用符号">
+<meta itemprop="description" content="注意 Bash一般都是用“ ”来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用‘ ’进行quote. You should always"><meta itemprop="datePublished" content="2023-05-01T23:14:22+00:00" />
+<meta itemprop="dateModified" content="2023-05-01T23:14:22+00:00" />
+<meta itemprop="wordCount" content="1650">
+<meta itemprop="keywords" content="Regex," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="正则表达式常用符号"/>
+<meta name="twitter:description" content="注意 Bash一般都是用“ ”来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用‘ ’进行quote. You should always"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">正则表达式常用符号</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-01 </span>
+        <div class="post-category">
+            <a href="/categories/regex/"> Regex </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#1---">1. <code>?</code>, <code>*</code>, <code>.</code></a></li>
+            <li><a href="#2-d-w-s">2. <code>\d</code>, <code>\w</code>, <code>\s</code></a></li>
+            <li><a href="#3-b">3. <code>\b</code></a></li>
+            <li><a href="#4-">4. <code>+</code></a></li>
+            <li><a href="#5---">5. <code>$</code> &amp; <code>^</code></a></li>
+            <li><a href="#6-eg">6. e.g.,</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>注意 Bash一般都是用<code>“ ”</code>来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用<code>‘ ’</code>进行quote.</p>
+<blockquote>
+<p>You should always <a href="https://www.gnu.org/software/bash/manual/bash.html#Quoting">quote</a> regular expressions for <code>grep</code>&ndash;and <a href="https://www.gnu.org/software/bash/manual/bash.html#Single-Quotes">single quotes</a> are usually best.  来源: <a href="https://askubuntu.com/a/957504/1690738">https://askubuntu.com/a/957504/1690738</a></p>
+</blockquote>
+<h3 id="1---">1. <code>?</code>, <code>*</code>, <code>.</code></h3>
+<p><code>?</code> The question mark indicates zero or one occurrences of the <strong>preceding element</strong>. For example, <code>colou?r</code> matches both &ldquo;color&rdquo; and &ldquo;colour&rdquo;. 英文的 &ldquo;颜色&rdquo; 一字, 有两种拼法: color 及 colour。 用 regexp 表达, 可以一石两鸟: colou?r 其中的 ? 表示 「前面的字符可有可无」</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;colour\ncolor\ncolouur\n&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;colou?r&#39;</span>
+</span></span><span class="line"><span class="cl">colour
+</span></span><span class="line"><span class="cl">color
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>*</code> The <strong>asterisk</strong> indicates zero or more occurrences of the preceding element. For example, ab*c matches &ldquo;ac&rdquo;, &ldquo;abc&rdquo;, &ldquo;abbc&rdquo;, &ldquo;abbbc&rdquo;, and so on.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;colour\ncolor\ncolouur\n&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;colou*r&#39;</span>                          
+</span></span><span class="line"><span class="cl">colour
+</span></span><span class="line"><span class="cl">color
+</span></span><span class="line"><span class="cl">colouur
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>.</code>Matches any single character (many applications exclude newlines, and exactly which characters are considered newlines is flavor-, character-encoding-, and platform-specific, but it is safe to assume that the line feed character is included). Within POSIX bracket expressions, the dot character matches a literal dot. For example, <code>a.c</code> matches &ldquo;abc&rdquo;, etc., but <code>[a.c]</code> matches only &ldquo;a&rdquo;, &ldquo;.&rdquo;, or &ldquo;c&rdquo;.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;colour\ncolor\ncolouur\n&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;colo.r&#39;</span>                           
+</span></span><span class="line"><span class="cl">colour
+</span></span><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;colour\ncolor\ncolouur\n&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;colou.r&#39;</span>                          
+</span></span><span class="line"><span class="cl">colouur
+</span></span></code></pre></td></tr></table>
+</div>
+</div><table>
+<thead>
+<tr>
+<th><code>+</code></th>
+<th>代表出現1次以上</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*</code></td>
+<td>代表出現0次以上</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>代表出現0次或1次</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-d-w-s">2. <code>\d</code>, <code>\w</code>, <code>\s</code></h3>
+<ul>
+<li><code>\d</code> 其实就是 <code>[0-9]</code>, &ldquo;任何一个数字&rdquo;</li>
+<li><code>\D</code> 其实就是 <code>[^0-9]</code>, &ldquo;任何一个非数字&rdquo;</li>
+<li><code>\w</code> 其实就是 <code>[a-zA-Z0-9_]</code>, &ldquo;任何一个文数字&rdquo;</li>
+<li><code>\W</code> 其实就是 <code>[^a-zA-Z0-9_]</code>, &ldquo;任何一个非文数字&rdquo;</li>
+<li><code>\s</code> 其实就是 <code>[ \t\n]</code>, &ldquo;任何一个空白类字符&rdquo;,  注意<code>[ \t\n]</code>是前面故意有个空格,</li>
+<li><code>\S</code> 其实就是 <code>[^ \t\n]</code>, &ldquo;任何一个非空白类字符&rdquo;</li>
+</ul>
+<p>计数用, 表达 「前面的样版重复出现多少次」 的 quantifier:</p>
+<ul>
+<li><code>{5}</code> 重复 5 次</li>
+<li><code>{3,7}</code> 重复 3 到 7 次</li>
+<li><code>{3,}</code> 重复至少 3 次</li>
+<li><code>?</code> 可有可无。 相当于 <code>{0,1}</code></li>
+<li><code>*</code> 重复出现任意次， 包含 0 次。 相当于 <code>{0,}</code></li>
+<li><code>+</code> 重复出现任意次, 至少 1 次。 相当于 <code>{1,}</code></li>
+</ul>
+<p>国内的手机号是11位, 所以要查手机号, 我们可以简单的查找大于等于11位数字的字符串, 下面用7位的举例子,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;12345\n12345678\n123\n234567\n1234567&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;\d{7}&#39;</span>        
+</span></span><span class="line"><span class="cl"><span class="m">12345678</span>
+</span></span><span class="line"><span class="cl"><span class="m">1234567</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果想要查找就是7位的数字呢?</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;12345\n12345678\n123\n234567\n1234567&#34;</span> <span class="p">|</span> ggrep -E <span class="s1">&#39;\b[0-9]{7}\b&#39;</span> 
+</span></span><span class="line"><span class="cl"><span class="m">1234567</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="3-b">3. <code>\b</code></h3>
+<p>想要找 &ldquo;port&rdquo; 与 &ldquo;ports&rdquo;, 但又不希望找到 &ldquo;export&rdquo;, &ldquo;portable&rdquo;, &ldquo;important&rdquo; 等等一大堆不相关的单字, 该怎么办? 用 <code>\bports?\b</code> 这里的<code> \b</code> 表示 boundary, 旁边不可有其他文数字。 所谓文数字, 就是英文本母, 数字, 及底线 &ldquo;_&quot;。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;The port is...\nTo export it...\nThere are many ports...\nportable&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;\bports?\b&#39;</span>
+</span></span><span class="line"><span class="cl">The port is...
+</span></span><span class="line"><span class="cl">There are many ports...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="4-">4. <code>+</code></h3>
+<p>The pattern <code>a+</code> will match one or more occurrences of the letter &lsquo;a&rsquo;. It will match strings like &ldquo;a&rdquo;, &ldquo;aa&rdquo;, &ldquo;aaa&rdquo;, and so on, but it will not match an empty string or a string without any &lsquo;a&rsquo; characters.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;aaa\nadd\nsra\ndfgh&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;a+&#39;</span>
+</span></span><span class="line"><span class="cl">aaa
+</span></span><span class="line"><span class="cl">add
+</span></span><span class="line"><span class="cl">sra
+</span></span><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;aaa\nadd\nsra\ndfgh&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;\ba+\b&#39;</span>
+</span></span><span class="line"><span class="cl">aaa
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="5---">5. <code>$</code> &amp; <code>^</code></h3>
+<p><code>$</code> The pattern <code>hello$</code> will match the word &ldquo;hello&rdquo; only if it appears at the end of a line.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;My name is Jack\nHi Jack, this is John\nYou and Jack will come..\ndfHelloJack&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;Jack$&#39;</span>
+</span></span><span class="line"><span class="cl">My name is Jack
+</span></span><span class="line"><span class="cl">dfHelloJack
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>^</code> Can be used to match the start of a line. For instance, the pattern <code>^Hello</code> will match any line that begins with &ldquo;Hello.&rdquo;</p>
+<p>For example, the pattern <code>^hello$</code> will only match the exact string &ldquo;hello&rdquo; and not &ldquo;hello world&rdquo; or &ldquo;say hello.&rdquo;</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;Hell 123\n123456\n123\n123 hello&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;^\d+$&#39;</span>        
+</span></span><span class="line"><span class="cl"><span class="m">123456</span>
+</span></span><span class="line"><span class="cl"><span class="m">123</span>
+</span></span><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;Hell 123\n123456\n123\n123 hello&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;\d{3}&#39;</span>        
+</span></span><span class="line"><span class="cl">Hell <span class="m">123</span>
+</span></span><span class="line"><span class="cl"><span class="m">123456</span>
+</span></span><span class="line"><span class="cl"><span class="m">123</span>
+</span></span><span class="line"><span class="cl"><span class="m">123</span> hello
+</span></span><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;Hell 123\n123456\n123\n123 hello&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;\b\d{3}\b&#39;</span>    
+</span></span><span class="line"><span class="cl">Hell <span class="m">123</span>
+</span></span><span class="line"><span class="cl"><span class="m">123</span>
+</span></span><span class="line"><span class="cl"><span class="m">123</span> hello
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="6-eg">6. e.g.,</h3>
+<p>在一篇文章当中, 抓出所有 「看起来像是机场代码的字符串」 (例如 TPE 台北, KHH 高雄, LAX 洛杉矶, &hellip; 等等): <code>\b[A-Z][A-Z][A-Z]\b</code>。 这里的 <code>[A-Z]</code> 是 [ABCDEFGHIJKLMNOPQRSTUVWXYZ] 的简写, 意思是 「任何一个大写字母」</p>
+<p>如何在一大片文本, 银行账号, 信用卡号&hellip; 当中, 找出看来像是移动电话号码的字符串, 例如 0912345678 或是 0912-345678 或是 0912-345-678 之类的? <code>09\d\d-?\d\d\d-?\d\d\d</code> 这里的<code> \d</code> 是 [0-9] 的简写, 这又是 [0123456789] 的简写, 意思是 「任何一个数字字符」</p>
+<p>想要找一组数字 ip (例如 168.95.1.1 或 163.17.9.176 之类的) 印象中在某个文件内曾看过, 但既不记得精确的数字, 也不记得在那个文件看过, 该怎么办? 可以搜索 <code>\d+\.\d+\.\d+\.\d+</code> 抓出所有数字 ip。 这里的<code> +</code> 表示 「前面的东西, 可以重复出现 1 次, 2 次, 3 次, &hellip; 任意次」。 因为 . 在 regexp 当中有特殊的意义: 「任何一个字符」; 但在这里我们就是要找 &ldquo;.&rdquo; 于是在前面加上 \ 以取消它的特殊意义。</p>
+<p>可以把一个文本文件里面的所有空白列都删掉吗? 这个 regexp 可以抓出所有空白列: <code>^\s*$</code>。 在 regexp 最前面放一个 <code>^</code> 表示您只对 「出现在一列之首」 的样版有兴趣; 在 regexp 的最后面放一个 <code>$</code> 表示您只对 「出现在一列之尾」 的样版有兴趣。 <code>\s</code> 是<code> [\t\n]</code> 的简写, 意思是 「任何一个空白字符」 (包含空格, tab, 等等)。 <code>*</code> 表示 「前面的东西, 可以重复出现 0 次, 1 次, 2 次, &hellip; 任意次」。 这个样版翻译成中文, 就是 「从头到尾都是一片空白的那种列」。</p>
+<table>
+<thead>
+<tr>
+<th><code>\</code></th>
+<th><code>\</code> is used to escape special chars: <code>\*</code>matches <code>*</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[abc]</td>
+<td>any of a, b, or c</td>
+</tr>
+<tr>
+<td>[^abc]</td>
+<td>not a, b, or c</td>
+</tr>
+<tr>
+<td>[a-g]</td>
+<td>character between a &amp; g</td>
+</tr>
+<tr>
+<td>[^adgf]</td>
+<td>代表不是a, d, g或f的字符</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 忽略大小写</span>
+</span></span><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;Hello\nHeal\ntold\nhello&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;(?i)LL&#39;</span> 
+</span></span><span class="line"><span class="cl">Hello
+</span></span><span class="line"><span class="cl">hello
+</span></span><span class="line"><span class="cl"><span class="c1"># 找出带后缀的文件</span>
+</span></span><span class="line"><span class="cl">$ ls /etc/ <span class="p">|</span> egrep <span class="s1">&#39;\.\w+$&#39;</span>  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>参考:</p>
+<ul>
+<li>
+<p><a href="https://www.cyut.edu.tw/~ckhung/b/re/intro.php">Regexp 是什么东东?</a></p>
+</li>
+<li>
+<p><a href="https://digitalfortress.tech/tips/top-15-commonly-used-regex/">Top 15 Commonly Used Regex - Digital Fortress</a></p>
+</li>
+<li>
+<p><a href="https://www.cyut.edu.tw/~ckhung/b/re/rules.php">Perl 常用的 regexp 规则列表</a></p>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/regex/">Regex</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/bugs/bug-regex-grep-lookahead/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">grep不支持Negative Lookahead问题</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/java/backend/spring-boot-embedded-tomcat/">
+            <span class="next-text nav-default">Spring Boot之何为内嵌Tomcat</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
