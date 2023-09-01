@@ -153,6 +153,146 @@ type CommonType struct {
 
 Functions and channels will not be sent in a gob. Attempting to encode such a value at the top level will fail. A struct field of chan or func type is treated exactly like an unexported field and is ignored.
 
+### 2.7. gob.Register method
+
+Register records a type, identified by a value for that type, under its internal type name. That name will identify the concrete type of a value sent or received as an interface variable. **Only types that will be transferred as implementations of interface values need to be registered.** Expecting to be used only during initialization, it panics if the mapping between types and names is not a bijection. 
+
+```go
+func Register(value any)
+```
+
+If you're dealing with concrete types (structs) only, you don't really need it. Once you're dealing with interfaces you must register your concrete type first. 
+
+For example, let's assume we have these struct and interface (the struct implements the interface):
+
+```golang
+type Getter interface {
+    Get() string
+}
+
+type Foo struct {
+    Bar string
+}
+
+func (f Foo)Get() string {
+    return f.Bar
+}
+```
+
+To send a `Foo` over gob **as a `Getter`** and decode it back, we must first call
+
+```golang
+gob.Register(Foo{})
+```
+
+So the flow would be:
+
+```golang
+// init and register
+buf := bytes.NewBuffer(nil)
+gob.Register(Foo{})    
+
+// create a getter of Foo
+g := Getter(Foo{"wazzup"})
+
+// encode
+enc := gob.NewEncoder(buf)
+enc.Encode(&g)
+
+// decode
+dec := gob.NewDecoder(buf)
+var gg Getter
+if err := dec.Decode(&gg); err != nil {
+    panic(err)
+}
+```
+
+Now try removing the `Register` and this won't work because gob wouldn't know how to map things back to their appropriate type.
+
+### 2.8. gob.Register in map
+
+There is another issue, if you have a nested map, then you should register for that type too, 
+
+```go
+expectedCopy := map[interface{}]interface{}{
+	"id": "0007",
+	"cats": map[string]int{
+		"kitten": 3,
+		"milo":   1,
+	}
+}
+```
+
+you should register for `map[interface{}]interface{}` and `map[string]int` before encode `expectedOriginal`, but you don't need to register for a primitive type slice, golang has done that for you:
+
+```go
+func registerBasics() {
+	Register(int(0))
+  ...
+	Register(float32(0))
+	Register(complex64(0i))
+	Register([]uint(nil))
+  ...
+	Register([]bool(nil))
+	Register([]string(nil))
+}
+```
+
+Therefore, if you want encode `expectedOriginal` below, you just need to register for `map[interface{}]interface{}`, don't need to register for `[]string`
+
+```go
+expectedOriginal: map[interface{}]interface{}{
+	"cats": []string{"Coco", "Bella"},
+},
+```
+
+Similary, if you have a slice of custom struct, you have to register for that type, if you want encode `expectedOriginal` below, you have to register for `[]Cat`, otherwise, program will panic: `gob: type not registered for interface: []Cat`,
+
+```go
+type Cat struct {
+	Name string
+}
+
+expectedOriginal := map[interface{}]interface{}{
+	"cats": []Cat{{name: "jack"}},
+}
+```
+
+All of this because we have map `map[interface{}]interface{}`, there is interface, according to [gob package](https://pkg.go.dev/encoding/gob), **Only types that will be transferred as implementations of interface values need to be registered.** If your map here is:
+
+```
+expectedOriginal := map[interface{}][]Cat {
+	"cats": []Cat{{Name: "jack"}},
+}
+```
+
+You don't need to register for type `map[interface{}][]Cat`, 
+
+And don't forget, the first letter of the field of Cat must be Capital, namely, expored fields, otherwise, it (the field) won't encode by gob. 
+
+```go
+type Cat struct {
+	Name string
+}
+
+func main() {
+	m := map[interface{}][]Cat{
+		"cats": []Cat{{Name: "jack"}},
+	}
+	buf := new(bytes.Buffer)
+	enc := gob.NewEncoder(buf)
+	dec := gob.NewDecoder(buf)
+	if err := enc.Encode(m); err != nil {
+		fmt.Sprintf("failed to copy map: %v", err)
+	}
+	result := make(map[interface{}][]Cat)
+	if err := dec.Decode(&result); err != nil {
+		fmt.Sprintf("failed to copy map: %v", err)
+	}
+	fmt.Println(result)
+}
+```
+
 ## 3. encoding/json
 
 - `Marshal()` → to encode GO values to JSON in string format
@@ -220,6 +360,8 @@ References:
 - [Gobs of data - The Go Programming Language](https://go.dev/blog/gob)
 - [gob package - encoding/gob - Go Packages](https://pkg.go.dev/encoding/gob)
 - [difference between encoding/gob and encoding/json](https://stackoverflow.com/questions/41179453/difference-between-encoding-gob-and-encoding-json) 
+- [go - What's the purpose of gob.Register method? - Stack Overflow](https://stackoverflow.com/questions/32676898/whats-the-purpose-of-gob-register-method/32677598#32677598)
+- [go - gob.Register() by type or for each variable? - Stack Overflow](https://stackoverflow.com/questions/31467602/gob-register-by-type-or-for-each-variable)
 
 Learn more: 
 
