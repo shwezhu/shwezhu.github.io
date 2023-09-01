@@ -54,3 +54,4 @@ Learn more: https://olowolo.com/post/hugo-quick-start/
 Hugo will make the url into lowercase automatically, therefore, make sure all you blog files and folders under `/content/post/` are lowercase. Otherwise, you will get 404 for that blog. 
 
 And if you didn't make it lowercase before generate html pages with `hugo` command, then you need delete all the generated html files under `/public/post/` then run `hugo` command again, this should work. 
+
