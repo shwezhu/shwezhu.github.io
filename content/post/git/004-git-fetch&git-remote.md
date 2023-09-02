@@ -1,21 +1,11 @@
 ---
-title: "Origin的本质之被我们忽略的Git Remote操作(git fetch)"
+title: essence of "origin" - git fetch & git remote
 date: 2023-04-21 21:46:44
 categories:
   - git
 tags:
   - git
 ---
-
-## 总结
-
-- origin 是远程仓库 url 的别名, 可以改成其他的, 如 repo, 但是之后push代码时, 需要使用命令 `git push repo master`
-  -  添加远程仓库时指定 url 别名 origin:`git remote add origin git@github.com:shwezhu/MyProject.git`
-  - `git remote add <name> <url>` 
-  - 可以用 ` git remote` 查看当前 url 别名
-  - `git remote rename repo origin` 修改
-- ` git fetch <remote>` 中的 `<remote>`  就是远程仓库的 url, 可以用 url 别名代替 如 origin, repo
-- 配置信息在 ` .git/config ` 
 
 ## git fetch & git remote
 
@@ -67,6 +57,16 @@ git fetch git@github.com:shwezhu/MyProject.git
 ```shell
 git remote add origin git@github.com:shwezhu/MyProject.git
 ```
+
+## conclusion
+
+- origin 是远程仓库 url 的别名, 可以改成其他的, 如 repo, 但是之后push代码时, 需要使用命令 `git push repo master`
+  -  添加远程仓库时指定 url 别名 origin:`git remote add origin git@github.com:shwezhu/MyProject.git`
+  -  `git remote add <name> <url>` 
+  -  可以用 ` git remote` 查看当前 url 别名
+  -  `git remote rename repo origin` 修改
+- ` git fetch <remote>` 中的 `<remote>`  就是远程仓库的 url, 可以用 url 别名代替 如 origin, repo
+- 配置信息在 ` .git/config ` 
 
 参考:
 

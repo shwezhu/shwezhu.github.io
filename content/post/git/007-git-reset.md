@@ -11,15 +11,6 @@ tags:
 
 原文: [Git - Reset Demystified](https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified#_git_reset)
 
-## Conclusion
-
-- HEAD points to branch, branch point to the last commit, 
-  - so HEAD point the last commit, 
-  - when you make HEAD point other commit by using `git reset`, it actually makes current branch point to that commit
-- The first thing `reset` will do is move what HEAD points to. This isn’t the same as changing HEAD itself (which is what `checkout` does); `reset` moves the branch that HEAD is pointing to. This means if HEAD is set to the `master` branch (i.e. you’re currently on the `master` branch), running `git reset 9e5e6a4` will start by making `master` point to `9e5e6a4`
-- Three Tree: HEAD, index, work tree
-- `git reset` will do three things, Move HEAD (update HEAD), Updating the Index, Updating the work tree with `--hard`, 
-
 ## 1. The Workflow 
 
 **Git’s typical workflow** is to record snapshots of your project by manipulating these three trees: 
@@ -34,11 +25,11 @@ Now we want to commit this file, so we first use `git add` to copy content in th
 
 ![c](/007-git-reset/c.png)
 
-Then we run `git commit`, which saves the contents of the **index** as a permanent snapshot, creates a commit object which points to that snapshot, and updates `master` to point to that commit. (这句话信息量很大, 对比下图看看 `git commit`做了什么, 注意 `master` 是个branch)
+Then we run `git commit`, which saves the contents of the **index** as a permanent snapshot, creates a commit object which points to that snapshot, and updates `master` to point to that commit. 
 
 ![d](/007-git-reset/d.png)
 
-If we run `git status`, we’ll see no changes, because all three trees are the same (三个tree: HEAD, Index, Working Directory). 
+If we run `git status`, we’ll see no changes, because all three trees are the same (three tree: HEAD, Index, Working Directory). 
 
 Now we want to make a change to that file and commit it. first, we change the file in our **working directory**:
 
@@ -120,3 +111,12 @@ This is why the output of the `git status` command suggests that you run this to
 We could just as easily not let Git assume we meant “pull the data from HEAD” by specifying a specific commit to pull that file version from. We would just run something like `git reset eb43bf file.txt`.
 
 ![n](/007-git-reset/n.png)
+
+## Conclusion
+
+- HEAD points to branch, branch point to the last commit, 
+  - so HEAD point the last commit, 
+  - when you make HEAD point other commit by using `git reset`, it actually makes current branch point to that commit
+- The first thing `reset` will do is move what HEAD points to. This isn’t the same as changing HEAD itself (which is what `checkout` does); `reset` moves the branch that HEAD is pointing to. This means if HEAD is set to the `master` branch (i.e. you’re currently on the `master` branch), running `git reset 9e5e6a4` will start by making `master` point to `9e5e6a4`
+- Three Tree: HEAD, index, work tree
+- `git reset` will do three things, Move HEAD (update HEAD), Updating the Index, Updating the work tree with `--hard`, 

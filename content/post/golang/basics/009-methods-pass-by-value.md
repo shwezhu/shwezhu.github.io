@@ -1,5 +1,5 @@
 ---
-title: Golang值传递分析之传递指针的规则介绍(Methods, Functions & interface value)
+title: pass by value or reference - golang
 date: 2023-05-16 17:25:04
 categories:
  - golang
@@ -8,68 +8,62 @@ tags:
  - golang
 ---
 
-类似C语言 [Go文档](https://go.dev/doc/faq#methods_on_values_or_pointers) 指出所有传递都是值传递:
-
 > As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an `int` value to a function makes a copy of the `int`, and passing a pointer value makes a copy of the pointer, but not the data it points to. 
+>
+> Source: https://go.dev/doc/faq#methods_on_values_or_pointers
 
-即然是值传递, 那就必须要考虑到参数传递以及函数返回时因拷贝导致的效率问题, 刚好Go里有指针的概念, 我们可以通过传递一个指向较大数据的指针来提高传递的效率, 那什么时候通过传递指针呢, Go文档也有说:
+> Go does not have reference variables, so Go does not have pass-by-reference function call semantics.
+>
+> Source: [There is no pass-by-reference in Go | Dave Cheney](https://dave.cheney.net/2017/04/29/there-is-no-pass-by-reference-in-go)
 
-> There are **two reasons** to use a pointer receiver. The first is so that the method can modify the value that its receiver points to. The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example. 
+## 1. what is a reference variable?
 
-同时这个规则也适用于 methods的 receiver argument, Go文档里专门讨论这个 [choosing a value or pointer receiver](https://go.dev/tour/methods/8). Function的参数传递是传递指针还是值这个很好理解, 我们来验证一下methods的receiver argument, 是不是真的是传递值的时候会复制value:
+In languages like C++ you can declare an *alias*, or an *alternate name* to an existing variable. This is called a *reference variable*.
 
-```go
-type Person struct {
-	name string
-	age  int
+```c++
+#include <stdio.h>
+
+int main() {
+        int a = 10;
+        int &b = a;
+        int &c = b;
+
+        printf("%p %p %p\n", &a, &b, &c); // 0x7ffe114f0b14 0x7ffe114f0b14 0x7ffe114f0b14
+        return 0;
 }
-
-func (person Person) foo1() *Person {
-	return &person
-}
-
-func (person *Person) foo2() *Person {
-	return person
-}
-
-func main() {
-	person := Person{"John", 18}
-	fmt.Printf("main: %p\n", &person)
-	fmt.Printf("foo1: %p\n", person.foo1())
-	fmt.Printf("foo2: %p\n", person.foo2())
-}
-
-main: 0x140000a8018
-foo1: 0x140000a8030
-foo2: 0x140000a8018
 ```
 
-可以看出, 确实我们在使用 struct value `person`调用 `foo1` 的时候并不是它调用的, 而是它的复制本, 在这注意下Go里的概念, 即我们把一个 struct 的 instance 叫 struct value, 而不是 object, Go 里面没有 object 的概念, 但后面为了方便理解, 依然称 struct value 为对象, 
+You can see that `a`, `b`, and `c` all refer to the same memory location. A write to `a` will alter the contents of `b` and `c`. This is useful when you want to declare reference variables in different scopes–namely function calls.
 
-再举个例子:
+## 2. go does not have reference variables
+
+Unlike C++, each variable defined in a Go program occupies a unique memory location.
 
 ```go
-type Rect struct {
-	width float32
-	height float32
-}
-
-func getRect() Rect {
-	rect := Rect{3, 2}
-	fmt.Printf("in getRect(): %p\n", &rect)
-	return rect
-}
-
 func main() {
-	rect := getRect()
-	fmt.Printf("outside getRect(): %p\n", &rect)
+        var a, b, c int
+        fmt.Println(&a, &b, &c) // 0x1040a124 0x1040a128 0x1040a12c
 }
-
-// in getRect(): 0x1400011a020
-// outside getRect(): 0x1400011a018
 ```
 
-因此, 在函数中一般返回对象的指针 (reference of struct value), 而不是直接返回对象的值, 如:
+It is not possible to create a Go program where two variables share the same storage location in memory. It is possible to create two variables whose contents *point* to the same storage location, but that is not the same thing as two variables who share the same storage location.
+
+```go
+func main() {
+        var a int
+        var b, c = &a, &a
+        fmt.Println(b, c)   // 0x1040a124 0x1040a124
+        fmt.Println(&b, &c) // 0x1040c108 0x1040c110
+}
+```
+
+In this example, `b` and c hold the same value–the address of `a`–however, `b` and `c` themselves are stored in unique locations. Updating the contents of `b` would have no effect on `c`.
+
+## 2. struct type 
+
+Therefore, when a function returns a value of struct type or pass a struct value as argument, we usually use a pointer type for better efficiency. If you don't want to modiy the original value of struct, don't pass it as a pointer.  
+
+> The value of a struct here means the object of a struct. 
 
 ``` go
 type Page struct {
@@ -84,6 +78,60 @@ func loadPage(title string) *Page {
 }
 // https://go.dev/doc/articles/wiki/
 ```
+
+## 3. map & slice
+
+As we talked ablove, for better efficiency we usually choose to pass pointer type. Map and slice often store a lot of elements, should we pass/return a pointer to them when calling a function?
+
+Learn more: https://shaowenzhu.top/post/golang/basics/003-collections/
+
+## 3. assignment always makes a copy
+
+> Similar to C++, a variable is just an adress location. But unlike C++, each variable defined in a Go program occupies a unique memory location. 
+
+```go
+func main() {
+    kitten := Cat{Name: "Coco"}
+    // do not think bella and kitten is a reference which points to a same object, this is java and python
+    bella := kitten // makes a copy
+    bella.Name = "Bella"
+    fmt.Printf("kitten.Name:%v, bella.Name:%v\n", kitten.Name, bella.Name)
+}
+// kitten.Name:Coco, bella.Name:Bella
+```
+
+> For a mental model, you can treat variable names as references, which exists till their scope exists.
+>
+> For implementation, Go's variables are NOT references - for reference, use a pointer.
+>
+> These variables can be allocated on the stack, or on the heap. Both have pros and cons, the compiler decides. For correctness, it does not make any difference. "You don't have to know". 
+>
+> [source](https://www.reddit.com/r/golang/comments/s0m2h9/comment/hs2kvyo/?utm_source=share&utm_medium=web2x&context=3) 
+
+```golang
+type temp struct{
+   val int
+}
+
+variable1 := temp{val:5}  // 1 makes a copy
+variable2 := &temp{val:6} // 2
+```
+
+`temp{val:5}` is a [composite literal](https://go.dev/ref/spec#Composite_literals), it creates a value of type `temp`.
+
+In the first example you used a [short variable declaration](https://go.dev/ref/spec#Short_variable_declarations), which is equivalent to
+
+```golang
+var variable1 = temp{val: 5}
+```
+
+There is a single variable created here (`variable1`) which is initialized with the value `temp{val: 5}`.
+
+In the second example you take the address of a composite literal. That does create a variable, initialized with the literal's value, and the address of this variable will be the result of the expression. This pointer value will be assigned to the variable `variable2`.
+
+
+
+
 
 ----
 

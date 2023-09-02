@@ -1,5 +1,5 @@
 ---
-title: Golang函数变量以及基础数据类型
+title: golang basics ‼️
 date: 2023-05-12 10:00:20
 categories:
  - golang
@@ -8,48 +8,161 @@ tags:
  - golang
 ---
 
-## 1. Function Declearation
+## 1. variable declarations
 
-先来看看函数相关的东西, 
+- The ***`:=`*** can **only** be used in inside a function, which is called **short variable declarations**. 
+
+- A ***`var`*** statement can be at package or function level, which is called **regular variable declarations**. 
+
+Variables declared without an explicit initial value are given their zero value. The zero value is:
+
+- `0` for numeric types,
+- `false` for the boolean type, and
+- `""` (the empty string) for strings.
+- `nil` for pointer
+- `nil` for map and slice
 
 ```go
-// declear a basic func
-func add(x int, y int) int {
-	return x + y
-}
-// If parameter type same, you can omit the type from all but the last
-func add(x, y int) int {
-	return x + y
-}
-// Multiple results, the swap function returns two strings.
-func swap(x, y string) (string, string) {
-	return y, x
-}
+
 func main() {
-	a, b := swap("hello", "world")
-	fmt.Println(a, b)
+	var i int
+	var f float64
+	var b bool
+	var s string
+	var p *string
+	var sl []int
+	var m map[string]string
+	fmt.Printf("%v %v %v %q %v %v %v \n", i, f, b, s, p, sl==nil, m==nil)
+}
+// 0 0 false "" <nil> true true 
+```
+
+Dereferencing a nil pinter will cause panic, don't do that.
+
+```go
+kitten := Cat{Name: "Coco"}
+var cat *Cat
+*cat = kitten  // runtime error: invalid memory address or nil pointer dereference
+```
+
+## 2. variable redeclaration 
+
+Unlike regular variable declarations, a short variable declaration may *redeclare* variables provided they were originally declared earlier in the same block **with the same type**, and **at least one of the non-[blank](https://go.dev/ref/spec#Blank_identifier) variables is new**. As a consequence, redeclaration can only appear in a multi-variable short declaration. Redeclaration does not introduce a new variable; it just assigns a new value to the original. 
+
+```go
+func main() {
+	y, x := 1, 2
+	z, x := 2, 3 // z must be new
+	fmt.Println(x, y, z)
 }
 ```
 
-除了上面的基础的声明, 在声明function的时候还可以声明返回值的名字: 
+This is useful when handle error, 
 
 ```go
-// 返回值在函数签名中已确认 故返回时可不用标注 return x, y
-// 这也叫 "naked" return
-func split(sum int) (x, y int) {
-	x = sum * 4 / 9
-	y = sum - x
-	return
+// func (s *memoryStore) generateID(n int) (string, error)
+id, err := s.generateID(32) 
+if err != nil {
+	return nil, err
 }
-
-func main() {
-	fmt.Println(split(17))
-}
+// func (r *Request) Cookie(name string) (*Cookie, error)
+c, err := r.Cookie(name) // redeclare err 
+...
 ```
 
-> **Naked return** statements should be used only in short functions, as with the example shown here. They can harm readability in longer functions. 
+## 3. go does not have reference variables
 
-当函数是匿名函数的时候, 可以直接在函数体后加`()`进行调用该函数, 
+This all is very easy once you stop using inappropriate terms while thinking of it. It is not helpful to ask about the hair color or the accent of a bacterium. These are categories applicable to humans. Same in Go: there are no references in Go and there are no "shallow" copies (and no "deep" copy, all there is are copies of values).
+
+Putting & before a variable does not produce a reference, simply because there are no references in Go. It produces a value of totally different type:
+
+```go
+var i int = 3     // create variable of type int and store 3 in this variable
+var p *int = &i   // create variable of type *int and store memory location of i init
+```
+
+Note that `p` is not a "reference to i". It is not. Forget that now and forever. `p` is a pointer to an `int` and nothing else.
+
+The same applies to `:=`. This operator creates a new variable and assigns a value to it. The type is inferred for your convenience from the right hand side. So your
+
+```go
+copy1 := someStruct.listofStruct[0]
+copy2 := &someStruct.listofStruct[0]
+```
+
+is basically (writing out the type interference)
+
+```go
+var copy1 someOtherStruct = someStruct.listofStruct[0]
+var copy2 *someOtherStruct = &someStruct.listofStruct[0]
+```
+
+And now you see that `copy1` and `copy2` are totally unrelated. The have completely different types. `copy1` really is a copy of someStruct.listofStruct[0]: It has the same type and was assigned via = so a copy was made. On the other hand `copy2` is **not** a "copy". You asked the compile the "give me the memory address of someStruct.listofStruct[0] and store this value in copy2 (make this an appropriate pointer type)". Absolutely no copying here.
+
+Pointers are totally normal values. Making a copy of a pointer value makes a copy of a pointer value. No magic here. No deep or shallow copy, no references. Same like making a copy of an int or a complex256.
+
+By dereferencing a pointer you can "get back to the object pointed too". This is the only "reference" like step. In your case you can modify what copy2 points to by `*copy2 = ...`. Note the * which dereferences copy2 (if copy2!=nil).
+
+What everybody irritates at first is that some Go types use pointers internally: especially Maps and Slices. E.g. a slice is a view into an underlying backing array and two slices may look at the same backing array and each slice may modify what the other sees (as the see the same backing array). Such types have reference semantics.
+
+> I think is true in Go/C++/C :
+> A variable is just an adress location. When assignments happens `str="hello world"` : Instead of telling the computer store this series of bits in 0x015c5c15c1c5, you tell him to store it in `str`. `str` is just a nicer name of a memory adress location.
+>
+>  The computer doesn't care and will replace them when compiling, `str` won't exists, it's all 0x015c5c15c1c5.
+
+Source: [Does operator := always cause a new copy to be created if assign without reference?](https://www.reddit.com/r/golang/comments/6v0aka/comment/dlwwvgn/?utm_source=share&utm_medium=web2x&context=3) 
+
+> A variable is a **storage location** for holding a value. The set of permissible values is determined by the variable's type. 
+
+Source: [The Go Programming Language Specification ](https://go.dev/ref/spec#Variables)
+
+Learn more: [There is no pass-by-reference in Go | Dave Cheney](https://dave.cheney.net/2017/04/29/there-is-no-pass-by-reference-in-go)
+
+## 3. assignment always makes a copy
+
+> Similar to C++, a variable is just an adress location. But unlike C++, each variable defined in a Go program occupies a unique memory location. 
+
+```go
+func main() {
+    kitten := Cat{Name: "Coco"}
+    // do not think bella and kitten is a reference which points to a same object, this is java and python
+    bella := kitten // makes a copy
+    bella.Name = "Bella"
+    fmt.Printf("kitten.Name:%v, bella.Name:%v\n", kitten.Name, bella.Name)
+}
+// kitten.Name:Coco, bella.Name:Bella
+```
+
+> For a mental model, you can treat variable names as references, which exists till their scope exists.
+>
+> For implementation, Go's variables are NOT references - for reference, use a pointer.
+>
+> These variables can be allocated on the stack, or on the heap. Both have pros and cons, the compiler decides. For correctness, it does not make any difference. "You don't have to know". 
+>
+> [source](https://www.reddit.com/r/golang/comments/s0m2h9/comment/hs2kvyo/?utm_source=share&utm_medium=web2x&context=3) 
+
+```golang
+type temp struct{
+   val int
+}
+
+variable1 := temp{val:5}  // 1 makes a copy
+variable2 := &temp{val:6} // 2
+```
+
+`temp{val:5}` is a [composite literal](https://go.dev/ref/spec#Composite_literals), it creates a value of type `temp`.
+
+In the first example you used a [short variable declaration](https://go.dev/ref/spec#Short_variable_declarations), which is equivalent to
+
+```golang
+var variable1 = temp{val: 5}
+```
+
+There is a single variable created here (`variable1`) which is initialized with the value `temp{val: 5}`.
+
+In the second example you take the address of a composite literal. That does create a variable, initialized with the literal's value, and the address of this variable will be the result of the expression. This pointer value will be assigned to the variable `variable2`.
+
+## 4. Function
 
 ```go
 defer func() {
@@ -58,56 +171,20 @@ defer func() {
 			return
 		}
 	}()
+// -------------------------------
+go func() {
+  ....
+}()
 ```
 
-上面等于直接调用匿名函数, 可以这么理解:
+You can treat the code above like this:
 
 ```go
 var b = func a() { ... }
-b() //调用函数
+b() //call that function
 ```
 
-## 2. Varibale
-
-### 2.1. `var`
-
-A `var` statement can be at package or function level.
-
-```go
-// package level
-var c, python, java bool
-
-func main() {
-  // funcition level
-	var i int
-	fmt.Println(i, c, python, java)
-}
-```
-
-声明变量时, 如果有 initializer 便可以省略数据类型:
-
-```go
-func main() {
-  var j = 1
-	fmt.Println(j)
-}
-```
-
-### 2.2. `:=`
-
-```go
-func main() {
-	var i, j int = 1, 2
-	k := 3
-	c, python, java := true, false, "no!"
-
-	fmt.Println(i, j, k, c, python, java)
-}
-```
-
-The `:=` short assignment statement can **only** be used in inside a function, outside a function, every statement begins with `var`, `func`, and so on. 
-
-## 3. Basic Type
+## 5. Basic Type
 
 ```go
 bool
@@ -127,26 +204,7 @@ float32 float64
 complex64 complex128
 ```
 
-### 3.1. Default Value
-
-Variables declared without an explicit initial value are given their ***zero value***. The zero value is:
-
-- `0` for numeric types,
-- `false` for the boolean type, and
-- `""` (the empty string) for strings.
-
-```go
-func main() {
-	var i int
-	var f float64
-	var b bool
-	var s string
-	fmt.Printf("%v %v %v %q\n", i, f, b, s)
-}
-// 0 0 false ""
-```
-
-## 4. Type Conversions
+## 6. Type Conversions
 
 The expression `T(v)` converts the value `v` to the type `T`. Some numeric conversions:
 
@@ -166,7 +224,7 @@ u := uint(f)
 
 Unlike in C, in Go assignment between items of different type requires an explicit conversion, 这增加了golang的type safety, 了解更多: [Type Safety from Why Rusy ](https://davidzhu.xyz/2023/08/05/Other/type-safety)
 
-## 5. Type Assertions
+## 7. Type Assertions
 
 A *type assertion* provides access to an **interface value's** underlying concrete value. 
 
@@ -185,7 +243,7 @@ if ok {
 }
 ```
 
-类似的语法还有 map 通过 key 获取值, 
+similar syntax - 1:
 
 ```go
 users := make(map[string]int)
@@ -200,7 +258,7 @@ if ok {
 }
 ```
 
-channel 值读取也可用类似语法判断是否状态为 closed, 
+similar syntax - 2:
 
 ```go
 ele, ok:= <-channel_name
@@ -208,7 +266,7 @@ ele, ok:= <-channel_name
 
 If the value of `ok` is true, this indicates that the channel is open and read operations can be done. 
 
-### 5.1. Type Assertion Use Case
+### 7.1. Type Assertion Use Case
 
 Type assertion only can be used when value's type is interface, 
 
@@ -230,21 +288,8 @@ fmt.Println(isMap)
 // print: true
 ```
 
-## 6. Conclusion
+## 8. Conclusion
 
-- ‼️ `ele, ok:= <-channel_name`, `user, ok := users["milo"]`, `str, ok := value.(string)` 
-- ‼️ type assertions only can be used by interface type
-- 三个常用关键字 `var`, `const`, `func`, 
-- 在函数中可以用 `:=` 来定义变量, 可以自动推断类型, 类似cpp里的`auto`
-- 声明变量时, 如果有 initializer 便也可以省略数据类型
-- go 没有 implicit conversion, int->float 也不行, 
-- 函数声明可以对返回值命名, 相当于在函数体的顶部定义两个local variables
-- 常用移位操作, `Big = 1 << 100`, `Small = Big >> 99`
-- 调用匿名函数可以直接在函数体后加`()`
-
-拓展阅读, 
-
-- Exported names: [A Tour of Go](https://go.dev/tour/basics/3)
-
-- Go的声明很奇怪, [这篇文章](https://go.dev/blog/declaration-syntax) 解释了为啥Go选择“奇怪”的声明方式
-
+- `ele, ok:= <-channel_name`, `user, ok := users["milo"]`, `str, ok := value.(string)` 
+-  type assertions only can be used by interface type.
+- assignment, pass as an arguments and function return always makes a copy.

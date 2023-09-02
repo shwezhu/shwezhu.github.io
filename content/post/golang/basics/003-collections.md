@@ -1,5 +1,5 @@
 ---
-title: Golang容器之Array & Slice & Map
+title:  array & slice & map - golang collections
 date: 2023-05-13 10:23:59
 categories:
  - golang
@@ -37,20 +37,6 @@ Slice can be created using the built-in function `make()`:
 
 ```go
 var intSlice = make([]int, 10)
-```
-
-- Nil slices
-
-A nil slice has a length and capacity of 0 and has no underlying array.
-
-```go
-func main() {
-	var s []int
-	fmt.Println(s, len(s), cap(s))
-	if s == nil {
-		fmt.Println("nil!")
-	}
-}
 ```
 
 - Slice of slices
@@ -128,33 +114,48 @@ false false false
 
 ## 3. Maps
 
-The `make` function returns a map of the given type, initialized and ready for use.
+> *A map value is a pointer to a* `runtime.hmap` *structure.* 
+
+When you write the statement
+
+```go
+m := make(map[int]int)
+```
+
+The compiler replaces it with a call to [`runtime.makemap`](https://golang.org/src/runtime/hashmap.go#L222), which has the signature
+
+```go
+// makemap implements a Go map creation make(map[k]v, hint)
+// If the compiler has determined that the map or the first bucket
+// can be created on the stack, h and/or bucket may be non-nil.
+// If h != nil, the map can be created directly in h.
+// If bucket != nil, bucket can be used as the first bucket.
+func makemap(t *maptype, hint int64, h *hmap, bucket unsafe.Pointer) *hmap
+```
 
 ```go
 func main() {
-	m := make(map[string]int)
-
-	m["Answer"] = 42
-	fmt.Println("The value:", m["Answer"])
-
-	m["Answer"] = 48
-	fmt.Println("The value:", m["Answer"])
-
-	delete(m, "Answer")
-	fmt.Println("The value:", m["Answer"])
-
-	v, ok := m["Answer"]
-	fmt.Println("The value:", v, "Present?", ok)
+	var m map[int]int
+	var p uintptr
+	fmt.Println(unsafe.Sizeof(m), unsafe.Sizeof(p)) // 8 8 (linux/amd64)
 }
 ```
 
-> ⚠️ **Like slices**, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller. So like slices, when a function return or accept, don't need to take a pointer to map, [source](https://go.dev/doc/effective_go#maps)
+**If maps are pointers, shouldn’t they be *map[key]value?**
+
+> *In the very early days what we call maps now were written as pointers, so you wrote \*map[int]int. We moved away from that when we realized that no one ever wrote `map` without writing `\*map`.*
+>
+> Maps, like channels, but *unlike* slices, are just pointers to `runtime` types. As you saw above, a map is just a pointer to a `runtime.hmap` structure.
+
+Source: [If a map isn’t a reference variable, what is it? | Dave Cheney](https://dave.cheney.net/2017/04/30/if-a-map-isnt-a-reference-variable-what-is-it) 
+
+> ⚠️ Map value just a pointer, therefore, we don't need to pass a pointer to a map for better performance. This is similar to slices, slice just a struct that has a pointer element which pointer to an underlaying array, so we don't need to set a pointer of slice as a paramter. This also applys function's return type. 
 
 ### 3.1. Copy Map
 
 Find a [blog](https://web.archive.org/web/20171006194258/https://stackoverflow.com/documentation/go/732/maps/9834/copy-a-map#t=20171006194258443316) talks copy map, share it here:
 
-Like slices, maps hold **references** to an underlying data structure. So by assigning its value to another variable, only the reference will be passed. To copy the map, it is necessary to create another map and copy each value:
+Like slices, maps hold references to an underlying data structure. So by assigning its value to another variable, only the reference will be passed. To copy the map, it is necessary to create another map and copy each value:
 
 ```go
 // Create the original map
@@ -171,11 +172,11 @@ for key, value := range originalMap {
 }
 ```
 
-Same as slice, copy a map have deep copy and shallow copy, for deep copy a map, visit: [dictionary - How to deep copy a map and then clear the original? - Stack Overflow ](https://stackoverflow.com/questions/23057785/how-to-deep-copy-a-map-and-then-clear-the-original)
+How to deep copy a map or slice: [encoding/gob & encoding/json in golang - David's Blog](https://shaowenzhu.top/post/golang/basics/014-gob-json-encoding/#24-values-are-flattened)
 
 ## 4. Slice 
 
-Slices are like references to arrays. **A slice does not store any data, it just describes a section of an underlying array**. Changing the elements of a slice modifies the corresponding elements of its underlying array. Other slices that share the same underlying array will see those changes. 
+**A slice does not store any data, it just describes a section of an underlying array**. Changing the elements of a slice modifies the corresponding elements of its underlying array. Other slices that share the same underlying array will see those changes. 
 
 - e.g., 
 
@@ -204,32 +205,7 @@ func main() {
 [John XXX George Ringo]
 ```
 
-## 5. Loop Slice
-
-```go
-func main() {
-	var strSlice = []string{"India", "Canada", "Japan", "Germany", "Italy"}
-
-	fmt.Println("\n---------------Example 1 --------------------\n")
-	for index, element := range strSlice {
-		fmt.Println(index, "--", element)
-	}
-
-	fmt.Println("\n---------------Example 2 --------------------\n")
-	for _, value := range strSlice {
-		fmt.Println(value)
-	}
-
-	j := 0
-	fmt.Println("\n---------------Example 3 --------------------\n")
-	for range strSlice {
-		fmt.Println(strSlice[j])
-		j++
-	}
-}
-```
-
-## 6. Conclusion
+## 5. Conclusion
 
 - The type `[n]T` is an array of `n` values of type `T`.
   - An array's length is part of its type, so arrays cannot be resized.
@@ -237,5 +213,3 @@ func main() {
   - An array has a fixed size. A slice, on the other hand, is a dynamically-sized,
   - A slice does not store any data, it just describes a section of an underlying array.
   - Changing the elements of a slice modifies the corresponding elements of its underlying array.
-
-learn more: [A Tour of Go](https://go.dev/tour/moretypes/7)

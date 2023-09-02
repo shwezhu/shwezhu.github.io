@@ -1,5 +1,5 @@
 ---
-title: Git Merge实例分析之fast-forward & three-way merge
+title: fast-forward & three-way merge - git merge
 date: 2023-04-21 09:44:39
 categories:
   - git
@@ -7,14 +7,6 @@ tags:
   - git
 typora-root-url: ../../../static
 ---
-## 总结
-
-- 是否可以 fast-forward 取决于主分支是否在被合并分支的祖先分支上
-- git merge 输出提示存在 conflicts 时, 就需要进行 three-way merge
-  - 此时在输出中找到存在 conflict 的文件, 手动解决 conflict 后进行 commit: ` git commit -m "fixed conflicts"` 
-  - 然后便可安全删除次分支
-  - 可以使用 git log 查看提交历史
-
 ## 实验
 
 ```shell
@@ -301,6 +293,14 @@ Date:   Sat Apr 22 20:28:56 2023 -0300
 
     feat print hello world
 ```
+
+## 总结
+
+- 是否可以 fast-forward 取决于主分支是否在被合并分支的祖先分支上
+- git merge 输出提示存在 conflicts 时, 就需要进行 three-way merge
+  - 此时在输出中找到存在 conflict 的文件, 手动解决 conflict 后进行 commit: ` git commit -m "fixed conflicts"` 
+  - 然后便可安全删除次分支
+  - 可以使用 git log 查看提交历史
 
 参考:
 

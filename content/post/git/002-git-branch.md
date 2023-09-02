@@ -1,5 +1,5 @@
 ---
-title: Git分支指令及切换分支注意事项
+title: git branch
 date: 2023-04-22 00:47:50
 categories:
   - git
@@ -7,7 +7,9 @@ tags:
   - git
 ---
 
-## 1. Common Commands
+## 1. Some Commands Used in Branch
+
+You can use `git branch -h` to check these commands' explanation. 
 
 List branches:
 
@@ -31,11 +33,17 @@ Switch branch:
 
 Delete branch:
 
-- `git branch -d <name>`
+- delete fully merged branch: `git branch -d <name>`
+- delete branch (even if not merged):  `git branch -D <name>`
 
 Merge benach `issue003` into current branch：
 
 - `git merge <issue003>`
+
+Rename Current Branch
+
+- move/rename a branch and its [reflog](https://www.atlassian.com/git/tutorials/rewriting-history/git-reflog): `git branch -m <branch-name>` 
+-  move/rename a branch, even if target exists: `git branch -M <branch-name>` 
 
 ## 2. 切换分支需要注意的事
 
@@ -84,3 +92,20 @@ Aborting
 所以结论是, **切换分支前, 一定要记得commit, 别在A分支修改你想提交到B分支的文件**.
 
 了解 stash: [git-stash Documentation](https://git-scm.com/docs/git-stash) 
+
+## 3. 重命名远程分支
+
+首先在 GitHub 修改分支名字, 之后GitHub会提醒:
+
+#### The default branch has been renamed!
+
+` backup`  is now named ` hexo-blog` 
+
+If you have a local clone, you can update it by running the following commands.
+
+```shell
+git branch -m backup hexo-blog
+git fetch origin
+git branch -u origin/hexo-blog hexo-blog
+git remote set-head origin -a
+```

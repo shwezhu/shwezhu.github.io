@@ -1,5 +1,5 @@
 ---
-title: "Git基础文件状态之版本穿梭"
+title: git rm & git restore
 date: 2023-05-05 09:31:30
 categories:
   - git
@@ -8,123 +8,86 @@ tags:
 typora-root-url: ../../../static
 ---
 
-## 总结
-
-- `git add` modified -> staged, untracked -> tracked
-
-- `git commit` staged -> unmodifed
--  ` git rm --cached <filename>`, tracked->untracked, `git rm <filname>` 真实删除文件, 
-  - `git rm` is about *removing* some file(s) from somewhere.
--  ` git restore --staged <filename>` staged->modified, `git restore <filename>`  真实修改文件
-  - `git restore` is about *copying* some file(s) from somewhere to somewhere.
-
-- index = staging area, `git add <filename>`: stage the file
-- working directory / working tree 就是项目文件夹
-
-## 状态之间的切换
-
-学习Git的时候发现一些基础的概念很是模糊, 于是读了一下[文档](https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository), 在这记录一下, 
+## 1. Status Switch
 
 Remember that each file in your **working directory** can be in one of **two states**: *`tracked`* or *`untracked`*. Tracked files are files that were in the last **snapshot**, as well as any newly **staged files**; they can be `unmodified`, `modified`, or `staged`. In short, tracked files are files that Git knows about. As you edit files, Git sees them as modified, because you’ve changed them since your last commit. As you work, you selectively stage these modified files and then commit all those staged changes, and the cycle repeats.
 
 ![a](/001-git-basics/a.png)
 
-### Modified -> Unmodified
-
-早上接到老板的命令, 把昨天实现的功能再修改一下, 然后还没吃早饭你的开始各种操作, 俩小时整好了, 正准备add, commit,  然后突然老板打电话说客户又不想要了(WTF?), 然后你要一行一行把代码修改回之前的的内容吗?  不要怕, git可以帮助你, 
-
-理论不如实践, 我们修改一下`a.txt`(注意`a.txt`已经是tracked file), 然后观察它的状态:
+Some commands are used frequently, the commands below will make a diffference on ***Git repository*** but won't change the ***wok place*** (file system):
 
 ```shell
-$ echo "hello" > a.txt 
-$ git status 
-On branch main
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	modified:   a.txt
-
-no changes added to commit (use "git add" and/or "git commit -a")
+# just untrack file
+git rm --cached file-name
+# just unstatge file
+git restore --staged file-name
 ```
 
-Git提示了很多, `git restore <file>...`就是撤销刚刚的修改`a.txt`, 
+The commands below will change both work place and Git repository:
 
 ```shell
-$ git restore a.txt 
-$ git status
-On branch main
-nothing to commit, working tree clean
+# untrack file & rm file
+git rm file-name
+# unstatge file & discard uncommitted local changes
+git restore file-name
 ```
 
-如果修改一个untracked file, git 没保存过它之前的内容, 也就不存在 `git restore` 这一说, 如下:
+## 2. Untrack File
 
 ```shell
-$ touch e.txt 
-$ echo "hello" > e.txt 
-$ git status       
-On branch main
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	e.txt
-
-nothing added to commit but untracked files present (use "git add" to track)
+git rm file-name
+git rm --cached file-name
 ```
 
-只是提示我们去使用`git add`去track这个文件
+The "rm" command helps you to remove files from a Git repository. It allows you to not only delete a file from the *repository*, but also - if you wish - from the *filesystem*.
 
-### Staged -> Modified
+Deleting a file from the filesystem can of course easily be done in many other applications, e.g. a text editor, IDE or file browser. But deleting the file from the *actual Git repository* is a separate task, for which `git rm` was made.
 
-如果你老板在你刚stage文件到staging area的时候给你打电话(还没commit), 那你应该怎么把文件从staged变回没修改之前呢? 
+- ***`--cached`***
+  - **Removes the file only from the Git repository, but not from the filesystem.** By default, the `git rm` command deletes files both from the Git repository as well as the filesystem. Using the `--cached` flag, the actual file on disk will *not* be deleted.
 
-分两步: 
+- ***`-r`***
+  - **Recursively removes folders.** When a path to a directory is specified, the `-r` flag allows Git to remove that folder including all its contents.
 
-- Staged->Modified
-- Modified->Unmodified 上面我们已经讨论过
+### 3. Unstage File
 
 ```shell
-$ echo "hi" > a.txt 
-$ git add a.txt 
-$ git status
-On branch main
-Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
-	modified:   a.txt
-
-# 根据提示从staged->modified
-$ git restore --staged a.txt 
-$ git status
-On branch main
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	modified:   a.txt
-
-no changes added to commit (use "git add" and/or "git commit -a")
-# 根据提示从modified->unmodified
-$ git restore a.txt 
-$ git status
-On branch main
-nothing to commit, working tree clean
+git restore file-name
+git restore --staged file-name
 ```
 
-## Tracked -> Untracked
+The "restore" command helps to unstage or even discard uncommitted local changes. On the one hand, the command can be used to undo the effects of `git add` and unstage changes you have previously added to the ***Staging Area***. 
 
-To remove a file from Git, you have to remove it from your tracked files (more accurately, remove it from your staging area) and then commit. The `git rm` command does that, and also removes the file from your working directory so you don’t see it as an untracked file the next time around.
+- ***`--staged`***
+  - **Removes the file from the Staging Area, but leaves its actual modifications untouched.** By default, the `git restore` command will discard any local, uncommitted changes in the corresponding files and thereby restore their last committed state. With the `--staged` option, however, the file will only be removed from the Staging Area - but its actual modifications will remain untouched.
 
-If you modified the file or had already added it to the **staging area**, you must force the removal with the `-f` option. This is a safety feature to prevent accidental removal of data that hasn’t yet been recorded in a snapshot and that can’t be recovered from Git. 
-
-Another useful thing you may want to do is to keep the file in your **working tree** but remove it from your staging area. In other words, **you may want to keep the file on your hard drive but not have Git track it anymore**. This is particularly useful if you forgot to add something to your `.gitignore` file and accidentally staged it, like a large log file or a bunch of `.a` compiled files. To do this, use the `--cached` option:
+- ***`--source <ref>`***
+  - **Restores a specific revision of the file.** By default, the file will be restored to its last committed state (or simply be unstaged). The `--source` option, however, allows you to restore the file at a *specific revision*.
 
 ```shell
-$ git rm --cached a.txt
+$ git restore --source 7173808e index.html
+$ git restore --source master~2 index.html
 ```
 
-## git restore vs git rm
+The first example will restore the file as it was in commit #7173808e, while the second one will restore it as it was "two commits before the current tip of the master branch".
 
-Because `git restore` is about *copying* a file or files, it needs to know *where to get the files*. There are three possible sources:
+## 3. Stage File
 
-- the current, or `HEAD`, commit (which must exist); or
-- any arbitrary commit that you specify (which must exist); or
-- Git's *index* aka *staging area*. 
+```shell
+git add file-name
+```
 
-Because `git rm` is about *removing* a file or files, it only needs to know the name(s) of the file(s) to remove. Adding `--cached` tells `git rm` to remove these files *only* from **Git's index aka *staging area*.** 
+It adds changes to Git's ***Staging Area*** (index), the contents of which can then be wrapped up in a new revision with the `git commit` command.
+
+## 4. Conclusion
+
+- Git repository, Work place (Filesystem,  Working tree), Staging Area (Index), 
+- Stage the file: `git add <filename>`
+- Unstage: ` git restore --staged <filename>`, `git restore <filename>`
+- Untrack: ` git rm --cached <filename>`, `git rm <filname>` 
+
+References:
+
+- https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
+- https://www.git-tower.com/learn/git/commands/git-rm
+- https://www.git-tower.com/learn/git/commands/git-restore
