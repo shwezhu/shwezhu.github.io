@@ -22,27 +22,27 @@ Save the tomcat-users.xml file and restart the server to have the changes take e
 
 重启Tomcat就是进到Tomcat的`bin`目录下, 执行`startup.sh`, `./shutdown.sh`, 其实你直接使用`startup.sh`命令开启Tomcat服务就会加载配置文件了, 上面说的重启是默认你的Tomcat一直处于运行状态. 现在你也应该启动Tomcat服务了, 启动后尝试访问`http://localhost:8080/`, 
 
-![](d.png)
+![](/war/d.png)
 
 点击后输入上面的`username`和对应的`password`, 即可进入管理页面如下:
 
-![](e.png)
+![](/war/e.png)
 
 ### 无法访问 tomcat 主页问题
 
 我在访问Tomcat主页出现了问题, 访问的总是我以前的JSP应用, 我用IDEA开发的, 但我都没打开IDEA, 仍然可以访问到, 真是奇了怪了, 如下:
 
-![](a.png)
+![](/war/a.png)
 
 然后我就[查到了一个博客](https://www.cnblogs.com/yayazi/p/7920257.html)说需要将Tomcat的首页的工程部署到Tomcat服务器上，我们通过IDEA来操作, 部署步骤如下：
 
 选择菜单栏“Run-->Edit Configuration...-->Deployment”, 选择右上角绿色“+”，选择“External Source...”，将Apache-tomcat的`webapps`目录下的ROOT文件夹添加进来, 下面的Application Context 空着, 删除 `ROOT` 下面的那个`ServletDemo:war exploded`, 如下图:
 
-![](b.png)
+![](/war/b.png)
 
 然后我IDEA上选择的Tomcat服务器不是我现在用的, 我有个旧的Tomcat服务器, 我不知道, 然后IDEA用的一直是那个旧的(但我在上面部署位置的`ROOT`文件夹选择的是新的Tomcat下的文件), 所以就导致就算部署项目后, 我依然无法访问Tomcat的主页. 所以检查一下你是否选择了正确的Tomcat服务器, 
 
-![](c.png)
+![](/war/c.png)
 
 这样配置好后再在IDEA点击运行, 就可以通过`http://localhost:8080/`访问 Tomcat 主页了, 之后你关闭IDEA, 直接进入Tomcat根目录的`bin`下通过执行`startup.sh`来启动Tomcat. 
 
@@ -134,11 +134,11 @@ Now that Maven and Tomcat are configured, the next step is to edit the Java web 
 
 然后重新运行`mvn install tomcat7:deploy`, 成功:
 
-![](f.png)
+![](/war/f.png)
 
 然后去Tomcat根目录的`webapps`下查看生成的War, 可以看到生成了名为`rps`的web应用, 即这个名字取决于上面`pom.xml`填的内容, 
 
-![](g.png)
+![](/war/g.png)
 
 然后我们对比一下生成的war与我们的源代码文件结构:
 
@@ -217,7 +217,7 @@ Now that Maven and Tomcat are configured, the next step is to edit the Java web 
 
 确保你已经开启Tomcat服务(即使你关闭了IDEA, IDEA和Tomcat是两个东西, IDEA是个IDE会用到Tomcat作为web服务器来部署web app), 然后访问通过`http://localhost:8080/`访问到Tomcat主页, 这时候你可以在链接🔗后加上`/rps`即`http://localhost:8080/rps/`就可以进入到你的那个web网页, 如下:
 
-![](h.png)
+![](/war/h.png)
 
 ## 思考总结
 

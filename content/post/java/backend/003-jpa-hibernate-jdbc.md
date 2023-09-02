@@ -127,9 +127,9 @@ As code above, `ResultSet`, `PreparedStatement` and `Connection` they are all be
 
 - [Overview (Java Platform SE 8 )](https://docs.oracle.com/javase/8/docs/api/)
 
-![](a.png)
+![](/003-jpa-hibernate-jdbc/a.png)
 
-![1](1.png)
+![1](/003-jpa-hibernate-jdbc/1.png)
 
 ## 3. JPA vs Hibernate
 

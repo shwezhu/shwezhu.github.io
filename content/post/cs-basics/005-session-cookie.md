@@ -34,7 +34,7 @@ categories:
 
 下面就是服务器传回 cookie expires 没有为其指定时区的例子, 可以看到请求是 Jun 20 发出的, cookie 过期时间却是 Jun 19: 
 
-![1](1.png)
+![1](/005-session-cookie/1.png)
 
 服务器端 Python Flask 处理 http request时, 设置 cookie 方式如下:
 

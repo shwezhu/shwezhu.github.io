@@ -25,7 +25,7 @@ To understand all of this better, it’s good to describe and define a few conce
 
 The [program counter](https://en.wikipedia.org/wiki/Program_counter) (PC), which is sometimes called the instruction pointer (IP), is what allows the Thread to keep track of the next instruction to execute. In most processors, the PC points to the next instruction and not the current instruction.
 
-![a](a.png)
+![a](/003-go-scheduler-1/a.png)
 
 ### 2. Thread States
 
@@ -87,7 +87,7 @@ What if your service is doing a lot of different types of work? That could creat
 
 Accessing data from main memory has **such** a high latency cost (100~300 clock cycles) **that** processors and cores have local caches to keep data close to the hardware threads that need it. Accessing data from caches have a much lower cost (3~40 clock cycles) depending on the cache being accessed. Today, one aspect of performance is about how efficiently you can get data into the processor to reduce these data-access latencies. Writing multithreaded applications that mutate state need to consider the mechanics of the caching system.
 
-![b](b.png)
+![b](/003-go-scheduler-1/b.png)
 
 Data is exchanged between the processor and main memory using [cache lines](https://www.youtube.com/watch?v=WDIkqP4JbkE). A cache line is a 64-byte chunk of memory that is exchanged between main memory and the caching system. Each core is given its own copy of any cache line it needs, which means the hardware uses [value semantics](https://www.ardanlabs.com/blog/2017/06/design-philosophy-on-data-and-semantics.html). This is why mutations to memory in multithreaded applications can create performance nightmares.
 

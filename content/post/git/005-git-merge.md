@@ -5,6 +5,7 @@ categories:
   - Git
 tags:
   - Git
+typora-root-url: ../../../static
 ---
 ## 总结
 
@@ -67,7 +68,7 @@ $ git switch -c issue01
 
 现在我们的分支结构类似下图(在 [`git branch` ](https://davidzhu.xyz/2023/04/22/Git/Git-Branch/)讲过, 新建的分支`issue01`含有`main`分支已存在的commit history), 
 
-![](a.png)
+![](/005-git-merge/a.png)
 
 ```shell
 # 接着上面, 现在在issue01分支上
@@ -98,7 +99,7 @@ Aborting
 
 现在分支结构如下, 
 
-![](b.png)
+![](/005-git-merge/b.png)
 
 ```shell
 # 验证一下, 在main分支
@@ -167,7 +168,7 @@ $ git commit -m "delete hello wrld"
 
 然后分支结构如下图, 
 
-![](c.png) 
+![](/005-git-merge/c.png) 
 
 `hotfix`分支已经完成了它的任务, 我们现在跳到`main`分支然后merge一下, 
 
@@ -197,7 +198,7 @@ Date:   Sat Apr 22 20:35:05 2023 -0300
 
 merge `hotfix`后, 连带着commit历史一起merge了, 现在结构如下:
 
-![](d.png)
+![](/005-git-merge/d.png)
 
 现在可以安全删除`hotfix`分支了, 
 
@@ -208,7 +209,7 @@ Deleted branch hotfix (was 8c9302c).
 
 现在结构如下:
 
-![](e.png)
+![](/005-git-merge/e.png)
 
 假设bug修好了, 准备把分支`issue01`合并到分支`main`上, 如下:
 
@@ -236,13 +237,13 @@ int main() {
 
 合并失败了, 需要手动解决conflicts, 这次失败而上次合并`hotfix`分支并没有失败的的原因是`main`没有在分支`issue01`的祖先分支上, **而`main`在`hotfix`的祖先分支上(类似下图, `main`和`issue1`没在一条线上), 所以可以进行fast-forward合并`hotfix`分支**, 但合并分支`issue01`的时候却不能进行fast-forward合并. 
 
-![](f.png)
+![](/005-git-merge/f.png)
 
 > This looks a bit different than the `hotfix` merge you did earlier. In this case, your development history has diverged from some older point. Because the commit on the branch you’re on isn’t a direct ancestor of the branch you’re merging in, Git has to do some work. In this case, Git does a simple **three-way merge, using the two snapshots pointed to by the branch tips and the common ancestor of the two**.
 
 不能 fast-forward 合并就需要 three-way merge, 手动解决冲突再提交后大致结构如下图所示:
 
-![](g.png)
+![](/005-git-merge/g.png)
 
 我们手动修改conflicts内容后进行提交, 
 

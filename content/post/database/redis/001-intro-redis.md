@@ -109,7 +109,7 @@ Here is the explanation of the Cache-Aside Pattern:
 2. Cache miss. If the data is not stored in the cache, the service will read the data from the database.
 3. Once the data is obtained, the service then stores the data to cache for future request.
 
-![1](1.png)
+![1](/001-intro-redis/1.png)
 
 - **Read/Write Through Pattern,**
 

@@ -34,7 +34,7 @@ tags:
 
 创建一个简单的 spring boot 项目, 依赖只选择 spring web, 之后慢慢添加各种依赖, 创建一个简单的 Controller, 如下:
 
-![1](1.png)
+![1](/005-spring-security/1.png)
 
 由于没有使用 spring security, 现在这两个 endpoints 都可以通过 http://localhost:8080/private 或 http://localhost:8080 访问, 
 
@@ -70,7 +70,7 @@ $ curl localhost:8080 -v
 
 This section examines how form-based login works within Spring Security. First, we see how the user is redirected to the login form:
 
-![7](7.png)
+![7](/005-spring-security/7.png)
 
 The preceding figure builds off our [`SecurityFilterChain`](https://docs.spring.io/spring-security/reference/servlet/architecture.html#servlet-securityfilterchain) diagram: 
 
@@ -188,7 +188,7 @@ spring:
 
 然后剩下的就是从谷歌获取 client-id 和 client-secret, 具体配置可参考: [Setting up OAuth 2.0 - Google Cloud Platform Console Help](https://support.google.com/cloud/answer/6158849?hl=en)
 
-![2](2.png)
+![2](/005-spring-security/2.png)
 
 然后点 create, 即可获得 client-id 和 client-secret, 然后填入 `application.yaml` 中, 记住哦, **提交远程仓库的时候别忘把这个文件加入到 `.gitignore` 中**, 然后运行程序就可以实现谷歌登录了, 
 
@@ -196,11 +196,11 @@ spring:
 
 另外注意这个服务都是免费的, 不放心的话可以到 https://console.cloud.google.com/welcome/ 查看管理你的 project (看到有的一年订阅费要15k, 这是在自我安慰), 
 
-![4](4.png)
+![4](/005-spring-security/4.png)
 
-![5](5.png)
+![5](/005-spring-security/5.png)
 
-![6](6.png)
+![6](/005-spring-security/6.png)
 
 ## 5. 获取登录用户信息 - `Authentication Object`
 
@@ -227,7 +227,7 @@ spring:
 >
 > https://youtu.be/iJ2muJniikY?t=2085
 
-![a](a.png)
+![a](/005-spring-security/a.png)
 
 看看 authentication 对象的方法: 
 
@@ -297,15 +297,15 @@ public class WebController {
 
 设置断点, 
 
-![8](8.png)
+![8](/005-spring-security/8.png)
 
 访问 `/private` 页面输入密码登录, 返回 IDE, 
 
-![9](9.png)
+![9](/005-spring-security/9.png)
 
 下面是通过 ouath Google 登录之后的 Authentication 信息, 
 
-![10](10.png)
+![10](/005-spring-security/10.png)
 
 ## 8. 总结
 

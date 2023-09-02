@@ -74,7 +74,7 @@ package_sample
 
 这里需要注意 遇上面输出相比, 压缩后的jar包内第一层目录并不是 `bin`, 而是package, 在Windows的资源管理器中看，应该长这样：
 
-![](a.png)
+![](/what-is-jar-package-in-java/a.png)
 
 就说明打包打得有问题, 因此JVM无法从jar包中查找正确的class, 原因是`hong.Person`必须按`hong/Person.class`存放，而不是`bin/hong/Person.class`。
 

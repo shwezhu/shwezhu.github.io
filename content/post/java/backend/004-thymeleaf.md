@@ -13,13 +13,13 @@ tags:
 
 - 访问 http://localhost:8080/ 的时候主页列出所有的猫猫信息(name+age), 
 
-![1](1.png)
+![1](/004-thymeleaf/1.png)
 
 - 可通过参数查找某个猫猫信息如 http://localhost:8080/?name=Max, 如果猫猫Max存在将会列出其信息, 不存在则进行提示,
 
-![2](2.png)
+![2](/004-thymeleaf/2.png)
 
-![3](3.png)
+![3](/004-thymeleaf/3.png)
 
 通过实现以上功能展示如何通过controller往html模板插入数据, 形成动态html页面, 
 
@@ -65,7 +65,7 @@ src
 
 理解了Thymeleaf的逻辑, 之后看着文档自己就能写了, 这里只讲一个, 对于下面代码, 当访问 http://localhost:8080/ 的时候, 得到页面如下:
 
-![4](4.png)
+![4](/004-thymeleaf/4.png)
 
 首先若不在html文件中使用Thymeleaf的时候, controller代码如下:
 

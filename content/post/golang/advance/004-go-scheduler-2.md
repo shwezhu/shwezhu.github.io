@@ -21,7 +21,7 @@ In the [first part](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part
 
 When your Go program starts up, it’s given a Logical Processor (P) for every **virtual core** that is identified on the host machine. If you have a processor with multiple **hardware threads** per **physical core** (**Hyper-Threading**), each hardware thread will be presented to your Go program as a **virtual core**. To better understand this, take a look at the system report for my MacBook Pro. 即利用 Hyper-Threading 技术, 一个 physical core 对应两个 virtual cores, 所以程序所在机器的CPU有几个 physical threads, 就有几个Logical Processor **P**, 这样也就理解了什么是P, 即 physical threads, 
 
-![a](a.png)
+![a](/004-go-scheduler-2/a.png)
 
 You can see I have a single processor with 4 physical cores. What this report is not exposing is the number of hardware threads I have per physical core. The Intel Core i7 processor has Hyper-Threading, which means there are 2 hardware threads per physical core. This will report to the Go program that 8 virtual cores are available for executing OS Threads in parallel. 
 
@@ -45,7 +45,7 @@ The last piece of the puzzle is the **run queues**. There are two different run 
 
 M和P是一一对应的关系, M机器即用来运行Goroutine的,  而P拥有一个runqueue, 这个runqueue里面有多个等待被M执行的goroutine, 在M上只能同时运行一个goroutine, 所以当go scheduler要switch 一个goroutine的时候, 这时候进行goroutine上下文切换, 注意这里不是对kernel thread, 即M进行上下文切换, 
 
-![b](b.png)
+![b](/004-go-scheduler-2/b.png)
 
 根据图可以看出, 一个kernel thread维护一个runqueue, 请参考: https://youtu.be/YHRO5WQGh0k
 
@@ -106,15 +106,15 @@ Networking-based system calls can be processed asynchronously by many of the OSs
 
 The best way to see how this works is to run through an example.
 
-![c](c.png)
+![c](/004-go-scheduler-2/c.png)
 
 Figure 3 shows our base scheduling diagram. Goroutine-1 is executing on the M and there are 3 more Goroutines waiting in the LRQ to get their time on the M. The network poller is idle with nothing to do.
 
-![d](d.png)
+![d](/004-go-scheduler-2/d.png)
 
 In figure 4, Goroutine-1 wants to make a network system call, so Goroutine-1 is moved to the network poller and the asynchronous network system call is processed. Once Goroutine-1 is moved to the network poller, the M is now available to execute a different Goroutine from the LRQ. In this case, Goroutine-2 is context-switched on the M.
 
-![e](e.png)
+![e](/004-go-scheduler-2/e.png)
 
 In figure 5, the asynchronous network system call is completed by the network poller and Goroutine-1 is moved back into the LRQ for the P. Once Goroutine-1 can be context-switched back on the M, the Go related code it’s responsible for can execute again. The big win here is that, to execute network system calls, no extra Ms are needed. The network poller has an OS Thread and it is handling an efficient event loop.
 
@@ -126,15 +126,15 @@ What happens when the Goroutine wants to make a system call that can’t be done
 
 Let’s walk through what happens with a synchronous system call (like file I/O) that will cause the M to block.
 
-![f](f.png)
+![f](/004-go-scheduler-2/f.png)
 
 Figure 6 is showing our basic scheduling diagram again but this time Goroutine-1 is going to make a synchronous system call that will block M1.
 
-![g](g.png)
+![g](/004-go-scheduler-2/g.png)
 
 In figure 7, the scheduler is able to identify that Goroutine-1 has caused the M to block. At this point, the scheduler detaches M1 from the P with the blocking Goroutine-1 still attached. Then the scheduler brings in a new M2 to service the P. At that point, Goroutine-2 can be selected from the LRQ and context-switched on M2. If an M already exists because of a previous swap, this transition is quicker than having to create a new M.
 
-![h](h.png)
+![h](/004-go-scheduler-2/h.png)
 
 In figure 8, the blocking system call that was made by Goroutine-1 finishes. At this point, Goroutine-1 can move back into the LRQ and be serviced by the P again. M1 is then placed on the side for future use if this scenario needs to happen again.
 

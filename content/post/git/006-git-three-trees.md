@@ -44,7 +44,7 @@ The Git index is a critical data structure in Git. It serves as the “staging a
 
 Git’s typical workflow is to record snapshots of your project in successively better states, by manipulating these three trees.
 
-![](a.png)
+![](/006-git-three-trees/a.png)
 
 还记得上一篇文章我们说的 git restore, git rm, git reset 的区别吗, 再看看上面这个图, 是不是觉得前后呼应了:
 

@@ -5,6 +5,7 @@ categories:
   - Git
 tags:
   - Git
+typora-root-url: ../../../static
 ---
 
 ## 总结
@@ -26,7 +27,7 @@ tags:
 
 Remember that each file in your **working directory** can be in one of **two states**: *`tracked`* or *`untracked`*. Tracked files are files that were in the last **snapshot**, as well as any newly **staged files**; they can be `unmodified`, `modified`, or `staged`. In short, tracked files are files that Git knows about. As you edit files, Git sees them as modified, because you’ve changed them since your last commit. As you work, you selectively stage these modified files and then commit all those staged changes, and the cycle repeats.
 
-![](a.png)
+![a](/001-git-basics/a.png)
 
 ### Modified -> Unmodified
 

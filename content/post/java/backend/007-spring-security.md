@@ -24,16 +24,16 @@ logging:
     org.springframework.security: TRACE
 ```
 
-![1](1.png)
+![1](/007-spring-security/1.png)
 
 #### ` 1:30:35` 理论: AuthenticationManager, ProviderManager, AuthenticationProvider 
 
 > Authentication Object stands for either the request to login or the result of a successful login request , 
 
 
-![2](2.png)
+![2](/007-spring-security/2.png)
 
-![3](3.png)
+![3](/007-spring-security/3.png)
 
 上图中, 如果账号密码正确, 则 ProviderManager 返回的 UsernamePasswordAuthenticationToken 就是同一个对象, 只不过内容从 password, username 变成了一个 richer object (内容更丰富), 如 UserDetails 对象可能包含 你喜欢的颜色, 生日, 等信息, 而 Authority 对象可能包含你的权限, 如 user 还是 admin, 
 
@@ -60,7 +60,7 @@ Basically `AuthenticationProvider` is the specialized version of the `ProviderMa
 
 And this allows you to extend Spring Security in a very specific place for changing the way someone logs in, *without having to write a custom filter that takes the request*, that does some transformation, maybe you don't need to go that far, maybe you have special rules around, you know the email of the user that comes in, well here an `AuthenticationProvider` would be good enough. 
 
-![4](4.png)
+![4](/007-spring-security/4.png)
 
 A `ProviderManager` just like this, kind of the same idea of the filters, but applied to transforming authentication requests into authenciated objects, it's a for loop over a list of `AuthenticationProvider`.
 
@@ -136,7 +136,7 @@ We mount it into the filter chain, go to the `WebSecurityConfig`:
 
 When I log in `ProviderManager` produces an event, when I fail to log in and it also produces an event a spring event, so this means we can listen to those events and do stuff when an event is done. 
 
-![5](5.png)
+![5](/007-spring-security/5.png)
 
 #### `1:45:00` Change our Custom RobotFilter to Custom AuthenticationProvider
 
@@ -181,9 +181,9 @@ logging:
     org.springframework.security: TRACE
 ```
 
-![7](7.png)
+![7](/007-spring-security/7.png)
 
-![8](9.png)
+![8](/007-spring-security/9.png)
 
 从图中可以看出 使用如下登录, 则会匹配到我们的 DavidAuthenticationProvider, 
 
@@ -191,7 +191,7 @@ logging:
 $ curl -u "david:asd" http://localhost:8080/private -v
 ```
 
-![9](8.png)
+![9](/007-spring-security/8.png)
 
 若使用正常用户密码登录, 则会跳过 DavidAuthenticationProvider, 使用 DaoAuthenticationProvider 验证, 
 
@@ -223,7 +223,7 @@ Found username 'david' in Basic Authorization header
 
 把 BasicAuthenticationFilter 加入到了 Security, 然后验证的时候正如输出那样, 一层一层的调用Filter, 进行匹配, 我们此时使用的是命令行 `curl -u ""` 进行验证的, 而 BasicAuthenticationFilter 就是做这个的, 如果我们把 BasicAuthenticationFilter 从我们的SecurityChian中移除也就是删除代码 `.httpBasic(withDefaults())`, 那我们通过 `curl -u` 提供的账号密码就不会被发现, 然后导致验证失败, 原因是所有的 filter 都被依次掉用完, 但依然没有发现匹配的,
 
-![10](10.png)
+![10](/007-spring-security/10.png)
 
 通过这个我们也会发现, 如果使用自定义 filter 进行验证, 如使用 DavidFIlter, 而不是DavidAuthenticationProvider, 那我们还需要去验证 post 里面的账号密码, 具体分析参考视频 `1:58:15`
 
@@ -231,15 +231,15 @@ Found username 'david' in Basic Authorization header
 
 #### `2:00:00` Recap
 
-![11](11.png)
+![11](/007-spring-security/11.png)
 
 #### `2:01:35`  Configurers - "navigate Spring Security"
 
 > Configurers are an abstraction that allows you to configure the filter chain and do multiple operations on the the HTTP builder(), 
 
-![12](12.png)
+![12](/007-spring-security/12.png)
 
-![13](13.png)
+![13](/007-spring-security/13.png)
 
 `RobotLoginConfigurer.java`
 

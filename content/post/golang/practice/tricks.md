@@ -1,5 +1,5 @@
 ---
-title: tricks in golang
+title: little tricks in golang
 date: 2023-08-27 17:12:55
 categories:
  - Golang

@@ -264,7 +264,7 @@ $ echo $GOPATH
 
 Go Modules 是 Golang 新的依赖管理方法, 之前用的都是 GOPATH, 他们两个不能同时存在, Goland 默认设置了 GOPATH, 如果你使用了Go Modules 即 `go mod init xxx`, 那你需要删除 Goland 上面的 Project GOPATH, 如下:
 
-![a](a.png)
+![a](/005-go-modules/a.png)
 
 了解 GOPATH: https://golangr.com/what-is-gopath
 

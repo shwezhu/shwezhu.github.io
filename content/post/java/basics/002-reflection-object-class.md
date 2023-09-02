@@ -18,7 +18,7 @@ public class Object {...}
 
 The `java.lang.Object` class is the root of the class hierarchy. Every class has `Object` as a superclass. 所有的类(包括自定义类)都自动继承了类 `java.lang.Object`, 你可以自己创建个类, 然后查看其对象可调用的方法, 如下:
 
-![1](1.png)
+![1](/002-reflection-object-class/1.png)
 
 可以看到一些方法如 `equals()`, `getClass()`, 这都是 `Cat` 继承自类 `Object` 所得, 
 

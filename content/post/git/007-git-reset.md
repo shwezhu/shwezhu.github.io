@@ -24,33 +24,33 @@ tags:
 
 **Git’s typical workflow** is to record snapshots of your project by manipulating these three trees: 
 
-![a](a.png)
+![a](/007-git-reset/a.png)
 
 Let’s visualize git’s typical workflow: say you have a new directory with a single file  `file.txt`  in it. Now we run `git init`, which will create a Git repository with a **HEAD reference** which points to the unborn `master` branch (newly-initialized Git repository with unstaged file  `file.txt: v1` in the working directory):
 
-![b](b.png)
+![b](/007-git-reset/b.png)
 
 Now we want to commit this file, so we first use `git add` to copy content in the **working directory** to the **index**:
 
-![c](c.png)
+![c](/007-git-reset/c.png)
 
 Then we run `git commit`, which saves the contents of the **index** as a permanent snapshot, creates a commit object which points to that snapshot, and updates `master` to point to that commit. (这句话信息量很大, 对比下图看看 `git commit`做了什么, 注意 `master` 是个branch)
 
-![d](d.png)
+![d](/007-git-reset/d.png)
 
 If we run `git status`, we’ll see no changes, because all three trees are the same (三个tree: HEAD, Index, Working Directory). 
 
 Now we want to make a change to that file and commit it. first, we change the file in our **working directory**:
 
-![e](e.png)
+![e](/007-git-reset/e.png)
 
 If we run `git status` right now, we’ll see “Changes not staged for commit”, because that entry differs between the **index** and the **working directory**. Next we run `git add` to stage it into our **index**.
 
-![f](f.png)
+![f](/007-git-reset/f.png)
 
 At this point, if we run `git status`, we will see  “Changes to be committed” because the **index** and **HEAD** differ — that is, our proposed next commit is now different from our last commit. Finally, we run `git commit` to finalize the commit:
 
-![g](g.png)
+![g](/007-git-reset/g.png)
 
 注意看我们的图, 分成两个部分, 第一部分是宏观的, 即可以发现HEAD指向的一直是master branch, 然后master branch随着不断的commit一直向外延伸, 第二部分即为了方便我们理解展示的三棵树的变化细节, 即不停的拷贝对比不同, 
 
@@ -64,13 +64,13 @@ The `reset` command makes more sense when viewed in this context.
 
 For the purposes of these examples, let’s say that we’ve modified `file.txt` again and committed it a third time. So now our history looks like this:
 
-![h](h.png)
+![h](/007-git-reset/h.png)
 
 ### 2.1. Step 1: Move HEAD
 
 The first thing `reset` will do is move what HEAD points to. This isn’t the same as changing HEAD itself (which is what `checkout` does); `reset` moves the branch that HEAD is pointing to. This means if HEAD is set to the `master` branch (i.e. you’re currently on the `master` branch), running `git reset 9e5e6a4` will start by making `master` point to `9e5e6a4`. 所以`reset`在这一步做的就是移动master分支的指向, 即在同一个分支上的版本穿梭, 注意看下图, 三个tree, 只有HEAD的内容变了, 
 
-![i](i.png)
+![i](/007-git-reset/i.png)
 
 No matter what form of `reset` with a commit you invoke, this is the first thing it will always try to do. With `reset --soft`, it will simply stop there.
 
@@ -82,7 +82,7 @@ Note that if you run `git status` now you’ll see in green the difference betwe
 
 The next thing `reset` will do is to update the index with the contents of whatever snapshot HEAD now points to.
 
-![j](j.png)
+![j](/007-git-reset/j.png)
 
 If you specify the `--mixed` option, `reset` will stop at this point. This is also the default, so if you specify no option at all (just `git reset HEAD~` in this case), this is where the command will stop.
 
@@ -92,7 +92,7 @@ Now take another second to look at that diagram and realize what happened: it st
 
 The third thing that `reset` will do is to make the working directory look like the index. If you use the `--hard` option, it will continue to this stage.
 
-![k](k.png)
+![k](/007-git-reset/k.png)
 
 根据上图可以发现  `--hard` 把三个tree的内容更改为master分支所指向的snapshot, 对这次我们仅是时master分支指向上一次提交的snapshot, 但这个时候要注意, 如果你的working directory里有修改的内容但还没提交, 那可别用这个, 不然就直接覆盖了... 用`--hard`之前要先想想, 
 
@@ -109,14 +109,14 @@ So, assume we run `git reset file.txt`. This form (since you did not specify a c
 
 So it essentially just copies `file.txt` from HEAD to the index.
 
-![l](l.png)
+![l](/007-git-reset/l.png)
 
 This has the practical effect of *unstaging* the file. If we look at the diagram for that command and think about what `git add` does, they are exact opposites.
 
-![m](m.png)
+![m](/007-git-reset/m.png)
 
 This is why the output of the `git status` command suggests that you run this to unstage a file (see [Unstaging a Staged File](https://git-scm.com/book/en/v2/ch00/_unstaging) for more on this).
 
 We could just as easily not let Git assume we meant “pull the data from HEAD” by specifying a specific commit to pull that file version from. We would just run something like `git reset eb43bf file.txt`.
 
-![n](n.png)
+![n](/007-git-reset/n.png)

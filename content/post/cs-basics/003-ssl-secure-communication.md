@@ -57,7 +57,7 @@ SSL certificates include the following information in a single data file:
 
 其实我只猜对了一半, HTPPS 采用的是混合加密, 即从建立 HTTPS 连接到相互传递数据存在两个Key, 服务器的公钥和客户端服务器两者共享的密钥, 该密钥是对称加密里的密钥, 什么意思呢, 就是客户端不是拿到了服务器的 SSL 证书吗? 这个证书里包含了服务器的公钥, 这时候呢, 客户端生成一个密钥 (对称加密里的密钥, 不是公私钥里的私钥) 然后客户端用服务器的公钥加密这个密钥传给服务器, 服务器用它自己的私钥解密, 之后的他们就都使用这同一个密钥进行加密解密, 具体如下图:
 
-![a](a-5839840.png)
+![a](/003-ssl-secure-communication/a-5839840.png)
 
 这里又有个问题, HTTPS 是 stateful 还是 stateless 的呢? 我们知道 http 是stateless的, 在文章第一节我们就提到 https 并不是什么新的协议, 就是 http 利用了 SSL 协议, 而 SSL 是 stateful 的, 所以在上图中的会话即session里, 客户端和服务器并不是只传递一次信息回话就结束了, 而是可传递多次,  
 
@@ -121,7 +121,7 @@ ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the 'ssl' modu
 
 However, from your Python code's perspective, you're just using the ssl module's high-level API. You don't have to interact directly with OpenSSL - it's an implementation detail hidden by the SSLContext and socket wrapping methods. So in short, the Python SSL library uses the OpenSSL library under the hood to actually perform SSL handshakes, key generation, encryption, etc. But from a Python programmer's point of view, you just import ssl and call its APIs to establish encrypted SSL connections.
 
-![b](b.png)
+![b](/003-ssl-secure-communication/b.png)
 
 所以呢上面这个错误是在说, urllib3 2.0 仅支持 OpenSSL 1.1.1+, 但是电脑上的 ssl 库使用的是 LibreSSL 2.8.3., (别忘了上面我们输入`openssl version` 的时候输出的是LibreSSL), 在这 OpenSSL 和 LibreSSL等价, 既然 urllib3的2.0版本不支持我们电脑上的LibreSSL, 那我们就换个 urllib3 的版本咯, 
 

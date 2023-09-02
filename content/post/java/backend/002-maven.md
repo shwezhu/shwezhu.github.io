@@ -13,7 +13,7 @@ tags:
 
 **1.Go to Maven [Download site]( https://maven.apache.org/download.cgi)**
 
-![](a.png)
+![](/002-maven/a.png)
 
 **2.Set Environment Variables**
 
@@ -55,7 +55,7 @@ Maven Repository有3种类型:
 
 Maven Local Repository 是本机中的一个目录, 如果目录不存在, 执行maven时就会先创建它, 默认情况下, maven本地存储库是`%USER_HOME%/.m2` , 我们可以在maven配置文件查看local repository, 位置在 maven 安装路径下, `MAVEN_HOME/conf/settings`:
 
-![1](1.png)
+![1](/002-maven/1.png)
 
 查看 `.m2` 的内容, 
 

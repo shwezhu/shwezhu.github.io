@@ -17,7 +17,7 @@ tags:
 
 - 关于 authentication object, 可以参考[上一篇](https://davidzhu.xyz/2023/08/04/Java/Backend/005-spring-security/)或者观看[视频 33:00](https://youtu.be/iJ2muJniikY), 
 - 关于 filter chain, 可参考视频 39:15, 或参考: [FIlter Architecture Spring Security](https://docs.spring.io/spring-security/reference/servlet/architecture.html)
-![1](1.png)
+![1](/006-spring-security/1.png)
 
 ## 功能陈述
 
@@ -125,7 +125,5 @@ Hello David~%
 - 创建我们的特殊 RobotFilter, 通过继承 `OncePerRequestFilter` 实现
 - 因为访问的页面需要 authenticated, 因此创建特殊 RobotFilter 时, 需要新建一个 authentication object `RobotAuthentication` 来表示 robot 用户
 - 在账号密码登录认证 filter 前添加我们刚自定义的 `RobotFilter`, 通过修改 `WebSecurityConfig::securityFilterChain` 方法实现
-
-
 
 本文主要参考: [Spring Security, demystified by Daniel Garnier Moiroux](https://www.youtube.com/watch?v=iJ2muJniikY&list=PLn7Fivb51OvJLdfD8KrhgiawFINb94j9X&index=2&t=3741s)

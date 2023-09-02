@@ -21,7 +21,7 @@ tags:
 
 An array’s size is fixed; its length is part of its type (`[4]int` and `[5]int` are distinct, incompatible types). The in-memory representation of `[4]int` is just four integer values laid out sequentially:
 
-![1](1.png)
+![1](/016-slice-string-relearning/1.png)
 
 Go’s arrays are values. An array variable denotes the entire array; it is not a pointer to the first array element (as would be the case in C). This means that when you assign or pass around an array value you will make a copy of its contents. (To avoid the copy you could pass a *pointer* to the array, but then that’s a pointer to an array, not an array.) 
 
@@ -66,7 +66,7 @@ Note that new slice shares the same storage as `b`, namely, same underlying arra
 
 A slice is a descriptor of an array segment. It consists of a pointer to the array, the length of the segment, and its capacity (the maximum length of the segment). A slice is essentially just this:
 
-![2](2.png)
+![2](/016-slice-string-relearning/2.png)
 
 ```go
 type slice struct {
@@ -78,13 +78,13 @@ type slice struct {
 
 Our variable `s`, created earlier by `make([]byte, 5)`, is structured like this:
 
-![3](3.png)
+![3](/016-slice-string-relearning/3.png)
 
 The length is the number of elements referred to by the slice. The capacity is the number of elements in the underlying array. The distinction between length and capacity will be made clear as we walk through the next example. 
 
 As we slice `s`, observe the changes in the slice data structure and their relation to the underlying array:
 
-![4](4.png)
+![4](/016-slice-string-relearning/4.png)
 
 Slicing does not copy the slice’s data. It creates a new slice value that points to the original array. This makes slice operations as efficient as manipulating array indices. Therefore, modifying the *elements* (not the slice itself) of a re-slice modifies the elements of the original slice:
 
@@ -105,7 +105,7 @@ Earlier we sliced `s` to a length shorter than its capacity. We can grow s to it
 s = s[:cap(s)]
 ```
 
-![5](5.png)
+![5](/016-slice-string-relearning/5.png)
 
 A slice cannot be grown beyond its capacity. Attempting to do so will cause a runtime panic, just as when indexing outside the bounds of a slice or array. Similarly, slices cannot be re-sliced below zero to access earlier elements in the array.
 

@@ -11,13 +11,13 @@ tags:
 
 单核CPU的基本结构如下:
 
-![a](a.png)
+![a](/006-cpu-architecture/a.png)
 
 可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register + Cache), 然后由通过总线进行IO与Main Memory进行通信, 
 
 那么多核CPU即有多个这种独立的核心(ALU, CU, Memory (Register + Cache))执行命令, 最后的结果交给与CPU相连的总线进行处理, 多核CPU架构如下:
 
-![b](b.png)
+![b](/006-cpu-architecture/b.png)
 
 ## 2. Hyper-Threading & Physical Threads
 
@@ -33,7 +33,7 @@ Some apps take better advantage of multiple threads than others. Lightly-threade
 
 The Windows Task Manager shows this fairly well. Here, for example, you can see that this system has one actual CPU (socket) and 8 cores. Simultaneous multithreading makes each core look like two CPUs to the operating system, so it shows 16 logical processors.
 
-![c](c.png)
+![c](/006-cpu-architecture/c.png)
 
 参考:
 
