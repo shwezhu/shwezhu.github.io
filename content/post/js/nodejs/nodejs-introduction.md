@@ -2,11 +2,11 @@
 title: Nodejs 安装与介绍
 date: 2023-06-11 19:45:27
 categories:
-  - JavaScript
-  - Nodejs
+  - javascript
+  - nodejs
 tags:
-  - JavaScript
-  - Nodejs
+  - javascript
+  - nodejs
 ---
 
 ### 1. Intro

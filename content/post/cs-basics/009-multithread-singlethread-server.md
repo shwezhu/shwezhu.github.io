@@ -2,9 +2,10 @@
 title: Is Multithreaded Server Better than a Single Thread Server?
 date: 2023-08-26 19:03:60
 categories:
- - CS Basics
+ - cs basics
 tags:
- - Concurrency
+ - concurrency
+ - cs basics
 ---
 
 Original: https://qr.ae/pyztor

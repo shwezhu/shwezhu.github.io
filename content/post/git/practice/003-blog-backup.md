@@ -2,10 +2,10 @@
 title: Backup Blogs with Git
 date: 2023-09-01 14:12:50
 categories:
-  - Git
-  - Practice
+  - git
+  - practice
 tags:
-  - Git
+  - git
 ---
 
 ## Problem I have

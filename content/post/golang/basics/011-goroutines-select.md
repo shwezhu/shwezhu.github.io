@@ -2,11 +2,11 @@
 title: Golang并发学习之Select
 date: 2023-05-21 21:22:11
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
- - Concurrency
+ - golang
+ - concurrency
 ---
 
 ## 1. `select` will block if none of its case cannot run

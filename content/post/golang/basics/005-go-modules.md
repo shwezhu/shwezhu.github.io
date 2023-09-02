@@ -2,10 +2,10 @@
 title: Golang模块module和包package的使用之导入自定义包
 date: 2023-05-21 14:32:10
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 昨天做贪吃蛇的时候想用个第三方的库来读取键盘输入, 很小, 就直接创建一个go文件把内容复制了进去, 但import的时候却找不到包, 查了一下是Go的包管理机制和Java, Python的不太一样, 于是就有了这篇文章, 

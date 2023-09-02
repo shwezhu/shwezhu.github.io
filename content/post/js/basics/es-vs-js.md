@@ -2,10 +2,10 @@
 title: ECMAScript vs JavaScript & CommonJS vs ES Modules
 date: 2023-06-13 10:36:28
 categories:
-  - JavaScript
-  - Basics
+  - javascript
+  - basics
 tags:
-  - JavaScript
+  - javascript
 ---
 
 ## 1. ECMAScript vs JavaScript

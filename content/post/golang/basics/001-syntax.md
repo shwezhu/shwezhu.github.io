@@ -2,10 +2,10 @@
 title: Golang函数变量以及基础数据类型
 date: 2023-05-12 10:00:20
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 ## 1. Function Declearation

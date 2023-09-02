@@ -2,9 +2,9 @@
 title: Primary Key
 date: 2023-07-12 08:58:36
 categories:
- - Database
+ - database
 tags:
- - Database
+ - database
 ---
 
 ## Primary Key

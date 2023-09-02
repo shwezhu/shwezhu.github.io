@@ -2,10 +2,10 @@
 title: byte slice vs string in golang
 date: 2023-08-19 19:38:60
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 Before read this: [Relearn slice in Golang](https://davidzhu.xyz/2023/08/19/Golang/Basics/016-slice-relearning/)

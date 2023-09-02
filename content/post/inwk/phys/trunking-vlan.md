@@ -2,8 +2,10 @@
 title: Trunk 和 Vlan - Lab 笔记
 date: 2023-05-18 00:49:07
 categories:
- - INWK
- - Phys
+ - inwk
+ - phys
+tags:
+ - inwk
 ---
 
 ## 1. Switchport `Access Mode` vs `Trunk Mode`

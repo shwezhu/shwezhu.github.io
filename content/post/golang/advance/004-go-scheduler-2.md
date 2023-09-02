@@ -2,11 +2,11 @@
 title: Go Scheduler (1) - Go Advanced
 date: 2023-05-28 18:06:20
 categories:
- - Golang
- - Advance
+ - golang
+ - advance
 tags:
- - Golang
- - Concurrency
+ - golang
+ - concurrency
 ---
 
 原文: [Scheduling In Go : Part II - Go Scheduler](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part2.html)

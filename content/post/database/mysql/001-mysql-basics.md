@@ -2,9 +2,9 @@
 title: MySQL 命名规则 时间字符串类型 基础创表语句 
 date: 2023-07-12 08:51:35
 categories:
- - Database
+ - database
 tags:
- - Database
+ - database
 ---
 ## 0. 常用语句
 

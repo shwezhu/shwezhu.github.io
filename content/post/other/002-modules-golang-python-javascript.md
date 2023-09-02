@@ -2,11 +2,12 @@
 title: Python Golang Javascript中的模块对比以及Python中的__name__
 date: 2023-06-14 18:32:30
 categories:
-  - Other
+  - other
 tags:
-  - JavaScript
-  - Python
-  - Golang
+  - javascript
+  - python
+  - golang
+  - other
 ---
 
 ## Python

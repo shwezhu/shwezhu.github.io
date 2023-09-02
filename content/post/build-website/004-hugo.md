@@ -2,9 +2,9 @@
 title: "Write Blog with Hugo & Deploy to Github Pages"
 date: 2023-08-31 23:51:57
 categories:
-  - Build Website
+ - build website
 tags:
-  - Hugo
+  - hugo
 ---
 
 ## 1. Basic Commands

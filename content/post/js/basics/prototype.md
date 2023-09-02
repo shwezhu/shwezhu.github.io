@@ -2,10 +2,10 @@
 title: 说说 JS 中的 Prototype
 date: 2023-06-20 21:41:32
 categories:
-  - JavaScript
-  - Basics
+  - javascript
+  - basics
 tags:
-  - JavaScript
+  - javascript
 ---
 
 `{}` 就是个空对象, `{}` 然鹅在 Python 里是个 dictionary, 

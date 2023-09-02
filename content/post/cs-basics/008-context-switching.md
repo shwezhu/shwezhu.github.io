@@ -2,9 +2,10 @@
 title: Context Switching
 date: 2023-05-27 16:29:15
 categories:
- - CS Basics
+ - cs basics
 tags:
- - Concurrency
+ - concurrency
+ - cs basics
 ---
 
 ## 1. Context Switch

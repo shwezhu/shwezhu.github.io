@@ -2,10 +2,10 @@
 title: 关于Golang函数返回局部变量的地址的问题
 date: 2023-05-15 22:52:03
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 最近在学习Golang, 看到了类似下面的代码, 

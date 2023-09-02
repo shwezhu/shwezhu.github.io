@@ -2,11 +2,11 @@
 title: Goroutines Model - Go Advanced
 date: 2023-08-24 14:58:18
 categories:
- - Golang
- - Advance
+ - golang
+ - advance
 tags:
- - Golang
- - Concurrency
+ - golang
+ - concurrency
 ---
 
 ## 1.  Two Styles of Concurrent Programming

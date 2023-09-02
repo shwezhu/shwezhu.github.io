@@ -2,9 +2,9 @@
 title: master vs origin/master vs remotes/origin/master
 date: 2023-08-16 09:42:50
 categories:
-  - Git
+  - git
 tags:
-  - Git
+  - git
 ---
 
 Take a clone of a remote repository and run `git branch -a` (to show all the branches git knows about). It will probably look something like this:

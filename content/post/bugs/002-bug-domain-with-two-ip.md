@@ -2,10 +2,10 @@
 title: 启动Cloudflare代理导致无法通过域名解析出A记录中的IP
 date: 2023-04-26 17:30:22
 categories:
- - Bugs
+ - bugs
 tags:
- - Bugs
- - Build Website
+ - bugs
+ - build website
 typora-root-url: ../../../static
 ---
 

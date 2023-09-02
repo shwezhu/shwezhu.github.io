@@ -2,10 +2,10 @@
 title: Pointer Receiver vs Value Receiver in Golang
 date: 2023-08-15 17:18:20
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 ## Pointer Receiver Error

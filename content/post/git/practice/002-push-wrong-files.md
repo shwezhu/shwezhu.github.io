@@ -2,10 +2,10 @@
 title: pushed a wrong file to github - solved
 date: 2023-08-20 07:40:57
 categories:
-  - Git
-  - Practice
+  - git
+  - practice
 tags:
-  - Git
+  - git
 ---
 
 ## 问题描述

@@ -2,10 +2,10 @@
 title: C++类学习之构造函数
 date: 2023-05-15 18:56:01
 categories:
- - C++
- - Basics
+ - c++
+ - basics
 tags:
- - C++
+ - c++
 ---
 
 ## 1. Member initialization list

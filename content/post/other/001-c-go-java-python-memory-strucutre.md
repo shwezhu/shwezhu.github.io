@@ -2,12 +2,13 @@
 title: C Go Java Python内存结构及对比
 date: 2023-05-27 19:59:17
 categories:
- - Other
+ - other
 tags:
- - Golang
- - Java
- - C
- - Python
+ - golang
+ - java
+ - c
+ - python
+ - other
 ---
 
 声明: 很多知识尤其是GC相关也是刚接触, 里面很可能会有不正确的观点, 会在接下来的学习中不断的修改, 当作自己的笔记, 用质疑的心态去读... 英文部分皆是拷贝的其它文章和官方文档, 链接都在文章末尾, 

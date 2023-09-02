@@ -2,10 +2,10 @@
 title: encoding/gob & encoding/json in golang
 date: 2023-08-31 11:38:20
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 ## 1. why do we need encoding

@@ -2,10 +2,10 @@
 title: JS对象, 数据类型, 容器介绍
 date: 2023-06-20 20:51:31
 categories:
-  - JavaScript
-  - Basics
+  - javascript
+  - basics
 tags:
-  - JavaScript
+  - javascript
 ---
 
 ## JavaScript Objects

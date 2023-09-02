@@ -2,11 +2,11 @@
 title: os.Getenv() function
 date: 2023-08-16 21:28:55
 categories:
- - Golang
- - Practice
+ - golang
+ - practice
 tags:
- - Golang
- - Practice
+ - golang
+ - practice
 ---
 
 ## 什么是环境变量

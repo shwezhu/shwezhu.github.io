@@ -2,9 +2,9 @@
 title: Linux常用命令行
 date: 2023-05-03 12:40:56
 categories:
- - Linux
+ - linux
 tags:
- - Linux
+ - linux
 ---
 
 ## 1. 常用指令

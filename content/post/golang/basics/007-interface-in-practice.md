@@ -2,10 +2,10 @@
 title: Golang Interface & Interface in Web App
 date: 2023-08-22 13:03:05
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 ## 1. Empty Interface - Wildcard

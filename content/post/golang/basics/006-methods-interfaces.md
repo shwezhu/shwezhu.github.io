@@ -2,10 +2,10 @@
 title: Golang Methods与Interface结合实现多态
 date: 2023-05-14 01:10:32
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 Go does not have classes, however, **you can define methods on types**. A method is a function with a special *receiver* argument.

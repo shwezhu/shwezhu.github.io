@@ -2,9 +2,9 @@
 title: Git分支指令及切换分支注意事项
 date: 2023-04-22 00:47:50
 categories:
-  - Git
+  - git
 tags:
-  - Git
+  - git
 ---
 
 ## 1. Common Commands

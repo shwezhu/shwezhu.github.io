@@ -2,10 +2,10 @@
 title: Golang容器之Array & Slice & Map
 date: 2023-05-13 10:23:59
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 ## 1. Declare & Init Array

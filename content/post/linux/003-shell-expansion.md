@@ -2,9 +2,9 @@
 title: Shell Expansion
 date: 2023-08-26 11:30:20
 categories:
- - Linux
+ - linux
 tags:
- - Linux
+ - linux
 ---
 
 ## 1. Shell Expansion

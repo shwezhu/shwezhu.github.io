@@ -2,7 +2,9 @@
 title: An overview of HTTP
 date: 2023-08-28 16:03:60
 categories:
- - CS Basics
+ - cs basics
+tags:
+ - cs basics
 ---
 
 ## Process of HTTP Connection Establishment

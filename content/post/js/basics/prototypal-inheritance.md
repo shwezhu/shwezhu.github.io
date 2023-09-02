@@ -2,10 +2,10 @@
 title: JS 继承之 Prototype Chain 的意义
 date: 2023-06-21 11:08:32
 categories:
-  - JavaScript
-  - Basics
+  - javascript
+  - basics
 tags:
-  - JavaScript
+  - javascript
 ---
 
 ## 1. JS 对象的特殊行为

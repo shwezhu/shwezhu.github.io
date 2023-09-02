@@ -2,7 +2,9 @@
 title: 英语阅读(一)
 date: 2023-07-14 18:50:37
 categories:
- - Other
+ - other
+tags:
+ - other
 ---
 
 During today’s press conference in which Hollywood actors confirmed that **they were going on strike**, Duncan Crabtree-Ireland, SAG-AFTRA’s chief negotiator, revealed a proposal from Hollywood studios that sounds ripped right out of a Black Mirror episode.

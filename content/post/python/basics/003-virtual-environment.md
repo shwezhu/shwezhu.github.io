@@ -2,9 +2,9 @@
 title: Python创建虚拟环境以及'Python -m'和‘if __name__ == "__main__"’
 date: 2023-05-09 20:12:40
 categories:
- - Python
+  - python
 tags:
- - Python
+  - python
 ---
 
 ### **查看python环境**

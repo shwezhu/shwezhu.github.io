@@ -2,10 +2,10 @@
 title: 说说编码 - encoding
 date: 2023-06-01 22:13:25 
 categories:
-  - CS Basics
+  - cs basics
 tags:
-  - Python
-  - Reflection
+  - python
+  - cs basics
 ---
 
 编码问题很常见, 比如要读文件有时候打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 

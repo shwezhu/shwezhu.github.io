@@ -2,9 +2,9 @@
 title: Python不定长参数
 date: 2023-06-06 22:51:26
 categories:
-  - Python
+  - python
 tags:
-  - Python
+  - python
 ---
 
 ### 1. 四种 argument 类型

@@ -2,10 +2,10 @@
 title: Golang基础语法之循环判断及defer
 date: 2023-05-13 00:10:15
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 ## For

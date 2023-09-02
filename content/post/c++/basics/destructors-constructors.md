@@ -2,10 +2,10 @@
 title: C++构造函数和析构函数的应用RAII
 date: 2023-05-16 20:32:04
 categories:
- - C++
- - Basics
+ - c++
+ - basics
 tags:
- - C++
+ - c++
 ---
 
 在上一节[C++类学习之构造函数](https://davidzhu.xyz/2023/05/15/C++/Basics/constructors/)里介绍了构造函数和member initialization list, 这里介绍一些实际开发中会用的改善代码的方法, 

@@ -2,10 +2,10 @@
 title: First-Class Functions in Golang
 date: 2023-08-14 22:28:20
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 ## 1. 函数可以赋值给变量

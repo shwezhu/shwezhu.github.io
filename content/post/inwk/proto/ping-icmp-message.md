@@ -2,8 +2,10 @@
 title: Ping & ICMP Message - 课堂笔记
 date: 2023-06-22 19:49:33
 categories:
- - INWK
- - Proto
+ - inwk
+ - proto
+tags:
+ - inwk
 ---
 
 ## `ping` command

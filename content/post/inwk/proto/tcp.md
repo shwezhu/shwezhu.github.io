@@ -2,8 +2,10 @@
 title: TCP 4 Way Handshake - 课堂笔记
 date: 2023-07-22 10:45:39
 categories:
- - INWK
- - Proto
+ - inwk
+ - proto
+tags:
+ - inwk
 ---
 
 原文: [4.1 TCP 三次握手与四次挥手面试题 | 小林coding](https://xiaolincoding.com/network/3_tcp/tcp_interview.html)

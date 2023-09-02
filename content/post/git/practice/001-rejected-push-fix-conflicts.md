@@ -2,10 +2,10 @@
 title: push to github get rejected - solved
 date: 2023-08-15 22:18:50
 categories:
-  - Git
-  - Practice
+  - git
+  - practice
 tags:
-  - Git
+  - git
 ---
 
 ## 问题描述

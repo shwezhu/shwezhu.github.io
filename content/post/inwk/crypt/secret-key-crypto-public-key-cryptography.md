@@ -2,11 +2,11 @@
 title: 对称加密和非对称加密 - 课堂笔记
 date: 2023-06-03 19:26:27
 categories:
-  - INWK
-  - Crypt
+  - inwk
+  - crypt
 tags:
-  - Build Website
-  - Cryptography
+  - build website
+  - cryptography
 ---
 
 本篇从以前上课笔记搬过来的, 那时候用于复习, 查找资料的时候就没有加上引用, 很多信息没 reference, 

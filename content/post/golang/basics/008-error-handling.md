@@ -2,10 +2,10 @@
 title: Golang错误处理
 date: 2023-05-17 17:20:06
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 ## 1.`error` interface

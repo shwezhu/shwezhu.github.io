@@ -2,10 +2,10 @@
 title: Golang值传递分析之传递指针的规则介绍(Methods, Functions & interface value)
 date: 2023-05-16 17:25:04
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 类似C语言 [Go文档](https://go.dev/doc/faq#methods_on_values_or_pointers) 指出所有传递都是值传递:

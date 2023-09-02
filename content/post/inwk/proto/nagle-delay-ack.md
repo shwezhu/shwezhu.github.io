@@ -2,8 +2,10 @@
 title: Nagle算法和延迟ack - 课堂笔记
 date: 2023-07-22 19:46:40
 categories:
- - INWK
- - Proto
+ - inwk
+ - proto
+tags:
+ - inwk
 ---
 
 原文: [深入浅出TCPIP之Nagle算法-腾讯云开发者社区-腾讯云](https://cloud.tencent.com/developer/article/1784570)

@@ -2,10 +2,10 @@
 title: 利用Openai API实现自己的Chat AI Bot (一)
 date: 2023-06-06 22:28:25
 categories:
-  - Python
+  - python
 tags:
-  - Python
-  - Practice
+  - python
+  - practice
 ---
 
 ### 1. 任务类型

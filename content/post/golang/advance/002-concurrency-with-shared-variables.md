@@ -2,11 +2,11 @@
 title: Concurrency with Shared Variables - Go Advanced
 date: 2023-08-24 19:16:59
 categories:
- - Golang
- - Advance
+ - golang
+ - advance
 tags:
- - Golang
- - Concurrency
+ - golang
+ - concurrency
 ---
 
 ## 1. Concurrency Safe

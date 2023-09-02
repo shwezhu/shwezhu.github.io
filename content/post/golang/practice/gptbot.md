@@ -2,11 +2,11 @@
 title: Golang Web - A Simple GPTBot with Openai API
 date: 2023-08-18 09:20:57
 categories:
- - Golang
- - Practice
+ - golang
+ - practice
 tags:
- - Golang
- - Practice
+ - golang
+ - practice
 ---
 
 ## Introduction

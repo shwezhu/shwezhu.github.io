@@ -2,10 +2,10 @@
 title: C++里自定义类型和基础类型应采取何种初始化方式
 date: 2023-05-15 15:23:00
 categories:
- - C++
- - Basics
+ - c++
+ - basics
 tags:
- - C++
+ - c++
 ---
 
 看段代码, 

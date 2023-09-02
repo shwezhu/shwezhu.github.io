@@ -2,9 +2,9 @@
 title: "Git基础文件状态之版本穿梭"
 date: 2023-05-05 09:31:30
 categories:
-  - Git
+  - git
 tags:
-  - Git
+  - git
 typora-root-url: ../../../static
 ---
 

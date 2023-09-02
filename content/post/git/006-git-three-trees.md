@@ -2,9 +2,9 @@
 title: Three Trees & HEAD in Git
 date: 2023-05-04 19:40:30
 categories:
-  - Git
+  - git
 tags:
-  - Git
+  - git
 ---
 
 ## HEAD

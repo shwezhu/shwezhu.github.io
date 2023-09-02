@@ -2,9 +2,9 @@
 title: 部署博客到服务器 - Hexo
 date: 2023-04-23 19:54:52
 categories:
- - Build Website
+ - build website
 tags:
- - Hexo
+ - hexo
 ---
 
 ## 1. 安装Nginx和git (服务器端)

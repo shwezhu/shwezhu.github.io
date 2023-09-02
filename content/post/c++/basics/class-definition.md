@@ -2,10 +2,10 @@
 title: C++定义类规则
 date: 2023-05-16 22:36:06
 categories:
- - C++
- - Basics
+ - c++
+ - basics
 tags:
- - C++
+ - c++
 ---
 
 关于头文件相关的规则可以到: [C++头文件内容相关规则](https://davidzhu.xyz/2023/05/16/C++/Basics/header-files/)

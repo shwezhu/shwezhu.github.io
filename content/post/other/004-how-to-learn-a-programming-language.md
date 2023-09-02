@@ -2,9 +2,9 @@
 title: 如何开始学习一门程式语言
 date: 2023-05-03 19:11:30
 categories:
- - Other
+ - other
 tags:
- - Reflection
+ - other
 ---
 
 之前就在想每次学习一个新的语言的时候不知道从哪开始, 要么跟着教程要么就写个hello world不知道该干嘛了, 其实只要弄明白两个东西, 就可以边写边学了. 首先应该弄明白它是compiled language还是interpreted language, 然后再去搞明白它的data type system, 

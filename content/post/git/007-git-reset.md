@@ -2,9 +2,9 @@
 title: Git Reset 
 date: 2023-05-31 10:20:23
 categories:
-  - Git
+  - git
 tags:
-  - Git
+  - git
 ---
 
 前置: [Git撤销提交之The Three Trees | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/04/Git/006-Git-Three-Trees/)

@@ -2,9 +2,9 @@
 title: 正则表达式常用符号
 date: 2023-05-01 23:14:22
 categories:
- - Regex
+ - regex
 tags:
- - Regex
+ - regex
 ---
 
 注意 Bash一般都是用`“ ”`来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用`‘ ’`进行quote. 

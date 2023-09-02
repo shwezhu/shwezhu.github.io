@@ -2,10 +2,10 @@
 title: Relearn slice in Golang
 date: 2023-08-19 21:43:59
 categories:
- - Golang
- - Basics
+ - golang
+ - basics
 tags:
- - Golang
+ - golang
 ---
 
 ## 1. Slice is not an Array

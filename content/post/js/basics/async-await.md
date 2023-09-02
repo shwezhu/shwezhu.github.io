@@ -2,10 +2,10 @@
 title: Javascript 中的 Promise 对象和异步函数
 date: 2023-06-16 00:34:29
 categories:
-  - JavaScript
-  - Basics
+  - javascript
+  - basics
 tags:
-  - JavaScript
+  - javascript
 ---
 
 ## 1. Promise

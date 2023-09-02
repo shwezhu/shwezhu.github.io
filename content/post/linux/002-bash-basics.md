@@ -2,9 +2,9 @@
 title: Bash Basic Syntax
 date: 2023-09-01 12:23:59
 categories:
- - Linux
+ - linux
 tags:
- - Linux
+ - linux
 ---
 
 ## 1. Run a Script

@@ -2,10 +2,10 @@
 title: grep不支持Negative Lookahead问题
 date: 2023-05-02 22:29:30
 categories:
- - Bugs
+ - bugs
 tags:
- - Bugs
- - Regex
+ - bugs
+ - regex
 ---
 
 刚开始使用`printf "123\n24567\n8930\n234\n" | egrep '(?<!2)3'`提示`egrep: repetition-operator operand invalid`, 然后查到可以使用参数`-P`, 如下:

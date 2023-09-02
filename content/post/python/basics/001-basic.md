@@ -2,9 +2,9 @@
 title: Python Basics
 date: 2023-06-17 22:51:31
 categories:
-  - Python
+  - python
 tags:
-  - Python
+  - python
 ---
 
 dict,

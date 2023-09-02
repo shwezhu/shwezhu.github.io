@@ -2,11 +2,12 @@
 title: HTTPS 连接过程分析以及 SSL 证书和 OpenSSL 介绍
 date: 2023-06-03 20:32:26
 categories:
-  - CS Basics
+  - cs basics
 tags:
-  - Python
-  - Cryptography
-  - Build Website
+  - python
+  - cryptography
+  - build website
+  - cs basics
 ---
 
 最近使用python的 `urllib3` 发送http请求, 看到了一些基础概念, 想着还是记录一下, 

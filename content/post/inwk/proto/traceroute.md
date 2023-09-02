@@ -2,8 +2,10 @@
 title: Ping & Traceroute Command - 课堂笔记
 date: 2023-06-23 16:15:34
 categories:
- - INWK
- - Proto
+ - inwk
+ - proto
+tags:
+ - inwk
 ---
 
 ## 1. Ping and Tracert Test

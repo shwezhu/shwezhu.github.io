@@ -2,9 +2,9 @@
 title: Introduce Redis
 date: 2023-08-18 10:40:58
 categories:
- - Database
+ - database
 tags:
- - Database
+ - database
 ---
 
 ## 1. Install & Run Redis Server

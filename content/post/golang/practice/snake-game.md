@@ -2,12 +2,12 @@
 title: 用Go实现一个简单的贪吃蛇
 date: 2023-05-20 19:59:9
 categories:
- - Golang
- - Practice
+ - golang
+ - practice
 tags:
- - Golang
- - Game
- - Practice
+ - golang
+ - game
+ - practice
 ---
 
 Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 

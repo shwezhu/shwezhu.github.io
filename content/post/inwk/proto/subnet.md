@@ -2,8 +2,10 @@
 title: 计算网络地址和广播地址 - 课堂笔记
 date: 2023-07-01 09:28:37
 categories:
- - INWK
- - Proto
+ - inwk
+ - proto
+tags:
+ - inwk
 ---
 
 ### 1. 确定用于划分子网的位数

@@ -2,10 +2,10 @@
 title: C++变量初始化Assignment & Initialization
 date: 2023-05-14 18:29:32
 categories:
- - C++
- - Basics
+ - c++
+ - basics
 tags:
- - C++
+ - c++
 ---
 
 感觉这句话说得很好, 道明了变量的本质:
