@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Golang值传递分析之传递指针的规则介绍(Methods, Functions &amp; interface value) - David&#39;s Blog</title>
+  <title>pass by value or reference - golang - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="类似C语言 Go文档 指出所有传递都是值传递: As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a" />
+<meta name="author" content="David" /><meta name="description" content="As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a function makes a copy of the int, and passing a pointer value makes a copy of the pointer, but not the" />
 
 
 
@@ -39,19 +39,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Golang值传递分析之传递指针的规则介绍(Methods, Functions &amp; interface value)" />
-<meta property="og:description" content="类似C语言 Go文档 指出所有传递都是值传递: As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a" />
+<meta property="og:title" content="pass by value or reference - golang" />
+<meta property="og:description" content="As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a function makes a copy of the int, and passing a pointer value makes a copy of the pointer, but not the" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/009-methods-pass-by-value/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-16T17:25:04+00:00" />
 <meta property="article:modified_time" content="2023-05-16T17:25:04+00:00" />
-<meta itemprop="name" content="Golang值传递分析之传递指针的规则介绍(Methods, Functions &amp; interface value)">
-<meta itemprop="description" content="类似C语言 Go文档 指出所有传递都是值传递: As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a"><meta itemprop="datePublished" content="2023-05-16T17:25:04+00:00" />
+<meta itemprop="name" content="pass by value or reference - golang">
+<meta itemprop="description" content="As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a function makes a copy of the int, and passing a pointer value makes a copy of the pointer, but not the"><meta itemprop="datePublished" content="2023-05-16T17:25:04+00:00" />
 <meta itemprop="dateModified" content="2023-05-16T17:25:04+00:00" />
-<meta itemprop="wordCount" content="1212">
+<meta itemprop="wordCount" content="1345">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Golang值传递分析之传递指针的规则介绍(Methods, Functions &amp; interface value)"/>
-<meta name="twitter:description" content="类似C语言 Go文档 指出所有传递都是值传递: As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a"/>
+<meta name="twitter:title" content="pass by value or reference - golang"/>
+<meta name="twitter:description" content="As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a function makes a copy of the int, and passing a pointer value makes a copy of the pointer, but not the"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +124,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Golang值传递分析之传递指针的规则介绍(Methods, Functions &amp; interface value)</h1>
+      <h1 class="post-title">pass by value or reference - golang</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-05-16 </span>
@@ -139,19 +139,32 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-what-is-a-reference-variable">1. what is a reference variable?</a></li>
+        <li><a href="#2-go-does-not-have-reference-variables">2. go does not have reference variables</a></li>
+        <li><a href="#2-struct-type">2. struct type</a></li>
+        <li><a href="#3-map--slice">3. map &amp; slice</a></li>
+        <li><a href="#3-assignment-always-makes-a-copy">3. assignment always makes a copy</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
-      <p>类似C语言 <a href="https://go.dev/doc/faq#methods_on_values_or_pointers">Go文档</a> 指出所有传递都是值传递:</p>
-<blockquote>
+      <blockquote>
 <p>As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an <code>int</code> value to a function makes a copy of the <code>int</code>, and passing a pointer value makes a copy of the pointer, but not the data it points to.</p>
+<p>Source: <a href="https://go.dev/doc/faq#methods_on_values_or_pointers">https://go.dev/doc/faq#methods_on_values_or_pointers</a></p>
 </blockquote>
-<p>即然是值传递, 那就必须要考虑到参数传递以及函数返回时因拷贝导致的效率问题, 刚好Go里有指针的概念, 我们可以通过传递一个指向较大数据的指针来提高传递的效率, 那什么时候通过传递指针呢, Go文档也有说:</p>
 <blockquote>
-<p>There are <strong>two reasons</strong> to use a pointer receiver. The first is so that the method can modify the value that its receiver points to. The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.</p>
+<p>Go does not have reference variables, so Go does not have pass-by-reference function call semantics.</p>
+<p>Source: <a href="https://dave.cheney.net/2017/04/29/there-is-no-pass-by-reference-in-go">There is no pass-by-reference in Go | Dave Cheney</a></p>
 </blockquote>
-<p>同时这个规则也适用于 methods的 receiver argument, Go文档里专门讨论这个 <a href="https://go.dev/tour/methods/8">choosing a value or pointer receiver</a>. Function的参数传递是传递指针还是值这个很好理解, 我们来验证一下methods的receiver argument, 是不是真的是传递值的时候会复制value:</p>
+<h2 id="1-what-is-a-reference-variable">1. what is a reference variable?</h2>
+<p>In languages like C++ you can declare an <em>alias</em>, or an <em>alternate name</em> to an existing variable. This is called a <em>reference variable</em>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -164,91 +177,62 @@
 </span><span class="lnt"> 8
 </span><span class="lnt"> 9
 </span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">name</span> <span class="kt">string</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">age</span>  <span class="kt">int</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="o">&amp;</span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="o">&amp;</span><span class="n">c</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">person</span> <span class="nx">Person</span><span class="p">)</span> <span class="nf">foo1</span><span class="p">()</span> <span class="o">*</span><span class="nx">Person</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">person</span>
+</span></span><span class="line"><span class="cl">        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%p %p %p</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">);</span> <span class="c1">// 0x7ffe114f0b14 0x7ffe114f0b14 0x7ffe114f0b14
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">person</span> <span class="o">*</span><span class="nx">Person</span><span class="p">)</span> <span class="nf">foo2</span><span class="p">()</span> <span class="o">*</span><span class="nx">Person</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">person</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">person</span> <span class="o">:=</span> <span class="nx">Person</span><span class="p">{</span><span class="s">&#34;John&#34;</span><span class="p">,</span> <span class="mi">18</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;main: %p\n&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">person</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;foo1: %p\n&#34;</span><span class="p">,</span> <span class="nx">person</span><span class="p">.</span><span class="nf">foo1</span><span class="p">())</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;foo2: %p\n&#34;</span><span class="p">,</span> <span class="nx">person</span><span class="p">.</span><span class="nf">foo2</span><span class="p">())</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">main</span><span class="p">:</span> <span class="mh">0x140000a8018</span>
-</span></span><span class="line"><span class="cl"><span class="nx">foo1</span><span class="p">:</span> <span class="mh">0x140000a8030</span>
-</span></span><span class="line"><span class="cl"><span class="nx">foo2</span><span class="p">:</span> <span class="mh">0x140000a8018</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>可以看出, 确实我们在使用 struct value <code>person</code>调用 <code>foo1</code> 的时候并不是它调用的, 而是它的复制本, 在这注意下Go里的概念, 即我们把一个 struct 的 instance 叫 struct value, 而不是 object, Go 里面没有 object 的概念, 但后面为了方便理解, 依然称 struct value 为对象,</p>
-<p>再举个例子:</p>
+</div><p>You can see that <code>a</code>, <code>b</code>, and <code>c</code> all refer to the same memory location. A write to <code>a</code> will alter the contents of <code>b</code> and <code>c</code>. This is useful when you want to declare reference variables in different scopes–namely function calls.</p>
+<h2 id="2-go-does-not-have-reference-variables">2. go does not have reference variables</h2>
+<p>Unlike C++, each variable defined in a Go program occupies a unique memory location.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Rect</span> <span class="kd">struct</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">width</span> <span class="kt">float32</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">height</span> <span class="kt">float32</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">getRect</span><span class="p">()</span> <span class="nx">Rect</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">rect</span> <span class="o">:=</span> <span class="nx">Rect</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;in getRect(): %p\n&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">rect</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">rect</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">rect</span> <span class="o">:=</span> <span class="nf">getRect</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;outside getRect(): %p\n&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">rect</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// in getRect(): 0x1400011a020
-</span></span></span><span class="line"><span class="cl"><span class="c1">// outside getRect(): 0x1400011a018
-</span></span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">var</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">b</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">c</span><span class="p">)</span> <span class="c1">// 0x1040a124 0x1040a128 0x1040a12c
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
-</div><p>因此, 在函数中一般返回对象的指针 (reference of struct value), 而不是直接返回对象的值, 如:</p>
+</div><p>It is not possible to create a Go program where two variables share the same storage location in memory. It is possible to create two variables whose contents <em>point</em> to the same storage location, but that is not the same thing as two variables who share the same storage location.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">var</span> <span class="nx">a</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">var</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">a</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span>   <span class="c1">// 0x1040a124 0x1040a124
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">b</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">c</span><span class="p">)</span> <span class="c1">// 0x1040c108 0x1040c110
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In this example, <code>b</code> and c hold the same value–the address of <code>a</code>–however, <code>b</code> and <code>c</code> themselves are stored in unique locations. Updating the contents of <code>b</code> would have no effect on <code>c</code>.</p>
+<h2 id="2-struct-type">2. struct type</h2>
+<p>Therefore, when a function returns a value of struct type or pass a struct value as argument, we usually use a pointer type for better efficiency. If you don&rsquo;t want to modiy the original value of struct, don&rsquo;t pass it as a pointer.</p>
+<blockquote>
+<p>The value of a struct here means the object of a struct.</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -277,7 +261,72 @@
 </span></span><span class="line"><span class="cl"><span class="c1">// https://go.dev/doc/articles/wiki/
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><hr>
+</div><h2 id="3-map--slice">3. map &amp; slice</h2>
+<p>As we talked ablove, for better efficiency we usually choose to pass pointer type. Map and slice often store a lot of elements, should we pass/return a pointer to them when calling a function?</p>
+<p>Learn more: <a href="https://shaowenzhu.top/post/golang/basics/003-collections/">https://shaowenzhu.top/post/golang/basics/003-collections/</a></p>
+<h2 id="3-assignment-always-makes-a-copy">3. assignment always makes a copy</h2>
+<blockquote>
+<p>Similar to C++, a variable is just an adress location. But unlike C++, each variable defined in a Go program occupies a unique memory location.</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">kitten</span> <span class="o">:=</span> <span class="nx">Cat</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Coco&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// do not think bella and kitten is a reference which points to a same object, this is java and python
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">bella</span> <span class="o">:=</span> <span class="nx">kitten</span> <span class="c1">// makes a copy
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">bella</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="s">&#34;Bella&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;kitten.Name:%v, bella.Name:%v\n&#34;</span><span class="p">,</span> <span class="nx">kitten</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">bella</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// kitten.Name:Coco, bella.Name:Bella
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>For a mental model, you can treat variable names as references, which exists till their scope exists.</p>
+<p>For implementation, Go&rsquo;s variables are NOT references - for reference, use a pointer.</p>
+<p>These variables can be allocated on the stack, or on the heap. Both have pros and cons, the compiler decides. For correctness, it does not make any difference. &ldquo;You don&rsquo;t have to know&rdquo;.</p>
+<p><a href="https://www.reddit.com/r/golang/comments/s0m2h9/comment/hs2kvyo/?utm_source=share&amp;utm_medium=web2x&amp;context=3">source</a></p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">temp</span> <span class="kd">struct</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">val</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">variable1</span> <span class="o">:=</span> <span class="nx">temp</span><span class="p">{</span><span class="nx">val</span><span class="p">:</span><span class="mi">5</span><span class="p">}</span>  <span class="c1">// 1 makes a copy
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">variable2</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">temp</span><span class="p">{</span><span class="nx">val</span><span class="p">:</span><span class="mi">6</span><span class="p">}</span> <span class="c1">// 2
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>temp{val:5}</code> is a <a href="https://go.dev/ref/spec#Composite_literals">composite literal</a>, it creates a value of type <code>temp</code>.</p>
+<p>In the first example you used a <a href="https://go.dev/ref/spec#Short_variable_declarations">short variable declaration</a>, which is equivalent to</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">variable1</span> <span class="p">=</span> <span class="nx">temp</span><span class="p">{</span><span class="nx">val</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>There is a single variable created here (<code>variable1</code>) which is initialized with the value <code>temp{val: 5}</code>.</p>
+<p>In the second example you take the address of a composite literal. That does create a variable, initialized with the literal&rsquo;s value, and the address of this variable will be the result of the expression. This pointer value will be assigned to the variable <code>variable2</code>.</p>
+<hr>
 <p>说一下 slice 和 map, 在<a href="https://davidzhu.xyz/2023/05/13/Golang/Basics/003-collections/">Golang容器之Array &amp; Slice &amp; Map</a> 中提到 Slices are like references to arrays. A slice does not store any data, it just describes a section of an underlying array. 官方<a href="https://go.dev/doc/faq">FAQs Doc</a>里有细节介绍, 拷贝一些:</p>
 <blockquote>
 <p><em>Map</em> and <em>slice</em> values behave like pointers: they are descriptors that contain pointers to the underlying map or slice data. <strong>Copying a map or slice value doesn&rsquo;t copy the data it points to</strong>. <a href="https://stackoverflow.com/a/37851764/16317008">Copying an <strong>interface value</strong></a> makes a copy of the thing stored in the interface value. If the interface value holds a struct, copying the interface value makes a copy of the struct. If the interface value holds a pointer, copying the interface value makes a copy of the pointer, but again not the data it points to.</p>

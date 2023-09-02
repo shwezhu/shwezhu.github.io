@@ -91,14 +91,15 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
     </item>
     
     <item>
-      <title>Pointer Receiver vs Value Receiver in Golang</title>
+      <title>Pointer Receiver or Value Receiver - Golang</title>
       <link>https://shaowenzhu.top/post/golang/basics/013-pointer-receiver/</link>
       <pubDate>Tue, 15 Aug 2023 17:18:20 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/013-pointer-receiver/</guid>
-      <description>Pointer Receiver Error error interface:
-1 2 3 type error interface { Error() string } errorString implements error interface in package errors :
-1 2 3 4 5 6 7 8 9 10 11 12 13 // errorString is a trivial implementation of error. type errorString struct { s string } func (e *errorString) Error() string { return e.s } // New returns an error that formats as the given text.</description>
+      <description>1. different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
+The first is so that the method can modify the value that its receiver points to.
+The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
+&amp;ldquo;the value&amp;rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value.</description>
     </item>
     
     <item>
@@ -165,12 +166,12 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
     </item>
     
     <item>
-      <title>Golang值传递分析之传递指针的规则介绍(Methods, Functions &amp; interface value)</title>
+      <title>pass by value or reference - golang</title>
       <link>https://shaowenzhu.top/post/golang/basics/009-methods-pass-by-value/</link>
       <pubDate>Tue, 16 May 2023 17:25:04 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/009-methods-pass-by-value/</guid>
-      <description>类似C语言 Go文档 指出所有传递都是值传递: As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a</description>
+      <description>As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a function makes a copy of the int, and passing a pointer value makes a copy of the pointer, but not the</description>
     </item>
     
     <item>
@@ -192,7 +193,7 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
     </item>
     
     <item>
-      <title>Golang容器之Array &amp; Slice &amp; Map</title>
+      <title>array &amp; slice &amp; map - golang collections</title>
       <link>https://shaowenzhu.top/post/golang/basics/003-collections/</link>
       <pubDate>Sat, 13 May 2023 10:23:59 +0000</pubDate>
       
@@ -201,21 +202,12 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
     </item>
     
     <item>
-      <title>Golang基础语法之循环判断及defer</title>
-      <link>https://shaowenzhu.top/post/golang/basics/002-syntax/</link>
-      <pubDate>Sat, 13 May 2023 00:10:15 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/basics/002-syntax/</guid>
-      <description>For There are no parentheses surrounding the three components of the for statement and the braces { } are always required. 1 2 3 4 5 6 func main() { sum := 0 for i := 0; i &amp;lt; 10; i++ { sum += i } } for在go里除了判断条件部分, 其它都可省略,</description>
-    </item>
-    
-    <item>
-      <title>Golang函数变量以及基础数据类型</title>
+      <title>golang basics ‼️</title>
       <link>https://shaowenzhu.top/post/golang/basics/001-syntax/</link>
       <pubDate>Fri, 12 May 2023 10:00:20 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/001-syntax/</guid>
-      <description>1. Function Declearation 先来看看函数相关的东西, 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 // declear a basic func func add(x int, y int) int { return x + y } // If parameter type same, you can omit the type from all but the last func add(x, y int) int { return</description>
+      <description>1. variable declarations The := can only be used in inside a function, which is called short variable declarations. A var statement can be at package or function level, which is called regular variable declarations. Variables declared without an explicit initial value are given their zero value. The zero value is: 0 for numeric types, false for the boolean type, and &amp;quot;&amp;quot; (the empty string) for strings. nil for pointer</description>
     </item>
     
     <item>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Git基础文件状态之版本穿梭 - David&#39;s Blog</title>
+  <title>git rm &amp; git restore - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="总结 git add modified -&amp;gt; staged, untracked -&amp;gt; tracked git commit staged -&amp;gt; unmodifed git rm --cached &amp;lt;filename&amp;gt;, tracked-&amp;gt;untracked, git rm &amp;lt;filname&amp;gt; 真实删除文件, git rm is about removing some file(s) from somewhere. git restore --staged &amp;lt;filename&amp;gt; staged-&amp;gt;modified, git restore &amp;lt;filename&amp;gt; 真实修改文件 git restore is about copying some file(s) from somewhere to somewhere. index = staging area, git add" />
+<meta name="author" content="David" /><meta name="description" content="1. Status Switch Remember that each file in your working directory can be in one of two states: tracked or untracked. Tracked files are files that were in the last snapshot, as well as any newly staged files; they can be unmodified, modified, or staged. In short, tracked files are files that Git knows about. As you edit files, Git sees them as modified, because you’ve changed them since your last commit." />
 
 
 
@@ -39,19 +39,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Git基础文件状态之版本穿梭" />
-<meta property="og:description" content="总结 git add modified -&gt; staged, untracked -&gt; tracked git commit staged -&gt; unmodifed git rm --cached &lt;filename&gt;, tracked-&gt;untracked, git rm &lt;filname&gt; 真实删除文件, git rm is about removing some file(s) from somewhere. git restore --staged &lt;filename&gt; staged-&gt;modified, git restore &lt;filename&gt; 真实修改文件 git restore is about copying some file(s) from somewhere to somewhere. index = staging area, git add" />
+<meta property="og:title" content="git rm &amp; git restore" />
+<meta property="og:description" content="1. Status Switch Remember that each file in your working directory can be in one of two states: tracked or untracked. Tracked files are files that were in the last snapshot, as well as any newly staged files; they can be unmodified, modified, or staged. In short, tracked files are files that Git knows about. As you edit files, Git sees them as modified, because you’ve changed them since your last commit." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/git/001-git-basics/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-05T09:31:30+00:00" />
 <meta property="article:modified_time" content="2023-05-05T09:31:30+00:00" />
-<meta itemprop="name" content="Git基础文件状态之版本穿梭">
-<meta itemprop="description" content="总结 git add modified -&gt; staged, untracked -&gt; tracked git commit staged -&gt; unmodifed git rm --cached &lt;filename&gt;, tracked-&gt;untracked, git rm &lt;filname&gt; 真实删除文件, git rm is about removing some file(s) from somewhere. git restore --staged &lt;filename&gt; staged-&gt;modified, git restore &lt;filename&gt; 真实修改文件 git restore is about copying some file(s) from somewhere to somewhere. index = staging area, git add"><meta itemprop="datePublished" content="2023-05-05T09:31:30+00:00" />
+<meta itemprop="name" content="git rm &amp; git restore">
+<meta itemprop="description" content="1. Status Switch Remember that each file in your working directory can be in one of two states: tracked or untracked. Tracked files are files that were in the last snapshot, as well as any newly staged files; they can be unmodified, modified, or staged. In short, tracked files are files that Git knows about. As you edit files, Git sees them as modified, because you’ve changed them since your last commit."><meta itemprop="datePublished" content="2023-05-05T09:31:30+00:00" />
 <meta itemprop="dateModified" content="2023-05-05T09:31:30+00:00" />
-<meta itemprop="wordCount" content="1183">
+<meta itemprop="wordCount" content="597">
 <meta itemprop="keywords" content="git," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Git基础文件状态之版本穿梭"/>
-<meta name="twitter:description" content="总结 git add modified -&gt; staged, untracked -&gt; tracked git commit staged -&gt; unmodifed git rm --cached &lt;filename&gt;, tracked-&gt;untracked, git rm &lt;filname&gt; 真实删除文件, git rm is about removing some file(s) from somewhere. git restore --staged &lt;filename&gt; staged-&gt;modified, git restore &lt;filename&gt; 真实修改文件 git restore is about copying some file(s) from somewhere to somewhere. index = staging area, git add"/>
+<meta name="twitter:title" content="git rm &amp; git restore"/>
+<meta name="twitter:description" content="1. Status Switch Remember that each file in your working directory can be in one of two states: tracked or untracked. Tracked files are files that were in the last snapshot, as well as any newly staged files; they can be unmodified, modified, or staged. In short, tracked files are files that Git knows about. As you edit files, Git sees them as modified, because you’ve changed them since your last commit."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +124,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Git基础文件状态之版本穿梭</h1>
+      <h1 class="post-title">git rm &amp; git restore</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-05-05 </span>
@@ -142,15 +142,14 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#总结">总结</a></li>
-        <li><a href="#状态之间的切换">状态之间的切换</a>
+        <li><a href="#1-status-switch">1. Status Switch</a></li>
+        <li><a href="#2-untrack-file">2. Untrack File</a>
           <ul>
-            <li><a href="#modified---unmodified">Modified -&gt; Unmodified</a></li>
-            <li><a href="#staged---modified">Staged -&gt; Modified</a></li>
+            <li><a href="#3-unstage-file">3. Unstage File</a></li>
           </ul>
         </li>
-        <li><a href="#tracked---untracked">Tracked -&gt; Untracked</a></li>
-        <li><a href="#git-restore-vs-git-rm">git restore vs git rm</a></li>
+        <li><a href="#3-stage-file">3. Stage File</a></li>
+        <li><a href="#4-conclusion">4. Conclusion</a></li>
       </ul>
     </li>
   </ul>
@@ -158,65 +157,10 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="总结">总结</h2>
-<ul>
-<li>
-<p><code>git add</code> modified -&gt; staged, untracked -&gt; tracked</p>
-</li>
-<li>
-<p><code>git commit</code> staged -&gt; unmodifed</p>
-</li>
-<li>
-<p><code> git rm --cached &lt;filename&gt;</code>, tracked-&gt;untracked, <code>git rm &lt;filname&gt;</code> 真实删除文件,</p>
-</li>
-<li>
-<p><code>git rm</code> is about <em>removing</em> some file(s) from somewhere.</p>
-</li>
-<li>
-<p><code> git restore --staged &lt;filename&gt;</code> staged-&gt;modified, <code>git restore &lt;filename&gt;</code>  真实修改文件</p>
-</li>
-<li>
-<p><code>git restore</code> is about <em>copying</em> some file(s) from somewhere to somewhere.</p>
-</li>
-<li>
-<p>index = staging area, <code>git add &lt;filename&gt;</code>: stage the file</p>
-</li>
-<li>
-<p>working directory / working tree 就是项目文件夹</p>
-</li>
-</ul>
-<h2 id="状态之间的切换">状态之间的切换</h2>
-<p>学习Git的时候发现一些基础的概念很是模糊, 于是读了一下<a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">文档</a>, 在这记录一下,</p>
+      <h2 id="1-status-switch">1. Status Switch</h2>
 <p>Remember that each file in your <strong>working directory</strong> can be in one of <strong>two states</strong>: <em><code>tracked</code></em> or <em><code>untracked</code></em>. Tracked files are files that were in the last <strong>snapshot</strong>, as well as any newly <strong>staged files</strong>; they can be <code>unmodified</code>, <code>modified</code>, or <code>staged</code>. In short, tracked files are files that Git knows about. As you edit files, Git sees them as modified, because you’ve changed them since your last commit. As you work, you selectively stage these modified files and then commit all those staged changes, and the cycle repeats.</p>
 <p><img src="/001-git-basics/a.png" alt="a"></p>
-<h3 id="modified---unmodified">Modified -&gt; Unmodified</h3>
-<p>早上接到老板的命令, 把昨天实现的功能再修改一下, 然后还没吃早饭你的开始各种操作, 俩小时整好了, 正准备add, commit,  然后突然老板打电话说客户又不想要了(WTF?), 然后你要一行一行把代码修改回之前的的内容吗?  不要怕, git可以帮助你,</p>
-<p>理论不如实践, 我们修改一下<code>a.txt</code>(注意<code>a.txt</code>已经是tracked file), 然后观察它的状态:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="s2">&#34;hello&#34;</span> &gt; a.txt 
-</span></span><span class="line"><span class="cl">$ git status 
-</span></span><span class="line"><span class="cl">On branch main
-</span></span><span class="line"><span class="cl">Changes not staged <span class="k">for</span> commit:
-</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git add &lt;file&gt;...&#34;</span> to update what will be committed<span class="o">)</span>
-</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git restore &lt;file&gt;...&#34;</span> to discard changes in working directory<span class="o">)</span>
-</span></span><span class="line"><span class="cl">	modified:   a.txt
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">no changes added to commit <span class="o">(</span>use <span class="s2">&#34;git add&#34;</span> and/or <span class="s2">&#34;git commit -a&#34;</span><span class="o">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Git提示了很多, <code>git restore &lt;file&gt;...</code>就是撤销刚刚的修改<code>a.txt</code>,</p>
+<p>Some commands are used frequently, the commands below will make a diffference on <em><strong>Git repository</strong></em> but won&rsquo;t change the <em><strong>wok place</strong></em> (file system):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -225,117 +169,114 @@
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ git restore a.txt 
-</span></span><span class="line"><span class="cl">$ git status
-</span></span><span class="line"><span class="cl">On branch main
-</span></span><span class="line"><span class="cl">nothing to commit, working tree clean
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># just untrack file</span>
+</span></span><span class="line"><span class="cl">git rm --cached file-name
+</span></span><span class="line"><span class="cl"><span class="c1"># just unstatge file</span>
+</span></span><span class="line"><span class="cl">git restore --staged file-name
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>如果修改一个untracked file, git 没保存过它之前的内容, 也就不存在 <code>git restore</code> 这一说, 如下:</p>
+</div><p>The commands below will change both work place and Git repository:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ touch e.txt 
-</span></span><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="s2">&#34;hello&#34;</span> &gt; e.txt 
-</span></span><span class="line"><span class="cl">$ git status       
-</span></span><span class="line"><span class="cl">On branch main
-</span></span><span class="line"><span class="cl">Untracked files:
-</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git add &lt;file&gt;...&#34;</span> to include in what will be committed<span class="o">)</span>
-</span></span><span class="line"><span class="cl">	e.txt
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">nothing added to commit but untracked files present <span class="o">(</span>use <span class="s2">&#34;git add&#34;</span> to track<span class="o">)</span>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># untrack file &amp; rm file</span>
+</span></span><span class="line"><span class="cl">git rm file-name
+</span></span><span class="line"><span class="cl"><span class="c1"># unstatge file &amp; discard uncommitted local changes</span>
+</span></span><span class="line"><span class="cl">git restore file-name
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>只是提示我们去使用<code>git add</code>去track这个文件</p>
-<h3 id="staged---modified">Staged -&gt; Modified</h3>
-<p>如果你老板在你刚stage文件到staging area的时候给你打电话(还没commit), 那你应该怎么把文件从staged变回没修改之前呢?</p>
-<p>分两步:</p>
+</div><h2 id="2-untrack-file">2. Untrack File</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git rm file-name
+</span></span><span class="line"><span class="cl">git rm --cached file-name
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The &ldquo;rm&rdquo; command helps you to remove files from a Git repository. It allows you to not only delete a file from the <em>repository</em>, but also - if you wish - from the <em>filesystem</em>.</p>
+<p>Deleting a file from the filesystem can of course easily be done in many other applications, e.g. a text editor, IDE or file browser. But deleting the file from the <em>actual Git repository</em> is a separate task, for which <code>git rm</code> was made.</p>
 <ul>
-<li>Staged-&gt;Modified</li>
-<li>Modified-&gt;Unmodified 上面我们已经讨论过</li>
+<li>
+<p><em><strong><code>--cached</code></strong></em></p>
+<ul>
+<li><strong>Removes the file only from the Git repository, but not from the filesystem.</strong> By default, the <code>git rm</code> command deletes files both from the Git repository as well as the filesystem. Using the <code>--cached</code> flag, the actual file on disk will <em>not</em> be deleted.</li>
+</ul>
+</li>
+<li>
+<p><em><strong><code>-r</code></strong></em></p>
+<ul>
+<li><strong>Recursively removes folders.</strong> When a path to a directory is specified, the <code>-r</code> flag allows Git to remove that folder including all its contents.</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-unstage-file">3. Unstage File</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git restore file-name
+</span></span><span class="line"><span class="cl">git restore --staged file-name
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The &ldquo;restore&rdquo; command helps to unstage or even discard uncommitted local changes. On the one hand, the command can be used to undo the effects of <code>git add</code> and unstage changes you have previously added to the <em><strong>Staging Area</strong></em>.</p>
+<ul>
+<li>
+<p><em><strong><code>--staged</code></strong></em></p>
+<ul>
+<li><strong>Removes the file from the Staging Area, but leaves its actual modifications untouched.</strong> By default, the <code>git restore</code> command will discard any local, uncommitted changes in the corresponding files and thereby restore their last committed state. With the <code>--staged</code> option, however, the file will only be removed from the Staging Area - but its actual modifications will remain untouched.</li>
+</ul>
+</li>
+<li>
+<p><em><strong><code>--source &lt;ref&gt;</code></strong></em></p>
+<ul>
+<li><strong>Restores a specific revision of the file.</strong> By default, the file will be restored to its last committed state (or simply be unstaged). The <code>--source</code> option, however, allows you to restore the file at a <em>specific revision</em>.</li>
+</ul>
+</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="s2">&#34;hi&#34;</span> &gt; a.txt 
-</span></span><span class="line"><span class="cl">$ git add a.txt 
-</span></span><span class="line"><span class="cl">$ git status
-</span></span><span class="line"><span class="cl">On branch main
-</span></span><span class="line"><span class="cl">Changes to be committed:
-</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git restore --staged &lt;file&gt;...&#34;</span> to unstage<span class="o">)</span>
-</span></span><span class="line"><span class="cl">	modified:   a.txt
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 根据提示从staged-&gt;modified</span>
-</span></span><span class="line"><span class="cl">$ git restore --staged a.txt 
-</span></span><span class="line"><span class="cl">$ git status
-</span></span><span class="line"><span class="cl">On branch main
-</span></span><span class="line"><span class="cl">Changes not staged <span class="k">for</span> commit:
-</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git add &lt;file&gt;...&#34;</span> to update what will be committed<span class="o">)</span>
-</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git restore &lt;file&gt;...&#34;</span> to discard changes in working directory<span class="o">)</span>
-</span></span><span class="line"><span class="cl">	modified:   a.txt
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">no changes added to commit <span class="o">(</span>use <span class="s2">&#34;git add&#34;</span> and/or <span class="s2">&#34;git commit -a&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># 根据提示从modified-&gt;unmodified</span>
-</span></span><span class="line"><span class="cl">$ git restore a.txt 
-</span></span><span class="line"><span class="cl">$ git status
-</span></span><span class="line"><span class="cl">On branch main
-</span></span><span class="line"><span class="cl">nothing to commit, working tree clean
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ git restore --source 7173808e index.html
+</span></span><span class="line"><span class="cl">$ git restore --source master~2 index.html
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="tracked---untracked">Tracked -&gt; Untracked</h2>
-<p>To remove a file from Git, you have to remove it from your tracked files (more accurately, remove it from your staging area) and then commit. The <code>git rm</code> command does that, and also removes the file from your working directory so you don’t see it as an untracked file the next time around.</p>
-<p>If you modified the file or had already added it to the <strong>staging area</strong>, you must force the removal with the <code>-f</code> option. This is a safety feature to prevent accidental removal of data that hasn’t yet been recorded in a snapshot and that can’t be recovered from Git.</p>
-<p>Another useful thing you may want to do is to keep the file in your <strong>working tree</strong> but remove it from your staging area. In other words, <strong>you may want to keep the file on your hard drive but not have Git track it anymore</strong>. This is particularly useful if you forgot to add something to your <code>.gitignore</code> file and accidentally staged it, like a large log file or a bunch of <code>.a</code> compiled files. To do this, use the <code>--cached</code> option:</p>
+</div><p>The first example will restore the file as it was in commit #7173808e, while the second one will restore it as it was &ldquo;two commits before the current tip of the master branch&rdquo;.</p>
+<h2 id="3-stage-file">3. Stage File</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ git rm --cached a.txt
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git add file-name
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="git-restore-vs-git-rm">git restore vs git rm</h2>
-<p>Because <code>git restore</code> is about <em>copying</em> a file or files, it needs to know <em>where to get the files</em>. There are three possible sources:</p>
+</div><p>It adds changes to Git&rsquo;s <em><strong>Staging Area</strong></em> (index), the contents of which can then be wrapped up in a new revision with the <code>git commit</code> command.</p>
+<h2 id="4-conclusion">4. Conclusion</h2>
 <ul>
-<li>the current, or <code>HEAD</code>, commit (which must exist); or</li>
-<li>any arbitrary commit that you specify (which must exist); or</li>
-<li>Git&rsquo;s <em>index</em> aka <em>staging area</em>.</li>
+<li>Git repository, Work place (Filesystem,  Working tree), Staging Area (Index),</li>
+<li>Stage the file: <code>git add &lt;filename&gt;</code></li>
+<li>Unstage: <code> git restore --staged &lt;filename&gt;</code>, <code>git restore &lt;filename&gt;</code></li>
+<li>Untrack: <code> git rm --cached &lt;filename&gt;</code>, <code>git rm &lt;filname&gt;</code></li>
 </ul>
-<p>Because <code>git rm</code> is about <em>removing</em> a file or files, it only needs to know the name(s) of the file(s) to remove. Adding <code>--cached</code> tells <code>git rm</code> to remove these files <em>only</em> from <strong>Git&rsquo;s index aka <em>staging area</em>.</strong></p>
+<p>References:</p>
+<ul>
+<li><a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository</a></li>
+<li><a href="https://www.git-tower.com/learn/git/commands/git-rm">https://www.git-tower.com/learn/git/commands/git-rm</a></li>
+<li><a href="https://www.git-tower.com/learn/git/commands/git-restore">https://www.git-tower.com/learn/git/commands/git-restore</a></li>
+</ul>
 
     </div>
 

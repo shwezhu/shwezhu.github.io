@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Golang容器之Array &amp; Slice &amp; Map - David&#39;s Blog</title>
+  <title>array &amp; slice &amp; map - golang collections - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -39,18 +39,18 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Golang容器之Array &amp; Slice &amp; Map" />
+<meta property="og:title" content="array &amp; slice &amp; map - golang collections" />
 <meta property="og:description" content="1. Declare &amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&rsquo;s length is part of its type, so arrays cannot be resized. 2. Declare &amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/003-collections/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-13T10:23:59+00:00" />
 <meta property="article:modified_time" content="2023-05-13T10:23:59+00:00" />
-<meta itemprop="name" content="Golang容器之Array &amp; Slice &amp; Map">
+<meta itemprop="name" content="array &amp; slice &amp; map - golang collections">
 <meta itemprop="description" content="1. Declare &amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&rsquo;s length is part of its type, so arrays cannot be resized. 2. Declare &amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices"><meta itemprop="datePublished" content="2023-05-13T10:23:59+00:00" />
 <meta itemprop="dateModified" content="2023-05-13T10:23:59+00:00" />
-<meta itemprop="wordCount" content="1069">
+<meta itemprop="wordCount" content="1093">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Golang容器之Array &amp; Slice &amp; Map"/>
+<meta name="twitter:title" content="array &amp; slice &amp; map - golang collections"/>
 <meta name="twitter:description" content="1. Declare &amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&rsquo;s length is part of its type, so arrays cannot be resized. 2. Declare &amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices"/>
 
 <!--[if lte IE 9]>
@@ -124,7 +124,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Golang容器之Array &amp; Slice &amp; Map</h1>
+      <h1 class="post-title">array &amp; slice &amp; map - golang collections</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-05-13 </span>
@@ -151,8 +151,7 @@
           </ul>
         </li>
         <li><a href="#4-slice">4. Slice</a></li>
-        <li><a href="#5-loop-slice">5. Loop Slice</a></li>
-        <li><a href="#6-conclusion">6. Conclusion</a></li>
+        <li><a href="#5-conclusion">5. Conclusion</a></li>
       </ul>
     </li>
   </ul>
@@ -205,30 +204,6 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">intSlice</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>Nil slices</li>
-</ul>
-<p>A nil slice has a length and capacity of 0 and has no underlying array.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">s</span> <span class="p">[]</span><span class="kt">int</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">s</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;nil!&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><ul>
@@ -365,49 +340,65 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="3-maps">3. Maps</h2>
-<p>The <code>make</code> function returns a map of the given type, initialized and ready for use.</p>
+<blockquote>
+<p><em>A map value is a pointer to a</em> <code>runtime.hmap</code> <em>structure.</em></p>
+</blockquote>
+<p>When you write the statement</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The compiler replaces it with a call to <a href="https://golang.org/src/runtime/hashmap.go#L222"><code>runtime.makemap</code></a>, which has the signature</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// makemap implements a Go map creation make(map[k]v, hint)
+</span></span></span><span class="line"><span class="cl"><span class="c1">// If the compiler has determined that the map or the first bucket
+</span></span></span><span class="line"><span class="cl"><span class="c1">// can be created on the stack, h and/or bucket may be non-nil.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// If h != nil, the map can be created directly in h.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// If bucket != nil, bucket can be used as the first bucket.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">makemap</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">maptype</span><span class="p">,</span> <span class="nx">hint</span> <span class="kt">int64</span><span class="p">,</span> <span class="nx">h</span> <span class="o">*</span><span class="nx">hmap</span><span class="p">,</span> <span class="nx">bucket</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span><span class="p">)</span> <span class="o">*</span><span class="nx">hmap</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="nx">m</span><span class="p">[</span><span class="s">&#34;Answer&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">42</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The value:&#34;</span><span class="p">,</span> <span class="nx">m</span><span class="p">[</span><span class="s">&#34;Answer&#34;</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="nx">m</span><span class="p">[</span><span class="s">&#34;Answer&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">48</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The value:&#34;</span><span class="p">,</span> <span class="nx">m</span><span class="p">[</span><span class="s">&#34;Answer&#34;</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="nb">delete</span><span class="p">(</span><span class="nx">m</span><span class="p">,</span> <span class="s">&#34;Answer&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The value:&#34;</span><span class="p">,</span> <span class="nx">m</span><span class="p">[</span><span class="s">&#34;Answer&#34;</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="nx">v</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="s">&#34;Answer&#34;</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The value:&#34;</span><span class="p">,</span> <span class="nx">v</span><span class="p">,</span> <span class="s">&#34;Present?&#34;</span><span class="p">,</span> <span class="nx">ok</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">m</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">int</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">p</span> <span class="kt">uintptr</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">unsafe</span><span class="p">.</span><span class="nf">Sizeof</span><span class="p">(</span><span class="nx">m</span><span class="p">),</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nf">Sizeof</span><span class="p">(</span><span class="nx">p</span><span class="p">))</span> <span class="c1">// 8 8 (linux/amd64)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
-<p>⚠️ <strong>Like slices</strong>, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller. So like slices, when a function return or accept, don&rsquo;t need to take a pointer to map, <a href="https://go.dev/doc/effective_go#maps">source</a></p>
+</div><p>*<em>If maps are pointers, shouldn’t they be <em>map[key]value?</em></em></p>
+<blockquote>
+<p><em>In the very early days what we call maps now were written as pointers, so you wrote *map[int]int. We moved away from that when we realized that no one ever wrote <code>map</code> without writing <code>\*map</code>.</em></p>
+<p>Maps, like channels, but <em>unlike</em> slices, are just pointers to <code>runtime</code> types. As you saw above, a map is just a pointer to a <code>runtime.hmap</code> structure.</p>
+</blockquote>
+<p>Source: <a href="https://dave.cheney.net/2017/04/30/if-a-map-isnt-a-reference-variable-what-is-it">If a map isn’t a reference variable, what is it? | Dave Cheney</a></p>
+<blockquote>
+<p>⚠️ Map value just a pointer, therefore, we don&rsquo;t need to pass a pointer to a map for better performance. This is similar to slices, slice just a struct that has a pointer element which pointer to an underlaying array, so we don&rsquo;t need to set a pointer of slice as a paramter. This also applys function&rsquo;s return type.</p>
 </blockquote>
 <h3 id="31-copy-map">3.1. Copy Map</h3>
 <p>Find a <a href="https://web.archive.org/web/20171006194258/https://stackoverflow.com/documentation/go/732/maps/9834/copy-a-map#t=20171006194258443316">blog</a> talks copy map, share it here:</p>
-<p>Like slices, maps hold <strong>references</strong> to an underlying data structure. So by assigning its value to another variable, only the reference will be passed. To copy the map, it is necessary to create another map and copy each value:</p>
+<p>Like slices, maps hold references to an underlying data structure. So by assigning its value to another variable, only the reference will be passed. To copy the map, it is necessary to create another map and copy each value:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -438,9 +429,9 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Same as slice, copy a map have deep copy and shallow copy, for deep copy a map, visit: <a href="https://stackoverflow.com/questions/23057785/how-to-deep-copy-a-map-and-then-clear-the-original">dictionary - How to deep copy a map and then clear the original? - Stack Overflow </a></p>
+</div><p>How to deep copy a map or slice: <a href="https://shaowenzhu.top/post/golang/basics/014-gob-json-encoding/#24-values-are-flattened">encoding/gob &amp; encoding/json in golang - David&rsquo;s Blog</a></p>
 <h2 id="4-slice">4. Slice</h2>
-<p>Slices are like references to arrays. <strong>A slice does not store any data, it just describes a section of an underlying array</strong>. Changing the elements of a slice modifies the corresponding elements of its underlying array. Other slices that share the same underlying array will see those changes.</p>
+<p><strong>A slice does not store any data, it just describes a section of an underlying array</strong>. Changing the elements of a slice modifies the corresponding elements of its underlying array. Other slices that share the same underlying array will see those changes.</p>
 <ul>
 <li>e.g.,</li>
 </ul>
@@ -494,54 +485,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">John</span> <span class="nx">XXX</span> <span class="nx">George</span> <span class="nx">Ringo</span><span class="p">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="5-loop-slice">5. Loop Slice</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">strSlice</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;India&#34;</span><span class="p">,</span> <span class="s">&#34;Canada&#34;</span><span class="p">,</span> <span class="s">&#34;Japan&#34;</span><span class="p">,</span> <span class="s">&#34;Germany&#34;</span><span class="p">,</span> <span class="s">&#34;Italy&#34;</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;\n---------------Example 1 --------------------\n&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">element</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">strSlice</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="s">&#34;--&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;\n---------------Example 2 --------------------\n&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">value</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">strSlice</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="nx">j</span> <span class="o">:=</span> <span class="mi">0</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;\n---------------Example 3 --------------------\n&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="k">range</span> <span class="nx">strSlice</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">strSlice</span><span class="p">[</span><span class="nx">j</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">j</span><span class="o">++</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="6-conclusion">6. Conclusion</h2>
+</div><h2 id="5-conclusion">5. Conclusion</h2>
 <ul>
 <li>The type <code>[n]T</code> is an array of <code>n</code> values of type <code>T</code>.
 <ul>
@@ -556,7 +500,6 @@
 </ul>
 </li>
 </ul>
-<p>learn more: <a href="https://go.dev/tour/moretypes/7">A Tour of Go</a></p>
 
     </div>
 
@@ -585,8 +528,8 @@
             <span class="prev-text nav-default">Golang Methods与Interface结合实现多态</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
-        <a class="next" href="/post/golang/basics/002-syntax/">
-            <span class="next-text nav-default">Golang基础语法之循环判断及defer</span>
+        <a class="next" href="/post/golang/basics/001-syntax/">
+            <span class="next-text nav-default">golang basics ‼️</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

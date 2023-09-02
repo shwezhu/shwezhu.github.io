@@ -296,7 +296,7 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
 
     <article class="post">
   <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/013-pointer-receiver/">Pointer Receiver vs Value Receiver in Golang</a></h1>
+    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/013-pointer-receiver/">Pointer Receiver or Value Receiver - Golang</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-08-15 </span>
       <div class="post-category">
@@ -308,9 +308,10 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
   
   <div class="post-content">
     <div class="post-summary">
-      Pointer Receiver Error error interface:
-1 2 3 type error interface { Error() string } errorString implements error interface in package errors :
-1 2 3 4 5 6 7 8 9 10 11 12 13 // errorString is a trivial implementation of error. type errorString struct { s string } func (e *errorString) Error() string { return e.s } // New returns an error that formats as the given text.
+      1. different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
+The first is so that the method can modify the value that its receiver points to.
+The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
+&ldquo;the value&rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value.
     </div>
     <div class="read-more">
       <a href="/post/golang/basics/013-pointer-receiver/" class="read-more-link">Read more...</a>
