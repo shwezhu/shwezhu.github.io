@@ -165,7 +165,7 @@
 <p>To understand all of this better, it’s good to describe and define a few concepts that are important.</p>
 <h3 id="1-executing-instructions">1. Executing Instructions</h3>
 <p>The <a href="https://en.wikipedia.org/wiki/Program_counter">program counter</a> (PC), which is sometimes called the instruction pointer (IP), is what allows the Thread to keep track of the next instruction to execute. In most processors, the PC points to the next instruction and not the current instruction.</p>
-<p><img src="a.png" alt="a"></p>
+<p><img src="/003-go-scheduler-1/a.png" alt="a"></p>
 <h3 id="2-thread-states">2. Thread States</h3>
 <p>Another important concept is Thread state, which dictates the role the scheduler takes with the Thread. A Thread can be in one of three states: Waiting, Runnable or Executing.</p>
 <p><strong>Waiting</strong>: This means the Thread is stopped and waiting for something in order to continue. This could be for reasons like, waiting for the hardware (disk, network), the operating system (system calls) or synchronization calls (atomic, mutexes). These types of <a href="https://en.wikipedia.org/wiki/Latency_(engineering)">latencies</a> are a root cause for bad performance.</p>
@@ -196,7 +196,7 @@
 <p>What if your service is doing a lot of different types of work? That could create different and inconsistent latencies. Maybe it also creates a lot of different system-level events that need to be handled. It might not be possible to find a magic number that works all the time for all the different work loads. When it comes to using Thread pools to tune the performance of a service, it can get very complicated to find the right consistent configuration.</p>
 <h3 id="7-cache-lines">7. Cache Lines</h3>
 <p>Accessing data from main memory has <strong>such</strong> a high latency cost (100~300 clock cycles) <strong>that</strong> processors and cores have local caches to keep data close to the hardware threads that need it. Accessing data from caches have a much lower cost (3~40 clock cycles) depending on the cache being accessed. Today, one aspect of performance is about how efficiently you can get data into the processor to reduce these data-access latencies. Writing multithreaded applications that mutate state need to consider the mechanics of the caching system.</p>
-<p><img src="b.png" alt="b"></p>
+<p><img src="/003-go-scheduler-1/b.png" alt="b"></p>
 <p>Data is exchanged between the processor and main memory using <a href="https://www.youtube.com/watch?v=WDIkqP4JbkE">cache lines</a>. A cache line is a 64-byte chunk of memory that is exchanged between main memory and the caching system. Each core is given its own copy of any cache line it needs, which means the hardware uses <a href="https://www.ardanlabs.com/blog/2017/06/design-philosophy-on-data-and-semantics.html">value semantics</a>. This is why mutations to memory in multithreaded applications can create performance nightmares.</p>
 <p>相关文章:</p>
 <p><a href="https://davidzhu.xyz/2023/05/28/Operating-System/CPU-Architecture/">多核 CPU 之 Hyper Threading | 橘猫小八的鱼</a></p>

@@ -168,7 +168,7 @@ forking an OS process per request (like old versions of Apache) spawning an OS t
 <p>When nginx web server was introduced it used a single-threaded event loop and didn’t block for any request. It could handle much more concurrent requests, having no problem with the mythical c10k problem - nginx was basically created to solve the c10k problem (10,000 concurrent requests).</p>
 <p>Imagine how much RAM is wasted for 10,000 threads if you could even spawn that many and how much time is used for context switches.</p>
 <p><strong>Memory usage of multi-threaded Apache vs single-threaded nginx:</strong></p>
-<p><img src="1.png" alt="1"></p>
+<p><img src="/009-multithread-singlethread-server/1.png" alt="1"></p>
 <p>Incidentally, this is the reason why Ryan Dahl used a non-blocking I/O and a single-threaded event loop in Node.js and he still uses the same idea in Deno, because that is the way to write high performance network servers (contrary to what you might read in other answers here).</p>
 <blockquote>
 <p>Note that <a href="https://nginx.org/en/docs/ngx_core_module.html#worker_processes">nginx “core functionality” doc</a> mentions that on most servers nginx defaults to multiple workers (which will be ran as threads) so it’s not always “single threaded.” <a href="https://www.quora.com/profile/Alex-Sergeyev">from a comment of this blog</a></p>

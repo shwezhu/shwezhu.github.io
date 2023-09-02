@@ -258,7 +258,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在我们的分支结构类似下图(在 <a href="https://davidzhu.xyz/2023/04/22/Git/Git-Branch/"><code>git branch</code> </a>讲过, 新建的分支<code>issue01</code>含有<code>main</code>分支已存在的commit history),</p>
-<p><img src="a.png" alt=""></p>
+<p><img src="/005-git-merge/a.png" alt=""></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -314,7 +314,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在分支结构如下,</p>
-<p><img src="b.png" alt=""></p>
+<p><img src="/005-git-merge/b.png" alt=""></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -441,7 +441,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>然后分支结构如下图,</p>
-<p><img src="c.png" alt=""></p>
+<p><img src="/005-git-merge/c.png" alt=""></p>
 <p><code>hotfix</code>分支已经完成了它的任务, 我们现在跳到<code>main</code>分支然后merge一下,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -492,7 +492,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>merge <code>hotfix</code>后, 连带着commit历史一起merge了, 现在结构如下:</p>
-<p><img src="d.png" alt=""></p>
+<p><img src="/005-git-merge/d.png" alt=""></p>
 <p>现在可以安全删除<code>hotfix</code>分支了,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -505,7 +505,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在结构如下:</p>
-<p><img src="e.png" alt=""></p>
+<p><img src="/005-git-merge/e.png" alt=""></p>
 <p>假设bug修好了, 准备把分支<code>issue01</code>合并到分支<code>main</code>上, 如下:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -552,12 +552,12 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>合并失败了, 需要手动解决conflicts, 这次失败而上次合并<code>hotfix</code>分支并没有失败的的原因是<code>main</code>没有在分支<code>issue01</code>的祖先分支上, <strong>而<code>main</code>在<code>hotfix</code>的祖先分支上(类似下图, <code>main</code>和<code>issue1</code>没在一条线上), 所以可以进行fast-forward合并<code>hotfix</code>分支</strong>, 但合并分支<code>issue01</code>的时候却不能进行fast-forward合并.</p>
-<p><img src="f.png" alt=""></p>
+<p><img src="/005-git-merge/f.png" alt=""></p>
 <blockquote>
 <p>This looks a bit different than the <code>hotfix</code> merge you did earlier. In this case, your development history has diverged from some older point. Because the commit on the branch you’re on isn’t a direct ancestor of the branch you’re merging in, Git has to do some work. In this case, Git does a simple <strong>three-way merge, using the two snapshots pointed to by the branch tips and the common ancestor of the two</strong>.</p>
 </blockquote>
 <p>不能 fast-forward 合并就需要 three-way merge, 手动解决冲突再提交后大致结构如下图所示:</p>
-<p><img src="g.png" alt=""></p>
+<p><img src="/005-git-merge/g.png" alt=""></p>
 <p>我们手动修改conflicts内容后进行提交,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -698,8 +698,8 @@
             <span class="prev-text nav-default">Origin的本质之被我们忽略的Git Remote操作(git fetch)</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
-        <a class="next" href="/post/build-website/hugo-theme-meme/">
-            <span class="next-text nav-default">Hugo With MemE</span>
+        <a class="next" href="/post/cs-basics/010-http-overview/">
+            <span class="next-text nav-default">An overview of HTTP</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

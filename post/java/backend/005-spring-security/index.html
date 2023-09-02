@@ -190,7 +190,7 @@
 <h2 id="1-创建一个简单的-spring-boot-项目---controller-类">1. 创建一个简单的 spring boot 项目 - <code>Controller</code> 类</h2>
 <p>创建一个 spring 项目思路, 首先要想到创建的一个类是 Controller, 因为我们要处理不同的 endpoints, 比如叫 <code>WebController.java</code>, 名子无所谓, 只要加上 <code>@Controller/@RestController</code> 的类都是 Controller, 然后考虑你的这个 Controller 是要返回简单的 json 对象还是 web 页面, 前者的话就选择 <code>@RestController</code> 修饰你的 Controller, 至于这两个注解的区别, 可以参考: <a href="https://davidzhu.xyz/2023/07/29/Java/Backend/001-first-spring-boot-program/">Spring Boot项目及踩坑总结 Spring学习(一)</a></p>
 <p>创建一个简单的 spring boot 项目, 依赖只选择 spring web, 之后慢慢添加各种依赖, 创建一个简单的 Controller, 如下:</p>
-<p><img src="1.png" alt="1"></p>
+<p><img src="/005-spring-security/1.png" alt="1"></p>
 <p>由于没有使用 spring security, 现在这两个 endpoints 都可以通过 http://localhost:8080/private 或 http://localhost:8080 访问,</p>
 <h2 id="2-使用-spring-security-保护-web-application">2. 使用 spring security 保护 web application</h2>
 <p>在项目中添加 spring security 依赖, 此例使用的 gradle, 因此编辑 <code>build.gradle</code>, 添加:</p>
@@ -234,7 +234,7 @@
 <p>只添加了 spring security 依赖, 然后运行项目, 我们的页面就被保护, 不得不说 spring 默默地在背后帮我们做了很多, 之所以需要登录才能访问那两个 endpoints的原因是在 spring security中 <em>everything is secure by default</em>, 但我们可以修改这些配置,</p>
 <p>在进行下一步的时候要注意, 即使我们试图访问一个不存在的页面比如 http://localhost:8080/foo , 得到的依旧是 401 forbidden code, 即会直接跳出登录页面, 而不是告诉你 404, 页面不存在, 即所有访问此网址的请求都被 spring security 拦截, 只有你成功登录, 才能访问页面, 此时因为页面不存在, 你得到的是 404 code, 注意此时默认用户名为 <code>user</code>, 密码会在程序运行中断输出, 可以尝试一下, 具体拦截过程如下, 可见主要是 <code>SecurityFilterChain</code> 类的作用,</p>
 <p>This section examines how form-based login works within Spring Security. First, we see how the user is redirected to the login form:</p>
-<p><img src="7.png" alt="7"></p>
+<p><img src="/005-spring-security/7.png" alt="7"></p>
 <p>The preceding figure builds off our <a href="https://docs.spring.io/spring-security/reference/servlet/architecture.html#servlet-securityfilterchain"><code>SecurityFilterChain</code></a> diagram:</p>
 <ol>
 <li>First, a user makes an unauthenticated request to the resource (<code>/private</code>) for which it is not authorized.</li>
@@ -420,15 +420,15 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>然后剩下的就是从谷歌获取 client-id 和 client-secret, 具体配置可参考: <a href="https://support.google.com/cloud/answer/6158849?hl=en">Setting up OAuth 2.0 - Google Cloud Platform Console Help</a></p>
-<p><img src="2.png" alt="2"></p>
+<p><img src="/005-spring-security/2.png" alt="2"></p>
 <p>然后点 create, 即可获得 client-id 和 client-secret, 然后填入 <code>application.yaml</code> 中, 记住哦, <strong>提交远程仓库的时候别忘把这个文件加入到 <code>.gitignore</code> 中</strong>, 然后运行程序就可以实现谷歌登录了,</p>
 <blockquote>
 <p><strong>OAuth</strong> (short for &ldquo;Open Authorization&rdquo;) is <strong>an open standard for access delegation</strong>, commonly used as a way for internet users to grant websites or applications access to their information on other websites but without giving them the passwords. <a href="https://en.wikipedia.org/wiki/OAuth">OAuth</a></p>
 </blockquote>
 <p>另外注意这个服务都是免费的, 不放心的话可以到 <a href="https://console.cloud.google.com/welcome/">https://console.cloud.google.com/welcome/</a> 查看管理你的 project (看到有的一年订阅费要15k, 这是在自我安慰),</p>
-<p><img src="4.png" alt="4"></p>
-<p><img src="5.png" alt="5"></p>
-<p><img src="6.png" alt="6"></p>
+<p><img src="/005-spring-security/4.png" alt="4"></p>
+<p><img src="/005-spring-security/5.png" alt="5"></p>
+<p><img src="/005-spring-security/6.png" alt="6"></p>
 <h2 id="5-获取登录用户信息---authentication-object">5. 获取登录用户信息 - <code>Authentication Object</code></h2>
 <p>这里就要提到一个重要的对象, 即 Authentication Object, 它代表 <strong>either the request to login or the result of a successful login request</strong> ,</p>
 <ul>
@@ -453,7 +453,7 @@
 <p><code>var authentication = SecurityContextHolder.getContext().getAuthentication();</code></p>
 <p><a href="https://youtu.be/iJ2muJniikY?t=2085">https://youtu.be/iJ2muJniikY?t=2085</a></p>
 </blockquote>
-<p><img src="a.png" alt="a"></p>
+<p><img src="/005-spring-security/a.png" alt="a"></p>
 <p>看看 authentication 对象的方法:</p>
 <ul>
 <li><code>getPrincipal()</code>
@@ -567,11 +567,11 @@
 </div><p>运行后选择谷歌登录, 输出: Hi ~[shehu@gmail.com]~, you&rsquo;ve logged in. 🎉</p>
 <h2 id="7-通过-debug-查看-authentication-object">7. 通过 debug 查看 <code>Authentication Object</code></h2>
 <p>设置断点,</p>
-<p><img src="8.png" alt="8"></p>
+<p><img src="/005-spring-security/8.png" alt="8"></p>
 <p>访问 <code>/private</code> 页面输入密码登录, 返回 IDE,</p>
-<p><img src="9.png" alt="9"></p>
+<p><img src="/005-spring-security/9.png" alt="9"></p>
 <p>下面是通过 ouath Google 登录之后的 Authentication 信息,</p>
-<p><img src="10.png" alt="10"></p>
+<p><img src="/005-spring-security/10.png" alt="10"></p>
 <h2 id="8-总结">8. 总结</h2>
 <p>总结大概从 25:00 左右开始,</p>
 <p>{% youtube iJ2muJniikY %}</p>

@@ -168,17 +168,17 @@
 </div>
 </div><p>Save the tomcat-users.xml file and restart the server to have the changes take effect.</p>
 <p>重启Tomcat就是进到Tomcat的<code>bin</code>目录下, 执行<code>startup.sh</code>, <code>./shutdown.sh</code>, 其实你直接使用<code>startup.sh</code>命令开启Tomcat服务就会加载配置文件了, 上面说的重启是默认你的Tomcat一直处于运行状态. 现在你也应该启动Tomcat服务了, 启动后尝试访问<code>http://localhost:8080/</code>,</p>
-<p><img src="d.png" alt=""></p>
+<p><img src="/war/d.png" alt=""></p>
 <p>点击后输入上面的<code>username</code>和对应的<code>password</code>, 即可进入管理页面如下:</p>
-<p><img src="e.png" alt=""></p>
+<p><img src="/war/e.png" alt=""></p>
 <h3 id="无法访问-tomcat-主页问题">无法访问 tomcat 主页问题</h3>
 <p>我在访问Tomcat主页出现了问题, 访问的总是我以前的JSP应用, 我用IDEA开发的, 但我都没打开IDEA, 仍然可以访问到, 真是奇了怪了, 如下:</p>
-<p><img src="a.png" alt=""></p>
+<p><img src="/war/a.png" alt=""></p>
 <p>然后我就<a href="https://www.cnblogs.com/yayazi/p/7920257.html">查到了一个博客</a>说需要将Tomcat的首页的工程部署到Tomcat服务器上，我们通过IDEA来操作, 部署步骤如下：</p>
 <p>选择菜单栏“Run&ndash;&gt;Edit Configuration&hellip;&ndash;&gt;Deployment”, 选择右上角绿色“+”，选择“External Source&hellip;”，将Apache-tomcat的<code>webapps</code>目录下的ROOT文件夹添加进来, 下面的Application Context 空着, 删除 <code>ROOT</code> 下面的那个<code>ServletDemo:war exploded</code>, 如下图:</p>
-<p><img src="b.png" alt=""></p>
+<p><img src="/war/b.png" alt=""></p>
 <p>然后我IDEA上选择的Tomcat服务器不是我现在用的, 我有个旧的Tomcat服务器, 我不知道, 然后IDEA用的一直是那个旧的(但我在上面部署位置的<code>ROOT</code>文件夹选择的是新的Tomcat下的文件), 所以就导致就算部署项目后, 我依然无法访问Tomcat的主页. 所以检查一下你是否选择了正确的Tomcat服务器,</p>
-<p><img src="c.png" alt=""></p>
+<p><img src="/war/c.png" alt=""></p>
 <p>这样配置好后再在IDEA点击运行, 就可以通过<code>http://localhost:8080/</code>访问 Tomcat 主页了, 之后你关闭IDEA, 直接进入Tomcat根目录的<code>bin</code>下通过执行<code>startup.sh</code>来启动Tomcat.</p>
 <p>有时候你会遇到其他情况, 比如8080端口被占用, 这时候解决办法也很简单</p>
 <div class="highlight"><div class="chroma">
@@ -318,9 +318,9 @@
 <p>提示: 点击IDEA软件的右上角有个浮动的更新小按钮即更新, 或者你可以查查命令行maven怎么更新<code>pom.xml</code>文件.</p>
 </blockquote>
 <p>然后重新运行<code>mvn install tomcat7:deploy</code>, 成功:</p>
-<p><img src="f.png" alt=""></p>
+<p><img src="/war/f.png" alt=""></p>
 <p>然后去Tomcat根目录的<code>webapps</code>下查看生成的War, 可以看到生成了名为<code>rps</code>的web应用, 即这个名字取决于上面<code>pom.xml</code>填的内容,</p>
-<p><img src="g.png" alt=""></p>
+<p><img src="/war/g.png" alt=""></p>
 <p>然后我们对比一下生成的war与我们的源代码文件结构:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -463,7 +463,7 @@
 </div>
 </div><h2 id="final-step-verify">FInal Step: Verify</h2>
 <p>确保你已经开启Tomcat服务(即使你关闭了IDEA, IDEA和Tomcat是两个东西, IDEA是个IDE会用到Tomcat作为web服务器来部署web app), 然后访问通过<code>http://localhost:8080/</code>访问到Tomcat主页, 这时候你可以在链接🔗后加上<code>/rps</code>即<code>http://localhost:8080/rps/</code>就可以进入到你的那个web网页, 如下:</p>
-<p><img src="h.png" alt=""></p>
+<p><img src="/war/h.png" alt=""></p>
 <h2 id="思考总结">思考总结</h2>
 <p>这时候其实我们也就知道了什么是根目录和url中神秘的路径问题, 你看我们若想访问<code>manager</code>页面, 这个页面的url是<code>http://localhost:8080/manager/</code>, 我们访问我们刚部署的页面是<code>http://localhost:8080/rps/</code>, 你看最后的这个路径及<code>/manager</code>, <code>/rps</code>都是tomcat的<code>webapps</code>目录下的文件, 如下:</p>
 <div class="highlight"><div class="chroma">
@@ -584,8 +584,8 @@
             <span class="prev-text nav-default">Spring Boot之何为内嵌Tomcat</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
-        <a class="next" href="/post/build-website/modify-hexo-theme-in-css/">
-            <span class="next-text nav-default">微修Hexo主题CSS文件思路记录</span>
+        <a class="next" href="/post/bugs/002-bug-domain-with-two-ip/">
+            <span class="next-text nav-default">启动Cloudflare代理导致无法通过域名解析出A记录中的IP</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

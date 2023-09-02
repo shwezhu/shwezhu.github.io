@@ -174,13 +174,13 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">org.springframework.security</span><span class="p">:</span><span class="w"> </span><span class="l">TRACE</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="1.png" alt="1"></p>
+</div><p><img src="/007-spring-security/1.png" alt="1"></p>
 <h4 id="-13035-理论-authenticationmanager-providermanager-authenticationprovider"><code> 1:30:35</code> 理论: AuthenticationManager, ProviderManager, AuthenticationProvider</h4>
 <blockquote>
 <p>Authentication Object stands for either the request to login or the result of a successful login request ,</p>
 </blockquote>
-<p><img src="2.png" alt="2"></p>
-<p><img src="3.png" alt="3"></p>
+<p><img src="/007-spring-security/2.png" alt="2"></p>
+<p><img src="/007-spring-security/3.png" alt="3"></p>
 <p>上图中, 如果账号密码正确, 则 ProviderManager 返回的 UsernamePasswordAuthenticationToken 就是同一个对象, 只不过内容从 password, username 变成了一个 richer object (内容更丰富), 如 UserDetails 对象可能包含 你喜欢的颜色, 生日, 等信息, 而 Authority 对象可能包含你的权限, 如 user 还是 admin,</p>
 <blockquote>
 <p><a href="https://docs.spring.io/spring-security/site/docs/6.1.2/api/org/springframework/security/authentication/ProviderManager.html"><em><strong><code>ProviderManager</code></strong></em></a> is the most commonly used implementation of <a href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authenticationmanager"><em><strong><code>AuthenticationManager</code></strong></em></a>.</p>
@@ -218,7 +218,7 @@
 </div>
 </div><p>Basically <code>AuthenticationProvider</code> is the specialized version of the <code>ProviderManager</code> that says I only deal with username password authentication tokens, I only deal with robot authentications, I only deal with over 2 login authentication tokens.</p>
 <p>And this allows you to extend Spring Security in a very specific place for changing the way someone logs in, <em>without having to write a custom filter that takes the request</em>, that does some transformation, maybe you don&rsquo;t need to go that far, maybe you have special rules around, you know the email of the user that comes in, well here an <code>AuthenticationProvider</code> would be good enough.</p>
-<p><img src="4.png" alt="4"></p>
+<p><img src="/007-spring-security/4.png" alt="4"></p>
 <p>A <code>ProviderManager</code> just like this, kind of the same idea of the filters, but applied to transforming authentication requests into authenciated objects, it&rsquo;s a for loop over a list of <code>AuthenticationProvider</code>.</p>
 <h4 id="-13550-实践-authenticationproviders-providermanager-authenticationprovider"><code> 1:35:50</code> 实践: AuthenticationProviders, ProviderManager, AuthenticationProvider</h4>
 <p>Our website is great, it has two beautiful pages I can log in with username and password, or with Google login, and have a robot a robot account, I can hit my endpoints and get stuff with credentials that are not in the database for example,</p>
@@ -339,7 +339,7 @@
 <p>Usually when you want to do a custom authentication, you should do a custom AuthenticationProvider rather than a full filter.</p>
 </blockquote>
 <p>When I log in <code>ProviderManager</code> produces an event, when I fail to log in and it also produces an event a spring event, so this means we can listen to those events and do stuff when an event is done.</p>
-<p><img src="5.png" alt="5"></p>
+<p><img src="/007-spring-security/5.png" alt="5"></p>
 <h4 id="14500-change-our-custom-robotfilter-to-custom-authenticationprovider"><code>1:45:00</code> Change our Custom RobotFilter to Custom AuthenticationProvider</h4>
 <p>源码: <a href="https://github.com/shwezhu/springboot-learning/tree/master/3-spring-security-authenciation-provider">https://github.com/shwezhu/springboot-learning/tree/master/3-spring-security-authenciation-provider</a></p>
 <p>注意结构, 比起下面这个:</p>
@@ -411,8 +411,8 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">org.springframework.security</span><span class="p">:</span><span class="w"> </span><span class="l">TRACE</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="7.png" alt="7"></p>
-<p><img src="9.png" alt="8"></p>
+</div><p><img src="/007-spring-security/7.png" alt="7"></p>
+<p><img src="/007-spring-security/9.png" alt="8"></p>
 <p>从图中可以看出 使用如下登录, 则会匹配到我们的 DavidAuthenticationProvider,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -422,7 +422,7 @@
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ curl -u <span class="s2">&#34;david:asd&#34;</span> http://localhost:8080/private -v
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="8.png" alt="9"></p>
+</div><p><img src="/007-spring-security/8.png" alt="9"></p>
 <p>若使用正常用户密码登录, 则会跳过 DavidAuthenticationProvider, 使用 DaoAuthenticationProvider 验证,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -468,17 +468,17 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>把 BasicAuthenticationFilter 加入到了 Security, 然后验证的时候正如输出那样, 一层一层的调用Filter, 进行匹配, 我们此时使用的是命令行 <code>curl -u &quot;&quot;</code> 进行验证的, 而 BasicAuthenticationFilter 就是做这个的, 如果我们把 BasicAuthenticationFilter 从我们的SecurityChian中移除也就是删除代码 <code>.httpBasic(withDefaults())</code>, 那我们通过 <code>curl -u</code> 提供的账号密码就不会被发现, 然后导致验证失败, 原因是所有的 filter 都被依次掉用完, 但依然没有发现匹配的,</p>
-<p><img src="10.png" alt="10"></p>
+<p><img src="/007-spring-security/10.png" alt="10"></p>
 <p>通过这个我们也会发现, 如果使用自定义 filter 进行验证, 如使用 DavidFIlter, 而不是DavidAuthenticationProvider, 那我们还需要去验证 post 里面的账号密码, 具体分析参考视频 <code>1:58:15</code></p>
 <h4 id="15925--filterchain-调用顺序"><code>1:59:25 </code> FilterChain 调用顺序</h4>
 <h4 id="20000-recap"><code>2:00:00</code> Recap</h4>
-<p><img src="11.png" alt="11"></p>
+<p><img src="/007-spring-security/11.png" alt="11"></p>
 <h4 id="20135--configurers---navigate-spring-security"><code>2:01:35</code>  Configurers - &ldquo;navigate Spring Security&rdquo;</h4>
 <blockquote>
 <p>Configurers are an abstraction that allows you to configure the filter chain and do multiple operations on the the HTTP builder(),</p>
 </blockquote>
-<p><img src="12.png" alt="12"></p>
-<p><img src="13.png" alt="13"></p>
+<p><img src="/007-spring-security/12.png" alt="12"></p>
+<p><img src="/007-spring-security/13.png" alt="13"></p>
 <p><code>RobotLoginConfigurer.java</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

@@ -177,7 +177,7 @@
 <p>上面说到的 expires 格式是 UTC, 意味着服务器把 cookie 传给客户端时, 若设置了 expires, 则需要先处理一下时间即把格式转为 UTC 格式, 规定 expires 格式必须时 UTC 的原因是客户端与服务器可能不在同一个时区, 比如服务器所在位置时区为 UTC-3,  客户端的时区为 UTC, 此时服务器比 UTC 慢了三小时, 此时若服务器直接设置 cookie expires 为 Now() + 30, 指的是半小时后过期, 可是传到客户端立刻过期了, 因为客户端浏览器默认来自服务器的 cookie expires 是 UTC,</p>
 </blockquote>
 <p>下面就是服务器传回 cookie expires 没有为其指定时区的例子, 可以看到请求是 Jun 20 发出的, cookie 过期时间却是 Jun 19:</p>
-<p><img src="1.png" alt="1"></p>
+<p><img src="/005-session-cookie/1.png" alt="1"></p>
 <p>服务器端 Python Flask 处理 http request时, 设置 cookie 方式如下:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

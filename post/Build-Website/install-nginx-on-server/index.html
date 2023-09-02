@@ -136,12 +136,16 @@
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#1-为什么要开启nginx服务">1. 为什么要开启Nginx服务</a></li>
-    <li><a href="#2-安装nginx">2. 安装Nginx</a>
+    <li>
       <ul>
-        <li><a href="#21-install-nginx-web-server">2.1. Install Nginx Web Server</a></li>
-        <li><a href="#22-adjusting-firewall-rules">2.2. Adjusting Firewall Rules</a></li>
-        <li><a href="#23-checking-your-web-server">2.3. Checking your Web Server</a></li>
+        <li><a href="#1-为什么要开启nginx服务">1. 为什么要开启Nginx服务</a></li>
+        <li><a href="#2-安装nginx">2. 安装Nginx</a>
+          <ul>
+            <li><a href="#21-install-nginx-web-server">2.1. Install Nginx Web Server</a></li>
+            <li><a href="#22-adjusting-firewall-rules">2.2. Adjusting Firewall Rules</a></li>
+            <li><a href="#23-checking-your-web-server">2.3. Checking your Web Server</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -149,7 +153,7 @@
   </div>
 </div>
     <div class="post-content">
-      <h1 id="1-为什么要开启nginx服务">1. 为什么要开启Nginx服务</h1>
+      <h2 id="1-为什么要开启nginx服务">1. 为什么要开启Nginx服务</h2>
 <p>没启动Nginx之前, 可以ping通服务器的ip地址, 也可以ping通域名(已经把ip加到域名的A类DNS records中了).</p>
 <p>但是就是在浏览器中输入ip地址或者域名就会显示无法连接服务, 注意你输入一个不存在的ip的时候, 显示的是找不到服务器.</p>
 <p>分析浏览器输入ip地址后, 发送的是http的get指令, http是80端口, 服务器的防火墙未必允许这个端口了, 另外服务器也是个电脑装个操作系统呀, 你直接http访问怎么能行, 谁来处理http请求? 我们写Java还知道Spring里集成了tomcat来处理http请求呢, 那为什么可以ping通呢? 问这个问题就说明你又忘了网络的基础知识了, ping是基于ICMP协议的, 能ping通只能说明目的电脑的网络(TCP/IP)是通的, ICMP属于IP层协议.</p>
@@ -162,8 +166,8 @@
 </blockquote>
 <p>在服务器安装并启动Nginx之后便可以在浏览器访问了, 其实这么说并不专业, 应该说可以接受http请求了, <code>http://shaowenzhu.top</code> 是可以访问的了, 但是<code>https://shaowenzhu.top</code>仍显示无法连接服务器, 这可能和SSL有关系(比如我的域名没买证书或者我服务器没有监听8080端口, 可以查查服务器怎么使能8080端口), 然后别忘了http是<code>80</code>端口, https是<code>8080</code>端口.</p>
 <p>看在浏览器输入<code>http://shaowenzhu.top</code>, 便可以访问了~</p>
-<h1 id="2-安装nginx">2. 安装Nginx</h1>
-<h2 id="21-install-nginx-web-server">2.1. Install Nginx Web Server</h2>
+<h2 id="2-安装nginx">2. 安装Nginx</h2>
+<h3 id="21-install-nginx-web-server">2.1. Install Nginx Web Server</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -178,7 +182,7 @@
 </span></span><span class="line"><span class="cl">sudo systemctl start nginx
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="22-adjusting-firewall-rules">2.2. Adjusting Firewall Rules</h2>
+</div><h3 id="22-adjusting-firewall-rules">2.2. Adjusting Firewall Rules</h3>
 <p>Run the following command to permanently enable HTTP connections on port 80:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -239,7 +243,7 @@
 <pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">sudo firewall-cmd --reload
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="23-checking-your-web-server">2.3. Checking your Web Server</h2>
+</div><h3 id="23-checking-your-web-server">2.3. Checking your Web Server</h3>
 <p>You can now test if your Nginx web server is up and running by accessing your server’s public IP address or domain name from your web browser.</p>
 <p>If you do not have a domain name pointed at your server and you do not know your server’s public IP address, you can find it by running the following command:</p>
 <div class="highlight"><div class="chroma">
@@ -277,13 +281,13 @@
           <a href="/tags/build-website/">Build Website</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/bugs/bug-ssh-connection-refused/">
+        <a class="prev" href="/post/bugs/004-bug-ssh-connection-refused/">
             <i class="iconfont icon-left"></i>
             <span class="prev-text nav-default">SSH连接远程主机出现的Connection Refused问题</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         <a class="next" href="/post/build-website/hexo-to-remote-server/">
-            <span class="next-text nav-default">Hexo部署博客到服务器</span>
+            <span class="next-text nav-default">部署博客到服务器 - Hexo</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>
