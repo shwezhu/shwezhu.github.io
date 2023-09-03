@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Golang并发学习之Select - David&#39;s Blog</title>
+  <title>Select - Go Concurrency - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an" />
+<meta name="author" content="David" /><meta name="description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an unbuffered channel operation // will block unitl the value stored in the channel get read case s&amp;lt;- 1: fmt." />
 
 
 
@@ -39,19 +40,22 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Golang并发学习之Select" />
-<meta property="og:description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an" />
+<meta property="og:title" content="Select - Go Concurrency" />
+<meta property="og:description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an unbuffered channel operation // will block unitl the value stored in the channel get read case s&lt;- 1: fmt." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/011-goroutines-select/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-21T21:22:11+00:00" />
 <meta property="article:modified_time" content="2023-05-21T21:22:11+00:00" />
-<meta itemprop="name" content="Golang并发学习之Select">
-<meta itemprop="description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an"><meta itemprop="datePublished" content="2023-05-21T21:22:11+00:00" />
+<meta itemprop="name" content="Select - Go Concurrency">
+<meta itemprop="description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an unbuffered channel operation // will block unitl the value stored in the channel get read case s&lt;- 1: fmt."><meta itemprop="datePublished" content="2023-05-21T21:22:11+00:00" />
 <meta itemprop="dateModified" content="2023-05-21T21:22:11+00:00" />
-<meta itemprop="wordCount" content="394">
+<meta itemprop="wordCount" content="367">
 <meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Golang并发学习之Select"/>
-<meta name="twitter:description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an"/>
+<meta name="twitter:title" content="Select - Go Concurrency"/>
+<meta name="twitter:description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an unbuffered channel operation // will block unitl the value stored in the channel get read case s&lt;- 1: fmt."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +128,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Golang并发学习之Select</h1>
+      <h1 class="post-title">Select - Go Concurrency</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-05-21 </span>
@@ -242,7 +246,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="3-practice">3. Practice</h2>
-<p>实现贪吃蛇的时候用一个 goroutine 监听键盘输入, 另一个 goroutine 打印每一帧,</p>
+<p>When achiveve a snake game I use another goroutine to monitor keybord input:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -279,7 +283,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>想在退出游戏的时候让线程函数 <code>monitorInput()</code> 也结束运行而不是一直 for 循环:</p>
+</div><p>And I want the goroutine function <code>monitorInput()</code> exit when main function ends, which can be achieved with select:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1

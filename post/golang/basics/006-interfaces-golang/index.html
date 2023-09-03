@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>interfaces in golang (and something new methods receivers) - David&#39;s Blog</title>
+  <title>Interfaces in Golang (and Methods Receivers) - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="pointers to interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &amp;ldquo;type.&amp;rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If the" />
+<meta name="author" content="David" /><meta name="description" content="1. Pointers to Interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &amp;ldquo;type.&amp;rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If" />
 
 
 
@@ -39,19 +39,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="interfaces in golang (and something new methods receivers)" />
-<meta property="og:description" content="pointers to interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &ldquo;type.&rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If the" />
+<meta property="og:title" content="Interfaces in Golang (and Methods Receivers)" />
+<meta property="og:description" content="1. Pointers to Interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &ldquo;type.&rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-09-02T19:58:32+00:00" />
 <meta property="article:modified_time" content="2023-09-02T19:58:32+00:00" />
-<meta itemprop="name" content="interfaces in golang (and something new methods receivers)">
-<meta itemprop="description" content="pointers to interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &ldquo;type.&rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If the"><meta itemprop="datePublished" content="2023-09-02T19:58:32+00:00" />
+<meta itemprop="name" content="Interfaces in Golang (and Methods Receivers)">
+<meta itemprop="description" content="1. Pointers to Interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &ldquo;type.&rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If"><meta itemprop="datePublished" content="2023-09-02T19:58:32+00:00" />
 <meta itemprop="dateModified" content="2023-09-02T19:58:32+00:00" />
-<meta itemprop="wordCount" content="1851">
+<meta itemprop="wordCount" content="1856">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="interfaces in golang (and something new methods receivers)"/>
-<meta name="twitter:description" content="pointers to interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &ldquo;type.&rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If the"/>
+<meta name="twitter:title" content="Interfaces in Golang (and Methods Receivers)"/>
+<meta name="twitter:description" content="1. Pointers to Interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &ldquo;type.&rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +124,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">interfaces in golang (and something new methods receivers)</h1>
+      <h1 class="post-title">Interfaces in Golang (and Methods Receivers)</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-09-02 </span>
@@ -143,11 +143,11 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#pointers-to-interfaces">pointers to interfaces</a></li>
-        <li><a href="#an-interesting-question">an interesting question</a></li>
-        <li><a href="#first-try---type-admin-isnt-adimin">first try - type <code>Admin</code> isn&rsquo;t <code>*Adimin</code></a></li>
-        <li><a href="#answer">answer</a></li>
-        <li><a href="#polymorphism">polymorphism</a></li>
+        <li><a href="#1-pointers-to-interfaces">1. Pointers to Interfaces</a></li>
+        <li><a href="#2-an-interesting-question">2. An Interesting Question</a></li>
+        <li><a href="#3-first-try---type-admin-isnt-adimin">3. First Try - Type <code>Admin</code> isn&rsquo;t <code>*Adimin</code></a></li>
+        <li><a href="#4-answer">4. Answer</a></li>
+        <li><a href="#5-polymorphism">5. Polymorphism</a></li>
       </ul>
     </li>
   </ul>
@@ -155,7 +155,7 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="pointers-to-interfaces">pointers to interfaces</h2>
+      <h2 id="1-pointers-to-interfaces">1. Pointers to Interfaces</h2>
 <p>You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer.</p>
 <p>An interface is two fields:</p>
 <ol>
@@ -176,7 +176,7 @@
 </div><p><strong>Calling a method on an interface value executes the method of the same name on its underlying type.</strong></p>
 <p>You should know that value in golang is similar to object in other language.</p>
 <p>Source: <a href="https://go.dev/tour/methods/11">https://go.dev/tour/methods/11</a></p>
-<h2 id="an-interesting-question">an interesting question</h2>
+<h2 id="2-an-interesting-question">2. An Interesting Question</h2>
 <p>I found an <a href="https://stackoverflow.com/questions/37851500/how-to-copy-an-interface-value-in-go/37851764#37851764">interesting question</a> on stackoverflow, and find that interface in golang is different from other languages, I&rsquo;ll show you. This is the backgroud code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -249,7 +249,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="first-try---type-admin-isnt-adimin">first try - type <code>Admin</code> isn&rsquo;t <code>*Adimin</code></h2>
+</div><h2 id="3-first-try---type-admin-isnt-adimin">3. First Try - Type <code>Admin</code> isn&rsquo;t <code>*Adimin</code></h2>
 <p>Because golang everything pass by value, even assignment will make a copy, therefore, at first I tried like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -316,7 +316,7 @@
 <p>enlightened by:</p>
 <p><a href="https://stackoverflow.com/questions/37851500/how-to-copy-an-interface-value-in-go/37851764#37851764">pointers - How to copy an interface value in Go? - Stack Overflow </a></p>
 <p><a href="https://stackoverflow.com/questions/53701458/pointer-receiver-and-value-receiver-on-interfaces-in-golang">go - Pointer Receiver and Value Receiver on Interfaces in Golang - Stack Overflow</a></p>
-<h2 id="answer">answer</h2>
+<h2 id="4-answer">4. Answer</h2>
 <p>Now, we know what&rsquo;s happening here:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -355,10 +355,10 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">user2</span><span class="p">.</span><span class="nf">SetName</span><span class="p">(</span><span class="s">&#34;user2&#34;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><strong>Using reflection</strong></p>
+</div><p><em><strong>Using reflection:</strong></em></p>
 <p>If we want a &ldquo;general&rdquo; solution (not just one that works with <code>*Admin</code>), we can use reflection (<a href="https://golang.org/pkg/reflect/"><code>reflect</code></a> package).</p>
 <p>Learn more: <a href="https://stackoverflow.com/a/37851764/16317008">https://stackoverflow.com/a/37851764/16317008</a></p>
-<h2 id="polymorphism">polymorphism</h2>
+<h2 id="5-polymorphism">5. Polymorphism</h2>
 <p>Go does not have classes, however, <strong>you can define methods on types</strong>. A method is a function with a special <em>receiver</em> argument.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -615,8 +615,8 @@
           </div>
       <nav class="post-nav">
         
-        <a class="next" href="/post/git/practice/003-blog-backup/">
-            <span class="next-text nav-default">Backup Blogs with Git</span>
+        <a class="next" href="/post/golang/basics/017-interface-value/">
+            <span class="next-text nav-default">Interface Value - Golang</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>encoding/gob &amp; encoding/json in golang - David&#39;s Blog</title>
+  <title>encoding/gob &amp; encoding/json in Golang - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’" />
+<meta name="author" content="David" /><meta name="description" content="1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’" />
 
 
 
@@ -39,19 +39,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="encoding/gob &amp; encoding/json in golang" />
-<meta property="og:description" content="1. why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’" />
+<meta property="og:title" content="encoding/gob &amp; encoding/json in Golang" />
+<meta property="og:description" content="1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/014-gob-json-encoding/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-31T11:38:20+00:00" />
 <meta property="article:modified_time" content="2023-08-31T11:38:20+00:00" />
-<meta itemprop="name" content="encoding/gob &amp; encoding/json in golang">
-<meta itemprop="description" content="1. why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’"><meta itemprop="datePublished" content="2023-08-31T11:38:20+00:00" />
+<meta itemprop="name" content="encoding/gob &amp; encoding/json in Golang">
+<meta itemprop="description" content="1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’"><meta itemprop="datePublished" content="2023-08-31T11:38:20+00:00" />
 <meta itemprop="dateModified" content="2023-08-31T11:38:20+00:00" />
 <meta itemprop="wordCount" content="2322">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="encoding/gob &amp; encoding/json in golang"/>
-<meta name="twitter:description" content="1. why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’"/>
+<meta name="twitter:title" content="encoding/gob &amp; encoding/json in Golang"/>
+<meta name="twitter:description" content="1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +124,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">encoding/gob &amp; encoding/json in golang</h1>
+      <h1 class="post-title">encoding/gob &amp; encoding/json in Golang</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-08-31 </span>
@@ -143,15 +143,15 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#1-why-do-we-need-encoding">1. why do we need encoding</a></li>
+        <li><a href="#1-why-do-we-need-encoding">1. Why do we need encoding</a></li>
         <li><a href="#2-encodinggob">2. encoding/gob</a>
           <ul>
-            <li><a href="#21-why-gob">2.1. why gob</a></li>
-            <li><a href="#22-googles-protocol-buffers-misfeatures">2.2. google’s protocol buffers misfeatures</a></li>
-            <li><a href="#23-how-does-gob-work---value-of-encoded-gob-data-is-just-integer">2.3. how does gob work - value of encoded gob data is just integer</a></li>
-            <li><a href="#24-values-are-flattened">2.4. values are flattened</a></li>
-            <li><a href="#25-types-on-the-wire">2.5. types on the wire</a></li>
-            <li><a href="#26-functions-and-channels">2.6. functions and channels</a></li>
+            <li><a href="#21-why-gob">2.1. Why gob</a></li>
+            <li><a href="#22-googles-protocol-buffers-misfeatures">2.2. Google’s protocol buffers misfeatures</a></li>
+            <li><a href="#23-how-does-gob-work---value-of-encoded-gob-data-is-just-integer">2.3. How does gob work - value of encoded gob data is just integer</a></li>
+            <li><a href="#24-values-are-flattened">2.4. Values are flattened</a></li>
+            <li><a href="#25-types-on-the-wire">2.5. Types on the wire</a></li>
+            <li><a href="#26-functions-and-channels">2.6. Functions and channels</a></li>
             <li><a href="#27-gobregister-method">2.7. gob.Register method</a></li>
             <li><a href="#28-gobregister-in-map">2.8. gob.Register in map</a></li>
           </ul>
@@ -169,19 +169,19 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-why-do-we-need-encoding">1. why do we need encoding</h2>
+      <h2 id="1-why-do-we-need-encoding">1. Why do we need encoding</h2>
 <blockquote>
 <p>To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary.</p>
 </blockquote>
 <p>There are many encodings available, of course: <a href="http://www.json.org/">JSON</a>, <a href="http://www.w3.org/XML/">XML</a>, Google’s <a href="http://code.google.com/p/protobuf">protocol buffers</a>, and more. And now there’s another, provided by Go’s <a href="https://go.dev/pkg/encoding/gob/">gob</a> package.</p>
 <h2 id="2-encodinggob">2. encoding/gob</h2>
-<h3 id="21-why-gob">2.1. why gob</h3>
+<h3 id="21-why-gob">2.1. Why gob</h3>
 <p>Why define a new encoding? It’s a lot of work and redundant at that. Why not just use one of the existing formats? Well, for one thing, we do! Go has <a href="https://go.dev/pkg/">packages</a> supporting all the encodings just mentioned (the <a href="http://github.com/golang/protobuf">protocol buffer package</a> is in a separate repository but it’s one of the most frequently downloaded). And for many purposes, including communicating with tools and systems written in other languages, they’re the right choice.</p>
 <p>But for a Go-specific environment, such as communicating between two servers written in Go, there’s an opportunity to build something much easier to use and possibly more efficient.</p>
 <blockquote>
 <p>Gob is much more preferred when communicating between Go programs. However, gob is currently supported only in Go and, well, <a href="https://code.google.com/archive/p/libgob/">C</a>, so only ever use that when you&rsquo;re sure no program written in any other programming language will try to decode the values. <a href="https://stackoverflow.com/questions/41179453/difference-between-encoding-gob-and-encoding-json">source</a></p>
 </blockquote>
-<h3 id="22-googles-protocol-buffers-misfeatures">2.2. google’s protocol buffers misfeatures</h3>
+<h3 id="22-googles-protocol-buffers-misfeatures">2.2. Google’s protocol buffers misfeatures</h3>
 <blockquote>
 <p><strong>Protocol Buffers</strong> is a free and open-source cross-platform data format used to serialize structured data. It is useful in developing programs that communicate with each other over a network or for storing data. <a href="https://en.wikipedia.org/wiki/Protocol_Buffers">Wikipedia</a></p>
 </blockquote>
@@ -199,7 +199,7 @@
 <li>Don&rsquo;t need all fields of a type exist when decoding and encoding.</li>
 <li>If the varibale being transmitted has &ldquo;zero value&rdquo; for its type, it doesn&rsquo;t need to be transmitted. Decoder know its type, it will set its default value automatically.</li>
 </ul>
-<h3 id="23-how-does-gob-work---value-of-encoded-gob-data-is-just-integer">2.3. how does gob work - value of encoded gob data is just integer</h3>
+<h3 id="23-how-does-gob-work---value-of-encoded-gob-data-is-just-integer">2.3. How does gob work - value of encoded gob data is just integer</h3>
 <p>The <strong>encoded gob data</strong> isn’t about types like <code>int8</code> and <code>uint16</code>. Instead, somewhat analogous to constants in Go, its integer values are abstract, sizeless numbers, either signed or unsigned. When you encode an <code>int8</code>, its value is transmitted as an unsized, variable-length integer. When you encode an <code>string</code>, its value is also transmitted as an unsized, variable-length integer.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -267,7 +267,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Besides, <code>enc.Encode(message)</code> does two things: encode message and transmit it, similarily, <code>dec.Decode(&amp;ms)</code> does three</p>
-<h3 id="24-values-are-flattened">2.4. values are flattened</h3>
+<h3 id="24-values-are-flattened">2.4. Values are flattened</h3>
 <blockquote>
 <p>A stream of gobs is <strong>self-describing</strong>. Each data item in the stream is preceded by a specification of its type, expressed in terms of a small set of predefined types. <strong>Pointers are not transmitted, but the things they point to are transmitted</strong>; that is, the values are flattened. Nil pointers are not permitted, as they have no value. <strong>Recursive types work fine</strong>, but recursive values (data with cycles) are problematic. <a href="https://pkg.go.dev/encoding/gob#pkg-overview">source</a></p>
 </blockquote>
@@ -348,7 +348,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="25-types-on-the-wire">2.5. types on the wire</h3>
+</div><h3 id="25-types-on-the-wire">2.5. Types on the wire</h3>
 <p>The first time you send a given type, the gob package includes in the data stream a description of that type. In fact, what happens is that the encoder is used to encode, in the standard gob encoding format, <strong>an internal struct</strong> that describes the type and gives it a unique number. (Basic types, plus the layout of the type description structure, are predefined by the software for bootstrapping.) After the type is described, it can be referenced by its type number.</p>
 <p>Thus when we send our first type <code>T</code>, the gob encoder sends a description of <code>T</code> and tags it with a type number, say 127. All values, including the first, are then prefixed by that number, so a stream of <code>T</code> values looks like:</p>
 <div class="highlight"><div class="chroma">
@@ -374,7 +374,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="26-functions-and-channels">2.6. functions and channels</h3>
+</div><h3 id="26-functions-and-channels">2.6. Functions and channels</h3>
 <p>Functions and channels will not be sent in a gob. Attempting to encode such a value at the top level will fail. A struct field of chan or func type is treated exactly like an unexported field and is ignored.</p>
 <h3 id="27-gobregister-method">2.7. gob.Register method</h3>
 <p>Register records a type, identified by a value for that type, under its internal type name. That name will identify the concrete type of a value sent or received as an interface variable. <strong>Only types that will be transferred as implementations of interface values need to be registered.</strong> Expecting to be used only during initialization, it panics if the mapping between types and names is not a bijection.</p>

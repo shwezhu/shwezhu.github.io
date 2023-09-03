@@ -8,21 +8,30 @@
     <language>en</language>
     <lastBuildDate>Sat, 02 Sep 2023 19:58:32 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/categories/golang/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>interfaces in golang (and something new methods receivers)</title>
+      <title>Interfaces in Golang (and Methods Receivers)</title>
       <link>https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/</link>
       <pubDate>Sat, 02 Sep 2023 19:58:32 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/</guid>
-      <description>pointers to interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &amp;ldquo;type.&amp;rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If the</description>
+      <description>1. Pointers to Interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &amp;ldquo;type.&amp;rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If</description>
     </item>
     
     <item>
-      <title>encoding/gob &amp; encoding/json in golang</title>
+      <title>Interface Value - Golang</title>
+      <link>https://shaowenzhu.top/post/golang/basics/017-interface-value/</link>
+      <pubDate>Sat, 02 Sep 2023 18:57:04 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/basics/017-interface-value/</guid>
+      <description>Copying an interface value makes a copy of the thing stored in the interface value. If the interface value holds a struct, copying the interface value makes a copy of the struct. If the interface value holds a pointer, copying the interface value makes a copy of the pointer, but again not the data it points to. Note that this discussion is about the semantics of the operations. Actual implementations</description>
+    </item>
+    
+    <item>
+      <title>encoding/gob &amp; encoding/json in Golang</title>
       <link>https://shaowenzhu.top/post/golang/basics/014-gob-json-encoding/</link>
       <pubDate>Thu, 31 Aug 2023 11:38:20 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/014-gob-json-encoding/</guid>
-      <description>1. why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’</description>
+      <description>1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’</description>
     </item>
     
     <item>
@@ -100,12 +109,12 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
     </item>
     
     <item>
-      <title>Pointer Receiver or Value Receiver - Golang</title>
+      <title>Choose Methods Receivers in Concurrency - Golang</title>
       <link>https://shaowenzhu.top/post/golang/basics/013-methods-receivers/</link>
       <pubDate>Tue, 15 Aug 2023 17:18:20 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/013-methods-receivers/</guid>
-      <description>1. different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
+      <description>1. Different Behaviors - Pointer and Value Receiver There are two reasons to use a pointer receiver:
 The first is so that the method can modify the value that its receiver points to.
 The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
 &amp;ldquo;the value&amp;rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value.</description>
@@ -148,12 +157,13 @@ The second is to avoid copying the value on each method call. This can be more e
     </item>
     
     <item>
-      <title>Golang并发学习之Select</title>
+      <title>Select - Go Concurrency</title>
       <link>https://shaowenzhu.top/post/golang/basics/011-goroutines-select/</link>
       <pubDate>Sun, 21 May 2023 21:22:11 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/011-goroutines-select/</guid>
-      <description>1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an</description>
+      <description>1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an unbuffered channel operation // will block unitl the value stored in the channel get read case s&amp;lt;- 1: fmt.</description>
     </item>
     
     <item>
@@ -175,7 +185,7 @@ The second is to avoid copying the value on each method call. This can be more e
     </item>
     
     <item>
-      <title>returns a local variable address - golang</title>
+      <title>Returns a Address of Local Variable - Golang</title>
       <link>https://shaowenzhu.top/post/golang/basics/004-lifetime-of-variables/</link>
       <pubDate>Mon, 15 May 2023 22:52:03 +0000</pubDate>
       
@@ -196,12 +206,12 @@ From a correctness standpoint, you don&amp;rsquo;t need to know. Each variable i
     </item>
     
     <item>
-      <title>golang basics ‼️</title>
+      <title>Golang Basics ‼️</title>
       <link>https://shaowenzhu.top/post/golang/basics/001-syntax/</link>
       <pubDate>Fri, 12 May 2023 10:00:20 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/001-syntax/</guid>
-      <description>1. variable declarations The := can only be used in inside a function, which is called short variable declarations. A var statement can be at package or function level, which is called regular variable declarations. Variables declared without an explicit initial value are given their zero value. The zero value is: 0 for numeric types, false for the boolean type, and &amp;quot;&amp;quot; (the empty string) for strings. nil for pointer</description>
+      <description>1. Variable Declarations The := can only be used in inside a function, which is called short variable declarations. A var statement can be at package or function level, which is called regular variable declarations. Variables declared without an explicit initial value are given their zero value. The zero value is: 0 for numeric types, false for the boolean type, and &amp;quot;&amp;quot; (the empty string) for strings. nil for pointer</description>
     </item>
     
     <item>
@@ -217,21 +227,12 @@ byte slice vs string A byte is just a char in C language, so a byte slice just a
     </item>
     
     <item>
-      <title>interface value - golang</title>
-      <link>https://shaowenzhu.top/post/golang/basics/017-interface-value/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/basics/017-interface-value/</guid>
-      <description>Copying an interface value makes a copy of the thing stored in the interface value. If the interface value holds a struct, copying the interface value makes a copy of the struct. If the interface value holds a pointer, copying the interface value makes a copy of the pointer, but again not the data it points to. Note that this discussion is about the semantics of the operations. Actual implementations</description>
-    </item>
-    
-    <item>
-      <title>pass by value or reference - golang</title>
+      <title>Pass by Value or Reference - golang</title>
       <link>https://shaowenzhu.top/post/golang/basics/009-methods-pass-by-value/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/009-methods-pass-by-value/</guid>
-      <description>1. everything in Go is passed by value As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a function makes a copy of the int, and passing a pointer value makes a copy of the pointer, but not the data it points to.</description>
+      <description>1. Everything in Go is passed by value As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a function makes a copy of the int, and passing a pointer value makes a copy of the pointer, but not the data it points to.</description>
     </item>
     
     <item>
