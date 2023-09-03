@@ -1,5 +1,5 @@
 ---
-title: Golang并发学习之Select
+title: Select - Go Concurrency
 date: 2023-05-21 21:22:11
 categories:
  - golang
@@ -61,7 +61,7 @@ func main() {
 
 ## 3. Practice
 
-实现贪吃蛇的时候用一个 goroutine 监听键盘输入, 另一个 goroutine 打印每一帧, 
+When achiveve a snake game I use another goroutine to monitor keybord input: 
 
 ```go
 func monitorInput() {
@@ -81,7 +81,7 @@ func main() {
 }
 ```
 
-想在退出游戏的时候让线程函数 `monitorInput()` 也结束运行而不是一直 for 循环:
+And I want the goroutine function `monitorInput()` exit when main function ends, which can be achieved with select:
 
 ```go
 func monitorInput() {

@@ -1,14 +1,15 @@
 ---
-title: Pointer Receiver or Value Receiver - Golang
+title: Choose Methods Receivers in Concurrency - Golang
 date: 2023-08-15 17:18:20
 categories:
  - golang
  - basics
 tags:
  - golang
+ - concurrency
 ---
 
-## 1. different behaviors - pointer and value receiver
+## 1. Different Behaviors - Pointer and Value Receiver
 
 There are two reasons to use a pointer receiver:
 
@@ -69,7 +70,7 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 }
 ```
 
-## 2. method receivers in concurrency
+## 2. Method Receivers in Concurrency
 
 I came across a satement about when to use value receiver but forget where I found:
 
@@ -120,7 +121,7 @@ A similar pitfall can occur with types that maintain slices of values, and of co
 
 In short, I think that you should prefer declaring methods on `*T` unless you have a strong reason to do otherwise.
 
-## 3. pointer receiver - a practical example
+## 3. Pointer Receiver - a Practical Example
 
  `error` interface:
 

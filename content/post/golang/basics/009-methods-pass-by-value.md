@@ -1,5 +1,5 @@
 ---
-title: pass by value or reference - golang
+title: Pass by Value or Reference - golang
 date: 2023-09-2 18:37:04
 categories:
  - golang
@@ -8,7 +8,7 @@ tags:
  - golang
 ---
 
-## 1. everything in Go is passed by value
+## 1. Everything in Go is passed by value
 
 > As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an `int` value to a function makes a copy of the `int`, and passing a pointer value makes a copy of the pointer, but not the data it points to. 
 >
@@ -18,7 +18,7 @@ tags:
 >
 > Source: [There is no pass-by-reference in Go | Dave Cheney](https://dave.cheney.net/2017/04/29/there-is-no-pass-by-reference-in-go)
 
-## 2. what is a reference variable?
+## 2. What is a reference variable?
 
 In languages like C++ you can declare an *alias*, or an *alternate name* to an existing variable. This is called a *reference variable*.
 

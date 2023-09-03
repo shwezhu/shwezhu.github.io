@@ -1,5 +1,5 @@
 ---
-title: golang basics ‼️
+title: Golang Basics ‼️
 date: 2023-05-12 10:00:20
 categories:
  - golang
@@ -8,7 +8,7 @@ tags:
  - golang
 ---
 
-## 1. variable declarations
+## 1. Variable Declarations
 
 - The ***`:=`*** can **only** be used in inside a function, which is called **short variable declarations**. 
 
@@ -45,7 +45,7 @@ var cat *Cat
 *cat = kitten  // runtime error: invalid memory address or nil pointer dereference
 ```
 
-## 2. variable redeclaration 
+## 2. Variable Redeclaration 
 
 Unlike regular variable declarations, a short variable declaration may *redeclare* variables provided they were originally declared earlier in the same block **with the same type**, and **at least one of the non-[blank](https://go.dev/ref/spec#Blank_identifier) variables is new**. As a consequence, redeclaration can only appear in a multi-variable short declaration. Redeclaration does not introduce a new variable; it just assigns a new value to the original. 
 
@@ -70,7 +70,7 @@ c, err := r.Cookie(name) // redeclare err
 ...
 ```
 
-## 3. go does not have reference variables
+## 3. Go does not have Reference Variables
 
 This all is very easy once you stop using inappropriate terms while thinking of it. It is not helpful to ask about the hair color or the accent of a bacterium. These are categories applicable to humans. Same in Go: there are no references in Go and there are no "shallow" copies (and no "deep" copy, all there is are copies of values).
 
@@ -118,7 +118,7 @@ Source: [The Go Programming Language Specification ](https://go.dev/ref/spec#Var
 
 Learn more: [There is no pass-by-reference in Go | Dave Cheney](https://dave.cheney.net/2017/04/29/there-is-no-pass-by-reference-in-go)
 
-## 3. assignment always makes a copy
+## 3. Assignment Always Makes a Copy
 
 > Similar to C++, a variable is just an adress location. But unlike C++, each variable defined in a Go program occupies a unique memory location. 
 

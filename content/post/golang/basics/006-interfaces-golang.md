@@ -1,5 +1,5 @@
 ---
-title: interfaces in golang (and something new methods receivers)
+title: Interfaces in Golang (and Methods Receivers)
 date: 2023-09-02 19:58:32
 categories:
  - golang
@@ -8,7 +8,7 @@ tags:
  - golang
 ---
 
-## pointers to interfaces
+## 1. Pointers to Interfaces
 
 You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer.
 
@@ -33,7 +33,7 @@ You should know that value in golang is similar to object in other language.
 
 Source: https://go.dev/tour/methods/11
 
-## an interesting question
+## 2. An Interesting Question
 
 I found an [interesting question](https://stackoverflow.com/questions/37851500/how-to-copy-an-interface-value-in-go/37851764#37851764) on stackoverflow, and find that interface in golang is different from other languages, I'll show you. This is the backgroud code:
 
@@ -74,7 +74,7 @@ func main() {
 }
 ```
 
-## first try - type `Admin` isn't `*Adimin`
+## 3. First Try - Type `Admin` isn't `*Adimin`
 
 Because golang everything pass by value, even assignment will make a copy, therefore, at first I tried like this:
 
@@ -131,7 +131,7 @@ enlightened by:
 
 [go - Pointer Receiver and Value Receiver on Interfaces in Golang - Stack Overflow](https://stackoverflow.com/questions/53701458/pointer-receiver-and-value-receiver-on-interfaces-in-golang) 
 
-## answer
+## 4. Answer
 
 Now, we know what's happening here:
 
@@ -161,13 +161,13 @@ user2 = &admin2          // Wrap its address in another User
 user2.SetName("user2")
 ```
 
-**Using reflection**
+***Using reflection:***
 
 If we want a "general" solution (not just one that works with `*Admin`), we can use reflection ([`reflect`](https://golang.org/pkg/reflect/) package).
 
 Learn more: https://stackoverflow.com/a/37851764/16317008
 
-## polymorphism
+## 5. Polymorphism
 
 Go does not have classes, however, **you can define methods on types**. A method is a function with a special *receiver* argument.
 

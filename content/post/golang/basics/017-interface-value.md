@@ -1,6 +1,6 @@
 ---
-title: interface value - golang
-date: 2023-09-2 18:57:04
+title: Interface Value - Golang
+date: 2023-09-02 18:57:04
 categories:
  - golang
  - basics

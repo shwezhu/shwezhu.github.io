@@ -1,5 +1,5 @@
 ---
-title: encoding/gob & encoding/json in golang
+title: encoding/gob & encoding/json in Golang
 date: 2023-08-31 11:38:20
 categories:
  - golang
@@ -8,7 +8,7 @@ tags:
  - golang
 ---
 
-## 1. why do we need encoding
+## 1. Why do we need encoding
 
 > To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. 
 
@@ -16,7 +16,7 @@ There are many encodings available, of course: [JSON](http://www.json.org/), [XM
 
 ## 2. encoding/gob
 
-### 2.1. why gob
+### 2.1. Why gob
 
 Why define a new encoding? It’s a lot of work and redundant at that. Why not just use one of the existing formats? Well, for one thing, we do! Go has [packages](https://go.dev/pkg/) supporting all the encodings just mentioned (the [protocol buffer package](http://github.com/golang/protobuf) is in a separate repository but it’s one of the most frequently downloaded). And for many purposes, including communicating with tools and systems written in other languages, they’re the right choice.
 
@@ -24,7 +24,7 @@ But for a Go-specific environment, such as communicating between two servers wri
 
 > Gob is much more preferred when communicating between Go programs. However, gob is currently supported only in Go and, well, [C](https://code.google.com/archive/p/libgob/), so only ever use that when you're sure no program written in any other programming language will try to decode the values. [source](https://stackoverflow.com/questions/41179453/difference-between-encoding-gob-and-encoding-json) 
 
-### 2.2. google’s protocol buffers misfeatures
+### 2.2. Google’s protocol buffers misfeatures
 
 > **Protocol Buffers** is a free and open-source cross-platform data format used to serialize structured data. It is useful in developing programs that communicate with each other over a network or for storing data. [Wikipedia](https://en.wikipedia.org/wiki/Protocol_Buffers)
 
@@ -46,7 +46,7 @@ Gobs implements thress important features compared with Google's Protocol Buffer
 - Don't need all fields of a type exist when decoding and encoding. 
 - If the varibale being transmitted has "zero value" for its type, it doesn't need to be transmitted. Decoder know its type, it will set its default value automatically. 
 
-### 2.3. how does gob work - value of encoded gob data is just integer
+### 2.3. How does gob work - value of encoded gob data is just integer
 
 The **encoded gob data** isn’t about types like `int8` and `uint16`. Instead, somewhat analogous to constants in Go, its integer values are abstract, sizeless numbers, either signed or unsigned. When you encode an `int8`, its value is transmitted as an unsized, variable-length integer. When you encode an `string`, its value is also transmitted as an unsized, variable-length integer.
 
@@ -86,7 +86,7 @@ type Buffer struct {
 
 Besides, `enc.Encode(message)` does two things: encode message and transmit it, similarily, `dec.Decode(&ms)` does three 
 
-### 2.4. values are flattened
+### 2.4. Values are flattened
 
 > A stream of gobs is **self-describing**. Each data item in the stream is preceded by a specification of its type, expressed in terms of a small set of predefined types. **Pointers are not transmitted, but the things they point to are transmitted**; that is, the values are flattened. Nil pointers are not permitted, as they have no value. **Recursive types work fine**, but recursive values (data with cycles) are problematic. [source](https://pkg.go.dev/encoding/gob#pkg-overview)
 
@@ -130,7 +130,7 @@ func Map(m map[string]interface{}) (map[string]interface{}, error) {
 }
 ```
 
-### 2.5. types on the wire
+### 2.5. Types on the wire
 
 The first time you send a given type, the gob package includes in the data stream a description of that type. In fact, what happens is that the encoder is used to encode, in the standard gob encoding format, **an internal struct** that describes the type and gives it a unique number. (Basic types, plus the layout of the type description structure, are predefined by the software for bootstrapping.) After the type is described, it can be referenced by its type number.
 
@@ -149,7 +149,7 @@ type CommonType struct {
 }
 ```
 
-### 2.6. functions and channels
+### 2.6. Functions and channels
 
 Functions and channels will not be sent in a gob. Attempting to encode such a value at the top level will fail. A struct field of chan or func type is treated exactly like an unexported field and is ignored.
 
