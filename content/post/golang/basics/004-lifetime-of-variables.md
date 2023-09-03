@@ -1,5 +1,5 @@
 ---
-title: 关于Golang函数返回局部变量的地址的问题
+title: returns a local variable address - golang
 date: 2023-05-15 22:52:03
 categories:
  - golang
@@ -8,7 +8,7 @@ tags:
  - golang
 ---
 
-最近在学习Golang, 看到了类似下面的代码, 
+Find codes below:
 
 ```go
 func f() *int {
@@ -17,7 +17,7 @@ func f() *int {
 }
 ```
 
-因为最近也在慢慢捡cpp, 然后就条件反射的觉得很奇怪, 怎么能返回一个local变量的地址呢, 查了半天谷歌, 终于找了[官方相关的说法](https://go.dev/doc/faq):
+New to golang from cpp so don't understand why can do this, this is returning a local variable's address 😱. And find a [doc](https://go.dev/doc/faq) talks about this:
 
 **How do I know whether a variable is allocated on the heap or the stack?**
 
@@ -27,9 +27,15 @@ The storage location does have an effect on writing efficient programs. When pos
 
 In the current compilers, if a variable has its address taken, that variable is a candidate for allocation on the heap. However, a basic *escape analysis* recognizes some cases when such variables will not live past the return from the function and can reside on the stack. 
 
-其实这就和Java很像了, Java里也有引用的概念, 只不过和Go和C++里的引用还不同, Java的gc回收也是通过判断某对象的引用是否为0来决定是否清理对象, 但C++不是, 只要是stack上的, 统统删除, 毕竟C++没有gc啊, 了解更多关于Java引用:[Java中变量(Variables)和引用(References)的区别](https://davidzhu.xyz/2023/05/14/Java/Basics/Variables-vs-References/)
+You probably think this quite like java's reference type ( java variable has two type: primitive and reference type), but you are wrong, a avriable actually another name of a address in golang. We say that each variable in Go exists as long as there are references to it, means we can reach to the value stored in the address which variable point to. Variable has value, its just a address. 
 
-然后写个代码验证一下, 可以看到变量`a`的地址始终没变, 而`b`已经经历了copy和重建, 
+> For a mental model, you can treat variable names as references, which exists till their scope exists.
+>
+> For implementation, Go's variables are NOT references - for reference, use a pointer.
+>
+> These variables can be allocated on the stack, or on the heap. Both have pros and cons, the compiler decides. For correctness, it does not make any difference. "You don't have to know". 
+>
+> Source: https://www.reddit.com/r/golang/comments/s0m2h9/comment/hs2kvyo/?utm_source=share&utm_medium=web2x&context=3
 
 ```go
 func foo1() *int {
@@ -58,6 +64,4 @@ func main() {
 0x1400011a038
 0x1400011a030
 ```
-
-
 

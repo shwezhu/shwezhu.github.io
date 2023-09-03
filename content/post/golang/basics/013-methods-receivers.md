@@ -69,7 +69,7 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 }
 ```
 
-## 2. receiver in concurrency
+## 2. method receivers in concurrency
 
 I came across a satement about when to use value receiver but forget where I found:
 
