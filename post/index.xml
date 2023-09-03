@@ -6,23 +6,35 @@
     <description>Recent content in Posts on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 02 Sep 2023 19:58:32 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 02 Sep 2023 22:18:20 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Interfaces in Golang (and Methods Receivers)</title>
-      <link>https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/</link>
-      <pubDate>Sat, 02 Sep 2023 19:58:32 +0000</pubDate>
+      <title>Methods Receivers &amp; Concurrency - Golang</title>
+      <link>https://shaowenzhu.top/post/golang/basics/013-methods-receivers/</link>
+      <pubDate>Sat, 02 Sep 2023 22:18:20 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/</guid>
-      <description>1. Pointers to Interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &amp;ldquo;type.&amp;rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If</description>
+      <guid>https://shaowenzhu.top/post/golang/basics/013-methods-receivers/</guid>
+      <description>1. Different Behaviors - Pointer and Value Receiver There are two reasons to use a pointer receiver:
+The first is so that the method can modify the value that its receiver points to.
+The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
+&amp;ldquo;the value&amp;rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value.</description>
     </item>
     
     <item>
-      <title>Interface Value - Golang</title>
-      <link>https://shaowenzhu.top/post/golang/basics/017-interface-value/</link>
+      <title>Interfaces in Golang (and Methods Receivers)</title>
+      <link>https://shaowenzhu.top/post/golang/basics/006-interfaces/</link>
+      <pubDate>Sat, 02 Sep 2023 19:58:32 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/basics/006-interfaces/</guid>
+      <description>1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&amp;rsquo;ll show you. This is the backgroud code: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name</description>
+    </item>
+    
+    <item>
+      <title>Type and Interface Value - Golang</title>
+      <link>https://shaowenzhu.top/post/golang/basics/017-interface-relearn/</link>
       <pubDate>Sat, 02 Sep 2023 18:57:04 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/basics/017-interface-value/</guid>
-      <description>Copying an interface value makes a copy of the thing stored in the interface value. If the interface value holds a struct, copying the interface value makes a copy of the struct. If the interface value holds a pointer, copying the interface value makes a copy of the pointer, but again not the data it points to. Note that this discussion is about the semantics of the operations. Actual implementations</description>
+      <guid>https://shaowenzhu.top/post/golang/basics/017-interface-relearn/</guid>
+      <description>1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare 1 2 3 4 type MyInt int var i int var j MyInt</description>
     </item>
     
     <item>
@@ -112,11 +124,12 @@ Solution I&amp;rsquo;m using hugo now but I don&amp;rsquo;t want to override or 
     
     <item>
       <title>Golang Interface &amp; Interface in Web App</title>
-      <link>https://shaowenzhu.top/post/golang/basics/007-interface-in-practice/</link>
+      <link>https://shaowenzhu.top/post/golang/basics/007-interface-practical-example/</link>
       <pubDate>Tue, 22 Aug 2023 13:03:05 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/basics/007-interface-in-practice/</guid>
-      <description>1. Empty Interface - Wildcard Java 中的 Object 类是所有类的父类, 可以作为一个 Wildcard, Go 里与之对应的是个空 interface, 如 gorilla/session 里 Session 的定义, 1 2 3 4 5 6 7 8 9 10 11 12 // Session stores the values and optional configuration for a session. type Session struct</description>
+      <guid>https://shaowenzhu.top/post/golang/basics/007-interface-practical-example/</guid>
+      <description>1. Empty Interface - Wildcard In golang, you can treat an empty interface as a wildcard. For example, in a third part library gorilla/session:
+1 2 3 4 5 6 7 8 9 10 11 12 // Session stores the values and optional configuration for a session. type Session struct { // The ID of the session, generated by stores. It should not be used for // user data. ID string // Values contains the user-data for the session.</description>
     </item>
     
     <item>
@@ -191,18 +204,6 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
       
       <guid>https://shaowenzhu.top/post/git/practice/001-rejected-push-fix-conflicts/</guid>
       <description>问题描述 在 GitHub 新建一个 repository, 并选择了自动创建 README.md, 在本地初始化项目后进行push, 报错: 1 2 3 4 5 6 7 8 9 $ git push -u origin master To github.com:shwezhu/gptbot.git ! [rejected] master -&amp;gt; master (fetch first) error: failed to push some refs to</description>
-    </item>
-    
-    <item>
-      <title>Choose Methods Receivers in Concurrency - Golang</title>
-      <link>https://shaowenzhu.top/post/golang/basics/013-methods-receivers/</link>
-      <pubDate>Tue, 15 Aug 2023 17:18:20 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/basics/013-methods-receivers/</guid>
-      <description>1. Different Behaviors - Pointer and Value Receiver There are two reasons to use a pointer receiver:
-The first is so that the method can modify the value that its receiver points to.
-The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
-&amp;ldquo;the value&amp;rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value.</description>
     </item>
     
     <item>
@@ -892,7 +893,7 @@ From a correctness standpoint, you don&amp;rsquo;t need to know. Each variable i
       <pubDate>Fri, 12 May 2023 10:00:20 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/001-syntax/</guid>
-      <description>1. Variable Declarations The := can only be used in inside a function, which is called short variable declarations. A var statement can be at package or function level, which is called regular variable declarations. Variables declared without an explicit initial value are given their zero value. The zero value is: 0 for numeric types, false for the boolean type, and &amp;quot;&amp;quot; (the empty string) for strings. nil for pointer</description>
+      <description>0. Variable Type Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare 1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt. The variables i and j have distinct static types and, although they</description>
     </item>
     
     <item>
