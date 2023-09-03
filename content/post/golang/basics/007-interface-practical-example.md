@@ -10,9 +10,7 @@ tags:
 
 ## 1. Empty Interface - Wildcard
 
-Java 中的 `Object `类是所有类的父类, 可以作为一个 Wildcard, Go 里与之对应的是个空 interface, 
-
-如 gorilla/session 里 Session 的定义, 
+In golang, you can treat an empty interface as a wildcard. For example, in a third part library gorilla/session:
 
 ```go
 // Session stores the values and optional configuration for a session.
@@ -29,7 +27,7 @@ type Session struct {
 }
 ```
 
-Values 是个 map, key可以是任何类型, key对应的值也可以是任何类型, 如在代码中可以这么写:
+The field of Session: Values is a map whoes key can value can be any type:
 
 ```go
 session.Values["name"] = "John"
@@ -38,26 +36,39 @@ session.Values["messages"] = []byte
 session.Values[3] = "123"
 ```
 
-只是之后用到这些值时, 需要使用 type assertions, 
+When you take value from an empty interface, you need type asseration:
 
 ```go
 messages := session.Values["messages"].([]byte)
 name := session.Values["name"].(string)
+// or you can write like this
+str, ok := value.(string)
+if ok {
+    fmt.Printf("string value is: %q\n", str)
+} else {
+    fmt.Printf("value is not a string\n")
+}
 ```
 
-因为 ` session.Values[xxx] ` 在编译器看来只是个空 interface, 可以用来存储任何类型的值, 但当你拿来用时, 需要告诉编译器它的类型, 
+Because  the type of  ` session.Values[xxx] ` is `interface{}`, you can store any value in it directly but when you wnat take value form it you have let compiler know which type stored in this empty interface. 
 
-## 2. 任何类型都可以实现接口
+Learn more: 
 
-之前的印象中, 只有类可以实现接口, 这样才有意义, 比如常见的接口 Animal, Shape, 实现这些接口的类可以是Cat, Dog, Rect, Circle, 
+https://shaowenzhu.top/post/golang/basics/014-gob-json-encoding/#27-gobregister-method
 
-在 golang 里, 一个函数甚至一个 int 都可以实现接口, 
+https://shaowenzhu.top/post/golang/basics/001-syntax/#7-type-assertions
+
+## 2. Any types can implement an interface
+
+"Any types can implement an interface." is not accurate, I think "Any type can have its [method set](https://golang.org/ref/spec#Method_sets), and if there are all the methods of an interfacce in that type's method set, we say this type implements this interface." This type can be a function, map, struct even an int. 
 
 >Interfaces in Go provide a way to **specify the behavior of an object**: if something can do *this*, then it can be used *here*.
 
+Learn more: https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/#3-first-try---type-admin-isnt-adimin
+
 ### 2.1. `http.HandleFunc`
 
-通过例子来解释, 实现一个简单的 Go Web:
+I'll give you a practical example in Go web dev:
 
 ```go
 func helloHandler(w http.ResponseWriter, r *http.Request) {
@@ -70,23 +81,23 @@ func main() {
 }
 ```
 
-`  HandleFunc`  signature:
+`  HandleFunc()`  signature:
 
 ```go
 func HandleFunc(pattern string, handler func(ResponseWriter, *Request))
 ```
 
-第二个参数是个function, `helloHandler` 也是 `func(ResponseWriter, *Request)` 类型, 因此可以当作 callback 传入, 
+The second parameter of `HandleFunc()` is a function type, `helloHandler` is `func(ResponseWriter, *Request)` type, therefore, we can pass it as a callback function into `HandleFunc()`
 
 ### 2.2. `http.Handle` 
 
-` http`  package 里还有个函数可以设置 router 信息以及 callback, 类似 `http.HandleFunc`, 只是参数类型不同:
+There is another function called `http.Handle()` can be used to set routing info and callback, which has a different parameter compared with function `http.HandleFunc()`:
 
 ```go
 func Handle(pattern string, handler Handler)
 ```
 
-第二个参数 `Handler` 是个 interface, 在 `http` package 定义如下:
+The second pamrameter is a `Handler` which is an interface type defined in http package:
 
 ```go
 type Handler interface {
@@ -94,11 +105,11 @@ type Handler interface {
 }
 ```
 
-也就是说, 若想使用 `http.Handle()` 来定义 routing 信息以及对应的 callback, 则需要实现 interface Handler, 前面提到不仅是 struct 可以实现 interface, function 也可以, 
-
 ### 2.3. function type implement interface
 
-这里讨论两个 interface 的实现方法, 分别为 struct 和 function, 首先是 function type:
+Therefore, any types whose method set has `ServeHTTP(ResponseWriter, *Request)` inside, we can say this type can be used as interface `http.Handler`. 
+
+I'll use two different types to implemet the interface `http.Handler`, first is a function type:
 
 ```go
 type myWebHandler func(http.ResponseWriter, *http.Request)
@@ -123,7 +134,7 @@ func main() {
 }
 ```
 
-这里注意一下语法, 对于 type struct, 产生 instance 的方法为 curly bracket, 
+**NOTE:** for struct, when you gengerate a value ("object") you should use curly brcket `{}` as below:
 
 ```go
 type Cat struct {
@@ -134,7 +145,7 @@ type Cat struct {
 cat := Cat{name: "Kitten", age: 3}
 ```
 
-对于 type function, 产生 instance, 需要使用 parentheses, 
+for a function  type, we use parentheses to produce a value of that type:
 
 ```go
 type myWebHandler func(http.ResponseWriter, *http.Request)
@@ -143,8 +154,6 @@ callback := myWebHandler(func(w http.ResponseWriter, r *http.Request) {
 		_, _ = fmt.Fprintf(w, "hello there")
 })
 ```
-
-这里, callback 就是 myWebHandler 的一个对象, 
 
 ### 2.4. struct type implement interface
 
@@ -172,7 +181,7 @@ func main() {
 }
 ```
 
-此功能也可以用前面的 function type 来实现:
+We can achieve this feature with function type too:
 
 ```go
 type WrapperFunc func(w http.ResponseWriter, r *http.Request)
@@ -200,7 +209,7 @@ func main() {
 
 ### 2.5. `http.HandlerFunc` 
 
-http package 已经帮我们写了一个实现了 `http.Handler` 的 function type, 如下:
+http package has already made a function implement `http.Handler`:
 
 ```go
 // The HandlerFunc type is an adapter to allow the use of
@@ -215,19 +224,11 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 }
 ```
 
-可以看出` type HandlerFunc func(ResponseWriter, *Request)` 与前面自定义的 `type WrapperFunc func(w http.ResponseWriter, r *http.Request)` 一样, 都是 wrapper, 只是  HandlerFunc 在 ` ServeHTTP` 里什么都没做, 只是简单调用callback, 
+` type HandlerFunc func(ResponseWriter, *Request)`  is actually same as `type WrapperFunc func(w http.ResponseWriter, r *http.Request)` we talked before, both of them are a wrapper, 
 
-> 不要把此函数类型与上面提到的函数 `http.HandleFunc`  弄混, 不仅是名字不同, 前者是个函数类型, 后者就是个函数, 
+> Don't make mistak from `http.HandleFunc`  and `HandlerFunc`, they have different name, former is just a value of a function, latter is a function. 
 
-### 2.6 conclusion
-
-可以看到不同的 interface 实现途径, 有不同的效果, 
-
-前者使用 function type 实现 interface http.Handler, 达到了一个 wrapper 的效果, 即在真正处理 http 相关数据之前或者之后做一些事, 比如对 http 做过滤, 直接受 POST 方法, 
-
-而后面使用 struct 实现  interface http.Handler, 达到了记录 state 的目的, 因为 struct 可以保存变量, 从而让我们实现计数
-
-参考:
+References:
 
 - [HTTP Closures](https://gist.github.com/tsenart/5fc18c659814c078378d)
 - [Structuring Applications in Go. How I organize my applications in Go | by Ben Johnson | Medium](https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091)

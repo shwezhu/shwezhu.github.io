@@ -1,6 +1,6 @@
 ---
-title: Choose Methods Receivers in Concurrency - Golang
-date: 2023-08-15 17:18:20
+title: Methods Receivers & Concurrency - Golang
+date: 2023-09-02 22:18:20
 categories:
  - golang
  - basics

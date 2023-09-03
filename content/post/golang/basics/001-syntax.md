@@ -8,6 +8,40 @@ tags:
  - golang
 ---
 
+## 0. Variable Type
+
+Go is statically typed. Every variable has **only one static type**, that is, exactly one type known and fixed at compile time: `int`, `float32`, `*MyType`, `[]byte`, and so on. If we declare
+
+```go
+type MyInt int
+
+var i int
+var j MyInt
+```
+
+then `i` has type `int` and `j` has type `MyInt`. The variables `i` and `j` have distinct static types and, although they have the same underlying type, they cannot be assigned to one another without a conversion.
+
+This is also true for an interface:
+
+```go
+// Reader is an interface defined in io package
+type Reader interface {
+    Read(p []byte) (n int, err error)
+}
+```
+
+We declare a variable of interface:
+
+```go
+var r io.Reader
+```
+
+Then we say the type of variable `r` is `io.Reader`, **there is no object, just variable and the value of a variable**. 
+
+> A variable is a **storage location** for holding a value. 
+
+But you can save `r` is the value of `io.Reader` for simplicity, actually it's a variable which is just a nice name for address.  
+
 ## 1. Variable Declarations
 
 - The ***`:=`*** can **only** be used in inside a function, which is called **short variable declarations**. 

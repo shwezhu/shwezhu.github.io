@@ -8,32 +8,7 @@ tags:
  - golang
 ---
 
-## 1. Pointers to Interfaces
-
-You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer.
-
-An interface is two fields:
-
-1. A pointer to some type-specific information. You can think of this as "type."
-2. Data pointer. If the data stored is a pointer, it’s stored directly. If the data stored is a value, then a pointer to the value is stored.
-
-If you want interface methods to modify the underlying data, you must use a pointer.
-
-Sources: https://github.com/uber-go/guide/blob/master/style.md#pointers-to-interfaces
-
-Under the hood, interface values can be thought of as a tuple of a value and a concrete type:
-
-```
-(value, type)
-```
-
-**Calling a method on an interface value executes the method of the same name on its underlying type.**
-
-You should know that value in golang is similar to object in other language. 
-
-Source: https://go.dev/tour/methods/11
-
-## 2. An Interesting Question
+## 1. An Interesting Question
 
 I found an [interesting question](https://stackoverflow.com/questions/37851500/how-to-copy-an-interface-value-in-go/37851764#37851764) on stackoverflow, and find that interface in golang is different from other languages, I'll show you. This is the backgroud code:
 
@@ -74,7 +49,7 @@ func main() {
 }
 ```
 
-## 3. First Try - Type `Admin` isn't `*Adimin`
+## 2. First Try - Type `Admin` isn't `*Adimin`
 
 Because golang everything pass by value, even assignment will make a copy, therefore, at first I tried like this:
 
@@ -131,7 +106,7 @@ enlightened by:
 
 [go - Pointer Receiver and Value Receiver on Interfaces in Golang - Stack Overflow](https://stackoverflow.com/questions/53701458/pointer-receiver-and-value-receiver-on-interfaces-in-golang) 
 
-## 4. Answer
+## 3. Answer
 
 Now, we know what's happening here:
 
@@ -167,7 +142,7 @@ If we want a "general" solution (not just one that works with `*Admin`), we can 
 
 Learn more: https://stackoverflow.com/a/37851764/16317008
 
-## 5. Polymorphism
+## 4. Polymorphism
 
 Go does not have classes, however, **you can define methods on types**. A method is a function with a special *receiver* argument.
 
@@ -187,30 +162,7 @@ func main() {
 }
 ```
 
-Methods就是个函数, 只不过多定义了一个receiver, 我们可以用函数来实现相同效果, 不仅会想Go设计Methods干嘛呢, 既然函数也可以实现, 那这不是多此一举吗? 
-
-平时的面向对象语言有重载的概念, 即相同方法名可以有不同的参数, 但是Go的function却不行, 比如我们想计算正方形和圆形的面积, 那我们就得设计两个不同的functions, 
-
-```go
-type Rectangle struct {
-	length int
-	width  int
-}
-
-type Circle struct {
-	radius float64
-}
-
-func RectangleArea(r Rectangle) int {
-	return r.length * r.width
-}
-
-func CircleArea(c Circle) float64 {
-	return math.Pi * c.radius * c.radius
-}
-```
-
-在Java里我们可以使这两个形状都继承一个Interface, 然后通过多态和方法重载来简单调用同一个方法`Area`来求两个形状的面积, 而不是分别调用不同的函数, 如下:
+In java we cam make Rect and Circle implement a same interface to achieve polymorphism:
 
 ```java
 import java.util.ArrayList;
@@ -249,7 +201,7 @@ public class Main {
 }
 ```
 
-通过 Golang 的 Interface 和 Methods 可实现上面的效果, Go 的接口并不需要 Java 那样显示 `implement`, 你直接定义个同名的 method, 然后在 *receiver argument* 指定对应类型, 就可以说这个类型实现了那个接口,  然后结合interface和methods, 我们就可以实现上面 Java 的代码啦:
+In golang we can use Method Receiver to implement polymorphism, 
 
 ```go
 package main
@@ -271,7 +223,10 @@ type circle struct {
 	radius float64
 }
 
-// 等于 Rect 实现了Interface Shape, 不用显示 declare
+// this is value receiver
+// echo method call will make a copy of rect value that is rect's "object"
+// if you want modify the field of the value, you need a pinter receiver
+// learn more: https://shaowenzhu.top/post/golang/basics/013-methods-receivers/
 func (r rect) area() float64 {
 	return r.width * r.height
 }
