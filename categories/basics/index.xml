@@ -6,7 +6,16 @@
     <description>Recent content in basics on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 31 Aug 2023 11:38:20 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/categories/basics/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 02 Sep 2023 19:58:32 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/categories/basics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>interfaces in golang (and something new methods receivers)</title>
+      <link>https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/</link>
+      <pubDate>Sat, 02 Sep 2023 19:58:32 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/</guid>
+      <description>pointers to interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &amp;ldquo;type.&amp;rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If the</description>
+    </item>
+    
     <item>
       <title>encoding/gob &amp; encoding/json in golang</title>
       <link>https://shaowenzhu.top/post/golang/basics/014-gob-json-encoding/</link>
@@ -47,10 +56,10 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
     
     <item>
       <title>Pointer Receiver or Value Receiver - Golang</title>
-      <link>https://shaowenzhu.top/post/golang/basics/013-pointer-receiver/</link>
+      <link>https://shaowenzhu.top/post/golang/basics/013-methods-receivers/</link>
       <pubDate>Tue, 15 Aug 2023 17:18:20 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/basics/013-pointer-receiver/</guid>
+      <guid>https://shaowenzhu.top/post/golang/basics/013-methods-receivers/</guid>
       <description>1. different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
 The first is so that the method can modify the value that its receiver points to.
 The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
@@ -256,21 +265,15 @@ The second is to avoid copying the value on each method call. This can be more e
     </item>
     
     <item>
-      <title>pass by value or reference - golang</title>
-      <link>https://shaowenzhu.top/post/golang/basics/009-methods-pass-by-value/</link>
-      <pubDate>Tue, 16 May 2023 17:25:04 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/basics/009-methods-pass-by-value/</guid>
-      <description>As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a function makes a copy of the int, and passing a pointer value makes a copy of the pointer, but not the</description>
-    </item>
-    
-    <item>
-      <title>关于Golang函数返回局部变量的地址的问题</title>
+      <title>returns a local variable address - golang</title>
       <link>https://shaowenzhu.top/post/golang/basics/004-lifetime-of-variables/</link>
       <pubDate>Mon, 15 May 2023 22:52:03 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/004-lifetime-of-variables/</guid>
-      <description>最近在学习Golang, 看到了类似下面的代码, 1 2 3 4 func f() *int { v := 1 return &amp;amp;v } 因为最近也在慢慢捡cpp, 然后就条件反射的觉得很奇怪, 怎么能返回一</description>
+      <description>Find codes below:
+1 2 3 4 func f() *int { v := 1 return &amp;amp;v } New to golang from cpp so don&amp;rsquo;t understand why can do this, this is returning a local variable&amp;rsquo;s address 😱. And find a doc talks about this:
+How do I know whether a variable is allocated on the heap or the stack?
+From a correctness standpoint, you don&amp;rsquo;t need to know. Each variable in Go exists as long as there are references to it.</description>
     </item>
     
     <item>
@@ -328,15 +331,6 @@ The second is to avoid copying the value on each method call. This can be more e
     </item>
     
     <item>
-      <title>Golang Methods与Interface结合实现多态</title>
-      <link>https://shaowenzhu.top/post/golang/basics/006-methods-interfaces/</link>
-      <pubDate>Sun, 14 May 2023 01:10:32 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/basics/006-methods-interfaces/</guid>
-      <description>Go does not have classes, however, you can define methods on types. A method is a function with a special receiver argument. 1 2 3 4 5 6 7 8 9 10 11 12 13 // displaySalary() method has Employee as the receiver type func (e Employee) displaySalary() { fmt.Printf(&amp;#34;Salary of %s is %d&amp;#34;, e.name, e.salary) } func main() { emp1 := Employee { name: &amp;#34;Sam Adolf&amp;#34;, salary: 5000, }</description>
-    </item>
-    
-    <item>
       <title>array &amp; slice &amp; map - golang collections</title>
       <link>https://shaowenzhu.top/post/golang/basics/003-collections/</link>
       <pubDate>Sat, 13 May 2023 10:23:59 +0000</pubDate>
@@ -373,6 +367,24 @@ The second is to avoid copying the value on each method call. This can be more e
 byte type A byte in Go is an unsigned 8-bit integer. It has type uint8. A byte has a limit of 0 – 255 in numerical range. It can represent an ASCII character.
 Go uses rune, which has type int32, to deal with multibyte characters.
 byte slice vs string A byte is just a char in C language, so a byte slice just a list of ASCII characters, and don&amp;rsquo;t forget a byte is just a number - an unsigned 8-bit integer.</description>
+    </item>
+    
+    <item>
+      <title>interface value - golang</title>
+      <link>https://shaowenzhu.top/post/golang/basics/017-interface-value/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/basics/017-interface-value/</guid>
+      <description>Copying an interface value makes a copy of the thing stored in the interface value. If the interface value holds a struct, copying the interface value makes a copy of the struct. If the interface value holds a pointer, copying the interface value makes a copy of the pointer, but again not the data it points to. Note that this discussion is about the semantics of the operations. Actual implementations</description>
+    </item>
+    
+    <item>
+      <title>pass by value or reference - golang</title>
+      <link>https://shaowenzhu.top/post/golang/basics/009-methods-pass-by-value/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/basics/009-methods-pass-by-value/</guid>
+      <description>1. everything in Go is passed by value As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an int value to a function makes a copy of the int, and passing a pointer value makes a copy of the pointer, but not the data it points to.</description>
     </item>
     
   </channel>
