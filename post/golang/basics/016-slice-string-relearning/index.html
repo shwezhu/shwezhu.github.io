@@ -54,7 +54,7 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
 An array&rsquo;s length is part of its type, so arrays cannot be resized. The type []T is a slice with elements of type T.
 A slice is a dynamically-sized. Slices have a capacity and length property. The length and capacity of a slice s can be obtained using the expressions len(s) and cap(s)."><meta itemprop="datePublished" content="2023-08-19T21:43:59+00:00" />
 <meta itemprop="dateModified" content="2023-08-19T21:43:59+00:00" />
-<meta itemprop="wordCount" content="1030">
+<meta itemprop="wordCount" content="700">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Relearn slice in Golang"/>
 <meta name="twitter:description" content="1. Slice is not an Array The type [n]T is an array of n values of type T.
@@ -156,10 +156,9 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
         <li><a href="#3-slice">3. Slice</a>
           <ul>
             <li><a href="#31-slice-is-just-a-struct">3.1. Slice is just a Struct</a></li>
-            <li><a href="#32-growing-slices-the-copy-and-append-functions">3.2. Growing slices (the copy and append functions)</a></li>
           </ul>
         </li>
-        <li><a href="#4-strings">4. strings</a></li>
+        <li><a href="#4-strings">4. Strings</a></li>
         <li><a href="#5-conclusion">5. Conclusion</a></li>
       </ul>
     </li>
@@ -231,7 +230,7 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
 </span></span></code></pre></td></tr></table>
 </div>
 </div><ul>
-<li>slicing,</li>
+<li>slicing</li>
 </ul>
 <p>A slice can also be formed by “slicing” <strong>an existing slice or array</strong>:</p>
 <div class="highlight"><div class="chroma">
@@ -247,9 +246,7 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="31-slice-is-just-a-struct">3.1. Slice is just a Struct</h3>
-<p>Note that new slice shares the same storage as <code>b</code>, namely, same underlying array, why?  Let me show you,</p>
 <p>A slice is a descriptor of an array segment. It consists of a pointer to the array, the length of the segment, and its capacity (the maximum length of the segment). A slice is essentially just this:</p>
-<p><img src="/016-slice-string-relearning/2.png" alt="2"></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -266,12 +263,7 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Our variable <code>s</code>, created earlier by <code>make([]byte, 5)</code>, is structured like this:</p>
-<p><img src="/016-slice-string-relearning/3.png" alt="3"></p>
-<p>The length is the number of elements referred to by the slice. The capacity is the number of elements in the underlying array. The distinction between length and capacity will be made clear as we walk through the next example.</p>
-<p>As we slice <code>s</code>, observe the changes in the slice data structure and their relation to the underlying array:</p>
-<p><img src="/016-slice-string-relearning/4.png" alt="4"></p>
-<p>Slicing does not copy the slice’s data. It creates a new slice value that points to the original array. This makes slice operations as efficient as manipulating array indices. Therefore, modifying the <em>elements</em> (not the slice itself) of a re-slice modifies the elements of the original slice:</p>
+</div><p>Slicing does not copy the slice’s data. It creates <strong>a new slice value that points to the original array</strong>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -279,36 +271,18 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
-</span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">d</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">{</span><span class="sc">&#39;r&#39;</span><span class="p">,</span> <span class="sc">&#39;o&#39;</span><span class="p">,</span> <span class="sc">&#39;a&#39;</span><span class="p">,</span> <span class="sc">&#39;d&#39;</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="nx">e</span> <span class="o">:=</span> <span class="nx">d</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
-</span></span><span class="line"><span class="cl"><span class="c1">// e == []byte{&#39;a&#39;, &#39;d&#39;}
+</span></span><span class="line"><span class="cl"><span class="nx">e</span> <span class="o">:=</span> <span class="nx">d</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="c1">// NOTE: &#39;e&#39; is a totally new slice, e == []byte{&#39;a&#39;, &#39;d&#39;}
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="sc">&#39;m&#39;</span>
 </span></span><span class="line"><span class="cl"><span class="c1">// e == []byte{&#39;a&#39;, &#39;m&#39;}
 </span></span></span><span class="line"><span class="cl"><span class="c1">// d == []byte{&#39;r&#39;, &#39;o&#39;, &#39;a&#39;, &#39;m&#39;}
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><blockquote>
-<p>A slice does not store any data, it just describes a section of an underlying array. Changing the elements of a slice modifies the corresponding elements of its underlying array. Other slices that share the same underlying array will see those changes.</p>
+<p>If a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array. A <code>Read</code> function can therefore accept a slice argument rather than a pointer and a count;  <code>func (f *File) Read(buf []byte) (n int, err error)</code> <a href="https://go.dev/doc/effective_go#slices">Effective Go</a></p>
 </blockquote>
-<p>Earlier we sliced <code>s</code> to a length shorter than its capacity. We can grow s to its capacity by slicing it again:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">s</span> <span class="p">=</span> <span class="nx">s</span><span class="p">[:</span><span class="nb">cap</span><span class="p">(</span><span class="nx">s</span><span class="p">)]</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><img src="/016-slice-string-relearning/5.png" alt="5"></p>
-<p>A slice cannot be grown beyond its capacity. Attempting to do so will cause a runtime panic, just as when indexing outside the bounds of a slice or array. Similarly, slices cannot be re-sliced below zero to access earlier elements in the array.</p>
-<blockquote>
-<p>Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array. If a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array. A <code>Read</code> function can therefore accept a slice argument rather than a pointer and a count;  <code>func (f *File) Read(buf []byte) (n int, err error)</code> <a href="https://go.dev/doc/effective_go#slices">Effective Go - The Go Programming Language</a></p>
-</blockquote>
-<h3 id="32-growing-slices-the-copy-and-append-functions">3.2. Growing slices (the copy and append functions)</h3>
-<p>To increase the capacity of a slice one must create a new, larger slice and copy the contents of the original slice into it. This technique is how dynamic array implementations from other languages work behind the scenes. The next example doubles the capacity of <code>s</code> by making a new slice, <code>t</code>, copying the contents of <code>s</code> into <code>t</code>, and then assigning the slice value <code>t</code> to <code>s</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -318,23 +292,16 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">t := make([]byte, len(s), (cap(s)+1)*2) // +1 in case cap(s) == 0
-</span></span><span class="line"><span class="cl">for i := range s {
-</span></span><span class="line"><span class="cl">        t[i] = s[i]
-</span></span><span class="line"><span class="cl">}
-</span></span><span class="line"><span class="cl">s = t
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">d</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">e</span> <span class="o">:=</span> <span class="nx">d</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="c1">// e == int{1, 3}
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="c1">// [1 3]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">e</span><span class="p">))</span> <span class="c1">// 2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">cap</span><span class="p">(</span><span class="nx">e</span><span class="p">))</span> <span class="c1">// 4
+</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>The looping piece of this common operation is made easier by the built-in copy function. As the name suggests, copy copies data from a source slice to a destination slice. It returns the number of elements copied.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">func copy(dst, src []T) int
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="4-strings">4. strings</h2>
+</div><p>There is a trick, we usually use <code>d = d[:0]</code> to generate a new slice <code>d</code> whose length is 0 but capacity not change, which can make program more efficient.</p>
+<p>Learn more about slice: <a href="https://go.dev/blog/slices-intro">Go Slices: usage and internals</a></p>
+<h2 id="4-strings">4. Strings</h2>
 <p>In Go, a string is in effect a read-only slice of bytes.</p>
 <h2 id="5-conclusion">5. Conclusion</h2>
 <ul>

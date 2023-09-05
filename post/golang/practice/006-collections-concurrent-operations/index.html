@@ -51,7 +51,7 @@
 <meta itemprop="description" content="1. Map First version:
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 func (s *memoryStore) monitorExpiredSessions() { for { // detect every seconds time.Sleep(time.Second) memoryMutex.Lock() if len(s.sessions) == 0 { memoryMutex.Unlock() continue } for k, info := range s.sessions { if info.expiresTimestamp &lt;= time.Now().Unix() { delete(s.sessions, k) } } memoryMutex.Unlock() } } // in other place will run this method go s."><meta itemprop="datePublished" content="2023-09-04T21:35:55+00:00" />
 <meta itemprop="dateModified" content="2023-09-04T21:35:55+00:00" />
-<meta itemprop="wordCount" content="627">
+<meta itemprop="wordCount" content="751">
 <meta itemprop="keywords" content="golang,practice,concurrency," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="The Concurrent Operations in Collections - Golang"/>
 <meta name="twitter:description" content="1. Map First version:
@@ -354,6 +354,50 @@
 </span></span><span class="line"><span class="cl">	<span class="nx">mutex</span><span class="p">.</span><span class="nf">RLock</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">	<span class="k">defer</span> <span class="nx">mutex</span><span class="p">.</span><span class="nf">RUnlock</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">sessions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When I test this, this gets panic sometimes:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">panic</span><span class="p">:</span> <span class="nx">runtime</span> <span class="kt">error</span><span class="p">:</span> <span class="nx">invalid</span> <span class="nx">memory</span> <span class="nx">address</span> <span class="nx">or</span> <span class="kc">nil</span> <span class="nx">pointer</span> <span class="nx">dereference</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>At <code>v.expiry &lt;= time.Now().Unix() </code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">v</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">sessions</span><span class="p">[</span><span class="nx">expired</span><span class="p">[</span><span class="nx">i</span><span class="p">]]</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">v</span><span class="p">.</span><span class="nx">expiry</span> <span class="o">&lt;=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">().</span><span class="nf">Unix</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">delete</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">sessions</span><span class="p">,</span> <span class="nx">expired</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This means we get a nil session from <code>s.sessions[expired[i]]</code>, which mean there is a problem with slice <code>expired</code>, I was thinking if its length is 0, the range still iterate it. Turns out the <code>range</code> won&rsquo;t iterate an empty slice, just do nothing.</p>
+<p>Then I realize that I did&rsquo;t update the slice, woops, we need drop the useless element in last round:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="k">range</span> <span class="nx">ticker</span><span class="p">.</span><span class="nx">C</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// Drop useless elements in last round.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">expired</span> <span class="p">=</span> <span class="nx">expired</span><span class="p">[:</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span><span class="p">..</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
