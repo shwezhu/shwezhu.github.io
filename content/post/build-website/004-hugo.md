@@ -5,6 +5,7 @@ categories:
  - build website
 tags:
   - hugo
+typora-root-url: ../../../static
 ---
 
 ## 1. Basic Commands
@@ -43,19 +44,25 @@ Then go to Actions options, you can see your page is building in progess, when i
 
 > You probably need wait about 10 mintes even your the processof building bolgs has been finished, try to clear cache of your browser and restart your browser if you constantly get 404 page for yor website. 
 
-### 2.3. Custom Domain (optional)
+## 3. Custom Domain (optional)
 
-visit: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages
+Update DNS Records of your domain according to the provided ip address by github:
 
-Learn more: https://olowolo.com/post/hugo-quick-start/
+![a](/004-hugo/a.png)
 
-## 3. Issues - 404 page
+Go to Settings -> Pages -> Custom domain: input your domain. And wait about 15 mintes to take effect (try to clear your browser cache). 
+
+If https cannot enable, try to remove your custom domain and wait minutes add again. The CNAME DNS Records has to be set to`www`, when I set `blog` the https cannot be enabled. 
+
+Learn more: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
+
+## 4. Issues - 404 page
 
 Hugo will make the url into lowercase automatically, therefore, make sure all you blog files and folders under `/content/post/` are lowercase. Otherwise, you will get 404 for that blog. 
 
 And if you didn't make it lowercase before generate html pages with `hugo` command, then you need delete all the generated html files under `/public/post/` then run `hugo` command again, this should work. 
 
-## 4. Insert Images
+## 5. Insert Images
 
 Put images under `/static/file-name/` and insert image with`![](/file-name/xxx.png)`, 
 
@@ -69,13 +76,13 @@ then, write `typora-root-url: ../../../static` at front matter of blog, if you d
 
 Fromat -> Image -> Use Image Root Path, then typora will add someting like `typora-root-url: ../../../static` in yur md file at the front matter part. Then both typora and website will disply image correctly. 
 
-## 5. Backup & Recover
+## 6. Backup & Recover
 
-### 5.1. Backup
+### 6.1. Backup
 
 Please check: [Backup Blogs with Git - David's Blog](https://shaowenzhu.top/post/git/practice/003-blog-backup/)
 
-### 5.2. Recover
+### 6.2. Recover
 
 ```shell
 hugo new site blogs
@@ -88,3 +95,5 @@ hugo server
 ```
 
 and visit localhost to check...
+
+References: https://olowolo.com/post/hugo-quick-start/
