@@ -6,7 +6,17 @@
     <description>Recent content in concurrency on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 02 Sep 2023 22:18:20 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/tags/concurrency/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Sep 2023 21:35:55 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/tags/concurrency/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Concurrent Operations in Collections - Golang</title>
+      <link>https://shaowenzhu.top/post/golang/practice/006-collections-concurrent-operations/</link>
+      <pubDate>Mon, 04 Sep 2023 21:35:55 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/practice/006-collections-concurrent-operations/</guid>
+      <description>1. Map First version:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 func (s *memoryStore) monitorExpiredSessions() { for { // detect every seconds time.Sleep(time.Second) memoryMutex.Lock() if len(s.sessions) == 0 { memoryMutex.Unlock() continue } for k, info := range s.sessions { if info.expiresTimestamp &amp;lt;= time.Now().Unix() { delete(s.sessions, k) } } memoryMutex.Unlock() } } // in other place will run this method go s.</description>
+    </item>
+    
     <item>
       <title>Methods Receivers &amp; Concurrency - Golang</title>
       <link>https://shaowenzhu.top/post/golang/basics/013-methods-receivers/</link>
@@ -93,10 +103,10 @@ The second is to avoid copying the value on each method call. This can be more e
     
     <item>
       <title>Go并发学习之实现一个Worker Pool</title>
-      <link>https://shaowenzhu.top/post/golang/practice/golang-worker-pools/</link>
+      <link>https://shaowenzhu.top/post/golang/practice/002-golang-worker-pools/</link>
       <pubDate>Thu, 25 May 2023 14:13:13 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/practice/golang-worker-pools/</guid>
+      <guid>https://shaowenzhu.top/post/golang/practice/002-golang-worker-pools/</guid>
       <description>谷歌Go组的一个大佬Bryan C. Mills认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解</description>
     </item>
     

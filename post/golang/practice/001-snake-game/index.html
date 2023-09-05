@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>用Go实现一个简单的贪吃蛇 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 地图 地图就是个二维数组b" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/golang/practice/001-snake-game/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="用Go实现一个简单的贪吃蛇" />
+<meta property="og:description" content="Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 地图 地图就是个二维数组b" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/golang/practice/001-snake-game/" /><meta property="article:section" content="post" />
+
+
+<meta itemprop="name" content="用Go实现一个简单的贪吃蛇">
+<meta itemprop="description" content="Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 地图 地图就是个二维数组b">
+
+<meta itemprop="wordCount" content="1634">
+<meta itemprop="keywords" content="golang,game,practice," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="用Go实现一个简单的贪吃蛇"/>
+<meta name="twitter:description" content="Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 地图 地图就是个二维数组b"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">用Go实现一个简单的贪吃蛇</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 0001-01-01 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/practice/"> practice </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下:</p>
+<p><strong>地图</strong></p>
+<p>地图就是个二维数组<code>board</code>, 在Go里面叫Slice of slices, 不清楚可以看这篇<a href="https://davidzhu.xyz/2023/05/13/Golang/Basics/003-collections/">Golang容器之Array &amp; Slice &amp; Map </a>, 该地图(二维数组)存储bool类型, 定义如下和结构如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// height = 4, width = 3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// Definition
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">board</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">bool</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">board</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">bool</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// Test
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">board</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">y</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span><span class="p">[</span><span class="nx">y</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v &#34;</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">println</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span> 
+</span></span><span class="line"><span class="cl"><span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span> 
+</span></span><span class="line"><span class="cl"><span class="kc">false</span> <span class="kc">true</span> <span class="kc">false</span> 
+</span></span><span class="line"><span class="cl"><span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<p><strong>打印蛇🐍身体</strong></p>
+<p>蛇的身体由多个节点组成, 节点是个struct类型, 如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">node</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">x</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">y</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>把地图设计成存储布尔类型的数组的目的就是方便打印蛇的身体, 也是实现的关键, 即每次循环<code>board</code>(代表地图的二维数组), 遇到false就打印空白, 遇到true就打印一个黑色方块▪️代表蛇的身体:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">draw</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;\033[H\033[2J&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// original: &#39;for y, _ := range board { ... }&#39;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="nx">y</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">xValue</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span><span class="p">[</span><span class="nx">y</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">!</span><span class="nx">xValue</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">food</span><span class="p">.</span><span class="nx">x</span> <span class="o">!=</span> <span class="nx">x</span> <span class="o">||</span> <span class="nx">food</span><span class="p">.</span><span class="nx">y</span> <span class="o">!=</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;□ &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">!</span><span class="nx">xValue</span> <span class="o">&amp;&amp;</span> <span class="nx">food</span><span class="p">.</span><span class="nx">x</span> <span class="o">==</span> <span class="nx">x</span> <span class="o">&amp;&amp;</span> <span class="nx">food</span><span class="p">.</span><span class="nx">y</span> <span class="o">==</span> <span class="nx">y</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;★ &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;■ &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这样我们只需要写个函数根据蛇的身体(多个节点)来修改(更新)<code>board</code>里面每个元素的值, 然后再写个函数(也就是上面的<code>draw()</code>)根据<code>board</code>来画地图就好了, 注意画地图的时候也画了蛇的身体:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">update</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// 这里访问二维数组的时候第一个是高度, 第二个是宽度
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// 即board[0][2]代表第1个数组的第3个元素, 所以我们写成 board[v.y][v.x] = true
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// 而不是board[v.x][v.y] = true
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">snake</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">board</span><span class="p">[</span><span class="nx">v</span><span class="p">.</span><span class="nx">y</span><span class="p">][</span><span class="nx">v</span><span class="p">.</span><span class="nx">x</span><span class="p">]</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// draw map and snake and food
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nf">draw</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<p><strong>让蛇动起来</strong></p>
+<p>让蛇动起来的方法有多种, 在这里比如每次reset地图<code>board</code>的数据为false, 然后再根据蛇的身体<code>snake</code>更新<code>board</code>, 但这样效率稍低, 因为每次我们都需要遍历board去reset, 仔细想一下蛇每次移动, 其实就是最前面的头往前移动一格, 尾巴往前移动一格, 中间的身体<strong>看着</strong>是不变的, 所以我们在实现的时候也是有三步:</p>
+<ul>
+<li>1 根据当前方向<code>direction</code>修改<code>snake</code>第一个元素的坐标, 实现蛇头前进一格</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl">  <span class="c1">// change the head position
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">switch</span> <span class="nx">direction</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="nx">right</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">snake</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">x</span><span class="o">++</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="nx">left</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">snake</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">x</span><span class="o">--</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="nx">up</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">snake</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">y</span><span class="o">--</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="nx">down</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">snake</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">y</span><span class="o">++</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>2 遍历<code>snake</code>, 使第<code>i</code>个元素的坐标等于第<code>i-1</code>个元素的坐标(<code>i&gt;=1</code>),实现中间的身体看着是不动的, 其实每个节点都前进了</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">length</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">snake</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// &#34;move&#34; all node of snake except the head
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="nx">length</span> <span class="p">&gt;</span> <span class="mi">1</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// make the value of each (i)th element equal to the (i-1)th value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">snake</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">snake</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">snake</span><span class="p">[</span><span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>3 设置位置在蛇的最后一个节点即尾巴<code>(snake[len - 1].x, snake[len - 1].y)</code>的<code>board</code>元素为false, 因为在第2步尾巴已经变成倒数第二个元素的坐标了, 所以我们要把旧的尾巴坐标位置设置为false</li>
+</ul>
+<p>即这样只遍历了<code>snake</code>(一维数组)来实现更新地图, 具体吃食物增加节点就不介绍了, 逻辑很容易,</p>
+<hr>
+<p><strong>总结</strong></p>
+<p>这次的小应用, 熟悉了slice的用法, 也熟悉了很多语法比如<code>:=</code>和<code>var</code>, 尤其是遍历slice以及loop的写法, 比如无限循环可写成:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其次是导入第三方模块, 如这里读取键盘我们使用的是第三方库, 安装方法很简单, 即在项目根目录执行:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go get github.com/eiannone/keyboard
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后项目里就会多出<code>go.mod</code>和<code>mod.sum</code>文件, 里面保存了第三方库的版本, 有点像Java里的maven<code>pom.xml</code>, 或者是npm的<code>package.json</code>, 当然肯定是不一样的他们, 最近作业有点多, 还没仔细研究, 另外注意, 如果是在Goland上开发, 可能会报错<code>$GOPATH/go.mod exists but should not exist</code>, 这个原因是你项目设置了<code>Project GOPATH</code>, 在Goland设置里删除就好了, 以上这些和包相关的问题可以参考这篇文章 <a href="https://davidzhu.xyz/2023/05/21/Golang/Basics/005-go-modules/">Golang模块module和包package的使用之导入自定义包</a></p>
+<p>最后是关于线程, goroutine, 这个改天再研究, 研究了一下怎么关闭线程, 可以参考:<a href="https://davidzhu.xyz/2023/05/21/Golang/Basics/011-goroutines-select/">Golang Goroutine和Select</a></p>
+<p><a href="https://gist.github.com/shwezhu/3def0433eb5656deebf07dc32e6eecc1">源码</a>如下:</p>
+<p>{% gist 3def0433eb5656deebf07dc32e6eecc1 %}</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        0001-01-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          <a href="/tags/game/">game</a>
+          <a href="/tags/practice/">practice</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/basics/009-methods-pass-by-value/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Pass by Value or Reference - golang</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

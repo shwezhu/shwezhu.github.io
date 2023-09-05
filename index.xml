@@ -6,7 +6,17 @@
     <description>Recent content on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 02 Sep 2023 22:18:20 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Sep 2023 21:35:55 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Concurrent Operations in Collections - Golang</title>
+      <link>https://shaowenzhu.top/post/golang/practice/006-collections-concurrent-operations/</link>
+      <pubDate>Mon, 04 Sep 2023 21:35:55 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/practice/006-collections-concurrent-operations/</guid>
+      <description>1. Map First version:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 func (s *memoryStore) monitorExpiredSessions() { for { // detect every seconds time.Sleep(time.Second) memoryMutex.Lock() if len(s.sessions) == 0 { memoryMutex.Unlock() continue } for k, info := range s.sessions { if info.expiresTimestamp &amp;lt;= time.Now().Unix() { delete(s.sessions, k) } } memoryMutex.Unlock() } } // in other place will run this method go s.</description>
+    </item>
+    
     <item>
       <title>Methods Receivers &amp; Concurrency - Golang</title>
       <link>https://shaowenzhu.top/post/golang/basics/013-methods-receivers/</link>
@@ -79,10 +89,10 @@ Solution I&amp;rsquo;m using hugo now but I don&amp;rsquo;t want to override or 
     
     <item>
       <title>little tricks in golang</title>
-      <link>https://shaowenzhu.top/post/golang/practice/tricks/</link>
+      <link>https://shaowenzhu.top/post/golang/practice/005-tricks/</link>
       <pubDate>Sun, 27 Aug 2023 17:12:55 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/practice/tricks/</guid>
+      <guid>https://shaowenzhu.top/post/golang/practice/005-tricks/</guid>
       <description>1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]++ } </description>
     </item>
     
@@ -163,10 +173,10 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
     
     <item>
       <title>Golang Web - A Simple GPTBot with Openai API</title>
-      <link>https://shaowenzhu.top/post/golang/practice/gptbot/</link>
+      <link>https://shaowenzhu.top/post/golang/practice/004-gptbot/</link>
       <pubDate>Fri, 18 Aug 2023 09:20:57 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/practice/gptbot/</guid>
+      <guid>https://shaowenzhu.top/post/golang/practice/004-gptbot/</guid>
       <description>Introduction Source Code: gptbot 1. gorilla/session bugs 1.1. encode before save When try to save data in session, we usually use the Values field of session, for example, 1 session.Values[&amp;#34;username&amp;#34;] = &amp;#34;Jack&amp;#34; The first problem I came across is that, you can save int, bool, string and other basic value into session.Values[] directly, but when you try to assign other type value, custom object, array to session.Values[&amp;quot;xxx&amp;quot;] for example, you</description>
     </item>
     
@@ -181,10 +191,10 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
     
     <item>
       <title>os.Getenv() function</title>
-      <link>https://shaowenzhu.top/post/golang/practice/get-env/</link>
+      <link>https://shaowenzhu.top/post/golang/practice/003-get-env/</link>
       <pubDate>Wed, 16 Aug 2023 21:28:55 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/practice/get-env/</guid>
+      <guid>https://shaowenzhu.top/post/golang/practice/003-get-env/</guid>
       <description>什么是环境变量 开发程序的时候会用到一些密钥, 如 session key 用来加密解密一个会话 session message, 再比如拿到 openai 的密钥用来与 gpt 对话, 把这些 key 提交到 GitHub 是很危险的, 所以一</description>
     </item>
     
@@ -723,10 +733,10 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
     
     <item>
       <title>Go并发学习之实现一个Worker Pool</title>
-      <link>https://shaowenzhu.top/post/golang/practice/golang-worker-pools/</link>
+      <link>https://shaowenzhu.top/post/golang/practice/002-golang-worker-pools/</link>
       <pubDate>Thu, 25 May 2023 14:13:13 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/practice/golang-worker-pools/</guid>
+      <guid>https://shaowenzhu.top/post/golang/practice/002-golang-worker-pools/</guid>
       <description>谷歌Go组的一个大佬Bryan C. Mills认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解</description>
     </item>
     
@@ -1157,10 +1167,10 @@ forking an OS process per request (like old versions of Apache) spawning an OS t
     
     <item>
       <title>用Go实现一个简单的贪吃蛇</title>
-      <link>https://shaowenzhu.top/post/golang/practice/snake-game/</link>
+      <link>https://shaowenzhu.top/post/golang/practice/001-snake-game/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/practice/snake-game/</guid>
+      <guid>https://shaowenzhu.top/post/golang/practice/001-snake-game/</guid>
       <description>Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 地图 地图就是个二维数组b</description>
     </item>
     

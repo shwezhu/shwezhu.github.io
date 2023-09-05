@@ -121,6 +121,29 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/006-collections-concurrent-operations/">The Concurrent Operations in Collections - Golang</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-04 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/practice/"> practice </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. Map First version:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 func (s *memoryStore) monitorExpiredSessions() { for { // detect every seconds time.Sleep(time.Second) memoryMutex.Lock() if len(s.sessions) == 0 { memoryMutex.Unlock() continue } for k, info := range s.sessions { if info.expiresTimestamp &lt;= time.Now().Unix() { delete(s.sessions, k) } } memoryMutex.Unlock() } } // in other place will run this method go s.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/practice/006-collections-concurrent-operations/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/golang/basics/013-methods-receivers/">Methods Receivers &amp; Concurrency - Golang</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-09-02 </span>
@@ -280,7 +303,7 @@ Solution I&rsquo;m using hugo now but I don&rsquo;t want to override or delete t
 
     <article class="post">
   <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/tricks/">little tricks in golang</a></h1>
+    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/005-tricks/">little tricks in golang</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-08-27 </span>
       <div class="post-category">
@@ -295,7 +318,7 @@ Solution I&rsquo;m using hugo now but I don&rsquo;t want to override or delete t
       1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]++ } 
     </div>
     <div class="read-more">
-      <a href="/post/golang/practice/tricks/" class="read-more-link">Read more...</a>
+      <a href="/post/golang/practice/005-tricks/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
@@ -317,28 +340,6 @@ Solution I&rsquo;m using hugo now but I don&rsquo;t want to override or delete t
     </div>
     <div class="read-more">
       <a href="/post/linux/003-shell-expansion/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/advance/002-concurrency-with-shared-variables/">Concurrency with Shared Variables - Go Advanced</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-24 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/advance/"> advance </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/advance/002-concurrency-with-shared-variables/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>

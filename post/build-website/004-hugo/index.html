@@ -48,7 +48,7 @@
 <meta itemprop="name" content="Write Blog with Hugo &amp; Deploy to Github Pages">
 <meta itemprop="description" content="1. Basic Commands 1 2 3 4 5 6 # create a website $ hugo new site blogs # see your websites locally $ hugo server # generate static html file in public folder $ hugo 2. Deploy to Github Pages 2.1. Local Repository 1 2 3 4 5 6 $ cd blogs/public/ $ git init $ git remote add origin git@github.com:shwezhu/shwezhu.github.io.git ... $ git branch -M master $ git push origin master 2."><meta itemprop="datePublished" content="2023-08-31T23:51:57+00:00" />
 <meta itemprop="dateModified" content="2023-08-31T23:51:57+00:00" />
-<meta itemprop="wordCount" content="349">
+<meta itemprop="wordCount" content="421">
 <meta itemprop="keywords" content="hugo," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Write Blog with Hugo &amp; Deploy to Github Pages"/>
 <meta name="twitter:description" content="1. Basic Commands 1 2 3 4 5 6 # create a website $ hugo new site blogs # see your websites locally $ hugo server # generate static html file in public folder $ hugo 2. Deploy to Github Pages 2.1. Local Repository 1 2 3 4 5 6 $ cd blogs/public/ $ git init $ git remote add origin git@github.com:shwezhu/shwezhu.github.io.git ... $ git branch -M master $ git push origin master 2."/>
@@ -147,15 +147,15 @@
           <ul>
             <li><a href="#21-local-repository">2.1. Local Repository</a></li>
             <li><a href="#22-remote-repository">2.2. Remote Repository</a></li>
-            <li><a href="#23-custom-domain-optional">2.3. Custom Domain (optional)</a></li>
           </ul>
         </li>
-        <li><a href="#3-issues---404-page">3. Issues - 404 page</a></li>
-        <li><a href="#4-insert-images">4. Insert Images</a></li>
-        <li><a href="#5-backup--recover">5. Backup &amp; Recover</a>
+        <li><a href="#3-custom-domain-optional">3. Custom Domain (optional)</a></li>
+        <li><a href="#4-issues---404-page">4. Issues - 404 page</a></li>
+        <li><a href="#5-insert-images">5. Insert Images</a></li>
+        <li><a href="#6-backup--recover">6. Backup &amp; Recover</a>
           <ul>
-            <li><a href="#51-backup">5.1. Backup</a></li>
-            <li><a href="#52-recover">5.2. Recover</a></li>
+            <li><a href="#61-backup">6.1. Backup</a></li>
+            <li><a href="#62-recover">6.2. Recover</a></li>
           </ul>
         </li>
       </ul>
@@ -212,13 +212,16 @@
 <blockquote>
 <p>You probably need wait about 10 mintes even your the processof building bolgs has been finished, try to clear cache of your browser and restart your browser if you constantly get 404 page for yor website.</p>
 </blockquote>
-<h3 id="23-custom-domain-optional">2.3. Custom Domain (optional)</h3>
-<p>visit: <a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages">https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages</a></p>
-<p>Learn more: <a href="https://olowolo.com/post/hugo-quick-start/">https://olowolo.com/post/hugo-quick-start/</a></p>
-<h2 id="3-issues---404-page">3. Issues - 404 page</h2>
+<h2 id="3-custom-domain-optional">3. Custom Domain (optional)</h2>
+<p>Update DNS Records of your domain according to the provided ip address by github:</p>
+<p><img src="/004-hugo/a.png" alt="a"></p>
+<p>Go to Settings -&gt; Pages -&gt; Custom domain: input your domain. And wait about 15 mintes to take effect (try to clear your browser cache).</p>
+<p>If https cannot enable, try to remove your custom domain and wait minutes add again. The CNAME DNS Records has to be set to<code>www</code>, when I set <code>blog</code> the https cannot be enabled.</p>
+<p>Learn more: <a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site">https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site</a></p>
+<h2 id="4-issues---404-page">4. Issues - 404 page</h2>
 <p>Hugo will make the url into lowercase automatically, therefore, make sure all you blog files and folders under <code>/content/post/</code> are lowercase. Otherwise, you will get 404 for that blog.</p>
 <p>And if you didn&rsquo;t make it lowercase before generate html pages with <code>hugo</code> command, then you need delete all the generated html files under <code>/public/post/</code> then run <code>hugo</code> command again, this should work.</p>
-<h2 id="4-insert-images">4. Insert Images</h2>
+<h2 id="5-insert-images">5. Insert Images</h2>
 <p>Put images under <code>/static/file-name/</code> and insert image with<code>![](/file-name/xxx.png)</code>,</p>
 <p>On Typora, go to settings -&gt; images -&gt; When instert, choose custome folder and write someting like this:</p>
 <div class="highlight"><div class="chroma">
@@ -231,10 +234,10 @@
 </div>
 </div><p>then, write <code>typora-root-url: ../../../static</code> at front matter of blog, if you don&rsquo;t know how to wtite, you can choose option:</p>
 <p>Fromat -&gt; Image -&gt; Use Image Root Path, then typora will add someting like <code>typora-root-url: ../../../static</code> in yur md file at the front matter part. Then both typora and website will disply image correctly.</p>
-<h2 id="5-backup--recover">5. Backup &amp; Recover</h2>
-<h3 id="51-backup">5.1. Backup</h3>
+<h2 id="6-backup--recover">6. Backup &amp; Recover</h2>
+<h3 id="61-backup">6.1. Backup</h3>
 <p>Please check: <a href="https://shaowenzhu.top/post/git/practice/003-blog-backup/">Backup Blogs with Git - David&rsquo;s Blog</a></p>
-<h3 id="52-recover">5.2. Recover</h3>
+<h3 id="62-recover">6.2. Recover</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -253,6 +256,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>and visit localhost to check&hellip;</p>
+<p>References: <a href="https://olowolo.com/post/hugo-quick-start/">https://olowolo.com/post/hugo-quick-start/</a></p>
 
     </div>
 
