@@ -134,3 +134,37 @@ func (s *cookieStore) isEmpty() bool {
 }
 ```
 
+When I test this, this gets panic sometimes:
+
+```go
+panic: runtime error: invalid memory address or nil pointer dereference
+```
+
+At `v.expiry <= time.Now().Unix() `:
+
+```go
+v := s.sessions[expired[i]]
+if v.expiry <= time.Now().Unix() {
+  delete(s.sessions, expired[i])
+}
+```
+
+This means we get a nil session from `s.sessions[expired[i]]`, which mean there is a problem with slice `expired`, I was thinking if its length is 0, the range still iterate it. Turns out the `range` won't iterate an empty slice, just do nothing. 
+
+Then I realize that I did't update the slice, woops, we need drop the useless element in last round:
+
+```go
+...
+for range ticker.C {
+  // Drop useless elements in last round.
+  expired = expired[:0]
+  .....
+}
+```
+
+
+
+
+
+
+

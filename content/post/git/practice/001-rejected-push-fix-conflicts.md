@@ -49,6 +49,8 @@ Note: switching to 'origin/master'
 # 发现没什么问题, 切换回本地原分支,  (假装查看变化)
 git switch master
 
+# 注意 如果查看变化后你不想合并这个远程分支 直接删除该分支即可
+# git branch -r -d origin/master, 必须加上 -r 否则报错找不到分支
 git merge origin/master
 fatal: refusing to merge unrelated histories
 
