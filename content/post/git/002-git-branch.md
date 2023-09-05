@@ -35,6 +35,7 @@ Delete branch:
 
 - delete fully merged branch: `git branch -d <name>`
 - delete branch (even if not merged):  `git branch -D <name>`
+- delete a fetched branch locally: `git branch -r -d <name>`, e.g., `git branch -r -d origin/master `
 
 Merge benach `issue003` into current branch：
 
