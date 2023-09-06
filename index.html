@@ -121,6 +121,29 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/007-channels-tricks/">Go Channels Use Cases in Practice</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-06 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/practice/"> practice </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Previous post: Goroutine &amp; Channel - Go Basics - David&rsquo;s Blog
+1. Pass a slice to channel 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 func main() { ready := make(chan []string) go func() { var expired []string expired = append(expired, &#34;Coco&#34;) expired = append(expired, &#34;Bella&#34;) ready&lt;- expired }() go func() { // this will block until there is data sent to cahnnel ready for s := range ready { for _, name := range s{ fmt.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/practice/007-channels-tricks/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/golang/basics/002-assignment-makes-copy/">Assignment always Makes a Copy - Go</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-09-05 </span>
@@ -191,7 +214,7 @@ Therefore there four types of functions:
 
     <article class="post">
   <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/006-collections-concurrent-operations/">The Concurrent Operations in Collections - Golang</a></h1>
+    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/006-collection-operations/">The Operations of Collections in Practice - Go</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-09-04 </span>
       <div class="post-category">
@@ -203,11 +226,12 @@ Therefore there four types of functions:
   
   <div class="post-content">
     <div class="post-summary">
-      1. Map First version:
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 func (s *memoryStore) monitorExpiredSessions() { for { // detect every seconds time.Sleep(time.Second) memoryMutex.Lock() if len(s.sessions) == 0 { memoryMutex.Unlock() continue } for k, info := range s.sessions { if info.expiresTimestamp &lt;= time.Now().Unix() { delete(s.sessions, k) } } memoryMutex.Unlock() } } // in other place will run this method go s.
+      1. var vs make() 1.1. slice What&rsquo;s the difference between these two statement below:
+1 2 3 var cats []string // or dogs := make([]string, 0) We have know that any varibles declared with var without an explicit initial value are given their zero value, nil is zero for map, slice and pointer.
+Therefore, the value of cats is nil for sure, then for make([]string, 0)it allocates a memory with 0 elements, which means dog !
     </div>
     <div class="read-more">
-      <a href="/post/golang/practice/006-collections-concurrent-operations/" class="read-more-link">Read more...</a>
+      <a href="/post/golang/practice/006-collection-operations/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
@@ -324,27 +348,6 @@ Solution I&rsquo;m using hugo now but I don&rsquo;t want to override or delete t
     </div>
     <div class="read-more">
       <a href="/post/linux/002-bash-basics/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/build-website/004-hugo/">Write Blog with Hugo &amp; Deploy to Github Pages</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-31 </span>
-      <div class="post-category">
-          <a href="/categories/build-website/"> build website </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Basic Commands 1 2 3 4 5 6 # create a website $ hugo new site blogs # see your websites locally $ hugo server # generate static html file in public folder $ hugo 2. Deploy to Github Pages 2.1. Local Repository 1 2 3 4 5 6 $ cd blogs/public/ $ git init $ git remote add origin git@github.com:shwezhu/shwezhu.github.io.git ... $ git branch -M master $ git push origin master 2.
-    </div>
-    <div class="read-more">
-      <a href="/post/build-website/004-hugo/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>

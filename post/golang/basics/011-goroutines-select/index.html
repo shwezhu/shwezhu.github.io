@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
+<meta name="author" content="David" /><meta name="description" content="1. select will block A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an unbuffered channel operation // will block unitl the value stored in the channel get read case s&amp;lt;- 1: fmt." />
 
 
@@ -41,20 +41,20 @@
 
 
 <meta property="og:title" content="Select - Go Concurrency" />
-<meta property="og:description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
+<meta property="og:description" content="1. select will block A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an unbuffered channel operation // will block unitl the value stored in the channel get read case s&lt;- 1: fmt." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/011-goroutines-select/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-21T21:22:11+00:00" />
 <meta property="article:modified_time" content="2023-05-21T21:22:11+00:00" />
 <meta itemprop="name" content="Select - Go Concurrency">
-<meta itemprop="description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
+<meta itemprop="description" content="1. select will block A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an unbuffered channel operation // will block unitl the value stored in the channel get read case s&lt;- 1: fmt."><meta itemprop="datePublished" content="2023-05-21T21:22:11+00:00" />
 <meta itemprop="dateModified" content="2023-05-21T21:22:11+00:00" />
-<meta itemprop="wordCount" content="367">
+<meta itemprop="wordCount" content="360">
 <meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Select - Go Concurrency"/>
-<meta name="twitter:description" content="1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
+<meta name="twitter:description" content="1. select will block A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an unbuffered channel operation // will block unitl the value stored in the channel get read case s&lt;- 1: fmt."/>
 
 <!--[if lte IE 9]>
@@ -147,7 +147,7 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#1-select-will-block-if-none-of-its-case-cannot-run">1. <code>select</code> will block if none of its case cannot run</a></li>
+        <li><a href="#1-select-will-block">1. <code>select</code> will block</a></li>
         <li><a href="#2-default-case">2. Default case</a></li>
         <li><a href="#3-practice">3. Practice</a></li>
       </ul>
@@ -157,7 +157,7 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-select-will-block-if-none-of-its-case-cannot-run">1. <code>select</code> will block if none of its case cannot run</h2>
+      <h2 id="1-select-will-block">1. <code>select</code> will block</h2>
 <p>A <code>select</code> blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

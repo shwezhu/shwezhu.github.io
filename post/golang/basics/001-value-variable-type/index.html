@@ -51,7 +51,7 @@
 <meta itemprop="description" content="1. Go is statically typed Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
 1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt. The variables i and j have distinct static types and, although they have the same underlying type, they cannot be assigned to one another without a conversion."><meta itemprop="datePublished" content="2023-09-05T22:00:20+00:00" />
 <meta itemprop="dateModified" content="2023-09-05T22:00:20+00:00" />
-<meta itemprop="wordCount" content="1313">
+<meta itemprop="wordCount" content="1325">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Value Variable and Types - Go"/>
 <meta name="twitter:description" content="1. Go is statically typed Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
@@ -159,6 +159,7 @@
             <li><a href="#31--vs-var">3.1. <code>:=</code> vs <code>var</code></a></li>
             <li><a href="#32-zero-value">3.2. Zero value</a></li>
             <li><a href="#32-var-vs-new">3.2. <code>var</code> vs <code>new</code></a></li>
+            <li><a href="#33-var-vs-make">3.3. <code>var</code> vs <code>make</code></a></li>
           </ul>
         </li>
         <li><a href="#4-variable-redeclarations">4. Variable redeclarations</a></li>
@@ -412,8 +413,10 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Source: <a href="https://stackoverflow.com/a/9322182/16317008">https://stackoverflow.com/a/9322182/16317008</a></p>
+<h3 id="33-var-vs-make">3.3. <code>var</code> vs <code>make</code></h3>
+<p>I have talked this in another post: <a href="https://davidzhu.xyz/post/golang/practice/006-collection-operations/">https://davidzhu.xyz/post/golang/practice/006-collection-operations/</a></p>
 <h2 id="4-variable-redeclarations">4. Variable redeclarations</h2>
-<p>Unlike regular variable declarations, a short variable declaration may <em>redeclare</em> variables provided they were originally declared earlier in the same block <strong>with the same type</strong>, and <strong>at least one of the non-<a href="https://go.dev/ref/spec#Blank_identifier">blank</a> variables is new</strong>. As a consequence, redeclaration can only appear in a multi-variable short declaration. Redeclaration does not introduce a new variable; it just assigns a new value to the original.</p>
+<p>Unlike regular variable declarations, a short variable declaration may <em>redeclare</em> variables provided they were originally <strong>declared earlier in the same block</strong> <strong>with the same type</strong>, and <strong>at least one of the non-<a href="https://go.dev/ref/spec#Blank_identifier">blank</a> variables is new</strong>. As a consequence, redeclaration can only appear in a multi-variable short declaration. Redeclaration does not introduce a new variable; it just assigns a new value to the original.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1

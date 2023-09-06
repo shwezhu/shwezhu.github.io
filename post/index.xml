@@ -6,7 +6,17 @@
     <description>Recent content in Posts on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 05 Sep 2023 23:30:20 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Sep 2023 14:05:55 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go Channels Use Cases in Practice</title>
+      <link>https://shaowenzhu.top/post/golang/practice/007-channels-tricks/</link>
+      <pubDate>Wed, 06 Sep 2023 14:05:55 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/practice/007-channels-tricks/</guid>
+      <description>Previous post: Goroutine &amp;amp; Channel - Go Basics - David&amp;rsquo;s Blog
+1. Pass a slice to channel 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 func main() { ready := make(chan []string) go func() { var expired []string expired = append(expired, &amp;#34;Coco&amp;#34;) expired = append(expired, &amp;#34;Bella&amp;#34;) ready&amp;lt;- expired }() go func() { // this will block until there is data sent to cahnnel ready for s := range ready { for _, name := range s{ fmt.</description>
+    </item>
+    
     <item>
       <title>Assignment always Makes a Copy - Go</title>
       <link>https://shaowenzhu.top/post/golang/basics/002-assignment-makes-copy/</link>
@@ -39,13 +49,14 @@ Therefore there four types of functions:
     </item>
     
     <item>
-      <title>The Concurrent Operations in Collections - Golang</title>
-      <link>https://shaowenzhu.top/post/golang/practice/006-collections-concurrent-operations/</link>
+      <title>The Operations of Collections in Practice - Go</title>
+      <link>https://shaowenzhu.top/post/golang/practice/006-collection-operations/</link>
       <pubDate>Mon, 04 Sep 2023 21:35:55 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/practice/006-collections-concurrent-operations/</guid>
-      <description>1. Map First version:
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 func (s *memoryStore) monitorExpiredSessions() { for { // detect every seconds time.Sleep(time.Second) memoryMutex.Lock() if len(s.sessions) == 0 { memoryMutex.Unlock() continue } for k, info := range s.sessions { if info.expiresTimestamp &amp;lt;= time.Now().Unix() { delete(s.sessions, k) } } memoryMutex.Unlock() } } // in other place will run this method go s.</description>
+      <guid>https://shaowenzhu.top/post/golang/practice/006-collection-operations/</guid>
+      <description>1. var vs make() 1.1. slice What&amp;rsquo;s the difference between these two statement below:
+1 2 3 var cats []string // or dogs := make([]string, 0) We have know that any varibles declared with var without an explicit initial value are given their zero value, nil is zero for map, slice and pointer.
+Therefore, the value of cats is nil for sure, then for make([]string, 0)it allocates a memory with 0 elements, which means dog !</description>
     </item>
     
     <item>
@@ -119,7 +130,7 @@ Solution I&amp;rsquo;m using hugo now but I don&amp;rsquo;t want to override or 
     </item>
     
     <item>
-      <title>little tricks in golang</title>
+      <title>Trivial Tricks and Common Mistakes in Practice - Go</title>
       <link>https://shaowenzhu.top/post/golang/practice/005-tricks-and-common-mistakes/</link>
       <pubDate>Sun, 27 Aug 2023 17:12:55 +0000</pubDate>
       
@@ -162,7 +173,7 @@ Brace Expansion - expanding values between braces, such as file{1.</description>
       <pubDate>Thu, 24 Aug 2023 10:06:10 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/010-goroutine-channels/</guid>
-      <description>1. goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&amp;#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly</description>
+      <description>1. Goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&amp;#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly</description>
     </item>
     
     <item>
@@ -671,7 +682,7 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
       <pubDate>Sun, 21 May 2023 21:22:11 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/basics/011-goroutines-select/</guid>
-      <description>1. select will block if none of its case cannot run A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
+      <description>1. select will block A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready.
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 // This goroutine will sleep forever s := make(chan int) select { // write to an unbuffered channel operation // will block unitl the value stored in the channel get read case s&amp;lt;- 1: fmt.</description>
     </item>
     

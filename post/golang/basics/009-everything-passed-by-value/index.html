@@ -51,7 +51,7 @@
 <meta itemprop="description" content="Everything passed by value, we have talked that assignment makes a copy, value receiver makes a copy of the struct value on each method call, in this post I&rsquo;ll show you argument is also passed by value.
 1. Everything passed by value As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter.">
 
-<meta itemprop="wordCount" content="824">
+<meta itemprop="wordCount" content="879">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Everything Passed by Value - Go"/>
 <meta name="twitter:description" content="Everything passed by value, we have talked that assignment makes a copy, value receiver makes a copy of the struct value on each method call, in this post I&rsquo;ll show you argument is also passed by value.
@@ -322,6 +322,21 @@
 </div><h2 id="5-map--slice">5. map &amp; slice</h2>
 <p>As we talked ablove, for better efficiency we usually choose to pass pointer type. Map and slice often store a lot of elements, should we pass/return a pointer to them when calling a function?</p>
 <p>The answer is no, we don&rsquo;t need to do that. Learn more: <a href="https://shaowenzhu.top/post/golang/basics/003-collections/">array &amp; slice &amp; map - golang collections</a></p>
+<blockquote>
+<p><strong>NOTE:</strong>  when we have a slice channel, both the slice we pass to the channel and the other slice we received from the channel share a same underlying array. If you don&rsquo;t want that, you probably need a copy, check the built-in copy function.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="nx">newSlice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">copy</span><span class="p">(</span><span class="nx">newSlice</span><span class="p">,</span> <span class="nx">oldSlice</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ch</span><span class="o">&lt;-</span> <span class="nx">newSlice</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></blockquote>
 
     </div>
 
