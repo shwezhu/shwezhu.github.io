@@ -8,7 +8,7 @@ tags:
  - golang
 ---
 
-Similar to C++, a variable is just an address location. But unlike C++, each variable defined in a Go program occupies a unique memory location. We have talked this in [last post](). 
+Similar to C++, a variable is just an address location. But unlike C++, each variable defined in a Go program occupies a unique memory location. We have talked this in [last post](https://davidzhu.xyz/post/golang/basics/001-value-variable-type/). 
 
 ```go
 func main() {
@@ -20,13 +20,13 @@ func main() {
 // kitten.Name:Coco, bella.Name:Bella
 ```
 
-Do not treat variable `bella` and `kitten` as a reference which point to a same object, that's java and python. We have talked about this in [previous post](). A variable is just a nice name for address in Go. 
+Do not treat variable `bella` and `kitten` as a reference which point to a same object, that's java and python. We have talked about this in [previous post](https://davidzhu.xyz/post/golang/basics/009-methods-pass-by-value/). A variable is just a nice name for address in Go. 
 
 > Go's variables are NOT references - for reference, use a pointer.
 >
 > These variables can be allocated on the stack, or on the heap. Both have pros and cons, the compiler decides. For correctness, it does not make any difference. "You don't have to know". 
 >
-> Source: [This is no reference](https://www.reddit.com/r/golang/comments/s0m2h9/comment/hs2kvyo/?utm_source=share&utm_medium=web2x&context=3)
+> Source: [there is no reference](https://www.reddit.com/r/golang/comments/s0m2h9/comment/hs2kvyo/?utm_source=share&utm_medium=web2x&context=3)
 
 ```golang
 type temp struct{
@@ -48,3 +48,6 @@ var variable1 = temp{val: 5}
 There is a single variable created here (`variable1`) which is initialized with the value `temp{val: 5}`.
 
 In the second example you take the address of a composite literal. That does create a variable, initialized with the literal's value, and the address of this variable will be the result of the expression. This pointer value will be assigned to the variable `variable2`.
+
+
+

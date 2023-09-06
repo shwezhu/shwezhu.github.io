@@ -50,6 +50,13 @@ Btw, for simplicity reason, we usually use value/variable verbally. So here we c
 >
 > Source: [The Go Programming Language Specification ](https://go.dev/ref/spec#Variables)
 
+> I think is true in Go/C++/C :
+> A variable is just an adress location. When assignments happens `str="hello world"` : Instead of telling the computer store this series of bits in 0x015c5c15c1c5, you tell him to store it in `str`. `str` is just a nicer name of a memory adress location. 
+>
+> The computer doesn't care and will replace them when compiling, `str` won't exists, it's all 0x015c5c15c1c5.
+>
+> Source: [Does operator := always cause a new copy to be created if assign without reference?](https://www.reddit.com/r/golang/comments/6v0aka/comment/dlwwvgn/?utm_source=share&utm_medium=web2x&context=3)
+
 ### 2.1. Value size
 
 | Kinds of Types     | Value Size | [Required](https://golang.org/ref/spec#Size_and_alignment_guarantees) by [Go Specification](https://golang.org/ref/spec#Numeric_types) |
