@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Bash Basic Syntax - David&#39;s Blog</title>
+  <title>Shell Script Basic Syntax - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Run a Script The first line here specifies the bash interpreter will execute this script:
+<meta name="author" content="David" /><meta name="description" content="1. Run a script The first line here specifies the bash interpreter will execute this script:
 1 2 #!/usr/bin/bash echo &amp;#34;hello world&amp;#34; You can check the shells on your computer:
 1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells. /bin/bash /bin/csh /bin/dash /bin/ksh /bin/sh /bin/tcsh /bin/zsh Don&amp;rsquo;t write a wrong location of bash interpreter, /bin/nmsd below doesn&amp;rsquo;t exist, execute this script will go wrong:" />
 
@@ -41,23 +41,23 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Bash Basic Syntax" />
-<meta property="og:description" content="1. Run a Script The first line here specifies the bash interpreter will execute this script:
+<meta property="og:title" content="Shell Script Basic Syntax" />
+<meta property="og:description" content="1. Run a script The first line here specifies the bash interpreter will execute this script:
 1 2 #!/usr/bin/bash echo &#34;hello world&#34; You can check the shells on your computer:
 1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells. /bin/bash /bin/csh /bin/dash /bin/ksh /bin/sh /bin/tcsh /bin/zsh Don&rsquo;t write a wrong location of bash interpreter, /bin/nmsd below doesn&rsquo;t exist, execute this script will go wrong:" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/linux/002-bash-basics/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-09-01T12:23:59+00:00" />
 <meta property="article:modified_time" content="2023-09-01T12:23:59+00:00" />
-<meta itemprop="name" content="Bash Basic Syntax">
-<meta itemprop="description" content="1. Run a Script The first line here specifies the bash interpreter will execute this script:
+<meta itemprop="name" content="Shell Script Basic Syntax">
+<meta itemprop="description" content="1. Run a script The first line here specifies the bash interpreter will execute this script:
 1 2 #!/usr/bin/bash echo &#34;hello world&#34; You can check the shells on your computer:
 1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells. /bin/bash /bin/csh /bin/dash /bin/ksh /bin/sh /bin/tcsh /bin/zsh Don&rsquo;t write a wrong location of bash interpreter, /bin/nmsd below doesn&rsquo;t exist, execute this script will go wrong:"><meta itemprop="datePublished" content="2023-09-01T12:23:59+00:00" />
 <meta itemprop="dateModified" content="2023-09-01T12:23:59+00:00" />
-<meta itemprop="wordCount" content="1448">
+<meta itemprop="wordCount" content="1606">
 <meta itemprop="keywords" content="linux," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Bash Basic Syntax"/>
-<meta name="twitter:description" content="1. Run a Script The first line here specifies the bash interpreter will execute this script:
+<meta name="twitter:title" content="Shell Script Basic Syntax"/>
+<meta name="twitter:description" content="1. Run a script The first line here specifies the bash interpreter will execute this script:
 1 2 #!/usr/bin/bash echo &#34;hello world&#34; You can check the shells on your computer:
 1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells. /bin/bash /bin/csh /bin/dash /bin/ksh /bin/sh /bin/tcsh /bin/zsh Don&rsquo;t write a wrong location of bash interpreter, /bin/nmsd below doesn&rsquo;t exist, execute this script will go wrong:"/>
 
@@ -132,7 +132,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Bash Basic Syntax</h1>
+      <h1 class="post-title">Shell Script Basic Syntax</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-09-01 </span>
@@ -150,11 +150,17 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#1-run-a-script">1. Run a Script</a></li>
-        <li><a href="#2-bash-variables-are-untyped">2. Bash Variables are Untyped</a></li>
+        <li><a href="#1-run-a-script">1. Run a script</a></li>
+        <li><a href="#2-bash-variables-are-untyped">2. Bash variables are untyped</a></li>
         <li><a href="#3-for-loop-syntax">3. for loop syntax</a></li>
-        <li><a href="#4-control-operators">4. Control Operators</a></li>
-        <li><a href="#5-quotes">5. Quotes</a></li>
+        <li><a href="#4-control-operators">4. Control operators</a></li>
+        <li><a href="#5-quotes">5. Quotes</a>
+          <ul>
+            <li><a href="#51-why-need-qoutes">5.1. Why need qoutes</a></li>
+            <li><a href="#52-backqoute">5.2. Backqoute</a></li>
+            <li><a href="#53-double-quotes">5.3. Double quotes</a></li>
+          </ul>
+        </li>
         <li><a href="#6----in-bash">6. <code>$</code> &amp; <code>*</code> in bash</a>
           <ul>
             <li><a href="#61-">6.1. <code>$</code></a></li>
@@ -170,7 +176,7 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-run-a-script">1. Run a Script</h2>
+      <h2 id="1-run-a-script">1. Run a script</h2>
 <p>The first line here specifies the bash interpreter will execute this script:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -239,7 +245,7 @@
 <li><strong>o for others</strong> (users not in the file group</li>
 <li><strong>a for all</strong> (all users)</li>
 </ul>
-<h2 id="2-bash-variables-are-untyped">2. Bash Variables are Untyped</h2>
+<h2 id="2-bash-variables-are-untyped">2. Bash variables are untyped</h2>
 <p>Bash does not type variables like C and related languages, defining them as integers, floating points, or string types. In Bash, all variables are strings. A string that is an integer can be used in integer arithmetic, which is the only type of math that Bash is capable of doing.</p>
 <p>The assignment <code>VAR=10</code> sets the value of the variable <code>VAR</code> to 10. To print the value of the variable, you can use the statement <code>echo $VAR</code>.</p>
 <blockquote>
@@ -317,7 +323,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>You probably wonder what is the <code>&quot;&quot;</code>,  <code>*</code> and <code>;</code>  above, I&rsquo;ll explain it to you next.</p>
-<h2 id="4-control-operators">4. Control Operators</h2>
+<h2 id="4-control-operators">4. Control operators</h2>
 <ul>
 <li><code>;</code>: Will run one command after another has finished, irrespective of the outcome of the first. This means even there is wrong in fiest command, the second can execute.</li>
 <li><code>&amp;&amp;</code>: if the precceeding command goes wrong, the commands left won&rsquo;t be executed.</li>
@@ -352,6 +358,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="5-quotes">5. Quotes</h2>
+<h3 id="51-why-need-qoutes">5.1. Why need qoutes</h3>
 <p>Quoting is used to remove the special meaning of <em><strong>metacharacters</strong></em> or words to the shell. Quoting can be used to disable special treatment for special characters, to prevent reserved words from being recognized as such, and to prevent <em><strong>parameter expansion</strong></em>.</p>
 <blockquote>
 <p><strong>Metacharacter</strong>: a character that, when unquoted, separates words. A metacharacter is a <code>space</code>, <code>tab</code>, <code>newline</code>, or one of the following characters: <code>*</code>,  <code>?</code>,  <code>|</code>,   <code>&amp;</code>,   <code>;</code>,  <code>(</code>,  <code>)</code>,   <code>&lt;</code>, or <code>&gt;</code>, etc&hellip;</p>
@@ -407,6 +414,7 @@
 </tr>
 </tbody>
 </table>
+<h3 id="52-backqoute">5.2. Backqoute</h3>
 <p>You may wonder what does back quote mean in the table, I&rsquo;ll give you an example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -423,6 +431,29 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The code between back quotes will be executed, and if there is output, you can save it into a variable,</p>
+<h3 id="53-double-quotes">5.3. Double quotes</h3>
+<p>The statement in the table about double qoutes probably not accurate, actually, <code>*</code> may acts like it remains its spcecial meaning in double quotes:</p>
+<ul>
+<li>
+<p>Without any special options:</p>
+<ul>
+<li>
+<p>Inside double quotes (<code>&quot;</code>), the asterisk retains its literal meaning and does not perform globbing (expansion to match filenames).</p>
+</li>
+<li>
+<p>For example, <code>&quot;*&quot;</code> will be treated as a literal asterisk character.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>With some spcecial options:</p>
+<ul>
+<li><code>find . -name &quot;*.sh&quot; -type f </code>, in the command the <code>-name &quot;*.sh&quot;</code> the <code>&quot;*.sh&quot;</code> acts as a pattern, the double quotes prevent the shell from interpreting the asterisk as a wildcard character and expanding it to match filenames in the current directory.</li>
+<li>Therefore, in the given command, <code>&quot;*.c&quot;</code> is treated as a literal string by the shell. The <code>find</code> command receives the pattern <code>&quot;*.c&quot;</code> as an argument, and it performs the matching internally during its execution.</li>
+<li>Which acts like the <code>*</code> doesn&rsquo;t lose its special meaning.</li>
+</ul>
+</li>
+</ul>
 <h2 id="6----in-bash">6. <code>$</code> &amp; <code>*</code> in bash</h2>
 <h3 id="61-">6.1. <code>$</code></h3>
 <p><code>$</code> has many use cases, I&rsquo;ll introduce one here, in bash scripting, variables are used to store values, the <code>$</code> symbol is used to retrieve the value of a variable Value.</p>
