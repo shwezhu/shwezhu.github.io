@@ -121,6 +121,75 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/002-assignment-makes-copy/">Assignment always Makes a Copy in Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-05 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/basics/"> basics </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Similar to C++, a variable is just an address location. But unlike C++, each variable defined in a Go program occupies a unique memory location. We have talked this in last post.
+1 2 3 4 5 6 7 func main() { kitten := Cat{Name: &#34;Coco&#34;} bella := kitten // makes a copy bella.Name = &#34;Bella&#34; fmt.Printf(&#34;kitten.Name:%v, bella.Name:%v\n&#34;, kitten.Name, bella.Name) } // kitten.Name:Coco, bella.Name:Bella Do not treat variable bella and kitten as a reference which point to a same object, that&rsquo;s java and python.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/basics/002-assignment-makes-copy/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/001-no-reference/">There is no Reference Variable in Golang</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-05 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/basics/"> basics </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      This all is very easy once you stop using inappropriate terms while thinking of it. It is not helpful to ask about the hair color or the accent of a bacterium. These are categories applicable to humans. Same in Go: there are no references in Go and there are no &ldquo;shallow&rdquo; copies (and no &ldquo;deep&rdquo; copy, all there is are copies of values).
+Putting &amp; before a variable does not produce a reference, simply because there are no references in Go.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/basics/001-no-reference/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/000-value-variable-type/">Value Variable and Types in Golang</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-05 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/basics/"> basics </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. Go is statically typed Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
+1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt. The variables i and j have distinct static types and, although they have the same underlying type, they cannot be assigned to one another without a conversion.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/basics/000-value-variable-type/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/golang/advance/005-unit-test/">Go Tests Basics - Go</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-09-05 </span>
@@ -278,71 +347,6 @@ Solution I&rsquo;m using hugo now but I don&rsquo;t want to override or delete t
     </div>
     <div class="read-more">
       <a href="/post/linux/002-bash-basics/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/build-website/004-hugo/">Write Blog with Hugo &amp; Deploy to Github Pages</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-31 </span>
-      <div class="post-category">
-          <a href="/categories/build-website/"> build website </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Basic Commands 1 2 3 4 5 6 # create a website $ hugo new site blogs # see your websites locally $ hugo server # generate static html file in public folder $ hugo 2. Deploy to Github Pages 2.1. Local Repository 1 2 3 4 5 6 $ cd blogs/public/ $ git init $ git remote add origin git@github.com:shwezhu/shwezhu.github.io.git ... $ git branch -M master $ git push origin master 2.
-    </div>
-    <div class="read-more">
-      <a href="/post/build-website/004-hugo/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/014-gob-json-encoding/">encoding/gob &amp; encoding/json in Golang</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-31 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/basics/"> basics </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/basics/014-gob-json-encoding/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/005-tricks/">little tricks in golang</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-27 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/practice/"> practice </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]++ } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker.Stop() var expired []string for range ticker.
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/practice/005-tricks/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
