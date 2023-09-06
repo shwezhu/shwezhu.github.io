@@ -97,21 +97,21 @@ $ go test -run "ExampleSession|TestSession" -v
 If you want to specify benchmarks, use `-bench` flag. 
 
 ```shell
-	-bench regexp
-	    Run only those benchmarks matching a regular expression.
-	    By default, no benchmarks are run.
-	-fuzz regexp
-	    Run the fuzz test matching the regular expression.
-	-run regexp
-	    Run only those tests, examples, and fuzz tests matching the regular
-	    expression.
-	-skip regexp
-	    Run only those tests, examples, fuzz tests, and benchmarks that
-	    do not match the regular expression.
-	# Flags below can be used with flags above. 
-	-race
-	enable data race detection.
-	-cover
+-bench regexp
+	Run only those benchmarks matching a regular expression.
+	By default, no benchmarks are run.
+-fuzz regexp
+	Run the fuzz test matching the regular expression.
+-run regexp
+	Run only those tests, examples, and fuzz tests matching the regular
+	expression.
+-skip regexp
+	Run only those tests, examples, fuzz tests, and benchmarks that
+	do not match the regular expression.
+# Flags below can be used with flags above.
+-race
+ enable data race detection.
+-cover
 	enable code coverage instrumentation.
 ```
 
