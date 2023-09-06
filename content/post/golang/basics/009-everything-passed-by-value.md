@@ -51,7 +51,7 @@ func main() {
 
 As you can see, the `name` field didn't change which proves there is a copy when we call funciton`foo()`. But the first element of the slice has been changed which means the copy is just copy the direct value of a struct, the underlying value won't be copied. 
 
-How to make a deep copy: 
+How to make a deep copy: you can use encoding/gobs or reflect to impment a deep copy, however these two ways can just copy the exported fields of struct. 
 
 ## 2. What is a reference variable?
 

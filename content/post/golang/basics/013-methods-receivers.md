@@ -70,6 +70,10 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 }
 ```
 
+> **NOTE:** Generally, in practice, we seldom use pointer types whose base types are slice types, map types, channel types, function types, string types and interface types. The costs of copying values of these assumed base types are very small. 
+>
+> Source: https://go101.org/article/value-copy-cost.html
+
 ## 2. Method Receivers in Concurrency
 
 I came across a satement about when to use value receiver but forget where I found:

@@ -9,7 +9,9 @@ tags:
  - practice
 ---
 
-### 1. `map[string]int` 
+## Tricks
+
+### 1. `map[string]int`
 
 ```go
 // Dup1 prints the text of each line that appears more than
@@ -42,3 +44,10 @@ func (s *MemoryStore) gc() {
 }
 ```
 
+## Common mistakes
+
+#### 1. encode non-exported fields struct value with gobs
+
+gobs can encode the exported fields of a struct value, if a sturct without exported field, when you try encode its value, you will get a `nil`. 
+
+> Functions and channels will not be sent in a gob. Attempting to encode such a value at the top level will fail. A struct field of chan or func type is treated exactly like an unexported field and is ignored. 
