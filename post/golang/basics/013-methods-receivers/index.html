@@ -57,7 +57,7 @@ The first is so that the method can modify the value that its receiver points to
 The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
 &ldquo;the value&rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value."><meta itemprop="datePublished" content="2023-09-02T22:18:20+00:00" />
 <meta itemprop="dateModified" content="2023-09-02T22:18:20+00:00" />
-<meta itemprop="wordCount" content="1147">
+<meta itemprop="wordCount" content="1188">
 <meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Methods Receivers &amp; Concurrency - Golang"/>
 <meta name="twitter:description" content="1. Different Behaviors - Pointer and Value Receiver There are two reasons to use a pointer receiver:
@@ -271,7 +271,11 @@ The second is to avoid copying the value on each method call. This can be more e
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="2-method-receivers-in-concurrency">2. Method Receivers in Concurrency</h2>
+</div><blockquote>
+<p><strong>NOTE:</strong> Generally, in practice, we seldom use pointer types whose base types are slice types, map types, channel types, function types, string types and interface types. The costs of copying values of these assumed base types are very small.</p>
+<p>Source: <a href="https://go101.org/article/value-copy-cost.html">https://go101.org/article/value-copy-cost.html</a></p>
+</blockquote>
+<h2 id="2-method-receivers-in-concurrency">2. Method Receivers in Concurrency</h2>
 <p>I came across a satement about when to use value receiver but forget where I found:</p>
 <blockquote>
 <p>You should notice that <strong><em>value receivers</em> are concurrency safe, while <em>pointer receivers</em> are not concurrency safe.</strong> So if there is no a lot copy, and you don&rsquo;t need modify any field of the value, try to use value receiver.</p>

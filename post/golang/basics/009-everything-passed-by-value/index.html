@@ -51,7 +51,7 @@
 <meta itemprop="description" content="Everything passed by value, we have talked that assignment makes a copy, value receiver makes a copy of the struct value on each method call, in this post I&rsquo;ll show you argument is also passed by value.
 1. Everything passed by value As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter.">
 
-<meta itemprop="wordCount" content="801">
+<meta itemprop="wordCount" content="824">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Everything Passed by Value - Golang"/>
 <meta name="twitter:description" content="Everything passed by value, we have talked that assignment makes a copy, value receiver makes a copy of the struct value on each method call, in this post I&rsquo;ll show you argument is also passed by value.
@@ -220,7 +220,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>As you can see, the <code>name</code> field didn&rsquo;t change which proves there is a copy when we call funciton<code>foo()</code>. But the first element of the slice has been changed which means the copy is just copy the direct value of a struct, the underlying value won&rsquo;t be copied.</p>
-<p>How to make a deep copy:</p>
+<p>How to make a deep copy: you can use encoding/gobs or reflect to impment a deep copy, however these two ways can just copy the exported fields of struct.</p>
 <h2 id="2-what-is-a-reference-variable">2. What is a reference variable?</h2>
 <p>In languages like C++ you can declare an <em>alias</em>, or an <em>alternate name</em> to an existing variable. This is called a <em>reference variable</em>.</p>
 <div class="highlight"><div class="chroma">
