@@ -1,5 +1,5 @@
 ---
-title: encoding/gob & encoding/json in Golang
+title: encoding/gob & encoding/json in Go
 date: 2023-08-31 11:38:20
 categories:
  - golang

@@ -1,5 +1,5 @@
 ---
-title: byte slice vs string in golang
+title: byte slice vs string - Go
 date: 2023-08-19 19:38:60
 categories:
  - golang

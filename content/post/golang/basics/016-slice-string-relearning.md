@@ -1,5 +1,5 @@
 ---
-title: Relearn slice in Golang
+title: Relearn slice - Go
 date: 2023-08-19 21:43:59
 categories:
  - golang

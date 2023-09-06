@@ -1,5 +1,5 @@
 ---
-title: Methods Receivers & Concurrency - Golang
+title: Methods Receivers & Concurrency - Go
 date: 2023-09-02 22:18:20
 categories:
  - golang

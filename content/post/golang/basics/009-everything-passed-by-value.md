@@ -1,5 +1,5 @@
 ---
-title: Everything Passed by Value - Golang
+title: Everything Passed by Value - Go
 date: 2023-09-2 18:37:04
 categories:
  - golang

@@ -1,5 +1,5 @@
 ---
-title: Interfaces in Golang (and Methods Receivers)
+title: Interfaces in Go (and Methods Receivers)
 date: 2023-09-02 19:58:32
 categories:
  - golang

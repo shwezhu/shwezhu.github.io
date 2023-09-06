@@ -1,5 +1,5 @@
 ---
-title: Linux常用命令行
+title: Common Commands in Linux
 date: 2023-05-03 12:40:56
 categories:
  - linux
@@ -7,30 +7,28 @@ tags:
  - linux
 ---
 
-## 1. 常用指令
+## 1. Some Commands
 
-使用 `--help `, `man your-command` 查看用法
+You can use `your-command --help `, `man your-command`, `tldr you-command` to check how to use the command. 
 
 ```shell
-# 重命名所有文件 大写到小写
+# Rename all file in current directory, from cupper-case to lower-case
 $ find . -depth -execdir rename -f 'y/A-Z/a-z/' {} \;
-# `-nr`: n显示line number行号, r是recursive, 可以理解为遍历文件文件夹
+# n: line number, r: recursive
 $ grep -nr "ul$" themes/cactus/source/css
-# Mac下查看本地IP
+# check your ip on Mac
 $ ipconfig getifaddr en0 
-# 查看自己的Public IP, Mac和Linux皆可
+# check public IP, Mac and Linux
 $ curl ifconfig.me && echo
-# 赋予可执行权限
+# make a file executable
 $ chmod u+x test.sh
-# 追踪域名DNS
+# check DNS of domain
 $ dig +trace davidzhu.xyz
-# 查看IP
+# check IP of domian
 $ dig +short davidzhu.xyz
-# 查看当前文件夹下的内容size, 其中h: human-readable, *: all, s: 整合列出
+# check files size under current folder, h: human-readable, *: all, s: sort
 $ du  -sh  *
-# 查看/下的文件size
-$ df -l
-# 把指定文件转换为16进制输出
+# output file in hexadecimal
 $ xxd a.class
 # specify header with curl
 $ curl localhost:8080/private -H "x-robot-password: beep-boo" -v
@@ -41,17 +39,17 @@ $ curl localhost:8080/chat/gpt-3 -d "message=tell me more about him" --cookie "s
 ## 2. wget
 
 ```shell
-# 下载文件并保存为指定名字
+# download the file and save it into install.sh
 wget -O install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-# 不输出任何内容, -q即quiet, 但是依然下载了文件并保存
+# -q quiet, same as above but output nothing
 wget -qO install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-# 输出install.sh的内容, 并不会保存文件, Output to stdout
-wget -O- install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+# just output the content to stdout, no file saving
+wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 ```
 
-## 3. sh -c
+In the command `wget -O-`, the option `-O` is used to specify the output file or destination. In this case, the hyphen (`-`) after `-O` indicates that the output should be sent to the standard output (stdout) instead of saving it to a file.
 
-网络上的脚本下载之后再执行需要下载后再赋予可执行权限, 有点麻烦, 分享一个简单执行脚本的方法, 使用 sh 配合 wget 直接拉去网上脚本内容然后执行, 即此处 sh 执行 wegt 的输出, 
+### 2.1. sh -c with wget
 
 ```shell
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -64,60 +62,58 @@ sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools
 /usr/bin/sh
 ```
 
-> 注意这样不安全, 因为你要确定网上的脚本没有人任何安全问题, 若执行时需要赋予管理员权限, 就要认真看看脚本内容了, 别把整个磁盘给删了, 
+> **NOTE:** this is execute the command directly, which may not safe, don't do this on you production server. Don't give it system admin permission: `sudo`. 
 
-## 4. `>` & `>>`
+## 3. `>` & `>>`
 
 ```shell
 echo "Hello, World" > output.txt
 ```
-
-`>`不是追加而是覆盖, 并且只能重定向标准输出, 注意标准输出即打印到屏幕, 所以并不只是`echo`可以, `cat`, `ls`都可以
-
-```shell
-cat a.txt
-ls a.txt
-```
-
-`>>`是追加,
 
 The `>` sign is used for redirecting the output of a program to something other than stdout (standard output, which is the terminal by default).
 
 The `>>` **appends** to a file or creates the file if it doesn't exist.
 The `>` **overwrites** the file if it exists or creates it if it doesn't exist.
 
-## 6. find
+## 4. find & grep
 
-可以说这个是最可以帮助我们省事的命令了,
-
-指定查找的文件名以及文件类型:
+### 4.1. find
 
 ```shell
-# -type f 指定找的是文件, -type d指定找的是文件夹
-$ find ~/blog -name clean.sh -type f       
-/Users/David/blog/clean.sh
-# globs 也可以这么用: "clean.*"
+# -type f is for file, -type d is for directory, -iname is case-insensitive
+$ find . -name "*header*" -type f
+./content/post/c++/basics/header-files.md
+./themes/even/layouts/partials/header.html
+./themes/even/assets/sass/_partial/_post/_header.scss
+./themes/even/assets/sass/_partial/_header.scss
+```
+
+The command below execute in the same folder as above, but output nothing:
+
+```shell
+$ find . -name "header" -type f 
+```
+
+Which indicates that pathname expansion works in double quotes, learn more: [Shell Expansion - David's Blog](https://davidzhu.xyz/post/linux/003-shell-expansion/)
+
+```shell
+# You can try this: find ~/blog -name "clean.*"
 $ find ~/blog -name "*.sh"  
 /Users/David/blog/node_modules/jake/bin/bash_completion.sh
 /Users/David/blog/backup.sh
 /Users/David/blog/clean.sh
 ```
 
-忽略名字的大小写:
+### 4.2. grep
 
 ```shell
-# case-insensitive searching
-find . -iname foo  # find foo, Foo, FOo, FOO, etc.
+# `-nr`: 'n' for line number, 'r' for recursive
+$ grep -nr "ul$" themes/cactus/source/css
 ```
 
-指定查找的目录:
+> **NOTE:** The difference between `find` and `grep` is that find will search the file recursively, if you want `grep` search files recursively you have to use `-r` option.
 
-```shell
-# search multiple dirs
-find /opt /usr /var -name foo.scala -type f
-```
-
-## 7. find & xargs
+## 5. find & xargs
 
 > **xargs** takes input and runs the commands provided as arguments with the data it reads from the input. 
 
@@ -127,13 +123,13 @@ xargs <options> <command>
 
 **e.g., Find out all the `.png` images and archive them using `tar`.**
 
-先看下`tar`怎么用的: This command creates a tar file called file.tar.gz which is the Archive of `.c` files:
+`tar`: this command creates a tar file called file.tar.gz which is the Archive of `.c` files:
 
 ```shell
 $ tar cvzf file.tar.gz *.c
 ```
 
-了解更多关于`tar`: [tar command](https://www.geeksforgeeks.org/tar-command-linux-examples/). 
+Learn more aboute `tar`: [tar command](https://www.geeksforgeeks.org/tar-command-linux-examples/). 
 
 ```shell
 $ find Pictures/tecmint/ -name "*.png" -type f -print0 | xargs -0 tar -cvzf images.tar.gz
@@ -146,7 +142,7 @@ find . -name "*.c" -print
 Print out a list of all the files whose names end in .c
 ```
 
-## 8. `find -print0` & `xargs -0`
+## 6. `find -print0` & `xargs -0`
 
 看find命令的时候总是看到`-print0`这个option, 查查资料学习一下: 
 

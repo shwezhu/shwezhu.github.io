@@ -1,5 +1,5 @@
 ---
-title: First-Class Functions in Golang
+title: First-Class Functions - Go
 date: 2023-08-14 22:28:20
 categories:
  - golang

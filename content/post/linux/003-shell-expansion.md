@@ -7,7 +7,7 @@ tags:
  - linux
 ---
 
-## 1. Shell Expansion
+## 1. Shell expansion
 
 When the shell receives a command, either from the user typing at the keyboard, or from a shell script, it breaks it up into words. After this happens, the shell performs seven operations on the words, which can change how they are interpreted. There are seven operations are collectively known as 'shell expansion'. 
 
@@ -54,7 +54,7 @@ echo "My backup folder is: ${HOME}backup"
 echo "My backup folder is: /home/dwmkerrbackup"
 ```
 
-应该尽量使用`"My backup folder is: ${HOME}backup"`, 而不是`"I like $fruit"`
+You should use`"My backup folder is: ${HOME}backup"`, not `"I like $fruit" `style. 
 
 **Tilde Expansion**
 
@@ -64,7 +64,7 @@ cd ~/effective-shell
 cd $HOME/effective-shell
 ```
 
-这里在插一段, 如果我们想看实际的expansion, 就像上面的例子那样, 我们怎么看呢? 通过`echo`就可以看到了, 
+Note that if you want check what the command  exactly is after expansion, check it with `echo`:
 
 ```shell
 $ ls
@@ -75,43 +75,37 @@ $ echo rm *.txt
 rm one.txt two.txt
 ```
 
-假如刚开始我不知道`*`代表什么, 那我现在就可以这样查看展开后的指令:
+## 2. Wildcard pattern 
 
-```shell
-$ tree -L 2
-.
-├── a.txt
-├── b.txt
-└── sub
-    └── a.txt
-$ echo grep -r "a.txt" *        
-grep -r a.txt a.txt b.txt sub
-```
-
-## 2. Wildcard Pattern
+### 2.1. Wildcard pattern in shell
 
 A string is a ***wildcard pattern*** if it contains one of the characters `?`, `*`, or `[`,  Globbing is the operation that expands a wildcard pattern into the list of **pathnames** matching the pattern.  Matching is defined by: 
 
 - A `?` (not between brackets) matches any single character. 
 - A `*` (not between brackets) matches any string, including the empty string.
 
-在上面已经提到,在 shell 中 `*` 会被 interpreter 展开, 前提是它不能在双引号里, 否则无特殊意义, 
+Don't forget  `*` may lose its special meaning in double qoutes, but it depends, at some conditions, it won't lost its special meaning for globing wich is filepath expansion. Learn more: [Shell Script Basic Syntax - David's Blog](https://davidzhu.xyz/post/linux/002-bash-basics/)
 
 ```shell
 # Expands to: tar xvf file1.tar file2.tar file42.tar ...
 tar xvf *.tar
-# 删除目录下所有以.txt结尾的文件
+# Delete all files ends with .txt under current folder
 rm *.txt
-# 使用quote就不会展开
+# with double, it won't be expanded
 $ rm "*.txt"
 rm: *.txt: No such file or directory
+# search for a string in your current directory and all other subdirectories
+$ grep -r ‘hello’ *  
+a.txt:hello world
+sub/c.txt:hello, this is...
+sub/b.txt:hello, this is...
+# check what the command is after expansion
+$ echo grep -r ‘hello’ *
 ```
 
-> Bash expands globs which appear **unquoted** in commands, by matching filenames relative to the current directory. 
+### 2.2. Metacharacter in regular expressions
 
-Note that wildcard patterns are not regular expressions, although they are a bit similar.  First of all, **they match filenames, rather than text**, and secondly, the conventions are not the same: for example, in a regular expression '*' means zero or more copies of the preceding thing.
-
-`*` 在 Regex 里的意义是匹配它前面的字符出现 0 或多次:
+In regular expression the  `*`  is a metacharacter that represents zero or more occurrences of the preceding element. 
 
 ```shell
 $ printf "colour\ncolor\ncolouur\n" | egrep 'colou*r'                          
@@ -120,27 +114,7 @@ color
 colouur
 ```
 
-Wildcard Pattern 例子, 使用 grep 查找文件内容:
-
-```shell
-# Search for a string in your current directory and all other subdirectories
-$ grep -r ‘hello’ *  
-a.txt:hello world
-sub/c.txt:hello, this is...
-sub/b.txt:hello, this is...
-# 如果好奇通配符*代表什么意思, 可以使用echo查看一下展开式, 如下:
-$ echo grep -r ‘hello’ *
-```
-
-## Conclusion
-
-- Bash一般用 `“ ”` quote 字符串, 为了防止 bash 解释错误, 写 Regex 表达式用 `‘ ’` 来 quote, 
-  - You should always [quote](https://www.gnu.org/software/bash/manual/bash.html#Quoting) regular expressions for `grep`--and [single quotes](https://www.gnu.org/software/bash/manual/bash.html#Single-Quotes) are usually best.  [source](https://askubuntu.com/a/957504/1690738) 
-- 单引号中, 所有特殊字符都失去其本身意义
-- Bash expands globs which appear **unquoted** in commands. `rm "*.txt"` won't expand. 
-- 应该尽量使用`"My backup folder is: ${HOME}backup"`, 而不是 `"I like $fruit"`
-
-参考:
+References:
 
 - [glob(7) - Linux manual page](https://man7.org/linux/man-pages/man7/glob.7.html)
 

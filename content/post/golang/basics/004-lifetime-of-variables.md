@@ -1,5 +1,5 @@
 ---
-title: Returns a Address of Local Variable - Golang
+title: Returns a Address of Local Variable - Go
 date: 2023-05-15 22:52:03
 categories:
  - golang

@@ -1,5 +1,5 @@
 ---
-title: Type and Interface Value - Golang
+title: Type and Interface Value - Go
 date: 2023-09-02 18:57:04
 categories:
  - golang

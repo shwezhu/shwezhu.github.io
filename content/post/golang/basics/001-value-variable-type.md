@@ -1,5 +1,5 @@
 ---
-title: Value Variable and Types in Golang 
+title: Value Variable and Types - Go
 date: 2023-09-05 22:00:20
 categories:
  - golang

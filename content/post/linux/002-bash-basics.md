@@ -1,5 +1,5 @@
 ---
-title: Bash Basic Syntax
+title: Shell Script Basic Syntax
 date: 2023-09-01 12:23:59
 categories:
  - linux
@@ -7,7 +7,7 @@ tags:
  - linux
 ---
 
-## 1. Run a Script
+## 1. Run a script
 
 The first line here specifies the bash interpreter will execute this script:
 
@@ -51,7 +51,7 @@ zsh: ./a.sh: bad interpreter: /bin/ash: no such file or directory
 - **o for others** (users not in the file group
 - **a for all** (all users)
 
-## 2. Bash Variables are Untyped
+## 2. Bash variables are untyped
 
 Bash does not type variables like C and related languages, defining them as integers, floating points, or string types. In Bash, all variables are strings. A string that is an integer can be used in integer arithmetic, which is the only type of math that Bash is capable of doing. 
 
@@ -104,7 +104,7 @@ $ find . -depth -execdir rename -f 'y/A-Z/a-z/' {} \;
 
 You probably wonder what is the `""`,  `*` and `;`  above, I'll explain it to you next. 
 
-## 4. Control Operators
+## 4. Control operators
 
 - `;`: Will run one command after another has finished, irrespective of the outcome of the first. This means even there is wrong in fiest command, the second can execute. 
 - `&&`: if the precceeding command goes wrong, the commands left won't be executed. 
@@ -125,6 +125,8 @@ economic fd.sh    test.sh
 ```
 
 ## 5. Quotes
+
+### 5.1. Why need qoutes 
 
 Quoting is used to remove the special meaning of ***metacharacters*** or words to the shell. Quoting can be used to disable special treatment for special characters, to prevent reserved words from being recognized as such, and to prevent ***parameter expansion***.
 
@@ -157,6 +159,8 @@ Why does this work?  Because all special characters between single quotes lose t
 |   3    | **Backquote**  Anything in between back quotes would be treated as a command and would be executed. |
 |   4    | The characters ` $`  and '`' retain their special meaning within **double quotes**. |
 
+### 5.2. Backqoute
+
 You may wonder what does back quote mean in the table, I'll give you an example:
 
 ```shell
@@ -167,6 +171,21 @@ hello world
 ```
 
 The code between back quotes will be executed, and if there is output, you can save it into a variable, 
+
+### 5.3. Double quotes
+
+The statement in the table about double qoutes probably not accurate, actually, `*` may acts like it remains its spcecial meaning in double quotes:
+
+- Without any special options:
+
+  - Inside double quotes (`"`), the asterisk retains its literal meaning and does not perform globbing (expansion to match filenames).
+
+  - For example, `"*"` will be treated as a literal asterisk character.
+
+- With some spcecial options:
+  - `find . -name "*.sh" -type f `, in the command the `-name "*.sh"` the `"*.sh"` acts as a pattern, the double quotes prevent the shell from interpreting the asterisk as a wildcard character and expanding it to match filenames in the current directory. 
+  - Therefore, in the given command, `"*.c"` is treated as a literal string by the shell. The `find` command receives the pattern `"*.c"` as an argument, and it performs the matching internally during its execution.
+  - Which acts like the `*` doesn't lose its special meaning. 
 
 ## 6. `$` & `*` in bash
 
