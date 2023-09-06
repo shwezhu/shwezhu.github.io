@@ -9,7 +9,7 @@ tags:
  - concurrency
 ---
 
-## 1. goroutines
+## 1. Goroutines
 
 When a program starts, its only goroutine is the one that calls the `main` function, so we call it the *main goroutine*. The `go` statement itself completes immediately:
 
@@ -32,7 +32,7 @@ func main() {
 
 Other than (除了) by returning from `main` or exiting the program, there is no programmatic way for one goroutine to stop another, but there are ways to communicate with a goroutine to request that it stop itself.
 
-## 2. channels
+## 2. Channels
 
 A Go channel is a means of communication that enables data sharing between goroutines. Each channel has a type associated with it. 
 
@@ -41,7 +41,7 @@ data := <- a // read from channel a
 a <- data // write to channel a  
 ```
 
-### 2.1. unbuffered channel 
+### 2.1. Unbuffered channel 
 
 This creates an unbuffered channel of type `int`. An unbuffered channel is one that can only hold one value at a time. 
 
@@ -79,7 +79,7 @@ func main() {
 }
 ```
 
-### 2.2. buffered channel
+### 2.2. Buffered channel
 
 You can also specify the buffer size of a channel when creating it. A buffered channel allows for multiple values to be stored in the channel at once before they shall be read.
 
@@ -87,7 +87,7 @@ You can also specify the buffer size of a channel when creating it. A buffered c
 ch := make(chan int, 3)
 ```
 
-### 2.3. buffered channel vs unbuffered channel 
+### 2.3. Buffered channel vs unbuffered channel 
 
 `ch := make(chan int, 1)` is totally different from `ch := make(chan int)`, the code below won't get deadlock error: 
 
@@ -101,9 +101,9 @@ func main() {
 }
 ```
 
-### 2.4. read & send on closed channel
+### 2.4. Read & send on closed channel
 
-#### 2.4.1 read on a closed channel
+#### 2.4.1 Read on a closed channel
 
 A closed channel returns its default value as many times as it is called:
 
@@ -130,7 +130,7 @@ ele, ok:= <- channel_name
 
 If the value of `ok` is true, this indicates that the channel is open and read operations can be done. 
 
-#### 2.4.2 send on a closed channel
+#### 2.4.2 Send on a closed channel
 
 An attempt to **send** value to a ***closed channel*** will panic.
 
@@ -142,7 +142,7 @@ close(ch)
 ch <- true
 ```
 
-### 2.5. read & send on a nil channel
+### 2.5. Read & send on a nil channel
 
 An attempt to **send/read** value on a ***nil channel*** will block that goroutine forerver.
 
@@ -172,87 +172,122 @@ How to know if a channel is closed only by sending value to it? Answer: You can'
 
 learn more: https://stackoverflow.com/a/61101887/16317008
 
-## 3. uses of go channels
+## 3. Use cases of channels
 
-### 3.1. synchronization between goroutines
+### 3.1. Synchronization between goroutines
 
-Traditional threading models (commonly used when writing Java, C++, and Python programs, for example) require the programmer to communicate between threads using shared memory. Typically, shared data structures are protected by locks, and threads will contend over those locks to access the data. 
+Traditional threading models require the programmer to communicate between threads using shared memory. Typically, shared data structures are protected by locks, and threads will contend over those locks to access the data. Instead of explicitly using locks to mediate access to shared data, Go encourages the use of channels to pass references to data between goroutines. 
 
-Go’s concurrency primitives - goroutines and channels - provide an elegant and distinct means of structuring concurrent software. Instead of explicitly using locks to mediate access to shared data, Go encourages the use of channels to pass references to data between goroutines. This approach ensures that **only one goroutine has access to the data at a given time**. 
+Channels **can be used to** ensure that one goroutine doesn't proceed until another goroutine has completed its work. This is particularly useful in scenarios where data needs to be shared between two or more goroutines, and it's important to ensure that the data isn't modified by multiple goroutines at the same time. 
 
-Channels can be used to ensure that one goroutine doesn't proceed until another goroutine has completed its work. This is particularly useful in scenarios where data needs to be shared between two or more goroutines, and it's important to ensure that the data isn't modified by multiple goroutines at the same time.
-
-> *Do not communicate by sharing memory; instead, share memory by communicating.*
-
-Consider a program that polls a list of URLs. In a traditional threading environment, one might structure its data like so:
+> **NOTE:** Channels **can be used to** ensure one goroutine doesn't proceed until another goroutine has completed its work. Doesn't mean channels ensure that itself. You need to implement this by utilizing channel. This is the channel use case for notification. 
 
 ```go
-type Resource struct {
-    url        string
-    polling    bool
-    lastPolled int64
-}
+// main goroutine won't exit until the worker goroutine has completed its work.
+// this is channel's use case for notification
+// you can use this to ensue that data isn't modified by multiple goroutines at a same time.
+func main() {
+	done := make(chan struct{})
 
-type Resources struct {
-    data []*Resource
-    lock *sync.Mutex
+	go func() {
+		fmt.Println("working...")
+		time.Sleep(time.Second)
+		fmt.Println("done")
+		done<- struct{}{}
+	}()
+
+	<-done
 }
 ```
 
-And then a Poller function (many of which would run in separate threads) might look something like this:
+Actually, in essence, synchronization between goroutines implemented by channel is just a channel's use case for notification. 
+
+When you pass a data let's say `cat` to an unbuffered channel in a goroutine `g1`, this operation let's say `ch <- cat` will block until another goroutine let's say`g2` takes `cat` out from the channel. After the `g2` got data, this is done,  `ch <- cat`  won't block. Then `g2` can do anything to your `cat` and `g1` can also access `cat`, which means you have to consider data race even you send your data with channel. For example. when you pass a `cat` to a channel, what if `cat` has a slice or a pointer in its field? Whenver use channel pass value, you should remember that everything passed by value in go, and the direct value not the underlying value. You pass a pointer to a channel, there is a copy for an address, not the underlying value that pinter point to. 
+
+But there is an exception, you pass a simple value to channel not struct value, not slice, not a map or pointer value, just a `int`, `string` value because these simple value has no underlying values, and everything passed by value, when a `int` passed to a channel, there is a copy for that `int` value, therefore you don't need to consider data race. 
+
+For large objects like arrays or large structs, passing a pointer is usually the logical thing to do to avoid expensive copies. But you should consider and promise that when one gouroutine **write the data**, there is no other goroutine access that data. You can use `sync.RWMutex`, you can add another for notification after the writing operation is done by using the blocking nature of a channel. 
+
+### 3.2. Use channels for notifications
+
+Notifications can be viewed as special requests/responses in which the responded values are not important. Generally, we use the blank struct type `struct{}` as the element types of the notification channels, for the size of type `struct{}` is zero, hence values of `struct{}` doesn't consume memory.
+
+### 3.3. Use Channels as counting semaphores
+
+This is the buffered channel's use case, this blog gives an excellent example:  [Share memory by communicating · The Ethically-Trained Programmer](https://blog.carlmjohnson.net/post/share-memory-by-communicating/) 
 
 ```go
-func Poller(res *Resources) {
-    for {
-        // get the least recently-polled Resource
-        // and mark it as being polled
-        res.lock.Lock()
-        var r *Resource
-        for _, v := range res.data {
-            if v.polling {
-                continue
-            }
-            if r == nil || v.lastPolled < r.lastPolled {
-                r = v
-            }
-        }
-        if r != nil {
-            r.polling = true
-        }
-        res.lock.Unlock()
-        if r == nil {
-            continue
-        }
+// Share memory by communicating
+// https://blog.carlmjohnson.net/post/share-memory-by-communicating/
 
-        // poll the URL
+package semaphores
 
-        // update the Resource's polling and lastPolled
-        res.lock.Lock()
-        r.polling = false
-        r.lastPolled = time.Nanoseconds()
-        res.lock.Unlock()
-    }
+type Semaphore struct {
+	acquire chan bool
+	release chan struct{}
+	stop chan chan struct{}
+}
+
+func New(n int) *Semaphore {
+	s := Semaphore{
+		acquire:  make(chan bool),
+		release:  make(chan struct{}),
+		stop:     make(chan chan struct{}),
+	}
+	go s.start(n)
+	return &s
+}
+
+func (s *Semaphore) start(max int) {
+	count := 0
+
+	for {
+		var acquire = s.acquire
+
+		// nil always blocks sends and read operation
+		if count >= max {
+			acquire = nil
+		}
+
+		select {
+
+		case acquire <- true:
+			count++
+
+		case s.release <- struct{}{}:
+			count--
+
+		case wait := <-s.stop:
+			close(s.acquire)
+
+			// Drain remaining calls to Release
+			for count > 0 {
+				s.release <- struct{}{}
+				count--
+			}
+			close(wait)
+			return
+		}
+	}
+}
+
+// Acquire a closed channel returns its default value as many times as it is called.
+// if s.acquire is closed, the Acquire() get called in other goroutine will return false immediately
+// if s.acquire is not closed, and no data written into it, Acquire() will block
+func (s *Semaphore) Acquire() bool {
+	return <-s.acquire
+}
+
+func (s *Semaphore) Release() {
+	<-s.release
+}
+
+func (s *Semaphore) Stop() {
+	blocker := make(chan struct{})
+	s.stop <- blocker
+	<-blocker
 }
 ```
-
-Let’s take a look at the same functionality implemented using Go idiom. In this example, Poller is a function that receives Resources to be polled from an input channel, and sends them to an output channel when they’re done.
-
-```go
-type Resource string
-
-func Poller(in, out chan *Resource) {
-    for r := range in {
-        // poll the URL
-
-        // send the processed Resource to out
-        out <- r
-    }
-}
-```
-
-There are many omissions from the above code snippets. For a walkthrough of a complete, idiomatic Go program that uses these ideas, see the Codewalk [*Share Memory By Communicating*](https://go.dev/doc/codewalk/sharemem/).
-
-A great bolg: [Share memory by communicating · The Ethically-Trained Programmer](https://blog.carlmjohnson.net/post/share-memory-by-communicating/)
 
 References:
 
@@ -260,3 +295,5 @@ References:
 - [Understanding Go Channels: An Overview for Beginners](https://www.atatus.com/blog/go-channels-overview/)
 - [Closing the Channel in Golang - Scaler Topics](https://www.scaler.com/topics/golang/closing-the-channel-in-golang/)
 - [Share memory by communicating · The Ethically-Trained Programmer](https://blog.carlmjohnson.net/post/share-memory-by-communicating/)
+
+Learn more: [Channel Use Cases -Go 101](https://go101.org/article/channel-use-cases.html) 

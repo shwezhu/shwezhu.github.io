@@ -121,3 +121,11 @@ func loadPage(title string) *Page {
 As we talked ablove, for better efficiency we usually choose to pass pointer type. Map and slice often store a lot of elements, should we pass/return a pointer to them when calling a function? 
 
 The answer is no, we don't need to do that. Learn more: [array & slice & map - golang collections](https://shaowenzhu.top/post/golang/basics/003-collections/) 
+
+> **NOTE:**  when we have a slice channel, both the slice we pass to the channel and the other slice we received from the channel share a same underlying array. If you don't want that, you probably need a copy, check the built-in copy function. 
+>
+> ```golang
+> newSlice := make([]int, len(s))
+> copy(newSlice, oldSlice)
+> ch<- newSlice
+> ```

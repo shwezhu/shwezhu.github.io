@@ -157,9 +157,13 @@ func newInt2() *int {
 
 Source: https://stackoverflow.com/a/9322182/16317008
 
+### 3.3. `var` vs `make`
+
+I have talked this in another post: https://davidzhu.xyz/post/golang/practice/006-collection-operations/
+
 ## 4. Variable redeclarations 
 
-Unlike regular variable declarations, a short variable declaration may *redeclare* variables provided they were originally declared earlier in the same block **with the same type**, and **at least one of the non-[blank](https://go.dev/ref/spec#Blank_identifier) variables is new**. As a consequence, redeclaration can only appear in a multi-variable short declaration. Redeclaration does not introduce a new variable; it just assigns a new value to the original. 
+Unlike regular variable declarations, a short variable declaration may *redeclare* variables provided they were originally **declared earlier in the same block** **with the same type**, and **at least one of the non-[blank](https://go.dev/ref/spec#Blank_identifier) variables is new**. As a consequence, redeclaration can only appear in a multi-variable short declaration. Redeclaration does not introduce a new variable; it just assigns a new value to the original. 
 
 ```go
 func main() {

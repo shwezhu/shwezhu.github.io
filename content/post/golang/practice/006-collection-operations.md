@@ -1,5 +1,5 @@
 ---
-title: The Concurrent Operations in Collections - Golang
+title: The Operations of Collections in Practice - Go
 date: 2023-09-04 21:35:55
 categories:
  - golang
@@ -10,7 +10,52 @@ tags:
  - concurrency
 ---
 
-## 1. Map
+## 1. `var` vs `make()`
+
+### 1.1. slice
+
+What's the difference between these two statement below:
+
+```go
+var cats []string
+// or
+dogs := make([]string, 0)
+```
+
+We have know that any varibles declared with `var` without an explicit initial value are given their zero value, `nil` is zero for `map`, `slice` and `pointer`. 
+
+Therefore, the value of `cats` is `nil` for sure, then for `make([]string, 0)`it allocates a memory with 0 elements, which means `dog != nil`. 
+
+But there probably no difference when you use, cause you and append a `nil` slice directly:
+
+```go
+var expired []string
+// it's totally fine to do this:
+expired = append(expired, "hello")
+fmt.Println(expired)
+```
+
+### 1.2. map
+
+But this is not the case in a map:
+
+```go
+var cats map[string]int
+// panic: assignment to entry in nil map
+cats["Coco"] = 3
+```
+
+Therefore, for map you should use `make` or `map literal`
+
+```go
+// They are equivlent
+cats := map[string]int{}
+dogs := make(map[string]int)
+```
+
+Learn more: https://stackoverflow.com/a/53575947/16317008
+
+## 2. Map
 
 **First version:**
 

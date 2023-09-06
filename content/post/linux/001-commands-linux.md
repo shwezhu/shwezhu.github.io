@@ -167,7 +167,7 @@ bash-3.2$ find . -print0
 ../CCABELD.mdx./CCABELD.css./vocabulary.css
 ```
 
-参考:
+References:
 
 - [Dozens of Unix/Linux 'find' command examples | alvinalexander.com](https://alvinalexander.com/unix/edu/examples/find.shtml)
 - [linux - What's meaning of -print0 in following command - Stack Overflow](https://stackoverflow.com/questions/56221518/whats-meaning-of-print0-in-following-command)

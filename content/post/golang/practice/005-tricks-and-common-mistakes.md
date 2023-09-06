@@ -1,5 +1,5 @@
 ---
-title: little tricks in golang
+title: Trivial Tricks and Common Mistakes in Practice - Go
 date: 2023-08-27 17:12:55
 categories:
  - golang
@@ -46,8 +46,55 @@ func (s *MemoryStore) gc() {
 
 ## Common mistakes
 
-#### 1. encode non-exported fields struct value with gobs
+#### 1. Encoding non-exported fields struct value with gobs
 
 gobs can encode the exported fields of a struct value, if a sturct without exported field, when you try encode its value, you will get a `nil`. 
 
 > Functions and channels will not be sent in a gob. Attempting to encode such a value at the top level will fail. A struct field of chan or func type is treated exactly like an unexported field and is ignored. 
+
+### 2. Using goroutines on a loop iterator variable
+
+In Go, the loop iterator variable is a single variable that takes different values in each loop iteration. 
+
+```go
+func main() {
+	var out []*int
+	for i := 0; i < 3; i++ {
+		out = append(out, &i)
+	}
+	fmt.Println("Values:", *out[0], *out[1], *out[2])
+	fmt.Println("Addresses:", out[0], out[1], out[2])
+}
+
+Values: 3 3 3
+Addresses: 0x40e020 0x40e020 0x40e020
+```
+
+For example, you might write something like this, using a closure:
+
+```go
+// this is bad
+for _, val := range values {
+	go func() {
+		fmt.Println(val)
+	}()
+}
+```
+
+Because the closures are all only bound to that one variable, **there is a very good chance that** when you run this code you will see the last element printed for every iteration instead of each value in sequence, because the goroutines will probably not begin executing until after the loop.
+
+The proper way to write that closure loop is:
+
+```go
+for _, val := range values {
+	go func(val interface{}) {
+		fmt.Println(val)
+	}(val)
+}
+```
+
+
+
+
+
+Learn more: https://github.com/golang/go/wiki/CommonMistakes
