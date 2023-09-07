@@ -48,7 +48,7 @@
 <meta itemprop="name" content="Trivial Tricks and Common Mistakes in Practice - Go">
 <meta itemprop="description" content="Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]&#43;&#43; } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker."><meta itemprop="datePublished" content="2023-08-27T17:12:55+00:00" />
 <meta itemprop="dateModified" content="2023-08-27T17:12:55+00:00" />
-<meta itemprop="wordCount" content="399">
+<meta itemprop="wordCount" content="502">
 <meta itemprop="keywords" content="golang,practice," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Trivial Tricks and Common Mistakes in Practice - Go"/>
 <meta name="twitter:description" content="Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]&#43;&#43; } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker."/>
@@ -152,7 +152,8 @@
         <li><a href="#common-mistakes">Common mistakes</a>
           <ul>
             <li></li>
-            <li><a href="#2-using-goroutines-on-a-loop-iterator-variable">2. Using goroutines on a loop iterator variable</a></li>
+            <li><a href="#2-use-var-to-declare-channel">2. Use <code>var</code> to declare channel</a></li>
+            <li><a href="#3-using-goroutines-on-a-loop-iterator-variable">3. Using goroutines on a loop iterator variable</a></li>
           </ul>
         </li>
       </ul>
@@ -229,7 +230,34 @@
 <blockquote>
 <p>Functions and channels will not be sent in a gob. Attempting to encode such a value at the top level will fail. A struct field of chan or func type is treated exactly like an unexported field and is ignored.</p>
 </blockquote>
-<h3 id="2-using-goroutines-on-a-loop-iterator-variable">2. Using goroutines on a loop iterator variable</h3>
+<h3 id="2-use-var-to-declare-channel">2. Use <code>var</code> to declare channel</h3>
+<p>Variables declared without an explicit initial value are given their zero value. Zero value for a channel is <code>nil</code>, read and write a <code>nil</code> channel will block forever. The code below is a common mistake:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kd">var</span> <span class="nx">expiredSessions</span> <span class="kd">chan</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Session</span> <span class="c1">// expiredSessions == nil
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="kd">var</span> <span class="nx">errSession</span> <span class="o">:=</span> <span class="kd">chan</span> <span class="kt">error</span> <span class="c1">// errSession == nil
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">store</span><span class="p">.</span><span class="nf">GetExpiredSessions</span><span class="p">(</span><span class="nx">expiredSessions</span><span class="p">,</span> <span class="nx">errSession</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">select</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="nx">sessions</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">expiredSessions</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">...</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Don&rsquo;t use <code>var</code> to declare channel, map or slice values, use <code>make()</code>, keep this convension you will won&rsquo;t make mistakes.</p>
+<h3 id="3-using-goroutines-on-a-loop-iterator-variable">3. Using goroutines on a loop iterator variable</h3>
 <p>In Go, the loop iterator variable is a single variable that takes different values in each loop iteration.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -296,7 +324,11 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Learn more: <a href="https://github.com/golang/go/wiki/CommonMistakes">https://github.com/golang/go/wiki/CommonMistakes</a></p>
+</div><p>Learn more:</p>
+<ul>
+<li><a href="https://go.dev/doc/effective_go#channels">https://go.dev/doc/effective_go#channels</a></li>
+<li><a href="https://github.com/golang/go/wiki/CommonMistakes">https://github.com/golang/go/wiki/CommonMistakes</a></li>
+</ul>
 
     </div>
 
