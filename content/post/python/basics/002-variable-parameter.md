@@ -1,45 +1,45 @@
 ---
-title: Python不定长参数
-date: 2023-06-06 22:51:26
+title: Python 
+date: 2023-09-07 22:51:26
 categories:
   - python
 tags:
   - python
+typora-root-url: ../../../../static
 ---
 
-### 1. 四种 argument 类型
-
-Python 参数类型有四种:
+### 1. Four types of parameter
 
 1. Default argument
 2. Keyword arguments (named arguments)
 3. Positional arguments
 4. Arbitrary arguments (variable-length arguments `*args` and `**kwargs`)
 
-### 2. parameters vs arguments
+### 2. Parameters vs arguments
 
-首先分清 parameters 和 arguments 的区别: 
+```python
+# a and b here are pamameter
+def my_sum(a, b): # function definition
+  returen a + b
+  
+# a and 99 are arguments
+my_sum(1, 99) # function call
+```
 
-![a](/002-variable-parameter/a.png)
-
-### 3. Positional arguments vs Keyword arguments
-
-Positional arguments 有点迷, 但也是我们最经常用的, 就是当我们调用函数不指定参数名, 如下面这个函数:
+### 3. Positional arguments vs keyword argumentss
 
 ```python
 def add(lhs, rhs):
   ...
 ```
 
-有很多种调用该函数的方法,  如最常见的 `add(10, 20)`, 或者 `add(lhs=10, rhs=20)`, 或者你还可以 `add(10, rhs=20)`, 
+For this function we have many ways to call it,  `add(10, 20)`,  `add(lhs=10, rhs=20)` and  `add(10, rhs=20)`, 
 
-对于`add(10, 20)` 里面的`10`, `20` 就是两个 Positional arguments, 
+- In `add(10, 20)`, `10`, `20` are positional arguments, 
 
-对于 `add(lhs=10, rhs=20)`, `lhs=10` 和` rhs=20`就是两个 Keyword arguments, 
+-  In `add(lhs=10, rhs=20)`, `lhs=10` and ` rhs=20` are keyword arguments, 
 
-对于 `add(10, rhs=20)`, `10` 是 Positional arguments, `rhs=20` 是 Keyword arguments, 
-
-![b](/002-variable-parameter/b.png)
+- In `add(10, rhs=20)`, `10`  is positional arguments, `rhs=20` is keyword arguments, 
 
 ### 4. Arbitrary positional arguments (`*args`)
 
@@ -71,7 +71,7 @@ percentage(56, 61, 73)
 
 ### 5. Arbitrary keyword arguments (**kwargs)
 
-与 arbitrary positional arguments 不同, arbitrary keyword arguments 使用 `dictionary` 存储多个被传入的 keyword arguments, 
+arbitrary keyword arguments use dictionary to store keyword arguments, 
 
 ```python
 # function with variable-length keyword arguments
@@ -88,7 +88,7 @@ def percentage(**kwargs):
 percentage(math=56, english=61, science=73)
 ```
 
-输出:
+Output:
 
 ```
 math = 56
@@ -96,7 +96,7 @@ english = 61
 science = 73
 ```
 
-看源码的时候学到一些技巧, 说一下, 这是部分代码:
+We can learn a lot from the source code if some python program:
 
 ```python
     def __prepare_create_request(
@@ -116,13 +116,11 @@ science = 73
         headers = params.pop("headers", None)
 ```
 
-上面代码 `model = params.get("model", None)` 的意思: It tries to retrieve the "model" key from the params dictionary, If that key exists, it uses that value, If that key does not exist, it uses the default value None.
+- `model = params.get("model", None)` : It tries to retrieve the "model" key from the params dictionary, If that key exists, it uses that value, If that key does not exist, it uses the default value None.
 
-对于 `deployment_id = params.pop("deployment_id", None)`: Tries to retrieve the "deployment_id" key from the params dictionary, If it exists, it uses that value and also removes that key,  If it does not exist, it uses the default value None. 
+- `deployment_id = params.pop("deployment_id", None)`: Same as `params.get()` but it will removes that key. 
 
-另外, 可以看到此函数`__prepare_create_request()`, 前半部分是一些有默认值的参数, 后面因为一些不那么主要的参数直接写成了arbitrary keyword arguments, 然后最后在函数体里遍历查找, 这么写主要是为了更好的 Readability, 即用户看到这个函数 至少知道要传什么参数, 如果函数写成 `def __prepare_create_request(cls, **params):`, 那用户也不知道具体怎么调用了, 
-
-参考:
+References:
 
 - [Python Function Arguments [4 Types] – PYnative](https://pynative.com/python-function-arguments/)
 - [Dictionary - Python](https://docs.python.org/3/tutorial/datastructures.html)

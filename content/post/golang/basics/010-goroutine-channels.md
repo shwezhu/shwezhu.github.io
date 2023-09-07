@@ -172,9 +172,19 @@ How to know if a channel is closed only by sending value to it? Answer: You can'
 
 learn more: https://stackoverflow.com/a/61101887/16317008
 
-## 3. Use cases of channels
+### 3. Should a channel has to be closed
 
-### 3.1. Synchronization between goroutines
+It's OK to leave a Go channel open forever and never close it. When the channel is no longer used, it will be garbage collected.
+
+> Note that it is only necessary to close a channel if the receiver is looking for a close. Closing the channel is a control signal on the channel indicating that no more data follows.
+>
+> [Design Question: Channel Closing](https://groups.google.com/d/msg/golang-nuts/pZwdYRGxCIk/qpbHxRRPJdUJ)
+
+Source: https://stackoverflow.com/a/8593986/16317008
+
+## 4. Use cases of channels
+
+### 4.1. Synchronization between goroutines
 
 Traditional threading models require the programmer to communicate between threads using shared memory. Typically, shared data structures are protected by locks, and threads will contend over those locks to access the data. Instead of explicitly using locks to mediate access to shared data, Go encourages the use of channels to pass references to data between goroutines. 
 
@@ -212,11 +222,11 @@ For large objects like arrays or large structs, passing a pointer is usually the
 
 Learn more: [go - does passing pointer through channel break the csp design?](https://stackoverflow.com/questions/70456785/golang-does-passing-pointer-through-channel-break-the-csp-design)
 
-### 3.2. Use channels for notifications
+### 4.2. Use channels for notifications
 
 Notifications can be viewed as special requests/responses in which the responded values are not important. Generally, we use the blank struct type `struct{}` as the element types of the notification channels, for the size of type `struct{}` is zero, hence values of `struct{}` doesn't consume memory.
 
-### 3.3. Use Channels as counting semaphores
+### 4.3. Use Channels as counting semaphores
 
 This is the buffered channel's use case, this blog gives an excellent example:  [Share memory by communicating · The Ethically-Trained Programmer](https://blog.carlmjohnson.net/post/share-memory-by-communicating/) 
 

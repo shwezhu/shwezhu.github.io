@@ -9,14 +9,14 @@ tags:
 
 ## 1. Run a script
 
-The first line here specifies the bash interpreter will execute this script:
+A hello world script:
 
 ```shell
 #!/usr/bin/bash
 echo "hello world"
 ```
 
-You can check the shells on your computer:
+The first here specifies which shell should execute this script, if you don't write, the default shell on your computer will run it, check all the shells on your computer:
 
 ```shell
 $ cat /etc/shells      
@@ -49,7 +49,7 @@ zsh: ./a.sh: bad interpreter: /bin/ash: no such file or directory
 - **u for user** (the user who is owner of the file
 - **g for group** (other users in the file group
 - **o for others** (users not in the file group
-- **a for all** (all users)
+- **a for all** (all users
 
 ## 2. Bash variables are untyped
 
@@ -205,39 +205,25 @@ name="Mark"; echo "My name is $name"
 
 The Shell (bash) considers an asterisk `*` to be a wildcard character that can match one or more occurrences of any character, including no character.
 
-The `*` character is a shortcut for “everything”. Thus, if you enter `ls *`, you will see all of the contents under your current folder.
+The “*” character is a shortcut for “everything”. Thus, if you enter `ls *`, you will see all of the contents of a given directory.  
 
-he “*” character is a shortcut for “everything”. Thus, if you enter `ls *`, you will see all of the contents of a given directory. Now try this command:
-
-```shell
-$ ls *fq
-```
-
-This lists every file that ends with a `fq`. Try this command:
-
-```shell
-$ ls /usr/bin/*.sh
-```
-
-This lists every file in `/usr/bin` directory that ends in the characters `.sh`. “*” can be placed anywhere in your pattern. For example:
-
-```shell
-$ ls Mov10*fq
-```
-
-This lists only the files that begin with ‘Mov10’ and end with `fq`.
+- `ls *fq` lists every file that ends with a `fq`. 
+- `ls /usr/bin/*.sh` This lists every file in `/usr/bin` directory that ends in the characters `.sh`. 
+- `*` can be placed anywhere in your pattern: `ls Mov10*fq`
 
 Now when you check the command we did before, you may understand:
 
 ```shell
-# rename all file under current folder form lowercase to capital
+# rename all file under current folder form lower-case to upper-case
 for file in *; 
 do
 	mv "$file" 	`echo $file |  tr 'a-z' 'A-Z'`
 done
 ```
 
-## 5. Arithmetic Expansion
+## 5. Arithmetic expansion
+
+> **Parameter Expansion**: The `$` character introduces parameter expansion, command substitution, or arithmetic expansion. [source](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
 
 The behaviour of bash interpreter is different from other programming interpreter so if you write code like below:
 

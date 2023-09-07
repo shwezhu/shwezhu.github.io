@@ -7,18 +7,18 @@ tags:
   - python
 ---
 
-### **查看python环境**
+## 1. Check python environment
 
 ```shell
 ls /usr/bin/python* & ls /usr/local/bin/python*
 ```
 
-### **`/usr/bin`, `usr/local/bin`**
+## 2. `/usr/bin` vs `usr/local/bin`
 
 > `/usr/bin` belongs to the system. Mess with it at your peril.
 > `/usr/local/bin` is yours to fool with; if you mess something up in there, you can trash `/usr/local` and the system will chug along just fine. If you trash `/usr/bin`, you'll probably end up reinstalling the OS.
 
-### **Environment Variable`$path`**
+## 3. Environment variable `$path`
 
 > The `PATH` environment variable is an essential component of any Linux system. If you ever use the command line at all, the system is relying on the `PATH` variable to find the location of the commands you are entering.
 
@@ -27,11 +27,9 @@ echo $path
 /opt/homebrew/bin /opt/homebrew/sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin
 ```
 
-More about `path`: https://linuxconfig.org/linux-path-environment-variable
+Learn more: https://linuxconfig.org/linux-path-environment-variable
 
----
-
-### **Command `python -m <module-name>`**
+## 4. **Command `python -m <module-name>`**
 
 ```shell
 python3 -m notebook
@@ -50,19 +48,15 @@ What does `-m` in `python -m pip install <package>` mean? or while upgrading pip
 > -m: run library module as a script (terminates option list)
 
 ```bash
-python3 main.py // 正常执行
-python3 -m main // 正常执行
-python3 main // 报错
-python3 -m main.py // 提示建议 去掉后缀
+python3 main.py
+python3 -m main
+python3 main // error
+python3 -m main.py // warning remove '.py'
 ```
 
----
-
-### **`if __name__ == "__main__"`**
+## 5. **`if __name__ == "__main__"`**
 
 > This is useful because you **do not** want this code block to run when importing into other files, but you **do** want it to run when invoked from the command line.
-
-两个文件 `main.py`, `cat.py`:
 
 ```python
 //cat.py:
@@ -74,19 +68,17 @@ import cat
 print('hello')
 ```
 
-命令行执行:
+Execute on shell:
 ```shell
 python main.py
 hello
-# 如果把cat.py里的第一行去掉, 执行main.py则会输出
+# After the first line in cat.py is removed
 python main.py
 mow~
 hello
 ```
 
----
-
-### **Create Virtual Environment**
+## 6. Create virtual environment
 
 **venv** (for Python 3) and **virtualenv** (for Python 2) allow you to manage separate package installations for different projects. They essentially allow you to create a “virtual” isolated Python installation and install packages into that virtual installation. When you switch projects, you can simply create a new virtual environment and not have to worry about breaking the packages installed in the other environments. It is always recommended to use a virtual environment while developing Python applications.
 
@@ -118,7 +110,7 @@ python3 -m pip freeze > requirements.txt
 
 https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/
 
-### **`pip uninstall xxx` doesn't remove dependencies**
+### 6.1. `pip uninstall xxx` doesn't remove dependencies
 
 use `pip-autoremove` to remove a package plus unused dependencies.
 ```shell
