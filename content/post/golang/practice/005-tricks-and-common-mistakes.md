@@ -52,7 +52,25 @@ gobs can encode the exported fields of a struct value, if a sturct without expor
 
 > Functions and channels will not be sent in a gob. Attempting to encode such a value at the top level will fail. A struct field of chan or func type is treated exactly like an unexported field and is ignored. 
 
-### 2. Using goroutines on a loop iterator variable
+### 2. Use `var` to declare channel 
+
+Variables declared without an explicit initial value are given their zero value. Zero value for a channel is `nil`, read and write a `nil` channel will block forever. The code below is a common mistake:
+
+```go
+go func() {
+		var expiredSessions chan []*Session // expiredSessions == nil
+		var errSession := chan error // errSession == nil
+		store.GetExpiredSessions(expiredSessions, errSession)
+		select {
+		case sessions, _ := <-expiredSessions:
+      ...
+		}
+	}()
+```
+
+Don't use `var` to declare channel, map or slice values, use `make()`, keep this convension you will won't make mistakes. 
+
+### 3. Using goroutines on a loop iterator variable
 
 In Go, the loop iterator variable is a single variable that takes different values in each loop iteration. 
 
@@ -93,8 +111,8 @@ for _, val := range values {
 }
 ```
 
+Learn more: 
 
+- https://go.dev/doc/effective_go#channels
+- https://github.com/golang/go/wiki/CommonMistakes
 
-
-
-Learn more: https://github.com/golang/go/wiki/CommonMistakes

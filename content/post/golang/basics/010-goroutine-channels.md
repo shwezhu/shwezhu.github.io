@@ -202,11 +202,15 @@ func main() {
 
 Actually, in essence, synchronization between goroutines implemented by channel is just a channel's use case for notification. 
 
+> The code above only can limit one groutine access the data at a time, if you want to prevent concurrent modifications to a variable **while retaining the ability to read**, which means enables more than one groutine to access the data, you'd typically embed a [sync.RWMutex](https://golang.org/pkg/sync/#RWMutex). This is no exemption. 
+
 When you pass a data let's say `cat` to an unbuffered channel in a goroutine `g1`, this operation let's say `ch <- cat` will block until another goroutine let's say`g2` takes `cat` out from the channel. After the `g2` got data, this is done,  `ch <- cat`  won't block. Then `g2` can do anything to your `cat` and `g1` can also access `cat`, which means you have to consider data race even you send your data with channel. For example. when you pass a `cat` to a channel, what if `cat` has a slice or a pointer in its field? Whenver use channel pass value, you should remember that everything passed by value in go, and the direct value not the underlying value. You pass a pointer to a channel, there is a copy for an address, not the underlying value that pinter point to. 
 
 But there is an exception, you pass a simple value to channel not struct value, not slice, not a map or pointer value, just a `int`, `string` value because these simple value has no underlying values, and everything passed by value, when a `int` passed to a channel, there is a copy for that `int` value, therefore you don't need to consider data race. 
 
 For large objects like arrays or large structs, passing a pointer is usually the logical thing to do to avoid expensive copies. But you should consider and promise that when one gouroutine **write the data**, there is no other goroutine access that data. You can use `sync.RWMutex`, you can add another for notification after the writing operation is done by using the blocking nature of a channel. 
+
+Learn more: [go - does passing pointer through channel break the csp design?](https://stackoverflow.com/questions/70456785/golang-does-passing-pointer-through-channel-break-the-csp-design)
 
 ### 3.2. Use channels for notifications
 
