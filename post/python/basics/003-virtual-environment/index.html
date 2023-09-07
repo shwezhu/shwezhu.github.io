@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="查看python环境 1 ls /usr/bin/python* &amp;amp; ls /usr/local/bin/python* /usr/bin, usr/local/bin /usr/bin belongs to the system. Mess with it at your peril. /usr/local/bin is yours to fool with; if you mess something up in there, you can trash /usr/local and the system will chug along just fine. If you trash /usr/bin, you&amp;rsquo;ll probably end up reinstalling the OS. Environment Variable$path The PATH environment" />
+<meta name="author" content="David" /><meta name="description" content="1. Check python environment 1 ls /usr/bin/python* &amp;amp; ls /usr/local/bin/python* 2. /usr/bin vs usr/local/bin /usr/bin belongs to the system. Mess with it at your peril. /usr/local/bin is yours to fool with; if you mess something up in there, you can trash /usr/local and the system will chug along just fine. If you trash /usr/bin, you&amp;rsquo;ll probably end up reinstalling the OS. 3. Environment variable $path The PATH environment variable is" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="Python创建虚拟环境以及&#39;Python -m&#39;和‘if __name__ == &#34;__main__&#34;’" />
-<meta property="og:description" content="查看python环境 1 ls /usr/bin/python* &amp; ls /usr/local/bin/python* /usr/bin, usr/local/bin /usr/bin belongs to the system. Mess with it at your peril. /usr/local/bin is yours to fool with; if you mess something up in there, you can trash /usr/local and the system will chug along just fine. If you trash /usr/bin, you&rsquo;ll probably end up reinstalling the OS. Environment Variable$path The PATH environment" />
+<meta property="og:description" content="1. Check python environment 1 ls /usr/bin/python* &amp; ls /usr/local/bin/python* 2. /usr/bin vs usr/local/bin /usr/bin belongs to the system. Mess with it at your peril. /usr/local/bin is yours to fool with; if you mess something up in there, you can trash /usr/local and the system will chug along just fine. If you trash /usr/bin, you&rsquo;ll probably end up reinstalling the OS. 3. Environment variable $path The PATH environment variable is" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/python/basics/003-virtual-environment/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-09T20:12:40+00:00" />
 <meta property="article:modified_time" content="2023-05-09T20:12:40+00:00" />
 <meta itemprop="name" content="Python创建虚拟环境以及&#39;Python -m&#39;和‘if __name__ == &#34;__main__&#34;’">
-<meta itemprop="description" content="查看python环境 1 ls /usr/bin/python* &amp; ls /usr/local/bin/python* /usr/bin, usr/local/bin /usr/bin belongs to the system. Mess with it at your peril. /usr/local/bin is yours to fool with; if you mess something up in there, you can trash /usr/local and the system will chug along just fine. If you trash /usr/bin, you&rsquo;ll probably end up reinstalling the OS. Environment Variable$path The PATH environment"><meta itemprop="datePublished" content="2023-05-09T20:12:40+00:00" />
+<meta itemprop="description" content="1. Check python environment 1 ls /usr/bin/python* &amp; ls /usr/local/bin/python* 2. /usr/bin vs usr/local/bin /usr/bin belongs to the system. Mess with it at your peril. /usr/local/bin is yours to fool with; if you mess something up in there, you can trash /usr/local and the system will chug along just fine. If you trash /usr/bin, you&rsquo;ll probably end up reinstalling the OS. 3. Environment variable $path The PATH environment variable is"><meta itemprop="datePublished" content="2023-05-09T20:12:40+00:00" />
 <meta itemprop="dateModified" content="2023-05-09T20:12:40+00:00" />
-<meta itemprop="wordCount" content="593">
+<meta itemprop="wordCount" content="547">
 <meta itemprop="keywords" content="python," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Python创建虚拟环境以及&#39;Python -m&#39;和‘if __name__ == &#34;__main__&#34;’"/>
-<meta name="twitter:description" content="查看python环境 1 ls /usr/bin/python* &amp; ls /usr/local/bin/python* /usr/bin, usr/local/bin /usr/bin belongs to the system. Mess with it at your peril. /usr/local/bin is yours to fool with; if you mess something up in there, you can trash /usr/local and the system will chug along just fine. If you trash /usr/bin, you&rsquo;ll probably end up reinstalling the OS. Environment Variable$path The PATH environment"/>
+<meta name="twitter:description" content="1. Check python environment 1 ls /usr/bin/python* &amp; ls /usr/local/bin/python* 2. /usr/bin vs usr/local/bin /usr/bin belongs to the system. Mess with it at your peril. /usr/local/bin is yours to fool with; if you mess something up in there, you can trash /usr/local and the system will chug along just fine. If you trash /usr/bin, you&rsquo;ll probably end up reinstalling the OS. 3. Environment variable $path The PATH environment variable is"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -142,15 +142,14 @@
   <ul>
     <li>
       <ul>
-        <li>
+        <li><a href="#1-check-python-environment">1. Check python environment</a></li>
+        <li><a href="#2-usrbin-vs-usrlocalbin">2. <code>/usr/bin</code> vs <code>usr/local/bin</code></a></li>
+        <li><a href="#3-environment-variable-path">3. Environment variable <code>$path</code></a></li>
+        <li><a href="#4-command-python--m-module-name">4. <strong>Command <code>python -m &lt;module-name&gt;</code></strong></a></li>
+        <li><a href="#5-if-__name__--__main__">5. <strong><code>if __name__ == &quot;__main__&quot;</code></strong></a></li>
+        <li><a href="#6-create-virtual-environment">6. Create virtual environment</a>
           <ul>
-            <li><a href="#查看python环境"><strong>查看python环境</strong></a></li>
-            <li><a href="#usrbin-usrlocalbin"><strong><code>/usr/bin</code>, <code>usr/local/bin</code></strong></a></li>
-            <li><a href="#environment-variablepath"><strong>Environment Variable<code>$path</code></strong></a></li>
-            <li><a href="#command-python--m-module-name"><strong>Command <code>python -m &lt;module-name&gt;</code></strong></a></li>
-            <li><a href="#if-__name__--__main__"><strong><code>if __name__ == &quot;__main__&quot;</code></strong></a></li>
-            <li><a href="#create-virtual-environment"><strong>Create Virtual Environment</strong></a></li>
-            <li><a href="#pip-uninstall-xxx-doesnt-remove-dependencies"><strong><code>pip uninstall xxx</code> doesn&rsquo;t remove dependencies</strong></a></li>
+            <li><a href="#61-pip-uninstall-xxx-doesnt-remove-dependencies">6.1. <code>pip uninstall xxx</code> doesn&rsquo;t remove dependencies</a></li>
           </ul>
         </li>
       </ul>
@@ -160,7 +159,7 @@
   </div>
 </div>
     <div class="post-content">
-      <h3 id="查看python环境"><strong>查看python环境</strong></h3>
+      <h2 id="1-check-python-environment">1. Check python environment</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -169,12 +168,12 @@
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ls /usr/bin/python* <span class="p">&amp;</span> ls /usr/local/bin/python*
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="usrbin-usrlocalbin"><strong><code>/usr/bin</code>, <code>usr/local/bin</code></strong></h3>
+</div><h2 id="2-usrbin-vs-usrlocalbin">2. <code>/usr/bin</code> vs <code>usr/local/bin</code></h2>
 <blockquote>
 <p><code>/usr/bin</code> belongs to the system. Mess with it at your peril.
 <code>/usr/local/bin</code> is yours to fool with; if you mess something up in there, you can trash <code>/usr/local</code> and the system will chug along just fine. If you trash <code>/usr/bin</code>, you&rsquo;ll probably end up reinstalling the OS.</p>
 </blockquote>
-<h3 id="environment-variablepath"><strong>Environment Variable<code>$path</code></strong></h3>
+<h2 id="3-environment-variable-path">3. Environment variable <code>$path</code></h2>
 <blockquote>
 <p>The <code>PATH</code> environment variable is an essential component of any Linux system. If you ever use the command line at all, the system is relying on the <code>PATH</code> variable to find the location of the commands you are entering.</p>
 </blockquote>
@@ -188,9 +187,8 @@
 </span></span><span class="line"><span class="cl">/opt/homebrew/bin /opt/homebrew/sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>More about <code>path</code>: <a href="https://linuxconfig.org/linux-path-environment-variable">https://linuxconfig.org/linux-path-environment-variable</a></p>
-<hr>
-<h3 id="command-python--m-module-name"><strong>Command <code>python -m &lt;module-name&gt;</code></strong></h3>
+</div><p>Learn more: <a href="https://linuxconfig.org/linux-path-environment-variable">https://linuxconfig.org/linux-path-environment-variable</a></p>
+<h2 id="4-command-python--m-module-name">4. <strong>Command <code>python -m &lt;module-name&gt;</code></strong></h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -227,18 +225,16 @@
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python3 main.py // 正常执行
-</span></span><span class="line"><span class="cl">python3 -m main // 正常执行
-</span></span><span class="line"><span class="cl">python3 main // 报错
-</span></span><span class="line"><span class="cl">python3 -m main.py // 提示建议 去掉后缀
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python3 main.py
+</span></span><span class="line"><span class="cl">python3 -m main
+</span></span><span class="line"><span class="cl">python3 main // error
+</span></span><span class="line"><span class="cl">python3 -m main.py // warning remove <span class="s1">&#39;.py&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><hr>
-<h3 id="if-__name__--__main__"><strong><code>if __name__ == &quot;__main__&quot;</code></strong></h3>
+</div><h2 id="5-if-__name__--__main__">5. <strong><code>if __name__ == &quot;__main__&quot;</code></strong></h2>
 <blockquote>
 <p>This is useful because you <strong>do not</strong> want this code block to run when importing into other files, but you <strong>do</strong> want it to run when invoked from the command line.</p>
 </blockquote>
-<p>两个文件 <code>main.py</code>, <code>cat.py</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -259,7 +255,7 @@
 </span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>命令行执行:</p>
+</div><p>Execute on shell:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -272,14 +268,13 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">python main.py
 </span></span><span class="line"><span class="cl">hello
-</span></span><span class="line"><span class="cl"><span class="c1"># 如果把cat.py里的第一行去掉, 执行main.py则会输出</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># After the first line in cat.py is removed</span>
 </span></span><span class="line"><span class="cl">python main.py
 </span></span><span class="line"><span class="cl">mow~
 </span></span><span class="line"><span class="cl">hello
 </span></span></code></pre></td></tr></table>
 </div>
-</div><hr>
-<h3 id="create-virtual-environment"><strong>Create Virtual Environment</strong></h3>
+</div><h2 id="6-create-virtual-environment">6. Create virtual environment</h2>
 <p><strong>venv</strong> (for Python 3) and <strong>virtualenv</strong> (for Python 2) allow you to manage separate package installations for different projects. They essentially allow you to create a “virtual” isolated Python installation and install packages into that virtual installation. When you switch projects, you can simply create a new virtual environment and not have to worry about breaking the packages installed in the other environments. It is always recommended to use a virtual environment while developing Python applications.</p>
 <p>To create a virtual environment, go to your project’s directory and run <code>venv</code>. If you are using Python 2, replace venv with <code>virtualenv</code> in the below commands.</p>
 <div class="highlight"><div class="chroma">
@@ -329,7 +324,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><a href="https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/">https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/</a></p>
-<h3 id="pip-uninstall-xxx-doesnt-remove-dependencies"><strong><code>pip uninstall xxx</code> doesn&rsquo;t remove dependencies</strong></h3>
+<h3 id="61-pip-uninstall-xxx-doesnt-remove-dependencies">6.1. <code>pip uninstall xxx</code> doesn&rsquo;t remove dependencies</h3>
 <p>use <code>pip-autoremove</code> to remove a package plus unused dependencies.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

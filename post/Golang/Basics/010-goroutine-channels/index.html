@@ -48,7 +48,7 @@
 <meta itemprop="name" content="Goroutine &amp; Channel - Go Basics">
 <meta itemprop="description" content="1. Goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly"><meta itemprop="datePublished" content="2023-08-24T10:06:10+00:00" />
 <meta itemprop="dateModified" content="2023-08-24T10:06:10+00:00" />
-<meta itemprop="wordCount" content="1716">
+<meta itemprop="wordCount" content="1789">
 <meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Goroutine &amp; Channel - Go Basics"/>
 <meta name="twitter:description" content="1. Goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly"/>
@@ -151,13 +151,14 @@
             <li><a href="#23-buffered-channel-vs-unbuffered-channel">2.3. Buffered channel vs unbuffered channel</a></li>
             <li><a href="#24-read--send-on-closed-channel">2.4. Read &amp; send on closed channel</a></li>
             <li><a href="#25-read--send-on-a-nil-channel">2.5. Read &amp; send on a nil channel</a></li>
+            <li><a href="#3-should-a-channel-has-to-be-closed">3. Should a channel has to be closed</a></li>
           </ul>
         </li>
-        <li><a href="#3-use-cases-of-channels">3. Use cases of channels</a>
+        <li><a href="#4-use-cases-of-channels">4. Use cases of channels</a>
           <ul>
-            <li><a href="#31-synchronization-between-goroutines">3.1. Synchronization between goroutines</a></li>
-            <li><a href="#32-use-channels-for-notifications">3.2. Use channels for notifications</a></li>
-            <li><a href="#33-use-channels-as-counting-semaphores">3.3. Use Channels as counting semaphores</a></li>
+            <li><a href="#41-synchronization-between-goroutines">4.1. Synchronization between goroutines</a></li>
+            <li><a href="#42-use-channels-for-notifications">4.2. Use channels for notifications</a></li>
+            <li><a href="#43-use-channels-as-counting-semaphores">4.3. Use Channels as counting semaphores</a></li>
           </ul>
         </li>
       </ul>
@@ -417,8 +418,15 @@
 </blockquote>
 <p>How to know if a channel is closed only by sending value to it? Answer: You can&rsquo;t.</p>
 <p>learn more: <a href="https://stackoverflow.com/a/61101887/16317008">https://stackoverflow.com/a/61101887/16317008</a></p>
-<h2 id="3-use-cases-of-channels">3. Use cases of channels</h2>
-<h3 id="31-synchronization-between-goroutines">3.1. Synchronization between goroutines</h3>
+<h3 id="3-should-a-channel-has-to-be-closed">3. Should a channel has to be closed</h3>
+<p>It&rsquo;s OK to leave a Go channel open forever and never close it. When the channel is no longer used, it will be garbage collected.</p>
+<blockquote>
+<p>Note that it is only necessary to close a channel if the receiver is looking for a close. Closing the channel is a control signal on the channel indicating that no more data follows.</p>
+<p><a href="https://groups.google.com/d/msg/golang-nuts/pZwdYRGxCIk/qpbHxRRPJdUJ">Design Question: Channel Closing</a></p>
+</blockquote>
+<p>Source: <a href="https://stackoverflow.com/a/8593986/16317008">https://stackoverflow.com/a/8593986/16317008</a></p>
+<h2 id="4-use-cases-of-channels">4. Use cases of channels</h2>
+<h3 id="41-synchronization-between-goroutines">4.1. Synchronization between goroutines</h3>
 <p>Traditional threading models require the programmer to communicate between threads using shared memory. Typically, shared data structures are protected by locks, and threads will contend over those locks to access the data. Instead of explicitly using locks to mediate access to shared data, Go encourages the use of channels to pass references to data between goroutines.</p>
 <p>Channels <strong>can be used to</strong> ensure that one goroutine doesn&rsquo;t proceed until another goroutine has completed its work. This is particularly useful in scenarios where data needs to be shared between two or more goroutines, and it&rsquo;s important to ensure that the data isn&rsquo;t modified by multiple goroutines at the same time.</p>
 <blockquote>
@@ -468,9 +476,9 @@
 <p>But there is an exception, you pass a simple value to channel not struct value, not slice, not a map or pointer value, just a <code>int</code>, <code>string</code> value because these simple value has no underlying values, and everything passed by value, when a <code>int</code> passed to a channel, there is a copy for that <code>int</code> value, therefore you don&rsquo;t need to consider data race.</p>
 <p>For large objects like arrays or large structs, passing a pointer is usually the logical thing to do to avoid expensive copies. But you should consider and promise that when one gouroutine <strong>write the data</strong>, there is no other goroutine access that data. You can use <code>sync.RWMutex</code>, you can add another for notification after the writing operation is done by using the blocking nature of a channel.</p>
 <p>Learn more: <a href="https://stackoverflow.com/questions/70456785/golang-does-passing-pointer-through-channel-break-the-csp-design">go - does passing pointer through channel break the csp design?</a></p>
-<h3 id="32-use-channels-for-notifications">3.2. Use channels for notifications</h3>
+<h3 id="42-use-channels-for-notifications">4.2. Use channels for notifications</h3>
 <p>Notifications can be viewed as special requests/responses in which the responded values are not important. Generally, we use the blank struct type <code>struct{}</code> as the element types of the notification channels, for the size of type <code>struct{}</code> is zero, hence values of <code>struct{}</code> doesn&rsquo;t consume memory.</p>
-<h3 id="33-use-channels-as-counting-semaphores">3.3. Use Channels as counting semaphores</h3>
+<h3 id="43-use-channels-as-counting-semaphores">4.3. Use Channels as counting semaphores</h3>
 <p>This is the buffered channel&rsquo;s use case, this blog gives an excellent example:  <a href="https://blog.carlmjohnson.net/post/share-memory-by-communicating/">Share memory by communicating · The Ethically-Trained Programmer</a></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
