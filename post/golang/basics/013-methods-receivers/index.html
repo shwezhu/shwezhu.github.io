@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Different Behaviors - Pointer and Value Receiver There are two reasons to use a pointer receiver:
+<meta name="author" content="David" /><meta name="description" content="1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
 The first is so that the method can modify the value that its receiver points to.
 The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
 &amp;ldquo;the value&amp;rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value." />
@@ -43,7 +43,7 @@ The second is to avoid copying the value on each method call. This can be more e
 
 
 <meta property="og:title" content="Methods Receivers &amp; Concurrency - Go" />
-<meta property="og:description" content="1. Different Behaviors - Pointer and Value Receiver There are two reasons to use a pointer receiver:
+<meta property="og:description" content="1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
 The first is so that the method can modify the value that its receiver points to.
 The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
 &ldquo;the value&rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value." />
@@ -52,15 +52,15 @@ The second is to avoid copying the value on each method call. This can be more e
 <meta property="article:published_time" content="2023-09-02T22:18:20+00:00" />
 <meta property="article:modified_time" content="2023-09-02T22:18:20+00:00" />
 <meta itemprop="name" content="Methods Receivers &amp; Concurrency - Go">
-<meta itemprop="description" content="1. Different Behaviors - Pointer and Value Receiver There are two reasons to use a pointer receiver:
+<meta itemprop="description" content="1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
 The first is so that the method can modify the value that its receiver points to.
 The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
 &ldquo;the value&rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value."><meta itemprop="datePublished" content="2023-09-02T22:18:20+00:00" />
 <meta itemprop="dateModified" content="2023-09-02T22:18:20+00:00" />
-<meta itemprop="wordCount" content="1188">
+<meta itemprop="wordCount" content="1130">
 <meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Methods Receivers &amp; Concurrency - Go"/>
-<meta name="twitter:description" content="1. Different Behaviors - Pointer and Value Receiver There are two reasons to use a pointer receiver:
+<meta name="twitter:description" content="1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
 The first is so that the method can modify the value that its receiver points to.
 The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
 &ldquo;the value&rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value."/>
@@ -155,9 +155,9 @@ The second is to avoid copying the value on each method call. This can be more e
   <ul>
     <li>
       <ul>
-        <li><a href="#1-different-behaviors---pointer-and-value-receiver">1. Different Behaviors - Pointer and Value Receiver</a></li>
-        <li><a href="#2-method-receivers-in-concurrency">2. Method Receivers in Concurrency</a></li>
-        <li><a href="#3-pointer-receiver---a-practical-example">3. Pointer Receiver - a Practical Example</a></li>
+        <li><a href="#1-different-behaviors---pointer-and-value-receiver">1. Different behaviors - pointer and value receiver</a></li>
+        <li><a href="#2-method-receivers-in-concurrency">2. Method receivers in concurrency</a></li>
+        <li><a href="#3-pointer-receiver---a-practical-example">3. Pointer receiver - a practical example</a></li>
       </ul>
     </li>
   </ul>
@@ -165,7 +165,7 @@ The second is to avoid copying the value on each method call. This can be more e
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-different-behaviors---pointer-and-value-receiver">1. Different Behaviors - Pointer and Value Receiver</h2>
+      <h2 id="1-different-behaviors---pointer-and-value-receiver">1. Different behaviors - pointer and value receiver</h2>
 <p>There are two reasons to use a pointer receiver:</p>
 <ul>
 <li>
@@ -275,7 +275,7 @@ The second is to avoid copying the value on each method call. This can be more e
 <p><strong>NOTE:</strong> Generally, in practice, we seldom use pointer types whose base types are slice types, map types, channel types, function types, string types and interface types. The costs of copying values of these assumed base types are very small.</p>
 <p>Source: <a href="https://go101.org/article/value-copy-cost.html">https://go101.org/article/value-copy-cost.html</a></p>
 </blockquote>
-<h2 id="2-method-receivers-in-concurrency">2. Method Receivers in Concurrency</h2>
+<h2 id="2-method-receivers-in-concurrency">2. Method receivers in concurrency</h2>
 <p>I came across a satement about when to use value receiver but forget where I found:</p>
 <blockquote>
 <p>You should notice that <strong><em>value receivers</em> are concurrency safe, while <em>pointer receivers</em> are not concurrency safe.</strong> So if there is no a lot copy, and you don&rsquo;t need modify any field of the value, try to use value receiver.</p>
@@ -349,7 +349,7 @@ The second is to avoid copying the value on each method call. This can be more e
 </div>
 </div><p>A similar pitfall can occur with types that maintain slices of values, and of course there is the possibility for an <a href="http://dave.cheney.net/2015/11/18/wednesday-pop-quiz-spot-the-race">unintended data race</a>.</p>
 <p>In short, I think that you should prefer declaring methods on <code>*T</code> unless you have a strong reason to do otherwise.</p>
-<h2 id="3-pointer-receiver---a-practical-example">3. Pointer Receiver - a Practical Example</h2>
+<h2 id="3-pointer-receiver---a-practical-example">3. Pointer receiver - a practical example</h2>
 <p><code>error</code> interface:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -456,32 +456,7 @@ The second is to avoid copying the value on each method call. This can be more e
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Cannot use &#39;MyError{message: text}&#39; (type MyError) as the type error Type does not implement &#39;error&#39; as the &#39;Error&#39; method has a pointer receiver
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>There is a good explaination: <a href="https://stackoverflow.com/a/46307148/16317008">https://stackoverflow.com/a/46307148/16317008</a></p>
-<p>If your interface is declared like this:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">interface</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">BasicInfo</span><span class="p">()</span> <span class="nx">MemberBasicInfo</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Then any type that implements a <code>BasicInfo() MemberBasicInfo</code> will fulfil the interface.</p>
-<p>In your case, you then created this method:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">member</span> <span class="o">*</span><span class="nx">Member</span><span class="p">)</span> <span class="nf">BasicInfo</span><span class="p">()</span> <span class="nx">MemberBasicInfo</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>That means that the type <code>*Member</code> fulfils the interface.</p>
-<p>But.. note the <code>*</code> there. <code>Member</code> does not implement the interface, it is <code>*Member</code> who does.</p>
+</div><p>Lear more about why it&rsquo;s doesn&rsquo;t work: <a href="https://davidzhu.xyz/post/golang/basics/006-interfaces/#2-first-try---type-admin-isnt-adimin">Interfaces in Go (and Methods Receivers) - David&rsquo;s Blog</a></p>
 
     </div>
 
