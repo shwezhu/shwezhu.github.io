@@ -87,7 +87,7 @@ This means you will get all the commands that your redis server received from cl
 
 And if your application `C1` use a Redis server `S` to save data, your another application `C2` that connects to server `S` can get that data too. When you run `redis-cli`, it start a client, and you can input `keys *` to query all key saved on your Redis server. 
 
-## 3. Use Redis from your application
+## 3. Use Redis for your application
 
 Of course using Redis just from the command line interface(*`redis-cli`*) is not enough as the goal is to use it from your application. In order to do so you need to download and install a Redis client library for your programming language. You'll find a [full list of clients for different languages in this page](https://redis.io/clients).
 
@@ -95,7 +95,7 @@ Of course using Redis just from the command line interface(*`redis-cli`*) is not
 
 ### 4.1. Session Store
 
-There are many ways to save sessions, in-memory, file, database and Redis, if you don't know about session, please refer to: [Cookie & Session | 橘猫小八的鱼](https://davidzhu.xyz/2023/08/17/CS-Basics/005-session-cookie/)
+There are many ways to save sessions, in-memory, file, database and Redis, if you don't know about session, please refer to: [Cookie & Session | 橘猫小八的鱼](https://davidzhu.xyz/post/cs-basics/005-session-cookie/)
 
 ### 4.2. Caching
 

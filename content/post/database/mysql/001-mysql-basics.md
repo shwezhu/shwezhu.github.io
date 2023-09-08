@@ -10,7 +10,6 @@ tags:
 
 ```mysql
 show tables;
-
 show columns from user;
 
 ALTER TABLE user

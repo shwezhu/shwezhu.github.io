@@ -1,6 +1,6 @@
 ---
-title: Golang错误处理
-date: 2023-05-17 17:20:06
+title: Error handling - Go
+date: 2023-09-08 09:13:06
 categories:
  - golang
  - basics
@@ -18,9 +18,7 @@ type error interface {
 }
 ```
 
-接口 error 是 built-in type, the `error` type, as with all built in types, is [predeclared](https://go.dev/doc/go_spec.html#Predeclared_identifiers) in the [universe block](https://go.dev/doc/go_spec.html#Blocks). 
-
-The most commonly-used `error` implementation is the [errors](https://go.dev/pkg/errors/) package’s **unexported** `errorString` type.
+Interface `error` is a built-in type, as with all other built in types, is [predeclared](https://go.dev/doc/go_spec.html#Predeclared_identifiers) in the [universe block](https://go.dev/doc/go_spec.html#Blocks). The most commonly-used `error` implementation is the [errors](https://go.dev/pkg/errors/) package’s **unexported** `errorString` type.
 
 ```go
 // errorString is a trivial implementation of error.
@@ -33,7 +31,7 @@ func (e *errorString) Error() string {
 }
 ```
 
- ` error`  是 interface, 故不可有 instance, ` errorString` 实现了 `error`, 它在 errors package 里, 但首字母是小写因此是私有, 所以不可在其他 package 直接创建  ` errorString` 的 instance, 但是 package errors 里提供了公有方法, 可以用来创建  ` errorString` 的 instance, 
+`errorString` is an unexported type which means we cannot use it directly outside of [errors](https://go.dev/pkg/errors/) package, but we can use `New` function declared in the same package to create a value of `errorString`. 
 
 ``` go
 // New returns an error that formats as the given text.
@@ -42,149 +40,228 @@ func New(text string) error {
 }
 ```
 
-这里有个问题, New 的返回类型是 error, 但是该函数返回的一个地址, 这没问题吗? 可参考: [Pointer Receiver vs Value Receiver](https://davidzhu.xyz/2023/08/15/Golang/Basics/013-pointer-receiver/)
+The type of function returns is an `error` but it actually returns a pointer, a little weird probably for newb from c++. In Go everything can implement a interface an `int`, `string` even a `pointer`. It's all about if the method set of that type contians all the methods declared in a interface, learn more: [Methods Receivers & Concurrency - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/013-methods-receivers/#3-pointer-receiver---a-practical-example)
 
-## 2. `fmt` package 
+## 2. Create an error value
 
-> The [fmt](https://go.dev/pkg/fmt/) package formats an `error` value by calling its `Error() string` method. 
+### 2.1. Ways to create an error value
 
-若某类型是 error 子类型, 则可以直接打印, 因为实现接口 error 的类型必须实现其函数 `Error() string` , 而 ` fmt` package 里面的函数遇到 error 类型的错误, 会掉用其 `Error()  string` 函数, 打印对应字符串, 
+You can create an `error` with these functions:
+
+- `errors.New()`, 
+- `fmt.Errorf()`, often used to provide conetxt. 
+- Use a custom error type, typically used for provide error details. 
+
+Note that `errors.New()` and `fmt.Errorf()` just return an error value that with the string you passed, not something magic. An error value likes an `int` value, struct value or pointer value. Learn more: [Errors are values](https://go.dev/blog/errors-are-values) 
+
+e.g.,
+
+Functions usually need to return an error to indicate an abnormal state in Go. For example, the `os.Open` function returns a non-nil `error` value when it fails to open a file:
 
 ```go
-func Sqrt(f float64) (float64, error) {
-	if f < 0 {
-		return 0, errors.New("math: square root of negative number")
-	}
-	return 1, nil
-}
-
-func main() {
-	_, err := Sqrt(-1)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
+func Open(name string) (file *File, err error)
 ```
 
-## 3. `fmt.Errorf()`
-
-`fmt.Errorf()` formats a string according to `Printf`’s rules and returns it as an `error` created by `errors.New`.
+If you want return an error you might want use `errors.New` which defined in [errors](https://go.dev/pkg/errors/) package we have talked above:
 
 ```go
 func Sqrt(f float64) (float64, error) {
     if f < 0 {
-        return 0, fmt.Errorf("math: square root of negative number %g", f)
+        return 0, errors.New("math: square root of negative number")
     }
     // implementation
 }
 ```
 
-参考: https://go.dev/blog/error-handling-and-go 另外此文章关于 Simplifying repetitive error handling 写的很好, 可以参考
+### 2.2. Summarize the context when create an error value
 
-## 4. 分析Go错误处理
+**It is the error implementation’s responsibility to summarize the context.** The error returned by `os.Open` formats as “open /etc/passwd: permission denied,” not just “permission denied.” The error returned by our `Sqrt` is missing information about the invalid argument.
 
-借鉴一下 Go 官方是怎么处理错误的, 
-
-下面 TCP 连接相关的代码:
+To add that information, a useful function is the `fmt` package’s `Errorf`. It formats a string according to `Printf`’s rules and returns it as an `error` created by `errors.New`.
 
 ```go
-func main() {
-...
-	sock, err := net.Listen("tcp", addr)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("Listening on", addr)
-
-	for {
-		conn, err := sock.Accept()
-		if err != nil {
-			panic(err)
+func Sqrt(f float64) (float64, error) {
+    if f < 0 {
+    	return 0, fmt.Errorf("math: square root of negative number %g", f)
 		}
-		go handle(conn, args.Cmd)
-	}
+    // implementation
 }
 ```
 
-`net.Listen("tcp", addr)`返回了err, 顺着这个函数查找, 找到了返回 err 的函数 (为了方便看, 我删除了很多代码, 只保留了部分):
+Sometimes we usually return a new error value which contains the context:
 
 ```go
-func setDefaultSockopts(s, family, sotype int, ipv6only bool) error {
-  if (sotype == syscall.SOCK_DGRAM || sotype == syscall.SOCK_RAW) && family != syscall.AF_UNIX {
-		// Allow broadcast.
-		return os.NewSyscallError(...)
-	}
-	return nil
+if err != nil {
+  return nil, fmt.Errorf("math: failed to calculate sqrt: %v", err)
 }
 ```
 
-该函数的返回值是 `error`, 注意 `error` 是内置接口, 不要因为 error 是小写 就不知道它是什么了: 
+## 3. Some common ways for error handling 
+
+We have talked that there are three ways to create an error, now let's discuss how to use them in practice. 
+
+### 3.1. Create error value with a custom error type - provide details
+
+In many cases `fmt.Errorf` is good enough, but since `error` is an interface, you can use arbitrary data structures as error values, to allow callers to inspect the details of the error. 
+
+The [json](https://go.dev/pkg/encoding/json/) package specifies a `SyntaxError` type that the `json.Decode` function returns when it encounters a syntax error parsing a JSON blob.
 
 ```go
-// The error built-in interface type is the conventional interface for
-// representing an error condition, with the nil value representing no error.
-type error interface {
-	Error() string
+type SyntaxError struct {
+    msg    string // description of error
+    Offset int64  // error occurred after reading Offset bytes
 }
+
+func (e *SyntaxError) Error() string { return e.msg }
 ```
 
-上面的代码返回的是`os.NewSyscallError(...)`, 看看`os.NewSyscallError(...)`具体的实现:
+The `Offset` field isn’t even shown in the default formatting of the error, but callers can use it to add file and line information to their error messages:
 
 ```go
-func NewSyscallError(syscall string, err error) error {
-	if err == nil {
-		return nil
-	}
-	return &SyscallError{syscall, err}
+if err := dec.Decode(&val); err != nil {
+    if serr, ok := err.(*json.SyntaxError); ok {
+        // serr.Offset provide detials about error
+        line, col := findLine(f, serr.Offset)
+        return fmt.Errorf("%s:%d:%d: %v", f.Name(), line, col, err)
+    }
+    return err
 }
 ```
 
-终于找到源头, `os.NewSyscallError(...)` 返回值是 `error` 类型, 然后它返回的是 `&SyscallError{syscall, err}`, 这个语法你可以简单理解为该函数返回了一个匿名对象的引用 (Go里没有对象的概念哦, 这样说是方便理解), 这个匿名对象不会在函数返回后被清理掉, 具体可参考: [关于Golang函数返回局部变量的地址的问题](https://davidzhu.xyz/2023/05/15/Golang/Basics/004-lifetime-of-variables/), 
+### 3.2. Don't return error dirctly - avoid repetitive error handling
 
-显然 `SyscallError` 也实现了接口 `error`, 这样它才能属于 `error`, 就像最开始介绍的那个 `errors` 包里的 `errorString`, 看看 `SyscallError`:
+#### 3.2.1. Return a `bool` value instead to indicate an abnormal state
+
+Here’s a simple example from the `bufio` package’s [`Scanner`](https://go.dev/pkg/bufio/#Scanner) type. Its [`Scan`](https://go.dev/pkg/bufio/#Scanner.Scan) method performs the underlying I/O, which can of course lead to an error. Yet the `Scan` method does not expose an error at all. Instead, it returns a boolean, and a separate method, to be run at the end of the scan, reports whether an error occurred. Client code looks like this:
 
 ```go
-type SyscallError struct {
-	Syscall string
-	Err     error
+scanner := bufio.NewScanner(input)
+for scanner.Scan() {
+    token := scanner.Text()
+    // process token
 }
-
-// 这里也可以发现, 自定义一个错误类型必须实现接口 `Error() string`, 
-// 直接打印该错误的一个实例, 就是打印该错误在实现 `Error() string` 时返回的内容, 
-// 即 SyscallError sError, println(sError) 就是打印的 return e.Syscall + ": " + e.Err.Error()
-func (e *SyscallError) Error() string { return e.Syscall + ": " + e.Err.Error() }
+if err := scanner.Err(); err != nil {
+    // process the error
+}
 ```
 
-唔~, 终于找到你了, 再来看看上面那个“简单的” `errorString `的实现:
+Sure, there is a nil check for an error, but it appears and executes only once. The `Scan` method could instead have been defined as
 
 ```go
-// errors.go
-// errorString is a trivial implementation of error.
-type errorString struct {
-	s string
-}
+func (s *Scanner) Scan() (token []byte, error)
+```
 
-func (e *errorString) Error() string {
-	return e.s
+and then the example user code might be (depending on how the token is retrieved),
+
+```
+scanner := bufio.NewScanner(input)
+for {
+    token, err := scanner.Scan()
+    if err != nil {
+        return err // or maybe break
+    }
+    // process token
 }
 ```
 
-ummm, 如果 `errorString` 是注释中所说的那样, 那难道`SyscallError` 不是 a trivial implementation of error 吗?
+This isn’t very different, but there is one important distinction. In this code, the client must check for an error on every iteration, but in the real `Scanner` API, the error handling is abstracted away from the key API element, which is iterating over tokens. With the real API, the client’s code therefore feels more natural: loop until done, then worry about errors. Error handling does not obscure the flow of control.
 
-到了这, 相信对于Go的错误处理机制也有个简单的概念, 你可以使用简单的`errors`里面的人家预先帮你实现好的`error`, 你也可以自己定一个自己的error, 就像`SyscallError`那样, 
+#### 3.2.1. Return nothing 
 
-如果我们想自己实现一个呢, 请参考: [Learn how to handle errors in Go (Golang) | golangbot.com](https://golangbot.com/error-handling/)
+```go
+_, err = fd.Write(p0[a:b])
+if err != nil {
+    return err
+}
+_, err = fd.Write(p1[c:d])
+if err != nil {
+    return err
+}
+_, err = fd.Write(p2[e:f])
+if err != nil {
+    return err
+}
+// and so on
+```
 
-## 5. 推荐的错误处理方法
+The code above is very repetitive. A function literal closing over the error variable would help:
 
-在知乎看到[一个回答](https://www.zhihu.com/question/330263279/answer/726217922), 总结的很好, 摘一段在这当个笔记:
+```go
+var err error
+write := func(buf []byte) {
+    if err != nil {
+        return
+    }
+    _, err = w.Write(buf)
+}
+write(p0[a:b])
+write(p1[c:d])
+write(p2[e:f])
+// and so on
+if err != nil {
+    return err
+}
+```
 
-Golang 中的错误处理的哲学和 C 语言一样, 函数通过返回错误类型 `error` 或者 `bool` 类型(不需要区分多种错误状态时) 表明函数的执行结果, 调用检查返回的错误类型值是否是 `nil` 来判断调用结果, 
+This pattern works well, but requires a closure in each function doing the writes; a separate helper function is clumsier to use because the `err` variable needs to be maintained across calls (try it).
 
-这个设计一直被吐槽太繁琐, 作为主要用GO的攻城狮, 经常写 `if err!=nil`, 但是如果想偷懒, 少带了上下文信息, 直接写 `if err != nil { return err }`了 或者 `fmt.Errorf` 携带的上下文信息太少了的话, 看到错误日志也会一脸懵逼, 难以定位问题
+We can make this cleaner, more general, and reusable by borrowing the idea from the `Scan` method above.
 
-官方在 2011 年就发过[一篇博客](https://go.dev/blog/error-handling-and-go)教大家如何在Go中处理error, error 是一个内建的 interface， 鼓励大家用好自定义错误类型，常用的范式有三种：
+I defined an object called an `errWriter`, something like this:
 
-- ﻿一是用 `errors.New(str string)` 定义错误常量Q, 让调用方去判断返回的err 是否等于这个常量, 来进行区分处理
-- ﻿二是用 `fmt.Errorf(fmt string, args. .. interface{})`增加一些上下文信息, 用文字的方式告诉调用方哪里出错了, 让调用方打错误日志出来
-- ﻿三是自定义 struct type, 实现 error 接口, 调用方用类型断言转成特定的 struct type, 拿到更结构化的错误信息
+```go
+type errWriter struct {
+    w   io.Writer
+    err error
+}
+```
+
+and gave it one method, `write.` It doesn’t need to have the standard `Write` signature, and it’s lower-cased in part to highlight the distinction. The `write` method calls the `Write` method of the underlying `Writer` and records the first error for future reference:
+
+```go
+func (ew *errWriter) write(buf []byte) {
+    if ew.err != nil {
+        return
+    }
+    _, ew.err = ew.w.Write(buf)
+}
+```
+
+As soon as an error occurs, the `write` method becomes a no-op but the error value is saved.
+
+Given the `errWriter` type and its `write` method, the code above can be refactored:
+
+```go
+ew := &errWriter{w: fd}
+ew.write(p0[a:b])
+ew.write(p1[c:d])
+ew.write(p2[e:f])
+// and so on
+if ew.err != nil {
+    return ew.err
+}
+```
+
+This is cleaner, even compared to the use of a closure, and also makes the actual sequence of writes being done easier to see on the page. There is no clutter anymore. Programming with error values (and interfaces) has made the code nicer.
+
+In fact, this pattern appears often in the standard library. The [`archive/zip`](https://go.dev/pkg/archive/zip/) and [`net/http`](https://go.dev/pkg/net/http/) packages use it. More salient to this discussion, the [`bufio` package’s `Writer`](https://go.dev/pkg/bufio/) is actually an implementation of the `errWriter` idea. Although `bufio.Writer.Write` returns an error, that is mostly about honoring the [`io.Writer`](https://go.dev/pkg/io/#Writer) interface. The `Write` method of `bufio.Writer` behaves just like our `errWriter.write` method above, with `Flush` reporting the error, so our example could be written like this:
+
+```go
+b := bufio.NewWriter(fd)
+b.Write(p0[a:b])
+b.Write(p1[c:d])
+b.Write(p2[e:f])
+// and so on
+if b.Flush() != nil {
+    return b.Flush()
+}
+```
+
+There is one significant drawback to this approach, at least for some applications: there is no way to know how much of the processing completed before the error occurred. If that information is important, a more fine-grained approach is necessary. Often, though, an all-or-nothing check at the end is sufficient.
+
+We’ve looked at just one technique for avoiding repetitive error handling code. Keep in mind that the use of `errWriter` or `bufio.Writer` isn’t the only way to simplify error handling, and this approach is not suitable for all situations. The key lesson, however, is that errors are values and the full power of the Go programming language is available for processing them.
+
+References:
+
+- [Error handling and Go - The Go Programming Language](https://go.dev/blog/error-handling-and-go)
+- [Errors are values - The Go Programming Language](https://go.dev/blog/errors-are-values)

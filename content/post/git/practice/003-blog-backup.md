@@ -1,5 +1,5 @@
 ---
-title: Backup Blogs with Git
+title: Backup Blogs with Git - Sovled
 date: 2023-09-01 14:12:50
 categories:
   - git

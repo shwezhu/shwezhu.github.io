@@ -1,5 +1,5 @@
 ---
-title: push to github get rejected - solved
+title: Push on Github get Rejected - Solved
 date: 2023-08-15 22:18:50
 categories:
   - git
@@ -8,9 +8,9 @@ tags:
   - git
 ---
 
-## 问题描述
+## Problem
 
-在 GitHub 新建一个 repository, 并选择了自动创建 `README.md`, 在本地初始化项目后进行push, 报错:
+ GitHub 新建一个 repository, 并选择了自动创建 `README.md`, 在本地初始化项目后进行push, 报错:
 
 ```shell
 $ git push -u origin master

@@ -1,5 +1,5 @@
 ---
-title: pushed a wrong file to github - solved
+title: Pushed a Wrong File to Github - Solved
 date: 2023-08-20 07:40:57
 categories:
   - git

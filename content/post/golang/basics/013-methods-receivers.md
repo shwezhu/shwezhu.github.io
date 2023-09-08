@@ -9,7 +9,7 @@ tags:
  - concurrency
 ---
 
-## 1. Different Behaviors - Pointer and Value Receiver
+## 1. Different behaviors - pointer and value receiver
 
 There are two reasons to use a pointer receiver:
 
@@ -74,7 +74,7 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 >
 > Source: https://go101.org/article/value-copy-cost.html
 
-## 2. Method Receivers in Concurrency
+## 2. Method receivers in concurrency
 
 I came across a satement about when to use value receiver but forget where I found:
 
@@ -125,7 +125,7 @@ A similar pitfall can occur with types that maintain slices of values, and of co
 
 In short, I think that you should prefer declaring methods on `*T` unless you have a strong reason to do otherwise.
 
-## 3. Pointer Receiver - a Practical Example
+## 3. Pointer receiver - a practical example
 
  `error` interface:
 
@@ -195,24 +195,4 @@ func New(text string) error {
 Cannot use 'MyError{message: text}' (type MyError) as the type error Type does not implement 'error' as the 'Error' method has a pointer receiver
 ```
 
-There is a good explaination: https://stackoverflow.com/a/46307148/16317008
-
-If your interface is declared like this:
-
-```golang
-type Person interface {
-    BasicInfo() MemberBasicInfo
-}
-```
-
-Then any type that implements a `BasicInfo() MemberBasicInfo` will fulfil the interface.
-
-In your case, you then created this method:
-
-```golang
-func (member *Member) BasicInfo() MemberBasicInfo
-```
-
-That means that the type `*Member` fulfils the interface.
-
-But.. note the `*` there. `Member` does not implement the interface, it is `*Member` who does.
+Lear more about why it's doesn't work: [Interfaces in Go (and Methods Receivers) - David's Blog](https://davidzhu.xyz/post/golang/basics/006-interfaces/#2-first-try---type-admin-isnt-adimin)
