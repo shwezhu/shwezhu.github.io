@@ -22,11 +22,9 @@ Nginx也是个处理http请求的东西, 咱们查查它是个啥,
 
 > Ping works by sending an Internet Control Message Protocol (ICMP) Echo Request to a specified interface on the network and waiting for a reply. When a ping command is issued, a ping signal is sent to a specified address. When the target host receives the echo request, it responds by sending an echo reply packet.
 
-在服务器安装并启动Nginx之后便可以在浏览器访问了, 其实这么说并不专业, 应该说可以接受http请求了, `http://shaowenzhu.top` 是可以访问的了, 但是`https://shaowenzhu.top`仍显示无法连接服务器, 这可能和SSL有关系(比如我的域名没买证书或者我服务器没有监听8080端口, 可以查查服务器怎么使能8080端口), 然后别忘了http是`80`端口, https是`8080`端口. 
+服务器安装并启动Nginx之后便可以在浏览器访问了, 其实这么说并不专业, 应该说可以接受http请求了, `http://shaowenzhu.top` 是可以访问的了, 
 
-看在浏览器输入`http://shaowenzhu.top`, 便可以访问了~
-
-## 2. 安装Nginx
+## 2. Install Nginx
 
 ### 2.1. Install Nginx Web Server
 
@@ -37,7 +35,7 @@ sudo systemctl enable nginx
 sudo systemctl start nginx
 ```
 
-### 2.2. Adjusting Firewall Rules
+### 2.2. Adjusting firewall rules
 
 Run the following command to permanently enable HTTP connections on port 80:
 
@@ -75,7 +73,7 @@ To apply the changes, you’ll need to reload the firewall service:
 sudo firewall-cmd --reload
 ```
 
-### 2.3. Checking your Web Server
+### 2.3. Checking your web server
 
 You can now test if your Nginx web server is up and running by accessing your server’s public IP address or domain name from your web browser.
 
@@ -85,6 +83,6 @@ If you do not have a domain name pointed at your server and you do not know your
 ip addr show eth0 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
 ```
 
-参考:
+References:
 
 - https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-centos-8

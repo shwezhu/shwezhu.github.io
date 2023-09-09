@@ -111,6 +111,8 @@ for _, val := range values {
 }
 ```
 
+> Avoid mixing anonymous functions and goroutines. [Concurrency Made Easy](https://youtu.be/DqHb5KBe7qI?si=IW3zRKFc1Wtk4ZJh) 
+
 Learn more: 
 
 - https://go.dev/doc/effective_go#channels

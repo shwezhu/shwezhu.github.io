@@ -5,7 +5,6 @@ categories:
  - build website
 tags:
   - hugo
-typora-root-url: ../../../static
 ---
 
 ## 1. Basic Commands
