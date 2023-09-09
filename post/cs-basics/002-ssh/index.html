@@ -48,7 +48,7 @@
 <meta itemprop="name" content="通过 SSH 实现免密登陆以及分析 SSH 如何验证真实性">
 <meta itemprop="description" content="1. SSH 应对中间人攻击的方法 SSH 采用了公钥加密, 过程如下： （1）Remote Host 收到用户的登录请求, 把自己的公钥发给用户 （2）用户使用这个公钥, 将登"><meta itemprop="datePublished" content="2023-06-03T17:14:27+00:00" />
 <meta itemprop="dateModified" content="2023-06-03T17:14:27+00:00" />
-<meta itemprop="wordCount" content="2287">
+<meta itemprop="wordCount" content="2411">
 <meta itemprop="keywords" content="ssh,cryptography,cs basics," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="通过 SSH 实现免密登陆以及分析 SSH 如何验证真实性"/>
 <meta name="twitter:description" content="1. SSH 应对中间人攻击的方法 SSH 采用了公钥加密, 过程如下： （1）Remote Host 收到用户的登录请求, 把自己的公钥发给用户 （2）用户使用这个公钥, 将登"/>
@@ -145,11 +145,21 @@
         <li>
           <ul>
             <li><a href="#1-ssh-应对中间人攻击的方法">1. SSH 应对中间人攻击的方法</a></li>
-            <li><a href="#2-利用公钥指纹人工进行对比验证">2. 利用公钥指纹人工进行对比验证</a></li>
-            <li><a href="#3-public-key-authentication-上传公钥实现免密登陆">3. Public Key Authentication (上传公钥实现免密登陆)</a></li>
-            <li><a href="#4-authorized_keys-文件">4. authorized_keys 文件</a></li>
           </ul>
         </li>
+        <li><a href="#2-利用公钥指纹人工进行对比验证">2. 利用公钥指纹人工进行对比验证</a>
+          <ul>
+            <li><a href="#21-验证公私钥位置">2.1. 验证公私钥位置</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-public-key-authentication-上传公钥实现免密登陆">3. Public Key Authentication (上传公钥实现免密登陆)</a>
+          <ul>
+            <li><a href="#31-过程分析">3.1. 过程分析</a></li>
+            <li><a href="#32-具体操作">3.2. 具体操作</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-authorized_keys-file">4. <code>authorized_keys</code> file</a></li>
+        <li><a href="#5-ssh_config-vs-sshd_config-file">5. <code>ssh_config</code> vs <code>sshd_config</code> file</a></li>
       </ul>
     </li>
   </ul>
@@ -168,7 +178,7 @@
 <li>上传公钥实现免密登录</li>
 </ul>
 <p>接下来我们一一介绍这两种方法,</p>
-<h3 id="2-利用公钥指纹人工进行对比验证">2. 利用公钥指纹人工进行对比验证</h3>
+<h2 id="2-利用公钥指纹人工进行对比验证">2. 利用公钥指纹人工进行对比验证</h2>
 <p>看来面的例子, 在Mac上通过ssh连接远程的服务器, 第一次连接的时候会问下面提示:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -229,7 +239,7 @@
 </div>
 </div><p>该 remote host 上的 ssh 使用的公私钥是由 ED25519 算法生成的, 也就是说 ED25519 是个非对称加密算法, 常见的非对称加密算法还有 RSA, 所以 RSA 和 ED25519 是并列的: Today, the RSA is the most widely used public-key algorithm for SSH key. But compared to Ed25519, it&rsquo;s slower and even considered not safe if it&rsquo;s generated with the key smaller than 2048-bit length. EdDSA is a digital signature scheme, Ed25519 is the EdDSA signature scheme using SHA-512 (SHA-2) and Curve25519. &ndash;Wiki</p>
 <p>另外, 该公钥指纹是由 SHA256 hash function 生成的, 另外常见的 hash function 还有md5,</p>
-<h4 id="21-验证公私钥位置">2.1. 验证公私钥位置</h4>
+<h3 id="21-验证公私钥位置">2.1. 验证公私钥位置</h3>
 <p>这个时候我们在电脑终端输入yes, 然后就会提示输入密码 (比如root用户对应的密码), 然后系统会提示如下:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -310,8 +320,8 @@
 <li>ecdsa-sha2-nistp256: Specifies the ECDSA algorithm with 256-bit key strength</li>
 <li>rsa: Specifies the public key algorithm rsa</li>
 </ul>
-<h3 id="3-public-key-authentication-上传公钥实现免密登陆">3. Public Key Authentication (上传公钥实现免密登陆)</h3>
-<h4 id="31-过程分析">3.1. 过程分析</h4>
+<h2 id="3-public-key-authentication-上传公钥实现免密登陆">3. Public Key Authentication (上传公钥实现免密登陆)</h2>
+<h3 id="31-过程分析">3.1. 过程分析</h3>
 <p>使用密码登录, 每次都必须输入密码, 非常麻烦, 好在SSH还提供了公钥登录, 可以省去输入密码的步骤, 具体验证过程如下:</p>
 <ol>
 <li>The client generates a public/private key pair, typically with RSA or ECC. The client keeps the private key secret and registers the public key with the SSH server.</li>
@@ -327,7 +337,7 @@
 <li>加密</li>
 <li>验证数字签名</li>
 </ul>
-<h4 id="32-具体操作">3.2. 具体操作</h4>
+<h3 id="32-具体操作">3.2. 具体操作</h3>
 <p>上面也说了, 远程主机需要使用用户的公钥来验证用户的身份, 以及加密随机数, 所以我们本地机器肯定要先生成一个公钥私钥然后把公钥存储到远程主机上, 生成方法:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -355,7 +365,7 @@
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ssh root@144.202.16.29
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="4-authorized_keys-文件">4. authorized_keys 文件</h3>
+</div><h2 id="4-authorized_keys-file">4. <code>authorized_keys</code> file</h2>
 <p>远程主机将用户的公钥保存在了<code>~/.ssh/authorized_keys</code>,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -386,7 +396,12 @@
 </span></span><span class="line"><span class="cl">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDvbHLCIxxUDDqktbqdrICPa+JDd3kEyowKpy9igugi7R+f/94UDBDJLmeu+K8wi90pjwq+mTM6bSPXBkjmYGibCPbUKk7RtrVx5FdR488PR7/ptMqQXJeQeMOIXvK2Lfnzay+rH5Fg/8z1+pd7cuHPq0bWm5LroGq+bYXVTIYgjKC5NDxPbQCY7zd4c0L+SvxlwqrJFvRBZKY41UBLywtuM8geluLWaGcbikX1K2hFVcZ7ETogG7eqdRBtbfx+JxhyRY1Od+snM88CSfuQkOgs4xQli3GrGttgY0f8BA65/pbixG9gAPkacEkexS997iuTP9BmwLmwWq1pw91c0yEQO1JnsbGHj/YfRhBV6s4FL8n5uVC0My64tisqA+8eZTeld8Zwem4XQGjoqwt2HYy1YXv0kOU8NyI0EGDz3fmqER3ex0cL+MqvWf/cnWQ6MRvGI3w/gL3+V8ueZv5qXpnY+ZH2UcrqEv7Xl74fkdqPYo53ySLQ9ZCiCitHgMjl3bk<span class="o">=</span> shwezu@qq.com
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>参考:</p>
+</div><h2 id="5-ssh_config-vs-sshd_config-file">5. <code>ssh_config</code> vs <code>sshd_config</code> file</h2>
+<p>I would like to change my SSH port running Linux CentOS 6. I also noticed there&rsquo;s an <code>/etc/ssh_config</code> file along with <code>/etc/sshd_config</code>. What&rsquo;s the difference between the two? Should I change both?</p>
+<p>The <code>sshd_config</code> is the ssh <em><strong>daemon</strong></em> (or ssh server process) configuration file. As you&rsquo;ve already stated, this is the file you&rsquo;ll need to modify to change the server port.</p>
+<p>Whereas, the <code>ssh_config</code> file is the ssh <em><strong>client</strong></em> configuration file. The client configuration file only has bearing on when you use the <code>ssh</code> command to connect to another ssh host. So, in this case, you don&rsquo;t need to modify it. It will be <em>other</em> client machines connecting to your server.</p>
+<p>Source: <a href="https://serverfault.com/questions/343533/changing-ssh-port-should-i-modify-only-sshd-config-or-also-ssh-config">Should I modify only sshd_config, or also ssh_config?</a></p>
+<p>参考:</p>
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/EdDSA">https://en.wikipedia.org/wiki/EdDSA</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Digital_signature">https://en.wikipedia.org/wiki/Digital_signature</a></li>
