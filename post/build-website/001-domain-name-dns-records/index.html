@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. DNS Records: A &amp;amp; CNAME 购买域名后, 肯定要在域名设置页面为自己的域名添加A, CNAME或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地" />
+<meta name="author" content="David" /><meta name="description" content="1. DNS Records: A &amp;amp; CNAME 购买域名后给域名指定的ip地址, 则要为其添加 A 类型的 DNS Record, 把域名和服务器IP关联就需要为域名添加 A 记录, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="域名分级和DNS记录之何为www" />
-<meta property="og:description" content="1. DNS Records: A &amp; CNAME 购买域名后, 肯定要在域名设置页面为自己的域名添加A, CNAME或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地" />
+<meta property="og:description" content="1. DNS Records: A &amp; CNAME 购买域名后给域名指定的ip地址, 则要为其添加 A 类型的 DNS Record, 把域名和服务器IP关联就需要为域名添加 A 记录, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/build-website/001-domain-name-dns-records/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-04-23T00:15:30+00:00" />
 <meta property="article:modified_time" content="2023-04-23T00:15:30+00:00" />
 <meta itemprop="name" content="域名分级和DNS记录之何为www">
-<meta itemprop="description" content="1. DNS Records: A &amp; CNAME 购买域名后, 肯定要在域名设置页面为自己的域名添加A, CNAME或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地"><meta itemprop="datePublished" content="2023-04-23T00:15:30+00:00" />
+<meta itemprop="description" content="1. DNS Records: A &amp; CNAME 购买域名后给域名指定的ip地址, 则要为其添加 A 类型的 DNS Record, 把域名和服务器IP关联就需要为域名添加 A 记录, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填"><meta itemprop="datePublished" content="2023-04-23T00:15:30+00:00" />
 <meta itemprop="dateModified" content="2023-04-23T00:15:30+00:00" />
-<meta itemprop="wordCount" content="2858">
+<meta itemprop="wordCount" content="2285">
 <meta itemprop="keywords" content="build website," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="域名分级和DNS记录之何为www"/>
-<meta name="twitter:description" content="1. DNS Records: A &amp; CNAME 购买域名后, 肯定要在域名设置页面为自己的域名添加A, CNAME或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地"/>
+<meta name="twitter:description" content="1. DNS Records: A &amp; CNAME 购买域名后给域名指定的ip地址, 则要为其添加 A 类型的 DNS Record, 把域名和服务器IP关联就需要为域名添加 A 记录, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -150,12 +150,6 @@
           </ul>
         </li>
         <li><a href="#3-dns-查询过程">3. DNS 查询过程</a></li>
-        <li><a href="#4-阅读实践">4. 阅读实践</a>
-          <ul>
-            <li><a href="#41-about-custom-domains-and-github-pages">4.1. About custom domains and GitHub Pages</a></li>
-            <li><a href="#42-using-a-subdomain-for-your-github-pages-site">4.2. Using a subdomain for your GitHub Pages site</a></li>
-          </ul>
-        </li>
       </ul>
     </li>
   </ul>
@@ -164,14 +158,11 @@
 </div>
     <div class="post-content">
       <h2 id="1-dns-records-a--cname">1. DNS Records: A &amp; CNAME</h2>
-<p>购买域名后, 肯定要在域名设置页面为自己的域名添加<code>A</code>, <code>CNAME</code>或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地址,</p>
-<p>把域名和服务器IP关联就需要为域名添加 <code>A</code> 记录, 需要指定 HOSTNAME 和 IP, 其中 <code>HOSTNAME</code> 可以填<code>@</code>或者<code>www</code>, 或者不填, <code>@</code>代表空即不填或者填<code>@</code>都是一个意思 (还有个概念叫wildcard, 即<code>*.example.com</code>)</p>
+<p>购买域名后给域名指定的ip地址, 则要为其添加 <code>A</code> 类型的 DNS Record,  把域名和服务器IP关联就需要为域名添加 <code>A</code> 记录, 需要指定 HOSTNAME 和 IP, 其中 <code>HOSTNAME</code> 可以填<code>@</code>或者<code>www</code>, 或者不填, <code>@</code>代表空即不填或者填<code>@</code>都是一个意思 (还有个概念叫wildcard, 即<code>*.example.com</code>)</p>
 <p><img src="/001-domain-name-dns-records/a-8733304.png" alt="a"></p>
-<p>添加 <code>CNAME记录</code> 需要指定<strong>HOSTNAME</strong>和<strong>target hostname</strong>,</p>
+<p>添加 <code>CNAME记录</code> 需要指定 <strong>HOSTNAME</strong>和 <strong>target hostname</strong>, 前者可以不填或者其他<code>blog</code>, <code> www</code>  与上面相同, 后者填另一个域名, 比如github 自定义域名, target hostname 则填 <code> your-username.github.io</code></p>
 <p><img src="/001-domain-name-dns-records/b-8733375.png" alt="b"></p>
-<p>下图是添加 <code>CNAME</code> 记录的例子:</p>
-<p><img src="/001-domain-name-dns-records/a.png" alt=""></p>
-<p>添加之后, 等大概半小时就会生效, 可以使用 <code>dig</code> 命令查看:</p>
+<p>大概半小时会生效, 可以使用 <code>dig</code> 命令查看:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -196,22 +187,11 @@
 </span></span><span class="line"><span class="cl">shwezhu.github.io.	1937	IN	A	185.199.111.153
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>添加 <code>A</code> 记录时, 相同 IP 可以有不同的 <code>HOSTNAME</code>:</p>
+</div><p>添加 <code>A</code> 记录时, 相同 IP 可以有不同的 <code>HOSTNAME</code>, 即一个为空一个为 <code>www</code>:</p>
 <p><img src="/001-domain-name-dns-records/c-8734697.png" alt="c"></p>
-<p>一个域名也可以拥有多个 ip 地址不同的 <code>A</code> 记录, 如下:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">HOSTNAME: @, IP: 1.2.3.4
-</span></span><span class="line"><span class="cl">HOSTNAME: www, IP: 6.7.8.5
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>一般我们的域名会自带默认的 DNS Records, 如下图,</p>
+<p>一般域名自带默认的 DNS Records:</p>
 <p><img src="/001-domain-name-dns-records/init_dns.png" alt=""></p>
-<p>所以我们买了域名之后做的第一件事就应该删除这些默认记录(你可以不删用于测试), 不然等你又添加了一个A记录, 这时候你的域名就会被解析到多个IP(默认的和你刚添加的), 那浏览器访问你域名的时候, 选择哪个呢? 我查了一下论坛, 有人说是choose randomly, 所以如果你不删除域名所有的默认DNS Records, 那浏览器访问你域名的时候就有可能选择“错误”的ip,</p>
+<p>所以买了域名之后做的第一件事就应该删除这些默认记录, 不然等你又添加了一个A记录, 这时候你的域名就会被解析到多个IP(默认的和你刚添加的), 那浏览器访问你域名的时候, 选择哪个呢? 我查了一下论坛, 有人说是choose randomly, 所以如果你不删除域名所有的默认DNS Records, 那浏览器访问你域名的时候就有可能选择“错误”的ip,</p>
 <p>下面是回答个链接, 这个其实自己为域名添加俩不同的A记录用<code>dig</code>测试一下就行了, 但是我懒, 还得等半小时生效, 所以就不去验证了~</p>
 <blockquote>
 <p>Yes you can. It is called round-robin DNS, and the browser just chooses one of them randomly. It is a well used method of getting cheap load balancing, but if one host goes down, users will still try to access it. <a href="https://serverfault.com/q/528742/761923">https://serverfault.com/q/528742/761923</a></p>
@@ -261,46 +241,6 @@
 </ol>
 <p>至此，我们完成了 DNS 的解析过程。现在总结一下，整个过程我画成了一个图。</p>
 <p><img src="/001-domain-name-dns-records/33.webp" alt="33"></p>
-<h2 id="4-阅读实践">4. 阅读实践</h2>
-<p>其实我们完整度以下<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages">Github这篇文档</a>即如何为GitHub pages设置自定义域名, 你就懂了, 学了知识要实践的嘛, 我复制一部分到下面了,</p>
-<h3 id="41-about-custom-domains-and-github-pages">4.1. About custom domains and GitHub Pages</h3>
-<p>GitHub Pages supports using custom domains, or changing the root of your site&rsquo;s URL from the default, like octocat.github.io, to any domain you own.</p>
-<p>GitHub Pages works with two types of domains: <strong>subdomains</strong> and <strong>apex domains</strong>. For a list of unsupported custom domains, see &ldquo;<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages#custom-domain-names-that-are-unsupported">Troubleshooting custom domains and GitHub Pages</a>.&rdquo;</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Supported custom domain type</th>
-<th style="text-align:left">Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>www</code> subdomain</td>
-<td style="text-align:left"><code>www.example.com</code></td>
-</tr>
-<tr>
-<td style="text-align:left">Custom subdomain</td>
-<td style="text-align:left"><code>blog.example.com</code></td>
-</tr>
-<tr>
-<td style="text-align:left">Apex domain</td>
-<td style="text-align:left"><code>example.com</code></td>
-</tr>
-</tbody>
-</table>
-<p>You can set up either or both of apex and <code>www</code> subdomain configurations for your site. For more information on apex domains, see &ldquo;<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages#using-an-apex-domain-for-your-github-pages-site">Using an apex domain for your GitHub Pages site</a>.&rdquo;</p>
-<p>We recommend always using a <code>www</code> subdomain, even if you also use an apex domain. When you create a new site with an apex domain, we automatically attempt to secure the <code>www</code> subdomain for use when serving your site&rsquo;s content, but you need to make the DNS changes to use the <code>www</code> subdomain. If you configure a <code>www</code> subdomain, we automatically attempt to secure the associated apex domain. For more information, see &ldquo;<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site">Managing a custom domain for your GitHub Pages site</a>.&rdquo;</p>
-<p>After you configure a custom domain for a user or organization site, the custom domain will replace the <code>&lt;user&gt;.github.io</code> or <code>&lt;organization&gt;.github.io</code> portion of the URL for any project sites owned by the account that do not have a custom domain configured. For example, if the custom domain for your user site is <code>www.octocat.com</code>, and you have a project site with no custom domain configured that is published from a repository called <code>octo-project</code>, the GitHub Pages site for that repository will be available at <code>www.octocat.com/octo-project</code>. For more information about each type of site and handling custom domains, see &ldquo;<a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#types-of-github-pages-sites">About GitHub Pages</a>.&rdquo;</p>
-<h3 id="42-using-a-subdomain-for-your-github-pages-site">4.2. Using a subdomain for your GitHub Pages site</h3>
-<p>A subdomain is the part of a URL before the root domain. You can configure your subdomain as <code>www</code> or as a distinct section of your site, like <code>blog.example.com</code>.</p>
-<p>Subdomains are configured with a <code>CNAME</code> record through your DNS provider. For more information, see &ldquo;<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-a-subdomain">Managing a custom domain for your GitHub Pages site</a>.&rdquo;</p>
-<h4 id="421-www-subdomains">4.2.1. <code>www</code> subdomains</h4>
-<p>A <code>www</code> subdomain is the most commonly used type of subdomain. For example, <code>www.example.com</code> includes a <code>www</code> subdomain.</p>
-<p><code>www</code> subdomains are the most stable type of custom domain because <code>www</code> subdomains are not affected by changes to the IP addresses of GitHub&rsquo;s servers.</p>
-<h4 id="422-custom-subdomains">4.2.2. Custom subdomains</h4>
-<p>A custom subdomain is a type of subdomain that doesn&rsquo;t use the standard <code>www</code> variant. Custom subdomains are mostly used when you want two distinct sections of your site. For example, you can create a site called <code>blog.example.com</code> and customize that section independently from <code>www.example.com</code>.</p>
-<p><a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages">https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages</a></p>
-<p><a href="https://docs.github.com/zh/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages">https://docs.github.com/zh/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages</a></p>
 
     </div>
 
