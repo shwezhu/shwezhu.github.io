@@ -121,6 +121,76 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/002-assignment-makes-copy/">Assignment always Makes a Copy - Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-05 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/basics/"> basics </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Similar to C++, a variable is just an address location. But unlike C++, each variable defined in a Go program occupies a unique memory location. We have talked this in last post.
+1 2 3 4 5 6 7 func main() { kitten := Cat{Name: &#34;Coco&#34;} bella := kitten // makes a copy bella.Name = &#34;Bella&#34; fmt.Printf(&#34;kitten.Name:%v, bella.Name:%v\n&#34;, kitten.Name, bella.Name) } // kitten.Name:Coco, bella.Name:Bella Do not treat variable bella and kitten as a reference which point to a same object, that&rsquo;s java and python.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/basics/002-assignment-makes-copy/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/001-value-variable-type/">Value Variable and Types - Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-05 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/basics/"> basics </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. Go is statically typed Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
+1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt. The variables i and j have distinct static types and, although they have the same underlying type, they cannot be assigned to one another without a conversion.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/basics/001-value-variable-type/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/advance/005-unit-test/">Go Tests Basics - Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-05 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/advance/"> advance </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. go test go test recompiles each package along with any files with names matching the file pattern *_test.go. These additional files can contain test functions, benchmark functions, fuzz tests and example functions.
+Therefore there four types of functions:
+1 2 3 4 5 6 7 8 9 10 11 12 13 // A test function is one named TestXxx (where Xxx does not start with a // lower case letter) and should have the signature, func TestXxx(t *testing.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/advance/005-unit-test/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/golang/practice/006-collection-operations/">The Operations of Collections in Practice - Go</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-09-04 </span>
@@ -276,73 +346,6 @@ Solution I&rsquo;m using hugo now but I don&rsquo;t want to override or delete t
     </div>
     <div class="read-more">
       <a href="/post/build-website/004-hugo/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/014-gob-json-encoding/">encoding/gob &amp; encoding/json in Go</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-31 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/basics/"> basics </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/basics/014-gob-json-encoding/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/005-tricks-and-common-mistakes/">Trivial Tricks and Common Mistakes in Practice - Go</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-27 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/practice/"> practice </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]++ } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker.
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/practice/005-tricks-and-common-mistakes/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/linux/003-shell-expansion/">Shell Expansion</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-26 </span>
-      <div class="post-category">
-          <a href="/categories/linux/"> linux </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Shell expansion When the shell receives a command, either from the user typing at the keyboard, or from a shell script, it breaks it up into words. After this happens, the shell performs seven operations on the words, which can change how they are interpreted. There are seven operations are collectively known as &lsquo;shell expansion&rsquo;.
-The seven operations that the shell performs are:
-Brace Expansion - expanding values between braces, such as file{1.
-    </div>
-    <div class="read-more">
-      <a href="/post/linux/003-shell-expansion/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>

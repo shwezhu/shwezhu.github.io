@@ -19,6 +19,27 @@ Why do I need a VPN if https connections are secure? A VPN will secure all of th
     </item>
     
     <item>
+      <title>Is HTTPS Secure Enough?</title>
+      <link>https://shaowenzhu.top/post/cs-basics/014-is-https-secure-enough/</link>
+      <pubDate>Sun, 10 Sep 2023 09:27:59 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/cs-basics/014-is-https-secure-enough/</guid>
+      <description>1. Is HTTPS Secure Enough? Does an established HTTPS connection mean the line is really secure?
+It&amp;rsquo;s important to understand what SSL does and does not do, especially since this is a very common source of misunderstanding.
+It encrypts the channel It applies integrity checking It provides authentication So, the quick answer should be: &amp;ldquo;yes, it is secure enough to transmit sensitive data&amp;rdquo;. However, things are not that simple. There are a few issues here, the major one being authentication.</description>
+    </item>
+    
+    <item>
+      <title>Tunneling Protocols</title>
+      <link>https://shaowenzhu.top/post/cs-basics/013-tunneling-protocols/</link>
+      <pubDate>Sun, 10 Sep 2023 08:27:59 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/cs-basics/013-tunneling-protocols/</guid>
+      <description>1. Tunneling In previous post, we know that TUN and TAP are two different kernel virtual network devices, which are used for tunneling purposes. In this post, we&amp;rsquo;ll discuss what is tunneling and coomon tunneling protocols.
+In the physical world, tunneling is a way to cross terrain or boundaries that could not normally be crossed. Similarly, in networking, tunnels are a method for transporting data across a network using protocols that are not supported by that network.</description>
+    </item>
+    
+    <item>
       <title>AWS EC2 - Basic Settings of a Server</title>
       <link>https://shaowenzhu.top/post/build-website/005-aws-basics/</link>
       <pubDate>Sat, 09 Sep 2023 15:53:57 +0000</pubDate>
@@ -43,6 +64,16 @@ Why do I need a VPN if https connections are secure? A VPN will secure all of th
       
       <guid>https://shaowenzhu.top/post/golang/practice/008-vpn-go/</guid>
       <description>1. Set up 1 go get -u github.com/songgao/water 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 func main() { ifce, err := water.New(water.Config{DeviceType: water.TUN}) if err != nil { log.Fatal(err) } log.Printf(&amp;#34;Interface Name: %s\n&amp;#34;, ifce.Name()) packet := make([]byte, 1500) for { n, err := ifce.Read(packet) if err != nil { log.Fatal(err) } log.Printf(&amp;#34;Packet Received: % x\n&amp;#34;, packet[:n]) } } 1 2 # NOTE: replace utunx with the name printed on your go code above $ sudo ifconfig utun5 10.</description>
+    </item>
+    
+    <item>
+      <title>TUN Device &amp; utun Interface</title>
+      <link>https://shaowenzhu.top/post/cs-basics/011-tun-device/</link>
+      <pubDate>Fri, 08 Sep 2023 17:54:59 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/cs-basics/011-tun-device/</guid>
+      <description>1. TUN (network TUNnel) Device In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&amp;rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
+By default, tun devices operate in the layer 3 mode, and it&amp;rsquo;s point to point.</description>
     </item>
     
     <item>
@@ -188,12 +219,34 @@ Solution I&amp;rsquo;m using hugo now but I don&amp;rsquo;t want to override or 
     </item>
     
     <item>
+      <title>An overview of HTTP</title>
+      <link>https://shaowenzhu.top/post/cs-basics/010-http-overview/</link>
+      <pubDate>Mon, 28 Aug 2023 16:03:59 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/cs-basics/010-http-overview/</guid>
+      <description>Process of HTTP Connection Establishment How a browser uses HTTP to display a simple HTML resource that resides on a distant server:
+The browser extracts the server’s hostname from the URL. The browser converts the server’s hostname into the server’s IP address. The browser extracts the port number (if any) from the URL. The browser establishes a TCP connection with the web server. The browser sends an HTTP request message to the server.</description>
+    </item>
+    
+    <item>
       <title>Trivial Tricks and Common Mistakes in Practice - Go</title>
       <link>https://shaowenzhu.top/post/golang/practice/005-tricks-and-common-mistakes/</link>
       <pubDate>Sun, 27 Aug 2023 17:12:55 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/practice/005-tricks-and-common-mistakes/</guid>
       <description>Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]++ } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker.</description>
+    </item>
+    
+    <item>
+      <title>Is Multithreaded Server Better than a Single Thread Server?</title>
+      <link>https://shaowenzhu.top/post/cs-basics/009-multithread-singlethread-server/</link>
+      <pubDate>Sat, 26 Aug 2023 19:03:59 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/cs-basics/009-multithread-singlethread-server/</guid>
+      <description>Original: https://qr.ae/pyztor
+Why is a multithreaded web server better than a single thread server? It isn’t.
+There are four basic ways how a web server can handle concurrency:
+forking an OS process per request (like old versions of Apache) spawning an OS thread per request (like a new versions of Apache) using a single-threaded event loop (like nginx) using green threads or lightweight processes scheduled by a VM runtime instead of the OS (like in Erlang) Currently the most common approaches are number 2 and 3.</description>
     </item>
     
     <item>
@@ -262,6 +315,18 @@ Brace Expansion - expanding values between braces, such as file{1.</description>
       <description>1. Slice is not an Array The type [n]T is an array of n values of type T.
 An array&amp;rsquo;s length is part of its type, so arrays cannot be resized. The type []T is a slice with elements of type T.
 A slice is a dynamically-sized. Slices have a capacity and length property. The length and capacity of a slice s can be obtained using the expressions len(s) and cap(s).</description>
+    </item>
+    
+    <item>
+      <title>byte slice vs string - Go</title>
+      <link>https://shaowenzhu.top/post/golang/basics/015-byte-slice-string/</link>
+      <pubDate>Sat, 19 Aug 2023 19:38:59 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/basics/015-byte-slice-string/</guid>
+      <description>Before read this: Relearn slice in Golang
+byte type A byte in Go is an unsigned 8-bit integer. It has type uint8. A byte has a limit of 0 – 255 in numerical range. It can represent an ASCII character.
+Go uses rune, which has type int32, to deal with multibyte characters.
+byte slice vs string A byte is just a char in C language, so a byte slice just a list of ASCII characters, and don&amp;rsquo;t forget a byte is just a number - an unsigned 8-bit integer.</description>
     </item>
     
     <item>
@@ -1054,28 +1119,6 @@ From a correctness standpoint, you don&amp;rsquo;t need to know. Each variable i
     </item>
     
     <item>
-      <title>An overview of HTTP</title>
-      <link>https://shaowenzhu.top/post/cs-basics/010-http-overview/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/cs-basics/010-http-overview/</guid>
-      <description>Process of HTTP Connection Establishment How a browser uses HTTP to display a simple HTML resource that resides on a distant server:
-The browser extracts the server’s hostname from the URL. The browser converts the server’s hostname into the server’s IP address. The browser extracts the port number (if any) from the URL. The browser establishes a TCP connection with the web server. The browser sends an HTTP request message to the server.</description>
-    </item>
-    
-    <item>
-      <title>byte slice vs string - Go</title>
-      <link>https://shaowenzhu.top/post/golang/basics/015-byte-slice-string/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/basics/015-byte-slice-string/</guid>
-      <description>Before read this: Relearn slice in Golang
-byte type A byte in Go is an unsigned 8-bit integer. It has type uint8. A byte has a limit of 0 – 255 in numerical range. It can represent an ASCII character.
-Go uses rune, which has type int32, to deal with multibyte characters.
-byte slice vs string A byte is just a char in C language, so a byte slice just a list of ASCII characters, and don&amp;rsquo;t forget a byte is just a number - an unsigned 8-bit integer.</description>
-    </item>
-    
-    <item>
       <title>Everything Passed by Value - Go</title>
       <link>https://shaowenzhu.top/post/golang/basics/009-everything-passed-by-value/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -1083,48 +1126,6 @@ byte slice vs string A byte is just a char in C language, so a byte slice just a
       <guid>https://shaowenzhu.top/post/golang/basics/009-everything-passed-by-value/</guid>
       <description>Everything passed by value, we have talked that assignment makes a copy, value receiver makes a copy of the struct value on each method call, in this post I&amp;rsquo;ll show you argument is also passed by value.
 1. Everything passed by value As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter.</description>
-    </item>
-    
-    <item>
-      <title>Is HTTPS Secure Enough?</title>
-      <link>https://shaowenzhu.top/post/cs-basics/014-is-https-secure-enough/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/cs-basics/014-is-https-secure-enough/</guid>
-      <description>1. Is HTTPS Secure Enough? Does an established HTTPS connection mean the line is really secure?
-It&amp;rsquo;s important to understand what SSL does and does not do, especially since this is a very common source of misunderstanding.
-It encrypts the channel It applies integrity checking It provides authentication So, the quick answer should be: &amp;ldquo;yes, it is secure enough to transmit sensitive data&amp;rdquo;. However, things are not that simple. There are a few issues here, the major one being authentication.</description>
-    </item>
-    
-    <item>
-      <title>Is Multithreaded Server Better than a Single Thread Server?</title>
-      <link>https://shaowenzhu.top/post/cs-basics/009-multithread-singlethread-server/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/cs-basics/009-multithread-singlethread-server/</guid>
-      <description>Original: https://qr.ae/pyztor
-Why is a multithreaded web server better than a single thread server? It isn’t.
-There are four basic ways how a web server can handle concurrency:
-forking an OS process per request (like old versions of Apache) spawning an OS thread per request (like a new versions of Apache) using a single-threaded event loop (like nginx) using green threads or lightweight processes scheduled by a VM runtime instead of the OS (like in Erlang) Currently the most common approaches are number 2 and 3.</description>
-    </item>
-    
-    <item>
-      <title>TUN Device &amp; utun Interface</title>
-      <link>https://shaowenzhu.top/post/cs-basics/011-tun-device/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/cs-basics/011-tun-device/</guid>
-      <description>1. TUN (network TUNnel) Device In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&amp;rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
-By default, tun devices operate in the layer 3 mode, and it&amp;rsquo;s point to point.</description>
-    </item>
-    
-    <item>
-      <title>Tunneling Protocols</title>
-      <link>https://shaowenzhu.top/post/cs-basics/013-tunneling-protocols/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/cs-basics/013-tunneling-protocols/</guid>
-      <description>In previous post, we know that TUN and TAP are two different kernel virtual network devices, which are used for tunneling purposes. In this post, we&amp;rsquo;ll discuss what is tunneling and coomon tunneling protocols.</description>
     </item>
     
     <item>
