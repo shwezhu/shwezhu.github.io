@@ -1,6 +1,6 @@
 ---
 title: An overview of HTTP
-date: 2023-08-28 16:03:60
+date: 2023-08-28 16:03:59
 categories:
  - cs basics
 tags:

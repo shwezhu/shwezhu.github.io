@@ -29,11 +29,9 @@ A VPN stops that because everything is connected securely through that pipe. The
 
 ## VPN vs Proxy
 
-From Wikipedia:
+> In computer networks, a proxy server is a server (a computer system or an application) that acts **as an intermediary** for requests from clients seeking resources from other servers. [Proxy server](https://en.wikipedia.org/wiki/Proxy_server)
 
-> In computer networks, a proxy server is a server (a computer system or an application) that acts **as an intermediary** for requests from clients seeking resources from other servers.
->
-> A virtual private network (VPN) is a computer network that uses a public telecommunication infrastructure such as the Internet to provide remote offices or individual users with **secure access** to their organization's network.
+> A virtual private network (VPN) is an encrypted connection between two or more computers. VPN connections take place over public networks, but the data exchanged over the VPN is still private because it is encrypted. [IPsec | Cloudflare](https://www.cloudflare.com/learning/network-layer/what-is-ipsec/)
 
 What a VPN does logically is turn your internet connection into a *big Ethernet cable*. When you are logged on to a company's VPN, the effect is similar as though you took your computer to the company's building and directly connected it. VPNs (usually) use encryption so that intermediate systems between you and the company (such as your ISP or a malicious wireless network sniffer) cannot eavesdrop your traffic. 
 
