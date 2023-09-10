@@ -6,6 +6,7 @@ categories:
 tags:
   - cs basics
   - build website
+  - networking
 ---
 
 ## 1. DDoS attack

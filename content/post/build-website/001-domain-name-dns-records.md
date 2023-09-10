@@ -10,21 +10,15 @@ typora-root-url: ../../../static
 
 ## 1. DNS Records: A & CNAME
 
-购买域名后, 肯定要在域名设置页面为自己的域名添加`A`, `CNAME`或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地址, 
-
-把域名和服务器IP关联就需要为域名添加 `A` 记录, 需要指定 HOSTNAME 和 IP, 其中 `HOSTNAME` 可以填`@`或者`www`, 或者不填, `@`代表空即不填或者填`@`都是一个意思 (还有个概念叫wildcard, 即`*.example.com`) 
+购买域名后给域名指定的ip地址, 则要为其添加 `A` 类型的 DNS Record,  把域名和服务器IP关联就需要为域名添加 `A` 记录, 需要指定 HOSTNAME 和 IP, 其中 `HOSTNAME` 可以填`@`或者`www`, 或者不填, `@`代表空即不填或者填`@`都是一个意思 (还有个概念叫wildcard, 即`*.example.com`) 
 
 ![a](/001-domain-name-dns-records/a-8733304.png)
 
-添加 `CNAME记录` 需要指定**HOSTNAME**和**target hostname**, 
+添加 `CNAME记录` 需要指定 **HOSTNAME**和 **target hostname**, 前者可以不填或者其他`blog`, ` www`  与上面相同, 后者填另一个域名, 比如github 自定义域名, target hostname 则填 ` your-username.github.io` 
 
 ![b](/001-domain-name-dns-records/b-8733375.png)
 
-下图是添加 `CNAME` 记录的例子:
-
-![](/001-domain-name-dns-records/a.png)
-
-添加之后, 等大概半小时就会生效, 可以使用 `dig` 命令查看:
+大概半小时会生效, 可以使用 `dig` 命令查看:
 
 ```shell
 $ dig www.shaowenzhu.top +nostats +nocomments +nocmd
@@ -38,22 +32,15 @@ shwezhu.github.io.	1937	IN	A	185.199.110.153
 shwezhu.github.io.	1937	IN	A	185.199.111.153
 ```
 
-添加 `A` 记录时, 相同 IP 可以有不同的 `HOSTNAME`:
+添加 `A` 记录时, 相同 IP 可以有不同的 `HOSTNAME`, 即一个为空一个为 `www`:
 
 ![c](/001-domain-name-dns-records/c-8734697.png)
 
-一个域名也可以拥有多个 ip 地址不同的 `A` 记录, 如下: 
-
-```shell
-HOSTNAME: @, IP: 1.2.3.4
-HOSTNAME: www, IP: 6.7.8.5
-```
-
-一般我们的域名会自带默认的 DNS Records, 如下图, 
+一般域名自带默认的 DNS Records:
 
 ![](/001-domain-name-dns-records/init_dns.png)
 
-所以我们买了域名之后做的第一件事就应该删除这些默认记录(你可以不删用于测试), 不然等你又添加了一个A记录, 这时候你的域名就会被解析到多个IP(默认的和你刚添加的), 那浏览器访问你域名的时候, 选择哪个呢? 我查了一下论坛, 有人说是choose randomly, 所以如果你不删除域名所有的默认DNS Records, 那浏览器访问你域名的时候就有可能选择“错误”的ip, 
+所以买了域名之后做的第一件事就应该删除这些默认记录, 不然等你又添加了一个A记录, 这时候你的域名就会被解析到多个IP(默认的和你刚添加的), 那浏览器访问你域名的时候, 选择哪个呢? 我查了一下论坛, 有人说是choose randomly, 所以如果你不删除域名所有的默认DNS Records, 那浏览器访问你域名的时候就有可能选择“错误”的ip, 
 
 下面是回答个链接, 这个其实自己为域名添加俩不同的A记录用`dig`测试一下就行了, 但是我懒, 还得等半小时生效, 所以就不去验证了~
 
@@ -118,44 +105,3 @@ HOSTNAME.SLD.TLD.root
 
 ![33](/001-domain-name-dns-records/33.webp)
 
-## 4. 阅读实践
-
-其实我们完整度以下[Github这篇文档](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages)即如何为GitHub pages设置自定义域名, 你就懂了, 学了知识要实践的嘛, 我复制一部分到下面了, 
-
-### 4.1. About custom domains and GitHub Pages
-
-GitHub Pages supports using custom domains, or changing the root of your site's URL from the default, like octocat.github.io, to any domain you own. 
-
-GitHub Pages works with two types of domains: **subdomains** and **apex domains**. For a list of unsupported custom domains, see "[Troubleshooting custom domains and GitHub Pages](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages#custom-domain-names-that-are-unsupported)."
-
-| Supported custom domain type | Example            |
-| :--------------------------- | :----------------- |
-| `www` subdomain              | `www.example.com`  |
-| Custom subdomain             | `blog.example.com` |
-| Apex domain                  | `example.com`      |
-
-You can set up either or both of apex and `www` subdomain configurations for your site. For more information on apex domains, see "[Using an apex domain for your GitHub Pages site](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages#using-an-apex-domain-for-your-github-pages-site)."
-
-We recommend always using a `www` subdomain, even if you also use an apex domain. When you create a new site with an apex domain, we automatically attempt to secure the `www` subdomain for use when serving your site's content, but you need to make the DNS changes to use the `www` subdomain. If you configure a `www` subdomain, we automatically attempt to secure the associated apex domain. For more information, see "[Managing a custom domain for your GitHub Pages site](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)."
-
-After you configure a custom domain for a user or organization site, the custom domain will replace the `<user>.github.io` or `<organization>.github.io` portion of the URL for any project sites owned by the account that do not have a custom domain configured. For example, if the custom domain for your user site is `www.octocat.com`, and you have a project site with no custom domain configured that is published from a repository called `octo-project`, the GitHub Pages site for that repository will be available at `www.octocat.com/octo-project`. For more information about each type of site and handling custom domains, see "[About GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#types-of-github-pages-sites)."
-
-### 4.2. Using a subdomain for your GitHub Pages site
-
-A subdomain is the part of a URL before the root domain. You can configure your subdomain as `www` or as a distinct section of your site, like `blog.example.com`.
-
-Subdomains are configured with a `CNAME` record through your DNS provider. For more information, see "[Managing a custom domain for your GitHub Pages site](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-a-subdomain)."
-
-#### 4.2.1. `www` subdomains
-
-A `www` subdomain is the most commonly used type of subdomain. For example, `www.example.com` includes a `www` subdomain.
-
-`www` subdomains are the most stable type of custom domain because `www` subdomains are not affected by changes to the IP addresses of GitHub's servers.
-
-#### 4.2.2. Custom subdomains
-
-A custom subdomain is a type of subdomain that doesn't use the standard `www` variant. Custom subdomains are mostly used when you want two distinct sections of your site. For example, you can create a site called `blog.example.com` and customize that section independently from `www.example.com`.
-
-https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages
-
-https://docs.github.com/zh/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages

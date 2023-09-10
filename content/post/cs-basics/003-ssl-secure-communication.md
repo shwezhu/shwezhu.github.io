@@ -8,6 +8,7 @@ tags:
   - cryptography
   - build website
   - cs basics
+  - networking
 ---
 
 最近使用python的 `urllib3` 发送http请求, 看到了一些基础概念, 想着还是记录一下, 
@@ -35,7 +36,27 @@ HTTPS, HTTP, TLS 都是协议,  HTTPS 利用了 SSL 提供的加密数据和数�
 
 ## 3. HTTPS 建立链接的过程
 
+- Establish a TCP connection.
+
+- Make a [TLS handshake](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/). During the TLS handshake, the two parties generate session keys, and the session keys encrypt and decrypt all communications after the TLS handshake. 
+- After TLS handshake,  the secure communication begins. 
+
+## 4. HTTPS 是如何进行 Authentication 的
+
 HTTPS 利用 SSL 实现加密传输以及让客户端验证服务器的身份与[SSH 中间人攻击](https://davidzhu.xyz/2023/06/03/CS-Basics/002-ssh/)问题相似, 但却不能用那种办法来解决, 因为在电脑上存储每个网站的公钥或者每点一个链接🔗就人工比对公钥指纹很不现实, 而且公钥指纹在人家服务器上, 你也没办法比对... 
+
+HTTPS 的 Authentication 发生在上面提到的 [TLS handshake](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/) 中:
+
+During the course of a TLS handshake, the client and server together will do the following:
+
+- Specify which version of TLS (TLS 1.0, 1.2, 1.3, etc.) they will use
+- Decide on which cipher suites (see below) they will use
+- Authenticate the identity of the server via the server’s public key and the SSL certificate authority’s digital signature
+- Generate session keys in order to use symmetric encryption after the handshake is complete
+
+了解更多: [What happens in a TLS handshake? | SSL handshake | Cloudflare](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/)
+
+## 5. SSL 证书
 
 SSL 证书是需要放到服务器上的, 当客户端向服务器发送 HTTPS 请求时, 服务器会把自己的 SSL 证书传给客户端, 
 
@@ -44,7 +65,7 @@ SSL 证书是需要放到服务器上的, 当客户端向服务器发送 HTTPS �
 - 服务器(网站)怎么获得 SSL 证书, 
 - 发送 HTTPS 请求后, 客户端拿到该服务器的 SSL 证书后, 如何验证该证书真伪: [浏览器如何验证HTTPS证书的合法性](https://www.zhihu.com/question/37370216)
 
-### 3.1. What is SSL Certificates
+### 5.1. 什么是 SSL 证书
 
 SSL certificates include the following information in a single data file:
 
@@ -54,9 +75,9 @@ SSL certificates include the following information in a single data file:
 - The certificate authority's digital signature
 - The public key (the private key is kept secret)
 
-刚开始我的想法是客户端给服务器发送数据如密码等信息, 可以使用服务器的公钥进行加密 (服务器会把自己的 SSL 证书发给客户端, 而 SSL 证书就是个文件, 里面包含了服务器的公钥信息), 那服务器怎么发送加密数据, 然后客户端怎么解密的? 
+刚开始我想的是当客户端向服务器发送敏感数据如密码时使用服务器的公钥进行加密 (服务器会把自己的 SSL 证书发给客户端, 而 SSL 证书就是个文件, 里面包含了服务器的公钥信息), 可是问题来了, 客户端是怎么解密服务器向它发送的数据? 
 
-其实我只猜对了一半, HTPPS 采用的是混合加密, 即从建立 HTTPS 连接到相互传递数据存在两个Key, 服务器的公钥和客户端服务器两者共享的密钥, 该密钥是对称加密里的密钥, 什么意思呢, 就是客户端不是拿到了服务器的 SSL 证书吗? 这个证书里包含了服务器的公钥, 这时候呢, 客户端生成一个密钥 (对称加密里的密钥, 不是公私钥里的私钥) 然后客户端用服务器的公钥加密这个密钥传给服务器, 服务器用它自己的私钥解密, 之后的他们就都使用这同一个密钥进行加密解密, 具体如下图:
+其实我只猜对了一半, HTPPS 采用的是混合加密, 即从建立 HTTPS 连接到相互传递数据存在两个Key, 服务器的公钥和客户端服务器两者共享的密钥, 该密钥是对称加密里的密钥, 什么意思呢, 就是客户端不是拿到了服务器的 SSL 证书吗? 这个证书里包含了服务器的公钥, 这时候呢, 客户端生成一个密钥也就是上面说 [TLS handshake](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/) 里产生的 session-key (对称加密) 然后客户端用服务器的公钥加密这个密钥传给服务器, 服务器用它自己的私钥解密, 之后的他们就都使用这同一个密钥进行加密解密, 具体如下图:
 
 ![a](/003-ssl-secure-communication/a-5839840.png)
 
@@ -66,7 +87,7 @@ SSL certificates include the following information in a single data file:
 
 > 服务器会为每个浏览器（或客户端软件）维护一个session ID，在TLS握手阶段传给浏览器，浏览器生成好密钥传给服务器后，服务器会把该密钥存到相应的session ID下，之后浏览器每次请求都会携带session ID，服务器会根据session ID找到相应的密钥并进行解密加密操作，这样就不必要每次重新制作、传输密钥了！[Source](https://zhuanlan.zhihu.com/p/43789231)
 
-## 4. 获取 SSL Certificate 的两种方式
+### 5.2. 获取 SSL Certificate 的两种方式
 
 现在来回答上面提出的两个问题, 好像扯的很远了 ummm, 篇幅有限我已经在第二个问题上附上了连接, 就说说第一个问题吧, 获取 SSL Certificate 的方式有两种, 一是从CA那里获得, 二是利用 OpenSSL 自己生成, 
 
@@ -149,3 +170,4 @@ $ brew install openssl@1.1
 - [Why You Should Use LibreSSL Instead of OpenSSL](https://www.youtube.com/watch?v=n1uaoJyBwHk)
 - https://youtu.be/wzbf9ldvBjM
 - [Fixing ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+ | Level Up Coding](https://levelup.gitconnected.com/fixing-importerror-urllib3-v2-0-5fbfe8576957)
+- [What happens in a TLS handshake? | SSL handshake | Cloudflare](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/)
