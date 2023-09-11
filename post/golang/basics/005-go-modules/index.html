@@ -48,7 +48,7 @@
 <meta itemprop="name" content="Golang模块module和包package的使用之导入自定义包">
 <meta itemprop="description" content="昨天做贪吃蛇的时候想用个第三方的库来读取键盘输入, 很小, 就直接创建一个go文件把内容复制了进去, 但import的时候却找不到包, 查了一下是G"><meta itemprop="datePublished" content="2023-05-21T14:32:10+00:00" />
 <meta itemprop="dateModified" content="2023-05-21T14:32:10+00:00" />
-<meta itemprop="wordCount" content="2472">
+<meta itemprop="wordCount" content="2022">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Golang模块module和包package的使用之导入自定义包"/>
 <meta name="twitter:description" content="昨天做贪吃蛇的时候想用个第三方的库来读取键盘输入, 很小, 就直接创建一个go文件把内容复制了进去, 但import的时候却找不到包, 查了一下是G"/>
@@ -358,9 +358,7 @@
 <li>The <a href="https://go.dev/ref/mod#go-install"><code>go install</code> command</a> compiles and installs the packages.</li>
 <li>The command <a href="https://www.digitalocean.com/community/tutorials/how-to-write-your-first-program-in-go#step-2-%E2%80%94-running-a-go-program"><code>go run</code></a> to automatically compile your source code and run the resulting executable.</li>
 </ul>
-<p>什么时候我们需要用到 <code>go mod init my_project</code> “初始化” 项目呢?</p>
-<p>答案是当我们用到 <strong>custom package</strong> 的时候, 这就会到了文章开头遇到的问题, 现在我演示一下如何导入 <strong>custom package</strong>,</p>
-<p>创建个空文件夹<code>my_project</code>, 并在里面编写两个go源文件,一个是<code>hello_world.go</code>, <code>tools/math.go</code>然后让前者为<code>main</code> package用于执行, 后者为<code>tools</code> package用于被<code>hello_world.go</code>调用,  项目结构如下如下:</p>
+<p>什么时候我们需要用到 <code>go mod init my_project</code> “初始化” 项目呢? 答案是当我们用到 <strong>custom package</strong> 的时候, 我演示一下如何导入 <strong>custom package</strong>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -369,29 +367,20 @@
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">my_project
-</span></span><span class="line"><span class="cl">├── hello_world.go
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">your_project_name
+</span></span><span class="line"><span class="cl">├── main.go
 </span></span><span class="line"><span class="cl">└── tools
 </span></span><span class="line"><span class="cl">    └── math.go
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>文件内容如下:</p>
-<div class="highlight"><div class="chroma">
+</div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// math.go
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">package</span> <span class="nx">tools</span>
-</span></span><span class="line"><span class="cl"><span class="c1">// 注意名字开头要大写属于exported names, 否则是私, 即外部无法访问, 变量也是
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">Calculate</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="p">,</span> 
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go mod init your_project_name
+</span></span><span class="line"><span class="cl">go: creating new go.mod: module your_project_name
 </span></span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -406,13 +395,27 @@
 </span><span class="lnt"> 8
 </span><span class="lnt"> 9
 </span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// hello_world.go
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// math.go
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">package</span> <span class="nx">tools</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// should be cpatical: exported names
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">Calculate</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// main.go
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">package</span> <span class="nx">main</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;my_project/tools&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;./tools&#34;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;hello world\n&#34;</span><span class="p">)</span>
@@ -420,44 +423,19 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>此时还无法运行<code>hello_world.go</code>, 若运行, 则报错:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go run hello_world.go
-</span></span><span class="line"><span class="cl">hello_world.go:4:8: package my_project/tools is not in GOROOT <span class="o">(</span>/Users/David/sdk/go1.20.4/src/my_project/tools<span class="o">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>此时在项目根目录创建go module, module的名字与项目文件夹名字<code>my_project</code>相同,</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go mod init my_project
-</span></span><span class="line"><span class="cl">go: creating new go.mod: module my_project
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>此时再运<code>hello_world.go</code>:</p>
-<div class="highlight"><div class="chroma">
+</div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="err">$</span> <span class="k">go</span> <span class="nx">run</span> <span class="nx">hello_world</span><span class="p">.</span><span class="k">go</span> 
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="err">$</span> <span class="k">go</span> <span class="nx">run</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span> 
 </span></span><span class="line"><span class="cl"><span class="nx">hello</span> <span class="nx">world</span>
 </span></span><span class="line"><span class="cl"><span class="mi">5</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>tools/</code> 是自定义的 package, <code>tools/math.go</code> 通过其第一行代码 <code>package tools</code> 声明其属于 package <code>tools</code>, 我们在 <code>hello_world.go</code> 调用package里的函数的语法是<code>import module_name/package_name</code>, 所以我们<code>hello_world.go</code>的第一行是<code>import &quot;my_project/tools&quot;</code>,</p>
-<p>现在看看下面这段话, 是不是觉得很多概念都清晰了呢:</p>
-<blockquote>
+</div><blockquote>
 <p><strong>A Go Module is nothing but a collection of Go packages.</strong> Now this question might come to your mind. Why do we need Go modules to create a custom package? The answer is <strong>the import path for the custom package we create is derived from the name of the go module</strong>. In addition to this, all the other third-party packages(such as source code from github) which our application uses will be present in the <code>go.mod</code> file along with the version. This <code>go.mod</code> file is created when we create a new module. Another question might popup in our minds. How come we got away without creating a <a href="https://golangbot.com/books/">Go module</a> till now? The answer is, we never created our own custom package till now in this <a href="https://golangbot.com/learn-golang-series/">tutorial series</a> and hence no Go module was needed.</p>
 </blockquote>
 <h2 id="4-a-bit-more-on-go-install">4. A bit more on <code>go install</code></h2>
@@ -547,8 +525,7 @@
 <h2 id="6-总结">6. 总结</h2>
 <ul>
 <li><code>go install</code>, <code>go run</code> 要区分开, 平时常用的是<code>go run</code></li>
-<li><code>go install</code>运行前需要执行<code>go mod init my_project</code></li>
-<li>需要使用custom package的时候, 要使用go module, 即<code>go mod init your_module_name</code>, module name往往和我们项目名相同, 但你也可以使用其他的名字,</li>
+<li><code>go install</code>运行前需要执行<code>go mod init my_project</code>ß</li>
 <li>创建自定义package即在项目根目录下创建一个文件夹, 然后在里面写go源代码, 注意package里面的源文件的第一行必须声明其属于该package: <code>package xxx</code></li>
 <li>创建自定义package的时候, 里面的函数变量必须要<strong>首字母大写</strong>, 否则那个函数就属于私有了, 具体参考: <a href="https://go.dev/tour/basics/3">A Tour of Go</a></li>
 <li>注意区分 package 和 module 的概念, 他们是不同的: A Go Module is nothing but a collection of Go packages.</li>
