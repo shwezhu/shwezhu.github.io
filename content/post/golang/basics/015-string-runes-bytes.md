@@ -8,6 +8,43 @@ tags:
  - golang
 ---
 
+## 0. Make it eassy
+
+This is all this post is going to talk, if you know this, you don't need to go through all this post.
+
+**a string literal is a slice of bytes:**
+
+```go
+func main() {
+	str := "汉"
+	for i:=0; i<len(str); i++{
+		fmt.Printf("%x ", str[i])
+	}
+}
+---------------------------
+e6 b1 89 
+```
+
+**a string literal consists of one or more `rune` values:**
+
+```go
+func main() {
+	str := "abc汉"
+	for _, s := range str {
+		fmt.Printf("%x ", s)
+	}
+	fmt.Println()
+	for _, s := range str {
+		fmt.Printf("%c ", s)
+	}
+}
+--------------------------
+61 62 63 6c49 
+a b c 汉 
+```
+
+Note that the ways of iterating the string literal in the codes above are different. 
+
 ## 1. string literals are encoded in UTF-8
 
 ```go
