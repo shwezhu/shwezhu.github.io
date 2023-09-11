@@ -48,7 +48,7 @@
 <meta itemprop="name" content="说说编码 - encoding">
 <meta itemprop="description" content="编码问题很常见, 比如要读文件有时候打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 1. ASCII vs Unicode 先来"><meta itemprop="datePublished" content="2023-06-01T22:13:25+00:00" />
 <meta itemprop="dateModified" content="2023-06-01T22:13:25+00:00" />
-<meta itemprop="wordCount" content="3982">
+<meta itemprop="wordCount" content="3870">
 <meta itemprop="keywords" content="python,cs basics," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="说说编码 - encoding"/>
 <meta name="twitter:description" content="编码问题很常见, 比如要读文件有时候打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 1. ASCII vs Unicode 先来"/>
@@ -197,7 +197,7 @@
 </span></span><span class="line"><span class="cl">11110xxx    10xxxxxx    10xxxxxx    10xxxxxx    (3+6+6+6)=21          10FFFF hex (1,114,111)
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>汉字<code>汉</code>的Unicode值是两字节即 <code>6C49</code>, 二进制为: <code>0110 1100 0100 1001</code> 根据上标经过utf-8编码变成 <code>11100110 10110001 10001001</code>, 成了三字节, 汉字在 utf-8 编码里占3字节 (gbk编码里, 一个汉字占2字节), 注意, 最终写入文件的是其三字节的 utf-8 encoding <code>11100110 10110001 10001001</code>, 而不是其Unicode <code>0110 1100 0100 1001</code> , 可以使用 <code>xxd</code> 查看,</p>
+</div><p>汉字<code>汉</code>的Unicode值是两字节即 <code>6C49</code>, 二进制为: <code>0110 1100 0100 1001</code>, 因为 utf-8 规定汉字占 3 字节, 因此选择第三行进行编码, 根据上标经过utf-8编码变成 <code>11100110 10110001 10001001</code>,  因此最终写入文件的是其三字节的 utf-8 encoding <code>11100110 10110001 10001001</code>, 而不是其Unicode <code>0110 1100 0100 1001</code> , 可以使用 <code>xxd</code> 查看文件的16进制内容,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -212,7 +212,7 @@
 </span></span><span class="line"><span class="cl">text.md: Unicode text, UTF-8 text
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>xxd</code>可以以16进制格式输出文件内容, <code>e6b1 89</code> 的二进制是<code>11100110 10110001 10001001</code>, 所以你知道了utf-8是怎么根据Unicode把code points编码成另一个二进制, 也知道了编码的意义, 体现在了文件的实际内容里, 解码 decoding 就是 encoding 的反过程了,</p>
+</div><p><code>e6b1 89</code>  = <code>11100110 10110001 10001001</code></p>
 <blockquote>
 <p>注意: 有时候也说ASCII编码, 其实意思就是告诉你你看到字符<code>A</code>, 那他的数值就是<code>0x41</code>, 不要太纠结到底ASCII是编码方式, 还是其他, 弄清楚本质就好了,</p>
 </blockquote>
