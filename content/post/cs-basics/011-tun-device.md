@@ -13,6 +13,10 @@ tags:
 In computer networking, **TUN** and **TAP** are two different kernel **virtual network devices**. Though both are for tunneling purposes, TUN and TAP can't be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
 
 > By default, tun devices operate in the layer 3 mode, and it's point to point. 
+>
+> A network interface can be a physical device, called network interface controller (NIC), such as an ethernet card or wireless adapter, or a virtual device, such as a TUN or TAP interface. 
+>
+> Source: https://www.baeldung.com/linux/create-check-network-interfaces
 
 Learn more: [TUN/TAP](https://en.wikipedia.org/wiki/TUN/TAP)
 

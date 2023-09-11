@@ -97,11 +97,7 @@ There is a trick, we usually use `d = d[:0]` to generate a new slice `d` whose l
 
 Learn more about slice: [Go Slices: usage and internals](https://go.dev/blog/slices-intro)
 
-## 4. Strings
-
-In Go, a string is in effect a read-only slice of bytes. 
-
-## 5. Conclusion
+## 4. Conclusion
 
 - It’s important to understand that even though a slice contains a pointer, it is itself a value. Under the covers, it is a struct value holding a pointer and a length. It is *not* a pointer to a struct.
 - A slice does not store any data, it just describes a section of an underlying array. 
