@@ -138,36 +138,33 @@ hello world
 - The [`go install` command](https://go.dev/ref/mod#go-install) compiles and installs the packages.
 - The command [`go run`](https://www.digitalocean.com/community/tutorials/how-to-write-your-first-program-in-go#step-2-—-running-a-go-program) to automatically compile your source code and run the resulting executable.
 
-什么时候我们需要用到 `go mod init my_project` “初始化” 项目呢? 
-
-答案是当我们用到 **custom package** 的时候, 这就会到了文章开头遇到的问题, 现在我演示一下如何导入 **custom package**, 
-
-创建个空文件夹`my_project`, 并在里面编写两个go源文件,一个是`hello_world.go`, `tools/math.go`然后让前者为`main` package用于执行, 后者为`tools` package用于被`hello_world.go`调用,  项目结构如下如下:
+什么时候我们需要用到 `go mod init my_project` “初始化” 项目呢? 答案是当我们用到 **custom package** 的时候, 我演示一下如何导入 **custom package**:
 
 ```shell
-my_project
-├── hello_world.go
+your_project_name
+├── main.go
 └── tools
     └── math.go
 ```
 
-文件内容如下:
+```shell
+$ go mod init your_project_name
+go: creating new go.mod: module your_project_name
+```
 
 ```go
 // math.go
 package tools
-// 注意名字开头要大写属于exported names, 否则是私, 即外部无法访问, 变量也是
+// should be cpatical: exported names
 func Calculate(a, b int) int {
 	return a+b, 
 }
-```
 
-```go
-// hello_world.go
+// main.go
 package main
 
 import "fmt"
-import "my_project/tools"
+import "./tools"
 
 func main() {
 	fmt.Printf("hello world\n")
@@ -175,31 +172,11 @@ func main() {
 }
 ```
 
-此时还无法运行`hello_world.go`, 若运行, 则报错:
-
-```shell
-$ go run hello_world.go
-hello_world.go:4:8: package my_project/tools is not in GOROOT (/Users/David/sdk/go1.20.4/src/my_project/tools)
-```
-
-此时在项目根目录创建go module, module的名字与项目文件夹名字`my_project`相同, 
-
-```shell
-$ go mod init my_project
-go: creating new go.mod: module my_project
-```
-
-此时再运`hello_world.go`:
-
 ```go
-$ go run hello_world.go 
+$ go run main.go 
 hello world
 5
 ```
-
-`tools/` 是自定义的 package, `tools/math.go` 通过其第一行代码 `package tools` 声明其属于 package `tools`, 我们在 `hello_world.go` 调用package里的函数的语法是`import module_name/package_name`, 所以我们`hello_world.go`的第一行是`import "my_project/tools"`, 
-
-现在看看下面这段话, 是不是觉得很多概念都清晰了呢:
 
 > **A Go Module is nothing but a collection of Go packages.** Now this question might come to your mind. Why do we need Go modules to create a custom package? The answer is **the import path for the custom package we create is derived from the name of the go module**. In addition to this, all the other third-party packages(such as source code from github) which our application uses will be present in the `go.mod` file along with the version. This `go.mod` file is created when we create a new module. Another question might popup in our minds. How come we got away without creating a [Go module](https://golangbot.com/books/) till now? The answer is, we never created our own custom package till now in this [tutorial series](https://golangbot.com/learn-golang-series/) and hence no Go module was needed. 
 
@@ -271,8 +248,7 @@ Go Modules 是 Golang 新的依赖管理方法, 之前用的都是 GOPATH, 他�
  ## 6. 总结
 
 - `go install`, `go run` 要区分开, 平时常用的是`go run`
-- `go install`运行前需要执行`go mod init my_project`
-- 需要使用custom package的时候, 要使用go module, 即`go mod init your_module_name`, module name往往和我们项目名相同, 但你也可以使用其他的名字, 
+- `go install`运行前需要执行`go mod init my_project`ß
 - 创建自定义package即在项目根目录下创建一个文件夹, 然后在里面写go源代码, 注意package里面的源文件的第一行必须声明其属于该package: `package xxx`
 - 创建自定义package的时候, 里面的函数变量必须要**首字母大写**, 否则那个函数就属于私有了, 具体参考: [A Tour of Go](https://go.dev/tour/basics/3)
 - 注意区分 package 和 module 的概念, 他们是不同的: A Go Module is nothing but a collection of Go packages. 
