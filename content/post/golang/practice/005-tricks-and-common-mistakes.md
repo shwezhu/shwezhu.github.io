@@ -44,6 +44,18 @@ func (s *MemoryStore) gc() {
 }
 ```
 
+```go
+// stimulate stack
+stack := make([]rune, 0)
+for _, r := range s {
+	if _, ok := pairs[r]; ok {
+		stack = append(stack, r)
+	} else {
+		stack = stack[:len(stack)-1]
+	}
+}
+```
+
 ## Common mistakes
 
 #### 1. Encoding non-exported fields struct value with gobs

@@ -1,28 +1,12 @@
 ---
-title: TUN Device & utun Interface
-date: 2023-09-08 17:54:59
+title: Working with TUN Device on MacOS
+date: 2023-09-012 08:31:59
 categories:
  - cs basics
 tags:
  - cs basics
  - networking
 ---
-
-## 1. TUN (network TUNnel) Device
-
-In computer networking, **TUN** and **TAP** are two different kernel **virtual network devices**. Though both are for tunneling purposes, TUN and TAP can't be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
-
-> By default, tun devices operate in the layer 3 mode, and it's point to point. 
->
-> A network interface can be a physical device, called network interface controller (NIC), such as an ethernet card or wireless adapter, or a virtual device, such as a TUN or TAP interface. 
->
-> Source: https://www.baeldung.com/linux/create-check-network-interfaces
-
-Learn more: [TUN/TAP](https://en.wikipedia.org/wiki/TUN/TAP)
-
-## 2. `utun*` interface
-
-### 2.1. `utun*` is a peer to peer network interface for TUN device
 
 On macOS, the `utun` interface is a type of TUN device specifically designed for VPN connections to handle the network traffic **within the VPN tunnel** [regardless of whether VPN is enabled](https://apple.stackexchange.com/questions/310220/who-creates-utun0-adapter). 
 
@@ -63,7 +47,11 @@ utun5: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1500
 >
 > Source: https://superuser.com/a/1446061/1689666
 
-### 2.2. `utun*` is just a network interface
+----
+
+**You can think `utun*` is an instance of TUN device on Mac, a TUN device can have many instances.**
+
+OS treat virtual network interface (tun/tap devices) as same to the physical network interface, which means virtual network interface can have anything (including ip address) that physical network interface have. 
 
 `utun*` is just a network interface similar to `en0`, `lo0`, when you input `ifconfig` command, they will listed together:
 
@@ -115,7 +103,9 @@ With point-to-point interfaces, it's actually the same idea. This example means 
 
 Source: https://superuser.com/a/1446061/1689666
 
-### Assign ip address for an `utun` interface
+-----
+
+**Assign ip address for an `utun` interface**
 
 ```shell
 $ tldr ifconfig
