@@ -48,7 +48,7 @@
 <meta itemprop="name" content="Trivial Tricks and Common Mistakes in Practice - Go">
 <meta itemprop="description" content="Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]&#43;&#43; } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker."><meta itemprop="datePublished" content="2023-08-27T17:12:55+00:00" />
 <meta itemprop="dateModified" content="2023-08-27T17:12:55+00:00" />
-<meta itemprop="wordCount" content="511">
+<meta itemprop="wordCount" content="553">
 <meta itemprop="keywords" content="golang,practice," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Trivial Tricks and Common Mistakes in Practice - Go"/>
 <meta name="twitter:description" content="Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]&#43;&#43; } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker."/>
@@ -220,6 +220,30 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">expired</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">			<span class="o">...</span>
 </span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// stimulate stack
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">stack</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">rune</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">pairs</span><span class="p">[</span><span class="nx">r</span><span class="p">];</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">stack</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">stack</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">stack</span> <span class="p">=</span> <span class="nx">stack</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="nx">stack</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>

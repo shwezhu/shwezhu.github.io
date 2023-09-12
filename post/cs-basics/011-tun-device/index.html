@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>TUN Device &amp; utun Interface - David&#39;s Blog</title>
+  <title>Working with TUN Device on MacOS - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,8 +16,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. TUN (network TUNnel) Device In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&amp;rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
-By default, tun devices operate in the layer 3 mode, and it&amp;rsquo;s point to point." />
+<meta name="author" content="David" /><meta name="description" content="On macOS, the utun interface is a type of TUN device specifically designed for VPN connections to handle the network traffic within the VPN tunnel regardless of whether VPN is enabled.
+I&amp;rsquo;ll give you an example to demonstrate the realtionship between TUN device and utun interface, the code below written in Go is to create a TUN device:
+1 2 // New() creates a new TUN/TAP interface using config. ifce, err := water." />
 
 
 
@@ -40,22 +41,25 @@ By default, tun devices operate in the layer 3 mode, and it&amp;rsquo;s point to
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="TUN Device &amp; utun Interface" />
-<meta property="og:description" content="1. TUN (network TUNnel) Device In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
-By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to point." />
+<meta property="og:title" content="Working with TUN Device on MacOS" />
+<meta property="og:description" content="On macOS, the utun interface is a type of TUN device specifically designed for VPN connections to handle the network traffic within the VPN tunnel regardless of whether VPN is enabled.
+I&rsquo;ll give you an example to demonstrate the realtionship between TUN device and utun interface, the code below written in Go is to create a TUN device:
+1 2 // New() creates a new TUN/TAP interface using config. ifce, err := water." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/cs-basics/011-tun-device/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2023-09-08T17:54:59+00:00" />
-<meta property="article:modified_time" content="2023-09-08T17:54:59+00:00" />
-<meta itemprop="name" content="TUN Device &amp; utun Interface">
-<meta itemprop="description" content="1. TUN (network TUNnel) Device In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
-By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to point."><meta itemprop="datePublished" content="2023-09-08T17:54:59+00:00" />
-<meta itemprop="dateModified" content="2023-09-08T17:54:59+00:00" />
-<meta itemprop="wordCount" content="838">
+
+
+<meta itemprop="name" content="Working with TUN Device on MacOS">
+<meta itemprop="description" content="On macOS, the utun interface is a type of TUN device specifically designed for VPN connections to handle the network traffic within the VPN tunnel regardless of whether VPN is enabled.
+I&rsquo;ll give you an example to demonstrate the realtionship between TUN device and utun interface, the code below written in Go is to create a TUN device:
+1 2 // New() creates a new TUN/TAP interface using config. ifce, err := water.">
+
+<meta itemprop="wordCount" content="748">
 <meta itemprop="keywords" content="cs basics,networking," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="TUN Device &amp; utun Interface"/>
-<meta name="twitter:description" content="1. TUN (network TUNnel) Device In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
-By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to point."/>
+<meta name="twitter:title" content="Working with TUN Device on MacOS"/>
+<meta name="twitter:description" content="On macOS, the utun interface is a type of TUN device specifically designed for VPN connections to handle the network traffic within the VPN tunnel regardless of whether VPN is enabled.
+I&rsquo;ll give you an example to demonstrate the realtionship between TUN device and utun interface, the code below written in Go is to create a TUN device:
+1 2 // New() creates a new TUN/TAP interface using config. ifce, err := water."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -128,10 +132,10 @@ By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to poi
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">TUN Device &amp; utun Interface</h1>
+      <h1 class="post-title">Working with TUN Device on MacOS</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2023-09-08 </span>
+        <span class="post-time"> 0001-01-01 </span>
         <div class="post-category">
             <a href="/categories/cs-basics/"> cs basics </a>
             </div>
@@ -142,36 +146,11 @@ By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to poi
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#1-tun-network-tunnel-device">1. TUN (network TUNnel) Device</a></li>
-        <li><a href="#2-utun-interface">2. <code>utun*</code> interface</a>
-          <ul>
-            <li><a href="#21-utun-is-a-peer-to-peer-network-interface-for-tun-device">2.1. <code>utun*</code> is a peer to peer network interface for TUN device</a></li>
-            <li><a href="#22-utun-is-just-a-network-interface">2.2. <code>utun*</code> is just a network interface</a></li>
-            <li><a href="#assign-ip-address-for-an-utun-interface">Assign ip address for an <code>utun</code> interface</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</nav>
+    <nav id="TableOfContents"></nav>
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-tun-network-tunnel-device">1. TUN (network TUNnel) Device</h2>
-<p>In computer networking, <strong>TUN</strong> and <strong>TAP</strong> are two different kernel <strong>virtual network devices</strong>. Though both are for tunneling purposes, TUN and TAP can&rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.</p>
-<blockquote>
-<p>By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to point.</p>
-<p>A network interface can be a physical device, called network interface controller (NIC), such as an ethernet card or wireless adapter, or a virtual device, such as a TUN or TAP interface.</p>
-<p>Source: <a href="https://www.baeldung.com/linux/create-check-network-interfaces">https://www.baeldung.com/linux/create-check-network-interfaces</a></p>
-</blockquote>
-<p>Learn more: <a href="https://en.wikipedia.org/wiki/TUN/TAP">TUN/TAP</a></p>
-<h2 id="2-utun-interface">2. <code>utun*</code> interface</h2>
-<h3 id="21-utun-is-a-peer-to-peer-network-interface-for-tun-device">2.1. <code>utun*</code> is a peer to peer network interface for TUN device</h3>
-<p>On macOS, the <code>utun</code> interface is a type of TUN device specifically designed for VPN connections to handle the network traffic <strong>within the VPN tunnel</strong> <a href="https://apple.stackexchange.com/questions/310220/who-creates-utun0-adapter">regardless of whether VPN is enabled</a>.</p>
+      <p>On macOS, the <code>utun</code> interface is a type of TUN device specifically designed for VPN connections to handle the network traffic <strong>within the VPN tunnel</strong> <a href="https://apple.stackexchange.com/questions/310220/who-creates-utun0-adapter">regardless of whether VPN is enabled</a>.</p>
 <p>I&rsquo;ll give you an example to demonstrate the realtionship between TUN device and utun interface, the code below written in Go is to create a TUN device:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -230,7 +209,9 @@ By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to poi
 <p>There are no layer-2 headers, no MAC addresses, and no ARP on a point-to-point interface, because everything sent through it reaches the same destination (the &ldquo;peer&rdquo; host).</p>
 <p>Source: <a href="https://superuser.com/a/1446061/1689666">https://superuser.com/a/1446061/1689666</a></p>
 </blockquote>
-<h3 id="22-utun-is-just-a-network-interface">2.2. <code>utun*</code> is just a network interface</h3>
+<hr>
+<p><strong>You can think <code>utun*</code> is an instance of TUN device on Mac, a TUN device can have many instances.</strong></p>
+<p>OS treat virtual network interface (tun/tap devices) as same to the physical network interface, which means virtual network interface can have anything (including ip address) that physical network interface have.</p>
 <p><code>utun*</code> is just a network interface similar to <code>en0</code>, <code>lo0</code>, when you input <code>ifconfig</code> command, they will listed together:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -310,7 +291,8 @@ By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to poi
 <p>With point-to-point interfaces, it&rsquo;s actually the same idea. This example means &ldquo;My address is <code>10.8.0.18</code> and I also have an on-link route <code>10.8.0.17/32 dev utun3</code>.&rdquo; In this case the autogenerated route is a /32, indicating only one host – the &ldquo;peer&rdquo;.</p>
 <p><em>(Note: My examples use Linux iproute2-style syntax.)</em> So in the end, the difference between <code>10.8.0.17 netmask 0xffffffff</code> and <code>10.8.0.17/32</code> styles is just that automatic route.</p>
 <p>Source: <a href="https://superuser.com/a/1446061/1689666">https://superuser.com/a/1446061/1689666</a></p>
-<h3 id="assign-ip-address-for-an-utun-interface">Assign ip address for an <code>utun</code> interface</h3>
+<hr>
+<p><strong>Assign ip address for an <code>utun</code> interface</strong></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -381,7 +363,7 @@ By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to poi
   <p class="copyright-item">
     <span class="item-title">LastMod</span>
     <span class="item-content">
-        2023-09-08
+        0001-01-01
         
     </span>
   </p>
@@ -394,13 +376,13 @@ By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to poi
           <a href="/tags/networking/">networking</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/golang/practice/008-vpn-go/">
+        <a class="prev" href="/post/golang/basics/009-everything-passed-by-value/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Octopus - Go</span>
+            <span class="prev-text nav-default">Everything Passed by Value - Go</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
-        <a class="next" href="/post/golang/basics/008-error-handling/">
-            <span class="next-text nav-default">Error handling - Go</span>
+        <a class="next" href="/post/golang/practice/001-snake-game/">
+            <span class="next-text nav-default">用Go实现一个简单的贪吃蛇</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

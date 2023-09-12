@@ -48,7 +48,7 @@
 <meta itemprop="name" content="虚拟网卡 tun/tap - 阅读转载">
 <meta itemprop="description" content="原文: 云原生虚拟网络 tun/tap &amp; veth-pair - luozhiyun`s Blog 理解 Linux 虚拟网卡设备 tun/tap 的一切 | 骏马金龙 之前的相关文章: TUN Device &amp; utun Interface - David&rsquo;s Blog Tunneling Protocols - David&rsquo;s Blog 1. 物理网卡和虚拟网卡 1.1. 物理网卡"><meta itemprop="datePublished" content="2023-09-11T21:57:37+00:00" />
 <meta itemprop="dateModified" content="2023-09-11T21:57:37+00:00" />
-<meta itemprop="wordCount" content="4472">
+<meta itemprop="wordCount" content="4807">
 <meta itemprop="keywords" content="networking," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="虚拟网卡 tun/tap - 阅读转载"/>
 <meta name="twitter:description" content="原文: 云原生虚拟网络 tun/tap &amp; veth-pair - luozhiyun`s Blog 理解 Linux 虚拟网卡设备 tun/tap 的一切 | 骏马金龙 之前的相关文章: TUN Device &amp; utun Interface - David&rsquo;s Blog Tunneling Protocols - David&rsquo;s Blog 1. 物理网卡和虚拟网卡 1.1. 物理网卡"/>
@@ -152,8 +152,12 @@
         <li><a href="#2-概述">2. 概述</a></li>
         <li><a href="#3-tuntap">3. tun/tap</a></li>
         <li><a href="#4-openvpn-使用-tun-设备收发数据">4. OpenVPN 使用 tun 设备收发数据</a></li>
-        <li><a href="#5-flannel-udp-模式使用-tun-设备收发数据">5. flannel UDP 模式使用 tun 设备收发数据</a></li>
-        <li><a href="#6-总结">6. 总结</a></li>
+        <li><a href="#5-flannel-udp-模式使用-tun-设备收发数据">5. flannel UDP 模式使用 tun 设备收发数据</a>
+          <ul>
+            <li><a href="#6-tap-设备作为虚拟机网卡">6. tap 设备作为虚拟机网卡</a></li>
+          </ul>
+        </li>
+        <li><a href="#7-总结">7. 总结</a></li>
       </ul>
     </li>
   </ul>
@@ -263,7 +267,13 @@
 <p>flanneld 进程会根据目的 IP 的地址匹配到对应的子网，从 Etcd 中找到这个子网对应的宿主机 Node2 的 IP 地址，然后将这个数据包直接封装在 UDP 包里面，然后发送给 Node 2。由于每台宿主机上的 flanneld 都监听着一个 8285 端口，所以 Node2 机器上 flanneld 进程会从 8285 端口获取到传过来的数据，解析出封装在里面的发给 ContainerA 的 IP 地址。</p>
 <p>flanneld 会直接把这个 IP 包发送给它所管理的 TUN 设备，即 flannel0 设备。然后网络栈会将这个数据包根据路由发送到 docker0 网桥，docker0 网桥会扮演二层交换机的角色，将数据包发送给正确的端口，进而通过 veth pair 设备进入到 containerA 的 Network Namespace 里。</p>
 <p>上面所讲的 Flannel UDP 模式现在已经废弃，原因就是因为它经过三次用户态与内核态之间的数据拷贝。容器发送数据包经过 docker0 网桥进入内核态一次；数据包由 flannel0 设备进入到 flanneld 进程又一次；第三次是 flanneld 进行 UDP 封包之后重新进入内核态，将 UDP 包通过宿主机的 eth0 发出去。</p>
-<h2 id="6-总结">6. 总结</h2>
+<h3 id="6-tap-设备作为虚拟机网卡">6. tap 设备作为虚拟机网卡</h3>
+<p>上面我们也说了，tap 设备是一个二层链路层设备，通常用作实现虚拟网卡。以 qemu-kvm 为例，它利用 tap 设备和 Bridge 配合使用拥有极大的灵活性，可以实现各种各样的网络拓扑。</p>
+<img src="/007-tun-tap-veth-reading/j.png" alt="j" style="zoom:50%;" />
+<p>在 qume-kvm 开启 tap 模式之后，在启动的时候会向内核注册了一个tap类型虚拟网卡 tapx，x 代表依次递增的数字； 这个虚拟网卡 tapx 是绑定在 Bridge 上面的，是它上面的一个接口，最终数据会通过 Bridge 来进行转发。</p>
+<p>qume-kvm 会通过其网卡 eth0 向外发送数据，从 Host 角度看就是用户层程序 qume-kvm 进程将字符设备写入数据；然后 tapx 设备会收到数据后由 Bridge 决定数据包如何转发。如果 qume-kvm 要和外界通信，那么数据包会被发送到物理网卡，最终实现与外部通信。</p>
+<p>从上面的图也可以看出 qume-kvm 发出的数据包通过 tap 设备先到达 Bridge ，然后到物理网络中，数据包不需要经过主机的的协议栈，这样效率也比较高。</p>
+<h2 id="7-总结">7. 总结</h2>
 <p>本篇文章只是讲了两种常见的虚拟网络设备。起因是在看 flannel 的时候，书里面都会讲到 flannel0 是一个 tun 设备，但是什么是 tun 设备却不明白，所以导致 flannel 也看的不明白。</p>
 <p>经过研究，发现 tun/tap 设备是一个虚拟网络设备，负责数据转发，但是它需要通过文件作为传输通道，这样不可避免的引申出 tun/tap 设备为什么要转发两次，这也是为什么 flannel 设备 UDP 模式下性能不好的原因，导致了后面这种模式被废弃掉。</p>
 <p>因为 tun/tap 设备作为虚拟网络设备性能不好，容器对容器的直接通信并不会把 tun/tap 作为首选方案，一般是基于后面介绍的 veth 来实现的。veth 作为一个二层设备，可以让两个隔离的网络名称空间之间可以互相通信，不需要反复多次经过网络协议栈， veth pair 是一端连着协议栈，另一端彼此相连的，数据之间的传输变得十分简单，这也让 veth 比起 tap/tun 具有更好的性能。</p>
