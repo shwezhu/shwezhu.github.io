@@ -89,7 +89,7 @@ For instance, suppose a company needs to set up a connection between the [local 
 
 With GRE, the company could send traffic through this network by encapsulating IPv6 packets within IPv4 packets. Referring back to the analogy, the **IPv6 packets are the car**, the IPv4 packets are the ferry, and the **third-party network is the water**.
 
-## 4.1. What goes in a GRE header?
+### 4.1. What goes in a GRE header?
 
 GRE adds two headers to each packet: the GRE header, which is 4 bytes long, and an IP header, which is 20 bytes long. The GRE header indicates the protocol type used by the encapsulated packet. The IP header encapsulates the original packet's header and payload. This means that a GRE packet usually has two IP headers: one for the original packet, and one added by the GRE protocol. Only the routers at each end of the GRE tunnel will reference the original, non-GRE IP header.
 
