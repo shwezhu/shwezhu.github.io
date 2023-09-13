@@ -142,7 +142,7 @@ var cat *Cat
 *cat = kitten  // runtime error: invalid memory address or nil pointer dereference
 ```
 
-### 3.2. `var` vs `new`
+### 3.2. `var` vs `new ` vs `make` 
 
 It's a little harder to justify `new`. The main thing it makes easier is creating pointers to non-composite types. The two functions below are equivalent. One's just a little more concise:
 
@@ -155,11 +155,27 @@ func newInt2() *int {
 }
 ```
 
-Source: https://stackoverflow.com/a/9322182/16317008
+`new()` returns a pointer to the value it created, a pointer to map, channel and slice is thought as useless, so don't use `new()` with these types, just use it with non-composite types. And always use `make()` when create slice, map and channnel. 
 
-### 3.3. `var` vs `make`
+When create a custom type, you can use literal:
 
-I have talked this in another post: https://davidzhu.xyz/post/golang/practice/006-collection-operations/
+```go
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+res := ListNode{}
+res := &ListNode{}
+```
+
+Conclusion is that don't use `new()`, it's a little confusing, just use `make()` and `var`, `:=`
+
+why  `new()`: https://softwareengineering.stackexchange.com/a/216582
+
+`new` vs `make`: https://stackoverflow.com/a/9322182/16317008
+
+`var` vs `make`: https://davidzhu.xyz/post/golang/practice/006-collection-operations/
 
 ## 4. Variable redeclarations 
 

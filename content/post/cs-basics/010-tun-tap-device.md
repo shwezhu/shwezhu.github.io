@@ -107,3 +107,27 @@ TAP interfaces (`IFF_TUN`) transport layer 2 (L2) PDUs:
 
 Source: [TUN/TAP interface (on Linux) - /dev/posts/](https://www.gabriel.urdhr.fr/2021/05/08/tuntap/)
 
+## 4. Set up TUN/TAP devices
+
+Because TUN is a layer 3 connection, it acts as a point-to-point link. We’ll assign these parameters:
+
+- local address (for your machine): 192.0.2.1
+- remote address (for Scapy): 192.0.2.2
+
+On Linux, you would use:
+
+```shell
+sudo ip link set tun0 up
+sudo ip addr add 192.0.2.1 peer 192.0.2.2 dev tun0 
+# sudo ip addr add 192.0.2.1 peer 192.0.2.2 dev tun0  up
+```
+
+On BSD and macOS, use:
+
+```shell
+sudo ifconfig tun0 up
+sudo ifconfig tun0 192.0.2.1 192.0.2.2
+# sudo ifconfig tun0 192.0.2.1 192.0.2.2 up
+```
+
+Source: https://scapy.readthedocs.io/en/latest/layers/tuntap.html#tuntapinterface-reference

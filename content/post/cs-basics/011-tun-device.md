@@ -1,6 +1,6 @@
 ---
 title: Working with TUN Device on MacOS
-date: 2023-09-012 08:31:59
+date: 2023-09-12 08:31:59
 categories:
  - cs basics
 tags:

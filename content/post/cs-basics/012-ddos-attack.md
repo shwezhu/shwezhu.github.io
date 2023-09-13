@@ -46,11 +46,11 @@ In 2004, a Chinese hacker nicknamed KiKi invented a hacking tool to send these k
 
 ### 4.1. Intercept cc attack - intercept http request
 
-**（1）Hardware firewall**
+**(1) Hardware firewall**
 
 Set a physical firewall before your server machine which used to filter request, this is best way but most expensive too.
 
-**（2）Software firewall **
+**(2) Software firewall **
 
 Almost all OS has firewall installed，Linux server usually use [iptables](https://wiki.archlinux.org/index.php/Iptables_(简体中文)), intercept request from IP address  `1.2.3.4`, for example:
 
@@ -58,7 +58,7 @@ Almost all OS has firewall installed，Linux server usually use [iptables](https
 $ iptables -A INPUT -s 1.2.3.4 -j DROP
 ```
 
-**（3）Web Server**
+**(3) Web server**
 
 Web can also used to intercept IP address `1.2.3.4`, on nginx:
 
@@ -76,6 +76,8 @@ On Apache, modify the  `.htaccess` file:
     Require not ip 1.2.3.4
 </RequireAll>
 ```
+
+Web server have a impact impact on the performance when used in firewall and cannot protect when there are huge DDoS attack.
 
 Learn more: https://www.ruanyifeng.com/blog/2018/06/ddos.html
 
