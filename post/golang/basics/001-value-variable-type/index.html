@@ -51,7 +51,7 @@
 <meta itemprop="description" content="1. Go is statically typed Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
 1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt. The variables i and j have distinct static types and, although they have the same underlying type, they cannot be assigned to one another without a conversion."><meta itemprop="datePublished" content="2023-09-05T22:00:20+00:00" />
 <meta itemprop="dateModified" content="2023-09-05T22:00:20+00:00" />
-<meta itemprop="wordCount" content="1325">
+<meta itemprop="wordCount" content="1414">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Value Variable and Types - Go"/>
 <meta name="twitter:description" content="1. Go is statically typed Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
@@ -158,8 +158,7 @@
           <ul>
             <li><a href="#31--vs-var">3.1. <code>:=</code> vs <code>var</code></a></li>
             <li><a href="#32-zero-value">3.2. Zero value</a></li>
-            <li><a href="#32-var-vs-new">3.2. <code>var</code> vs <code>new</code></a></li>
-            <li><a href="#33-var-vs-make">3.3. <code>var</code> vs <code>make</code></a></li>
+            <li><a href="#32-var-vs-new--vs-make">3.2. <code>var</code> vs <code>new </code> vs <code>make</code></a></li>
           </ul>
         </li>
         <li><a href="#4-variable-redeclarations">4. Variable redeclarations</a></li>
@@ -392,7 +391,7 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 </span></span><span class="line"><span class="cl"><span class="o">*</span><span class="nx">cat</span> <span class="p">=</span> <span class="nx">kitten</span>  <span class="c1">// runtime error: invalid memory address or nil pointer dereference
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="32-var-vs-new">3.2. <code>var</code> vs <code>new</code></h3>
+</div><h3 id="32-var-vs-new--vs-make">3.2. <code>var</code> vs <code>new </code> vs <code>make</code></h3>
 <p>It&rsquo;s a little harder to justify <code>new</code>. The main thing it makes easier is creating pointers to non-composite types. The two functions below are equivalent. One&rsquo;s just a little more concise:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -412,9 +411,32 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Source: <a href="https://stackoverflow.com/a/9322182/16317008">https://stackoverflow.com/a/9322182/16317008</a></p>
-<h3 id="33-var-vs-make">3.3. <code>var</code> vs <code>make</code></h3>
-<p>I have talked this in another post: <a href="https://davidzhu.xyz/post/golang/practice/006-collection-operations/">https://davidzhu.xyz/post/golang/practice/006-collection-operations/</a></p>
+</div><p><code>new()</code> returns a pointer to the value it created, a pointer to map, channel and slice is thought as useless, so don&rsquo;t use <code>new()</code> with these types, just use it with non-composite types. And always use <code>make()</code> when create slice, map and channnel.</p>
+<p>When create a custom type, you can use literal:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">ListNode</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Val</span>  <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Next</span> <span class="o">*</span><span class="nx">ListNode</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">res</span> <span class="o">:=</span> <span class="nx">ListNode</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">res</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">ListNode</span><span class="p">{}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Conclusion is that don&rsquo;t use <code>new()</code>, it&rsquo;s a little confusing, just use <code>make()</code> and <code>var</code>, <code>:=</code></p>
+<p>why  <code>new()</code>: <a href="https://softwareengineering.stackexchange.com/a/216582">https://softwareengineering.stackexchange.com/a/216582</a></p>
+<p><code>new</code> vs <code>make</code>: <a href="https://stackoverflow.com/a/9322182/16317008">https://stackoverflow.com/a/9322182/16317008</a></p>
+<p><code>var</code> vs <code>make</code>: <a href="https://davidzhu.xyz/post/golang/practice/006-collection-operations/">https://davidzhu.xyz/post/golang/practice/006-collection-operations/</a></p>
 <h2 id="4-variable-redeclarations">4. Variable redeclarations</h2>
 <p>Unlike regular variable declarations, a short variable declaration may <em>redeclare</em> variables provided they were originally <strong>declared earlier in the same block</strong> <strong>with the same type</strong>, and <strong>at least one of the non-<a href="https://go.dev/ref/spec#Blank_identifier">blank</a> variables is new</strong>. As a consequence, redeclaration can only appear in a multi-variable short declaration. Redeclaration does not introduce a new variable; it just assigns a new value to the original.</p>
 <div class="highlight"><div class="chroma">
