@@ -157,9 +157,9 @@ In the physical world, tunneling is a way to cross terrain or boundaries that co
             <li><a href="#35-how-does-ipsec-impact-mss-and-mtu">3.5. How does IPsec impact MSS and MTU?</a></li>
           </ul>
         </li>
-        <li><a href="#4-gre---network-layer">4. GRE - Network Layer</a></li>
-        <li><a href="#41-what-goes-in-a-gre-header">4.1. What goes in a GRE header?</a>
+        <li><a href="#4-gre---network-layer">4. GRE - Network Layer</a>
           <ul>
+            <li><a href="#41-what-goes-in-a-gre-header">4.1. What goes in a GRE header?</a></li>
             <li><a href="#42-how-does-the-use-of-gre-impact-mtu-and-mss-requirements">4.2. How does the use of GRE impact MTU and MSS requirements?</a></li>
           </ul>
         </li>
@@ -221,7 +221,7 @@ In the physical world, tunneling is a way to cross terrain or boundaries that co
 <p>GRE enables the usage of protocols that are not normally supported by a network, because the packets are wrapped within other packets that do use supported protocols. To understand how this works, think about the difference between a <strong>car</strong> and a <strong>ferry</strong>. A <strong>car</strong> travels over roads on land, while a <strong>ferry</strong> travels over <strong>water</strong>. A <strong>car</strong> cannot normally travel on <strong>water</strong> — however, a <strong>car</strong> can be loaded onto a <strong>ferry</strong> in order to do so.</p>
 <p>For instance, suppose a company needs to set up a connection between the <a href="https://www.cloudflare.com/learning/network-layer/what-is-a-lan/">local area networks (LANs)</a> in their two different offices. Both LANs use the latest version of the <a href="https://www.cloudflare.com/learning/network-layer/internet-protocol/">Internet Protocol</a>, IPv6. But in order to get from one office network to another, traffic must pass through a network managed by a third party — which is somewhat outdated and only supports the older IPv4 protocol.</p>
 <p>With GRE, the company could send traffic through this network by encapsulating IPv6 packets within IPv4 packets. Referring back to the analogy, the <strong>IPv6 packets are the car</strong>, the IPv4 packets are the ferry, and the <strong>third-party network is the water</strong>.</p>
-<h2 id="41-what-goes-in-a-gre-header">4.1. What goes in a GRE header?</h2>
+<h3 id="41-what-goes-in-a-gre-header">4.1. What goes in a GRE header?</h3>
 <p>GRE adds two headers to each packet: the GRE header, which is 4 bytes long, and an IP header, which is 20 bytes long. The GRE header indicates the protocol type used by the encapsulated packet. The IP header encapsulates the original packet&rsquo;s header and payload. This means that a GRE packet usually has two IP headers: one for the original packet, and one added by the GRE protocol. Only the routers at each end of the GRE tunnel will reference the original, non-GRE IP header.</p>
 <h3 id="42-how-does-the-use-of-gre-impact-mtu-and-mss-requirements">4.2. How does the use of GRE impact MTU and MSS requirements?</h3>
 <p>Like any protocol, using GRE adds a few bytes to the size of data packets. This must be factored into the MSS and MTU settings for packets. If the MTU is 1,500 bytes and the MSS is 1,460 bytes (to account for the size of the necessary IP and <a href="https://www.cloudflare.com/learning/ddos/glossary/tcp-ip/">TCP</a> headers), the addition of GRE 24-byte headers will cause the packets to exceed the MTU:</p>

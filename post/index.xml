@@ -91,7 +91,11 @@ In the physical world, tunneling is a way to cross terrain or boundaries that co
       <pubDate>Fri, 08 Sep 2023 21:43:55 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/practice/008-vpn-go/</guid>
-      <description>1. Set up 1 go get -u github.com/songgao/water 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 func main() { ifce, err := water.New(water.Config{DeviceType: water.TUN}) if err != nil { log.Fatal(err) } log.Printf(&amp;#34;Interface Name: %s\n&amp;#34;, ifce.Name()) packet := make([]byte, 1500) for { n, err := ifce.Read(packet) if err != nil { log.Fatal(err) } log.Printf(&amp;#34;Packet Received: % x\n&amp;#34;, packet[:n]) } } 1 2 # NOTE: replace utunx with the name printed on your go code above $ sudo ifconfig utun5 10.</description>
+      <description>1. Simple test 1.1. Install Go 1 2 3 # choose your version $ wget https://go.dev/dl/go1.21.1.linux-amd64.tar.gz $ sudo tar -C /usr/local -xzf go1.21.1.linux-amd64.tar.gz Add environment variable, edit .zshrc file:
+1 export PATH=$PATH:/usr/local/go/bin Learn more: https://go.dev/doc/install
+1.2. Run server &amp;amp; client code An echo server for test: https://github.com/venilnoronha/tcp-echo-server/blob/master/main_test.go
+1 $ go run main.go 9000 hello You need configure the firewall of you server, enable the tcp connection for port 9000.
+Run the code below on you loacl machine:</description>
     </item>
     
     <item>
