@@ -1,5 +1,5 @@
 ---
-title: Interfaces in Go (and Methods Receivers)
+title: Interfaces and Methods Receivers - Go (Interface 1)
 date: 2023-09-02 19:58:32
 categories:
  - golang
@@ -246,9 +246,14 @@ func main() {
 
 Here we saying type `rect` implements interface `Shape`  is not accurate, this is java things. We should say all methods of interface `Shape` are in the method set of type `rect`, and calling a method on an interface value executes the method of the same name on its underlying type. Therefore, we say type `rect` implements interface `Shape`. 
 
-参考:
+References:
 
 - [A Tour of Go](https://go.dev/tour/methods/14)
 - [Go by Example: Interfaces](https://gobyexample.com/interfaces)
 - [How to Iterate Over a Slice in Golang? - golangprograms.com](https://www.golangprograms.com/how-to-iterate-over-a-slice-in-golang.html)
 
+Learn more:
+
+[Interface in Practice - Go (Interface 2)](https://davidzhu.xyz/post/golang/basics/007-interface-practical-example/)
+
+[Types and Interface Value - Go (Interface 3)](https://davidzhu.xyz/post/golang/basics/017-interface-relearn/)

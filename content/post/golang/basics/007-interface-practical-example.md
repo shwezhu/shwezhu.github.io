@@ -1,5 +1,5 @@
 ---
-title: Golang Interface & Interface in Web App
+title: Interface in Practice - Go (Interface 2)
 date: 2023-08-22 13:03:05
 categories:
  - golang
@@ -7,6 +7,8 @@ categories:
 tags:
  - golang
 ---
+
+Previous post: [Interfaces and Methods Receivers - Go (Interface 1)](https://davidzhu.xyz/post/golang/basics/006-interfaces/)
 
 ## 1. Empty Interface - Wildcard
 
@@ -54,9 +56,9 @@ Because  the type of  ` session.Values[xxx] ` is `interface{}`, you can store an
 
 Learn more: 
 
-https://shaowenzhu.top/post/golang/basics/014-gob-json-encoding/#27-gobregister-method
+[encoding/gob & encoding/json in Go - David's Blog](https://davidzhu.xyz/post/golang/basics/014-gob-json-encoding/#27-gobregister-method)
 
-https://shaowenzhu.top/post/golang/basics/001-syntax/#7-type-assertions
+[Value Variable and Types - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/001-value-variable-type/#6-type-assertions)
 
 ## 2. Any types can implement an interface
 
@@ -64,7 +66,7 @@ https://shaowenzhu.top/post/golang/basics/001-syntax/#7-type-assertions
 
 >Interfaces in Go provide a way to **specify the behavior of an object**: if something can do *this*, then it can be used *here*.
 
-Learn more: https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/#3-first-try---type-admin-isnt-adimin
+Learn more: [Interfaces in Go (and Methods Receivers) - David's Blog](https://davidzhu.xyz/post/golang/basics/006-interfaces/#2-first-try---type-admin-isnt-adimin)
 
 ### 2.1. `http.HandleFunc`
 
@@ -232,3 +234,7 @@ References:
 
 - [HTTP Closures](https://gist.github.com/tsenart/5fc18c659814c078378d)
 - [Structuring Applications in Go. How I organize my applications in Go | by Ben Johnson | Medium](https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091)
+
+Learn more:
+
+[Types and Interface Value - Go (Interface 3)](https://davidzhu.xyz/post/golang/basics/017-interface-relearn/)

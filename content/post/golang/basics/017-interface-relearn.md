@@ -1,5 +1,5 @@
 ---
-title: Type and Interface Value - Go
+title: Types and Interface Value - Go (Interface 3)
 date: 2023-09-02 18:57:04
 categories:
  - golang
@@ -7,6 +7,12 @@ categories:
 tags:
  - golang
 ---
+
+Previouse posts:
+
+[Interfaces and Methods Receivers - Go (Interface 1)](https://davidzhu.xyz/post/golang/basics/006-interfaces/)
+
+[Interface in Practice - Go (Interface 2)](https://davidzhu.xyz/post/golang/basics/007-interface-practical-example/)
 
 ## 1. Types and interfaces
 
@@ -41,7 +47,7 @@ type Writer interface {
 }
 ```
 
-Any type that implements a `Read` (or `Write`) method with this signature is said to implement `io.Reader` (or `io.Writer`). For the purposes of this discussion, that means that a variable of type `io.Reader` can hold any value whose type has a `Read` method:
+Any type that implements a `Read()` (or `Write()`) method with this signature is said to implement `io.Reader` (or `io.Writer`). For the purposes of this discussion, that means that a variable of type `io.Reader` can hold any value whose type‘s [method set](https://golang.org/ref/spec#Method_sets) has a `Read()` method:
 
 ```go
 var r io.Reader
@@ -51,9 +57,7 @@ r = new(bytes.Buffer)
 // and so on
 ```
 
-> It’s important to be clear that whatever concrete value `r` may hold, `r`’s type is always `io.Reader`: Go is statically typed and the static type of `r` is `io.Reader`.
-
-We have talked this in [other posts](https://shaowenzhu.top/post/golang/basics/006-interfaces/#3-first-try---type-admin-isnt-adimin):
+It’s important to be clear that whatever concrete value `r` may hold, `r`’s type is always `io.Reader`: Go is statically typed and the static type of `r` is `io.Reader`. We have talked this in [other posts](https://shaowenzhu.top/post/golang/basics/006-interfaces/#3-first-try---type-admin-isnt-adimin):
 
 ```go
 var user1 User
@@ -66,7 +70,7 @@ user2 = *user1 // error: Invalid indirect of 'user1' (type 'User')
 
 `user1` is an interface, it holds an pointer value: `&Admin{name:"user1"}`, however, its type is still a `User` neither `*User` nor `*Admin`. 
 
-Some people say that Go’s interfaces are dynamically typed, but that is misleading. They are statically typed: a variable of interface type always has the same static type, and even though at run time the value stored in the interface variable may change type, that value will always satisfy the interface.
+Some people say that Go’s interfaces are dynamically typed, but that is misleading. They are statically typed: **a variable of interface type always has the same static type**, and even though at run time **the value stored in the interface variable** may change type, that value will always satisfy the interface.
 
 ## 2. The representation of an interface
 
@@ -155,7 +159,7 @@ Wonder why can assign `&Admin{name:"Coco"}` to an interface `User` type? We have
 
 ## 4. Copy Interface
 
-As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an `int` value to a function makes a copy of the `int`, and passing a pointer value makes a copy of the pointer, but not the data it points to. (See a [later section](https://go.dev/doc/faq#methods_on_values_or_pointers) for a discussion of how this affects method receivers.)
+As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an `int` value to a function makes a copy of the `int`, and passing a pointer value makes a copy of the pointer, not the data it points to. (See a [later section](https://go.dev/doc/faq#methods_on_values_or_pointers) for a discussion of how this affects method receivers.)
 
 Map and slice values behave like pointers: they are descriptors that contain pointers to the underlying map or slice data. Copying a map or slice value doesn't copy the data it points to. Copying an interface value makes a copy of the thing stored in the interface value. If the interface value holds a struct, copying the interface value makes a copy of the struct. If the interface value holds a pointer, copying the interface value makes a copy of the pointer, but again not the data it points to.
 

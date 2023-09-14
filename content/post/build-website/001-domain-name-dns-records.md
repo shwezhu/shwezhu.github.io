@@ -52,13 +52,9 @@ shwezhu.github.io.	1937	IN	A	185.199.111.153
 
 ## 2. www是干什么的
 
-上面我们添加DNS记录的时候有时候(根据自己的需求)需要把hostname的值填为www, 那这个是干嘛的呢, 填与不填? 是不是说, hostname空着不填,我们只能通过`exapmle.com`来访问服务器, 填了之后, 我们就可以通过`www.example.com`来访问服务器. 
-
-然后之前我的域名绑定的是我服务器的ip, url是`http://shaowenzhu.top/`, 看着好奇怪, 不是好多网站都是`www.`开头的吗, 为啥我的是`http://shaowenzhu.top/`,
+在上面截图中可以看出, 域名和ip就是一个映射关系, 添加 A Record 时若 HOSTNAME 空着则就是 `exapmle.com` -> ip address, 若填则为 `www.example.com`/`blog.example.com` -> ip address. 也就是说 `www` 就是个 HOSTNAME, 是用户随意分配的, 只是大部分网站使用 `www` 你也可以填成 `blog`, 
 
 ### 2.1. DNS Hierarchy
-
-先了解一下DNS hierarchy, 你就懂上面的`www`是什么了, 
 
 DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点`.`
 
@@ -66,25 +62,19 @@ DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, �
 
 多出的那个`.`是Root Level Domain, 比如`www.example.com`真正的名字是`www.example.com.root`然后上图就简写为`www.example.com.` 因为根域名`.root`对于所有域名都是一样的，所以平时是省略的。
 
-**Root Level Domain**(`.root`)的下一级叫**top-level domain**(TLD)，比如`.com`, `.net`
+- **Root Level Domain**(`.root`)的下一级叫**top-level domain**(TLD)，比如`.com`, `.net`
 
-再下一级叫**second-level domain**SLD，比如`www.example.com`里面的`.example`, 有人直接把`example.com`这种叫做SLD
+- 再下一级叫**second-level domain**SLD，比如`www.example.com`里面的`.example`, 有人直接把`example.com`这种叫做SLD
 
-再下一级是**HOSTNAME**，比如`www.example.com`里面的`www`，这是我们可以任意分配的。那具体怎么分配呢? 就是在域名管理页面, 有添加DNS Records选项, 比如你打算添加个A类记录, 这时候要求你填HOSTNAME和IP地址, 这时候HOSTNAME你可以填`www`, `@`, `blog`等等, 然后IP就是你的服务器的IP地址, 可以参考上面的添加A记录和CNAME的图. 
+- 再下一级是**HOSTNAME**，比如`www.example.com`里面的`www`, 这是可以任意设置的, 你也可以让域名的 HOSTNAME 为 `blog`, 
 
-总结一下，域名的层级结构如下:
+域名的层级结构:
 
 ```
 HOSTNAME.SLD.TLD.root
 ```
 
 ![](/001-domain-name-dns-records/d.png)
-
-### 2.2. Subdomain 和 Apex Domain
-
-然后还有个subdomain 和 apex domain, 其实subdomain就是HOSTNAME, 看一下Github上的解释:
-
-> An **apex domain** is a custom domain that does not contain a **subdomain**, such as `example.com`. Apex domains are also known as base, bare, naked, root apex, or zone apex domains. 
 
 ## 3. DNS 查询过程
 

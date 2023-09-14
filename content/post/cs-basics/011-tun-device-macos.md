@@ -8,6 +8,8 @@ tags:
  - networking
 ---
 
+## 1. TUN on MacOS
+
 On macOS, the `utun` interface is a type of TUN device specifically designed for VPN connections to handle the network traffic **within the VPN tunnel** [regardless of whether VPN is enabled](https://apple.stackexchange.com/questions/310220/who-creates-utun0-adapter). 
 
 I'll give you an example to demonstrate the realtionship between TUN device and utun interface, the code below written in Go is to create a TUN device:
@@ -47,7 +49,7 @@ utun5: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1500
 >
 > Source: https://superuser.com/a/1446061/1689666
 
-----
+## 2. utun is an instance of TUN device
 
 **You can think `utun*` is an instance of TUN device on Mac, a TUN device can have many instances.**
 
@@ -103,9 +105,7 @@ With point-to-point interfaces, it's actually the same idea. This example means 
 
 Source: https://superuser.com/a/1446061/1689666
 
------
-
-**Assign ip address for an `utun` interface**
+## 3. Set up ip for `utun` interface
 
 ```shell
 $ tldr ifconfig
@@ -142,3 +142,47 @@ on the remote system. Note the reversed perspective on the remote machine. Do no
 > Note, if you set a wrong interface, you can cancle it with  `sudo ifconfig utun2 delete 10.1.0.10 10.1.0.20 ` or `ifconfig en1 delete 192.168.141.99` for differnt types of network interfaces.
 
 Source: https://stackoverflow.com/a/17511998/16317008
+
+## 4. Use TUN capture ip packets with Go on MacOS
+
+```shell
+go get -u github.com/songgao/water
+```
+
+```go
+func main() {
+	ifce, err := water.New(water.Config{DeviceType: water.TUN})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Interface Name: %s\n", ifce.Name())
+
+	packet := make([]byte, 1500)
+	for {
+		n, err := ifce.Read(packet)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Packet Received: % x\n", packet[:n])
+	}
+}
+```
+
+```shell
+# NOTE: replace utunx with the name printed on your go code above
+$ sudo ifconfig utun5 10.1.0.10 10.1.0.20 up
+```
+
+Then :
+
+```shell
+ping -c 1 10.1.0.20
+```
+
+If no data printed on your go codes, restart your go codes and change a pair of ip addresses for utun interface.
+
+Learn more: 
+
+- [songgao/water: A simple TUN/TAP library written in native Go.](https://github.com/songgao/water)
+- [TUN Device & utun Interface](https://davidzhu.xyz/post/cs-basics/011-tun-device/)
