@@ -8,7 +8,7 @@ tags:
   - git
 ---
 
-## Problem I have
+## Problem
 
 On github `shwezhu.github.io` repository I have two branch already, one is `master` for static html files that is generate web page, another is `backup` for backup of my hexo themes files and blogs. 
 
