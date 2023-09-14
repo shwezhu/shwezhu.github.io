@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Interfaces in Go (and Methods Receivers) - David&#39;s Blog</title>
+  <title>Interfaces and Methods Receivers - Go (Interface 1) - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&amp;rsquo;ll show you. This is the backgroud code: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name" />
+<meta name="author" content="David" /><meta name="description" content="1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&amp;rsquo;ll show you. This is the backgroud code:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a." />
 
 
 
@@ -39,19 +40,22 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Interfaces in Go (and Methods Receivers)" />
-<meta property="og:description" content="1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&rsquo;ll show you. This is the backgroud code: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name" />
+<meta property="og:title" content="Interfaces and Methods Receivers - Go (Interface 1)" />
+<meta property="og:description" content="1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&rsquo;ll show you. This is the backgroud code:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/006-interfaces/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-09-02T19:58:32+00:00" />
 <meta property="article:modified_time" content="2023-09-02T19:58:32+00:00" />
-<meta itemprop="name" content="Interfaces in Go (and Methods Receivers)">
-<meta itemprop="description" content="1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&rsquo;ll show you. This is the backgroud code: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name"><meta itemprop="datePublished" content="2023-09-02T19:58:32+00:00" />
+<meta itemprop="name" content="Interfaces and Methods Receivers - Go (Interface 1)">
+<meta itemprop="description" content="1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&rsquo;ll show you. This is the backgroud code:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a."><meta itemprop="datePublished" content="2023-09-02T19:58:32+00:00" />
 <meta itemprop="dateModified" content="2023-09-02T19:58:32+00:00" />
-<meta itemprop="wordCount" content="1331">
+<meta itemprop="wordCount" content="1340">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Interfaces in Go (and Methods Receivers)"/>
-<meta name="twitter:description" content="1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&rsquo;ll show you. This is the backgroud code: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name"/>
+<meta name="twitter:title" content="Interfaces and Methods Receivers - Go (Interface 1)"/>
+<meta name="twitter:description" content="1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&rsquo;ll show you. This is the backgroud code:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +128,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Interfaces in Go (and Methods Receivers)</h1>
+      <h1 class="post-title">Interfaces and Methods Receivers - Go (Interface 1)</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-09-02 </span>
@@ -529,12 +533,15 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Here we saying type <code>rect</code> implements interface <code>Shape</code>  is not accurate, this is java things. We should say all methods of interface <code>Shape</code> are in the method set of type <code>rect</code>, and calling a method on an interface value executes the method of the same name on its underlying type. Therefore, we say type <code>rect</code> implements interface <code>Shape</code>.</p>
-<p>参考:</p>
+<p>References:</p>
 <ul>
 <li><a href="https://go.dev/tour/methods/14">A Tour of Go</a></li>
 <li><a href="https://gobyexample.com/interfaces">Go by Example: Interfaces</a></li>
 <li><a href="https://www.golangprograms.com/how-to-iterate-over-a-slice-in-golang.html">How to Iterate Over a Slice in Golang? - golangprograms.com</a></li>
 </ul>
+<p>Learn more:</p>
+<p><a href="https://davidzhu.xyz/post/golang/basics/007-interface-practical-example/">Interface in Practice - Go (Interface 2)</a></p>
+<p><a href="https://davidzhu.xyz/post/golang/basics/017-interface-relearn/">Types and Interface Value - Go (Interface 3)</a></p>
 
     </div>
 
@@ -564,7 +571,7 @@
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         <a class="next" href="/post/golang/basics/017-interface-relearn/">
-            <span class="next-text nav-default">Type and Interface Value - Go</span>
+            <span class="next-text nav-default">Types and Interface Value - Go (Interface 3)</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

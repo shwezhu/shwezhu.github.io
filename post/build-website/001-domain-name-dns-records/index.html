@@ -48,7 +48,7 @@
 <meta itemprop="name" content="域名分级和DNS记录之何为www">
 <meta itemprop="description" content="1. DNS Records: A &amp; CNAME 购买域名后给域名指定的ip地址, 则要为其添加 A 类型的 DNS Record, 把域名和服务器IP关联就需要为域名添加 A 记录, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填"><meta itemprop="datePublished" content="2023-04-23T00:15:30+00:00" />
 <meta itemprop="dateModified" content="2023-04-23T00:15:30+00:00" />
-<meta itemprop="wordCount" content="2285">
+<meta itemprop="wordCount" content="1892">
 <meta itemprop="keywords" content="build website," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="域名分级和DNS记录之何为www"/>
 <meta name="twitter:description" content="1. DNS Records: A &amp; CNAME 购买域名后给域名指定的ip地址, 则要为其添加 A 类型的 DNS Record, 把域名和服务器IP关联就需要为域名添加 A 记录, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填"/>
@@ -146,7 +146,6 @@
         <li><a href="#2-www是干什么的">2. www是干什么的</a>
           <ul>
             <li><a href="#21-dns-hierarchy">2.1. DNS Hierarchy</a></li>
-            <li><a href="#22-subdomain-和-apex-domain">2.2. Subdomain 和 Apex Domain</a></li>
           </ul>
         </li>
         <li><a href="#3-dns-查询过程">3. DNS 查询过程</a></li>
@@ -199,17 +198,23 @@
 <p>一般我们想把域名绑定到服务器的时候, 为我们的域名添加两个A类DNS Records就行了, 不用改什么Name Server, 类似下面这个样子(注意TTL一般设置为3600s就可以啦):</p>
 <p><img src="/001-domain-name-dns-records/domain_to_server.png" alt=""></p>
 <h2 id="2-www是干什么的">2. www是干什么的</h2>
-<p>上面我们添加DNS记录的时候有时候(根据自己的需求)需要把hostname的值填为www, 那这个是干嘛的呢, 填与不填? 是不是说, hostname空着不填,我们只能通过<code>exapmle.com</code>来访问服务器, 填了之后, 我们就可以通过<code>www.example.com</code>来访问服务器.</p>
-<p>然后之前我的域名绑定的是我服务器的ip, url是<code>http://shaowenzhu.top/</code>, 看着好奇怪, 不是好多网站都是<code>www.</code>开头的吗, 为啥我的是<code>http://shaowenzhu.top/</code>,</p>
+<p>在上面截图中可以看出, 域名和ip就是一个映射关系, 添加 A Record 时若 HOSTNAME 空着则就是 <code>exapmle.com</code> -&gt; ip address, 若填则为 <code>www.example.com</code>/<code>blog.example.com</code> -&gt; ip address. 也就是说 <code>www</code> 就是个 HOSTNAME, 是用户随意分配的, 只是大部分网站使用 <code>www</code> 你也可以填成 <code>blog</code>,</p>
 <h3 id="21-dns-hierarchy">2.1. DNS Hierarchy</h3>
-<p>先了解一下DNS hierarchy, 你就懂上面的<code>www</code>是什么了,</p>
 <p>DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点<code>.</code></p>
 <p><img src="/001-domain-name-dns-records/c.png" alt=""></p>
 <p>多出的那个<code>.</code>是Root Level Domain, 比如<code>www.example.com</code>真正的名字是<code>www.example.com.root</code>然后上图就简写为<code>www.example.com.</code> 因为根域名<code>.root</code>对于所有域名都是一样的，所以平时是省略的。</p>
+<ul>
+<li>
 <p><strong>Root Level Domain</strong>(<code>.root</code>)的下一级叫<strong>top-level domain</strong>(TLD)，比如<code>.com</code>, <code>.net</code></p>
+</li>
+<li>
 <p>再下一级叫<strong>second-level domain</strong>SLD，比如<code>www.example.com</code>里面的<code>.example</code>, 有人直接把<code>example.com</code>这种叫做SLD</p>
-<p>再下一级是<strong>HOSTNAME</strong>，比如<code>www.example.com</code>里面的<code>www</code>，这是我们可以任意分配的。那具体怎么分配呢? 就是在域名管理页面, 有添加DNS Records选项, 比如你打算添加个A类记录, 这时候要求你填HOSTNAME和IP地址, 这时候HOSTNAME你可以填<code>www</code>, <code>@</code>, <code>blog</code>等等, 然后IP就是你的服务器的IP地址, 可以参考上面的添加A记录和CNAME的图.</p>
-<p>总结一下，域名的层级结构如下:</p>
+</li>
+<li>
+<p>再下一级是<strong>HOSTNAME</strong>，比如<code>www.example.com</code>里面的<code>www</code>, 这是可以任意设置的, 你也可以让域名的 HOSTNAME 为 <code>blog</code>,</p>
+</li>
+</ul>
+<p>域名的层级结构:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -219,11 +224,6 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><img src="/001-domain-name-dns-records/d.png" alt=""></p>
-<h3 id="22-subdomain-和-apex-domain">2.2. Subdomain 和 Apex Domain</h3>
-<p>然后还有个subdomain 和 apex domain, 其实subdomain就是HOSTNAME, 看一下Github上的解释:</p>
-<blockquote>
-<p>An <strong>apex domain</strong> is a custom domain that does not contain a <strong>subdomain</strong>, such as <code>example.com</code>. Apex domains are also known as base, bare, naked, root apex, or zone apex domains.</p>
-</blockquote>
 <h2 id="3-dns-查询过程">3. DNS 查询过程</h2>
 <blockquote>
 <p>DNS 中的域名都是用<strong>句点</strong>来分隔的，比如 <code>www.server.com</code>，这里的句点代表了不同层次之间的<strong>界限</strong>。在域名中，<strong>越靠右</strong>的位置表示其层级<strong>越高</strong>。毕竟域名是外国人发明，所以思维和中国人相反，比如说一个城市地点的时候，外国喜欢从小到大的方式顺序说起（如 XX 街道 XX 区 XX 市 XX 省），而中国则喜欢从大到小的顺序（如 XX 省 XX 市 XX 区 XX 街道）。根域是在最顶层，它的下一层就是 com 顶级域，再下面是 server.com。</p>

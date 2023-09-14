@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Type and Interface Value - Go - David&#39;s Blog</title>
+  <title>Types and Interface Value - Go (Interface 3) - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare 1 2 3 4 type MyInt int var i int var j MyInt" />
+<meta name="author" content="David" /><meta name="description" content="Previouse posts: Interfaces and Methods Receivers - Go (Interface 1) Interface in Practice - Go (Interface 2) 1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so" />
 
 
 
@@ -39,19 +39,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Type and Interface Value - Go" />
-<meta property="og:description" content="1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare 1 2 3 4 type MyInt int var i int var j MyInt" />
+<meta property="og:title" content="Types and Interface Value - Go (Interface 3)" />
+<meta property="og:description" content="Previouse posts: Interfaces and Methods Receivers - Go (Interface 1) Interface in Practice - Go (Interface 2) 1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/017-interface-relearn/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-09-02T18:57:04+00:00" />
 <meta property="article:modified_time" content="2023-09-02T18:57:04+00:00" />
-<meta itemprop="name" content="Type and Interface Value - Go">
-<meta itemprop="description" content="1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare 1 2 3 4 type MyInt int var i int var j MyInt"><meta itemprop="datePublished" content="2023-09-02T18:57:04+00:00" />
+<meta itemprop="name" content="Types and Interface Value - Go (Interface 3)">
+<meta itemprop="description" content="Previouse posts: Interfaces and Methods Receivers - Go (Interface 1) Interface in Practice - Go (Interface 2) 1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so"><meta itemprop="datePublished" content="2023-09-02T18:57:04+00:00" />
 <meta itemprop="dateModified" content="2023-09-02T18:57:04+00:00" />
-<meta itemprop="wordCount" content="1383">
+<meta itemprop="wordCount" content="1406">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Type and Interface Value - Go"/>
-<meta name="twitter:description" content="1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare 1 2 3 4 type MyInt int var i int var j MyInt"/>
+<meta name="twitter:title" content="Types and Interface Value - Go (Interface 3)"/>
+<meta name="twitter:description" content="Previouse posts: Interfaces and Methods Receivers - Go (Interface 1) Interface in Practice - Go (Interface 2) 1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +124,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Type and Interface Value - Go</h1>
+      <h1 class="post-title">Types and Interface Value - Go (Interface 3)</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-09-02 </span>
@@ -159,7 +159,10 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-types-and-interfaces">1. Types and interfaces</h2>
+      <p>Previouse posts:</p>
+<p><a href="https://davidzhu.xyz/post/golang/basics/006-interfaces/">Interfaces and Methods Receivers - Go (Interface 1)</a></p>
+<p><a href="https://davidzhu.xyz/post/golang/basics/007-interface-practical-example/">Interface in Practice - Go (Interface 2)</a></p>
+<h2 id="1-types-and-interfaces">1. Types and interfaces</h2>
 <h3 id="11-types">1.1. Types</h3>
 <p>Because reflection builds on the type system, let’s start with a refresher about types in Go.</p>
 <p>Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: <code>int</code>, <code>float32</code>, <code>*MyType</code>, <code>[]byte</code>, and so on. If we declare</p>
@@ -204,7 +207,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Any type that implements a <code>Read</code> (or <code>Write</code>) method with this signature is said to implement <code>io.Reader</code> (or <code>io.Writer</code>). For the purposes of this discussion, that means that a variable of type <code>io.Reader</code> can hold any value whose type has a <code>Read</code> method:</p>
+</div><p>Any type that implements a <code>Read()</code> (or <code>Write()</code>) method with this signature is said to implement <code>io.Reader</code> (or <code>io.Writer</code>). For the purposes of this discussion, that means that a variable of type <code>io.Reader</code> can hold any value whose type‘s <a href="https://golang.org/ref/spec#Method_sets">method set</a> has a <code>Read()</code> method:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -221,10 +224,7 @@
 </span></span><span class="line"><span class="cl"><span class="c1">// and so on
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
-<p>It’s important to be clear that whatever concrete value <code>r</code> may hold, <code>r</code>’s type is always <code>io.Reader</code>: Go is statically typed and the static type of <code>r</code> is <code>io.Reader</code>.</p>
-</blockquote>
-<p>We have talked this in <a href="https://shaowenzhu.top/post/golang/basics/006-interfaces/#3-first-try---type-admin-isnt-adimin">other posts</a>:</p>
+</div><p>It’s important to be clear that whatever concrete value <code>r</code> may hold, <code>r</code>’s type is always <code>io.Reader</code>: Go is statically typed and the static type of <code>r</code> is <code>io.Reader</code>. We have talked this in <a href="https://shaowenzhu.top/post/golang/basics/006-interfaces/#3-first-try---type-admin-isnt-adimin">other posts</a>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -244,7 +244,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>user1</code> is an interface, it holds an pointer value: <code>&amp;Admin{name:&quot;user1&quot;}</code>, however, its type is still a <code>User</code> neither <code>*User</code> nor <code>*Admin</code>.</p>
-<p>Some people say that Go’s interfaces are dynamically typed, but that is misleading. They are statically typed: a variable of interface type always has the same static type, and even though at run time the value stored in the interface variable may change type, that value will always satisfy the interface.</p>
+<p>Some people say that Go’s interfaces are dynamically typed, but that is misleading. They are statically typed: <strong>a variable of interface type always has the same static type</strong>, and even though at run time <strong>the value stored in the interface variable</strong> may change type, that value will always satisfy the interface.</p>
 <h2 id="2-the-representation-of-an-interface">2. The representation of an interface</h2>
 <p>A variable of interface type stores a pair: the concrete value assigned to the variable, and that value’s type descriptor. To be more precise, the value is the underlying concrete data item that implements the interface and the type describes the full type of that item. For instance, after</p>
 <div class="highlight"><div class="chroma">
@@ -371,7 +371,7 @@
 <p>In both cases, the variable <code>user1</code>, and <code>user2</code> are just an interface whose type is <code>User</code>, <em>not</em> a pointer to an interface. However, when <code>user2</code> storing <code>&amp;Admin{name:&quot;Coco&quot;}</code>, the interface <em>holds</em> a pointer to a <code>Admin</code> structure.</p>
 <p>Wonder why can assign <code>&amp;Admin{name:&quot;Coco&quot;}</code> to an interface <code>User</code> type? We have taked this in <a href="https://shaowenzhu.top/post/golang/basics/006-interfaces/#3-first-try---type-admin-isnt-adimin">other posts</a>.</p>
 <h2 id="4-copy-interface">4. Copy Interface</h2>
-<p>As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an <code>int</code> value to a function makes a copy of the <code>int</code>, and passing a pointer value makes a copy of the pointer, but not the data it points to. (See a <a href="https://go.dev/doc/faq#methods_on_values_or_pointers">later section</a> for a discussion of how this affects method receivers.)</p>
+<p>As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter. For instance, passing an <code>int</code> value to a function makes a copy of the <code>int</code>, and passing a pointer value makes a copy of the pointer, not the data it points to. (See a <a href="https://go.dev/doc/faq#methods_on_values_or_pointers">later section</a> for a discussion of how this affects method receivers.)</p>
 <p>Map and slice values behave like pointers: they are descriptors that contain pointers to the underlying map or slice data. Copying a map or slice value doesn&rsquo;t copy the data it points to. Copying an interface value makes a copy of the thing stored in the interface value. If the interface value holds a struct, copying the interface value makes a copy of the struct. If the interface value holds a pointer, copying the interface value makes a copy of the pointer, but again not the data it points to.</p>
 <p>Note that this discussion is about the semantics of the operations. Actual implementations may apply optimizations to avoid copying as long as the optimizations do not change the semantics.</p>
 <p>Source: <a href="https://go.dev/doc/faq">https://go.dev/doc/faq</a></p>
@@ -400,7 +400,7 @@
       <nav class="post-nav">
         <a class="prev" href="/post/golang/basics/006-interfaces/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Interfaces in Go (and Methods Receivers)</span>
+            <span class="prev-text nav-default">Interfaces and Methods Receivers - Go (Interface 1)</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         <a class="next" href="/post/git/practice/003-blog-backup/">
