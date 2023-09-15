@@ -166,7 +166,9 @@ $ git commit -m "delete hello wrld"
 
 ```shell
 $ git switch main
+# 把 hotfix 分支合并到当前分支上
 # 根据输出知是 Fast-forward merge
+# Fast-forward merge 会丢失次分支信息 可以使用 --no-ff
 $ git merge hotfix
 Updating d64cbe3..8c9302c
 Fast-forward

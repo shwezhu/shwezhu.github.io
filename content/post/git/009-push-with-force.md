@@ -1,5 +1,5 @@
 ---
-title: Git Push with force Flag
+title: Git Push with force
 date: 2023-09-14 10:00:23
 categories:
   - git

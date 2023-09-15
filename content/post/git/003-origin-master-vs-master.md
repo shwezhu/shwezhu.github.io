@@ -31,4 +31,4 @@ These are just two different ways of referring to the same thing (incidentally, 
 
 `remotes/origin/HEAD` is the `default branch` for the remote named `origin`. This lets you simply say `origin` instead of `origin/master`.
 
-来源: https://stackoverflow.com/a/10588561/16317008
+Source: https://stackoverflow.com/a/10588561/16317008
