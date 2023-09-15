@@ -121,6 +121,77 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/001-value-variable-type/">Value Variable and Types - Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-05 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/basics/"> basics </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. Go is statically typed Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
+1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt. The variables i and j have distinct static types and, although they have the same underlying type, they cannot be assigned to one another without a conversion.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/basics/001-value-variable-type/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/advance/005-unit-test/">Go Tests Basics - Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-05 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/advance/"> advance </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. go test go test recompiles each package along with any files with names matching the file pattern *_test.go. These additional files can contain test functions, benchmark functions, fuzz tests and example functions.
+Therefore there four types of functions:
+1 2 3 4 5 6 7 8 9 10 11 12 13 // A test function is one named TestXxx (where Xxx does not start with a // lower case letter) and should have the signature, func TestXxx(t *testing.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/advance/005-unit-test/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/006-collection-operations/">The Operations of Collections in Practice - Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-04 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/practice/"> practice </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. var vs make() 1.1. slice What&rsquo;s the difference between these two statement below:
+1 2 3 var cats []string // or dogs := make([]string, 0) We have know that any varibles declared with var without an explicit initial value are given their zero value, nil is zero for map, slice and pointer.
+Therefore, the value of cats is nil for sure, then for make([]string, 0)it allocates a memory with 0 elements, which means dog !
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/practice/006-collection-operations/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/golang/basics/013-methods-receivers/">Methods Receivers &amp; Concurrency - Go</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-09-02 </span>
@@ -275,75 +346,6 @@ Solution I&rsquo;m using hugo now but I don&rsquo;t want to override or delete t
     </div>
     <div class="read-more">
       <a href="/post/golang/basics/014-gob-json-encoding/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/005-tricks-and-common-mistakes/">Trivial Tricks and Common Mistakes in Practice - Go</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-27 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/practice/"> practice </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]++ } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker.
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/practice/005-tricks-and-common-mistakes/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/cs-basics/009-multithread-singlethread-server/">Is Multithreaded Server Better than a Single Thread Server?</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-26 </span>
-      <div class="post-category">
-          <a href="/categories/cs-basics/"> cs basics </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Original: https://qr.ae/pyztor
-Why is a multithreaded web server better than a single thread server? It isn’t.
-There are four basic ways how a web server can handle concurrency:
-forking an OS process per request (like old versions of Apache) spawning an OS thread per request (like a new versions of Apache) using a single-threaded event loop (like nginx) using green threads or lightweight processes scheduled by a VM runtime instead of the OS (like in Erlang) Currently the most common approaches are number 2 and 3.
-    </div>
-    <div class="read-more">
-      <a href="/post/cs-basics/009-multithread-singlethread-server/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/linux/003-shell-expansion/">Shell Expansion</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-26 </span>
-      <div class="post-category">
-          <a href="/categories/linux/"> linux </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Shell expansion When the shell receives a command, either from the user typing at the keyboard, or from a shell script, it breaks it up into words. After this happens, the shell performs seven operations on the words, which can change how they are interpreted. There are seven operations are collectively known as &lsquo;shell expansion&rsquo;.
-The seven operations that the shell performs are:
-Brace Expansion - expanding values between braces, such as file{1.
-    </div>
-    <div class="read-more">
-      <a href="/post/linux/003-shell-expansion/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
