@@ -7,7 +7,7 @@ tags:
   - git
 ---
 
-## 1. Some Commands Used in Branch
+## 1. Commands used in branch
 
 You can use `git branch -h` to check these commands' explanation. 
 
