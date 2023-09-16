@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Nodejs 安装与介绍 - David&#39;s Blog</title>
+  <title>Nodejs Intro - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Intro NodeJS 不是语言而是 Javascript 的运行环境, 所以就不能像研究语言那样的顺序去研究它了, 而是研究它是个啥: Node. js is not a programming language. Rather, it&amp;rsquo;s a runtime environment that&amp;rsquo;s used to run JavaScript outside the browser. For example on the" />
+<meta name="author" content="David" /><meta name="description" content="1. Intro Node. js is not a programming language. Rather, it&amp;rsquo;s a runtime environment that&amp;rsquo;s used to run JavaScript outside the browser. For example on the server or in the command line.
+Recall a paragraph which introduces js engine:
+The use of JavaScript engines is not limited to browsers. For example, the V8 engine is a core component of the Node.js. V8 is the Javascript engine inside of node.js that parses and runs your Javascript." />
 
 
 
@@ -39,19 +41,25 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Nodejs 安装与介绍" />
-<meta property="og:description" content="1. Intro NodeJS 不是语言而是 Javascript 的运行环境, 所以就不能像研究语言那样的顺序去研究它了, 而是研究它是个啥: Node. js is not a programming language. Rather, it&rsquo;s a runtime environment that&rsquo;s used to run JavaScript outside the browser. For example on the" />
+<meta property="og:title" content="Nodejs Intro" />
+<meta property="og:description" content="1. Intro Node. js is not a programming language. Rather, it&rsquo;s a runtime environment that&rsquo;s used to run JavaScript outside the browser. For example on the server or in the command line.
+Recall a paragraph which introduces js engine:
+The use of JavaScript engines is not limited to browsers. For example, the V8 engine is a core component of the Node.js. V8 is the Javascript engine inside of node.js that parses and runs your Javascript." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/js/nodejs/nodejs-introduction/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-06-11T19:45:27+00:00" />
 <meta property="article:modified_time" content="2023-06-11T19:45:27+00:00" />
-<meta itemprop="name" content="Nodejs 安装与介绍">
-<meta itemprop="description" content="1. Intro NodeJS 不是语言而是 Javascript 的运行环境, 所以就不能像研究语言那样的顺序去研究它了, 而是研究它是个啥: Node. js is not a programming language. Rather, it&rsquo;s a runtime environment that&rsquo;s used to run JavaScript outside the browser. For example on the"><meta itemprop="datePublished" content="2023-06-11T19:45:27+00:00" />
+<meta itemprop="name" content="Nodejs Intro">
+<meta itemprop="description" content="1. Intro Node. js is not a programming language. Rather, it&rsquo;s a runtime environment that&rsquo;s used to run JavaScript outside the browser. For example on the server or in the command line.
+Recall a paragraph which introduces js engine:
+The use of JavaScript engines is not limited to browsers. For example, the V8 engine is a core component of the Node.js. V8 is the Javascript engine inside of node.js that parses and runs your Javascript."><meta itemprop="datePublished" content="2023-06-11T19:45:27+00:00" />
 <meta itemprop="dateModified" content="2023-06-11T19:45:27+00:00" />
-<meta itemprop="wordCount" content="508">
+<meta itemprop="wordCount" content="314">
 <meta itemprop="keywords" content="javascript,nodejs," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Nodejs 安装与介绍"/>
-<meta name="twitter:description" content="1. Intro NodeJS 不是语言而是 Javascript 的运行环境, 所以就不能像研究语言那样的顺序去研究它了, 而是研究它是个啥: Node. js is not a programming language. Rather, it&rsquo;s a runtime environment that&rsquo;s used to run JavaScript outside the browser. For example on the"/>
+<meta name="twitter:title" content="Nodejs Intro"/>
+<meta name="twitter:description" content="1. Intro Node. js is not a programming language. Rather, it&rsquo;s a runtime environment that&rsquo;s used to run JavaScript outside the browser. For example on the server or in the command line.
+Recall a paragraph which introduces js engine:
+The use of JavaScript engines is not limited to browsers. For example, the V8 engine is a core component of the Node.js. V8 is the Javascript engine inside of node.js that parses and runs your Javascript."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +132,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Nodejs 安装与介绍</h1>
+      <h1 class="post-title">Nodejs Intro</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-06-11 </span>
@@ -148,6 +156,7 @@
             <li><a href="#1-intro">1. Intro</a></li>
             <li><a href="#2-npm">2. npm</a></li>
             <li><a href="#3-install">3. Install</a></li>
+            <li><a href="#31-install-on-idea">3.1. Install on IDEA</a></li>
           </ul>
         </li>
       </ul>
@@ -158,44 +167,28 @@
 </div>
     <div class="post-content">
       <h3 id="1-intro">1. Intro</h3>
-<p>NodeJS 不是语言而是 Javascript 的运行环境, 所以就不能像研究语言那样的顺序去研究它了, 而是研究它是个啥:</p>
-<blockquote>
 <p>Node. js is not a programming language. Rather, it&rsquo;s a <code>runtime environment</code> that&rsquo;s used to run JavaScript outside the browser. For example on the <code>server</code> or in the <code>command line</code>.</p>
-</blockquote>
-<p>突然想到之前学JS的时候记的一段话, 介绍 JS engine 的:</p>
+<p>Recall a paragraph which introduces js engine:</p>
 <blockquote>
 <p>The use of JavaScript engines is not limited to browsers. For example, the <strong>V8 engine is a <code>core component</code> of the <a href="https://www.webopedia.com/definitions/node-js/">Node.js</a></strong>. V8 is the Javascript engine <strong>inside of</strong> node.js that parses and runs your Javascript. The same V8 engine is used <strong>inside of</strong> Chrome to run javascript in the Chrome browser. Both <code>chrome browser</code> and <code>node.js</code> have <code>v8</code> inside.</p>
 </blockquote>
-<p>当时没看太懂, 但自己知道是因为对环境语言本身的理解不够, 现在再看, 总结的不错</p>
+<blockquote>
+<p>A Node.js app runs in a <code>single process</code>, without creating a new thread for every request. Node.js provides a set of asynchronous I/O primitives in its standard library that prevent JavaScript code from blocking and generally, libraries in Node.js are written using non-blocking paradigms, making blocking behavior the exception rather than the norm.</p>
+</blockquote>
 <h3 id="2-npm">2. npm</h3>
-<p>就像 pip 对于 Python, npm 对于 nodejs, 就大概这么个意思, packages manager,</p>
+<p>just like pip for Python, npm is a packages manager for js,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">npm install &lt;package-name&gt;
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">pip install &lt;package-name&gt;
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>使用步骤;</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">npm init
-</span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">npm install xxx --save
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="3-install">3. Install</h3>
-<p>两个方法, 推荐第一个, 问好卸载,</p>
+<p>One way:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -204,19 +197,28 @@
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 会安装 node 和 npm
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># which will insatll both nodejs and npm</span>
 </span></span><span class="line"><span class="cl">brew install node
-</span></span><span class="line"><span class="cl"># 卸载
+</span></span><span class="line"><span class="cl"><span class="c1"># uninstall</span>
 </span></span><span class="line"><span class="cl">brew uninstall node
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>第二种方法,</p>
-<p>在 <a href="https://nodejs.org/en/download">Download | Node.js</a> 下载对应 OS 安装包, 安装的时候, 显示:</p>
-<p>This package will install:</p>
-<p>•	Node.js v16.17.0 to /usr/local/bin/node
-•	npm v8.15.0 to /usr/local/bin/npm</p>
-<p>可以看出此安装包包括 npm 和 nodejs, 安装完成后输入 <code>npm --version</code>, <code>node --version</code> 测试,</p>
-<p>在 IDEA 上怎么用 Nodejs 呢? 在 IDEA 下载个插件 Node.js, 然后创建 js 文件, 运行下面代码就可以了:</p>
+</div><p>Another way: go to <a href="https://nodejs.org/en/download">Download | Node.js</a>, note that when you install, the install pragram will reminds you:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">This</span> <span class="kn">package</span> <span class="nx">will</span> <span class="nx">install</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="err">•</span>	<span class="nx">Node</span><span class="p">.</span><span class="nx">js</span> <span class="nx">v16</span><span class="mf">.17.0</span> <span class="nx">to</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">local</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">node</span>
+</span></span><span class="line"><span class="cl"><span class="err">•</span>	<span class="nx">npm</span> <span class="nx">v8</span><span class="mf">.15.0</span> <span class="nx">to</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">local</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">npm</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>test: <code>npm --version</code>, <code>node --version</code></p>
+<h3 id="31-install-on-idea">3.1. Install on IDEA</h3>
+<p>Go to Settings-&gt;Plugins,  search and install <code>Node.js</code>, then the code below will work fine:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -251,12 +253,10 @@
 </span></span><span class="line"><span class="cl"><span class="p">});</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="4-find-more">4. Find More</h4>
-<p>A Node.js app runs in a <code>single process</code>, without creating a new thread for every request. Node.js provides a set of asynchronous I/O primitives in its standard library that prevent JavaScript code from blocking and generally, libraries in Node.js are written using non-blocking paradigms, making blocking behavior the exception rather than the norm.</p>
-<p>参考:</p>
+</div><p>References:</p>
 <ul>
 <li><a href="https://docs.npmjs.com/about-npm">About npm | npm Docs</a></li>
-<li>很好的文档 <a href="https://nodejs.dev/en/learn/">https://nodejs.dev/en/learn/</a></li>
+<li><a href="https://nodejs.dev/en/learn/">https://nodejs.dev/en/learn/</a></li>
 </ul>
 
     </div>

@@ -48,7 +48,7 @@
 <meta itemprop="name" content="encoding/gob &amp; encoding/json in Go">
 <meta itemprop="description" content="1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’"><meta itemprop="datePublished" content="2023-08-31T11:38:20+00:00" />
 <meta itemprop="dateModified" content="2023-08-31T11:38:20+00:00" />
-<meta itemprop="wordCount" content="2322">
+<meta itemprop="wordCount" content="2410">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="encoding/gob &amp; encoding/json in Go"/>
 <meta name="twitter:description" content="1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’"/>
@@ -153,7 +153,7 @@
             <li><a href="#25-types-on-the-wire">2.5. Types on the wire</a></li>
             <li><a href="#26-functions-and-channels">2.6. Functions and channels</a></li>
             <li><a href="#27-gobregister-method">2.7. gob.Register method</a></li>
-            <li><a href="#28-gobregister-in-map">2.8. gob.Register in map</a></li>
+            <li><a href="#28-gobregister">2.8. gob.Register</a></li>
           </ul>
         </li>
         <li><a href="#3-encodingjson">3. encoding/json</a>
@@ -266,7 +266,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Besides, <code>enc.Encode(message)</code> does two things: encode message and transmit it, similarily, <code>dec.Decode(&amp;ms)</code> does three</p>
+</div><p>Besides, <code>enc.Encode(message)</code> does two things: encode message and transmit it, similar to<code>dec.Decode(&amp;ms)</code>.</p>
 <h3 id="24-values-are-flattened">2.4. Values are flattened</h3>
 <blockquote>
 <p>A stream of gobs is <strong>self-describing</strong>. Each data item in the stream is preceded by a specification of its type, expressed in terms of a small set of predefined types. <strong>Pointers are not transmitted, but the things they point to are transmitted</strong>; that is, the values are flattened. Nil pointers are not permitted, as they have no value. <strong>Recursive types work fine</strong>, but recursive values (data with cycles) are problematic. <a href="https://pkg.go.dev/encoding/gob#pkg-overview">source</a></p>
@@ -467,8 +467,8 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Now try removing the <code>Register</code> and this won&rsquo;t work because gob wouldn&rsquo;t know how to map things back to their appropriate type.</p>
-<h3 id="28-gobregister-in-map">2.8. gob.Register in map</h3>
-<p>There is another issue, if you have a nested map, then you should register for that type too,</p>
+<h3 id="28-gobregister">2.8. gob.Register</h3>
+<p><strong>Whem there is an interface, be careful</strong>, you should figure out all the possiable concrete types (implementations) of the interface would be, and if these concrete type is not primitive type, you need register for them. You don&rsquo;t need to register for interface itself.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -478,18 +478,53 @@
 </span><span class="lnt">5
 </span><span class="lnt">6
 </span><span class="lnt">7
+</span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">expectedCopy</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kd">interface</span><span class="p">{}]</span><span class="kd">interface</span><span class="p">{}{</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">gob</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{})</span>
+</span></span><span class="line"><span class="cl"><span class="nx">expectedCopy</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
 </span></span><span class="line"><span class="cl">	<span class="s">&#34;id&#34;</span><span class="p">:</span> <span class="s">&#34;0007&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">		<span class="s">&#34;kitten&#34;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">		<span class="s">&#34;milo&#34;</span><span class="p">:</span>   <span class="mi">1</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>you should register for <code>map[interface{}]interface{}</code> and <code>map[string]int</code> before encode <code>expectedOriginal</code>, but you don&rsquo;t need to register for a primitive type slice, golang has done that for you:</p>
+</div><p>If you don&rsquo;t register for <code>map[string]int</code> you will get an error</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">error: gob: type not registered for interface: map[string]int
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>All of this because we have <code>map[string]interface{}</code>, there is an interface, according to <a href="https://pkg.go.dev/encoding/gob">gob package</a>, <strong>Only types that will be transferred as implementations of interface values need to be registered.</strong></p>
+<p>You need to register for nothing if <code>expectedCopy</code> type is <code>map[string]map[string]int</code> (because there is no interface):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// don&#39;t need this: gob.Register(map[string]map[string]int{})
+</span></span></span><span class="line"><span class="cl"><span class="c1">// don&#39;t need this: gob.Register(map[string]int{})
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">expectedCopy</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;kitten&#34;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;milo&#34;</span><span class="p">:</span>   <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that you <strong>don&rsquo;t need to register for a slice of primitive type or primitive type itself</strong> when they are the implementations of an interface, because Go has done that for you:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -516,20 +551,22 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Therefore, if you want encode <code>expectedOriginal</code> below, you just need to register for <code>map[interface{}]interface{}</code>, don&rsquo;t need to register for <code>[]string</code></p>
+</div><p>Therefore, if you want encode <code>expectedOriginal</code> below, you need register for nothing:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
+</span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">expectedOriginal</span><span class="p">:</span> <span class="kd">map</span><span class="p">[</span><span class="kd">interface</span><span class="p">{}]</span><span class="kd">interface</span><span class="p">{}{</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Go has done this for use: gob.Register([]string{})
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">expectedOriginal</span><span class="p">:</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
 </span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;Coco&#34;</span><span class="p">,</span> <span class="s">&#34;Bella&#34;</span><span class="p">},</span>
 </span></span><span class="line"><span class="cl"><span class="p">},</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Similary, if you have a slice of custom struct, you have to register for that type, if you want encode <code>expectedOriginal</code> below, you have to register for <code>[]Cat</code>, otherwise, program will panic: <code>gob: type not registered for interface: []Cat</code>,</p>
+</div><p>If the implementation&rsquo;s type of the interface is a custom type, you have to register for that type:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -539,32 +576,37 @@
 </span><span class="lnt">5
 </span><span class="lnt">6
 </span><span class="lnt">7
+</span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Cat</span> <span class="kd">struct</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="nx">Name</span> <span class="kt">string</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">expectedOriginal</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kd">interface</span><span class="p">{}]</span><span class="kd">interface</span><span class="p">{}{</span>
-</span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="p">[]</span><span class="nx">Cat</span><span class="p">{{</span><span class="nx">name</span><span class="p">:</span> <span class="s">&#34;jack&#34;</span><span class="p">}},</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// you have to register for Cat
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">gob</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="nx">Cat</span><span class="p">{})</span>
+</span></span><span class="line"><span class="cl"><span class="nx">expectedOriginal</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="nx">Cat</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;jack&#34;</span><span class="p">},</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>All of this because we have map <code>map[interface{}]interface{}</code>, there is interface, according to <a href="https://pkg.go.dev/encoding/gob">gob package</a>, <strong>Only types that will be transferred as implementations of interface values need to be registered.</strong> If your map here is:</p>
+</div><p>Similarly to we have talked above:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">expectedOriginal := map[interface{}][]Cat {
-</span></span><span class="line"><span class="cl">	&#34;cats&#34;: []Cat{{Name: &#34;jack&#34;}},
-</span></span><span class="line"><span class="cl">}
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// don&#39;t need this: gob.Register(Cat{})
+</span></span></span><span class="line"><span class="cl"><span class="c1">// there is no interface
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">expectedOriginal</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nx">Cat</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="nx">Cat</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;jack&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>You don&rsquo;t need to register for type <code>map[interface{}][]Cat</code>,</p>
-<p>And don&rsquo;t forget, the first letter of the field of Cat must be Capital, namely, expored fields, otherwise, it (the field) won&rsquo;t encode by gob.</p>
+</div><p>And don&rsquo;t forget, the first letter of the field of Cat must be Capital, namely, expored fields, otherwise, it (the field) won&rsquo;t encode by gob.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
