@@ -84,7 +84,7 @@ type Buffer struct {
 }
 ```
 
-Besides, `enc.Encode(message)` does two things: encode message and transmit it, similarily, `dec.Decode(&ms)` does three 
+Besides, `enc.Encode(message)` does two things: encode message and transmit it, similar to`dec.Decode(&ms)`.
 
 ### 2.4. Values are flattened
 
@@ -209,21 +209,43 @@ if err := dec.Decode(&gg); err != nil {
 
 Now try removing the `Register` and this won't work because gob wouldn't know how to map things back to their appropriate type.
 
-### 2.8. gob.Register in map
+### 2.8. gob.Register 
 
-There is another issue, if you have a nested map, then you should register for that type too, 
+**Whem there is an interface, be careful**, you should figure out all the possiable concrete types (implementations) of the interface would be, and if these concrete type is not primitive type, you need register for them. You don't need to register for interface itself. 
 
 ```go
-expectedCopy := map[interface{}]interface{}{
+gob.Register(map[string]int{})
+expectedCopy := map[string]interface{}{
 	"id": "0007",
 	"cats": map[string]int{
 		"kitten": 3,
 		"milo":   1,
-	}
+	},
 }
 ```
 
-you should register for `map[interface{}]interface{}` and `map[string]int` before encode `expectedOriginal`, but you don't need to register for a primitive type slice, golang has done that for you:
+If you don't register for `map[string]int` you will get an error 
+
+```
+error: gob: type not registered for interface: map[string]int
+```
+
+All of this because we have `map[string]interface{}`, there is an interface, according to [gob package](https://pkg.go.dev/encoding/gob), **Only types that will be transferred as implementations of interface values need to be registered.** 
+
+You need to register for nothing if `expectedCopy` type is `map[string]map[string]int` (because there is no interface):
+
+```go
+// don't need this: gob.Register(map[string]map[string]int{})
+// don't need this: gob.Register(map[string]int{})
+expectedCopy := map[string]map[string]int{
+	"cats": map[string]int{
+		"kitten": 3,
+		"milo":   1,
+	},
+}
+```
+
+Note that you **don't need to register for a slice of primitive type or primitive type itself** when they are the implementations of an interface, because Go has done that for you:
 
 ```go
 func registerBasics() {
@@ -238,35 +260,37 @@ func registerBasics() {
 }
 ```
 
-Therefore, if you want encode `expectedOriginal` below, you just need to register for `map[interface{}]interface{}`, don't need to register for `[]string`
+Therefore, if you want encode `expectedOriginal` below, you need register for nothing:
 
 ```go
-expectedOriginal: map[interface{}]interface{}{
+// Go has done this for use: gob.Register([]string{})
+expectedOriginal: map[string]interface{}{
 	"cats": []string{"Coco", "Bella"},
 },
 ```
 
-Similary, if you have a slice of custom struct, you have to register for that type, if you want encode `expectedOriginal` below, you have to register for `[]Cat`, otherwise, program will panic: `gob: type not registered for interface: []Cat`,
+If the implementation's type of the interface is a custom type, you have to register for that type:
 
 ```go
 type Cat struct {
 	Name string
 }
-
-expectedOriginal := map[interface{}]interface{}{
-	"cats": []Cat{{name: "jack"}},
+// you have to register for Cat
+gob.Register(Cat{})
+expectedOriginal := map[string]interface{}{
+	"cats": Cat{Name: "jack"},
 }
 ```
 
-All of this because we have map `map[interface{}]interface{}`, there is interface, according to [gob package](https://pkg.go.dev/encoding/gob), **Only types that will be transferred as implementations of interface values need to be registered.** If your map here is:
+Similarly to we have talked above:
 
-```
-expectedOriginal := map[interface{}][]Cat {
-	"cats": []Cat{{Name: "jack"}},
+```go
+// don't need this: gob.Register(Cat{})
+// there is no interface
+expectedOriginal := map[string]Cat {
+	"cats": Cat{Name: "jack"},
 }
 ```
-
-You don't need to register for type `map[interface{}][]Cat`, 
 
 And don't forget, the first letter of the field of Cat must be Capital, namely, expored fields, otherwise, it (the field) won't encode by gob. 
 

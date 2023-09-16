@@ -8,7 +8,7 @@ tags:
  - golang
 ---
 
-## 1. 函数可以赋值给变量
+## 1. Function can be assigned to variable
 
 ```go
 func sub(age int, name string) int {
@@ -24,7 +24,7 @@ func main() {
 // func(int, string) int
 ```
 
-## 2. 函数也有类型
+## 2. Function has type too
 
 ```go
 func sub(age int, name *string) int {
@@ -38,36 +38,37 @@ func main() {
 // func(int, *string) int
 ```
 
-即然函数也有类型, 便可以把函数当作参数传递, 这种用法就是简单的 callback function, 
+Which means we can use function as a parameter or return type of another function:
 
 ``` go
 func main() {
-	h1 := func(w http.ResponseWriter, _ *http.Request) {
+	handler1 := func(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, "Hello from a HandleFunc #1!\n")
 	}
-	h2 := func(w http.ResponseWriter, _ *http.Request) {
+	handler2 := func(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, "Hello from a HandleFunc #2!\n")
 	}
-
-	http.HandleFunc("/", h1)
-	http.HandleFunc("/endpoint", h2)
-
+	http.HandleFunc("/", handler1)
+	http.HandleFunc("/endpoint", handler2)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
-
-// http.HandleFunc 原型: 
-func HandleFunc(pattern string, handler func(ResponseWriter, *Request))
 ```
 
-## 3. 声明函数类型 Declaring Function Types
-
-函数类型主要用在声明函数 参数 和 返回值类型, 
+`http.HandleFunc` signature:
 
 ```go
-// Declaring Function Types
+ func HandleFunc(pattern string, handler func(ResponseWriter, *Request))
+```
+
+## 3. Function type declaration
+
+```go
+// Declare a function type
 type Handler func(int, string) int
 
-// foo 是类型Handler的一个instance
+// Parameter foo is a value of Handler type
+// You can think aa value is an object of a class
+// however, there is no class and object in golang, just struct and value
 func GenerateValue(age int, name string, foo Handler) {
 	foo(age, name)
 }
@@ -82,7 +83,7 @@ func main() {
 }
 ```
 
-## 4. Anonymous Functions & Closures
+## 4. Anonymous functions & closures
 
 A function literal (or lambda) is a function without a name. 
 
@@ -132,7 +133,7 @@ func main() {
 
 Credit: [First-Class Functions in Golang](https://levelup.gitconnected.com/first-class-functions-in-golang-ef2a5001bb4f) 
 
-## 5. a Confusion in initilizing function type
+## 5. a confusion in initilizing function type
 
 ```go
 // struct declaring
@@ -170,3 +171,6 @@ There is a advanced use case for function, called wrapper, you can learn more by
 - [Error handling and Go - The Go Programming Language](https://go.dev/blog/error-handling-and-go), at the *Simplifying repetitive error handling* part
 - [Structuring Applications in Go. How I organize my applications in Go | by Ben Johnson | Medium](https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091)
 
+Learn more [dotGo 2016 - Dave Cheney - Do not fear first class functions](https://www.youtube.com/watch?v=5buaPyJ0XeQ&list=WL&index=7&t=273s): 
+
+{{% youtube "5buaPyJ0XeQ" %}}

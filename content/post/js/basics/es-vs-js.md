@@ -38,7 +38,7 @@ tags:
 - Both provides syntactic sugar on top of ES5 and then are transcompiled into ES5 compliant JavaScript. 
 - You write TypeScript or CoffeeScript then the transpiler transforms it into ES5 JavaScript.
 
-原文: https://stackoverflow.com/a/33748400/16317008
+Source: https://stackoverflow.com/a/33748400/16317008
 
 ## 2. CommonJS vs ES Modules
 
@@ -83,7 +83,7 @@ sayHello()
 3. Better Performance: ES modules are designed to be loaded statically, while CommonJS modules are mainly loaded dynamically and synchronously. This can lead to slower performance and a blocking of the main thread. Static analysis refers to the process of analyzing code without executing it, and dynamic imports introduce runtime behavior into a module system. This means that the exact module that will be imported cannot be determined until the code is executed, making it difficult to analyze the module dependencies and relationships ahead of time (AOT).
 4. Improved Code Organization: ES modules provide a way to specify the dependencies between different parts of your code, making it easier to understand and maintain your codebase.
 
-原文: https://dev.to/costamatheus97/es-modules-and-commonjs-an-overview-1i4b
+Source: https://dev.to/costamatheus97/es-modules-and-commonjs-an-overview-1i4b
 
 ## 3. ES2015 New Features
 
@@ -93,4 +93,4 @@ sayHello()
 - JavaScript Classes
 - ECMAScript 2015 Promises
 
-了解更多: [A Rundown of JavaScript 2015 features](https://auth0.com/blog/a-rundown-of-es6-features/)
+Learn more: [A Rundown of JavaScript 2015 features](https://auth0.com/blog/a-rundown-of-es6-features/)
