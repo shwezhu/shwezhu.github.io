@@ -6,7 +6,6 @@ categories:
  - practice
 tags:
  - golang
- - practice
 ---
 
 ## Tricks

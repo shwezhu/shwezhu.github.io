@@ -6,7 +6,6 @@ categories:
  - practice
 tags:
  - golang
- - practice
 ---
 
 ## 什么是环境变量

@@ -6,15 +6,12 @@ categories:
  - practice
 tags:
  - golang
- - practice
  - concurrency
 ---
 
 ## 1. Channel
 
-
-
-
+Actor : https://youtu.be/5buaPyJ0XeQ?si=KO3yn5zyPuY9V64k
 
 ## 2. Map
 

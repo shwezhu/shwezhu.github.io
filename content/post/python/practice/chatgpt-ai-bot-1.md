@@ -5,7 +5,6 @@ categories:
   - python
 tags:
   - python
-  - practice
 ---
 
 ### 1. 任务类型

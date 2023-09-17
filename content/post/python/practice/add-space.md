@@ -5,7 +5,6 @@ categories:
   - python
 tags:
   - python
-  - practice
 ---
 
 强迫症, 读博客的时候中英字符或者标点符号后没有空格紧紧的贴在一块看着很不舒服, 于是想着能不能写个脚本来处理一下文章, bash太难用了(是我太菜), 于是用Python简单实现了一下, 

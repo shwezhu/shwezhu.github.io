@@ -7,7 +7,6 @@ categories:
 tags:
  - golang
  - concurrency
- - practice
 ---
 
 谷歌Go组的一个大佬Bryan C. Mills认为[Worker Pool在go里是anti-pattern](https://youtu.be/5zXAHh5tJqQ), 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的:
