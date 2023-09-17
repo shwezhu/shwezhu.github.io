@@ -1,5 +1,5 @@
 ---
-title: 1. Analyse Three-way Handshake with Wireshark - Go
+title: Analyse Three-way Handshake with Wireshark - Go
 date: 2023-09-13 20:06:55
 categories:
  - golang

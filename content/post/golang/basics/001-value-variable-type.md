@@ -175,7 +175,7 @@ why  `new()`: https://softwareengineering.stackexchange.com/a/216582
 
 `new` vs `make`: https://stackoverflow.com/a/9322182/16317008
 
-`var` vs `make`: https://davidzhu.xyz/post/golang/practice/006-collection-operations/
+`var` vs `make`: https://davidzhu.xyz/post/golang/basics/003-collections/#5-var-vs-make
 
 ## 4. Variable redeclarations 
 

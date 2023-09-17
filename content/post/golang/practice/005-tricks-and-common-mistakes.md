@@ -130,7 +130,7 @@ go func() {
 
 **Don't use `var` to declare** **channel**, **map** **or slice values**, use `make()`, keep this convension you will won't make mistakes. 
 
-Learn more: 
+Learn more: https://davidzhu.xyz/post/golang/basics/003-collections/#5-var-vs-make
 
 #### 3. Using goroutines on a loop iterator variable
 
