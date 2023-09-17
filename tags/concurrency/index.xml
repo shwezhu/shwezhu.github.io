@@ -13,7 +13,8 @@
       <pubDate>Mon, 04 Sep 2023 21:35:55 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/practice/006-concurrency-programming/</guid>
-      <description>1. Channel 2. Map First version:
+      <description>1. Channel Actor : https://youtu.be/5buaPyJ0XeQ?si=KO3yn5zyPuY9V64k
+2. Map First version:
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 func (s *memoryStore) monitorExpiredSessions() { for { // detect every seconds time.Sleep(time.Second) memoryMutex.Lock() if len(s.sessions) == 0 { memoryMutex.Unlock() continue } for k, info := range s.sessions { if info.expiresTimestamp &amp;lt;= time.Now().Unix() { delete(s.sessions, k) } } memoryMutex.Unlock() } } // in other place will run this method go s.</description>
     </item>
     
