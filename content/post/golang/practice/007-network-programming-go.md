@@ -1,5 +1,5 @@
 ---
-title: Network Programming - Go
+title: 1. Analyse Three-way Handshake with Wireshark - Go
 date: 2023-09-13 20:06:55
 categories:
  - golang
@@ -9,8 +9,6 @@ tags:
  - networking
 typora-root-url: ../../../../static
 ---
-
-## 1. Analyze three-way handshake with Wireshark 
 
 Client:
 

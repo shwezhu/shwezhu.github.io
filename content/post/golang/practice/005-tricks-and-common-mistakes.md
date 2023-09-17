@@ -1,5 +1,5 @@
 ---
-title: Trivial Tricks and Common Mistakes in Practice - Go
+title: Tricks and Common Mistakes - Go
 date: 2023-08-27 17:12:55
 categories:
  - golang
@@ -14,16 +14,19 @@ tags:
 ### 1. `map[string]int`
 
 ```go
-// Dup1 prints the text of each line that appears more than
-// once in the standard input, preceded by its count.
 counts := make(map[string]int)
-input := bufio.NewScanner(os.Stdin)
-for input.Scan() {
-	counts[input.Text()]++
+for name := range users {
+	counts[name]++
 }
 ```
 
 ### 2. slice
+
+#### 2.1. Reslicing - imporve performance
+
+> Note that the elements has not been removed actually, they still in the underlying array. But this doesn't matter, the slice has been changed that's what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one. 
+
+Remove elements by reslicing:
 
 ```go
 func (s *MemoryStore) gc() {
@@ -31,7 +34,7 @@ func (s *MemoryStore) gc() {
 	defer ticker.Stop()
 	var expired []string
 	for range ticker.C {
-    // create a new enpty slice whose capacity has not been changed.
+    // "remove" all elements in expired
 		expired = expired[:0]
     // add elements to expired
     ...
@@ -45,16 +48,61 @@ func (s *MemoryStore) gc() {
 ```
 
 ```go
-// stimulate stack
+func longestCommonPrefix(s []string) string {
+	pref := s[0]
+	for i := 1; i < len(s); i++ {
+		for !strings.HasPrefix(s[i], pref) {
+      // reslice, "delete" the last one element
+			pref = pref[:len(pref)-1]
+		}
+	}
+	return pref
+}
+```
+
+#### 2.2. Stimulate stack
+
+```go
 stack := make([]rune, 0)
 for _, r := range s {
 	if _, ok := pairs[r]; ok {
 		stack = append(stack, r)
 	} else {
+    // reslice, "delete" the last one element
 		stack = stack[:len(stack)-1]
 	}
 }
 ```
+
+#### 2.3. Passing a slice to channel
+
+```go
+func main() {
+	ready := make(chan []string)
+  
+	go func() {
+		var expired []string
+		expired = append(expired, "Coco")
+		expired = append(expired, "Bella")
+		ready<- expired
+	}()
+  
+	go func() {
+    // this will block until there is a data sent to the cahnnel "ready"
+		for s := range ready {
+			for _, name := range s{
+				fmt.Println(name)
+			}
+		}
+	}()
+  
+	time.Sleep(time.Second)
+}
+```
+
+Bacsuse a slice likes a pointer, the two goroutines above share a same underlying array. You have to consider if there is a data race, if yes, consider make a deep copy of the slice: [Everything Passed by Value - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/009-everything-passed-by-value/) 
+
+> Note that [iteration variable is re-used in each iteration](https://github.com/golang/go/wiki/CommonMistakes). 
 
 ## Common mistakes
 
@@ -64,7 +112,7 @@ gobs can encode the exported fields of a struct value, if a sturct without expor
 
 > Functions and channels will not be sent in a gob. Attempting to encode such a value at the top level will fail. A struct field of chan or func type is treated exactly like an unexported field and is ignored. 
 
-### 2. Use `var` to declare channel 
+#### 2. Use `var` to declare channel 
 
 Variables declared without an explicit initial value are given their zero value. Zero value for a channel is `nil`, read and write a `nil` channel will block forever. The code below is a common mistake:
 
@@ -80,9 +128,11 @@ go func() {
 	}()
 ```
 
-Don't use `var` to declare channel, map or slice values, use `make()`, keep this convension you will won't make mistakes. 
+**Don't use `var` to declare** **channel**, **map** **or slice values**, use `make()`, keep this convension you will won't make mistakes. 
 
-### 3. Using goroutines on a loop iterator variable
+Learn more: 
+
+#### 3. Using goroutines on a loop iterator variable
 
 In Go, the loop iterator variable is a single variable that takes different values in each loop iteration. 
 

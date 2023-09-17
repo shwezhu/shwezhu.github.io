@@ -41,76 +41,7 @@ var intSlice = make([]int, 10)
 
 - Slice of slices
 
-二维数组即一个数组里的元素也是数组, 在Go里用make生成:
-
-```go
-var board = make([][]bool, height)
-```
-
-这就是个二维数组了, 只不过这个数组现在看起来还是个“1维”的, 它的元素是空的(本来应该是每个元素都是另一个数组):
-
-```go
-func main() {
-  height : = 4
-	boards := make([][]bool, height)
-	for y, _ := range boards {
-		fmt.Printf("%v", boards[y])
-	}
-}
-// 打印:
-[][][][]
-```
-
-这时候我们需要为其每个元素再几个数组:
-
-```go
-func main() {
-  hetght := 4
-  width  := 4
-  // 创建二维数组
-	boards := make([][]bool, height)
-	for y, _ := range boards {
-		fmt.Printf("%v", boards[y])
-	}
-  
-  // 指定数组的每个元素是一个长度为width的数组
-	for i, _ := range boards {
-		boards[i] = make([]bool, width)
-	}
-
-	fmt.Printf("\n")
-
-	for y, _ := range boards {
-		fmt.Printf("%v", boards[y])
-	}
-}
-
-[][][][]
-[false false false false][false false false false][false false false false][false false false false]
-```
-
-根据输出可以看到, 二维数组就是多个并列的数组, 访问第3个数组的第2个元素即`board[2][1]`:
-
-```go
-func main() {
-	board := make([][]bool, height)
-	for i := range board {
-		board[i] = make([]bool, width)
-	}
-	board[2][1] = true
-	for y := range board{
-		for _, v := range board[y] {
-			fmt.Printf("%v ", v)
-		}
-		println()
-	}
-}
-
-false false false 
-false false false 
-false true false 
-false false false 
-```
+Check it out here: https://zhuanlan.zhihu.com/p/656805223
 
 ## 3. Maps
 
@@ -141,7 +72,7 @@ func main() {
 }
 ```
 
-**If maps are pointers, shouldn’t they be *map[key]value?**
+**If maps are pointers, shouldn’t they be map[key]value?**
 
 > *In the very early days what we call maps now were written as pointers, so you wrote \*map[int]int. We moved away from that when we realized that no one ever wrote `map` without writing `\*map`.*
 >
@@ -205,7 +136,52 @@ func main() {
 [John XXX George Ringo]
 ```
 
-## 5. Conclusion
+## 5. `var` vs `make()`
+
+### 5.1. slice
+
+What's the difference between these two statement below:
+
+```go
+var cats []string
+// or
+dogs := make([]string, 0)
+```
+
+We have know that any varibles declared with `var` without an explicit initial value are given their zero value, `nil` is zero for `map`, `slice` and `pointer`. 
+
+Therefore, the value of `cats` is `nil` for sure, then for `make([]string, 0)`it allocates a memory with 0 elements, which means `dog != nil`. 
+
+But there probably no difference when you use, cause you and append a `nil` slice directly:
+
+```go
+var expired []string
+// it's totally fine to do this:
+expired = append(expired, "hello")
+fmt.Println(expired)
+```
+
+### 5.2. map
+
+But this is not the case in a map:
+
+```go
+var cats map[string]int
+// panic: assignment to entry in nil map
+cats["Coco"] = 3
+```
+
+Therefore, for map you should use `make` or `map literal`
+
+```go
+// They are equivlent
+cats := map[string]int{}
+dogs := make(map[string]int)
+```
+
+Learn more: https://stackoverflow.com/a/53575947/16317008
+
+## 6. Conclusion
 
 - The type `[n]T` is an array of `n` values of type `T`.
   - An array's length is part of its type, so arrays cannot be resized.

@@ -1,5 +1,5 @@
 ---
-title: The Operations of Collections in Practice - Go
+title: The Operations of Collections - Go
 date: 2023-09-04 21:35:55
 categories:
  - golang
