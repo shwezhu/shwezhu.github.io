@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Trivial Tricks and Common Mistakes in Practice - Go - David&#39;s Blog</title>
+  <title>Tricks and Common Mistakes - Go - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]&#43;&#43; } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker." />
+<meta name="author" content="David" /><meta name="description" content="Tricks 1. map[string]int 1 2 3 4 counts := make(map[string]int) for name := range users { counts[name]&#43;&#43; } 2. slice 2.1. Reslicing - imporve performance Note that the elements has not been removed actually, they still in the underlying array. But this doesn&amp;rsquo;t matter, the slice has been changed that&amp;rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one." />
 
 
 
@@ -39,19 +39,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Trivial Tricks and Common Mistakes in Practice - Go" />
-<meta property="og:description" content="Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]&#43;&#43; } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker." />
+<meta property="og:title" content="Tricks and Common Mistakes - Go" />
+<meta property="og:description" content="Tricks 1. map[string]int 1 2 3 4 counts := make(map[string]int) for name := range users { counts[name]&#43;&#43; } 2. slice 2.1. Reslicing - imporve performance Note that the elements has not been removed actually, they still in the underlying array. But this doesn&rsquo;t matter, the slice has been changed that&rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/practice/005-tricks-and-common-mistakes/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-27T17:12:55+00:00" />
 <meta property="article:modified_time" content="2023-08-27T17:12:55+00:00" />
-<meta itemprop="name" content="Trivial Tricks and Common Mistakes in Practice - Go">
-<meta itemprop="description" content="Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]&#43;&#43; } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker."><meta itemprop="datePublished" content="2023-08-27T17:12:55+00:00" />
+<meta itemprop="name" content="Tricks and Common Mistakes - Go">
+<meta itemprop="description" content="Tricks 1. map[string]int 1 2 3 4 counts := make(map[string]int) for name := range users { counts[name]&#43;&#43; } 2. slice 2.1. Reslicing - imporve performance Note that the elements has not been removed actually, they still in the underlying array. But this doesn&rsquo;t matter, the slice has been changed that&rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one."><meta itemprop="datePublished" content="2023-08-27T17:12:55+00:00" />
 <meta itemprop="dateModified" content="2023-08-27T17:12:55+00:00" />
-<meta itemprop="wordCount" content="553">
+<meta itemprop="wordCount" content="773">
 <meta itemprop="keywords" content="golang,practice," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Trivial Tricks and Common Mistakes in Practice - Go"/>
-<meta name="twitter:description" content="Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]&#43;&#43; } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker."/>
+<meta name="twitter:title" content="Tricks and Common Mistakes - Go"/>
+<meta name="twitter:description" content="Tricks 1. map[string]int 1 2 3 4 counts := make(map[string]int) for name := range users { counts[name]&#43;&#43; } 2. slice 2.1. Reslicing - imporve performance Note that the elements has not been removed actually, they still in the underlying array. But this doesn&rsquo;t matter, the slice has been changed that&rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +124,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Trivial Tricks and Common Mistakes in Practice - Go</h1>
+      <h1 class="post-title">Tricks and Common Mistakes - Go</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-08-27 </span>
@@ -152,8 +152,6 @@
         <li><a href="#common-mistakes">Common mistakes</a>
           <ul>
             <li></li>
-            <li><a href="#2-use-var-to-declare-channel">2. Use <code>var</code> to declare channel</a></li>
-            <li><a href="#3-using-goroutines-on-a-loop-iterator-variable">3. Using goroutines on a loop iterator variable</a></li>
           </ul>
         </li>
       </ul>
@@ -171,21 +169,20 @@
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Dup1 prints the text of each line that appears more than
-</span></span></span><span class="line"><span class="cl"><span class="c1">// once in the standard input, preceded by its count.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">counts</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="nx">input</span> <span class="o">:=</span> <span class="nx">bufio</span><span class="p">.</span><span class="nf">NewScanner</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdin</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">input</span><span class="p">.</span><span class="nf">Scan</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">counts</span><span class="p">[</span><span class="nx">input</span><span class="p">.</span><span class="nf">Text</span><span class="p">()]</span><span class="o">++</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">counts</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">name</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">users</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">counts</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span><span class="o">++</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="2-slice">2. slice</h3>
+<h4 id="21-reslicing---imporve-performance">2.1. Reslicing - imporve performance</h4>
+<blockquote>
+<p>Note that the elements has not been removed actually, they still in the underlying array. But this doesn&rsquo;t matter, the slice has been changed that&rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one.</p>
+</blockquote>
+<p>Remove elements by reslicing:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -211,7 +208,7 @@
 </span></span><span class="line"><span class="cl">	<span class="k">defer</span> <span class="nx">ticker</span><span class="p">.</span><span class="nf">Stop</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">expired</span> <span class="p">[]</span><span class="kt">string</span>
 </span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="k">range</span> <span class="nx">ticker</span><span class="p">.</span><span class="nx">C</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// create a new enpty slice whose capacity has not been changed.
+</span></span><span class="line"><span class="cl">    <span class="c1">// &#34;remove&#34; all elements in expired
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">expired</span> <span class="p">=</span> <span class="nx">expired</span><span class="p">[:</span><span class="mi">0</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">// add elements to expired
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">...</span>
@@ -226,6 +223,33 @@
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">longestCommonPrefix</span><span class="p">(</span><span class="nx">s</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">pref</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="p">!</span><span class="nx">strings</span><span class="p">.</span><span class="nf">HasPrefix</span><span class="p">(</span><span class="nx">s</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">pref</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// reslice, &#34;delete&#34; the last one element
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="nx">pref</span> <span class="p">=</span> <span class="nx">pref</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="nx">pref</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">pref</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="22-stimulate-stack">2.2. Stimulate stack</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
@@ -237,24 +261,77 @@
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// stimulate stack
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">stack</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">rune</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">stack</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">rune</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">pairs</span><span class="p">[</span><span class="nx">r</span><span class="p">];</span> <span class="nx">ok</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">		<span class="nx">stack</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">stack</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">stack</span> <span class="p">=</span> <span class="nx">stack</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="nx">stack</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// reslice, &#34;delete&#34; the last one element
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">stack</span> <span class="p">=</span> <span class="nx">stack</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="nx">stack</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="common-mistakes">Common mistakes</h2>
+</div><h4 id="23-passing-a-slice-to-channel">2.3. Passing a slice to channel</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ready</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kd">var</span> <span class="nx">expired</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">expired</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">expired</span><span class="p">,</span> <span class="s">&#34;Coco&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">expired</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">expired</span><span class="p">,</span> <span class="s">&#34;Bella&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">ready</span><span class="o">&lt;-</span> <span class="nx">expired</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// this will block until there is a data sent to the cahnnel &#34;ready&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">for</span> <span class="nx">s</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ready</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">name</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">	<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Bacsuse a slice likes a pointer, the two goroutines above share a same underlying array. You have to consider if there is a data race, if yes, consider make a deep copy of the slice: <a href="https://davidzhu.xyz/post/golang/basics/009-everything-passed-by-value/">Everything Passed by Value - Go - David&rsquo;s Blog</a></p>
+<blockquote>
+<p>Note that <a href="https://github.com/golang/go/wiki/CommonMistakes">iteration variable is re-used in each iteration</a>.</p>
+</blockquote>
+<h2 id="common-mistakes">Common mistakes</h2>
 <h4 id="1-encoding-non-exported-fields-struct-value-with-gobs">1. Encoding non-exported fields struct value with gobs</h4>
 <p>gobs can encode the exported fields of a struct value, if a sturct without exported field, when you try encode its value, you will get a <code>nil</code>.</p>
 <blockquote>
 <p>Functions and channels will not be sent in a gob. Attempting to encode such a value at the top level will fail. A struct field of chan or func type is treated exactly like an unexported field and is ignored.</p>
 </blockquote>
-<h3 id="2-use-var-to-declare-channel">2. Use <code>var</code> to declare channel</h3>
+<h4 id="2-use-var-to-declare-channel">2. Use <code>var</code> to declare channel</h4>
 <p>Variables declared without an explicit initial value are given their zero value. Zero value for a channel is <code>nil</code>, read and write a <code>nil</code> channel will block forever. The code below is a common mistake:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -280,8 +357,9 @@
 </span></span><span class="line"><span class="cl">	<span class="p">}()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Don&rsquo;t use <code>var</code> to declare channel, map or slice values, use <code>make()</code>, keep this convension you will won&rsquo;t make mistakes.</p>
-<h3 id="3-using-goroutines-on-a-loop-iterator-variable">3. Using goroutines on a loop iterator variable</h3>
+</div><p><strong>Don&rsquo;t use <code>var</code> to declare</strong> <strong>channel</strong>, <strong>map</strong> <strong>or slice values</strong>, use <code>make()</code>, keep this convension you will won&rsquo;t make mistakes.</p>
+<p>Learn more:</p>
+<h4 id="3-using-goroutines-on-a-loop-iterator-variable">3. Using goroutines on a loop iterator variable</h4>
 <p>In Go, the loop iterator variable is a single variable that takes different values in each loop iteration.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

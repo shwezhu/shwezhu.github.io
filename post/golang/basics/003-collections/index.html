@@ -16,7 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Declare &amp;amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&amp;rsquo;s length is part of its type, so arrays cannot be resized. 2. Declare &amp;amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices" />
+<meta name="author" content="David" /><meta name="description" content="1. Declare &amp;amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&amp;rsquo;s length is part of its type, so arrays cannot be resized.
+2. Declare &amp;amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices have a capacity and length property." />
 
 
 
@@ -40,18 +41,21 @@
 
 
 <meta property="og:title" content="array &amp; slice &amp; map - Go collections" />
-<meta property="og:description" content="1. Declare &amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&rsquo;s length is part of its type, so arrays cannot be resized. 2. Declare &amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices" />
+<meta property="og:description" content="1. Declare &amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&rsquo;s length is part of its type, so arrays cannot be resized.
+2. Declare &amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices have a capacity and length property." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/003-collections/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-13T10:23:59+00:00" />
 <meta property="article:modified_time" content="2023-05-13T10:23:59+00:00" />
 <meta itemprop="name" content="array &amp; slice &amp; map - Go collections">
-<meta itemprop="description" content="1. Declare &amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&rsquo;s length is part of its type, so arrays cannot be resized. 2. Declare &amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices"><meta itemprop="datePublished" content="2023-05-13T10:23:59+00:00" />
+<meta itemprop="description" content="1. Declare &amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&rsquo;s length is part of its type, so arrays cannot be resized.
+2. Declare &amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices have a capacity and length property."><meta itemprop="datePublished" content="2023-05-13T10:23:59+00:00" />
 <meta itemprop="dateModified" content="2023-05-13T10:23:59+00:00" />
-<meta itemprop="wordCount" content="1093">
+<meta itemprop="wordCount" content="869">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="array &amp; slice &amp; map - Go collections"/>
-<meta name="twitter:description" content="1. Declare &amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&rsquo;s length is part of its type, so arrays cannot be resized. 2. Declare &amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices"/>
+<meta name="twitter:description" content="1. Declare &amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&rsquo;s length is part of its type, so arrays cannot be resized.
+2. Declare &amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices have a capacity and length property."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -151,7 +155,13 @@
           </ul>
         </li>
         <li><a href="#4-slice">4. Slice</a></li>
-        <li><a href="#5-conclusion">5. Conclusion</a></li>
+        <li><a href="#5-var-vs-make">5. <code>var</code> vs <code>make()</code></a>
+          <ul>
+            <li><a href="#51-slice">5.1. slice</a></li>
+            <li><a href="#52-map">5.2. map</a></li>
+          </ul>
+        </li>
+        <li><a href="#6-conclusion">6. Conclusion</a></li>
       </ul>
     </li>
   </ul>
@@ -209,137 +219,8 @@
 </div><ul>
 <li>Slice of slices</li>
 </ul>
-<p>二维数组即一个数组里的元素也是数组, 在Go里用make生成:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">board</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">bool</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>这就是个二维数组了, 只不过这个数组现在看起来还是个“1维”的, 它的元素是空的(本来应该是每个元素都是另一个数组):</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="nx">height</span> <span class="p">:</span> <span class="p">=</span> <span class="mi">4</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">boards</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">bool</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">boards</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v&#34;</span><span class="p">,</span> <span class="nx">boards</span><span class="p">[</span><span class="nx">y</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="c1">// 打印:
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">[][][][]</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>这时候我们需要为其每个元素再几个数组:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="nx">hetght</span> <span class="o">:=</span> <span class="mi">4</span>
-</span></span><span class="line"><span class="cl">  <span class="nx">width</span>  <span class="o">:=</span> <span class="mi">4</span>
-</span></span><span class="line"><span class="cl">  <span class="c1">// 创建二维数组
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">boards</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">bool</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">boards</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v&#34;</span><span class="p">,</span> <span class="nx">boards</span><span class="p">[</span><span class="nx">y</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">  
-</span></span><span class="line"><span class="cl">  <span class="c1">// 指定数组的每个元素是一个长度为width的数组
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">boards</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">boards</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">bool</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;\n&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">boards</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v&#34;</span><span class="p">,</span> <span class="nx">boards</span><span class="p">[</span><span class="nx">y</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="p">[][][][]</span>
-</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span><span class="p">][</span><span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span><span class="p">][</span><span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span><span class="p">][</span><span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span><span class="p">]</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>根据输出可以看到, 二维数组就是多个并列的数组, 访问第3个数组的第2个元素即<code>board[2][1]</code>:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">board</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">bool</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">board</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">bool</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">board</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="kc">true</span>
-</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">y</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span><span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span><span class="p">[</span><span class="nx">y</span><span class="p">]</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v &#34;</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">		<span class="nb">println</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span> 
-</span></span><span class="line"><span class="cl"><span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span> 
-</span></span><span class="line"><span class="cl"><span class="kc">false</span> <span class="kc">true</span> <span class="kc">false</span> 
-</span></span><span class="line"><span class="cl"><span class="kc">false</span> <span class="kc">false</span> <span class="kc">false</span> 
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="3-maps">3. Maps</h2>
+<p>Check it out here: <a href="https://zhuanlan.zhihu.com/p/656805223">https://zhuanlan.zhihu.com/p/656805223</a></p>
+<h2 id="3-maps">3. Maps</h2>
 <blockquote>
 <p><em>A map value is a pointer to a</em> <code>runtime.hmap</code> <em>structure.</em></p>
 </blockquote>
@@ -387,7 +268,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>*<em>If maps are pointers, shouldn’t they be <em>map[key]value?</em></em></p>
+</div><p><strong>If maps are pointers, shouldn’t they be map[key]value?</strong></p>
 <blockquote>
 <p><em>In the very early days what we call maps now were written as pointers, so you wrote *map[int]int. We moved away from that when we realized that no one ever wrote <code>map</code> without writing <code>\*map</code>.</em></p>
 <p>Maps, like channels, but <em>unlike</em> slices, are just pointers to <code>runtime</code> types. As you saw above, a map is just a pointer to a <code>runtime.hmap</code> structure.</p>
@@ -485,7 +366,67 @@
 </span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">John</span> <span class="nx">XXX</span> <span class="nx">George</span> <span class="nx">Ringo</span><span class="p">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="5-conclusion">5. Conclusion</h2>
+</div><h2 id="5-var-vs-make">5. <code>var</code> vs <code>make()</code></h2>
+<h3 id="51-slice">5.1. slice</h3>
+<p>What&rsquo;s the difference between these two statement below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">cats</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// or
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">dogs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We have know that any varibles declared with <code>var</code> without an explicit initial value are given their zero value, <code>nil</code> is zero for <code>map</code>, <code>slice</code> and <code>pointer</code>.</p>
+<p>Therefore, the value of <code>cats</code> is <code>nil</code> for sure, then for <code>make([]string, 0)</code>it allocates a memory with 0 elements, which means <code>dog != nil</code>.</p>
+<p>But there probably no difference when you use, cause you and append a <code>nil</code> slice directly:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">expired</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// it&#39;s totally fine to do this:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">expired</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">expired</span><span class="p">,</span> <span class="s">&#34;hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">expired</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="52-map">5.2. map</h3>
+<p>But this is not the case in a map:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">cats</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// panic: assignment to entry in nil map
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">cats</span><span class="p">[</span><span class="s">&#34;Coco&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">3</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Therefore, for map you should use <code>make</code> or <code>map literal</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// They are equivlent
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">cats</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">dogs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Learn more: <a href="https://stackoverflow.com/a/53575947/16317008">https://stackoverflow.com/a/53575947/16317008</a></p>
+<h2 id="6-conclusion">6. Conclusion</h2>
 <ul>
 <li>The type <code>[n]T</code> is an array of <code>n</code> values of type <code>T</code>.
 <ul>

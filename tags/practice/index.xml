@@ -6,19 +6,9 @@
     <description>Recent content in practice on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 06 Sep 2023 14:05:55 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/tags/practice/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Sep 2023 21:35:55 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/tags/practice/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Go Channels Use Cases in Practice</title>
-      <link>https://shaowenzhu.top/post/golang/practice/007-channels-tricks/</link>
-      <pubDate>Wed, 06 Sep 2023 14:05:55 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/practice/007-channels-tricks/</guid>
-      <description>Previous post: Goroutine &amp;amp; Channel - Go Basics - David&amp;rsquo;s Blog
-1. Pass a slice to channel 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 func main() { ready := make(chan []string) go func() { var expired []string expired = append(expired, &amp;#34;Coco&amp;#34;) expired = append(expired, &amp;#34;Bella&amp;#34;) ready&amp;lt;- expired }() go func() { // this will block until there is data sent to cahnnel ready for s := range ready { for _, name := range s{ fmt.</description>
-    </item>
-    
-    <item>
-      <title>The Operations of Collections in Practice - Go</title>
+      <title>The Operations of Collections - Go</title>
       <link>https://shaowenzhu.top/post/golang/practice/006-collection-operations/</link>
       <pubDate>Mon, 04 Sep 2023 21:35:55 +0000</pubDate>
       
@@ -29,12 +19,12 @@ Therefore, the value of cats is nil for sure, then for make([]string, 0)it alloc
     </item>
     
     <item>
-      <title>Trivial Tricks and Common Mistakes in Practice - Go</title>
+      <title>Tricks and Common Mistakes - Go</title>
       <link>https://shaowenzhu.top/post/golang/practice/005-tricks-and-common-mistakes/</link>
       <pubDate>Sun, 27 Aug 2023 17:12:55 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/practice/005-tricks-and-common-mistakes/</guid>
-      <description>Tricks 1. map[string]int 1 2 3 4 5 6 7 // Dup1 prints the text of each line that appears more than // once in the standard input, preceded by its count. counts := make(map[string]int) input := bufio.NewScanner(os.Stdin) for input.Scan() { counts[input.Text()]++ } 2. slice 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 func (s *MemoryStore) gc() { ticker := time.NewTicker(s.gcInterval) defer ticker.</description>
+      <description>Tricks 1. map[string]int 1 2 3 4 counts := make(map[string]int) for name := range users { counts[name]++ } 2. slice 2.1. Reslicing - imporve performance Note that the elements has not been removed actually, they still in the underlying array. But this doesn&amp;rsquo;t matter, the slice has been changed that&amp;rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one.</description>
     </item>
     
     <item>
