@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Function can be assigned to variable 1 2 3 4 5 6 7 8 9 10 11 func sub(age int, name string) int { // ... return 0 } func main() { foo := sub foo(1, &amp;#34;123&amp;#34;) fmt.Printf(&amp;#34;%T&amp;#34;, foo) } // func(int, string) int 2. Function has type too 1 2 3 4 5 6 7 8 9 func sub(age int, name *string) int { // ... return 0 } func main() { fmt." />
+<meta name="author" content="David" /><meta name="description" content="1. Function can be assigned to variable 1 2 3 4 5 6 7 8 9 10 11 func sub(age int, name string) int { // ... return 0 } func main() { foo := sub foo(1, &amp;#34;123&amp;#34;) fmt.Printf(&amp;#34;%T&amp;#34;, foo) } // func(int, string) int 2. Function value has a type too 1 2 3 4 5 6 7 func sub(age int, name *string) int { return 0 } func main() { fmt." />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="First-Class Functions - Go" />
-<meta property="og:description" content="1. Function can be assigned to variable 1 2 3 4 5 6 7 8 9 10 11 func sub(age int, name string) int { // ... return 0 } func main() { foo := sub foo(1, &#34;123&#34;) fmt.Printf(&#34;%T&#34;, foo) } // func(int, string) int 2. Function has type too 1 2 3 4 5 6 7 8 9 func sub(age int, name *string) int { // ... return 0 } func main() { fmt." />
+<meta property="og:description" content="1. Function can be assigned to variable 1 2 3 4 5 6 7 8 9 10 11 func sub(age int, name string) int { // ... return 0 } func main() { foo := sub foo(1, &#34;123&#34;) fmt.Printf(&#34;%T&#34;, foo) } // func(int, string) int 2. Function value has a type too 1 2 3 4 5 6 7 func sub(age int, name *string) int { return 0 } func main() { fmt." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/012-first-class-functions/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-14T22:28:20+00:00" />
 <meta property="article:modified_time" content="2023-08-14T22:28:20+00:00" />
 <meta itemprop="name" content="First-Class Functions - Go">
-<meta itemprop="description" content="1. Function can be assigned to variable 1 2 3 4 5 6 7 8 9 10 11 func sub(age int, name string) int { // ... return 0 } func main() { foo := sub foo(1, &#34;123&#34;) fmt.Printf(&#34;%T&#34;, foo) } // func(int, string) int 2. Function has type too 1 2 3 4 5 6 7 8 9 func sub(age int, name *string) int { // ... return 0 } func main() { fmt."><meta itemprop="datePublished" content="2023-08-14T22:28:20+00:00" />
+<meta itemprop="description" content="1. Function can be assigned to variable 1 2 3 4 5 6 7 8 9 10 11 func sub(age int, name string) int { // ... return 0 } func main() { foo := sub foo(1, &#34;123&#34;) fmt.Printf(&#34;%T&#34;, foo) } // func(int, string) int 2. Function value has a type too 1 2 3 4 5 6 7 func sub(age int, name *string) int { return 0 } func main() { fmt."><meta itemprop="datePublished" content="2023-08-14T22:28:20+00:00" />
 <meta itemprop="dateModified" content="2023-08-14T22:28:20+00:00" />
-<meta itemprop="wordCount" content="642">
+<meta itemprop="wordCount" content="369">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="First-Class Functions - Go"/>
-<meta name="twitter:description" content="1. Function can be assigned to variable 1 2 3 4 5 6 7 8 9 10 11 func sub(age int, name string) int { // ... return 0 } func main() { foo := sub foo(1, &#34;123&#34;) fmt.Printf(&#34;%T&#34;, foo) } // func(int, string) int 2. Function has type too 1 2 3 4 5 6 7 8 9 func sub(age int, name *string) int { // ... return 0 } func main() { fmt."/>
+<meta name="twitter:description" content="1. Function can be assigned to variable 1 2 3 4 5 6 7 8 9 10 11 func sub(age int, name string) int { // ... return 0 } func main() { foo := sub foo(1, &#34;123&#34;) fmt.Printf(&#34;%T&#34;, foo) } // func(int, string) int 2. Function value has a type too 1 2 3 4 5 6 7 func sub(age int, name *string) int { return 0 } func main() { fmt."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -144,11 +144,9 @@
     <li>
       <ul>
         <li><a href="#1-function-can-be-assigned-to-variable">1. Function can be assigned to variable</a></li>
-        <li><a href="#2-function-has-type-too">2. Function has type too</a></li>
+        <li><a href="#2-function-value-has-a-type-too">2. Function value has a type too</a></li>
         <li><a href="#3-function-type-declaration">3. Function type declaration</a></li>
-        <li><a href="#4-anonymous-functions--closures">4. Anonymous functions &amp; closures</a></li>
-        <li><a href="#5-a-confusion-in-initilizing-function-type">5. a confusion in initilizing function type</a></li>
-        <li><a href="#6-wrapper">6. Wrapper</a></li>
+        <li><a href="#4-a-confusion-in-initilizing-function-type">4. A confusion in initilizing function type</a></li>
       </ul>
     </li>
   </ul>
@@ -185,7 +183,7 @@
 </span></span><span class="line"><span class="cl"><span class="c1">// func(int, string) int
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="2-function-has-type-too">2. Function has type too</h2>
+</div><h2 id="2-function-value-has-a-type-too">2. Function value has a type too</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -195,22 +193,18 @@
 </span><span class="lnt">5
 </span><span class="lnt">6
 </span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">sub</span><span class="p">(</span><span class="nx">age</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">name</span> <span class="o">*</span><span class="kt">string</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="c1">// ...
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%T&#34;</span><span class="p">,</span> <span class="nx">sub</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="c1">// func(int, *string) int
-</span></span></span></code></pre></td></tr></table>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%T&#34;</span><span class="p">,</span> <span class="nx">sub</span><span class="p">)</span> <span class="c1">// func(int, *string) intß
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
-</div><p>Which means we can use function as a parameter or return type of another function:</p>
+</div><p>Function is just a value just like other values in Go and this means we can pass a function as a argument or return a function from another function (returning a anonymous function often forms a <a href="https://davidzhu.xyz/post/golang/practice/008-closures-go/">closure in Go</a>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -291,94 +285,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="4-anonymous-functions--closures">4. Anonymous functions &amp; closures</h2>
-<p>A function literal (or lambda) is a function without a name.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Pass an anonymous function as a argument directly
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">Slice</span><span class="p">(</span><span class="nx">slice</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">less</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="nx">people</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;Alice&#34;</span><span class="p">,</span> <span class="s">&#34;Bob&#34;</span><span class="p">,</span> <span class="s">&#34;Dave&#34;</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">sort</span><span class="p">.</span><span class="nf">Slice</span><span class="p">(</span><span class="nx">people</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nx">people</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">people</span><span class="p">[</span><span class="nx">j</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl"><span class="p">})</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">people</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Assigns an anonymous function to a variable: sayHelloWorld
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">var</span> <span class="nx">sayHelloWorld</span> <span class="p">=</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Hello World !&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nf">sayHelloWorld</span><span class="p">()</span> <span class="c1">// Hello World !
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>An anonymous function defined into another function <code>F</code> can use elements that are not defined in its scope but in the scope of <code>F</code>. A closure is formed when a function references variables not defined in its own scope.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">printer</span><span class="p">()</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">k</span> <span class="o">:=</span> <span class="mi">1</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Print n. %d\n&#34;</span><span class="p">,</span> <span class="nx">k</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="nx">k</span><span class="o">++</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">p</span> <span class="o">:=</span> <span class="nf">printer</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">p</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// Print n. 1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nf">p</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// Print n. 2
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nf">p</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// Print n. 3
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><blockquote>
-<p>A closure is a persistent scope which holds on to local variables even after the code execution has moved out of that block.  <a href="https://stackoverflow.com/a/7464475/16317008">Closure - Stackoverflow</a></p>
-</blockquote>
-<p>Credit: <a href="https://levelup.gitconnected.com/first-class-functions-in-golang-ef2a5001bb4f">First-Class Functions in Golang</a></p>
-<h2 id="5-a-confusion-in-initilizing-function-type">5. a confusion in initilizing function type</h2>
+</div><h2 id="4-a-confusion-in-initilizing-function-type">4. A confusion in initilizing function type</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -429,17 +336,7 @@
 </span></span><span class="line"><span class="cl">	<span class="p">})</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="6-wrapper">6. Wrapper</h2>
-<p>There is a advanced use case for function, called wrapper, you can learn more by visiting these blogs:</p>
-<ul>
-<li><a href="https://medium.com/@matryer/the-http-handler-wrapper-technique-in-golang-updated-bc7fbcffa702">The http.Handler wrapper technique in #golang UPDATED | by Mat Ryer | Medium</a></li>
-<li><a href="https://go.dev/blog/error-handling-and-go">Error handling and Go - The Go Programming Language</a>, at the <em>Simplifying repetitive error handling</em> part</li>
-<li><a href="https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091">Structuring Applications in Go. How I organize my applications in Go | by Ben Johnson | Medium</a></li>
-</ul>
-<p>Learn more <a href="https://www.youtube.com/watch?v=5buaPyJ0XeQ&amp;list=WL&amp;index=7&amp;t=273s">dotGo 2016 - Dave Cheney - Do not fear first class functions</a>:</p>
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-  <iframe src="https://www.youtube-nocookie.com/embed/5buaPyJ0XeQ" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
-</div>
+</div><p>Next post: <a href="https://davidzhu.xyz/post/golang/practice/008-closures-go/">closure in Go</a></p>
 
     </div>
 
