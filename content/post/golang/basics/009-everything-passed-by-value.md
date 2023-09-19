@@ -1,6 +1,6 @@
 ---
 title: Everything Passed by Value - Go
-date: 2023-09-2 18:37:04
+date: 2023-09-02 18:37:04
 categories:
  - golang
  - basics

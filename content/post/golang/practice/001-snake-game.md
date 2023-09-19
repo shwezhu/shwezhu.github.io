@@ -1,6 +1,6 @@
 ---
 title: 用Go实现一个简单的贪吃蛇
-date: 2023-05-20 19:59:9
+date: 2023-05-20 19:59:09
 categories:
  - golang
  - practice
