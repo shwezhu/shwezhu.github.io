@@ -215,7 +215,7 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
       <pubDate>Fri, 18 Aug 2023 09:20:57 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/practice/004-gptbot/</guid>
-      <description>Introduction Source Code: gptbot 1. gorilla/session bugs 1.1. encode before save When try to save data in session, we usually use the Values field of session, for example, 1 session.Values[&amp;#34;username&amp;#34;] = &amp;#34;Jack&amp;#34; The first problem I came across is that, you can save int, bool, string and other basic value into session.Values[] directly, but when you try to assign other type value, custom object, array to session.Values[&amp;quot;xxx&amp;quot;] for example, you</description>
+      <description>1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&amp;#34;gpt_bot.db&amp;#34;), &amp;amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &amp;#34;tcp&amp;#34;, &amp;#34;:6379&amp;#34;, &amp;#34;&amp;#34;, []byte(os.Getenv(&amp;#34;SESSION_KEY&amp;#34;))) ... http.Handle(&amp;#34;/login&amp;#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&amp;rsquo;s worth noting that every HTTP request that comes in to the server gets its own goroutine. Therefore, you</description>
     </item>
     
     <item>

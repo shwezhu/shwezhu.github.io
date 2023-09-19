@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="Introduction Source Code: gptbot 1. gorilla/session bugs 1.1. encode before save When try to save data in session, we usually use the Values field of session, for example, 1 session.Values[&amp;#34;username&amp;#34;] = &amp;#34;Jack&amp;#34; The first problem I came across is that, you can save int, bool, string and other basic value into session.Values[] directly, but when you try to assign other type value, custom object, array to session.Values[&amp;quot;xxx&amp;quot;] for example, you" />
+<meta name="author" content="David" /><meta name="description" content="1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&amp;#34;gpt_bot.db&amp;#34;), &amp;amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &amp;#34;tcp&amp;#34;, &amp;#34;:6379&amp;#34;, &amp;#34;&amp;#34;, []byte(os.Getenv(&amp;#34;SESSION_KEY&amp;#34;))) ... http.Handle(&amp;#34;/login&amp;#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&amp;rsquo;s worth noting that every HTTP request that comes in to the server gets its own goroutine. Therefore, you" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="Golang Web - A Simple GPTBot with Openai API" />
-<meta property="og:description" content="Introduction Source Code: gptbot 1. gorilla/session bugs 1.1. encode before save When try to save data in session, we usually use the Values field of session, for example, 1 session.Values[&#34;username&#34;] = &#34;Jack&#34; The first problem I came across is that, you can save int, bool, string and other basic value into session.Values[] directly, but when you try to assign other type value, custom object, array to session.Values[&quot;xxx&quot;] for example, you" />
+<meta property="og:description" content="1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&#34;gpt_bot.db&#34;), &amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &#34;tcp&#34;, &#34;:6379&#34;, &#34;&#34;, []byte(os.Getenv(&#34;SESSION_KEY&#34;))) ... http.Handle(&#34;/login&#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&rsquo;s worth noting that every HTTP request that comes in to the server gets its own goroutine. Therefore, you" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/practice/004-gptbot/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-18T09:20:57+00:00" />
 <meta property="article:modified_time" content="2023-08-18T09:20:57+00:00" />
 <meta itemprop="name" content="Golang Web - A Simple GPTBot with Openai API">
-<meta itemprop="description" content="Introduction Source Code: gptbot 1. gorilla/session bugs 1.1. encode before save When try to save data in session, we usually use the Values field of session, for example, 1 session.Values[&#34;username&#34;] = &#34;Jack&#34; The first problem I came across is that, you can save int, bool, string and other basic value into session.Values[] directly, but when you try to assign other type value, custom object, array to session.Values[&quot;xxx&quot;] for example, you"><meta itemprop="datePublished" content="2023-08-18T09:20:57+00:00" />
+<meta itemprop="description" content="1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&#34;gpt_bot.db&#34;), &amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &#34;tcp&#34;, &#34;:6379&#34;, &#34;&#34;, []byte(os.Getenv(&#34;SESSION_KEY&#34;))) ... http.Handle(&#34;/login&#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&rsquo;s worth noting that every HTTP request that comes in to the server gets its own goroutine. Therefore, you"><meta itemprop="datePublished" content="2023-08-18T09:20:57+00:00" />
 <meta itemprop="dateModified" content="2023-08-18T09:20:57+00:00" />
-<meta itemprop="wordCount" content="886">
+<meta itemprop="wordCount" content="1166">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Golang Web - A Simple GPTBot with Openai API"/>
-<meta name="twitter:description" content="Introduction Source Code: gptbot 1. gorilla/session bugs 1.1. encode before save When try to save data in session, we usually use the Values field of session, for example, 1 session.Values[&#34;username&#34;] = &#34;Jack&#34; The first problem I came across is that, you can save int, bool, string and other basic value into session.Values[] directly, but when you try to assign other type value, custom object, array to session.Values[&quot;xxx&quot;] for example, you"/>
+<meta name="twitter:description" content="1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&#34;gpt_bot.db&#34;), &amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &#34;tcp&#34;, &#34;:6379&#34;, &#34;&#34;, []byte(os.Getenv(&#34;SESSION_KEY&#34;))) ... http.Handle(&#34;/login&#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&rsquo;s worth noting that every HTTP request that comes in to the server gets its own goroutine. Therefore, you"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -143,16 +143,17 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#introduction">Introduction</a></li>
-        <li><a href="#1-gorillasession-bugs">1. gorilla/session bugs</a>
+        <li><a href="#1-introduction">1. Introduction</a></li>
+        <li><a href="#2-database---gorm">2. Database - gorm</a></li>
+        <li><a href="#3-session---gorillasession">3. Session - gorilla/session</a>
           <ul>
-            <li><a href="#11-encode-before-save">1.1. encode before save</a></li>
-            <li><a href="#12-reset-maxage-whenever-call-sessionsave">1.2. reset MaxAge whenever call <code>session.Save</code></a></li>
+            <li><a href="#31-encode-before-save">3.1. encode before save</a></li>
+            <li><a href="#32-reset-maxage-whenever-call-sessionsave">3.2. reset MaxAge whenever call <code>session.Save</code></a></li>
           </ul>
         </li>
-        <li><a href="#2-error-hanlding">2. Error Hanlding</a></li>
-        <li><a href="#3-session-or-redis-cache">3. Session or Redis Cache</a></li>
-        <li><a href="#4-session-store">4. Session Store</a></li>
+        <li><a href="#4-error-hanlding">4. Error hanlding</a></li>
+        <li><a href="#5-session-or-redis-cache">5. Session or redis cache</a></li>
+        <li><a href="#6-session-store">6. Session store</a></li>
       </ul>
     </li>
   </ul>
@@ -160,10 +161,66 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="introduction">Introduction</h2>
+      <h2 id="1-introduction">1. Introduction</h2>
 <p>Source Code: <a href="https://github.com/shwezhu/gptbot">gptbot</a></p>
-<h2 id="1-gorillasession-bugs">1. gorilla/session bugs</h2>
-<h3 id="11-encode-before-save">1.1. encode before save</h3>
+<h2 id="2-database---gorm">2. Database - gorm</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">db</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">gorm</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="nx">sqlite</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="s">&#34;gpt_bot.db&#34;</span><span class="p">),</span> <span class="o">&amp;</span><span class="nx">gorm</span><span class="p">.</span><span class="nx">Config</span><span class="p">{})</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">store</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">redistore</span><span class="p">.</span><span class="nf">NewRediStore</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s">&#34;tcp&#34;</span><span class="p">,</span> <span class="s">&#34;:6379&#34;</span><span class="p">,</span> <span class="s">&#34;&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nf">Getenv</span><span class="p">(</span><span class="s">&#34;SESSION_KEY&#34;</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/login&#34;</span><span class="p">,</span> <span class="nf">LoginHandler</span><span class="p">(</span><span class="nx">db</span><span class="p">,</span> <span class="nx">store</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, we use a global database connection here accross all handler, and it&rsquo;s worth noting that <strong>every HTTP request that comes in to the server gets its own goroutine</strong>. Therefore, you have to consider data race in the handers.</p>
+<p>Because we share the <code>db</code> across all handlers, we have to consider that if <code>db</code> is thread-safe. I find <a href="https://stackoverflow.com/questions/61822921/does-gorm-open-create-a-new-connection-pool-every-time-its-called">some answers</a> on stack overflow which explains well:</p>
+<p>Does gorm.Open() create a new connection pool every time it&rsquo;s called?</p>
+<p>yes, try to reuse the returned DB object.</p>
+<p><a href="https://github.com/jinzhu/gorm/blob/v1.9.12/main.go#L58">gorm.Open</a> does the following: (more or less):</p>
+<ol>
+<li>lookup the driver for the given dialect</li>
+<li>call <code>sql.Open</code> to return a <code>DB</code> object</li>
+<li>call <code>DB.Ping()</code> to force it to talk to the database</li>
+</ol>
+<p>This means that the recommendations for <a href="https://golang.org/pkg/database/sql/#Open">sql.Open</a> apply to <code>gorm.Open</code>:</p>
+<blockquote>
+<p><strong>The returned DB is safe for concurrent</strong> use by multiple goroutines and maintains its own pool of idle connections. Thus, the Open function should be called just once. It is rarely necessary to close a DB.</p>
+</blockquote>
+<p>also note that the connection pool can be configured as such, in both GORM v1 and v2:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nf">DB</span><span class="p">().</span><span class="nf">SetMaxIdleConns</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// SetMaxOpenConns sets the maximum number of open connections to the database.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nf">DB</span><span class="p">().</span><span class="nf">SetMaxOpenConns</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nf">DB</span><span class="p">().</span><span class="nf">SetConnMaxLifetime</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Hour</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// d, err := db.DB()
+</span></span></span><span class="line"><span class="cl"><span class="c1">// d.SetMaxIdleConns(10)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-session---gorillasession">3. Session - gorilla/session</h2>
+<h3 id="31-encode-before-save">3.1. encode before save</h3>
 <p>When try to save data in session, we usually use the <code>Values</code> field of session, for example,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -208,7 +265,7 @@
 </div>
 </div><p>When you want get message that stored in session, you just need to get the encoded value which is  <code>[]byte</code>, and pass it to <code>json.Unmarshal()</code>, this function will convert the encoded value back to golang object,</p>
 <p><a href="https://stackoverflow.com/questions/45196950/gorilla-sessions-persistent-between-server-restarts">go - gorilla/sessions persistent between server restarts? - Stack Overflow</a></p>
-<h3 id="12-reset-maxage-whenever-call-sessionsave">1.2. reset MaxAge whenever call <code>session.Save</code></h3>
+<h3 id="32-reset-maxage-whenever-call-sessionsave">3.2. reset MaxAge whenever call <code>session.Save</code></h3>
 <p>I don&rsquo;t know if I did it wrong, or it&rsquo;s a bug in <code>gorilla/sessions</code>, for example, I set the <code>MaxAge</code> of the session to 60 seconds when user first logged in I create session, and for later request, for example, user will send request for talking with chatGPT, and during this process, the server will update the history message which stored in <code>session.Values[&quot;messages&quot;]</code>, after update the value of  <code>session.Values[&quot;messages&quot;]</code>, we should call <code>session.Save()</code> so that this update can be saved for later request,</p>
 <p>But this will make <code>session.Options.MaxAge</code> back to its defalult value, which is 30 days, so you should set it again when you call  <code>session.Save()</code>,</p>
 <div class="highlight"><div class="chroma">
@@ -229,7 +286,7 @@
 </div>
 </div><p>Otherwise, the session stored in Redis won&rsquo;t be deleted until 30 days later, and your user will keep logged in satus for 30 days,</p>
 <p><a href="https://stackoverflow.com/questions/21865681/sessions-variables-in-golang-not-saved-while-using-gorilla-sessions">go - Sessions variables in golang not saved while using gorilla sessions - Stack Overflow</a></p>
-<h2 id="2-error-hanlding">2. Error Hanlding</h2>
+<h2 id="4-error-hanlding">4. Error hanlding</h2>
 <p>Return and wrap error in low layer function (try to provide more context info), only handle errors and log info on the top of the function call stack.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -281,7 +338,8 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="3-session-or-redis-cache">3. Session or Redis Cache</h2>
+</div><p>Learn more: <a href="https://davidzhu.xyz/post/golang/basics/008-error-handling/">Error handling - Go - David&rsquo;s Blog</a></p>
+<h2 id="5-session-or-redis-cache">5. Session or redis cache</h2>
 <p>I did some experiments , found that a query with gorm for sqlite3 takes about 380us, it&rsquo;s not that much, and there will no that many users can overwhelm my server, so I finally decide query the <code>tokens</code> value from database everytime when user make a request to chat with ChatGPT,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -315,7 +373,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">..</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="4-session-store">4. Session Store</h2>
+</div><h2 id="6-session-store">6. Session store</h2>
 <p>sessions need a place to store, in-memory, file or Redis, package <a href="https://github.com/gorilla/sessions">gorilla/sessions</a> provides two way to save sessions, one is file, another is in-memory,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

@@ -154,7 +154,7 @@
   
   <div class="post-content">
     <div class="post-summary">
-      Introduction Source Code: gptbot 1. gorilla/session bugs 1.1. encode before save When try to save data in session, we usually use the Values field of session, for example, 1 session.Values[&#34;username&#34;] = &#34;Jack&#34; The first problem I came across is that, you can save int, bool, string and other basic value into session.Values[] directly, but when you try to assign other type value, custom object, array to session.Values[&quot;xxx&quot;] for example, you
+      1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&#34;gpt_bot.db&#34;), &amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &#34;tcp&#34;, &#34;:6379&#34;, &#34;&#34;, []byte(os.Getenv(&#34;SESSION_KEY&#34;))) ... http.Handle(&#34;/login&#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&rsquo;s worth noting that every HTTP request that comes in to the server gets its own goroutine. Therefore, you
     </div>
     <div class="read-more">
       <a href="/post/golang/practice/004-gptbot/" class="read-more-link">Read more...</a>
