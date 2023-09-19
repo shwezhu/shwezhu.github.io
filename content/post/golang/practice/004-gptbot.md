@@ -8,13 +8,55 @@ tags:
  - golang
 ---
 
-## Introduction
+## 1. Introduction
 
 Source Code: [gptbot](https://github.com/shwezhu/gptbot)
 
-## 1. gorilla/session bugs
+## 2. Database - gorm
 
-### 1.1. encode before save
+```go
+func main() {
+	db, _ := gorm.Open(sqlite.Open("gpt_bot.db"), &gorm.Config{})
+  store, _ := redistore.NewRediStore(10, "tcp", ":6379", "", []byte(os.Getenv("SESSION_KEY")))
+  ...
+  http.Handle("/login", LoginHandler(db, store))
+}
+```
+
+As you can see, we use a global database connection here accross all handler, and it's worth noting that **every HTTP request that comes in to the server gets its own goroutine**. Therefore, you have to consider data race in the handers. 
+
+Because we share the `db` across all handlers, we have to consider that if `db` is thread-safe. I find [some answers](https://stackoverflow.com/questions/61822921/does-gorm-open-create-a-new-connection-pool-every-time-its-called) on stack overflow which explains well:
+
+Does gorm.Open() create a new connection pool every time it's called?
+
+yes, try to reuse the returned DB object. 
+
+[gorm.Open](https://github.com/jinzhu/gorm/blob/v1.9.12/main.go#L58) does the following: (more or less):
+
+1. lookup the driver for the given dialect
+2. call `sql.Open` to return a `DB` object
+3. call `DB.Ping()` to force it to talk to the database
+
+This means that the recommendations for [sql.Open](https://golang.org/pkg/database/sql/#Open) apply to `gorm.Open`:
+
+> **The returned DB is safe for concurrent** use by multiple goroutines and maintains its own pool of idle connections. Thus, the Open function should be called just once. It is rarely necessary to close a DB.
+
+also note that the connection pool can be configured as such, in both GORM v1 and v2:
+
+```go
+// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
+db.DB().SetMaxIdleConns(10)
+// SetMaxOpenConns sets the maximum number of open connections to the database.
+db.DB().SetMaxOpenConns(100)
+// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
+db.DB().SetConnMaxLifetime(time.Hour)
+// d, err := db.DB()
+// d.SetMaxIdleConns(10)
+```
+
+## 3. Session - gorilla/session
+
+### 3.1. encode before save
 
 When try to save data in session, we usually use the `Values` field of session, for example,
 
@@ -47,7 +89,7 @@ When you want get message that stored in session, you just need to get the encod
 
 [go - gorilla/sessions persistent between server restarts? - Stack Overflow](https://stackoverflow.com/questions/45196950/gorilla-sessions-persistent-between-server-restarts)
 
-### 1.2. reset MaxAge whenever call `session.Save`
+### 3.2. reset MaxAge whenever call `session.Save`
 
 I don't know if I did it wrong, or it's a bug in `gorilla/sessions`, for example, I set the `MaxAge` of the session to 60 seconds when user first logged in I create session, and for later request, for example, user will send request for talking with chatGPT, and during this process, the server will update the history message which stored in `session.Values["messages"]`, after update the value of  `session.Values["messages"]`, we should call `session.Save()` so that this update can be saved for later request, 
 
@@ -65,7 +107,7 @@ Otherwise, the session stored in Redis won't be deleted until 30 days later, and
 
 [go - Sessions variables in golang not saved while using gorilla sessions - Stack Overflow](https://stackoverflow.com/questions/21865681/sessions-variables-in-golang-not-saved-while-using-gorilla-sessions)
 
-## 2. Error Hanlding
+## 4. Error hanlding
 
 Return and wrap error in low layer function (try to provide more context info), only handle errors and log info on the top of the function call stack. 
 
@@ -94,7 +136,9 @@ func updateMessage(w http.ResponseWriter, r *http.Request, store *redistore.Redi
 }
 ```
 
-## 3. Session or Redis Cache
+Learn more: [Error handling - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/008-error-handling/)
+
+## 5. Session or redis cache
 
 I did some experiments , found that a query with gorm for sqlite3 takes about 380us, it's not that much, and there will no that many users can overwhelm my server, so I finally decide query the `tokens` value from database everytime when user make a request to chat with ChatGPT, 
 
@@ -114,7 +158,7 @@ fmt.Println(t.Sub(start))
 ..
 ```
 
-## 4. Session Store
+## 6. Session store
 
 sessions need a place to store, in-memory, file or Redis, package [gorilla/sessions](https://github.com/gorilla/sessions) provides two way to save sessions, one is file, another is in-memory, 
 

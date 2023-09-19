@@ -197,6 +197,27 @@ func (m *Mux) PrivateMsg(addr net.Addr, msg string) (int, error) {
 }
 ```
 
+I was wondering can I just replace the channel with just a error value in `sendMsg()` method, like this:
+
+```go
+func (m *Mux) SendMsg(msg string) error {
+	var result error
+	m.ops <- func(m map[net.Addr]net.Conn) {
+		for _, conn := range m {
+			_, err := io.WriteString(conn, msg)
+			if err != nil {
+				result = err
+				return
+			}
+		}
+		result = nil
+	}
+	return result
+}
+```
+
+The answer is no, I cann't, the `result` has to be a channel here. Because the closure defined in `SendMsg` is sent somewhere else (via the `m.ops` chan) to get executed - I need to get the `result` from the channel to block the `SendMsg` at the last `return <-result` - the `result` channel is a synchronization point. [source](https://www.reddit.com/r/golang/comments/16mfvne/comment/k19lmtm/?utm_source=share&utm_medium=web2x&context=3) 
+
 - First class functions let you pass around behaviour, not just dead data that must be interpreted.
 - First class functions aren't new or novel.
 - Like the other features, first class functions should be used with restraint.
@@ -209,7 +230,47 @@ Source: [dotGo 2016 - Dave Cheney - Do not fear first class functions](https://w
 
 {{% youtube "5buaPyJ0XeQ" %}}
 
+## 2.2. Creating middleware
+
+Middleware is basically a fancy term for reusable function that can run code both before and after your code designed to handle a web requst. In Go these are typically accomplished with closures, but in different programming languages they may be achieved in other ways.
+
+Middleware is very helpful in scenarios where we need to perform common tasks on incoming HTTP requests, such as authentication, authorization, request validation, and logging. Middleware allows us to apply these tasks consistently across our application, reducing code duplication and making it easier to maintain and modify our code.
+
+There are several middleware functions that are commonly used in web applications, including:
+
+1. **Authentication middleware**: This middleware checks whether the user is authenticated and authorized to access the requested resource.
+2. **Logging middleware**: This middleware logs information about incoming requests, including request method, URL, headers, and response status.
+3. **Error handling middleware**: This middleware catches errors that occur during request handling and returns an appropriate error response to the client.
+4. **Request validation middleware**: This middleware validates incoming requests to ensure that they meet certain criteria, such as HTTP method, headers, query parameters, and request body content.
+5. **Caching middleware:** This middleware caches responses to certain requests to improve performance and reduce server load.
+6. **Request Tracing**: This middleware is used to trace the path of a request through a web application. It captures relevant information about the request and logs it for monitoring and debugging purposes.
+
+```go
+func main() {
+  http.HandleFunc("/hello", timed(hello))
+  http.ListenAndServe(":3000", nil)
+}
+
+func timed(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
+  return func(w http.ResponseWriter, r *http.Request) {
+    start := time.Now()
+    f(w, r)
+    end := time.Now()
+    fmt.Println("The request took", end.Sub(start))
+  }
+}
+
+func hello(w http.ResponseWriter, r *http.Request) {
+  fmt.Fprintln(w, "<h1>Hello!</h1>")
+}
+```
+
+Notice that our `timed()` function takes in a function that could be used as a handler function, and returns a function of the same type, but the returned function is different that the one passed it. The closure being returned logs the current time, calls the original function, and finally logs the end time and prints out the duration of the request. All while being agnostic to what is actually happening inside of our handler function.
+
+Now all we need to do to time our handlers is to wrap them in `timed(handler)` and pass the closure to the `http.HandleFunc()` function call.
+
 References:
 
-- [Function Closures - A Tour of Go](https://go.dev/tour/moretypes/25)
--  [First-Class Functions in Golang](https://levelup.gitconnected.com/first-class-functions-in-golang-ef2a5001bb4f) 
+- [5 Useful Ways to Use Closures in Go - Calhoun.io](https://www.calhoun.io/5-useful-ways-to-use-closures-in-go/)
+-  [Mastering Middleware in Go: Tips, Tricks, and Real-World Use Cases | by ansu jain | Medium](https://medium.com/@ansujain/mastering-middleware-in-go-tips-tricks-and-real-world-use-cases-79215e72b4a8) 
+-  [Function Closures - A Tour of Go](https://go.dev/tour/moretypes/25)
