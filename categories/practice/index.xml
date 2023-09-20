@@ -6,7 +6,18 @@
     <description>Recent content in practice on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 18 Sep 2023 23:32:55 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/categories/practice/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 19 Sep 2023 20:30:55 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/categories/practice/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go Web Application</title>
+      <link>https://shaowenzhu.top/post/golang/practice/009-go-web-1/</link>
+      <pubDate>Tue, 19 Sep 2023 20:30:55 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/practice/009-go-web-1/</guid>
+      <description>1. Hello world - 2 ways 1.1. http.Handle() To run a server, we need to implement http.Handler interface:
+1 2 3 type Handler interface{ ServeHTTP(ResponseWriter, *Request) } To achieve that we need to create an empty struct and provide a method for it:
+1 2 3 4 5 6 7 8 9 10 11 type handler struct{} func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) { _, _ = fmt.Fprint(w, &amp;#34;hello world\n&amp;#34;) } func main() { h := &amp;amp;handler{} // 1 http.</description>
+    </item>
+    
     <item>
       <title>Function Closures - Go</title>
       <link>https://shaowenzhu.top/post/golang/practice/008-closures-go/</link>
@@ -74,7 +85,7 @@ Solution I&amp;rsquo;m using hugo now but I don&amp;rsquo;t want to override or 
       <pubDate>Fri, 18 Aug 2023 09:20:57 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/practice/004-gptbot/</guid>
-      <description>1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&amp;#34;gpt_bot.db&amp;#34;), &amp;amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &amp;#34;tcp&amp;#34;, &amp;#34;:6379&amp;#34;, &amp;#34;&amp;#34;, []byte(os.Getenv(&amp;#34;SESSION_KEY&amp;#34;))) ... http.Handle(&amp;#34;/login&amp;#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&amp;rsquo;s worth noting that every HTTP request that comes in to the server gets its own goroutine. Therefore, you</description>
+      <description>1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&amp;#34;gpt_bot.db&amp;#34;), &amp;amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &amp;#34;tcp&amp;#34;, &amp;#34;:6379&amp;#34;, &amp;#34;&amp;#34;, []byte(os.Getenv(&amp;#34;SESSION_KEY&amp;#34;))) ... http.Handle(&amp;#34;/login&amp;#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&amp;rsquo;s worth noticing that every HTTP request that comes in to the server gets its own goroutine. Therefore, you</description>
     </item>
     
     <item>
