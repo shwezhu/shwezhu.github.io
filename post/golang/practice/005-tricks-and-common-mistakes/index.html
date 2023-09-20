@@ -16,7 +16,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="Tricks 1. map[string]int 1 2 3 4 counts := make(map[string]int) for name := range users { counts[name]&#43;&#43; } 2. slice 2.1. Reslicing - imporve performance Note that the elements has not been removed actually, they still in the underlying array. But this doesn&amp;rsquo;t matter, the slice has been changed that&amp;rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one." />
+<meta name="author" content="David" /><meta name="description" content="Rules 1. Return a pointer or value I list some type to which you don&amp;rsquo;t need to return a pointer point:
+A slice does not store any data, it just describes a section of an underlying array.
+Therefore, your function can return a slice directly or accept a slice as a argument. You don&amp;rsquo;t need to return a pointer to a slice. learn more: https://davidzhu.xyz/post/golang/basics/016-slice-relearn/ In Go, a string is in effect a read-only slice of bytes." />
 
 
 
@@ -40,18 +42,24 @@
 
 
 <meta property="og:title" content="Tricks and Common Mistakes - Go" />
-<meta property="og:description" content="Tricks 1. map[string]int 1 2 3 4 counts := make(map[string]int) for name := range users { counts[name]&#43;&#43; } 2. slice 2.1. Reslicing - imporve performance Note that the elements has not been removed actually, they still in the underlying array. But this doesn&rsquo;t matter, the slice has been changed that&rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one." />
+<meta property="og:description" content="Rules 1. Return a pointer or value I list some type to which you don&rsquo;t need to return a pointer point:
+A slice does not store any data, it just describes a section of an underlying array.
+Therefore, your function can return a slice directly or accept a slice as a argument. You don&rsquo;t need to return a pointer to a slice. learn more: https://davidzhu.xyz/post/golang/basics/016-slice-relearn/ In Go, a string is in effect a read-only slice of bytes." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/practice/005-tricks-and-common-mistakes/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-27T17:12:55+00:00" />
 <meta property="article:modified_time" content="2023-08-27T17:12:55+00:00" />
 <meta itemprop="name" content="Tricks and Common Mistakes - Go">
-<meta itemprop="description" content="Tricks 1. map[string]int 1 2 3 4 counts := make(map[string]int) for name := range users { counts[name]&#43;&#43; } 2. slice 2.1. Reslicing - imporve performance Note that the elements has not been removed actually, they still in the underlying array. But this doesn&rsquo;t matter, the slice has been changed that&rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one."><meta itemprop="datePublished" content="2023-08-27T17:12:55+00:00" />
+<meta itemprop="description" content="Rules 1. Return a pointer or value I list some type to which you don&rsquo;t need to return a pointer point:
+A slice does not store any data, it just describes a section of an underlying array.
+Therefore, your function can return a slice directly or accept a slice as a argument. You don&rsquo;t need to return a pointer to a slice. learn more: https://davidzhu.xyz/post/golang/basics/016-slice-relearn/ In Go, a string is in effect a read-only slice of bytes."><meta itemprop="datePublished" content="2023-08-27T17:12:55+00:00" />
 <meta itemprop="dateModified" content="2023-08-27T17:12:55+00:00" />
-<meta itemprop="wordCount" content="774">
+<meta itemprop="wordCount" content="959">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Tricks and Common Mistakes - Go"/>
-<meta name="twitter:description" content="Tricks 1. map[string]int 1 2 3 4 counts := make(map[string]int) for name := range users { counts[name]&#43;&#43; } 2. slice 2.1. Reslicing - imporve performance Note that the elements has not been removed actually, they still in the underlying array. But this doesn&rsquo;t matter, the slice has been changed that&rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one."/>
+<meta name="twitter:description" content="Rules 1. Return a pointer or value I list some type to which you don&rsquo;t need to return a pointer point:
+A slice does not store any data, it just describes a section of an underlying array.
+Therefore, your function can return a slice directly or accept a slice as a argument. You don&rsquo;t need to return a pointer to a slice. learn more: https://davidzhu.xyz/post/golang/basics/016-slice-relearn/ In Go, a string is in effect a read-only slice of bytes."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -143,6 +151,11 @@
   <ul>
     <li>
       <ul>
+        <li><a href="#rules">Rules</a>
+          <ul>
+            <li><a href="#1-return-a-pointer-or-value">1. Return a pointer or value</a></li>
+          </ul>
+        </li>
         <li><a href="#tricks">Tricks</a>
           <ul>
             <li><a href="#1-mapstringint">1. <code>map[string]int</code></a></li>
@@ -161,7 +174,41 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="tricks">Tricks</h2>
+      <h2 id="rules">Rules</h2>
+<h3 id="1-return-a-pointer-or-value">1. Return a pointer or value</h3>
+<p>I list some type to which you don&rsquo;t need to return a pointer point:</p>
+<ul>
+<li>
+<p>A <strong>slice</strong> does not store any data, it just describes a section of an underlying array.</p>
+<ul>
+<li>Therefore, your function can return a slice directly or accept a slice as a argument.</li>
+<li>You don&rsquo;t need to return a pointer to a slice.</li>
+<li>learn more: <a href="https://davidzhu.xyz/post/golang/basics/016-slice-relearn/">https://davidzhu.xyz/post/golang/basics/016-slice-relearn/</a></li>
+</ul>
+</li>
+<li>
+<p>In Go, a <strong>string</strong> is in effect a read-only slice of bytes.</p>
+<ul>
+<li>Only use <code>*string</code> if you have to distinguish an empty string from no strings.</li>
+<li>learn more: <a href="https://davidzhu.xyz/post/golang/basics/015-string-runes-bytes">https://davidzhu.xyz/post/golang/basics/015-string-runes-bytes</a></li>
+</ul>
+</li>
+<li>
+<p><em>A <strong>map</strong> value is a pointer to a</em> <code>runtime.hmap</code> <em>structure.</em></p>
+<ul>
+<li>A map is just a pointer itself, therefore, you don&rsquo;t need returen a pinter of a map value.</li>
+<li>learn more: <a href="https://davidzhu.xyz/post/golang/basics/003-collections/#3-maps">https://davidzhu.xyz/post/golang/basics/003-collections/#3-maps</a></li>
+</ul>
+</li>
+<li>
+<p>Like maps, <strong>channels</strong> are allocated with <code>make</code>, and the resulting value acts as a reference to an underlying data structure.</p>
+</li>
+</ul>
+<blockquote>
+<p>Generally, in practice, we seldom use pointer types whose base types are <code>slice</code> types, <code>map</code> types, <code>channel</code> types, <code>function</code> types, <code>string</code> types and <code>interface</code> types. The costs of copying values of these assumed base types are very small.</p>
+<p>Source: <a href="https://go101.org/article/value-copy-cost.html">https://go101.org/article/value-copy-cost.html</a></p>
+</blockquote>
+<h2 id="tricks">Tricks</h2>
 <h3 id="1-mapstringint">1. <code>map[string]int</code></h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -309,7 +356,7 @@
 </span></span><span class="line"><span class="cl">	<span class="p">}()</span>
 </span></span><span class="line"><span class="cl">  
 </span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// this will block until there is a data sent to the cahnnel &#34;ready&#34;
+</span></span><span class="line"><span class="cl">    <span class="c1">// this will block until there is a data sent to the channel &#34;ready&#34;
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">for</span> <span class="nx">s</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ready</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">			<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">name</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>

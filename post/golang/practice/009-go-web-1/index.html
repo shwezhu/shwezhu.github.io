@@ -54,7 +54,7 @@ Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTT
 Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTTP Web Services after Eight Years 1. Hello world - 2 ways 1.1. Implementing a Handler Interface - way 1 To run a server, we need to implement http.Handler interface:
 1 2 3 type Handler interface{ ServeHTTP(ResponseWriter, *Request) } To achieve that we need to create an empty struct and provide a method for it:"><meta itemprop="datePublished" content="2023-09-19T23:49:55+00:00" />
 <meta itemprop="dateModified" content="2023-09-19T23:49:55+00:00" />
-<meta itemprop="wordCount" content="1895">
+<meta itemprop="wordCount" content="1899">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="The Router of Go Web App - ServeMux"/>
 <meta name="twitter:description" content="This article enlightened by:
@@ -650,6 +650,7 @@ Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTT
 </span><span class="lnt">41
 </span><span class="lnt">42
 </span><span class="lnt">43
+</span><span class="lnt">44
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">newServer</span><span class="p">()</span> <span class="o">*</span><span class="nx">server</span> <span class="p">{</span>
@@ -669,7 +670,8 @@ Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTT
 </span></span></span><span class="line"><span class="cl"><span class="c1">// so that we can pass it to ListenAndServe()
 </span></span></span><span class="line"><span class="cl"><span class="c1">// don&#39;t hide any logic here, which means don&#39;t write any other code
 </span></span></span><span class="line"><span class="cl"><span class="c1">// if you want do something before a request, valide request for example
-</span></span></span><span class="line"><span class="cl"><span class="c1">// use a middleware instead
+</span></span></span><span class="line"><span class="cl"><span class="c1">// use a middleware instead, 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// middleware: https://davidzhu.xyz/post/golang/practice/008-closures-go/#22-creating-middleware
 </span></span></span><span class="line"><span class="cl"><span class="c1">// learn more: https://youtu.be/rWBSMsLG8po?si=qwtUTKF3J4EtWRQC
 </span></span></span><span class="line"><span class="cl"><span class="c1">// I&#39;ll explain why we call s.router.ServeHTTP(w, r) later
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
