@@ -144,8 +144,6 @@ Print out a list of all the files whose names end in .c
 
 ## 6. `find -print0` & `xargs -0`
 
-看find命令的时候总是看到`-print0`这个option, 查查资料学习一下: 
-
 > The `find` command prints results to standard output by default, so the `-print` option is normally not needed, but `-print0` separates the filenames with a 0 (NULL) byte **so that names containing spaces or newlines can be interpreted correctly**.
 
 上面这段话提到的`0(null)` byte是一个escape sequence characters, 即`\0`在c语言里也是代表字符串的结束, 即在每个文件名后面都加个结束符, 为什么要加呢? 如果我们单用`find`指令, 确实没什么必要, 但有时候我们把`find`的输出作为另一个指令比如`xargs`的输入的时候, 就有必要了. 这是因为命令行指令一般把空格whitespace/blankspace作为参数分隔符, 而有一些文件名里含有空格, 所以, 你想`find`输出的一个文件名是`my project`, 那`xargs`就是会把`my project`看成俩参数即`my`, `project`, 这肯定就错了, 

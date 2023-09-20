@@ -96,9 +96,9 @@ Aborting
 
 ## 3. 重命名远程分支
 
-首先在 GitHub 修改分支名字, 之后GitHub会提醒:
+首先在 GitHub 修改分支名字, 之后GitHub会提醒: 
 
-#### The default branch has been renamed!
+The default branch has been renamed!
 
 ` backup`  is now named ` hexo-blog` 
 

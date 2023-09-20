@@ -37,7 +37,7 @@ That's what happens when `HEAD` points directly to a commit. This is called a de
 
 ### 1.3. Conclusion
 
-`HEAD` is you. It points to whatever you checked out, wherever you are. Typically that is not a commit, it is a branch. If `HEAD` *does* point to a commit (or tag), even if it's the same commit (or tag) that a branch also points to, you (and `HEAD`) have been detached from that branch. Since you don't have a branch attached to you, the branch won't follow along with you as you make new commits. `HEAD`, however, will.
+`HEAD` is you. It points to whatever you checked out, wherever you are. Typically that is not a commit, it is a local branch. If `HEAD` *does* point to a commit (or tag), even if it's the same commit (or tag) that a branch also points to, you (and `HEAD`) have been detached from that branch. Since you don't have a branch attached to you, the branch won't follow along with you as you make new commits. `HEAD`, however, will.
 
 Source: 
 
