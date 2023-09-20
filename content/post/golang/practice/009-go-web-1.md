@@ -293,7 +293,8 @@ type server struct {
 // so that we can pass it to ListenAndServe()
 // don't hide any logic here, which means don't write any other code
 // if you want do something before a request, valide request for example
-// use a middleware instead
+// use a middleware instead, 
+// middleware: https://davidzhu.xyz/post/golang/practice/008-closures-go/#22-creating-middleware
 // learn more: https://youtu.be/rWBSMsLG8po?si=qwtUTKF3J4EtWRQC
 // I'll explain why we call s.router.ServeHTTP(w, r) later
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {

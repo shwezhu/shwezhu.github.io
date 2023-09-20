@@ -122,6 +122,8 @@ As we talked ablove, for better efficiency we usually choose to pass pointer typ
 
 The answer is no, we don't need to do that. Learn more: [array & slice & map - golang collections](https://shaowenzhu.top/post/golang/basics/003-collections/) 
 
+Similarly, [string is just a read only slice](https://davidzhu.xyz/post/golang/basics/015-string-runes-bytes/) in Go, we don't need return a pointer of string value.
+
 > **NOTE:**  when we have a slice channel, both the slice we pass to the channel and the other slice we received from the channel share a same underlying array. If you don't want that, you probably need a copy, check the built-in copy function. 
 >
 > ```golang
@@ -129,3 +131,4 @@ The answer is no, we don't need to do that. Learn more: [array & slice & map - g
 > copy(newSlice, oldSlice)
 > ch<- newSlice
 > ```
+

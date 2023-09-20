@@ -8,6 +8,29 @@ tags:
  - golang
 ---
 
+## Rules
+
+### 1. Return a pointer or value
+
+I list some type to which you don't need to return a pointer point:
+
+- A **slice** does not store any data, it just describes a section of an underlying array. 
+  - Therefore, your function can return a slice directly or accept a slice as a argument. 
+  - You don't need to return a pointer to a slice. 
+  - learn more: https://davidzhu.xyz/post/golang/basics/016-slice-relearn/
+- In Go, a **string** is in effect a read-only slice of bytes. 
+  - Only use `*string` if you have to distinguish an empty string from no strings.
+  - learn more: https://davidzhu.xyz/post/golang/basics/015-string-runes-bytes
+- *A **map** value is a pointer to a* `runtime.hmap` *structure.* 
+  - A map is just a pointer itself, therefore, you don't need returen a pinter of a map value.
+  - learn more: https://davidzhu.xyz/post/golang/basics/003-collections/#3-maps
+
+- Like maps, **channels** are allocated with `make`, and the resulting value acts as a reference to an underlying data structure.
+
+> Generally, in practice, we seldom use pointer types whose base types are `slice` types, `map` types, `channel` types, `function` types, `string` types and `interface` types. The costs of copying values of these assumed base types are very small. 
+>
+> Source: https://go101.org/article/value-copy-cost.html
+
 ## Tricks
 
 ### 1. `map[string]int`
@@ -87,7 +110,7 @@ func main() {
 	}()
   
 	go func() {
-    // this will block until there is a data sent to the cahnnel "ready"
+    // this will block until there is a data sent to the channel "ready"
 		for s := range ready {
 			for _, name := range s{
 				fmt.Println(name)

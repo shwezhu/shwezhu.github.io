@@ -76,7 +76,7 @@ type stringStruct struct {
 >
 > **Size is not length**, the size of a stirng value is always 2 words, learn more: [Value Variable and Types - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/001-value-variable-type/)
 
-## 2. string are read-only slice of bytes
+## 2. string is read-only slice of bytes
 
 In Go, a string is in effect a **read-only slice of bytes**. We have disscussed slice in [previous post](https://davidzhu.xyz/post/golang/basics/016-slice-relearn/). 
 
