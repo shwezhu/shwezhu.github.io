@@ -23,7 +23,7 @@ func main() {
 }
 ```
 
-As you can see, we use a global database connection here accross all handler, and it's worth noting that **every HTTP request that comes in to the server gets its own goroutine**. Therefore, you have to consider data race in the handers. 
+As you can see, we use a global database connection here accross all handler, and it's worth noticing that **every HTTP request that comes in to the server gets its own goroutine**. Therefore, you have to consider data race in the handers. 
 
 Because we share the `db` across all handlers, we have to consider that if `db` is thread-safe. I find [some answers](https://stackoverflow.com/questions/61822921/does-gorm-open-create-a-new-connection-pool-every-time-its-called) on stack overflow which explains well:
 
