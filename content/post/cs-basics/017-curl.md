@@ -35,16 +35,14 @@ curl -X POST [URL]
 
 > Note that we use single quote to wrap the double quote which makes double quote lose its special meaning, it's just all about shell scripting, learn more: [Shell Script Basic Syntax - David's Blog](https://davidzhu.xyz/post/linux/002-bash-basics/#5-quotes)
 
-There is a bad example:
+Bad example:
 
 ```shell
 # Bad example
 curl localhost:8080/hello -d '{"username":"davidzhu", "password":"778899a"}'
 ```
 
-The server will parse it wrong, because the data format is json obviously, but `curl` will set the `Content-Type` header to `application/x-www-form-urlencoded` by default. 
-
-Don't write it wrong, otherwise, your server won't parse data from the request correctly. 
+The server will parse it wrong, because the data format is json obviously, but `curl` will set the `Content-Type` header to `application/x-www-form-urlencoded` by default. Therefore, don't write it wrong, otherwise, your server won't parse data from the request correctly. 
 
 The content below form the [docs](https://reqbin.com/req/c-dwjszac0/curl-post-json-example) of curl, hope it will help:
 
@@ -60,5 +58,13 @@ $ curl localhost:8080/hello
 
 Learn more: [application/x-www-form-urlencoded and multipart/form-data](https://javarevisited.blogspot.com/2017/06/difference-between-applicationx-www-form-urlencoded-vs-multipart-form-data.html) 
 
-Learn more about http request header: [...........................]()
+Learn more about http request header: https://davidzhu.xyz/post/cs-basics/018-http-messages/
+
+## 2. Query string with curl
+
+```shell
+$ curl -X POST "localhost:8080/postform?username=david&password=778899a"
+# The code below won' work (you have to make it with double quote):
+$ curl -X POST localhost:8080/postform?username=david&password=778899a
+```
 

@@ -174,7 +174,7 @@ type Foo struct {
     Bar string
 }
 
-func (f Foo)Get() string {
+func (f Foo) Get() string {
     return f.Bar
 }
 ```
@@ -191,14 +191,11 @@ So the flow would be:
 // init and register
 buf := bytes.NewBuffer(nil)
 gob.Register(Foo{})    
-
 // create a getter of Foo
 g := Getter(Foo{"wazzup"})
-
 // encode
 enc := gob.NewEncoder(buf)
 enc.Encode(&g)
-
 // decode
 dec := gob.NewDecoder(buf)
 var gg Getter
@@ -361,7 +358,7 @@ func main() {
 
 > ⚠️Note: *Channel*, complex, and *function* values cannot be encoded in JSON. Attempting to encode such a value causes *Marshal* to return an UnsupportedTypeError. [json package - encoding/json - Go Packages](https://pkg.go.dev/encoding/json)
 
-### 3.2. `json.Marshal()`
+### 3.2. `json.Unmarshal()`
 
 ```go
 func main() {
@@ -378,6 +375,21 @@ func main() {
 ----------------------------------
 {Kitten 2 true}
 ```
+
+### 3.3. `json.NewDecoder()` & `json.Unmarshal()`
+
+- Use `json.Decoder` if your data is coming from an `io.Reader` stream, or you need to decode multiple values from a stream of data.
+- Use `json.Unmarshal` if you already have the JSON data in memory.
+
+If you check the signature, you should understand:
+
+```go
+func NewDecoder(r io.Reader) *Decoder
+
+func Unmarshal(data []byte, v any) error
+```
+
+Source: https://stackoverflow.com/a/21198571/16317008
 
 References:
 

@@ -151,15 +151,16 @@ This means when you call `r.ParseForm()`, for all types of request, it will try 
 This means the command below will achieve same thing for Go server if the server call `ParseForm()` to parse form:
 
 ```shell
+# with -d option curl will make request POST automatically
 curl localhost:8080/hello -d "username=davidzhu&password=778899a" 
-curl localhost:8080/hello?username=david&password=778899a
+curl -X POST "localhost:8080/hello?username=david&password=778899a"
 ```
 
 Reference: https://pkg.go.dev/net/http#Request.ParseForm
 
-Learn more about curl: 
+Learn more about curl: https://davidzhu.xyz/post/cs-basics/017-curl/
 
-Learn more about Go parse form and request body: 
+Learn more about Go parse form and request body: https://davidzhu.xyz/post/golang/practice/010-go-web-2/
 
 #### 2.2.2. Spring Web
 
@@ -187,7 +188,7 @@ Source: https://stackoverflow.com/a/7173011/16317008
 
 Learn more about curl post: https://reqbin.com/req/c-dwjszac0/curl-post-json-example
 
-## 3. POST method header setting
+## 3. POST data
 
 The **HTTP `POST` method** sends data to the server. The type of the body of the request is indicated by the [`Content-Type`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) header.
 
@@ -196,6 +197,8 @@ A `POST` request is typically sent via an [HTML form](https://developer.mozilla.
 - `application/x-www-form-urlencoded`: the keys and values are encoded in key-value tuples separated by `'&'`, with a `'='` between the key and the value. 
 - `multipart/form-data`: each value is sent as a block of data ("body part"), with a user agent-defined delimiter ("boundary") separating each part. The keys are given in the `Content-Disposition` header of each part.
 - `text/plain`
+
+![a](/018-http-messages/a.png)
 
 Source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST
 
@@ -225,8 +228,6 @@ And when I push the regiser buttion to submit the form, the http request looks l
 
 ![d](/018-http-messages/d.png)
 
-
-
 As you can see the form data resides in the request body, not in the URL.  
 
 Sometimes when you put data in the URL as a query string **or** put data in the form, and make a POST request, these two cases may result same thing (the server will get same data), which gives you a wrong impression that form data wil be put into URL too. 
@@ -235,8 +236,57 @@ Looks like this:
 
 ```shell
 $ curl -X POST localhost:8080/postform -d "username=davidzhu&password=778899a" 
-$ curl -X POST localhost:8080/postform?username=davidzhu&password=778899a
+$ curl -X POST "localhost:8080/postform?username=david&password=778899a"
 ```
 
-The server may get same data for these two command, this is because the server may try to parse the query string and form data at the same time, **learn more**: 
+The server may get same data for these two command, this is because the server may try to parse the query string and form data at the same time, we have talked this above in Go web. 
+
+## 4. Form data resriction
+
+As we talk above, form data can only be these three type by by default:`application/x-www-form-urlencoded`, `multipart/form-data`, `text/plain`, and you have to set the `Content-Type` to the corresponding type with correct format. 
+
+If you want `application/json` type, you need encode the form data into josn at client and decode the request body at server side. Besides, don't forget to set the `Content-Type` header to `application/json` which will tell the server the data format resides in the request body. 
+
+[A answer](https://stackoverflow.com/a/22195153/16317008) from stackoverflow, hope it will help:
+
+HTML provides no way to generate JSON from form data. If you really want to handle it from the client, then you would have to resort to using JavaScript to:
+
+1. gather your data from the form via DOM
+2. organise it in an object or array
+3. generate JSON with [JSON.stringify](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify)
+4. POST it with [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest)
+
+You'd probably be better off sticking to `application/x-www-form-urlencoded` data and processing that on the server instead of JSON. Your form doesn't have any complicated hierarchy that would benefit from a JSON data structure.
+
+This is same in Go, if you want send json data in the request body, you should encode it into bytes and decode request body at server:
+
+client:
+
+```go
+// string in back quote is raw string which means
+// the double quote here will lose its special meaning
+// decode the json string into 
+reader_json := strings.NewReader(`{"username": "david", "password": "my_password"}`)
+r, _ := http.NewRequest(http.MethodPost, "/postbody", reader_json)
+r.Header.Set("Content-Type", "application/json")
+...
+```
+
+server:
+
+```go
+// Parse username and password in form.
+type info struct {
+  Username string `json:"username"`
+  Password string `json:"password"`
+}
+user := info{}
+// note that r.Body is an io.Reader
+// which means decoder.Decode() method will consume data stroed in r.Body
+// you cannot read same data twice
+decoder := json.NewDecoder(r.Body)
+err := decoder.Decode(&user)
+print(user.password)
+print(user.username)
+```
 

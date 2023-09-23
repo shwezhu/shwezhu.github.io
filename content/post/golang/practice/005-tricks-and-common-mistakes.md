@@ -8,6 +8,12 @@ tags:
  - golang
 ---
 
+```go
+// get data from bytes.Buffer
+bytes := buff.Bytes()
+str := string(bytes)
+```
+
 ## Rules
 
 ### 1. Return a pointer or value
