@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&amp;#34;gpt_bot.db&amp;#34;), &amp;amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &amp;#34;tcp&amp;#34;, &amp;#34;:6379&amp;#34;, &amp;#34;&amp;#34;, []byte(os.Getenv(&amp;#34;SESSION_KEY&amp;#34;))) ... http.Handle(&amp;#34;/login&amp;#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&amp;rsquo;s worth noticing that every HTTP request that comes in to the server gets its own goroutine. Therefore, you" />
+<meta name="author" content="David" /><meta name="description" content="1. Introduction Source Code: gptbot 2. Database - gorm Don&amp;rsquo;t Open db connection for each request, initialize a global DB and use it for all requests. Close is one of the most misused methods, most application don&amp;rsquo;t need it, be sure you really need it. it is not necessary to close when crash, and you can still Close DB connection in V2. jinzhu - creator of gorm 1 2 3" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="Golang Web - A Simple GPTBot with Openai API" />
-<meta property="og:description" content="1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&#34;gpt_bot.db&#34;), &amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &#34;tcp&#34;, &#34;:6379&#34;, &#34;&#34;, []byte(os.Getenv(&#34;SESSION_KEY&#34;))) ... http.Handle(&#34;/login&#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&rsquo;s worth noticing that every HTTP request that comes in to the server gets its own goroutine. Therefore, you" />
+<meta property="og:description" content="1. Introduction Source Code: gptbot 2. Database - gorm Don&rsquo;t Open db connection for each request, initialize a global DB and use it for all requests. Close is one of the most misused methods, most application don&rsquo;t need it, be sure you really need it. it is not necessary to close when crash, and you can still Close DB connection in V2. jinzhu - creator of gorm 1 2 3" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/practice/004-gptbot/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-18T09:20:57+00:00" />
 <meta property="article:modified_time" content="2023-08-18T09:20:57+00:00" />
 <meta itemprop="name" content="Golang Web - A Simple GPTBot with Openai API">
-<meta itemprop="description" content="1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&#34;gpt_bot.db&#34;), &amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &#34;tcp&#34;, &#34;:6379&#34;, &#34;&#34;, []byte(os.Getenv(&#34;SESSION_KEY&#34;))) ... http.Handle(&#34;/login&#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&rsquo;s worth noticing that every HTTP request that comes in to the server gets its own goroutine. Therefore, you"><meta itemprop="datePublished" content="2023-08-18T09:20:57+00:00" />
+<meta itemprop="description" content="1. Introduction Source Code: gptbot 2. Database - gorm Don&rsquo;t Open db connection for each request, initialize a global DB and use it for all requests. Close is one of the most misused methods, most application don&rsquo;t need it, be sure you really need it. it is not necessary to close when crash, and you can still Close DB connection in V2. jinzhu - creator of gorm 1 2 3"><meta itemprop="datePublished" content="2023-08-18T09:20:57+00:00" />
 <meta itemprop="dateModified" content="2023-08-18T09:20:57+00:00" />
-<meta itemprop="wordCount" content="1166">
+<meta itemprop="wordCount" content="1224">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Golang Web - A Simple GPTBot with Openai API"/>
-<meta name="twitter:description" content="1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&#34;gpt_bot.db&#34;), &amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &#34;tcp&#34;, &#34;:6379&#34;, &#34;&#34;, []byte(os.Getenv(&#34;SESSION_KEY&#34;))) ... http.Handle(&#34;/login&#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&rsquo;s worth noticing that every HTTP request that comes in to the server gets its own goroutine. Therefore, you"/>
+<meta name="twitter:description" content="1. Introduction Source Code: gptbot 2. Database - gorm Don&rsquo;t Open db connection for each request, initialize a global DB and use it for all requests. Close is one of the most misused methods, most application don&rsquo;t need it, be sure you really need it. it is not necessary to close when crash, and you can still Close DB connection in V2. jinzhu - creator of gorm 1 2 3"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -164,6 +164,12 @@
       <h2 id="1-introduction">1. Introduction</h2>
 <p>Source Code: <a href="https://github.com/shwezhu/gptbot">gptbot</a></p>
 <h2 id="2-database---gorm">2. Database - gorm</h2>
+<blockquote>
+<p>Don&rsquo;t <code>Open</code> db connection for each request, initialize a global DB and use it for all requests.</p>
+<p><code>Close</code> is one of the most misused methods, most application don&rsquo;t need it, be sure you really need it.</p>
+<p>it is not necessary to close when crash, and you can still <code>Close</code> DB connection in V2.</p>
+<p><a href="https://github.com/go-gorm/gorm/issues/3145">jinzhu - creator of gorm</a></p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1

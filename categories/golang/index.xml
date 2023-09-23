@@ -6,7 +6,19 @@
     <description>Recent content in golang on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 19 Sep 2023 23:49:55 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 23 Sep 2023 18:08:55 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Parse Form Data in Go Server</title>
+      <link>https://shaowenzhu.top/post/golang/practice/010-go-web-2/</link>
+      <pubDate>Sat, 23 Sep 2023 18:08:55 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/practice/010-go-web-2/</guid>
+      <description>1. Content-Type header The Content-Type header can be application/json, application/x-www-form-urlencoded, multipart/form-data, the first two is usually used with posting form data to server, the third is used to upload file to the server.
+The format of application/json is &#39;{&amp;quot;username&amp;quot;:&amp;quot;davidzhu&amp;quot;, &amp;quot;password&amp;quot;:&amp;quot;778899a&amp;quot;}&#39;.
+The format of application/x-www-form-urlencoded is &amp;quot;username=davidzhu&amp;amp;password=778899a&amp;quot; .
+2. Parse query string and x-www-form-urlencoded data In previous post&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;. I have talked that query string and form data is treated as same thing when you call r.</description>
+    </item>
+    
     <item>
       <title>The Router of Go Web App - ServeMux</title>
       <link>https://shaowenzhu.top/post/golang/practice/009-go-web-1/</link>
@@ -228,7 +240,7 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
       <pubDate>Fri, 18 Aug 2023 09:20:57 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/practice/004-gptbot/</guid>
-      <description>1. Introduction Source Code: gptbot 2. Database - gorm 1 2 3 4 5 6 func main() { db, _ := gorm.Open(sqlite.Open(&amp;#34;gpt_bot.db&amp;#34;), &amp;amp;gorm.Config{}) store, _ := redistore.NewRediStore(10, &amp;#34;tcp&amp;#34;, &amp;#34;:6379&amp;#34;, &amp;#34;&amp;#34;, []byte(os.Getenv(&amp;#34;SESSION_KEY&amp;#34;))) ... http.Handle(&amp;#34;/login&amp;#34;, LoginHandler(db, store)) } As you can see, we use a global database connection here accross all handler, and it&amp;rsquo;s worth noticing that every HTTP request that comes in to the server gets its own goroutine. Therefore, you</description>
+      <description>1. Introduction Source Code: gptbot 2. Database - gorm Don&amp;rsquo;t Open db connection for each request, initialize a global DB and use it for all requests. Close is one of the most misused methods, most application don&amp;rsquo;t need it, be sure you really need it. it is not necessary to close when crash, and you can still Close DB connection in V2. jinzhu - creator of gorm 1 2 3</description>
     </item>
     
     <item>
