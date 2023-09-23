@@ -63,7 +63,7 @@ e.g.,
 POST x-www-form-urlencoded format form data to server:
 1 2 # curl will set the request header to &#39;application/x-www-form-urlencoded&#39; by default curl localhost:8080/hello -d &#34;username=davidzhu&amp;password=778899a&#34; POST json format data with curl:"><meta itemprop="datePublished" content="2023-09-22T22:58:30+00:00" />
 <meta itemprop="dateModified" content="2023-09-22T22:58:30+00:00" />
-<meta itemprop="wordCount" content="326">
+<meta itemprop="wordCount" content="356">
 <meta itemprop="keywords" content="cs basics," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Curl Basics"/>
 <meta name="twitter:description" content="POST data with Curl The Content-Type header can be application/json, application/x-www-form-urlencoded, multipart/form-data, the first two is usually used with posting form data to server, the third is used to upload file to the server.
@@ -163,6 +163,7 @@ POST x-www-form-urlencoded format form data to server:
     <li>
       <ul>
         <li><a href="#post-data-with-curl">POST data with Curl</a></li>
+        <li><a href="#2-query-string-with-curl">2. Query string with curl</a></li>
       </ul>
     </li>
   </ul>
@@ -210,7 +211,7 @@ POST x-www-form-urlencoded format form data to server:
 </div><blockquote>
 <p>Note that we use single quote to wrap the double quote which makes double quote lose its special meaning, it&rsquo;s just all about shell scripting, learn more: <a href="https://davidzhu.xyz/post/linux/002-bash-basics/#5-quotes">Shell Script Basic Syntax - David&rsquo;s Blog</a></p>
 </blockquote>
-<p>There is a bad example:</p>
+<p>Bad example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -221,8 +222,7 @@ POST x-www-form-urlencoded format form data to server:
 </span></span><span class="line"><span class="cl">curl localhost:8080/hello -d <span class="s1">&#39;{&#34;username&#34;:&#34;davidzhu&#34;, &#34;password&#34;:&#34;778899a&#34;}&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>The server will parse it wrong, because the data format is json obviously, but <code>curl</code> will set the <code>Content-Type</code> header to <code>application/x-www-form-urlencoded</code> by default.</p>
-<p>Don&rsquo;t write it wrong, otherwise, your server won&rsquo;t parse data from the request correctly.</p>
+</div><p>The server will parse it wrong, because the data format is json obviously, but <code>curl</code> will set the <code>Content-Type</code> header to <code>application/x-www-form-urlencoded</code> by default. Therefore, don&rsquo;t write it wrong, otherwise, your server won&rsquo;t parse data from the request correctly.</p>
 <p>The content below form the <a href="https://reqbin.com/req/c-dwjszac0/curl-post-json-example">docs</a> of curl, hope it will help:</p>
 <p>To make a POST request with Curl, you can run the Curl command-line tool with the <code>-d</code> or <code>--data</code> command-line option and pass the data as the second argument. <strong>Curl will automatically select the HTTP POST method and application/x-www-form-urlencoded content type</strong> if the method and content type are not explicitly specified. <a href="https://reqbin.com/req/c-g5d14cew/curl-post-example">Source</a></p>
 <p>If you submit data using Curl and do not explicitly specify the <a href="https://reqbin.com/req/c-woh4qwov/curl-content-type">Content type</a>, Curl uses the application/x-www-form-urlencoded content type for your data. <strong>Therefore, when sending JSON (or any other data type), you must specify the data type using the -H &ldquo;Content-Type: application/json&rdquo; command line parameter</strong>.</p>
@@ -239,8 +239,21 @@ POST x-www-form-urlencoded format form data to server:
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Learn more: <a href="https://javarevisited.blogspot.com/2017/06/difference-between-applicationx-www-form-urlencoded-vs-multipart-form-data.html">application/x-www-form-urlencoded and multipart/form-data</a></p>
-<p>Learn more about http request header: <a href="">&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;</a></p>
-
+<p>Learn more about http request header: <a href="https://davidzhu.xyz/post/cs-basics/018-http-messages/">https://davidzhu.xyz/post/cs-basics/018-http-messages/</a></p>
+<h2 id="2-query-string-with-curl">2. Query string with curl</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ curl -X POST <span class="s2">&#34;localhost:8080/postform?username=david&amp;password=778899a&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># The code below won&#39; work (you have to make it with double quote):</span>
+</span></span><span class="line"><span class="cl">$ curl -X POST localhost:8080/postform?username<span class="o">=</span>david<span class="p">&amp;</span><span class="nv">password</span><span class="o">=</span>778899a
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
     </div>
 
     <div class="post-copyright">

@@ -16,7 +16,7 @@
       <description>1. Content-Type header The Content-Type header can be application/json, application/x-www-form-urlencoded, multipart/form-data, the first two is usually used with posting form data to server, the third is used to upload file to the server.
 The format of application/json is &#39;{&amp;quot;username&amp;quot;:&amp;quot;davidzhu&amp;quot;, &amp;quot;password&amp;quot;:&amp;quot;778899a&amp;quot;}&#39;.
 The format of application/x-www-form-urlencoded is &amp;quot;username=davidzhu&amp;amp;password=778899a&amp;quot; .
-2. Parse query string and x-www-form-urlencoded data In previous post&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;. I have talked that query string and form data is treated as same thing when you call r.</description>
+2. Parse query string and x-www-form-urlencoded data In previous post I have talked that r.ParseForm() will try to parse both query string and request body in Go, but there is a condition: the Content-Type header of the reuqest must be application/x-www-form-urlencoded and you have the correct format data in the request body.</description>
     </item>
     
     <item>
@@ -180,9 +180,9 @@ The second is to avoid copying the value on each method call. This can be more e
       <pubDate>Sun, 27 Aug 2023 17:12:55 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/practice/005-tricks-and-common-mistakes/</guid>
-      <description>Rules 1. Return a pointer or value I list some type to which you don&amp;rsquo;t need to return a pointer point:
+      <description>1 2 3 // get data from bytes.Buffer bytes := buff.Bytes() str := string(bytes) Rules 1. Return a pointer or value I list some type to which you don&amp;rsquo;t need to return a pointer point:
 A slice does not store any data, it just describes a section of an underlying array.
-Therefore, your function can return a slice directly or accept a slice as a argument. You don&amp;rsquo;t need to return a pointer to a slice. learn more: https://davidzhu.xyz/post/golang/basics/016-slice-relearn/ In Go, a string is in effect a read-only slice of bytes.</description>
+Therefore, your function can return a slice directly or accept a slice as a argument. You don&amp;rsquo;t need to return a pointer to a slice.</description>
     </item>
     
     <item>

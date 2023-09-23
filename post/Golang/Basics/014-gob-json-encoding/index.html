@@ -48,7 +48,7 @@
 <meta itemprop="name" content="encoding/gob &amp; encoding/json in Go">
 <meta itemprop="description" content="1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’"><meta itemprop="datePublished" content="2023-08-31T11:38:20+00:00" />
 <meta itemprop="dateModified" content="2023-08-31T11:38:20+00:00" />
-<meta itemprop="wordCount" content="2410">
+<meta itemprop="wordCount" content="2469">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="encoding/gob &amp; encoding/json in Go"/>
 <meta name="twitter:description" content="1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’"/>
@@ -159,7 +159,8 @@
         <li><a href="#3-encodingjson">3. encoding/json</a>
           <ul>
             <li><a href="#31-jsonmarshal">3.1. <code>json.Marshal()</code></a></li>
-            <li><a href="#32-jsonmarshal">3.2. <code>json.Marshal()</code></a></li>
+            <li><a href="#32-jsonunmarshal">3.2. <code>json.Unmarshal()</code></a></li>
+            <li><a href="#33-jsonnewdecoder--jsonunmarshal">3.3. <code>json.NewDecoder()</code> &amp; <code>json.Unmarshal()</code></a></li>
           </ul>
         </li>
       </ul>
@@ -411,7 +412,7 @@
 </span></span><span class="line"><span class="cl">    <span class="nx">Bar</span> <span class="kt">string</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <span class="nx">Foo</span><span class="p">)</span><span class="nf">Get</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <span class="nx">Foo</span><span class="p">)</span> <span class="nf">Get</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Bar</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
@@ -442,22 +443,16 @@
 </span><span class="lnt">12
 </span><span class="lnt">13
 </span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="c1">// init and register
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">buf</span> <span class="o">:=</span> <span class="nx">bytes</span><span class="p">.</span><span class="nf">NewBuffer</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nx">gob</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="nx">Foo</span><span class="p">{})</span>    
-</span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">// create a getter of Foo
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">g</span> <span class="o">:=</span> <span class="nf">Getter</span><span class="p">(</span><span class="nx">Foo</span><span class="p">{</span><span class="s">&#34;wazzup&#34;</span><span class="p">})</span>
-</span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">// encode
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">enc</span> <span class="o">:=</span> <span class="nx">gob</span><span class="p">.</span><span class="nf">NewEncoder</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nx">enc</span><span class="p">.</span><span class="nf">Encode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">g</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">// decode
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">dec</span> <span class="o">:=</span> <span class="nx">gob</span><span class="p">.</span><span class="nf">NewDecoder</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">gg</span> <span class="nx">Getter</span>
@@ -732,7 +727,7 @@
 </div><blockquote>
 <p>⚠️Note: <em>Channel</em>, complex, and <em>function</em> values cannot be encoded in JSON. Attempting to encode such a value causes <em>Marshal</em> to return an UnsupportedTypeError. <a href="https://pkg.go.dev/encoding/json">json package - encoding/json - Go Packages</a></p>
 </blockquote>
-<h3 id="32-jsonmarshal">3.2. <code>json.Marshal()</code></h3>
+<h3 id="32-jsonunmarshal">3.2. <code>json.Unmarshal()</code></h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -765,7 +760,26 @@
 </span></span><span class="line"><span class="cl"><span class="p">{</span><span class="nx">Kitten</span> <span class="mi">2</span> <span class="kc">true</span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>References:</p>
+</div><h3 id="33-jsonnewdecoder--jsonunmarshal">3.3. <code>json.NewDecoder()</code> &amp; <code>json.Unmarshal()</code></h3>
+<ul>
+<li>Use <code>json.Decoder</code> if your data is coming from an <code>io.Reader</code> stream, or you need to decode multiple values from a stream of data.</li>
+<li>Use <code>json.Unmarshal</code> if you already have the JSON data in memory.</li>
+</ul>
+<p>If you check the signature, you should understand:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">NewDecoder</span><span class="p">(</span><span class="nx">r</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Reader</span><span class="p">)</span> <span class="o">*</span><span class="nx">Decoder</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">data</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">v</span> <span class="nx">any</span><span class="p">)</span> <span class="kt">error</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Source: <a href="https://stackoverflow.com/a/21198571/16317008">https://stackoverflow.com/a/21198571/16317008</a></p>
+<p>References:</p>
 <ul>
 <li><a href="https://go.dev/blog/gob">Gobs of data - The Go Programming Language</a></li>
 <li><a href="https://pkg.go.dev/encoding/gob">gob package - encoding/gob - Go Packages</a></li>
