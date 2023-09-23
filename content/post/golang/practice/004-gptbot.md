@@ -14,6 +14,14 @@ Source Code: [gptbot](https://github.com/shwezhu/gptbot)
 
 ## 2. Database - gorm
 
+> Don't `Open` db connection for each request, initialize a global DB and use it for all requests.
+>
+> `Close` is one of the most misused methods, most application don't need it, be sure you really need it.
+>
+> it is not necessary to close when crash, and you can still `Close` DB connection in V2. 
+>
+> [jinzhu - creator of gorm](https://github.com/go-gorm/gorm/issues/3145)
+
 ```go
 func main() {
 	db, _ := gorm.Open(sqlite.Open("gpt_bot.db"), &gorm.Config{})
