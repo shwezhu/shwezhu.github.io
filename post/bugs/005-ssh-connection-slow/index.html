@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>IO in Go - David&#39;s Blog</title>
+  <title>ssh session vary slow - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,9 +16,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="bytes, bufio, io,
-The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time. In a case where you are reading or writing a lot of data, buffered I/O can be much faster than normal I/O.
-Golang Bufio (A Complete Guide)" />
+<meta name="author" content="David" /><meta name="description" content="Connecting to my aws server with ssh client is very slow, and after connected, the session is very slow too.
+Like input a command in the ssh session and you have to wait seconds to get the output, lots of latency.
+Then I think maybe there is a &amp;ldquo;bad&amp;rdquo; process which takes a lot of cpu usages makes my server in high load, or there is a high network traffic. Then I use top command to check, then I got this:" />
 
 
 
@@ -28,7 +28,7 @@ Golang Bufio (A Complete Guide)" />
 <meta name="generator" content="Hugo 0.111.3 with theme even" />
 
 
-<link rel="canonical" href="https://shaowenzhu.top/post/golang/basics/018-io-go/" />
+<link rel="canonical" href="https://shaowenzhu.top/post/bugs/005-ssh-connection-slow/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,25 +41,25 @@ Golang Bufio (A Complete Guide)" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="IO in Go" />
-<meta property="og:description" content="bytes, bufio, io,
-The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time. In a case where you are reading or writing a lot of data, buffered I/O can be much faster than normal I/O.
-Golang Bufio (A Complete Guide)" />
+<meta property="og:title" content="ssh session vary slow" />
+<meta property="og:description" content="Connecting to my aws server with ssh client is very slow, and after connected, the session is very slow too.
+Like input a command in the ssh session and you have to wait seconds to get the output, lots of latency.
+Then I think maybe there is a &ldquo;bad&rdquo; process which takes a lot of cpu usages makes my server in high load, or there is a high network traffic. Then I use top command to check, then I got this:" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/018-io-go/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2023-09-14T21:57:04+00:00" />
-<meta property="article:modified_time" content="2023-09-14T21:57:04+00:00" />
-<meta itemprop="name" content="IO in Go">
-<meta itemprop="description" content="bytes, bufio, io,
-The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time. In a case where you are reading or writing a lot of data, buffered I/O can be much faster than normal I/O.
-Golang Bufio (A Complete Guide)"><meta itemprop="datePublished" content="2023-09-14T21:57:04+00:00" />
-<meta itemprop="dateModified" content="2023-09-14T21:57:04+00:00" />
-<meta itemprop="wordCount" content="72">
-<meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="IO in Go"/>
-<meta name="twitter:description" content="bytes, bufio, io,
-The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time. In a case where you are reading or writing a lot of data, buffered I/O can be much faster than normal I/O.
-Golang Bufio (A Complete Guide)"/>
+<meta property="og:url" content="https://shaowenzhu.top/post/bugs/005-ssh-connection-slow/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-09-25T14:30:22+00:00" />
+<meta property="article:modified_time" content="2023-09-25T14:30:22+00:00" />
+<meta itemprop="name" content="ssh session vary slow">
+<meta itemprop="description" content="Connecting to my aws server with ssh client is very slow, and after connected, the session is very slow too.
+Like input a command in the ssh session and you have to wait seconds to get the output, lots of latency.
+Then I think maybe there is a &ldquo;bad&rdquo; process which takes a lot of cpu usages makes my server in high load, or there is a high network traffic. Then I use top command to check, then I got this:"><meta itemprop="datePublished" content="2023-09-25T14:30:22+00:00" />
+<meta itemprop="dateModified" content="2023-09-25T14:30:22+00:00" />
+<meta itemprop="wordCount" content="120">
+<meta itemprop="keywords" content="bugs,ssh,aws," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ssh session vary slow"/>
+<meta name="twitter:description" content="Connecting to my aws server with ssh client is very slow, and after connected, the session is very slow too.
+Like input a command in the ssh session and you have to wait seconds to get the output, lots of latency.
+Then I think maybe there is a &ldquo;bad&rdquo; process which takes a lot of cpu usages makes my server in high load, or there is a high network traffic. Then I use top command to check, then I got this:"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -132,13 +132,12 @@ Golang Bufio (A Complete Guide)"/>
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">IO in Go</h1>
+      <h1 class="post-title">ssh session vary slow</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2023-09-14 </span>
+        <span class="post-time"> 2023-09-25 </span>
         <div class="post-category">
-            <a href="/categories/golang/"> golang </a>
-            <a href="/categories/basics/"> basics </a>
+            <a href="/categories/bugs/"> bugs </a>
             </div>
         
       </div>
@@ -151,9 +150,30 @@ Golang Bufio (A Complete Guide)"/>
   </div>
 </div>
     <div class="post-content">
-      <p>bytes, bufio, io,</p>
-<p>The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time. In a case where you are reading or writing a lot of data, buffered I/O can be much faster than normal I/O.</p>
-<p><a href="https://www.kelche.co/blog/go/golang-bufio/">Golang Bufio (A Complete Guide)</a></p>
+      <p>Connecting to my aws server with ssh client is very slow, and after connected, the session is very slow too.</p>
+<p>Like input a command in the ssh session and you have to wait seconds to get the output, lots of latency.</p>
+<p>Then I think maybe there is a &ldquo;bad&rdquo; process which takes a lot of cpu usages makes my server in high load, or there is a high network traffic. Then I use <code>top</code> command to check, then I got this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ top
+</span></span><span class="line"><span class="cl"><span class="m">60841</span> asterisk -11   <span class="m">0</span> <span class="m">1025372</span> <span class="m">325376</span>   <span class="m">9300</span> R  99.9  32.9 980:16.51 asterisk                                 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The asterisk which takes up 99.9% of my cup!!!</p>
+<p>Thenk I kill it with</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo <span class="nb">kill</span> <span class="m">60841</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then my server works fine.</p>
 
     </div>
 
@@ -165,7 +185,7 @@ Golang Bufio (A Complete Guide)"/>
   <p class="copyright-item">
     <span class="item-title">LastMod</span>
     <span class="item-content">
-        2023-09-14
+        2023-09-25
         
     </span>
   </p>
@@ -174,16 +194,14 @@ Golang Bufio (A Complete Guide)"/>
 </div>
 <footer class="post-footer">
       <div class="post-tags">
-          <a href="/tags/golang/">golang</a>
+          <a href="/tags/bugs/">bugs</a>
+          <a href="/tags/ssh/">ssh</a>
+          <a href="/tags/aws/">aws</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/git/006-head-three-tress/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">HEAD and Three Trees - Git</span>
-            <span class="prev-text nav-mobile">Prev</span>
-          </a>
-        <a class="next" href="/post/git/009-push-with-force/">
-            <span class="next-text nav-default">Git Push with force</span>
+        
+        <a class="next" href="/post/golang/practice/010-go-web-2/">
+            <span class="next-text nav-default">Parse Form Data in Go Server</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

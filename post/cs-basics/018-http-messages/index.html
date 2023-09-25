@@ -60,7 +60,7 @@ An HTTP method, a verb (like GET, PUT or POST) or a noun (like HEAD or OPTIONS),
 Usually a URL Sometimes url followed by a &#39;?&#39; and query string: http://example.com/?bar1=a&amp;bar2=b The HTTP version
 1 POST www.example.com/test.html?username=alibaba HTTP/1.1 1.1.2. Headers An HTTP header consists of its case-insensitive name followed by a colon (:), then by its value."><meta itemprop="datePublished" content="2023-09-23T09:51:30+00:00" />
 <meta itemprop="dateModified" content="2023-09-23T09:51:30+00:00" />
-<meta itemprop="wordCount" content="1609">
+<meta itemprop="wordCount" content="1812">
 <meta itemprop="keywords" content="cs basics," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="HTTP Messages"/>
 <meta name="twitter:description" content="1. HTTP Messages 1.1. HTTP Requests 1.1.1. Start line A start line contains three parts:
@@ -175,7 +175,12 @@ Usually a URL Sometimes url followed by a &#39;?&#39; and query string: http://e
             <li><a href="#31-example-in-real-code">3.1. Example in real code</a></li>
           </ul>
         </li>
-        <li><a href="#4-form-data-resriction">4. Form data resriction</a></li>
+        <li><a href="#4-form-data-restriction">4. Form data restriction</a></li>
+        <li><a href="#5-some-common-headers">5. Some common headers</a>
+          <ul>
+            <li><a href="#51-cooke">5.1. cooke</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -465,7 +470,7 @@ Usually a URL Sometimes url followed by a &#39;?&#39; and query string: http://e
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The server may get same data for these two command, this is because the server may try to parse the query string and form data at the same time, we have talked this above in Go web.</p>
-<h2 id="4-form-data-resriction">4. Form data resriction</h2>
+<h2 id="4-form-data-restriction">4. Form data restriction</h2>
 <p>As we talk above, form data can only be these three type by by default:<code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, <code>text/plain</code>, and you have to set the <code>Content-Type</code> to the corresponding type with correct format.</p>
 <p>If you want <code>application/json</code> type, you need encode the form data into josn at client and decode the request body at server side. Besides, don&rsquo;t forget to set the <code>Content-Type</code> header to <code>application/json</code> which will tell the server the data format resides in the request body.</p>
 <p><a href="https://stackoverflow.com/a/22195153/16317008">A answer</a> from stackoverflow, hope it will help:</p>
@@ -532,7 +537,75 @@ Usually a URL Sometimes url followed by a &#39;?&#39; and query string: http://e
 </span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">username</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
+</div><h2 id="5-some-common-headers">5. Some common headers</h2>
+<h3 id="51-cooke">5.1. cooke</h3>
+<p>There are two headers related to cookie, one is <code>Set-Cookie</code> header another is <code>Cookie</code> header.</p>
+<p>After receiving an HTTP request, a server can send one or more <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie"><code>Set-Cookie</code></a> headers with the response. The browser usually stores the cookie and sends it with requests made to the same server inside a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie"><code>Cookie</code></a> HTTP header.</p>
+<p>For example, a response from server contains cookie headers may looks like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">HTTP/2.0 200 OK
+</span></span><span class="line"><span class="cl">Content-Type: text/html
+</span></span><span class="line"><span class="cl">Set-Cookie: yummy_cookie=choco
+</span></span><span class="line"><span class="cl">Set-Cookie: tasty_cookie=strawberry
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[page content]
+</span></span></code></pre></td></tr></table>
 </div>
+</div><p>A HTTP request may looks like this below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">GET /sample_page.html HTTP/2.0
+</span></span><span class="line"><span class="cl">Host: www.example.org
+</span></span><span class="line"><span class="cl">Cookie: yummy_cookie=choco; tasty_cookie=strawberry
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Therefore, when I want set cookie manually for my http request, I&rsquo;ll probably do something like this (I do this in Go):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">req</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">NewRequest</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">MethodPost</span><span class="p">,</span> <span class="s">&#34;/chat&#34;</span><span class="p">,</span> <span class="nx">your_encoded_message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// set content-type header
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">req</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// set cookie header (cookie is a key value data)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">req</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Cookie&#34;</span><span class="p">,</span> <span class="s">&#34;session_id=xxxxxxxxxxx&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If I want get cookie from repsonse, I&rsquo;ll probably retrieve the cookie like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">response</span> <span class="o">:=</span> <span class="nf">makeRequest</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">my_cooke</span> <span class="o">:=</span> <span class="nx">response</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;Set-Cookie&#34;</span><span class="p">)</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Cookie is just a header which having no doubt resides in the header of HTTP mesages, don&rsquo;t overthinking.</p>
+<p>Reference: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies">https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies</a></p>
+
     </div>
 
     <div class="post-copyright">

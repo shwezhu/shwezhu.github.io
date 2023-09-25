@@ -54,7 +54,7 @@ Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTT
 Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTTP Web Services after Eight Years 1. Hello world - 2 ways 1.1. Implementing a Handler Interface - way 1 To run a server, we need to implement http.Handler interface:
 1 2 3 type Handler interface{ ServeHTTP(ResponseWriter, *Request) } To achieve that we need to create an empty struct and provide a method for it:"><meta itemprop="datePublished" content="2023-09-19T23:49:55+00:00" />
 <meta itemprop="dateModified" content="2023-09-19T23:49:55+00:00" />
-<meta itemprop="wordCount" content="1899">
+<meta itemprop="wordCount" content="1882">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="The Router of Go Web App - ServeMux"/>
 <meta name="twitter:description" content="This article enlightened by:
@@ -566,7 +566,7 @@ Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTT
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Now you know that when develop a web app we have to deal with http requests, and we do this by regisering some patterns (urls) with its handler which is an instance of <code>http.Handler</code> into a <code>ServeMux</code>. And we don&rsquo;t need to create an instance of <code>http.Handler</code> by ourselves, instead we can take advantage of<code>func HandleFunc(pattern string, handler func(ResponseWriter, *Request))</code> which helps us create an instance of <code>http.Handler</code> for the <code>pattern</code> passed as the argument.</p>
+</div><p>Now you know that when develop a web app we have to deal with http requests, and we do this by regisering some patterns (urls) with its handler which is an instance of <code>http.Handler</code> into a <code>ServeMux</code>. We can take advantage of<code>func HandleFunc(pattern string, handler func(ResponseWriter, *Request))</code> which helps us create an instance of <code>http.Handler</code> for the <code>pattern</code>.</p>
 <blockquote>
 <p>ServeMux is an HTTP request multiplexer. It matches the URL of each incoming request against a list of <strong>registered patterns</strong> and <strong>calls the handler</strong> for the pattern that most closely matches the URL. <a href="https://pkg.go.dev/net/http#ServeMux">ServeMux - Go</a></p>
 <p>Keep in mind that servemux, provided by Go will process each request in a separate goroutine.</p>

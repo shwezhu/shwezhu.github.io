@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>HEAD and three trees - Git - David&#39;s Blog</title>
+  <title>HEAD and Three Trees - Git - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. HEAD 1.1. HEAD is YOU HEADis a symbolic reference pointing to wherever you are in your commit history. It follows you wherever you go, whatever you do, like a shadow. If you make a commit, HEAD will move. If you checkout something, HEAD will move. Whatever you do, if you have moved somewhere new in your commit history, HEAD has moved along with you. To address one common misconception: you cannot detach yourself from HEAD." />
+<meta name="author" content="David" /><meta name="description" content="1. Three trees Git as a system manages and manipulates three trees in its normal operation:
+Tree Role HEAD Last commit snapshot, next parent Index Proposed next commit snapshot Working Directory Sandbox The Git index is a critical data structure in Git. It serves as the “staging area” between the files you have on your filesystem and your commit history. When you run git add, the files from your working directory are hashed and stored as objects in the index, leading them to be “staged changes”." />
 
 
 
@@ -39,19 +40,22 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="HEAD and three trees - Git" />
-<meta property="og:description" content="1. HEAD 1.1. HEAD is YOU HEADis a symbolic reference pointing to wherever you are in your commit history. It follows you wherever you go, whatever you do, like a shadow. If you make a commit, HEAD will move. If you checkout something, HEAD will move. Whatever you do, if you have moved somewhere new in your commit history, HEAD has moved along with you. To address one common misconception: you cannot detach yourself from HEAD." />
+<meta property="og:title" content="HEAD and Three Trees - Git" />
+<meta property="og:description" content="1. Three trees Git as a system manages and manipulates three trees in its normal operation:
+Tree Role HEAD Last commit snapshot, next parent Index Proposed next commit snapshot Working Directory Sandbox The Git index is a critical data structure in Git. It serves as the “staging area” between the files you have on your filesystem and your commit history. When you run git add, the files from your working directory are hashed and stored as objects in the index, leading them to be “staged changes”." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/git/006-head-three-tress/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-09-15T10:18:30+00:00" />
 <meta property="article:modified_time" content="2023-09-15T10:18:30+00:00" />
-<meta itemprop="name" content="HEAD and three trees - Git">
-<meta itemprop="description" content="1. HEAD 1.1. HEAD is YOU HEADis a symbolic reference pointing to wherever you are in your commit history. It follows you wherever you go, whatever you do, like a shadow. If you make a commit, HEAD will move. If you checkout something, HEAD will move. Whatever you do, if you have moved somewhere new in your commit history, HEAD has moved along with you. To address one common misconception: you cannot detach yourself from HEAD."><meta itemprop="datePublished" content="2023-09-15T10:18:30+00:00" />
+<meta itemprop="name" content="HEAD and Three Trees - Git">
+<meta itemprop="description" content="1. Three trees Git as a system manages and manipulates three trees in its normal operation:
+Tree Role HEAD Last commit snapshot, next parent Index Proposed next commit snapshot Working Directory Sandbox The Git index is a critical data structure in Git. It serves as the “staging area” between the files you have on your filesystem and your commit history. When you run git add, the files from your working directory are hashed and stored as objects in the index, leading them to be “staged changes”."><meta itemprop="datePublished" content="2023-09-15T10:18:30+00:00" />
 <meta itemprop="dateModified" content="2023-09-15T10:18:30+00:00" />
 <meta itemprop="wordCount" content="470">
 <meta itemprop="keywords" content="git," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="HEAD and three trees - Git"/>
-<meta name="twitter:description" content="1. HEAD 1.1. HEAD is YOU HEADis a symbolic reference pointing to wherever you are in your commit history. It follows you wherever you go, whatever you do, like a shadow. If you make a commit, HEAD will move. If you checkout something, HEAD will move. Whatever you do, if you have moved somewhere new in your commit history, HEAD has moved along with you. To address one common misconception: you cannot detach yourself from HEAD."/>
+<meta name="twitter:title" content="HEAD and Three Trees - Git"/>
+<meta name="twitter:description" content="1. Three trees Git as a system manages and manipulates three trees in its normal operation:
+Tree Role HEAD Last commit snapshot, next parent Index Proposed next commit snapshot Working Directory Sandbox The Git index is a critical data structure in Git. It serves as the “staging area” between the files you have on your filesystem and your commit history. When you run git add, the files from your working directory are hashed and stored as objects in the index, leading them to be “staged changes”."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +128,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">HEAD and three trees - Git</h1>
+      <h1 class="post-title">HEAD and Three Trees - Git</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-09-15 </span>
@@ -142,14 +146,13 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#1-head">1. HEAD</a>
+        <li><a href="#1-three-trees">1. Three trees</a></li>
+        <li><a href="#2-head">2. HEAD</a>
           <ul>
-            <li><a href="#11-head-is-you">1.1. HEAD is YOU</a></li>
-            <li><a href="#12-what-can-head-attach-to">1.2. What can HEAD attach to?</a></li>
-            <li><a href="#13-conclusion">1.3. Conclusion</a></li>
+            <li><a href="#21-head-is-you">2.1. HEAD is YOU</a></li>
+            <li><a href="#22-what-can-head-attach-to">2.2. What can HEAD attach to?</a></li>
           </ul>
         </li>
-        <li><a href="#2-three-trees">2. Three trees</a></li>
       </ul>
     </li>
   </ul>
@@ -157,8 +160,33 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-head">1. HEAD</h2>
-<h3 id="11-head-is-you">1.1. HEAD is YOU</h3>
+      <h2 id="1-three-trees">1. Three trees</h2>
+<p>Git as a system manages and manipulates three trees in its normal operation:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Tree</th>
+<th style="text-align:left">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">HEAD</td>
+<td style="text-align:left">Last commit snapshot, next parent</td>
+</tr>
+<tr>
+<td style="text-align:left">Index</td>
+<td style="text-align:left">Proposed next commit snapshot</td>
+</tr>
+<tr>
+<td style="text-align:left">Working Directory</td>
+<td style="text-align:left">Sandbox</td>
+</tr>
+</tbody>
+</table>
+<p>The Git index is a critical data structure in Git. It serves as the “staging area” between the files you have on your filesystem and your commit history. When you run <code>git add</code>, the files from your working directory are hashed and stored as objects in the index, leading them to be “staged changes”. When you run <code>git commit</code>, the staged changes as stored in the index are used to create that new commit.</p>
+<h2 id="2-head">2. HEAD</h2>
+<h3 id="21-head-is-you">2.1. HEAD is YOU</h3>
 <p><code>HEAD</code>is a symbolic reference pointing to wherever you are in your commit history. It follows you wherever you go, whatever you do, like a shadow. If you make a commit, <code>HEAD</code> will move. If you checkout something, <code>HEAD</code> will move. Whatever you do, if you have moved somewhere new in your commit history, <code>HEAD</code> has moved along with you. To address one common misconception: you cannot detach yourself from <code>HEAD</code>. That is not what a detached HEAD state is. If you ever find yourself thinking: &ldquo;oh no, i&rsquo;m in detached HEAD state! I&rsquo;ve lost my HEAD!&rdquo; Remember, it&rsquo;s your HEAD. HEAD is you. You haven&rsquo;t detached from the HEAD, you and your HEAD have detached from something else.</p>
 <p>Acutally, HEAD is just a special pointer that points to the <strong>local branch</strong> you’re currently on.</p>
 <div class="highlight"><div class="chroma">
@@ -184,38 +212,16 @@
 <blockquote>
 <p>In Git, HEAD refers to the currently checked-out branch’s latest commit. However, in a <em>detached</em> HEAD state, the HEAD does not point to any branch, but instead points to a <strong>specific commit</strong> or the <strong>remote repository</strong>.</p>
 </blockquote>
-<h3 id="12-what-can-head-attach-to">1.2. What can HEAD attach to?</h3>
+<h3 id="22-what-can-head-attach-to">2.2. What can HEAD attach to?</h3>
 <p><code>HEAD</code> can point to a commit, yes, but typically it does not. Let me say that again. <em><strong>Typically <code>HEAD</code> does not point to a commit.</strong></em> It points to a branch reference. It is <em>attached</em> to that branch, and when you do certain things (e.g., <code>commit</code> or <a href="https://stackoverflow.com/a/54934887/7936744"><code>reset</code></a>), the attached branch will move along with <code>HEAD</code>.</p>
-<h3 id="13-conclusion">1.3. Conclusion</h3>
-<p><code>HEAD</code> is you. It points to whatever you checked out, wherever you are. Typically that is not a commit, it is a local branch. If <code>HEAD</code> <em>does</em> point to a commit (or tag), even if it&rsquo;s the same commit (or tag) that a branch also points to, you (and <code>HEAD</code>) have been detached from that branch. Since you don&rsquo;t have a branch attached to you, the branch won&rsquo;t follow along with you as you make new commits. <code>HEAD</code>, however, will.</p>
+<p><code>HEAD</code> is you. It points to whatever you checked out, wherever you are. Typically that is not a commit, it is a local branch. If <code>HEAD</code> <em>does</em> point to a commit (or tag), even if it&rsquo;s the same commit (or tag) that a branch also points to, you (and <code>HEAD</code>) have been detached from that branch. Since you don&rsquo;t have a branch attached to you, the branch won&rsquo;t follow along with you as you make new commits. The <code>HEAD</code>, however, will.</p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube-nocookie.com/embed/GN36mrrM12k" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
 <p>Source:</p>
 <p><a href="https://stackoverflow.com/a/54935492/16317008">https://stackoverflow.com/a/54935492/16317008</a></p>
 <p><a href="https://circleci.com/blog/git-detached-head-state/">https://circleci.com/blog/git-detached-head-state/</a></p>
-<h2 id="2-three-trees">2. Three trees</h2>
-<p>Git as a system manages and manipulates three trees in its normal operation:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Tree</th>
-<th style="text-align:left">Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">HEAD</td>
-<td style="text-align:left">Last commit snapshot, next parent</td>
-</tr>
-<tr>
-<td style="text-align:left">Index</td>
-<td style="text-align:left">Proposed next commit snapshot</td>
-</tr>
-<tr>
-<td style="text-align:left">Working Directory</td>
-<td style="text-align:left">Sandbox</td>
-</tr>
-</tbody>
-</table>
-<p>The Git index is a critical data structure in Git. It serves as the “staging area” between the files you have on your filesystem and your commit history. When you run <code>git add</code>, the files from your working directory are hashed and stored as objects in the index, leading them to be “staged changes”. When you run <code>git commit</code>, the staged changes as stored in the index are used to create that new commit.</p>
+<p><a href="https://youtu.be/GN36mrrM12k?si=S6_VTBQDZgG_fHre">https://youtu.be/GN36mrrM12k?si=S6_VTBQDZgG_fHre</a></p>
 
     </div>
 
