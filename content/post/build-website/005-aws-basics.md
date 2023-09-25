@@ -9,6 +9,11 @@ tags:
  - build website
 ---
 
+```shell
+# Change password of supervisor
+$ sudo passwd ubuntu
+```
+
 ## 1. Connect to EC2 Instance
 
 ```shell

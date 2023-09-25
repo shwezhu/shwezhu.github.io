@@ -241,7 +241,7 @@ $ curl -X POST "localhost:8080/postform?username=david&password=778899a"
 
 The server may get same data for these two command, this is because the server may try to parse the query string and form data at the same time, we have talked this above in Go web. 
 
-## 4. Form data resriction
+## 4. Form data restriction
 
 As we talk above, form data can only be these three type by by default:`application/x-www-form-urlencoded`, `multipart/form-data`, `text/plain`, and you have to set the `Content-Type` to the corresponding type with correct format. 
 
@@ -290,3 +290,51 @@ print(user.password)
 print(user.username)
 ```
 
+## 5. Some common headers
+
+### 5.1. cooke
+
+There are two headers related to cookie, one is `Set-Cookie` header another is `Cookie` header. 
+
+After receiving an HTTP request, a server can send one or more [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) headers with the response. The browser usually stores the cookie and sends it with requests made to the same server inside a [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) HTTP header.
+
+For example, a response from server contains cookie headers may looks like this:
+
+```
+HTTP/2.0 200 OK
+Content-Type: text/html
+Set-Cookie: yummy_cookie=choco
+Set-Cookie: tasty_cookie=strawberry
+
+[page content]
+```
+
+A HTTP request may looks like this below:
+
+```
+GET /sample_page.html HTTP/2.0
+Host: www.example.org
+Cookie: yummy_cookie=choco; tasty_cookie=strawberry
+```
+
+Therefore, when I want set cookie manually for my http request, I'll probably do something like this (I do this in Go):
+
+```go
+req, _ := http.NewRequest(http.MethodPost, "/chat", your_encoded_message)
+// set content-type header
+req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+// set cookie header (cookie is a key value data)
+req.Header.Set("Cookie", "session_id=xxxxxxxxxxx")
+...
+```
+
+If I want get cookie from repsonse, I'll probably retrieve the cookie like this:
+
+```go
+response := makeRequest(...)
+my_cooke := response.Header().Get("Set-Cookie") 
+```
+
+Cookie is just a header which having no doubt resides in the header of HTTP mesages, don't overthinking. 
+
+Reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies

@@ -246,7 +246,7 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 }
 ```
 
-Now you know that when develop a web app we have to deal with http requests, and we do this by regisering some patterns (urls) with its handler which is an instance of `http.Handler` into a `ServeMux`. And we don't need to create an instance of `http.Handler` by ourselves, instead we can take advantage of`func HandleFunc(pattern string, handler func(ResponseWriter, *Request))` which helps us create an instance of `http.Handler` for the `pattern` passed as the argument. 
+Now you know that when develop a web app we have to deal with http requests, and we do this by regisering some patterns (urls) with its handler which is an instance of `http.Handler` into a `ServeMux`. We can take advantage of`func HandleFunc(pattern string, handler func(ResponseWriter, *Request))` which helps us create an instance of `http.Handler` for the `pattern`. 
 
 > ServeMux is an HTTP request multiplexer. It matches the URL of each incoming request against a list of **registered patterns** and **calls the handler** for the pattern that most closely matches the URL. [ServeMux - Go](https://pkg.go.dev/net/http#ServeMux)
 >
