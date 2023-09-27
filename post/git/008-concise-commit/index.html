@@ -51,7 +51,7 @@ If applied, this commit will 1. Things to avoid when creating commits Sending la
 <meta itemprop="description" content="A properly formed git commit subject line should always be able to complete the following sentence:
 If applied, this commit will 1. Things to avoid when creating commits Sending large new features in a single giant commit. Mixing two unrelated functional changes. Again the reviewer will find it harder to identify flaws if two unrelated changes are mixed together. If it becomes necessary to later revert a broken commit, the two unrelated changes will need to be untangled, with further risk of bug creation."><meta itemprop="datePublished" content="2023-09-11T07:47:23+00:00" />
 <meta itemprop="dateModified" content="2023-09-11T07:47:23+00:00" />
-<meta itemprop="wordCount" content="591">
+<meta itemprop="wordCount" content="753">
 <meta itemprop="keywords" content="git," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Commit Message Guidelines"/>
 <meta name="twitter:description" content="A properly formed git commit subject line should always be able to complete the following sentence:
@@ -154,6 +154,7 @@ If applied, this commit will 1. Things to avoid when creating commits Sending la
         </li>
         <li><a href="#3-information-in-commit-messages">3. Information in commit messages</a></li>
         <li><a href="#4-common-wrods">4. Common wrods</a></li>
+        <li><a href="#5-check-commit-history">5. Check commit history</a></li>
       </ul>
     </li>
   </ul>
@@ -329,7 +330,63 @@ If applied, this commit will 1. Things to avoid when creating commits Sending la
 </span></span><span class="line"><span class="cl">Optimise = Refactor of performance, e.g. speed up code.
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>References:</p>
+</div><h2 id="5-check-commit-history">5. Check commit history</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ git config --global alias.lgg <span class="s2">&#34;log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit --date=relative&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ git lgg
+</span></span><span class="line"><span class="cl">* d7c4459 - <span class="o">(</span>HEAD, M, fromA<span class="o">)</span> M &lt;VonC&gt;
+</span></span><span class="line"><span class="cl">*   82b011d - <span class="o">(</span>L<span class="o">)</span> Merge commit <span class="s1">&#39;J&#39;</span> into fromA &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span><span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span><span class="p">|</span> * 190265b - <span class="o">(</span>J, master<span class="o">)</span> J &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> *   ef8e325 - <span class="o">(</span>I<span class="o">)</span> Merge commit <span class="s1">&#39;F&#39;</span> &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> <span class="p">|</span><span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span><span class="p">|</span> <span class="p">|</span> * 4b6d976 - <span class="o">(</span>F, fromB<span class="o">)</span> F &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> * <span class="p">|</span> 45a5d4d - <span class="o">(</span>H<span class="o">)</span> H &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> * <span class="p">|</span>   834b239 - <span class="o">(</span>G<span class="o">)</span> Merge commit <span class="s1">&#39;E&#39;</span> &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> <span class="p">|</span><span class="se">\ \
+</span></span></span><span class="line"><span class="cl"><span class="se"></span><span class="p">|</span> <span class="p">|</span> <span class="p">|</span>/
+</span></span><span class="line"><span class="cl"><span class="p">|</span> <span class="p">|</span> * f8e9272 - <span class="o">(</span>E<span class="o">)</span> E &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> <span class="p">|</span> * 96b5538 - <span class="o">(</span>D<span class="o">)</span> D &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> * <span class="p">|</span> 49eff7f - <span class="o">(</span>C<span class="o">)</span> C &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> <span class="p">|</span>/
+</span></span><span class="line"><span class="cl"><span class="p">|</span> * 02c3ef4 - <span class="o">(</span>B<span class="o">)</span> B &lt;VonC&gt;
+</span></span><span class="line"><span class="cl">* <span class="p">|</span> c0d9e1e - <span class="o">(</span>K<span class="o">)</span> K &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span>/
+</span></span><span class="line"><span class="cl">* 6530d79 - <span class="o">(</span>A<span class="o">)</span> A &lt;VonC&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Source: <a href="https://stackoverflow.com/a/6744268/16317008">https://stackoverflow.com/a/6744268/16317008</a></p>
+<p>References:</p>
 <ul>
 <li><a href="https://gist.github.com/robertpainsi/b632364184e70900af4ab688decf6f53">Commit message guidelines</a></li>
 <li><a href="https://gist.github.com/brianclements/841ea7bffdb01346392c">Angular Commit Format Reference Sheet</a></li>

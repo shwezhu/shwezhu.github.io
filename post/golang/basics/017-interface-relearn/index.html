@@ -48,7 +48,7 @@
 <meta itemprop="name" content="Types and Interface Value - Go (Interface 3)">
 <meta itemprop="description" content="Previouse posts: Interfaces and Methods Receivers - Go (Interface 1) Interface in Practice - Go (Interface 2) 1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so"><meta itemprop="datePublished" content="2023-09-02T18:57:04+00:00" />
 <meta itemprop="dateModified" content="2023-09-02T18:57:04+00:00" />
-<meta itemprop="wordCount" content="1406">
+<meta itemprop="wordCount" content="1549">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Types and Interface Value - Go (Interface 3)"/>
 <meta name="twitter:description" content="Previouse posts: Interfaces and Methods Receivers - Go (Interface 1) Interface in Practice - Go (Interface 2) 1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so"/>
@@ -152,6 +152,7 @@
         <li><a href="#2-the-representation-of-an-interface">2. The representation of an interface</a></li>
         <li><a href="#3-pointers-to-interfaces">3. Pointers to Interfaces</a></li>
         <li><a href="#4-copy-interface">4. Copy Interface</a></li>
+        <li><a href="#5-essence-of-interface-values">5. Essence of interface values</a></li>
       </ul>
     </li>
   </ul>
@@ -375,6 +376,25 @@
 <p>Map and slice values behave like pointers: they are descriptors that contain pointers to the underlying map or slice data. Copying a map or slice value doesn&rsquo;t copy the data it points to. Copying an interface value makes a copy of the thing stored in the interface value. If the interface value holds a struct, copying the interface value makes a copy of the struct. If the interface value holds a pointer, copying the interface value makes a copy of the pointer, but again not the data it points to.</p>
 <p>Note that this discussion is about the semantics of the operations. Actual implementations may apply optimizations to avoid copying as long as the optimizations do not change the semantics.</p>
 <p>Source: <a href="https://go.dev/doc/faq">https://go.dev/doc/faq</a></p>
+<h2 id="5-essence-of-interface-values">5. Essence of interface values</h2>
+<p>An interface is conceptually a <code>struct</code> with two fields. If we were to describe an interface in Go, it would look something like this.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="kd">interface</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">       <span class="nx">Type</span> <span class="kt">uintptr</span>     <span class="c1">// points to the type of the interface implementation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="nx">Data</span> <span class="kt">uintptr</span>     <span class="c1">// holds the data for the interface&#39;s receiver
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>Type</code> points to a structure that describes the type of the value that implements this interface. <code>Data</code> points to the value of the implementation itself. The contents of <code>Data</code> are passed as the receiver of any method called via the interface.</p>
+<p>The <a href="http://golang.org/ref/mem">Go memory model</a> says that writes to a single machine word will be atomic, but interfaces are two word values. It is possible that another goroutine may observe the contents of the interface value while it is being changed.</p>
+<p>Learn more: <a href="https://dave.cheney.net/2014/06/27/ice-cream-makers-and-data-races">https://dave.cheney.net/2014/06/27/ice-cream-makers-and-data-races</a></p>
 
     </div>
 
