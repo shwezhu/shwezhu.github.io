@@ -118,6 +118,37 @@ Reformat = Refactor of formatting, e.g. omit whitespace.
 Optimise = Refactor of performance, e.g. speed up code.
 ```
 
+## 5. Check commit history
+
+```shell
+$ git config --global alias.lgg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+```
+
+```shell
+$ git lgg
+* d7c4459 - (HEAD, M, fromA) M <VonC>
+*   82b011d - (L) Merge commit 'J' into fromA <VonC>
+|\
+| * 190265b - (J, master) J <VonC>
+| *   ef8e325 - (I) Merge commit 'F' <VonC>
+| |\
+| | * 4b6d976 - (F, fromB) F <VonC>
+| * | 45a5d4d - (H) H <VonC>
+| * |   834b239 - (G) Merge commit 'E' <VonC>
+| |\ \
+| | |/
+| | * f8e9272 - (E) E <VonC>
+| | * 96b5538 - (D) D <VonC>
+| * | 49eff7f - (C) C <VonC>
+| |/
+| * 02c3ef4 - (B) B <VonC>
+* | c0d9e1e - (K) K <VonC>
+|/
+* 6530d79 - (A) A <VonC>
+```
+
+Source: https://stackoverflow.com/a/6744268/16317008
+
 References:
 
 - [Commit message guidelines](https://gist.github.com/robertpainsi/b632364184e70900af4ab688decf6f53)

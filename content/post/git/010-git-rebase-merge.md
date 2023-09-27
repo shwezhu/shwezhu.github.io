@@ -191,10 +191,11 @@ And note that the `F'` mean it's a copy of original commit `F` (git will do this
 ## 3. git rebase vs merge
 
 - Merge preserves commit history. 
-  - Use merge on a public branch. 
+  - Use merge on a **public branch**. 
 - Rebase rewrites (makes copy) history.
-  - Use rebase on a private branch to catch up update form remote. 
+  - Use rebase on a **private branch** to catch up update form remote. 
   - Why rebase rewrite commit history: https://youtu.be/zOnwgxiC0OA?si=CwbvoPI35pHgJ1pn&t=401
+- `git push --force` on shared branches is an absolute no-no. 
 
 > Note that we say use rebase on a private branch means we can use the command`git rebase master` on a private, please don't use `git rebase fixissue` on `master` branch which apparently is a publick branch. 
 >

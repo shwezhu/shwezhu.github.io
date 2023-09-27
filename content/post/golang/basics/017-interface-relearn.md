@@ -166,3 +166,20 @@ Map and slice values behave like pointers: they are descriptors that contain poi
 Note that this discussion is about the semantics of the operations. Actual implementations may apply optimizations to avoid copying as long as the optimizations do not change the semantics.
 
 Source: https://go.dev/doc/faq
+
+## 5. Essence of interface values
+
+An interface is conceptually a `struct` with two fields. If we were to describe an interface in Go, it would look something like this.
+
+```go
+type interface struct {
+       Type uintptr     // points to the type of the interface implementation
+       Data uintptr     // holds the data for the interface's receiver
+}
+```
+
+`Type` points to a structure that describes the type of the value that implements this interface. `Data` points to the value of the implementation itself. The contents of `Data` are passed as the receiver of any method called via the interface.
+
+The [Go memory model](http://golang.org/ref/mem) says that writes to a single machine word will be atomic, but interfaces are two word values. It is possible that another goroutine may observe the contents of the interface value while it is being changed. 
+
+Learn more: https://dave.cheney.net/2014/06/27/ice-cream-makers-and-data-races
