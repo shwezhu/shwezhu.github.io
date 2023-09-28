@@ -132,3 +132,41 @@ Similarly, [string is just a read only slice](https://davidzhu.xyz/post/golang/b
 > ch<- newSlice
 > ```
 
+## 6. Useful cases
+
+### 6.1. Get map element
+
+```go
+type Cat struct {
+	name string
+	age int
+}
+
+func main() {
+	m := make(map[string]Cat)
+	m["coco"] = Cat{name: "Coco"}
+  // passed by value, means there is a copy
+	cat, _ := m["coco"]
+	cat.name = "Bella"
+	fmt.Println(m["coco"].name) // Coco
+}
+```
+
+### 6.2. Pass to channel
+
+```go
+func main() {
+	ch := make(chan Cat, 1)
+	coco := Cat{
+		name: "Coco",
+		age:  0,
+	}
+	ch <- coco
+  // passed by value
+	bella := <-ch
+	bella.name = "Bella"
+	fmt.Println(coco.name) // Coco
+}
+```
+
+Note that map, slice are just pointers to some extend, which means when you pass a slice to a channel, the slice still passsed by value but they shared a same underlying array which behaves like passed by reference. 

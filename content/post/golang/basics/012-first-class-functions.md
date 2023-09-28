@@ -111,5 +111,12 @@ divideOperation := MathOperation(func(l float32, r float32) (float32, error) {
 	})
 ```
 
-Next post: [closure in Go](https://davidzhu.xyz/post/golang/practice/008-closures-go/)
+## 5. Use case - pass behaviour
 
+
+
+Next post: [closure in Go](https://davidzhu.xyz/post/golang/advance/006-closures-go/)
+
+{{% youtube "5buaPyJ0XeQ" %}}
+
+Video: https://youtu.be/5buaPyJ0XeQ?si=k3t7k1RGVlBZypMu

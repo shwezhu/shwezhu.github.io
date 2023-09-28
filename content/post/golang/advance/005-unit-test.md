@@ -116,3 +116,26 @@ If you want to specify benchmarks, use `-bench` flag.
 ```
 
 Learn more: [go command - cmd/go - Go Packages](https://pkg.go.dev/cmd/go#hdr-Testing_flags)
+
+## 4. Benchmark test
+
+The benchmark tool only reports heap allocations. Stack allocations via escape analysis are less costly, possibly free, so are not reported.
+
+`allocs/op` means how many distinct memory allocations occurred per op (single iteration).
+
+`B/op` is how many bytes were allocated per op.s
+
+```shell
+$ go test -bench .      
+BenchmarkAsd-8          1000000000               0.3181 ns/op
+
+$ go test -bench . -benchmem
+BenchmarkAsd-8          1000000000               0.0000008 ns/op               0 B/op          0 allocs/op
+PASS
+ok      go-learning     0.139s
+```
+
+Source:
+
+- https://stackoverflow.com/questions/56832207/golang-benchmark-why-does-allocs-op-show-0-b-op
+- https://stackoverflow.com/a/35588683/16317008

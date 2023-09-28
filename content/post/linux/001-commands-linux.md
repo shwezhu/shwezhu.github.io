@@ -1,5 +1,5 @@
 ---
-title: Common Commands in Linux
+title: Useful Commands in Linux
 date: 2023-05-03 12:40:56
 categories:
  - linux
@@ -9,37 +9,35 @@ tags:
 
 ## 1. Some Commands
 
-You can use `your-command --help `, `man your-command`, `tldr you-command` to check how to use the command. 
+You can use `xxx --help `, `man xxx`, `tldr you-command` to check the usage of the command. 
 
 ```shell
-# Rename all file in current directory, from cupper-case to lower-case
-$ find . -depth -execdir rename -f 'y/A-Z/a-z/' {} \;
 # n: line number, r: recursive
 $ grep -nr "ul$" themes/cactus/source/css
-# check your ip on Mac
-$ ipconfig getifaddr en0 
-# check public IP, Mac and Linux
-$ curl ifconfig.me && echo
 # make a file executable
 $ chmod u+x test.sh
-# check DNS of domain
-$ dig +trace davidzhu.xyz
-# check IP of domian
-$ dig +short davidzhu.xyz
 # check files size under current folder, h: human-readable, *: all, s: sort
 $ du  -sh  *
 # output file in hexadecimal
 $ xxd a.class
-# specify header with curl
-$ curl localhost:8080/private -H "x-robot-password: beep-boo" -v
-# post request with cookie in curl
-$ curl localhost:8080/chat/gpt-3 -d "message=tell me more about him" --cookie "session-id=MTY5Mj..."
+# check your ip on Mac
+$ ipconfig getifaddr en0 
+# >: overwirte, >> append
+$ echo "Hello, World" > output.txt
+# check DNS of domain
+$ dig +trace davidzhu.xyz
+# check IP of domian
+$ dig +short davidzhu.xyz
+# Rename all file in current directory, from cupper-case to lower-case
+$ find . -depth -execdir rename -f 'y/A-Z/a-z/' {} \;
+# curl -v verbose
+curl localhost:8080 -H "Content-Type: application/json" -d "{"username":"david", age:3}" -v
 ```
 
 ## 2. wget
 
 ```shell
-# download the file and save it into install.sh
+# -O write documents to FILE: download the file and save it into install.sh
 wget -O install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 # -q quiet, same as above but output nothing
 wget -qO install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
@@ -64,37 +62,17 @@ sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools
 
 > **NOTE:** this is execute the command directly, which may not safe, don't do this on you production server. Don't give it system admin permission: `sudo`. 
 
-## 3. `>` & `>>`
-
-```shell
-echo "Hello, World" > output.txt
-```
-
-The `>` sign is used for redirecting the output of a program to something other than stdout (standard output, which is the terminal by default).
-
-The `>>` **appends** to a file or creates the file if it doesn't exist.
-The `>` **overwrites** the file if it exists or creates it if it doesn't exist.
-
-## 4. find & grep
-
-### 4.1. find
+## 3. find
 
 ```shell
 # -type f is for file, -type d is for directory, -iname is case-insensitive
+# find search the file recursively, don't need -r option
 $ find . -name "*header*" -type f
 ./content/post/c++/basics/header-files.md
 ./themes/even/layouts/partials/header.html
 ./themes/even/assets/sass/_partial/_post/_header.scss
 ./themes/even/assets/sass/_partial/_header.scss
 ```
-
-The command below execute in the same folder as above, but output nothing:
-
-```shell
-$ find . -name "header" -type f 
-```
-
-Which indicates that pathname expansion works in double quotes, learn more: [Shell Expansion - David's Blog](https://davidzhu.xyz/post/linux/003-shell-expansion/)
 
 ```shell
 # You can try this: find ~/blog -name "clean.*"
@@ -104,16 +82,9 @@ $ find ~/blog -name "*.sh"
 /Users/David/blog/clean.sh
 ```
 
-### 4.2. grep
+Pathname expansion doesn't work in double quotes actually, only `$` and back quote retain their special meaning in double quote, asterisk won't, `"*.sh"` is just a pattern for `find`,  learn more: [Shell Script Basic Syntax - David's Blog](https://davidzhu.xyz/post/linux/002-bash-basics/)
 
-```shell
-# `-nr`: 'n' for line number, 'r' for recursive
-$ grep -nr "ul$" themes/cactus/source/css
-```
-
-> **NOTE:** The difference between `find` and `grep` is that find will search the file recursively, if you want `grep` search files recursively you have to use `-r` option.
-
-## 5. find & xargs
+## 4. find & xargs
 
 > **xargs** takes input and runs the commands provided as arguments with the data it reads from the input. 
 
@@ -142,7 +113,7 @@ find . -name "*.c" -print
 Print out a list of all the files whose names end in .c
 ```
 
-## 6. `find -print0` & `xargs -0`
+## 5. `find -print0` & `xargs -0`
 
 > The `find` command prints results to standard output by default, so the `-print` option is normally not needed, but `-print0` separates the filenames with a 0 (NULL) byte **so that names containing spaces or newlines can be interpreted correctly**.
 

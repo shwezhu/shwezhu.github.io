@@ -174,11 +174,11 @@ The code between back quotes will be executed, and if there is output, you can s
 
 ### 5.3. Double quotes
 
-The statement in the table about double qoutes probably not accurate, actually, `*` may acts like it remains its spcecial meaning in double quotes:
+Sometimes `*` may acts like it remains its spcecial meaning in double quotes:
 
 - Without any special options:
 
-  - Inside double quotes (`"`), the asterisk retains its literal meaning and does not perform globbing (expansion to match filenames).
+  - Inside double quotes (`"`), the asterisk `*` retains its literal meaning and does not perform globbing (expansion to match filenames).
 
   - For example, `"*"` will be treated as a literal asterisk character.
 
