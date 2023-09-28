@@ -51,7 +51,7 @@
 <meta itemprop="description" content="Everything passed by value, we have talked that assignment makes a copy, value receiver makes a copy of the struct value on each method call, in this post I&rsquo;ll show you argument is also passed by value.
 1. Everything passed by value As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter."><meta itemprop="datePublished" content="2023-09-02T18:37:04+00:00" />
 <meta itemprop="dateModified" content="2023-09-02T18:37:04+00:00" />
-<meta itemprop="wordCount" content="898">
+<meta itemprop="wordCount" content="1045">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Everything Passed by Value - Go"/>
 <meta name="twitter:description" content="Everything passed by value, we have talked that assignment makes a copy, value receiver makes a copy of the struct value on each method call, in this post I&rsquo;ll show you argument is also passed by value.
@@ -152,6 +152,12 @@
         <li><a href="#3-go-does-not-have-reference-variables">3. Go does not have reference variables</a></li>
         <li><a href="#4-struct-type">4. struct type</a></li>
         <li><a href="#5-map--slice">5. map &amp; slice</a></li>
+        <li><a href="#6-useful-cases">6. Useful cases</a>
+          <ul>
+            <li><a href="#61-get-map-element">6.1. Get map element</a></li>
+            <li><a href="#62-pass-to-channel">6.2. Pass to channel</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -338,6 +344,72 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div></blockquote>
+<h2 id="6-useful-cases">6. Useful cases</h2>
+<h3 id="61-get-map-element">6.1. Get map element</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Cat</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">name</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">age</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nx">Cat</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">m</span><span class="p">[</span><span class="s">&#34;coco&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="nx">Cat</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span> <span class="s">&#34;Coco&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// passed by value, means there is a copy
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">cat</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="s">&#34;coco&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">cat</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span> <span class="s">&#34;Bella&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">m</span><span class="p">[</span><span class="s">&#34;coco&#34;</span><span class="p">].</span><span class="nx">name</span><span class="p">)</span> <span class="c1">// Coco
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="62-pass-to-channel">6.2. Pass to channel</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">Cat</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">coco</span> <span class="o">:=</span> <span class="nx">Cat</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">name</span><span class="p">:</span> <span class="s">&#34;Coco&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">age</span><span class="p">:</span>  <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">coco</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// passed by value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">bella</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">bella</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span> <span class="s">&#34;Bella&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">coco</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span> <span class="c1">// Coco
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that map, slice are just pointers to some extend, which means when you pass a slice to a channel, the slice still passsed by value but they shared a same underlying array which behaves like passed by reference.</p>
 
     </div>
 

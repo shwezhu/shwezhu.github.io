@@ -54,7 +54,7 @@ Therefore there four types of functions:
 Therefore there four types of functions:
 1 2 3 4 5 6 7 8 9 10 11 12 13 // A test function is one named TestXxx (where Xxx does not start with a // lower case letter) and should have the signature, func TestXxx(t *testing."><meta itemprop="datePublished" content="2023-09-05T15:10:18+00:00" />
 <meta itemprop="dateModified" content="2023-09-05T15:10:18+00:00" />
-<meta itemprop="wordCount" content="560">
+<meta itemprop="wordCount" content="642">
 <meta itemprop="keywords" content="golang,unit test," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Go Tests Basics - Go"/>
 <meta name="twitter:description" content="1. go test go test recompiles each package along with any files with names matching the file pattern *_test.go. These additional files can contain test functions, benchmark functions, fuzz tests and example functions.
@@ -154,6 +154,7 @@ Therefore there four types of functions:
         <li><a href="#1-go-test">1. <code>go test</code></a></li>
         <li><a href="#2-run-a-specific-function">2. Run a specific function</a></li>
         <li><a href="#3-run-a-specific-test-file">3. Run a specific test file</a></li>
+        <li><a href="#4-benchmark-test">4. Benchmark test</a></li>
       </ul>
     </li>
   </ul>
@@ -334,6 +335,35 @@ Therefore there four types of functions:
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Learn more: <a href="https://pkg.go.dev/cmd/go#hdr-Testing_flags">go command - cmd/go - Go Packages</a></p>
+<h2 id="4-benchmark-test">4. Benchmark test</h2>
+<p>The benchmark tool only reports heap allocations. Stack allocations via escape analysis are less costly, possibly free, so are not reported.</p>
+<p><code>allocs/op</code> means how many distinct memory allocations occurred per op (single iteration).</p>
+<p><code>B/op</code> is how many bytes were allocated per op.s</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go <span class="nb">test</span> -bench .      
+</span></span><span class="line"><span class="cl">BenchmarkAsd-8          <span class="m">1000000000</span>               0.3181 ns/op
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ go <span class="nb">test</span> -bench . -benchmem
+</span></span><span class="line"><span class="cl">BenchmarkAsd-8          <span class="m">1000000000</span>               0.0000008 ns/op               <span class="m">0</span> B/op          <span class="m">0</span> allocs/op
+</span></span><span class="line"><span class="cl">PASS
+</span></span><span class="line"><span class="cl">ok      go-learning     0.139s
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Source:</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/56832207/golang-benchmark-why-does-allocs-op-show-0-b-op">https://stackoverflow.com/questions/56832207/golang-benchmark-why-does-allocs-op-show-0-b-op</a></li>
+<li><a href="https://stackoverflow.com/a/35588683/16317008">https://stackoverflow.com/a/35588683/16317008</a></li>
+</ul>
 
     </div>
 
