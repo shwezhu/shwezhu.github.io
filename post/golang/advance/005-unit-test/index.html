@@ -16,9 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. go test go test recompiles each package along with any files with names matching the file pattern *_test.go. These additional files can contain test functions, benchmark functions, fuzz tests and example functions.
-Therefore there four types of functions:
-1 2 3 4 5 6 7 8 9 10 11 12 13 // A test function is one named TestXxx (where Xxx does not start with a // lower case letter) and should have the signature, func TestXxx(t *testing." />
+<meta name="author" content="David" /><meta name="description" content="1. Commands 1 $ go test -run &amp;#34;ExampleSession|TestSession&amp;#34; -v Note that the -run flag is used for specifying test functions, not benchmarks, not fuzz test. Because example test is similar to test function, you can specify both example and test function with -run flag. If you want to specify benchmarks, use -bench flag:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 -bench regexp Run only those benchmarks matching a regular expression." />
 
 
 
@@ -42,24 +41,21 @@ Therefore there four types of functions:
 
 
 <meta property="og:title" content="Go Tests Basics - Go" />
-<meta property="og:description" content="1. go test go test recompiles each package along with any files with names matching the file pattern *_test.go. These additional files can contain test functions, benchmark functions, fuzz tests and example functions.
-Therefore there four types of functions:
-1 2 3 4 5 6 7 8 9 10 11 12 13 // A test function is one named TestXxx (where Xxx does not start with a // lower case letter) and should have the signature, func TestXxx(t *testing." />
+<meta property="og:description" content="1. Commands 1 $ go test -run &#34;ExampleSession|TestSession&#34; -v Note that the -run flag is used for specifying test functions, not benchmarks, not fuzz test. Because example test is similar to test function, you can specify both example and test function with -run flag. If you want to specify benchmarks, use -bench flag:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 -bench regexp Run only those benchmarks matching a regular expression." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/advance/005-unit-test/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-09-05T15:10:18+00:00" />
 <meta property="article:modified_time" content="2023-09-05T15:10:18+00:00" />
 <meta itemprop="name" content="Go Tests Basics - Go">
-<meta itemprop="description" content="1. go test go test recompiles each package along with any files with names matching the file pattern *_test.go. These additional files can contain test functions, benchmark functions, fuzz tests and example functions.
-Therefore there four types of functions:
-1 2 3 4 5 6 7 8 9 10 11 12 13 // A test function is one named TestXxx (where Xxx does not start with a // lower case letter) and should have the signature, func TestXxx(t *testing."><meta itemprop="datePublished" content="2023-09-05T15:10:18+00:00" />
+<meta itemprop="description" content="1. Commands 1 $ go test -run &#34;ExampleSession|TestSession&#34; -v Note that the -run flag is used for specifying test functions, not benchmarks, not fuzz test. Because example test is similar to test function, you can specify both example and test function with -run flag. If you want to specify benchmarks, use -bench flag:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 -bench regexp Run only those benchmarks matching a regular expression."><meta itemprop="datePublished" content="2023-09-05T15:10:18+00:00" />
 <meta itemprop="dateModified" content="2023-09-05T15:10:18+00:00" />
-<meta itemprop="wordCount" content="642">
+<meta itemprop="wordCount" content="670">
 <meta itemprop="keywords" content="golang,unit test," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Go Tests Basics - Go"/>
-<meta name="twitter:description" content="1. go test go test recompiles each package along with any files with names matching the file pattern *_test.go. These additional files can contain test functions, benchmark functions, fuzz tests and example functions.
-Therefore there four types of functions:
-1 2 3 4 5 6 7 8 9 10 11 12 13 // A test function is one named TestXxx (where Xxx does not start with a // lower case letter) and should have the signature, func TestXxx(t *testing."/>
+<meta name="twitter:description" content="1. Commands 1 $ go test -run &#34;ExampleSession|TestSession&#34; -v Note that the -run flag is used for specifying test functions, not benchmarks, not fuzz test. Because example test is similar to test function, you can specify both example and test function with -run flag. If you want to specify benchmarks, use -bench flag:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 -bench regexp Run only those benchmarks matching a regular expression."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -151,10 +147,12 @@ Therefore there four types of functions:
   <ul>
     <li>
       <ul>
-        <li><a href="#1-go-test">1. <code>go test</code></a></li>
-        <li><a href="#2-run-a-specific-function">2. Run a specific function</a></li>
-        <li><a href="#3-run-a-specific-test-file">3. Run a specific test file</a></li>
-        <li><a href="#4-benchmark-test">4. Benchmark test</a></li>
+        <li><a href="#1-commands">1. Commands</a></li>
+        <li><a href="#2-go-test">2. <code>go test</code></a></li>
+        <li><a href="#3-run-a-specific-function">3. Run a specific function</a></li>
+        <li><a href="#4-run-a-specific-test-file">4. Run a specific test file</a></li>
+        <li><a href="#5-benchmark-test">5. Benchmark test</a></li>
+        <li><a href="#6-data-race-test">6. Data race test</a></li>
       </ul>
     </li>
   </ul>
@@ -162,7 +160,56 @@ Therefore there four types of functions:
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-go-test">1. <code>go test</code></h2>
+      <h2 id="1-commands">1. Commands</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go <span class="nb">test</span> -run <span class="s2">&#34;ExampleSession|TestSession&#34;</span> -v
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that the <code>-run</code> flag is used for specifying <strong>test functions</strong>, not <strong>benchmarks</strong>, not <strong>fuzz test</strong>. Because <strong>example test</strong> is similar to <strong>test function</strong>, you can specify both example and test function with <code>-run</code> flag. If you want to specify benchmarks, use <code>-bench</code> flag:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">-bench regexp
+</span></span><span class="line"><span class="cl">	Run only those benchmarks matching a regular expression.
+</span></span><span class="line"><span class="cl">	By default, no benchmarks are run.
+</span></span><span class="line"><span class="cl">-fuzz regexp
+</span></span><span class="line"><span class="cl">	Run the fuzz <span class="nb">test</span> matching the regular expression.
+</span></span><span class="line"><span class="cl">-run regexp
+</span></span><span class="line"><span class="cl">	Run only those tests, examples, and fuzz tests matching the regular
+</span></span><span class="line"><span class="cl">	expression.
+</span></span><span class="line"><span class="cl">-skip regexp
+</span></span><span class="line"><span class="cl">	Run only those tests, examples, fuzz tests, and benchmarks that
+</span></span><span class="line"><span class="cl">	<span class="k">do</span> not match the regular expression.
+</span></span><span class="line"><span class="cl"><span class="c1"># Flags below can be used with flags above.</span>
+</span></span><span class="line"><span class="cl">-race
+</span></span><span class="line"><span class="cl"> <span class="nb">enable</span> data race detection.
+</span></span><span class="line"><span class="cl">-cover
+</span></span><span class="line"><span class="cl">	<span class="nb">enable</span> code coverage instrumentation.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Learn more: <a href="https://pkg.go.dev/cmd/go#hdr-Testing_flags">go command - cmd/go - Go Packages</a></p>
+<h2 id="2-go-test">2. <code>go test</code></h2>
 <p><code>go test</code> recompiles each package along with any files with names matching the file pattern <code>*_test.go</code>. These additional files can contain <strong>test functions</strong>, <strong>benchmark functions</strong>, <strong>fuzz tests</strong> and <strong>example functions</strong>.</p>
 <p>Therefore there four types of functions:</p>
 <div class="highlight"><div class="chroma">
@@ -223,7 +270,7 @@ Therefore there four types of functions:
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="2-run-a-specific-function">2. Run a specific function</h2>
+</div><h2 id="3-run-a-specific-function">3. Run a specific function</h2>
 <p><code>go test</code> will run all the test functions in all your test files default,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -267,7 +314,7 @@ Therefore there four types of functions:
 </span></span><span class="line"><span class="cl">...
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="3-run-a-specific-test-file">3. Run a specific test file</h2>
+</div><h2 id="4-run-a-specific-test-file">4. Run a specific test file</h2>
 <p>Don&rsquo;t specify a test file to run, specify multiple test functions:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -292,50 +339,7 @@ Therefore there four types of functions:
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go <span class="nb">test</span> -run <span class="s2">&#34;ExampleSession|TestSession&#34;</span> -v
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
-<p>Note that the <code>-run</code> flag is used for specifying <strong>test functions</strong>, not <strong>benchmarks</strong>, not <strong>fuzz test</strong>. Because <strong>example test</strong> is similar to <strong>test function</strong>, you can specify both example and test function with <code>-run</code> flag.</p>
-</blockquote>
-<p>If you want to specify benchmarks, use <code>-bench</code> flag.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">-bench regexp
-</span></span><span class="line"><span class="cl">	Run only those benchmarks matching a regular expression.
-</span></span><span class="line"><span class="cl">	By default, no benchmarks are run.
-</span></span><span class="line"><span class="cl">-fuzz regexp
-</span></span><span class="line"><span class="cl">	Run the fuzz <span class="nb">test</span> matching the regular expression.
-</span></span><span class="line"><span class="cl">-run regexp
-</span></span><span class="line"><span class="cl">	Run only those tests, examples, and fuzz tests matching the regular
-</span></span><span class="line"><span class="cl">	expression.
-</span></span><span class="line"><span class="cl">-skip regexp
-</span></span><span class="line"><span class="cl">	Run only those tests, examples, fuzz tests, and benchmarks that
-</span></span><span class="line"><span class="cl">	<span class="k">do</span> not match the regular expression.
-</span></span><span class="line"><span class="cl"><span class="c1"># Flags below can be used with flags above.</span>
-</span></span><span class="line"><span class="cl">-race
-</span></span><span class="line"><span class="cl"> <span class="nb">enable</span> data race detection.
-</span></span><span class="line"><span class="cl">-cover
-</span></span><span class="line"><span class="cl">	<span class="nb">enable</span> code coverage instrumentation.
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Learn more: <a href="https://pkg.go.dev/cmd/go#hdr-Testing_flags">go command - cmd/go - Go Packages</a></p>
-<h2 id="4-benchmark-test">4. Benchmark test</h2>
+</div><h2 id="5-benchmark-test">5. Benchmark test</h2>
 <p>The benchmark tool only reports heap allocations. Stack allocations via escape analysis are less costly, possibly free, so are not reported.</p>
 <p><code>allocs/op</code> means how many distinct memory allocations occurred per op (single iteration).</p>
 <p><code>B/op</code> is how many bytes were allocated per op.s</p>
@@ -364,7 +368,18 @@ Therefore there four types of functions:
 <li><a href="https://stackoverflow.com/questions/56832207/golang-benchmark-why-does-allocs-op-show-0-b-op">https://stackoverflow.com/questions/56832207/golang-benchmark-why-does-allocs-op-show-0-b-op</a></li>
 <li><a href="https://stackoverflow.com/a/35588683/16317008">https://stackoverflow.com/a/35588683/16317008</a></li>
 </ul>
-
+<h2 id="6-data-race-test">6. Data race test</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># TestSession is the test function</span>
+</span></span><span class="line"><span class="cl">$ go <span class="nb">test</span> -race -run <span class="s2">&#34;TestSession&#34;</span> -v
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
     </div>
 
     <div class="post-copyright">
