@@ -53,3 +53,101 @@ My rule of thumb is, if you can do what you need to do with one mutex, there's n
 Also, performance isn't everything, but I do find it helpful to bear in mind that when using *any* of these primitives, they aren't free, even if they are cheap, and they need to pay their way. In general the way you do that sort of thing is try to ensure that when you do take a lock or send a message over a channel, you do what you can to send as big a task or chunk of information as possible. Even in a local OS process, you need to be a bit careful not to design internal APIs in a way that two processes are constantly interacting over mutexes or channels. For instance, rather than a loop where you ask the user server for a user's real name one at a time, create an API where the user server will accept the full list and return the full return set in one shot. Even 13.2ns is a couple hundred cycles, and that number is also the best case, it can get worse if there is contention.
 
 Source: https://www.reddit.com/r/golang/comments/d85d0l/comment/f17m5e8/?utm_source=share&utm_medium=web2x&context=3
+
+----
+
+This is just an example for demonstrating passing behavior with function, don't over-use channel:
+
+```go
+func newChannelStore() *Store {
+	s := &Store{ops: make(chan func(map[string]*Session))}
+	go s.loop()
+	return s
+}
+
+type Store struct {
+	ops chan func(map[string]*Session)
+}
+
+func (s *Store) addSession(session *Session)  {
+	s.ops <- func(m map[string]*Session) {
+		// if the key has existed in map, change the value of the key.
+		// if key doesn't exist, create a new one
+		m[session.id] = session
+	}
+}
+
+func (s *Store) getSession(id string) *Session {
+	result := make(chan *Session, 1)
+	s.ops <- func(m map[string]*Session) {
+		// everything copied by value, session is a copy of m[id]
+		// you should consider if session has pointer field
+		session, ok := m[id]
+		if !ok {
+			result <- nil
+			return
+		}
+		result <- session
+	}
+	// wait ops finish
+	return <-result
+}
+
+func (s *Store) loop() {
+	sessions := make(map[string]*Session)
+	for op := range s.ops {
+		op(sessions)
+	}
+}
+```
+
+The code below has a better performance compared with code above which achieves in channel style:
+
+```go
+func newMuxStore() *store {
+	return &store{
+		mu:       sync.RWMutex{},
+		sessions: make(map[string]*Session),
+	}
+}
+
+type store struct {
+	mu    sync.RWMutex
+	sessions map[string]*Session
+}
+
+func (m *store) addSession(session *Session) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.sessions[session.id] = session
+}
+
+func (m *store) getSession(id string) *Session {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	session, ok := m.sessions[id]
+	if !ok {
+		return nil
+	}
+	return session
+}
+```
+
+`session.go`:
+
+```go
+func newSession(id string, value int) *Session {
+	return &Session{
+		id:    id,
+		value: value,
+		expiry:  time.Now().Add(time.Duration(10) * time.Second).Unix(),
+	}
+}
+
+type Session struct {
+	id    string
+	value int
+	expiry int64
+}
+```
+
