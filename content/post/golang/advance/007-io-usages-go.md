@@ -3,7 +3,7 @@ title: Useful Types and Packages for IO - Go
 date: 2023-09-26 17:03:55
 categories:
  - golang
- - practice
+ - advance
 tags:
  - golang
 ---

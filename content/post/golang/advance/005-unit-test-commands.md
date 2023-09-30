@@ -1,5 +1,5 @@
 ---
-title: Go Tests Basics - Go
+title: Unit Test Basic Commands - Go
 date: 2023-09-05 15:10:18
 categories:
  - golang
@@ -36,9 +36,49 @@ Note that the `-run` flag is used for specifying **test functions**, not **bench
 	enable code coverage instrumentation.
 ```
 
+Note that enable benchmark by using `-bench` does not disable the normal `test` selection. If you only want to run the benchmark test you should pass `-run=xxx` or something so that the Run regexp doesn't match any tests. e.g., 
+
+```shell
+# Only run BenchmarkStore function:
+$ go test -bench 'BenchmarkStore' -run=xxx
+# when there is just 1 function, no single quote is fine: 
+$ go test -bench BenchmarkStore -run=xxx
+```
+
 Learn more: [go command - cmd/go - Go Packages](https://pkg.go.dev/cmd/go#hdr-Testing_flags) 
 
-## 2. `go test` 
+## 2. Benchmark test
+
+The benchmark tool only reports heap allocations. Stack allocations via escape analysis are less costly, possibly free, so are not reported.
+
+`allocs/op` means how many distinct memory allocations occurred per op (single iteration).
+
+`B/op` is how many bytes were allocated per op.s
+
+```shell
+# don't forget you can use -run=xxx   
+$ go test -bench .
+BenchmarkAsd-8          1000000000               0.3181 ns/op
+
+$ go test -bench . -benchmem
+BenchmarkAsd-8          1000000000               0.0000008 ns/op               0 B/op          0 allocs/op
+PASS
+ok      go-learning     0.139s
+```
+
+Source:
+
+- https://stackoverflow.com/questions/56832207/golang-benchmark-why-does-allocs-op-show-0-b-op
+- https://stackoverflow.com/a/35588683/16317008
+
+## 3. Data race test
+
+```shell
+# TestSession is the test function
+$ go test -race -run "TestSession" -v
+```
+
+## 4. `go test` 
 
 `go test` recompiles each package along with any files with names matching the file pattern `*_test.go`. These additional files can contain **test functions**, **benchmark functions**, **fuzz tests** and **example functions**. 
 
@@ -76,7 +116,7 @@ func ExampleSession() {
 }
 ```
 
-## 3. Run a specific function
+## 5. Run a specific function
 
 `go test` will run all the test functions in all your test files default, 
 
@@ -104,7 +144,7 @@ $ go test -run ExampleSession -v
 ...
 ```
 
-## 4. Run a specific test file
+## 6. Run a specific test file
 
 Don't specify a test file to run, specify multiple test functions:
 
@@ -120,34 +160,3 @@ As you see, you have to sepcify all related source files. You can run multiple t
 ```shell
 $ go test -run "ExampleSession|TestSession" -v
 ```
-
-## 5. Benchmark test
-
-The benchmark tool only reports heap allocations. Stack allocations via escape analysis are less costly, possibly free, so are not reported.
-
-`allocs/op` means how many distinct memory allocations occurred per op (single iteration).
-
-`B/op` is how many bytes were allocated per op.s
-
-```shell
-$ go test -bench .      
-BenchmarkAsd-8          1000000000               0.3181 ns/op
-
-$ go test -bench . -benchmem
-BenchmarkAsd-8          1000000000               0.0000008 ns/op               0 B/op          0 allocs/op
-PASS
-ok      go-learning     0.139s
-```
-
-Source:
-
-- https://stackoverflow.com/questions/56832207/golang-benchmark-why-does-allocs-op-show-0-b-op
-- https://stackoverflow.com/a/35588683/16317008
-
-## 6. Data race test
-
-```shell
-# TestSession is the test function
-$ go test -race -run "TestSession" -v
-```
-
