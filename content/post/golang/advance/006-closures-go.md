@@ -228,6 +228,8 @@ The answer is no, I cann't, the `result` has to be a channel here. Because the c
 
 > Next time you define an API it has just one method I want you to ask yourself: should this really just be a function.
 
+Don't overuse channel, learn more: https://davidzhu.xyz/post/golang/advance/008-do-not-overuse-cahnnel
+
 Source: [dotGo 2016 - Dave Cheney - Do not fear first class functions](https://www.youtube.com/watch?v=5buaPyJ0XeQ&list=WL&index=1) 
 
 {{% youtube "5buaPyJ0XeQ" %}}

@@ -9,7 +9,36 @@ tags:
  - unit test
 ---
 
-## 1. `go test` 
+## 1. Commands
+
+```shell
+$ go test -run "ExampleSession|TestSession" -v
+```
+
+Note that the `-run` flag is used for specifying **test functions**, not **benchmarks**, not **fuzz test**. Because **example test** is similar to **test function**, you can specify both example and test function with `-run` flag. If you want to specify benchmarks, use `-bench` flag:
+
+```shell
+-bench regexp
+	Run only those benchmarks matching a regular expression.
+	By default, no benchmarks are run.
+-fuzz regexp
+	Run the fuzz test matching the regular expression.
+-run regexp
+	Run only those tests, examples, and fuzz tests matching the regular
+	expression.
+-skip regexp
+	Run only those tests, examples, fuzz tests, and benchmarks that
+	do not match the regular expression.
+# Flags below can be used with flags above.
+-race
+ enable data race detection.
+-cover
+	enable code coverage instrumentation.
+```
+
+Learn more: [go command - cmd/go - Go Packages](https://pkg.go.dev/cmd/go#hdr-Testing_flags) 
+
+## 2. `go test` 
 
 `go test` recompiles each package along with any files with names matching the file pattern `*_test.go`. These additional files can contain **test functions**, **benchmark functions**, **fuzz tests** and **example functions**. 
 
@@ -47,7 +76,7 @@ func ExampleSession() {
 }
 ```
 
-## 2. Run a specific function
+## 3. Run a specific function
 
 `go test` will run all the test functions in all your test files default, 
 
@@ -75,7 +104,7 @@ $ go test -run ExampleSession -v
 ...
 ```
 
-## 3. Run a specific test file
+## 4. Run a specific test file
 
 Don't specify a test file to run, specify multiple test functions:
 
@@ -92,32 +121,7 @@ As you see, you have to sepcify all related source files. You can run multiple t
 $ go test -run "ExampleSession|TestSession" -v
 ```
 
-> Note that the `-run` flag is used for specifying **test functions**, not **benchmarks**, not **fuzz test**. Because **example test** is similar to **test function**, you can specify both example and test function with `-run` flag. 
-
-If you want to specify benchmarks, use `-bench` flag. 
-
-```shell
--bench regexp
-	Run only those benchmarks matching a regular expression.
-	By default, no benchmarks are run.
--fuzz regexp
-	Run the fuzz test matching the regular expression.
--run regexp
-	Run only those tests, examples, and fuzz tests matching the regular
-	expression.
--skip regexp
-	Run only those tests, examples, fuzz tests, and benchmarks that
-	do not match the regular expression.
-# Flags below can be used with flags above.
--race
- enable data race detection.
--cover
-	enable code coverage instrumentation.
-```
-
-Learn more: [go command - cmd/go - Go Packages](https://pkg.go.dev/cmd/go#hdr-Testing_flags)
-
-## 4. Benchmark test
+## 5. Benchmark test
 
 The benchmark tool only reports heap allocations. Stack allocations via escape analysis are less costly, possibly free, so are not reported.
 
@@ -139,3 +143,11 @@ Source:
 
 - https://stackoverflow.com/questions/56832207/golang-benchmark-why-does-allocs-op-show-0-b-op
 - https://stackoverflow.com/a/35588683/16317008
+
+## 6. Data race test
+
+```shell
+# TestSession is the test function
+$ go test -race -run "TestSession" -v
+```
+
