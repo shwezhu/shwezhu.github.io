@@ -6,7 +6,17 @@
     <description>Recent content in Posts on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Oct 2023 12:12:50 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 01 Oct 2023 17:56:58 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Caching in Go with Redis - Reading Notes</title>
+      <link>https://shaowenzhu.top/post/database/redis/003-caching/</link>
+      <pubDate>Sun, 01 Oct 2023 17:56:58 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/database/redis/003-caching/</guid>
+      <description>Source: Go-Redis Caching: Strategies, Best Practices &amp;amp; Common Pitfalls
+1. What is Caching? At its core, caching is the practice of storing a copy of data temporarily in a location for faster access upon subsequent requests. Imagine reading a thick encyclopedia. Instead of going through the entire book every time you need to reference a specific topic, you might keep a note or bookmark on pages of interest. Caching in the world of web applications follows a similar principle.</description>
+    </item>
+    
     <item>
       <title>Gorilla Sessions RedisStore Source Code Analysis</title>
       <link>https://shaowenzhu.top/post/golang/practice/011-redis-store-source-code/</link>
@@ -14,8 +24,18 @@
       
       <guid>https://shaowenzhu.top/post/golang/practice/011-redis-store-source-code/</guid>
       <description>To prevent data race, store.Get() always creates a new session (or make a copy) and returns the session to user.
-1 2 3 4 5 6 // Get a session. session, _ = store.Get(req, &amp;#34;session-key&amp;#34;) // Add a value. session.Values[&amp;#34;foo&amp;#34;] = &amp;#34;bar&amp;#34; // Save. _ = sessions.Save(req, rsp) Let&amp;rsquo;s check the source code, the Get() method of Redistore:
-1 2 3 func (s *RediStore) Get(r *http.Request, name string) (*sessions.Session, error) { return sessions.</description>
+1 2 3 4 5 6 7 // Get a session. // A copied one or new session. session, _ = store.Get(req, &amp;#34;session-key&amp;#34;) // Add a value. session.Values[&amp;#34;foo&amp;#34;] = &amp;#34;bar&amp;#34; // Save. _ = sessions.Save(req, rsp) Let&amp;rsquo;s check the source code, the Get() method of Redistore:
+1 2 3 func (s *RediStore) Get(r *http.</description>
+    </item>
+    
+    <item>
+      <title>Introduce Redis - In-memory Database</title>
+      <link>https://shaowenzhu.top/post/database/redis/001-intro-redis/</link>
+      <pubDate>Sun, 01 Oct 2023 10:40:58 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/database/redis/001-intro-redis/</guid>
+      <description>1. Redis data types 1.1. String Redis Strings is one of the most versatile of Redis’ building blocks, a binary-safe data structure, binary-safe means the strings in Redis can be any binary data. In Redis, strings are multipurpose. They can store data as simple as an integer or as complex as a JPEG image file.
+Strings is an array data structure of bytes (or words) that stores a sequence of elements, typically characters, using some character encoding.</description>
     </item>
     
     <item>
@@ -31,11 +51,11 @@
     </item>
     
     <item>
-      <title>Unit Test - Go</title>
-      <link>https://shaowenzhu.top/post/golang/advance/009-unit-test/</link>
+      <title>Test &amp; Benchmark - Go</title>
+      <link>https://shaowenzhu.top/post/golang/advance/009-benchmark-test/</link>
       <pubDate>Sat, 30 Sep 2023 09:58:56 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/advance/009-unit-test/</guid>
+      <guid>https://shaowenzhu.top/post/golang/advance/009-benchmark-test/</guid>
       <description>1. Benchmark 1.1. b.N loop Functions of the form
 1 func BenchmarkXxx(*testing.B) are considered benchmarks, and are executed by the go test command when its -bench flag is provided. Benchmarks are run sequentially.
 A sample benchmark function looks like this:
@@ -347,7 +367,7 @@ A network interface can be a physical device, called network interface controlle
       <pubDate>Tue, 05 Sep 2023 15:10:18 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/golang/advance/005-unit-test-commands/</guid>
-      <description>1. Commands 1 $ go test -run &amp;#34;ExampleSession|TestSession&amp;#34; -v Note that the -run flag is used for specifying test functions, not benchmarks, not fuzz test. Because example test is similar to test function, you can specify both example and test function with -run flag. If you want to specify benchmarks, use -bench flag:
+      <description>1. Useful commands 1 $ go test -run &amp;#34;ExampleSession|TestSession&amp;#34; -v Note that the -run flag is used for specifying test functions, not benchmarks, not fuzz test. Because example test is similar to test function, you can specify both example and test function with -run flag. If you want to specify benchmarks, use -bench flag:
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 -bench regexp Run only those benchmarks matching a regular expression.</description>
     </item>
     
@@ -533,15 +553,6 @@ Brace Expansion - expanding values between braces, such as file{1.</description>
       <description>1. Slice is not an Array The type [n]T is an array of n values of type T.
 An array&amp;rsquo;s length is part of its type, so arrays cannot be resized. The type []T is a slice with elements of type T.
 A slice is a dynamically-sized. Slices have a capacity and length property. The length and capacity of a slice s can be obtained using the expressions len(s) and cap(s).</description>
-    </item>
-    
-    <item>
-      <title>Introduce Redis - In-memory Database</title>
-      <link>https://shaowenzhu.top/post/database/redis/001-intro-redis/</link>
-      <pubDate>Fri, 18 Aug 2023 10:40:58 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/database/redis/001-intro-redis/</guid>
-      <description>1. Redis data types 1.1. String Redis Strings is one of the most versatile of Redis’ building blocks, a binary-safe data structure, binary-safe means the strings in Redis can be any binary data. In Redis, strings are multipurpose. They can store data as simple as an integer or as complex as a JPEG image file. Strings is an array data structure of bytes (or words)</description>
     </item>
     
     <item>
@@ -750,7 +761,7 @@ A slice is a dynamically-sized. Slices have a capacity and length property. The 
       <pubDate>Fri, 14 Jul 2023 18:50:37 +0000</pubDate>
       
       <guid>https://shaowenzhu.top/post/other/006-english-reading-1/</guid>
-      <description>During today’s press conference in which Hollywood actors confirmed that they were going on strike, Duncan Crabtree-Ireland, SAG-AFTRA’s chief negotiator, revealed a proposal from Hollywood studios that sounds ripped right out of a Black Mirror episode. A groundbreaking AI proposal that &amp;hellip;. SAG strike live updates: Hollywood actors join LA and NYC picket lines</description>
+      <description>When the topic of high-performance, in-memory caching surfaces, Redis invariably stands out. Renowned for its speed, flexibility, and rich feature set, Redis has cemented its position as a top-tier caching solution. For Go developers keen on optimizing application performance, understanding Redis becomes pivotal. Go’s concurrency features, paired with Redis’s in-memory data structure store, allows developers to implement robust caching mechanisms, elevating</description>
     </item>
     
     <item>

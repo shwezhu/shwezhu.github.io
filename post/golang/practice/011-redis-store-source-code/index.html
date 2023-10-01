@@ -17,8 +17,8 @@
 
 
 <meta name="author" content="David" /><meta name="description" content="To prevent data race, store.Get() always creates a new session (or make a copy) and returns the session to user.
-1 2 3 4 5 6 // Get a session. session, _ = store.Get(req, &amp;#34;session-key&amp;#34;) // Add a value. session.Values[&amp;#34;foo&amp;#34;] = &amp;#34;bar&amp;#34; // Save. _ = sessions.Save(req, rsp) Let&amp;rsquo;s check the source code, the Get() method of Redistore:
-1 2 3 func (s *RediStore) Get(r *http.Request, name string) (*sessions.Session, error) { return sessions." />
+1 2 3 4 5 6 7 // Get a session. // A copied one or new session. session, _ = store.Get(req, &amp;#34;session-key&amp;#34;) // Add a value. session.Values[&amp;#34;foo&amp;#34;] = &amp;#34;bar&amp;#34; // Save. _ = sessions.Save(req, rsp) Let&amp;rsquo;s check the source code, the Get() method of Redistore:
+1 2 3 func (s *RediStore) Get(r *http." />
 
 
 
@@ -43,23 +43,23 @@
 
 <meta property="og:title" content="Gorilla Sessions RedisStore Source Code Analysis" />
 <meta property="og:description" content="To prevent data race, store.Get() always creates a new session (or make a copy) and returns the session to user.
-1 2 3 4 5 6 // Get a session. session, _ = store.Get(req, &#34;session-key&#34;) // Add a value. session.Values[&#34;foo&#34;] = &#34;bar&#34; // Save. _ = sessions.Save(req, rsp) Let&rsquo;s check the source code, the Get() method of Redistore:
-1 2 3 func (s *RediStore) Get(r *http.Request, name string) (*sessions.Session, error) { return sessions." />
+1 2 3 4 5 6 7 // Get a session. // A copied one or new session. session, _ = store.Get(req, &#34;session-key&#34;) // Add a value. session.Values[&#34;foo&#34;] = &#34;bar&#34; // Save. _ = sessions.Save(req, rsp) Let&rsquo;s check the source code, the Get() method of Redistore:
+1 2 3 func (s *RediStore) Get(r *http." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/practice/011-redis-store-source-code/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-01T12:12:50+00:00" />
 <meta property="article:modified_time" content="2023-10-01T12:12:50+00:00" />
 <meta itemprop="name" content="Gorilla Sessions RedisStore Source Code Analysis">
 <meta itemprop="description" content="To prevent data race, store.Get() always creates a new session (or make a copy) and returns the session to user.
-1 2 3 4 5 6 // Get a session. session, _ = store.Get(req, &#34;session-key&#34;) // Add a value. session.Values[&#34;foo&#34;] = &#34;bar&#34; // Save. _ = sessions.Save(req, rsp) Let&rsquo;s check the source code, the Get() method of Redistore:
-1 2 3 func (s *RediStore) Get(r *http.Request, name string) (*sessions.Session, error) { return sessions."><meta itemprop="datePublished" content="2023-10-01T12:12:50+00:00" />
+1 2 3 4 5 6 7 // Get a session. // A copied one or new session. session, _ = store.Get(req, &#34;session-key&#34;) // Add a value. session.Values[&#34;foo&#34;] = &#34;bar&#34; // Save. _ = sessions.Save(req, rsp) Let&rsquo;s check the source code, the Get() method of Redistore:
+1 2 3 func (s *RediStore) Get(r *http."><meta itemprop="datePublished" content="2023-10-01T12:12:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-01T12:12:50+00:00" />
-<meta itemprop="wordCount" content="718">
+<meta itemprop="wordCount" content="726">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Gorilla Sessions RedisStore Source Code Analysis"/>
 <meta name="twitter:description" content="To prevent data race, store.Get() always creates a new session (or make a copy) and returns the session to user.
-1 2 3 4 5 6 // Get a session. session, _ = store.Get(req, &#34;session-key&#34;) // Add a value. session.Values[&#34;foo&#34;] = &#34;bar&#34; // Save. _ = sessions.Save(req, rsp) Let&rsquo;s check the source code, the Get() method of Redistore:
-1 2 3 func (s *RediStore) Get(r *http.Request, name string) (*sessions.Session, error) { return sessions."/>
+1 2 3 4 5 6 7 // Get a session. // A copied one or new session. session, _ = store.Get(req, &#34;session-key&#34;) // Add a value. session.Values[&#34;foo&#34;] = &#34;bar&#34; // Save. _ = sessions.Save(req, rsp) Let&rsquo;s check the source code, the Get() method of Redistore:
+1 2 3 func (s *RediStore) Get(r *http."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -160,9 +160,11 @@
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span><span class="lnt">6
+</span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Get a session.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// A copied one or new session.
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">session</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">store</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="s">&#34;session-key&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="c1">// Add a value.
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">session</span><span class="p">.</span><span class="nx">Values</span><span class="p">[</span><span class="s">&#34;foo&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;bar&#34;</span>
@@ -420,9 +422,13 @@
           <a href="/tags/golang/">golang</a>
           </div>
       <nav class="post-nav">
-        
-        <a class="next" href="/post/database/redis/002-redis-commands/">
-            <span class="next-text nav-default">Useful Redis Commands</span>
+        <a class="prev" href="/post/database/redis/003-caching/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Caching in Go with Redis - Reading Notes</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/database/redis/001-intro-redis/">
+            <span class="next-text nav-default">Introduce Redis - In-memory Database</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>
