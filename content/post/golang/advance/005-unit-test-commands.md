@@ -9,7 +9,7 @@ tags:
  - unit test
 ---
 
-## 1. Commands
+## 1. Useful commands
 
 ```shell
 $ go test -run "ExampleSession|TestSession" -v
@@ -31,7 +31,7 @@ Note that the `-run` flag is used for specifying **test functions**, not **bench
 	do not match the regular expression.
 # Flags below can be used with flags above.
 -race
- enable data race detection.
+	enable data race detection.
 -cover
 	enable code coverage instrumentation.
 ```
@@ -40,14 +40,14 @@ Note that enable benchmark by using `-bench` does not disable the normal `test` 
 
 ```shell
 # Only run BenchmarkStore function:
-$ go test -bench 'BenchmarkStore' -run=xxx
-# when there is just 1 function, no single quote is fine: 
-$ go test -bench BenchmarkStore -run=xxx
+$ go test -run=xxx -bench 'BenchmarkStore'
+# when there is just one function, no single quote is fine: 
+$ go test -run=xxx -bench BenchmarkStore
 ```
 
 Learn more: [go command - cmd/go - Go Packages](https://pkg.go.dev/cmd/go#hdr-Testing_flags) 
 
-## 2. Benchmark test
+## 2. `-bench` & `-benchmem`
 
 The benchmark tool only reports heap allocations. Stack allocations via escape analysis are less costly, possibly free, so are not reported.
 
@@ -71,14 +71,14 @@ Source:
 - https://stackoverflow.com/questions/56832207/golang-benchmark-why-does-allocs-op-show-0-b-op
 - https://stackoverflow.com/a/35588683/16317008
 
-## 3. Data race test
+## 3. `-race`
 
 ```shell
 # TestSession is the test function
-$ go test -race -run "TestSession" -v
+$ go test -race -run TestSession -v
 ```
 
-## 4. `go test` 
+## 4. Main command: `go test` 
 
 `go test` recompiles each package along with any files with names matching the file pattern `*_test.go`. These additional files can contain **test functions**, **benchmark functions**, **fuzz tests** and **example functions**. 
 

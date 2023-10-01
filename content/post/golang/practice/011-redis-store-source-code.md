@@ -12,6 +12,7 @@ To prevent data race, `store.Get()` always creates a new session (or make a copy
 
 ```go
 // Get a session.
+// A copied one or new session.
 session, _ = store.Get(req, "session-key")
 // Add a value.
 session.Values["foo"] = "bar"

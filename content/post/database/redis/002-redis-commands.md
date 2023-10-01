@@ -6,7 +6,6 @@ categories:
 tags:
  - database
  - redis
-typora-root-url: ../../../../static
 ---
 
 ## 1. Install & run redis server

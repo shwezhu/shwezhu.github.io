@@ -1,6 +1,6 @@
 ---
 title: Introduce Redis - In-memory Database
-date: 2023-08-18 10:40:58
+date: 2023-10-01 10:40:58
 categories:
  - database
 tags:
@@ -58,7 +58,7 @@ Figure 3 shows the basics of how a hash is stored. The key is associated with a 
 
 Source: 
 
-- https://thenewstack.io/redis-data-types-the-basics/
+- [Redis Data Types: The Basics - The New Stack](https://thenewstack.io/redis-data-types-the-basics/)
 
 - https://youtu.be/-KdITaRkQ-U?si=aAQDQfZvUhqGn800
 
@@ -131,35 +131,43 @@ Bu you should know that they are string!
 >
 > A Redis hash is a data type that represents a mapping between a string field and a string value. 
 
-## 3. Use Cases
+## 3. Redis features
 
-### 3.1. Session Store
+- **Atomic Operations**: Redis operations are atomic, ensuring data integrity and consistency, even in concurrent environments, a feature particularly complementary to Go’s concurrent capabilities.
+
+- **Persistence**: Even though Redis is an in-memory store, it offers optional durability. This means you can periodically save the data in memory to disk without compromising performance.
+  - Redis provides different methods to persist data on disk without sacrificing much performance. Configuring the right persistence option can make a significant impact.
+  - **RDB Snapshots**: RDB persistence offers point-in-time snapshots of your dataset at specified intervals.
+  - **Append-Only File (AOF)**: Logs every write operation received by the server, allowing complete data recovery.
+
+- Versatility: Redis isn’t just a simple key-value store. It supports various data structures like strings, hashes, lists, sets, and more, making it adaptable to diverse caching needs.
+
+- Scalability: With features like replication, partitioning, and clustering, Redis is designed for high availability and horizontal scaling, catering to applications of all sizes.
+  - **Horizontal Scaling**: Using Redis Cluster, you can distribute data across multiple machines.
+  - **Vertical Scaling**: Increasing the hardware resources (CPU, Memory) of your existing Redis server.
+  - **Replication**: Setting up master-slave replication to distribute read queries among multiple nodes.
+
+- Time-to-Live (TTL): Redis supports the assignment of expiration times to keys, making it conducive to caching scenarios.
+
+Source: 
+
+[Go-Redis Caching: Strategies, Best Practices & Common Pitfalls](https://voskan.host/2023/08/14/golang-redis-caching/) 
+
+[Complete Guide to Redis in Go - From Installation to Advanced Features | Master Redis with Golang](https://voskan.host/2023/08/10/redis-and-golang-complete-guide/)
+
+## 4. Use cases
+
+### 4.1. Session Store
 
 There are many ways to save sessions, in-memory, file, database and Redis, if you don't know session, please refer to: [Cookie & Session](https://davidzhu.xyz/post/cs-basics/005-session-cookie/)
 
-### 3.2. Caching
+### 4.2. Caching
 
-- Cache-Aside Pattern
-
-- Read/Write Through Pattern
-
-- Write Behind Caching Pattern
-
-For data that is frequently needed or retrieved by app users, a [cache](https://redislabs.com/redis-enterprise/use-cases/) would serve as a temporary data store for quick and fast retrieval without the need for extra database round trips. 
-
-<img src="/001-intro-redis/1.png" alt="1" style="zoom:50%;" />
-
-learn more:
-
-- [Redis Tutorial: Exploring Data Types, Architecture, and Key Features](https://www.atatus.com/blog/redis-tutorial-exploring-data-types-architecture-and-key-features/)
-
-- [Cache vs. Session Store | Redis](https://redis.com/blog/cache-vs-session-store/)
+Learn more: 
 
 References: 
 
 - [Install Redis on macOS | Redis](https://redis.io/docs/getting-started/installation/install-redis-on-mac-os/)
 - [Redis CLI | Redis](https://redis.io/docs/ui/cli/)
 - [Redis: In-memory database. How it works and Why you should use it | The Home of Redis Developers](https://developer.redis.com/explore/what-is-redis/)
-- [Redis - Cache-Aside Pattern](https://medium.com/bliblidotcom-techblog/redis-cache-aside-pattern-72fff2e4f927)
-- [全网最详细Redis教程之缓存原理&设计 - 掘金](https://juejin.cn/post/7044366350654898207)
 
