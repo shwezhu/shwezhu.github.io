@@ -16,7 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Context Switch In a CPU, the term &amp;ldquo;context&amp;rdquo; refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the address of the instruction to be executed immediately after the current one. In computing, a context switch" />
+<meta name="author" content="David" /><meta name="description" content="1. Context Switch In a CPU, the term &amp;ldquo;context&amp;rdquo; refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the address of the instruction to be executed immediately after the current one.
+In computing, a context switch is the process of storing the state of a process or thread, so that it can be restored and resume execution at a later point, and then restoring a different, previously saved, state." />
 
 
 
@@ -40,18 +41,21 @@
 
 
 <meta property="og:title" content="Context Switching" />
-<meta property="og:description" content="1. Context Switch In a CPU, the term &ldquo;context&rdquo; refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the address of the instruction to be executed immediately after the current one. In computing, a context switch" />
+<meta property="og:description" content="1. Context Switch In a CPU, the term &ldquo;context&rdquo; refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the address of the instruction to be executed immediately after the current one.
+In computing, a context switch is the process of storing the state of a process or thread, so that it can be restored and resume execution at a later point, and then restoring a different, previously saved, state." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/cs-basics/008-context-switching/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-27T16:29:15+00:00" />
 <meta property="article:modified_time" content="2023-05-27T16:29:15+00:00" />
 <meta itemprop="name" content="Context Switching">
-<meta itemprop="description" content="1. Context Switch In a CPU, the term &ldquo;context&rdquo; refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the address of the instruction to be executed immediately after the current one. In computing, a context switch"><meta itemprop="datePublished" content="2023-05-27T16:29:15+00:00" />
+<meta itemprop="description" content="1. Context Switch In a CPU, the term &ldquo;context&rdquo; refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the address of the instruction to be executed immediately after the current one.
+In computing, a context switch is the process of storing the state of a process or thread, so that it can be restored and resume execution at a later point, and then restoring a different, previously saved, state."><meta itemprop="datePublished" content="2023-05-27T16:29:15+00:00" />
 <meta itemprop="dateModified" content="2023-05-27T16:29:15+00:00" />
-<meta itemprop="wordCount" content="1104">
+<meta itemprop="wordCount" content="1035">
 <meta itemprop="keywords" content="concurrency,cs basics," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Context Switching"/>
-<meta name="twitter:description" content="1. Context Switch In a CPU, the term &ldquo;context&rdquo; refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the address of the instruction to be executed immediately after the current one. In computing, a context switch"/>
+<meta name="twitter:description" content="1. Context Switch In a CPU, the term &ldquo;context&rdquo; refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the address of the instruction to be executed immediately after the current one.
+In computing, a context switch is the process of storing the state of a process or thread, so that it can be restored and resume execution at a later point, and then restoring a different, previously saved, state."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -168,12 +172,11 @@
     <div class="post-content">
       <h2 id="1-context-switch">1. Context Switch</h2>
 <p>In a CPU, the term &ldquo;context&rdquo; refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the <strong>address of the instruction</strong> to be executed immediately after the current one.</p>
-<p>In computing, a context switch is the process of storing the state of a process or thread, so that it can be restored and resume execution at a later point, and then restoring a different, previously saved, state. 分两步, 先存一个线程或进程的state然后再恢复另一个的state去执行.</p>
+<p>In computing, a context switch is the process of storing the state of a process or thread, so that it can be restored and resume execution at a later point, and then restoring a different, previously saved, state. Two steps, the first step is to store the state of the thread or process and then restore the state of another.</p>
 <h2 id="2-two-data-structure-pcb--tcb">2. Two Data Structure: PCB &amp; TCB</h2>
-<p>上面说的state就是线程进程相关的信息, 分别在PCB (Process) 和TCB (Thread) 中,</p>
+<p>The &lsquo;state&rsquo; mentioned above is thread or process related information, stored in PCB (Process) and TCB (Thread) respectively.</p>
 <h3 id="21-process-control-block-pcb">2.1 Process Control Block (PCB)</h3>
 <p>A process control block (PCB) contains information about the process, i.e. registers, PID, priority, etc. The process table is an array of PCBs, that means logically contains a PCB for all of the current processes in the system.</p>
-<p>这里列举一些基础的PCB的内容(省略了一些, 具体可以去维基百科查看):</p>
 <ul>
 <li>Process State – new, ready, running, waiting, dead;</li>
 <li>Process Number (PID) – unique identification number for each process (also known as Process ID);</li>
@@ -217,7 +220,7 @@
 </ul>
 </li>
 </ul>
-<p>参考:</p>
+<p>References:</p>
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Context_switch">Context switch</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Process_control_block">Process control block</a></li>
@@ -252,7 +255,7 @@
       <nav class="post-nav">
         <a class="prev" href="/post/cs-basics/007-thread-process/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">并发学习之线程和进程 (Thread Stack)</span>
+            <span class="prev-text nav-default">Thread Stack and CPU Cores</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         <a class="next" href="/post/other/003-go-runtime-complie-c/">

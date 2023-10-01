@@ -48,7 +48,7 @@
 <meta itemprop="name" content="encoding/gob &amp; encoding/json in Go">
 <meta itemprop="description" content="1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’"><meta itemprop="datePublished" content="2023-08-31T11:38:20+00:00" />
 <meta itemprop="dateModified" content="2023-08-31T11:38:20+00:00" />
-<meta itemprop="wordCount" content="2469">
+<meta itemprop="wordCount" content="2713">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="encoding/gob &amp; encoding/json in Go"/>
 <meta name="twitter:description" content="1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’"/>
@@ -727,6 +727,72 @@
 </div><blockquote>
 <p>⚠️Note: <em>Channel</em>, complex, and <em>function</em> values cannot be encoded in JSON. Attempting to encode such a value causes <em>Marshal</em> to return an UnsupportedTypeError. <a href="https://pkg.go.dev/encoding/json">json package - encoding/json - Go Packages</a></p>
 </blockquote>
+<p>In the past, if you use <code>json.Marshal()</code> to encode map, you need to ensure that the type of the key is strin, otherwise, it will fail, It&rsquo;s not because of Go, but because of Json: Json does not support anything else than strings for keys.</p>
+<p>Learn more: <a href="https://stackoverflow.com/questions/24284612/failed-to-json-marshal-map-with-non-string-keys">https://stackoverflow.com/questions/24284612/failed-to-json-marshal-map-with-non-string-keys</a></p>
+<p>But now you can use <code>json.Marshal()</code> to encode the map whose key&rsquo;s type is int, but not float:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">float32</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">m</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;helllo&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">b</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// panic: json: unsupported type: map[float32]string
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Therefore, you may want do something like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// JSONSerializer encode the session map to JSON.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">JSONSerializer</span> <span class="kd">struct</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Serialize to JSON. Will err if there are unmarshalable key values
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">JSONSerializer</span><span class="p">)</span> <span class="nf">Serialize</span><span class="p">(</span><span class="nx">ss</span> <span class="o">*</span><span class="nx">sessions</span><span class="p">.</span><span class="nx">Session</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{},</span> <span class="nb">len</span><span class="p">(</span><span class="nx">ss</span><span class="p">.</span><span class="nx">Values</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ss</span><span class="p">.</span><span class="nx">Values</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">ks</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">k</span><span class="p">.(</span><span class="kt">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">err</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Non-string key value, cannot serialize session to JSON: %v&#34;</span><span class="p">,</span> <span class="nx">k</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;redistore.JSONSerializer.serialize() Error: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">m</span><span class="p">[</span><span class="nx">ks</span><span class="p">]</span> <span class="p">=</span> <span class="nx">v</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Code from: <a href="https://github.com/boj/redistore">https://github.com/boj/redistore</a></p>
+<p>Now support for non string key types for maps for json Marshal/UnMarshal has been added through the use of <a href="https://golang.org/pkg/encoding/#TextMarshaler">TextMarshaler</a> and <a href="https://golang.org/pkg/encoding/#TextUnmarshaler">TextUnmarshaler</a> interfaces <a href="https://go-review.googlesource.com/c/go/+/20356/1">here</a>. You could just implement these interfaces for your key types and then <code>json.Marshal</code> would work as expected. Learn more: <a href="https://stackoverflow.com/a/55879732/16317008">https://stackoverflow.com/a/55879732/16317008</a></p>
 <h3 id="32-jsonunmarshal">3.2. <code>json.Unmarshal()</code></h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

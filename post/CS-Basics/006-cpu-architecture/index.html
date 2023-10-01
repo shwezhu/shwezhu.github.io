@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. CPU 结构 单核CPU的基本结构如下: 可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register &#43; Cache), 然后由通过总线进行IO与Main Memory进行通信, 那么多" />
+<meta name="author" content="David" /><meta name="description" content="1. CPU structure Single core CPU: The CPU core consists of three parts: ALU, CU and Memory (Register &#43; Cache), The multiple cores CPU has more than one core (ALU, CU, Memory (Register &#43; Cache)) to execute instructions: 2. Hyper-threading &amp;amp; Physical threads A single physical core with hyper-threading or simultaneous multithreading technology appears as two logical cores to an operating system. The CPU is still a single CPU, so" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="Hyper-Threading &amp; Physical Threads" />
-<meta property="og:description" content="1. CPU 结构 单核CPU的基本结构如下: 可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register &#43; Cache), 然后由通过总线进行IO与Main Memory进行通信, 那么多" />
+<meta property="og:description" content="1. CPU structure Single core CPU: The CPU core consists of three parts: ALU, CU and Memory (Register &#43; Cache), The multiple cores CPU has more than one core (ALU, CU, Memory (Register &#43; Cache)) to execute instructions: 2. Hyper-threading &amp; Physical threads A single physical core with hyper-threading or simultaneous multithreading technology appears as two logical cores to an operating system. The CPU is still a single CPU, so" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/cs-basics/006-cpu-architecture/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-28T15:47:18+00:00" />
 <meta property="article:modified_time" content="2023-05-28T15:47:18+00:00" />
 <meta itemprop="name" content="Hyper-Threading &amp; Physical Threads">
-<meta itemprop="description" content="1. CPU 结构 单核CPU的基本结构如下: 可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register &#43; Cache), 然后由通过总线进行IO与Main Memory进行通信, 那么多"><meta itemprop="datePublished" content="2023-05-28T15:47:18+00:00" />
+<meta itemprop="description" content="1. CPU structure Single core CPU: The CPU core consists of three parts: ALU, CU and Memory (Register &#43; Cache), The multiple cores CPU has more than one core (ALU, CU, Memory (Register &#43; Cache)) to execute instructions: 2. Hyper-threading &amp; Physical threads A single physical core with hyper-threading or simultaneous multithreading technology appears as two logical cores to an operating system. The CPU is still a single CPU, so"><meta itemprop="datePublished" content="2023-05-28T15:47:18+00:00" />
 <meta itemprop="dateModified" content="2023-05-28T15:47:18+00:00" />
-<meta itemprop="wordCount" content="497">
+<meta itemprop="wordCount" content="303">
 <meta itemprop="keywords" content="concurrency,cs basics," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Hyper-Threading &amp; Physical Threads"/>
-<meta name="twitter:description" content="1. CPU 结构 单核CPU的基本结构如下: 可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register &#43; Cache), 然后由通过总线进行IO与Main Memory进行通信, 那么多"/>
+<meta name="twitter:description" content="1. CPU structure Single core CPU: The CPU core consists of three parts: ALU, CU and Memory (Register &#43; Cache), The multiple cores CPU has more than one core (ALU, CU, Memory (Register &#43; Cache)) to execute instructions: 2. Hyper-threading &amp; Physical threads A single physical core with hyper-threading or simultaneous multithreading technology appears as two logical cores to an operating system. The CPU is still a single CPU, so"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -142,8 +142,8 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#1-cpu-结构">1. CPU 结构</a></li>
-        <li><a href="#2-hyper-threading--physical-threads">2. Hyper-Threading &amp; Physical Threads</a></li>
+        <li><a href="#1-cpu-structure">1. CPU structure</a></li>
+        <li><a href="#2-hyper-threading--physical-threads">2. Hyper-threading &amp; Physical threads</a></li>
       </ul>
     </li>
   </ul>
@@ -151,22 +151,20 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-cpu-结构">1. CPU 结构</h2>
-<p>单核CPU的基本结构如下:</p>
-<p><img src="/006-cpu-architecture/a.png" alt="a"></p>
-<p>可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register + Cache), 然后由通过总线进行IO与Main Memory进行通信,</p>
-<p>那么多核CPU即有多个这种独立的核心(ALU, CU, Memory (Register + Cache))执行命令, 最后的结果交给与CPU相连的总线进行处理, 多核CPU架构如下:</p>
-<p><img src="/006-cpu-architecture/b.png" alt="b"></p>
-<h2 id="2-hyper-threading--physical-threads">2. Hyper-Threading &amp; Physical Threads</h2>
-<p>A single physical CPU core with hyper-threading or simultaneous multithreading appears as two logical CPUs to an operating system. The CPU is still a single CPU, so it’s a little bit of a cheat. While the operating system sees two CPUs for each core, the actual CPU hardware only has a single set of execution resources for each core. The CPU pretends it has more cores than it does, and it uses its own logic to speed up program execution. In other words, the operating system is tricked into seeing two CPUs for each actual CPU core.</p>
-<p>Hyper-threading allows the two logical CPU cores to share physical execution resources. This can speed things up somewhat — if one virtual CPU is stalled and waiting, the other virtual CPU can borrow its execution resources. Hyper-threading can speed your system up, but it’s nowhere near as good as having actual additional cores.</p>
+      <h2 id="1-cpu-structure">1. CPU structure</h2>
+<p>Single core CPU:</p>
+<img src="/006-cpu-architecture/a.png" alt="a" style="zoom:50%;" />
+<p>The CPU core consists of three parts: ALU, CU and Memory (Register + Cache), The multiple cores CPU has more than one core (ALU, CU, Memory (Register + Cache)) to execute instructions:</p>
+<img src="/006-cpu-architecture/b.png" alt="b" style="zoom:50%;" />
+<h2 id="2-hyper-threading--physical-threads">2. Hyper-threading &amp; Physical threads</h2>
+<p>A single physical core with hyper-threading or simultaneous multithreading technology appears as two logical cores to an operating system. The CPU is still a single CPU, so it’s a little bit of a cheat. This can speed things up somewhat — if one virtual CPU is stalled and waiting, the other virtual CPU can borrow its execution resources.</p>
 <p>Most processors can use a process called simultaneous multithreading or, if it’s an Intel processor, <strong>Hyper-threading</strong> (the two terms mean the same thing) to <strong>split a core into virtual cores, which are called threads</strong>. For example, AMD CPUs with four cores use simultaneous multithreading to provide eight threads, and most Intel CPUs with two cores use Hyper-threading to provide four threads.</p>
 <p>Some apps take better advantage of multiple threads than others. Lightly-threaded apps, like games, don&rsquo;t benefit from a lot of cores, while most video editing and animation programs can run much faster with extra threads.</p>
 <blockquote>
 <p><strong>Note:</strong> Strictly speaking, <em>only</em> Intel processors have hyper-threading, however, the term is sometimes used colloquially to refer to any kind of simultaneous multithreading.</p>
 </blockquote>
 <p>The Windows Task Manager shows this fairly well. Here, for example, you can see that this system has one actual CPU (socket) and 8 cores. Simultaneous multithreading makes each core look like two CPUs to the operating system, so it shows 16 logical processors.</p>
-<p><img src="/006-cpu-architecture/c.png" alt="c"></p>
+<img src="/006-cpu-architecture/c.png" alt="c" style="zoom:50%;" />
 <p>参考:</p>
 <ul>
 <li><a href="https://www.howtogeek.com/194756/cpu-basics-multiple-cpus-cores-and-hyper-threading-explained/">CPU Basics: What Are Cores, Hyper-Threading, and Multiple CPUs?</a></li>

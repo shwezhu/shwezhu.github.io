@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="0. 常用语句 1 2 3 4 5 6 7 8 show tables; show columns from user; ALTER TABLE user ADD COLUMN email VARCHAR(50) UNIQUE NOT NULL AFTER password; ALTER TABLE user DROP COLUMN email; 1. Naming Conventions General Using lowercase will help speed typing, avoid mistakes as MYSQL is case sensitive. Space replaced with Underscore — Using space between words is not advised. Numbers are not for" />
+<meta name="author" content="David" /><meta name="description" content="1. Useful commands Enter MySQL server: 1 2 3 4 $ mysql -u root -p778899 mysql&amp;gt; show databases; mysql&amp;gt; create database gptbot; mysql&amp;gt; use gptbot; Create table: 1 2 3 4 5 6 CREATE TABLE `user` ( `user_id` SMALLINT NOT NULL AUTO_INCREMENT, `username` VARCHAR(20) NOT NULL, `password` VARCHAR(20) NOT NULL, PRIMARY KEY (`user_id`) ); 1 2 3 4 5 6 7 8 show tables; show columns from user; ALTER TABLE" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="MySQL 命名规则 时间字符串类型 基础创表语句" />
-<meta property="og:description" content="0. 常用语句 1 2 3 4 5 6 7 8 show tables; show columns from user; ALTER TABLE user ADD COLUMN email VARCHAR(50) UNIQUE NOT NULL AFTER password; ALTER TABLE user DROP COLUMN email; 1. Naming Conventions General Using lowercase will help speed typing, avoid mistakes as MYSQL is case sensitive. Space replaced with Underscore — Using space between words is not advised. Numbers are not for" />
+<meta property="og:description" content="1. Useful commands Enter MySQL server: 1 2 3 4 $ mysql -u root -p778899 mysql&gt; show databases; mysql&gt; create database gptbot; mysql&gt; use gptbot; Create table: 1 2 3 4 5 6 CREATE TABLE `user` ( `user_id` SMALLINT NOT NULL AUTO_INCREMENT, `username` VARCHAR(20) NOT NULL, `password` VARCHAR(20) NOT NULL, PRIMARY KEY (`user_id`) ); 1 2 3 4 5 6 7 8 show tables; show columns from user; ALTER TABLE" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/database/mysql/001-mysql-basics/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-07-12T08:51:35+00:00" />
 <meta property="article:modified_time" content="2023-07-12T08:51:35+00:00" />
 <meta itemprop="name" content="MySQL 命名规则 时间字符串类型 基础创表语句">
-<meta itemprop="description" content="0. 常用语句 1 2 3 4 5 6 7 8 show tables; show columns from user; ALTER TABLE user ADD COLUMN email VARCHAR(50) UNIQUE NOT NULL AFTER password; ALTER TABLE user DROP COLUMN email; 1. Naming Conventions General Using lowercase will help speed typing, avoid mistakes as MYSQL is case sensitive. Space replaced with Underscore — Using space between words is not advised. Numbers are not for"><meta itemprop="datePublished" content="2023-07-12T08:51:35+00:00" />
+<meta itemprop="description" content="1. Useful commands Enter MySQL server: 1 2 3 4 $ mysql -u root -p778899 mysql&gt; show databases; mysql&gt; create database gptbot; mysql&gt; use gptbot; Create table: 1 2 3 4 5 6 CREATE TABLE `user` ( `user_id` SMALLINT NOT NULL AUTO_INCREMENT, `username` VARCHAR(20) NOT NULL, `password` VARCHAR(20) NOT NULL, PRIMARY KEY (`user_id`) ); 1 2 3 4 5 6 7 8 show tables; show columns from user; ALTER TABLE"><meta itemprop="datePublished" content="2023-07-12T08:51:35+00:00" />
 <meta itemprop="dateModified" content="2023-07-12T08:51:35+00:00" />
-<meta itemprop="wordCount" content="1685">
+<meta itemprop="wordCount" content="1664">
 <meta itemprop="keywords" content="database," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="MySQL 命名规则 时间字符串类型 基础创表语句"/>
-<meta name="twitter:description" content="0. 常用语句 1 2 3 4 5 6 7 8 show tables; show columns from user; ALTER TABLE user ADD COLUMN email VARCHAR(50) UNIQUE NOT NULL AFTER password; ALTER TABLE user DROP COLUMN email; 1. Naming Conventions General Using lowercase will help speed typing, avoid mistakes as MYSQL is case sensitive. Space replaced with Underscore — Using space between words is not advised. Numbers are not for"/>
+<meta name="twitter:description" content="1. Useful commands Enter MySQL server: 1 2 3 4 $ mysql -u root -p778899 mysql&gt; show databases; mysql&gt; create database gptbot; mysql&gt; use gptbot; Create table: 1 2 3 4 5 6 CREATE TABLE `user` ( `user_id` SMALLINT NOT NULL AUTO_INCREMENT, `username` VARCHAR(20) NOT NULL, `password` VARCHAR(20) NOT NULL, PRIMARY KEY (`user_id`) ); 1 2 3 4 5 6 7 8 show tables; show columns from user; ALTER TABLE"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -142,19 +142,18 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#0-常用语句">0. 常用语句</a></li>
-        <li><a href="#1-naming-conventions">1. Naming Conventions</a></li>
-        <li><a href="#2-基础命令">2. 基础命令</a></li>
+        <li><a href="#1-useful-commands">1. Useful commands</a></li>
+        <li><a href="#2-naming-conventions">2. Naming conventions</a></li>
         <li><a href="#3-数据类型">3. 数据类型</a>
           <ul>
             <li><a href="#31-数值类型">3.1. 数值类型</a></li>
             <li><a href="#32-字符串类型">3.2. 字符串类型</a></li>
           </ul>
         </li>
-        <li><a href="#4-数据库如何存储时间">4. 数据库如何存储时间</a>
+        <li><a href="#4-存储时间">4. 存储时间</a>
           <ul>
             <li><a href="#41-不要用字符串存储日期">4.1. 不要用字符串存储日期</a></li>
-            <li><a href="#42-datetime-和-timestamp-的选择">4.2. Datetime 和 Timestamp 的选择</a></li>
+            <li><a href="#42-datetime-and-timestamp">4.2. Datetime and Timestamp</a></li>
           </ul>
         </li>
         <li><a href="#5-查看-mysql-warning">5. 查看 MySQL Warning</a></li>
@@ -166,8 +165,42 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="0-常用语句">0. 常用语句</h2>
+      <h2 id="1-useful-commands">1. Useful commands</h2>
+<p>Enter MySQL server:</p>
 <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ mysql -u root -p778899
+</span></span><span class="line"><span class="cl">mysql&gt; show databases<span class="p">;</span>
+</span></span><span class="line"><span class="cl">mysql&gt; create database gptbot<span class="p">;</span>
+</span></span><span class="line"><span class="cl">mysql&gt; use gptbot<span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Create table:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">CREATE TABLE <span class="sb">`</span>user<span class="sb">`</span> <span class="o">(</span>
+</span></span><span class="line"><span class="cl">  <span class="sb">`</span>user_id<span class="sb">`</span> SMALLINT NOT NULL AUTO_INCREMENT,
+</span></span><span class="line"><span class="cl">  <span class="sb">`</span>username<span class="sb">`</span> VARCHAR<span class="o">(</span>20<span class="o">)</span> NOT NULL,
+</span></span><span class="line"><span class="cl">  <span class="sb">`</span>password<span class="sb">`</span> VARCHAR<span class="o">(</span>20<span class="o">)</span> NOT NULL,
+</span></span><span class="line"><span class="cl">  PRIMARY KEY <span class="o">(</span><span class="sb">`</span>user_id<span class="sb">`</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">)</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -189,7 +222,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">DROP</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">email</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="1-naming-conventions">1. Naming Conventions</h2>
+</div><h2 id="2-naming-conventions">2. Naming conventions</h2>
 <p><strong>General</strong></p>
 <ol>
 <li>
@@ -214,42 +247,7 @@
 <li>Do not add a column with the same name as its table and vice versa.</li>
 <li>I generally (not always) have a auto increment PK. I use the following convention: <code>tablename_id</code> (e.g. <code>foo_id</code>, <code>foo_bar_id</code>, etc.).</li>
 </ol>
-<h2 id="2-基础命令">2. 基础命令</h2>
-<p>登录 MySQL 服务器:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ mysql -u root -p778899
-</span></span><span class="line"><span class="cl">mysql&gt; show databases<span class="p">;</span>
-</span></span><span class="line"><span class="cl">mysql&gt; create database gptbot<span class="p">;</span>
-</span></span><span class="line"><span class="cl">mysql&gt; use gptbot<span class="p">;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>创建表:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">CREATE TABLE <span class="sb">`</span>user<span class="sb">`</span> <span class="o">(</span>
-</span></span><span class="line"><span class="cl">  <span class="sb">`</span>user_id<span class="sb">`</span> SMALLINT NOT NULL AUTO_INCREMENT,
-</span></span><span class="line"><span class="cl">  <span class="sb">`</span>username<span class="sb">`</span> VARCHAR<span class="o">(</span>20<span class="o">)</span> NOT NULL,
-</span></span><span class="line"><span class="cl">  <span class="sb">`</span>password<span class="sb">`</span> VARCHAR<span class="o">(</span>20<span class="o">)</span> NOT NULL,
-</span></span><span class="line"><span class="cl">  PRIMARY KEY <span class="o">(</span><span class="sb">`</span>user_id<span class="sb">`</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">)</span><span class="p">;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="3-数据类型">3. 数据类型</h2>
+<h2 id="3-数据类型">3. 数据类型</h2>
 <h3 id="31-数值类型">3.1. 数值类型</h3>
 <p>整数值的范围越大，那么占用的空间就越大，合理设置数据类型很关键, 浮点数小数一般都会用DESCIMAL数据类型。</p>
 <p><strong>人员年龄字段的数据类型选择</strong></p>
@@ -270,13 +268,13 @@
 <p>VARCHAR 是变长字符串, 当我们指定存储字符串的长度为10, 写入了几个文本字符串就算几个, <strong>不会用空格进行补充</strong>, 由于需要计算写入的字符串数量与总长度进行比较, 因此 VARCHAR 的性能略低与 CHAR。</p>
 </blockquote>
 <p>当明确指定该字段写入的字符串数量，并且一定会写入指定数量的字符串时，选择 CHAR 作为数据类型。当不固定用户会写入多少个字符串时，但是由文字数量限制，此时就使用 VARCHAR 作为数据类型。例如用户名是无法固定的，采用 VARCHAR 作为数据类型。</p>
-<h2 id="4-数据库如何存储时间">4. 数据库如何存储时间</h2>
+<h2 id="4-存储时间">4. 存储时间</h2>
 <h3 id="41-不要用字符串存储日期">4.1. 不要用字符串存储日期</h3>
 <ul>
 <li>字符串占用的空间更大</li>
 <li>字符串存储的日期比较效率比较低（逐个字符进行比对），无法用日期相关的 API 进行计算和比较</li>
 </ul>
-<h3 id="42-datetime-和-timestamp-的选择">4.2. Datetime 和 Timestamp 的选择</h3>
+<h3 id="42-datetime-and-timestamp">4.2. Datetime and Timestamp</h3>
 <p><code>Datetime</code> 和 <code>Timestamp</code> 是 MySQL 提供的两种比较相似的保存时间的数据类型, 通常我们都会首选 <code>Timestamp</code>. 因为DateTime类型没有时区信息的, 而Timestamp可以存储time zone信息, 并且做转换.</p>
 <p>Timestamp 只需要使用 4 个字节的存储空间，但是 DateTime 需要耗费 8 个字节的存储空间。但是，这样同样造成了一个问题，Timestamp 表示的时间范围更小。</p>
 <ul>
