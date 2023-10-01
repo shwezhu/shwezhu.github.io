@@ -12,17 +12,15 @@ tags:
 
 In a CPU, the term "context" refers to the data in the registers and program counter (PC) at a specific moment in time. A register holds the current CPU instruction. A program counter, also known as an instruction address register, is a small amount of fast memory that holds the **address of the instruction** to be executed immediately after the current one.
 
-In computing, a context switch is the process of storing the state of a process or thread, so that it can be restored and resume execution at a later point, and then restoring a different, previously saved, state. 分两步, 先存一个线程或进程的state然后再恢复另一个的state去执行. 
+In computing, a context switch is the process of storing the state of a process or thread, so that it can be restored and resume execution at a later point, and then restoring a different, previously saved, state. Two steps, the first step is to store the state of the thread or process and then restore the state of another. 
 
 ## 2. Two Data Structure: PCB & TCB
 
-上面说的state就是线程进程相关的信息, 分别在PCB (Process) 和TCB (Thread) 中, 
+The 'state' mentioned above is thread or process related information, stored in PCB (Process) and TCB (Thread) respectively.
 
 ### 2.1 Process Control Block (PCB)
 
 A process control block (PCB) contains information about the process, i.e. registers, PID, priority, etc. The process table is an array of PCBs, that means logically contains a PCB for all of the current processes in the system. 
-
-这里列举一些基础的PCB的内容(省略了一些, 具体可以去维基百科查看):
 
 - Process State – new, ready, running, waiting, dead;
 - Process Number (PID) – unique identification number for each process (also known as Process ID);
@@ -80,7 +78,7 @@ However, certain special instructions require [system calls](https://en.wikipedi
   - system call
   -  interrupt handling: CPU requests data from a disk
 
-参考:
+References:
 
 - [Context switch](https://en.wikipedia.org/wiki/Context_switch)
 - [Process control block](https://en.wikipedia.org/wiki/Process_control_block)

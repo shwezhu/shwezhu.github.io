@@ -6,7 +6,27 @@ categories:
 tags:
  - database
 ---
-## 0. 常用语句
+## 1. Useful commands
+
+Enter MySQL server:
+
+```shell
+$ mysql -u root -p778899
+mysql> show databases;
+mysql> create database gptbot;
+mysql> use gptbot;
+```
+
+Create table:
+
+```shell
+CREATE TABLE `user` (
+  `user_id` SMALLINT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(20) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`user_id`)
+);
+```
 
 ```mysql
 show tables;
@@ -19,7 +39,7 @@ ALTER TABLE user
 DROP COLUMN email;
 ```
 
-## 1. Naming Conventions
+## 2. Naming conventions
 
 **General**
 
@@ -40,28 +60,6 @@ DROP COLUMN email;
 3. Where possible **avoid simply using `id`** as the primary identifier for the table.
 4. Do not add a column with the same name as its table and vice versa.
 5. I generally (not always) have a auto increment PK. I use the following convention: `tablename_id` (e.g. `foo_id`, `foo_bar_id`, etc.).
-
-## 2. 基础命令
-
-登录 MySQL 服务器:
-
-```shell
-$ mysql -u root -p778899
-mysql> show databases;
-mysql> create database gptbot;
-mysql> use gptbot;
-```
-
-创建表:
-
-```shell
-CREATE TABLE `user` (
-  `user_id` SMALLINT NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(20) NOT NULL,
-  `password` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`user_id`)
-);
-```
 
 ## 3. 数据类型
 
@@ -89,14 +87,14 @@ age TINYINT UNSIGNED
 
 当明确指定该字段写入的字符串数量，并且一定会写入指定数量的字符串时，选择 CHAR 作为数据类型。当不固定用户会写入多少个字符串时，但是由文字数量限制，此时就使用 VARCHAR 作为数据类型。例如用户名是无法固定的，采用 VARCHAR 作为数据类型。
 
-## 4. 数据库如何存储时间
+## 4. 存储时间
 
 ### 4.1. 不要用字符串存储日期
 
 - 字符串占用的空间更大
 - 字符串存储的日期比较效率比较低（逐个字符进行比对），无法用日期相关的 API 进行计算和比较
 
-### 4.2. Datetime 和 Timestamp 的选择
+### 4.2. Datetime and Timestamp
 
 `Datetime` 和 `Timestamp` 是 MySQL 提供的两种比较相似的保存时间的数据类型, 通常我们都会首选 `Timestamp`. 因为DateTime类型没有时区信息的, 而Timestamp可以存储time zone信息, 并且做转换. 
 

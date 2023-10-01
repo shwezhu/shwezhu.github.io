@@ -358,6 +358,48 @@ func main() {
 
 > ⚠️Note: *Channel*, complex, and *function* values cannot be encoded in JSON. Attempting to encode such a value causes *Marshal* to return an UnsupportedTypeError. [json package - encoding/json - Go Packages](https://pkg.go.dev/encoding/json)
 
+In the past, if you use `json.Marshal()` to encode map, you need to ensure that the type of the key is strin, otherwise, it will fail, It's not because of Go, but because of Json: Json does not support anything else than strings for keys.
+
+Learn more: https://stackoverflow.com/questions/24284612/failed-to-json-marshal-map-with-non-string-keys
+
+But now you can use `json.Marshal()` to encode the map whose key's type is int, but not float:
+
+```go
+m := make(map[float32]string)
+m[3] = "helllo"
+b, err := json.Marshal(m)
+if err != nil {
+  panic(err)
+}
+// panic: json: unsupported type: map[float32]string
+```
+
+Therefore, you may want do something like this:
+
+```go
+// JSONSerializer encode the session map to JSON.
+type JSONSerializer struct{}
+
+// Serialize to JSON. Will err if there are unmarshalable key values
+func (s JSONSerializer) Serialize(ss *sessions.Session) ([]byte, error) {
+	m := make(map[string]interface{}, len(ss.Values))
+	for k, v := range ss.Values {
+		ks, ok := k.(string)
+		if !ok {
+			err := fmt.Errorf("Non-string key value, cannot serialize session to JSON: %v", k)
+			fmt.Printf("redistore.JSONSerializer.serialize() Error: %v", err)
+			return nil, err
+		}
+		m[ks] = v
+	}
+	return json.Marshal(m)
+}
+```
+
+Code from: https://github.com/boj/redistore
+
+Now support for non string key types for maps for json Marshal/UnMarshal has been added through the use of [TextMarshaler](https://golang.org/pkg/encoding/#TextMarshaler) and [TextUnmarshaler](https://golang.org/pkg/encoding/#TextUnmarshaler) interfaces [here](https://go-review.googlesource.com/c/go/+/20356/1). You could just implement these interfaces for your key types and then `json.Marshal` would work as expected. Learn more: https://stackoverflow.com/a/55879732/16317008
+
 ### 3.2. `json.Unmarshal()`
 
 ```go

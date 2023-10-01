@@ -6,25 +6,22 @@ categories:
 tags:
  - concurrency
  - cs basics
+typora-root-url: ../../../static
 ---
 
-## 1. CPU 结构
+## 1. CPU structure
 
-单核CPU的基本结构如下:
+Single core CPU:
 
-![a](/006-cpu-architecture/a.png)
+<img src="/006-cpu-architecture/a.png" alt="a" style="zoom:50%;" />
 
-可以看到CPU核心分为三个部分 ALU, CU 以及 Memory (Register + Cache), 然后由通过总线进行IO与Main Memory进行通信, 
+The CPU core consists of three parts: ALU, CU and Memory (Register + Cache), The multiple cores CPU has more than one core (ALU, CU, Memory (Register + Cache)) to execute instructions:
 
-那么多核CPU即有多个这种独立的核心(ALU, CU, Memory (Register + Cache))执行命令, 最后的结果交给与CPU相连的总线进行处理, 多核CPU架构如下:
+<img src="/006-cpu-architecture/b.png" alt="b" style="zoom:50%;" />
 
-![b](/006-cpu-architecture/b.png)
+## 2. Hyper-threading & Physical threads
 
-## 2. Hyper-Threading & Physical Threads
-
-A single physical CPU core with hyper-threading or simultaneous multithreading appears as two logical CPUs to an operating system. The CPU is still a single CPU, so it’s a little bit of a cheat. While the operating system sees two CPUs for each core, the actual CPU hardware only has a single set of execution resources for each core. The CPU pretends it has more cores than it does, and it uses its own logic to speed up program execution. In other words, the operating system is tricked into seeing two CPUs for each actual CPU core.
-
-Hyper-threading allows the two logical CPU cores to share physical execution resources. This can speed things up somewhat — if one virtual CPU is stalled and waiting, the other virtual CPU can borrow its execution resources. Hyper-threading can speed your system up, but it’s nowhere near as good as having actual additional cores.
+A single physical core with hyper-threading or simultaneous multithreading technology appears as two logical cores to an operating system. The CPU is still a single CPU, so it’s a little bit of a cheat. This can speed things up somewhat — if one virtual CPU is stalled and waiting, the other virtual CPU can borrow its execution resources.
 
 Most processors can use a process called simultaneous multithreading or, if it’s an Intel processor, **Hyper-threading** (the two terms mean the same thing) to **split a core into virtual cores, which are called threads**. For example, AMD CPUs with four cores use simultaneous multithreading to provide eight threads, and most Intel CPUs with two cores use Hyper-threading to provide four threads. 
 
@@ -34,7 +31,7 @@ Some apps take better advantage of multiple threads than others. Lightly-threade
 
 The Windows Task Manager shows this fairly well. Here, for example, you can see that this system has one actual CPU (socket) and 8 cores. Simultaneous multithreading makes each core look like two CPUs to the operating system, so it shows 16 logical processors.
 
-![c](/006-cpu-architecture/c.png)
+<img src="/006-cpu-architecture/c.png" alt="c" style="zoom:50%;" />
 
 参考:
 
