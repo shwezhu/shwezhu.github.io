@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>什么应该缓存的问题 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="Source: https://www.v2ex.com/t/109856 问题: 就是当前登录的个人信息，比如在v2ex，你的用户名，头像地址，账户余额(铜币银币之类的个数)，最常用的做法，把用户的userid加" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/database/redis/005-caching/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="什么应该缓存的问题" />
+<meta property="og:description" content="Source: https://www.v2ex.com/t/109856 问题: 就是当前登录的个人信息，比如在v2ex，你的用户名，头像地址，账户余额(铜币银币之类的个数)，最常用的做法，把用户的userid加" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/database/redis/005-caching/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-07-02T14:33:58+00:00" />
+<meta property="article:modified_time" content="2023-07-02T14:33:58+00:00" />
+<meta itemprop="name" content="什么应该缓存的问题">
+<meta itemprop="description" content="Source: https://www.v2ex.com/t/109856 问题: 就是当前登录的个人信息，比如在v2ex，你的用户名，头像地址，账户余额(铜币银币之类的个数)，最常用的做法，把用户的userid加"><meta itemprop="datePublished" content="2023-07-02T14:33:58+00:00" />
+<meta itemprop="dateModified" content="2023-07-02T14:33:58+00:00" />
+<meta itemprop="wordCount" content="3041">
+<meta itemprop="keywords" content="database,redis," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="什么应该缓存的问题"/>
+<meta name="twitter:description" content="Source: https://www.v2ex.com/t/109856 问题: 就是当前登录的个人信息，比如在v2ex，你的用户名，头像地址，账户余额(铜币银币之类的个数)，最常用的做法，把用户的userid加"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">什么应该缓存的问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-07-02 </span>
+        <div class="post-category">
+            <a href="/categories/database/"> database </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>Source: <a href="https://www.v2ex.com/t/109856">https://www.v2ex.com/t/109856</a></p>
+<p><strong>问题:</strong></p>
+<p>就是当前登录的个人信息，比如在v2ex，你的用户名，头像地址，账户余额(铜币银币之类的个数)，最常用的做法，把用户的userid加密后保存在cookies中，每次用户访问网页的时候解密userid，然后</p>
+<p>select * from Users where userid=xxxx</p>
+<p>从用户表中获取用户的个人信息，用户名、头像、账户余额。。。等等。</p>
+<p>这样每次打开一个网页，都要查询一次用户信息，于是为了减少数据库查询，把select出来的用户信息保存在session中，以后每次用户信息从session里面取(session用memcache实现，也就是每次到memcach里面取)。</p>
+<p>我现在的疑问是，真的需要缓存用户信息吗？select * from Users where userid=xxxx 语句本身已经很高效，userid是索引字段，现在服务器内存这么大，数据库几乎都可以完全跑在内存中了。我不喜欢用缓存，是因为一旦用了缓存，原本清晰的思路变得复杂，并且控制不好命中率的话，反而会加重系统负担。</p>
+<hr>
+<p><strong>回答:</strong></p>
+<p>需要缓存。这是结论。(注意这里说的需要缓存并不是说什么都需要缓存, 而是针对楼主提的问题说的用户的粉丝列表个人信息需要缓存)</p>
+<p>如果你的网站用户量小的可怜，倒是不必，但加了还是比不加好。</p>
+<p>这里要理解缓存和数据库的作用是同等重要的，也是需要强调的。</p>
+<p>首先需要理解缓存，缓存你可以简单的理解成一个哈希表，通过key就可以取得值。而这个key-value对在内存中，内存的访问极快。如果数据库有索引，那也是相当的快，但索引需要生成文件，如果对大量的key进行索引会导致索引文件数据膨胀，甚至有可能会超过数据文件本身。查询虽然性能消耗的小，但大量的查询性能还是会消耗，相比之下，能节约数据库性能就节约，因为我们程序员是干嘛的？就是为了不必重复劳动。</p>
+<p>既然lz对缓存作用有怀疑，觉得sql的查询性能已经很高了，那么我们可以仔细分析，有这么一种情况：</p>
+<p>1个用户被100个用户关注。</p>
+<p>OK，这样我们如果不使用缓存，加载一个用户的粉丝页面。</p>
+<ol>
+<li>首先通过数据库查询到用户，例如from user where id=xxx。</li>
+<li>然后通过数据库查到粉丝列表，例如from fans where follow_id=xxx。</li>
+<li>显示用户的页面，这里有101个用户。循环查询了from user where id=xxx 101次。</li>
+</ol>
+<p>这个时候你会发现，即便是同一个用户，那么访问一次页面需要101个查询，虽然粉丝已经很少了。即便性能很快，还是需要消耗sql资源。如果一个页面每天被访问1000万次，你就自己能够得到结论。</p>
+<p>如果使用缓存，会有下面的情况：</p>
+<ol>
+<li>首先通过数据库查询到用户，from user where id=xxx，放入缓存。</li>
+<li>通过数据库查询到粉丝列表，from fans where follow_id=xxx列表可以放入缓存。</li>
+<li>显示用户的页面，假设没有任何缓存的情况下，依旧循环查询了from user where id=xxx 100次。</li>
+</ol>
+<p>这个时候再访问同一个页面的时候，假设访问1000万次。</p>
+<ol>
+<li>首先通过缓存看用户是否在缓存里，存在，命中返回。</li>
+<li>看用户的粉丝列表是否在缓存里，存在，命中返回。</li>
+<li>显示用户的页面，100个粉丝的用户都在缓存里，存在，命中返回。</li>
+</ol>
+<p>无需数据库查询。</p>
+<p>至于当用户的粉丝变动了，如何更新缓存呢，一个简单的方法就是删除缓存。假设用户的粉丝取消关注了这个用户。</p>
+<ol>
+<li>删除用户的粉丝列表的缓存。</li>
+</ol>
+<p>那么刷新页面的时候就会下面的情况：</p>
+<ol>
+<li>首先通过缓存看用户是否在缓存里，存在，命中返回。</li>
+<li>看用户的粉丝列表是否在缓存里，不存在，查询数据库from fans where follow_id=xxx，并放入缓存。</li>
+<li>显示用户页面，99个粉丝都在缓存里，存在，命中返回。</li>
+</ol>
+<p>即便访问依旧是1000万次，只有取消关注的那第一次返回查询了一个数据库，并且是lz说的高性能查询。那么数据库服务器依旧没有什么压力。</p>
+<p>至于缓存性能？相当的快，在内存中，可以忽略不计（当然这里也是根据量级来判断，但即便千万用户也可以忽略不计）。</p>
+<p>上面的情况只是一个业务里相当小的情况，有比如你当前打开的v2ex这个页面，加载了多少用户、话题和评论？你可以计算一下缓存的优势。</p>
+<p>-&mdash;</p>
+<p>当然，继续深入的话，我们推荐缓存什么最好？（正确的缓存不会造成不一致）首先提出不好的：</p>
+<ol>
+<li>不要针对页面缓存，这才会造成什么不一致的情况。</li>
+<li>不要针对大块数据进行缓存，下面再说。</li>
+</ol>
+<p>（其实有时候是可以针对一些业务页面进行缓存的，例如上个月到几年前的每个月的财务结算报表）</p>
+<p>要缓存的，最好是最原始的数据。根据上面的情况，例如：</p>
+<ol>
+<li>一个用户的数据库数据的缓存。可以直接映射成一个用户的实例。</li>
+<li>一个用户的粉丝列表的id缓存，必须强调，这里不是粉丝列表的实例的缓存。</li>
+</ol>
+<p>假设通过mc.get(user_key)，那么得到的最好是用户数据库里的原数据。如果mc.get(user_fans_key)，那么得到的就是用户粉丝的<strong>id</strong>缓存。这里详细说明一下，不要针对大块数据进行缓存的原因。</p>
+<p>假设你缓存了大块数据，即拿到用户粉丝的列表不是缓存id，而是缓存对象，那么如果一个用户更新了自己的信息，这个时候并不会删除掉用户的关注列表缓存，对吧，因为粉丝并没有取消关注用户，那么关注列表拿到的用户数就错误了。</p>
+<p>另外一个问题就是如果缓存id，即便有100万个粉丝，内存占用也不大，如果100万个实例呢。。。</p>
+<p>所以，只针对粉丝的id进行缓存是很重要的，举例说明：</p>
+<ol>
+<li>用户有100个粉丝，并且缓存了。</li>
+<li>一个粉丝改了自己的名字，这个时候把粉丝的用户缓存失效。</li>
+<li>用户查询自己的粉丝时，发现99个用户缓存命中，1个用户缓存失效，查询并放入缓存。</li>
+</ol>
+<p>因为在2里粉丝并没有取消关注用户，不会刷新粉丝缓存，如果这个时候缓存的是用户对象，那就出现了不一致。</p>
+<p>-&mdash;</p>
+<p>我们可以再发散，为什么现在redis比memcached更热门，因为redis可以直接在内存里排序。假设我有一个需求是最新关注的粉丝在最上面。那么redis可以直接在缓存列表的最前面插入最新粉丝的id，但memcached不行，按上面的方法就是先删除，然后数据库里查询保持顺序，在插入到缓存中。</p>
+<p>redis这样的情况可以让类似twitter、新浪微博这样的业务顺利进行，memcached就用起来别扭了。</p>
+<p>-&mdash;</p>
+<p>再回到这个页面，我们看看v2ex当前页面可以怎么缓存。</p>
+<ol>
+<li>用户信息。</li>
+<li>lz发的内容的原数据，文字可以放入key-value持久化数据库。</li>
+<li>lz发的内容的评论id列表。</li>
+<li>每个评论的原数据缓存，内容可以放入key-value持久化数据库。</li>
+<li>如果有人添加评论，可以过期lz发的内容的评论id列表。</li>
+<li>如果有人更新评论，如果是内容，不需要更新缓存，直接更新持久化数据库。</li>
+<li>如果有人更新评论如时间之类的，或者删除评论，过期lz内容评论的id列表。</li>
+</ol>
+<p>可以看到数据库查询大大的减少，v2ex这个用户量级和访问，至少毫秒内就能展示。</p>
+<p>我不太同意『缓存』这是一个过度优化的设计，『缓存』这个概念无论是计算机硬件、软件还是web设计都是很重要的。不仅能提升app的使用体验（载入更快了），还减少了sql服务器的压力。</p>
+<p>大部分互联网公司都及其依赖缓存，如果缓存服务器挂了，网站必然挂。但之前我也说了，缓存和数据库都是非常重要的，因为在内存中的数据断电就会消失，还是需要持久化的。另外要知道，内存的速度是硬盘访问的数百倍甚至千倍。</p>
+<p>正如 @<a href="https://www.v2ex.com/member/pubby">pubby</a> 说的，网站运行了几年，那积累的缓存要是没了，查询流量瞬间就会击垮服务器。</p>
+<p>几年前大家做开发的时候，喜欢把数据写入数据库，然后放入memcached，现在更多的开发更喜欢先放入redis，然后写入数据库持久化，当成是log和恢复时使用。当然我觉得可以根据业务来选择不同的方案，不一定redis是最好的（因为它太消耗内存）。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-07-02
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/database/">database</a>
+          <a href="/tags/redis/">redis</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/other/005-ielts/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">备考雅思</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/bugs/001-npm-install-locally/">
+            <span class="next-text nav-default">解决 npm 无法安装 packages 到本地文件夹问题</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
