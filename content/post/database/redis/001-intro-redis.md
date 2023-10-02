@@ -11,6 +11,8 @@ typora-root-url: ../../../../static
 
 ## 1. Redis data types
 
+Redis, an acronym for **Remote Dictionary Server**, is an open-source, in-memory data structure store. It can be employed as a database, cache, and even a message broker. Unlike traditional databases that read and write data to disk, Redis operates primarily in memory, which is one of the key reasons behind its lightning-fast data retrieval capabilities.
+
 ### 1.1. String
 
 Redis Strings is one of the most versatile of Redis’ building blocks, a **binary-safe** data structure, binary-safe means the strings in Redis can be any binary data. In Redis, strings are multipurpose. They can store data as simple as an integer or as complex as a JPEG image file.

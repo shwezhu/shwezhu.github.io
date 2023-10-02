@@ -11,6 +11,8 @@ When the topic of high-performance, in-memory caching surfaces, Redis **invariab
 
 Go’s concurrency features, paired with Redis’s in-memory data structure store, allows developers to implement robust caching mechanisms, **elevating** the Go-Redis performance to **new heights**.
 
+Don't **sweat** your english, I wouldn't have **pegged** you for non-native if you hadn't said anything ;)
+
 ---
 
 During today’s press conference in which Hollywood actors confirmed that **they were going on strike**, Duncan Crabtree-Ireland, SAG-AFTRA’s chief negotiator, revealed a proposal from Hollywood studios that sounds ripped right out of a Black Mirror episode.

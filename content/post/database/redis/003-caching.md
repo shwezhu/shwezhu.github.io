@@ -1,5 +1,5 @@
 ---
-title: Caching in Go with Redis - Reading Notes
+title: Caching Strategies and What should be Cached
 date: 2023-10-01 17:56:58
 categories:
  - database
@@ -7,20 +7,57 @@ tags:
  - database
  - redis
  - go
-typora-root-url: ../../../../static
 ---
 
-Source: [Go-Redis Caching: Strategies, Best Practices & Common Pitfalls](https://voskan.host/2023/08/14/golang-redis-caching/)
+Previous post: https://davidzhu.xyz/post/database/redis/004-session-vs-cache/
 
-## 1. What is Caching?
+A paragraph I like, and share it here with you:
 
-At its core, caching is the practice of storing a copy of data temporarily in a location for faster access upon subsequent requests. Imagine reading a thick encyclopedia. Instead of going through the entire book every time you need to reference a specific topic, you might keep a note or bookmark on pages of interest. Caching in the world of web applications follows a similar principle. Instead of fetching data from the main database, which can be time-consuming, a cached version of the data is fetched, which is significantly faster.
+> “The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places and at the wrong times; **premature optimization** is the root of all evil (or at least most of it) in programming.” - [Donald Knuth](https://en.wikipedia.org/wiki/Donald_Knuth)
 
-## 2. What is Redis?
+Premature optimization is always a disaster. It's not too late to add caching when actual bottlenecks are discovered after deployment or users' feedback. 
 
-Redis, an acronym for **Remote Dictionary Server**, is an open-source, in-memory data structure store. It can be employed as a database, cache, and even a message broker. Unlike traditional databases that read and write data to disk, Redis operates primarily in memory, which is one of the key reasons behind its lightning-fast data retrieval capabilities.
+## 1. What should be cached
 
-## 3. Basic Caching Strategies and Implementation in Go
+Generally you want to cache:
+
+- Metadata/configuration data that **does not change frequently.** E.g. country/state lists, external resource addresses, logic/branching settings, product/price/tax definitions, etc.
+- Data that is costly to retrieve or generate and that does not need to frequently change. E.g. historical data sets for reports.
+- Data that is unique to the current user's session.
+
+The last item above is where you need to be careful as you can drastically increase your app's memory usage, by adding a few megabytes to the data for every active session. It implies **different levels of caching -- application wide, user session**, etc.
+
+Generally you should NOT cache data that is under active change.
+
+This is a really broad question, and the answer depends heavily on the specific application/system you are building. **Caching is only a performance optimization technique**, and as with any optimization, measure first before making substantial changes, to avoid wasting time optimizing the wrong thing. **Maybe you don't need much caching, and it would only complicate your app**. Maybe the data you are thinking of caching can be retrieved in a faster way, or less of it can be retrieved at once.
+
+Source: https://stackoverflow.com/a/13519206/16317008
+
+e.g., 
+
+Each user on my server has a credit balance which needs to be changed frequently, obviously we shouldn't cache it, instead we should fecth it from database directly, [a comment](https://www.reddit.com/r/golang/comments/16xw0zx/can_cache_be_viewed_as_a_method_of_storing/?utm_source=share&utm_medium=web2x&context=3) from Reddit:
+
+> If the credit balance (which sounds financial) query is simple and quick then pulling it directly from the backend storage should be fine and would **eliminate the complexities of using a caching layer** and trying to keep it in sync with the persistent storage layer.
+
+## 2. Where cache should sit
+
+In larger systems you also need to think about where the cache(s) will sit. Is it possible to have one central cache server (Redis), or is it good enough for each server/process to handle its own caching (local memory)? 
+
+Generally, Redis is used for distributed caching. But sometimes local caching like *Guava Cache* and *Caffeine* can also be considered. There are some disadvantages to using *local caching*: it cannot perform large-scale data storage, and the cache will become invalid when the application process restarts. 
+
+However, using caching brings up issues that need to be considered: how to ensure **consistency between redis and database**, cache penetration, cache breakdown and cache avalanche, clustering. 
+
+e.g., 
+
+A app is small enough that we haven't had to scale a single instance yet. The three caching avenues I'm looking into are:
+
+- in-memory - use HttpContext.Session for user data caching, with sticky sessions on the server. This is the one I tried out because it's simplest. (This belongs to the server handle its own caching above, local memory caching)
+- Redis - Add on MemoryDB or ElastiCache in our AWS stack. (Use Redis as a central cache server)
+- Database caching- Use a DB table to keep that user data. I'd rather avoid this, the whole point is to avoid that round trip to the DB every pageload
+
+Source: https://www.reddit.com/r/dotnet/comments/vp873j/whats_your_preferred_session_data_caching/
+
+## 3. Basic Caching Strategies
 
 To maximize the advantages of the **Go-Redis connection**, it’s imperative to employ the right caching strategy. Each strategy has its own set of merits and potential pitfalls, making the choice critical based on specific application needs. Let’s deep-dive into some basic caching strategies and their respective implementation in Go.
 
