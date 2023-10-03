@@ -13,6 +13,8 @@ Go’s concurrency features, paired with Redis’s in-memory data structure stor
 
 Don't **sweat** your english, I wouldn't have **pegged** you for non-native if you hadn't said anything ;)
 
+Thus the performance increase is **substantial**.
+
 ---
 
 During today’s press conference in which Hollywood actors confirmed that **they were going on strike**, Duncan Crabtree-Ireland, SAG-AFTRA’s chief negotiator, revealed a proposal from Hollywood studios that sounds ripped right out of a Black Mirror episode.

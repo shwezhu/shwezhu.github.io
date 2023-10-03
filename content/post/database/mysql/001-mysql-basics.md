@@ -5,6 +5,7 @@ categories:
  - database
 tags:
  - database
+ - mysql
 ---
 ## 1. Useful commands
 

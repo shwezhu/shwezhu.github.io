@@ -39,13 +39,17 @@ I list some type to which you don't need to return a pointer point:
 
 ## Tricks
 
-### 1. `map[string]int`
+### 1. `map`
 
 ```go
+// as a counter
 counts := make(map[string]int)
 for name := range users {
 	counts[name]++
 }
+// check if exist, O(1)
+ele, ok := m["key"]
+if !ok {...}
 ```
 
 ### 2. slice
@@ -76,21 +80,7 @@ func (s *MemoryStore) gc() {
 ```
 
 ```go
-func longestCommonPrefix(s []string) string {
-	pref := s[0]
-	for i := 1; i < len(s); i++ {
-		for !strings.HasPrefix(s[i], pref) {
-      // reslice, "delete" the last one element
-			pref = pref[:len(pref)-1]
-		}
-	}
-	return pref
-}
-```
-
-#### 2.2. Stimulate stack
-
-```go
+// Stimulate stack
 stack := make([]rune, 0)
 for _, r := range s {
 	if _, ok := pairs[r]; ok {
@@ -102,7 +92,7 @@ for _, r := range s {
 }
 ```
 
-#### 2.3. Passing a slice to channel
+#### 2.2. Passing a slice to channel
 
 ```go
 func main() {
