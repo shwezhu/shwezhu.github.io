@@ -18,7 +18,7 @@ Session is a server-side state management technique that allows the storage and 
 4. Session data can be accessed and modified throughout the user's session on any page of the application.
 5. Session data is available only as long as the session is active. It expires after a certain period of inactivity or can be explicitly cleared.
 
-Sessions are commonly used to store user-specific information such as login credentials, shopping cart contents, user preferences, and temporary data needed during the user's session.
+Sessions are commonly used to store user-specific information such as **user's authorization state, user's privilege**, user preferences, and temporary data needed during the user's session. And recently, I'm writing a chatgpt bot which needs remember user's chat history, this is just a temporary data which need isolated with each user and not that important, session is perfect to store it. 
 
 Learn more: [Session Management - AWS](https://aws.amazon.com/caching/session-management/)
 

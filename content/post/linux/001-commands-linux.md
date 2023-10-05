@@ -12,12 +12,14 @@ tags:
 You can use `xxx --help `, `man xxx`, `tldr you-command` to check the usage of the command. 
 
 ```shell
+# -type f is for file, -type d is for directory, -iname is case-insensitive
+$ find themes/source/css -name "*header*" -type f
 # n: line number, r: recursive
-$ grep -nr "ul$" themes/cactus/source/css
+$ grep -nr "ul$" themes/source/css
+# curl -v verbose
+curl localhost:8080 -H "Content-Type: application/json" -d "{"username":"david", age:3}" -v
 # make a file executable
 $ chmod u+x test.sh
-# check files size under current folder, h: human-readable, *: all, s: sort
-$ du  -sh  *
 # output file in hexadecimal
 $ xxd a.class
 # check your ip on Mac
@@ -30,8 +32,8 @@ $ dig +trace davidzhu.xyz
 $ dig +short davidzhu.xyz
 # Rename all file in current directory, from cupper-case to lower-case
 $ find . -depth -execdir rename -f 'y/A-Z/a-z/' {} \;
-# curl -v verbose
-curl localhost:8080 -H "Content-Type: application/json" -d "{"username":"david", age:3}" -v
+# check files size under current folder, h: human-readable, *: all, s: sort
+$ du  -sh  *
 ```
 
 ## 2. wget
@@ -106,22 +108,13 @@ Learn more aboute `tar`: [tar command](https://www.geeksforgeeks.org/tar-command
 $ find Pictures/tecmint/ -name "*.png" -type f -print0 | xargs -0 tar -cvzf images.tar.gz
 ```
 
-还记得在之前的文章中讨论过, bash quote相关的, 比如双引号里`$`会被展开而`*`并不会, 那在这里`*.png`充当的就是bash里面的wildcard而不是正则表达式里的metacharacter, 所以这里有双引号, 应该是find命令本身规定的, 为了防止有的文件名里有空格, 这样就不好确定到底是一个文件还是两个, 所以加个双引号, 然后find收到后, 会再把双引号去掉, 
+### 4.1. `find -print0` & `xargs -0`
 
-```
-find . -name "*.c" -print
-Print out a list of all the files whose names end in .c
-```
+The `find` command prints results to standard output by default, so the `-print` option is normally not needed, but `-print0` separates the filenames with a 0 (NULL) byte (`\0`) **so that names containing spaces or newlines can be interpreted correctly**.
 
-## 5. `find -print0` & `xargs -0`
+"`\0`" in the C language stands for the end of a string. However, why do we need "print0"? If we only use the "find" command, it is not necessary. In the command line, whitespace is generally treated as the argument delimiter. For example, there is a file named`my project`,  "xargs" will mistakenly interpret it as two separate arguments: `my` and `project`. This is obviously incorrect. `print0` is often used together with `xargs -0`. By using "xargs -0" or "xargs -null," we inform "xargs" not to consider whitespace or blank space as the argument delimiter but to use the end-of-line character (`\0`) as the delimiter. This ensures that the command runs correctly. 
 
-> The `find` command prints results to standard output by default, so the `-print` option is normally not needed, but `-print0` separates the filenames with a 0 (NULL) byte **so that names containing spaces or newlines can be interpreted correctly**.
-
-上面这段话提到的`0(null)` byte是一个escape sequence characters, 即`\0`在c语言里也是代表字符串的结束, 即在每个文件名后面都加个结束符, 为什么要加呢? 如果我们单用`find`指令, 确实没什么必要, 但有时候我们把`find`的输出作为另一个指令比如`xargs`的输入的时候, 就有必要了. 这是因为命令行指令一般把空格whitespace/blankspace作为参数分隔符, 而有一些文件名里含有空格, 所以, 你想`find`输出的一个文件名是`my project`, 那`xargs`就是会把`my project`看成俩参数即`my`, `project`, 这肯定就错了, 
-
-所以在每个文件名的尾巴那加个结束符, 然后再通过`xargs -0`或者`xargs -null`告诉`xargs`不要把whitespace/blankspace作为参数分隔符, 把结束符即`\0`作为分隔符, 这样就可以保证正确运行了, 了解关于escape character可以到:[Escape Sequence Characters](https://davidzhu.xyz/2023/05/22/Linux/Escape-Characters/). 
-
-> `xargs: -null`: Input items are terminated by a **null character** instead  of  by  **whitespace**,  and  the  quotes  and backslash  are not special (every character is taken literally).  Disables the end of file string, which is treated like any other argument.  Useful when input  items  might  contain  white  space, quote marks, or backslashes.  The GNU find `-print0` option produces input suitable for this mode.  `xargs: -null`=`xargs: -0`
+> `xargs -0`: Input items are terminated by a **null character** instead  of  by  **whitespace**,  and  the  quotes  and backslash  are not special (every character is taken literally).  Disables the end of file string, which is treated like any other argument.  Useful when input  items  might  contain  white  space, quote marks, or backslashes.  The GNU find `-print0` option produces input suitable for this mode.  `xargs: -null`=`xargs: -0`
 
 > `find -print0`: print  the  full file name on the standard output, **followed by a null character (instead of the newline character** that -print uses).  This allows file names that contain newlines  or  other types  of  white space to be correctly interpreted by programs that process the find output. This option corresponds to the -0 option of xargs.
 

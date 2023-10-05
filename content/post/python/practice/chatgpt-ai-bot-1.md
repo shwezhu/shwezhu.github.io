@@ -166,7 +166,7 @@ ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the 'ssl' modu
 b"User-agent: *\nDisallow: /deny\n"
 ```
 
-关于此错误解决办法可参考: [HTTPS 连接过程分析以及 SSL 证书和 OpenSSL 介绍](https://davidzhu.xyz/2023/06/03/Other/ssl-secure-communication/)
+关于此错误解决办法可参考: [HTTPS 连接过程分析以及 SSL 证书和 OpenSSL 介绍](https://davidzhu.xyz/post/cs-basics/003-ssl-secure-communication/)
 
 ### 6. 记住之前的聊天内容
 
