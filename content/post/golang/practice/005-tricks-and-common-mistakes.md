@@ -122,6 +122,30 @@ Bacsuse a slice likes a pointer, the two goroutines above share a same underlyin
 
 > Note that [iteration variable is re-used in each iteration](https://github.com/golang/go/wiki/CommonMistakes). 
 
+### 3. handle `close()`
+
+```go
+// credit to: https://gist.github.com/benbjohnson/9eebd201ec096ab6430e1f33411e6427
+func doSomething() error {
+	f, err := os.Create("foo")
+	if err != nil {
+		return err
+	}
+  // ensure that it's definitely closed by the end
+	defer f.Close()
+	if _, err := f.Write([]byte("bar"); err != nil {
+		return err
+	}
+  return f.Close()
+}
+```
+
+It [“won’t blow shit up if you call f.CLose() twice."](https://twitter.com/benbjohnson/status/874289044800368640), you can check the source code. 
+
+Why we bother to care about getting error from `f.Close()`? We have got error from  `f.Write()`. 
+
+Well, there are a lot to say, learn more: 010-defer-close
+
 ## Common mistakes
 
 #### 1. Encoding non-exported fields struct value with gobs
