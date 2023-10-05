@@ -140,11 +140,7 @@ func doSomething() error {
 }
 ```
 
-It [“won’t blow shit up if you call f.CLose() twice."](https://twitter.com/benbjohnson/status/874289044800368640), you can check the source code. 
-
-Why we bother to care about getting error from `f.Close()`? We have got error from  `f.Write()`. 
-
-Well, there are a lot to say, learn more: 010-defer-close
+Why we bother to care about getting error from `f.Close()`? We have got error from  `f.Write()`. Well, there are a lot to say, learn more: [Don't Defer Close() on Writable Files - Go Notes](https://davidzhu.xyz/post/golang/advance/010-defer-close/)
 
 ## Common mistakes
 
