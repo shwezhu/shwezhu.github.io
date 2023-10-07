@@ -5,7 +5,6 @@ categories:
  - cs basics
 tags:
  - cs basics
- - networking
 typora-root-url: ../../../static
 ---
 

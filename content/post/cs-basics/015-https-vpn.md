@@ -5,8 +5,9 @@ categories:
  - cs basics
 tags:
  - cs basics
- - networking
  - cryptography
+ - http
+ - cybersecurity
 ---
 
 HTTPS is used for encryption, VPN is too. What's difference?

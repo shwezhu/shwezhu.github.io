@@ -5,8 +5,9 @@ categories:
  - cs basics
 tags:
  - cs basics
- - networking
  - cryptography
+ - http
+ - cybersecurity
 ---
 
 ## 1. Is HTTPS Secure Enough?

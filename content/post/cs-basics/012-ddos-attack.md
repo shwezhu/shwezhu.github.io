@@ -2,11 +2,12 @@
 title: DDoS Attack
 date: 2023-09-09 09:29:57
 categories:
- - build website
+ - cs basics
 tags:
   - cs basics
   - build website
   - networking
+  - cybersecurity
 ---
 
 ## 1. DDoS attack
@@ -14,6 +15,10 @@ tags:
 A distributed denial-of-service (DDoS) attack is a malicious attempt to disrupt the normal traffic of a targeted server, service or network by overwhelming the target or its surrounding infrastructure with a flood of Internet traffic.
 
 When a DDoS attack happens, a large volume of traffic is sent to a website. The site under attack typically crashes because the increased traffic exhausts the bandwidth limit or overloads the website’s servers.
+
+{{% youtube "7kB9-nQJR44" %}}
+
+video: https://youtu.be/7kB9-nQJR44?si=R8qrLRhRwlqofAu5
 
 ## 2. How does a DDoS attack work?
 
@@ -80,8 +85,6 @@ On Apache, modify the  `.htaccess` file:
 Web server have a impact impact on the performance when used in firewall and cannot protect when there are huge DDoS attack.
 
 Learn more: https://www.ruanyifeng.com/blog/2018/06/ddos.html
-
-
 
 References:
 

@@ -6,6 +6,7 @@ categories:
  - practice
 tags:
  - golang
+ - http
 ---
 
 ## 1. `Content-Type` header
