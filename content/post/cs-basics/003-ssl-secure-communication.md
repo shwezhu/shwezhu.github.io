@@ -1,173 +1,102 @@
 ---
-title: HTTPS 连接过程分析以及 SSL 证书和 OpenSSL 介绍
-date: 2023-06-03 20:32:26
+title: HTTPS SSL TLS 
+date: 2023-10-07 08:30:26
 categories:
   - cs basics
 tags:
-  - python
   - cryptography
   - build website
   - cs basics
-  - networking
+  - http
 ---
-
-最近使用python的 `urllib3` 发送http请求, 看到了一些基础概念, 想着还是记录一下, 
 
 ## 1. HTTP vs HTTPS
 
-HTTPS 并不是个新的协议, 它就是使用了 SSL/TLS 的 HTTP 协议: 
+Strictly speaking, HTTPS is not a separate protocol, but refers to use of ordinary HTTP over an encrypted SSL/TLS connection. 
 
-> Strictly speaking, HTTPS is not a separate protocol, but refers to use of ordinary HTTP over an encrypted SSL/TLS connection. [Wiki](https://en.wikipedia.org/wiki/HTTPS#Network_layers) 
+Port 80 is typically used for unencrypted [HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) traffic while port 443 is the common port used for encrypted HTTP traffic which is called  [HTTPS](https://en.wikipedia.org/wiki/HTTPS). 
 
- A website that uses HTTP has `http://` in its URL, while a website that uses HTTPS has `https://`. HTTP commonly uses standard port 80, while HTTPS uses port 443. 
+> Note that TLS is the successor of SSL, you can simply think they are same thing. 
 
-## 2. TLS vs SSL
+ Source: https://en.wikipedia.org/wiki/HTTPS#Network_layers
 
-> SSL, more commonly called TLS, is a protocol for **encrypting Internet traffic and verifying server identity**. 
+## 2. What is TLS/SSL
+
+SSL (Secure Sockets Layer) and its successor, TLS (Transport Layer Security), are protocols for establishing ***authenticated*** and ***encrypted*** links between networked computers.
+
+HTTPS, HTTP, and TLS are all protocols. HTTPS utilizes the encryption and digital authentication provided by SSL/TLS, while SSL/TLS utilizes some cryptographic algorithms within the protocol in different phases, such as RSA is used at session key exchange stage, AES is used during data transfer. Encryption can be further divided into two types: 
+
+- Symmetric Encryption Algorithms: AES, etc. 
+
+- Asymmetric Encryption Algorithms (public key cryptography): RSA, ECC, etc.
+
+## 3. The process of establishing a HTTPS connection
+
+When we click a link on our browser will send a or multiple http requets to the target server, then the server will responds us with html file or some images or other resources. But transfer data there are other things needed to do under the hood:
+
+- A tcp connection needed to be established (envolves three way handshake). 
+- Make a [TLS handshake](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/)
+- After TLS handshake,  the secure communication begins (client makes http request, server makes response). 
+
+During the TLS handshake, the client generates a session key and encrypts it with the public key of the server and then send the encrypted session key string to the server, then the server decrypt this  string to get the actual session key. Then they make communication with this session key. Now you should understand why I say TLS/SSL use both RSA and AES encryption algorithms at different phrases in previous part. 
+
+> Note that SSL/TLS is a stateful protocol, whereas HTTP/HTTPS is a stateless protocol.  
 >
-> TLS evolved from a previous encryption protocol called Secure Sockets Layer ([SSL](https://www.cloudflare.com/learning/ssl/what-is-ssl/)), which was developed by Netscape. TLS version 1.0 actually began development as SSL version 3.1, but the name of the protocol was changed before publication in order to indicate that it was no longer associated with Netscape. Because of this history, the terms TLS and SSL are sometimes used interchangeably. 
-
-HTTPS, HTTP, TLS 都是协议,  HTTPS 利用了 SSL 提供的加密数据和数字认证功能, 而 SSL 利用 RSA 非对称算法生成公私钥实现加密, 加密又分为两种:
-
-- symmetric cryptography
-- asymmetric cryptography 又叫 public key cryptography
-
-使用 SSH 生成公私钥的时候会有看到 RSA 的身影, RSA 就是个非对称加密的算法, 用来产生公私钥, 除了 RSA, 还有其它非对称加密算法, 如 Diffie-Hellman, ECC (Elliptic Curve Cryptography), 感兴趣可参考: [通过 SSH 实现免密登陆以及分析 SSH 如何验证真实性](https://davidzhu.xyz/2023/06/03/CS-Basics/002-ssh/)
-
-## 3. HTTPS 建立链接的过程
-
-- Establish a TCP connection.
-
-- Make a [TLS handshake](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/). During the TLS handshake, the two parties generate session keys, and the session keys encrypt and decrypt all communications after the TLS handshake. 
-- After TLS handshake,  the secure communication begins. 
-
-## 4. HTTPS 是如何进行 Authentication 的
-
-HTTPS 利用 SSL 实现加密传输以及让客户端验证服务器的身份与[SSH 中间人攻击](https://davidzhu.xyz/2023/06/03/CS-Basics/002-ssh/)问题相似, 但却不能用那种办法来解决, 因为在电脑上存储每个网站的公钥或者每点一个链接🔗就人工比对公钥指纹很不现实, 而且公钥指纹在人家服务器上, 你也没办法比对... 
-
-HTTPS 的 Authentication 发生在上面提到的 [TLS handshake](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/) 中:
-
-During the course of a TLS handshake, the client and server together will do the following:
-
-- Specify which version of TLS (TLS 1.0, 1.2, 1.3, etc.) they will use
-- Decide on which cipher suites (see below) they will use
-- Authenticate the identity of the server via the server’s public key and the SSL certificate authority’s digital signature
-- Generate session keys in order to use symmetric encryption after the handshake is complete
-
-了解更多: [What happens in a TLS handshake? | SSL handshake | Cloudflare](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/)
-
-## 5. SSL 证书
-
-SSL 证书是需要放到服务器上的, 当客户端向服务器发送 HTTPS 请求时, 服务器会把自己的 SSL 证书传给客户端, 
-
-有两个问题:
-
-- 服务器(网站)怎么获得 SSL 证书, 
-- 发送 HTTPS 请求后, 客户端拿到该服务器的 SSL 证书后, 如何验证该证书真伪: [浏览器如何验证HTTPS证书的合法性](https://www.zhihu.com/question/37370216)
-
-### 5.1. 什么是 SSL 证书
-
-SSL certificates include the following information in a single data file:
-
-- The domain name that the certificate was issued for
-- Associated subdomains
-- Which person, organization, or device it was issued to
-- The certificate authority's digital signature
-- The public key (the private key is kept secret)
-
-刚开始我想的是当客户端向服务器发送敏感数据如密码时使用服务器的公钥进行加密 (服务器会把自己的 SSL 证书发给客户端, 而 SSL 证书就是个文件, 里面包含了服务器的公钥信息), 可是问题来了, 客户端是怎么解密服务器向它发送的数据? 
-
-其实我只猜对了一半, HTPPS 采用的是混合加密, 即从建立 HTTPS 连接到相互传递数据存在两个Key, 服务器的公钥和客户端服务器两者共享的密钥, 该密钥是对称加密里的密钥, 什么意思呢, 就是客户端不是拿到了服务器的 SSL 证书吗? 这个证书里包含了服务器的公钥, 这时候呢, 客户端生成一个密钥也就是上面说 [TLS handshake](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/) 里产生的 session-key (对称加密) 然后客户端用服务器的公钥加密这个密钥传给服务器, 服务器用它自己的私钥解密, 之后的他们就都使用这同一个密钥进行加密解密, 具体如下图:
-
-![a](/003-ssl-secure-communication/a-5839840.png)
-
-这里又有个问题, HTTPS 是 stateful 还是 stateless 的呢? 我们知道 http 是stateless的, 在文章第一节我们就提到 https 并不是什么新的协议, 就是 http 利用了 SSL 协议, 而 SSL 是 stateful 的, 所以在上图中的会话即session里, 客户端和服务器并不是只传递一次信息回话就结束了, 而是可传递多次,  
-
 > **TLS/SSL is stateful.** The web server and the client (browser) cache the session including the cryptographic keys to improve performance and do **not** perform key exchange for every request. [Source](https://stackoverflow.com/a/33681674/16317008)
 
-> 服务器会为每个浏览器（或客户端软件）维护一个session ID，在TLS握手阶段传给浏览器，浏览器生成好密钥传给服务器后，服务器会把该密钥存到相应的session ID下，之后浏览器每次请求都会携带session ID，服务器会根据session ID找到相应的密钥并进行解密加密操作，这样就不必要每次重新制作、传输密钥了！[Source](https://zhuanlan.zhihu.com/p/43789231)
+## 4. Details in TLS handshake - avoid man-in-middle attack
 
-### 5.2. 获取 SSL Certificate 的两种方式
+I have talked man-in-middle attack in other [post](https://davidzhu.xyz/post/cs-basics/002-ssh/), when a ssh connection is being established at the first time, it will notify us the fingerprint of the server which enables us can make sure to we are connecting the right server. But it's a little diffenent in SSL/TLS (HTTPS). The authenciation happens in the TLS handshake, the authenciation here means to prevent man-in-the-middle attack by verifying the identity of the remote server. 
 
-现在来回答上面提出的两个问题, 好像扯的很远了 ummm, 篇幅有限我已经在第二个问题上附上了连接, 就说说第一个问题吧, 获取 SSL Certificate 的方式有两种, 一是从CA那里获得, 二是利用 OpenSSL 自己生成, 
+Once the client and server have agreed to use TLS, they negotiate a [stateful](https://en.wikipedia.org/wiki/State_(computer_science)) connection by using a handshaking procedure (see [TLS handshake](https://en.wikipedia.org/wiki/Transport_Layer_Security#TLS_handshake)). The protocols use a handshake with an [asymmetric cipher](https://en.wikipedia.org/wiki/Asymmetric_cipher) to establish not only cipher settings but also a session-specific shared key with which further communication is encrypted using a [symmetric cipher](https://en.wikipedia.org/wiki/Symmetric_cipher). During this handshake, the client and server agree on various parameters used to establish the connection's security:
 
-我们先来看第一种, 从 CA 获得 SSL Certificate: 
+- The handshake begins when a client connects to a TLS-enabled server requesting a secure connection and the client presents a list of supported [cipher suites](https://en.wikipedia.org/wiki/Cipher_suite) ([ciphers](https://en.wikipedia.org/wiki/Encryption) and [hash functions](https://en.wikipedia.org/wiki/Hash_function)).
+- From this list, the server picks a cipher and hash function that it also supports and notifies the client of the decision.
+- The server usually then provides identification in the form of a [digital certificate](https://en.wikipedia.org/wiki/Public_key_certificate). The certificate contains the [server name](https://en.wikipedia.org/wiki/Hostname), the trusted [certificate authority](https://en.wikipedia.org/wiki/Certificate_authority) (CA) that vouches for the authenticity of the certificate, and the server's public encryption key. (**The digital certificate here is know as SSL/TLS certificate**)
+- The client confirms the validity of the certificate before proceeding. (**The client verifies the identity of the remote server by check the digital certificate which is called SSL/TLS certificate here**)
+- To generate the session keys used for the secure connection, the client either:
+  - encrypts a [random number](https://en.wikipedia.org/wiki/Random_number_generation) (*PreMasterSecret*) with the server's public key and sends the result to the server (which only the server should be able to decrypt with its private key); both parties then use the random number to generate a unique session key for subsequent encryption and decryption of data during the session, or
+  - uses [Diffie–Hellman key exchange](https://en.wikipedia.org/wiki/Diffie–Hellman_key_exchange) (or its variant [elliptic-curve DH](https://en.wikipedia.org/wiki/Elliptic-curve_Diffie–Hellman)) to securely generate a random and unique session key for encryption and decryption that has the additional property of [forward secrecy](https://en.wikipedia.org/wiki/Forward_secrecy): if the server's private key is disclosed in future, it cannot be used to decrypt the current session, even if the session is intercepted and recorded by a third party.
 
-For an SSL certificate to be valid, domains need to obtain it from a certificate authority (CA). A CA is an outside organization, a trusted third party, that generates and gives out SSL certificates. **The CA will also digitally sign the certificate with their own private key**, allowing client devices to verify it. Once the certificate is issued, it needs to be installed and activated on the website's origin server. 
+This concludes(ends) the handshake and begins the secured connection, which is encrypted and decrypted with the session key until the connection closes. If any one of the above steps fails, then the TLS handshake fails and the connection is not created.
 
-再来看看第二种, 自己生成:
+Source: https://en.wikipedia.org/wiki/Transport_Layer_Security
 
-Technically, anyone can create their own SSL certificate by generating a public-private key pairing and including all the information mentioned above . Such certificates are called self-signed certificates because the digital signature used, instead of being from a CA, would be the website's own private key.
+Learn more: https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/
 
-But with self-signed certificates, there's no outside authority to verify that the origin server is who it claims to be. **Browsers don't consider self-signed certificates trustworthy** and may still mark sites with one as "not secure," despite the `https://` URL. They may also terminate the connection altogether, blocking the website from loading.
+## 5. Two ways to get SSL/TLS certificate
 
-## 5. OpenSSL vs LibreSSL
+There are several ways to obtain an SSL/TLS certificate: 
 
-> OpenSSL is an all-around cryptography library that offers an open-source application of the TLS protocol. It allows users to perform various SSL-related tasks, including CSR (Certificate Signing Request) and private keys generation, and SSL certificate installation. You can use OpenSSL's commands to generate, install and manage SSL certificates on various servers.  [What Is OpenSSL and How Does It Work?](https://www.ssldragon.com/blog/what-is-openssl/) 
+Purchase from a Certificate Authority (CA): Trusted CAs offer various types of certificates, such as domain validation (DV), organization validation (OV), and extended validation (EV). A CA is an outside organization, a trusted third party, that generates and gives out SSL certificates. The CA will also digitally sign the certificate with their own private key, **allowing client devices to verify it**. Once the certificate is issued, it needs to be installed and activated on the website's origin server. 
 
-上面说 OpenSSL 是个库, 那应该有 API 接口吧, 但更常见的 OpenSSL 是作为命令行工具, 在电脑上输入:
+Technically, anyone can create their own SSL certificate by generating a public-private key pairing and including all the information mentioned above . Such certificates are called self-signed certificates because the digital signature used, instead of being from a CA, would be the website's own private key. While self-signed certificates provide encryption for your website or application, they are not trusted by default by web browsers or other client applications. Therefore, visitors accessing your site will typically see a warning message stating that the certificate is not trusted. Learn more: [How to generate a self-signed SSL certificate using OpenSSL?](https://stackoverflow.com/questions/10175812/how-to-generate-a-self-signed-ssl-certificate-using-openssl)
 
-在我电脑上输入:
+## 6. Is HTTPS secure enough?
 
-```shell
-$ openssl version   
-LibreSSL 3.3.6
-```
+Does an established HTTPS connection mean the line is really secure?
 
-不仅好奇, 怎么多出来个 LibreSSL,  这是什么? LibreSSL 就是实现 SSL 的另一个版本, 和 OpenSSL 并列, 请参考: [Why You Should Use LibreSSL Instead of OpenSSL](https://www.youtube.com/watch?v=n1uaoJyBwHk) 
+It's important to understand what SSL does and does not do, especially since this is a very common source of misunderstanding.
 
-上面说 OpenSSL 是个库, HTTPS 的基础是 SSL, 用SSL建立安全连接的时候需要 SSL 握手等验证身份的操作, 比如我们写个程序发送 http 请求给服务器, 然后那个服务器使用的是 https 安全协议, 那此时像握手, 验证数字签名这些操作, 自己写显然不太行, OpenSSL 就是干这些事的, 有人说之前我发送 http 请求也没用 openssl 啊, 那是因为你使用的 http 协议 不是 https 你看看你的目的端口是不是80, 或者你使用的发送http的库在底层调用了 openssl 库, 帮你实现了那些繁杂的操作, 比如我最近用的 openai 发送 https 请求的包, 就是底层调用了 OpenSSL, 但我们只看这些代码是看不出来的, 
+- It encrypts the channel
+- It applies integrity checking
+- It provides authentication
 
-```python
-import openai
+So, the quick answer should be: "yes, it is secure enough to transmit sensitive data". However, things are not that simple. There are a few issues here, **the major one being authentication**. Both ends need to be sure they are talking to the right person or institution and no man-in-the-middle attack or CSRF attacks. 
 
-openai.api_key = "Your Key"
+HTTPS is secure in encryption. HTTPS is secure itself but if we can totally trust HTTPS connection when exhcange privacy data is another thing. Although **no one can decrept the data without the session key**, there probably have man-in-the-middle attck or CSRF attck needs to be considered which make the hackers get your money without getting your sensitive data . If you can make sure the client is really that people you want talk as a server or you can make sure the server is the correct server you want to get, then https is safe. Can you make sure the server itself is a bad company? Which will sell your personal data to other perople. But this is another topic, haha, In the last I'll share a [answer](https://stackoverflow.com/a/5310027/16317008) here which is very comprehensive:
 
-response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "user", "content": "Who won the 2018 FIFA world cup?"}
-    ]
-)
+**Question:** Consider a scenario, where user authentication (username and password) is entered by the user in the page's form element, which is then submitted. The POST data is sent via HTTPS to a new page (where the php code will check for the credentials). If a hacker sits in the network, and say has access to all the traffic, is the Application layer security (HTTPS) enough in this case ?
 
-print(response['choices'][0]['message']['content'])
-```
+**[Answer 1](https://stackoverflow.com/a/5310032/16317008):** Yes. In an HTTPS only the handshake is done unencrypted, but even the HTTP GET/POST query's are done encrypted.
 
-然后报错的时候, 我才发现SSL的存在, 
+It is however impossible to hide to what server you are connecting, since he can see your packets he can see the IP address to where your packets go. If you want to hide this too you can use a proxy (though the hacker would know that you are sending to a proxy, but not where your packets go afterwards).
 
-```shell
-ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with LibreSSL 2.8.3. See: https://github.com/urllib3/urllib3/issues/2168
-```
+**[Answer 2](https://stackoverflow.com/a/5310288/16317008):** HTTPS is sufficient "if" the client is secure. Otherwise someone can install a custom certificate and play man-in-the-middle. 
 
-实际上面代码即openai利用了python的package, urllib3, 而 urllib3 就是用来发 http 请求的, urllib3 用到了python的内置库叫ssl, ssl里调用了openssl相关的接口, 进行创建会话, 验证证书等操作, 
+References:
 
-However, from your Python code's perspective, you're just using the ssl module's high-level API. You don't have to interact directly with OpenSSL - it's an implementation detail hidden by the SSLContext and socket wrapping methods. So in short, the Python SSL library uses the OpenSSL library under the hood to actually perform SSL handshakes, key generation, encryption, etc. But from a Python programmer's point of view, you just import ssl and call its APIs to establish encrypted SSL connections.
+- [Does an established HTTPS connection mean a line is really secure? - Information Security Stack Exchange](https://security.stackexchange.com/questions/5/does-an-established-https-connection-mean-a-line-is-really-secure)
+- [php - POST data encryption - Is HTTPS enough? - Stack Overflow](https://stackoverflow.com/questions/5309997/post-data-encryption-is-https-enough)
 
-![b](/003-ssl-secure-communication/b.png)
 
-所以呢上面这个错误是在说, urllib3 2.0 仅支持 OpenSSL 1.1.1+, 但是电脑上的 ssl 库使用的是 LibreSSL 2.8.3., (别忘了上面我们输入`openssl version` 的时候输出的是LibreSSL), 在这 OpenSSL 和 LibreSSL等价, 既然 urllib3的2.0版本不支持我们电脑上的LibreSSL, 那我们就换个 urllib3 的版本咯, 
-
-```shell
-pip3 uninstall urllib3 
-pip3 install 'urllib3<2.0' 
-```
-
-或者换我们电脑上的 LibreSSL 的版本, 
-
-```python
-$ brew install openssl@1.1
-```
-
-参考:
-
-- [Why is HTTP not secure? | HTTP vs. HTTPS | Cloudflare](https://www.cloudflare.com/learning/ssl/why-is-http-not-secure/)
-- [Difference Between SSL & TLS | Baeldung on Computer Science](https://www.baeldung.com/cs/ssl-vs-tls)
-- [What is Transport Layer Security (TLS)? | Cloudflare](https://www.cloudflare.com/learning/ssl/transport-layer-security-tls/)
-- [What is an SSL certificate? | Cloudflare](https://www.cloudflare.com/learning/ssl/what-is-an-ssl-certificate/)
-- [Is HTTPS Stateful or Stateless? - Stack Overflow](https://stackoverflow.com/questions/11067500/is-https-stateful-or-stateless)
-- [HTTPS 是如何进行加密的 - heptaluan's blog](https://heptaluan.github.io/2020/08/09/HTTP/09/)
-- [彻底搞懂HTTPS的加密原理 - 知乎](https://zhuanlan.zhihu.com/p/43789231)
-- [Why You Should Use LibreSSL Instead of OpenSSL](https://www.youtube.com/watch?v=n1uaoJyBwHk)
-- https://youtu.be/wzbf9ldvBjM
-- [Fixing ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+ | Level Up Coding](https://levelup.gitconnected.com/fixing-importerror-urllib3-v2-0-5fbfe8576957)
-- [What happens in a TLS handshake? | SSL handshake | Cloudflare](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/)

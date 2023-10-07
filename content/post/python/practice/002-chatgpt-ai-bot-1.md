@@ -1,5 +1,5 @@
 ---
-title: 利用Openai API实现自己的Chat AI Bot (一)
+title: 利用Openai API实现自己的Chat AI Bot
 date: 2023-06-06 22:28:25
 categories:
   - python
@@ -166,7 +166,7 @@ ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the 'ssl' modu
 b"User-agent: *\nDisallow: /deny\n"
 ```
 
-关于此错误解决办法可参考: [HTTPS 连接过程分析以及 SSL 证书和 OpenSSL 介绍](https://davidzhu.xyz/post/cs-basics/003-ssl-secure-communication/)
+解决办法可参考: https://davidzhu.xyz/post/python/practice/003-openssl-issue/
 
 ### 6. 记住之前的聊天内容
 
