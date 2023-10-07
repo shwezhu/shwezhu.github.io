@@ -54,7 +54,7 @@ When you make a cross-origin request, this is the request-response process:" />
 1.1. How does cross-origin resource sharing work? In standard internet communication, your browser sends an HTTP request to the application server, receives data as an HTTP response, and displays it. In browser terminology, the current browser URL is called the current origin and the third-party URL is cross-origin.
 When you make a cross-origin request, this is the request-response process:"><meta itemprop="datePublished" content="2023-10-06T18:29:57+00:00" />
 <meta itemprop="dateModified" content="2023-10-06T18:29:57+00:00" />
-<meta itemprop="wordCount" content="1288">
+<meta itemprop="wordCount" content="1393">
 <meta itemprop="keywords" content="cs basics,cybersecurity,http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="CSRF Attack and CORS"/>
 <meta name="twitter:description" content="1. Cross-Origin Resource Sharing (CORS) Cross-origin resource sharing (CORS) can be understood as a controlled relaxation of the same-origin policy.
@@ -280,13 +280,52 @@ When you make a cross-origin request, this is the request-response process:"/>
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">X-YOURSITE-CSRF-PROTECTION=1
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>When handling the request, the API checks for the existence of this header. If the header does not exist, the backend rejects the request as potential forgery. This approach has several advantages:</p>
+</div><p>When handling the request, the API checks for the existence of this header. I<strong>f the header does not exist, the backend rejects the request as potential forgery.</strong> This approach has several advantages:</p>
 <ul>
 <li>UI changes are not required</li>
 <li>no server state is introduced to track tokens</li>
 </ul>
 <p>If you use <code>&lt;form&gt;</code> tags anywhere in your client, you will still need to protect them with alternate approaches described in this document such as tokens.</p>
 <p>This defense relies on the browser&rsquo;s <a href="https://en.wikipedia.org/wiki/Same-origin_policy">same-origin policy (SOP)</a> restriction that only JavaScript can be used to add a custom header, and only within its origin. By default, browsers do not allow JavaScript to make cross origin requests with custom headers. Only JavaScript that you serve from your origin can add these headers.</p>
+<p>By default, web browsers enforce the same-origin policy, which restricts JavaScript from making cross-origin requests with custom headers.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;http:127.0.0.1:8080&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">body</span><span class="o">:</span> <span class="nx">formData</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// cosutm header
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span><span class="s2">&#34;abc&#34;</span><span class="o">:</span> <span class="s2">&#34;123&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Some <strong>headers in this request</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Origin:http://localhost:8080
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>And <code>Request URL: http://127.0.0.1:8080/upload</code>, as you can see this is a cross-origin request, because the origin is different from the target origin.</p>
+<p>We have <strong>header in response</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Access-Control-Allow-Origin: *
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But this request will still be blocked by the browser, because web browsers enforce the same-origin policy, which restricts JavaScript from making cross-origin requests with custom headers.</p>
 <h3 id="43-samesite-attribute">4.3. SameSite Attribute</h3>
 <p>An emerging way to protect against <a href="https://docs.spring.io/spring-security/reference/features/exploits/csrf.html#csrf">CSRF Attacks</a> is to specify the <a href="https://tools.ietf.org/html/draft-west-first-party-cookies">SameSite Attribute</a> on cookies. A server can specify the <code>SameSite</code> attribute when setting a cookie to indicate that the cookie should not be sent when coming from external sites.</p>
 <p>References:</p>
