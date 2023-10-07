@@ -123,7 +123,7 @@ In this pattern, the client appends a custom header to requests that require CSR
 X-YOURSITE-CSRF-PROTECTION=1
 ```
 
-When handling the request, the API checks for the existence of this header. If the header does not exist, the backend rejects the request as potential forgery. This approach has several advantages:
+When handling the request, the API checks for the existence of this header. I**f the header does not exist, the backend rejects the request as potential forgery.** This approach has several advantages:
 
 - UI changes are not required
 - no server state is introduced to track tokens
@@ -131,6 +131,33 @@ When handling the request, the API checks for the existence of this header. If t
 If you use `<form>` tags anywhere in your client, you will still need to protect them with alternate approaches described in this document such as tokens.
 
 This defense relies on the browser's [same-origin policy (SOP)](https://en.wikipedia.org/wiki/Same-origin_policy) restriction that only JavaScript can be used to add a custom header, and only within its origin. By default, browsers do not allow JavaScript to make cross origin requests with custom headers. Only JavaScript that you serve from your origin can add these headers. 
+
+By default, web browsers enforce the same-origin policy, which restricts JavaScript from making cross-origin requests with custom headers. 
+
+```js
+let response = await fetch("http:127.0.0.1:8080", {
+    method: "POST",
+    body: formData,
+    // cosutm header
+    headers: {"abc": "123"},
+})
+```
+
+Some **headers in this request**:
+
+```
+Origin:http://localhost:8080
+```
+
+And `Request URL: http://127.0.0.1:8080/upload`, as you can see this is a cross-origin request, because the origin is different from the target origin. 
+
+We have **header in response**:
+
+```
+Access-Control-Allow-Origin: *
+```
+
+But this request will still be blocked by the browser, because web browsers enforce the same-origin policy, which restricts JavaScript from making cross-origin requests with custom headers. 
 
 ### 4.3. SameSite Attribute
 
