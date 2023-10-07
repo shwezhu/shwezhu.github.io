@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>通过 SSH 实现免密登陆以及分析 SSH 如何验证真实性 - David&#39;s Blog</title>
+  <title>实现ssh免密登陆 ssh如何验证远程主机真实性 - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -39,18 +39,18 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="通过 SSH 实现免密登陆以及分析 SSH 如何验证真实性" />
+<meta property="og:title" content="实现ssh免密登陆 ssh如何验证远程主机真实性" />
 <meta property="og:description" content="1. SSH 应对中间人攻击的方法 SSH 采用了公钥加密, 过程如下： （1）Remote Host 收到用户的登录请求, 把自己的公钥发给用户 （2）用户使用这个公钥, 将登" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/cs-basics/002-ssh/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-06-03T17:14:27+00:00" />
 <meta property="article:modified_time" content="2023-06-03T17:14:27+00:00" />
-<meta itemprop="name" content="通过 SSH 实现免密登陆以及分析 SSH 如何验证真实性">
+<meta itemprop="name" content="实现ssh免密登陆 ssh如何验证远程主机真实性">
 <meta itemprop="description" content="1. SSH 应对中间人攻击的方法 SSH 采用了公钥加密, 过程如下： （1）Remote Host 收到用户的登录请求, 把自己的公钥发给用户 （2）用户使用这个公钥, 将登"><meta itemprop="datePublished" content="2023-06-03T17:14:27+00:00" />
 <meta itemprop="dateModified" content="2023-06-03T17:14:27+00:00" />
-<meta itemprop="wordCount" content="2411">
+<meta itemprop="wordCount" content="2404">
 <meta itemprop="keywords" content="ssh,cryptography,cs basics,networking," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="通过 SSH 实现免密登陆以及分析 SSH 如何验证真实性"/>
+<meta name="twitter:title" content="实现ssh免密登陆 ssh如何验证远程主机真实性"/>
 <meta name="twitter:description" content="1. SSH 应对中间人攻击的方法 SSH 采用了公钥加密, 过程如下： （1）Remote Host 收到用户的登录请求, 把自己的公钥发给用户 （2）用户使用这个公钥, 将登"/>
 
 <!--[if lte IE 9]>
@@ -124,7 +124,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">通过 SSH 实现免密登陆以及分析 SSH 如何验证真实性</h1>
+      <h1 class="post-title">实现ssh免密登陆 ssh如何验证远程主机真实性</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-06-03 </span>
@@ -170,7 +170,7 @@
       <h3 id="1-ssh-应对中间人攻击的方法">1. SSH 应对中间人攻击的方法</h3>
 <p>SSH 采用了公钥加密, 过程如下：</p>
 <p>（1）Remote Host 收到用户的登录请求, 把自己的公钥发给用户</p>
-<p>（2）用户使用这个公钥, 将登录密码加密后, 发送回来</p>
+<p>（2）用户使用这个公钥, 将登录密码加密后, 发送过去</p>
 <p>（3）Remote Host 用自己的私钥, 解密信息, 验证密码是否正确</p>
 <p>这个过程存在一个漏洞：如果有人截获了用户的登录请求，然后冒充 Remote Host，将伪造的公钥发给用户，那么用户很难辨别真伪。这就是 Man-in-the-middle attack, 应对方法有两种:</p>
 <ul>
@@ -237,7 +237,7 @@
 </span></span><span class="line"><span class="cl">...
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>该 remote host 上的 ssh 使用的公私钥是由 ED25519 算法生成的, 也就是说 ED25519 是个非对称加密算法, 常见的非对称加密算法还有 RSA, 所以 RSA 和 ED25519 是并列的: Today, the RSA is the most widely used public-key algorithm for SSH key. But compared to Ed25519, it&rsquo;s slower and even considered not safe if it&rsquo;s generated with the key smaller than 2048-bit length. EdDSA is a digital signature scheme, Ed25519 is the EdDSA signature scheme using SHA-512 (SHA-2) and Curve25519. &ndash;Wiki</p>
+</div><p>该 remote host 上的 ssh 使用的公私钥是由 ED25519 算法生成的, ED25519 是非对称加密算法, 常见的非对称加密算法还有 RSA, 所以 RSA 和 ED25519 是并列的: Today, the RSA is the most widely used public-key algorithm for SSH key. But compared to Ed25519, it&rsquo;s slower and even considered not safe if it&rsquo;s generated with the key smaller than 2048-bit length. EdDSA is a digital signature scheme, Ed25519 is the EdDSA signature scheme using SHA-512 (SHA-2) and Curve25519. &ndash;Wiki</p>
 <p>另外, 该公钥指纹是由 SHA256 hash function 生成的, 另外常见的 hash function 还有md5,</p>
 <h3 id="21-验证公私钥位置">2.1. 验证公私钥位置</h3>
 <p>这个时候我们在电脑终端输入yes, 然后就会提示输入密码 (比如root用户对应的密码), 然后系统会提示如下:</p>
@@ -401,7 +401,7 @@
 <p>The <code>sshd_config</code> is the ssh <em><strong>daemon</strong></em> (or ssh server process) configuration file. As you&rsquo;ve already stated, this is the file you&rsquo;ll need to modify to change the server port.</p>
 <p>Whereas, the <code>ssh_config</code> file is the ssh <em><strong>client</strong></em> configuration file. The client configuration file only has bearing on when you use the <code>ssh</code> command to connect to another ssh host. So, in this case, you don&rsquo;t need to modify it. It will be <em>other</em> client machines connecting to your server.</p>
 <p>Source: <a href="https://serverfault.com/questions/343533/changing-ssh-port-should-i-modify-only-sshd-config-or-also-ssh-config">Should I modify only sshd_config, or also ssh_config?</a></p>
-<p>参考:</p>
+<p>References:</p>
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/EdDSA">https://en.wikipedia.org/wiki/EdDSA</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Digital_signature">https://en.wikipedia.org/wiki/Digital_signature</a></li>
@@ -436,9 +436,9 @@
           <a href="/tags/networking/">networking</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/cs-basics/003-ssl-secure-communication/">
+        <a class="prev" href="/post/python/practice/002-chatgpt-ai-bot-1/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">HTTPS 连接过程分析以及 SSL 证书和 OpenSSL 介绍</span>
+            <span class="prev-text nav-default">利用Openai API实现自己的Chat AI Bot</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         <a class="next" href="/post/cs-basics/001-encoding/">
