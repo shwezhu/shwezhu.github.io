@@ -14,35 +14,14 @@ In Git, there are two main ways to integrate changes from one branch into anothe
 There are two type of merge:
 
 - three-way merge, 
-  - happens when the branches have diverged
-  - will result a new commit in commit history
+  - happens when the branches' commit have diverged
+  - will result a merge commit
 - fast-forward merge, 
   - happens when there is a liner structure in the commit history
-  - won't result new commit
+  - we usually prevent fast-forward merge, because **there is no merge commit**. 
   - can be suppressed with the `--no-ff` option
-  - we usually prevent fast-forward merge, because it will lose infomation
 
-On `main` branch:
-
-```shell
-* commit 2220b67f9c8ccf5f47e51bff7bd3a3fca6e141b6 (HEAD -> main)
-      main: Fri 15 Sep 2023 11:47:54 ADT
-```
-
-On `fixbug` branch:
-
-```shell
-* commit 0096a2dfa2b4e4c40011213b6cce12ee73833ca9 (HEAD -> fixbug)
-|     fixbug: Fri 15 Sep 2023 11:48:53 ADT
-| 
-* commit fd900fa0c05632757f45fd6fee236eb84c99bb94
-|     fixbug: Fri 15 Sep 2023 11:48:27 ADT
-| 
-* commit 2220b67f9c8ccf5f47e51bff7bd3a3fca6e141b6 (main)
-      main: Fri 15 Sep 2023 11:47:54 ADT
-```
-
-The commit structure looks like this:
+The liner structure commit structure looks like this:
 
 ```shell
       A---B fixbug
@@ -50,68 +29,17 @@ The commit structure looks like this:
 ...--E master
 ```
 
-Merge `fixbug` into `main` branch (fast-forward):
+Branches' diverged commit structure looks like this:
 
-```shell
-$ git switch main
-$ git merge fixbug 
-Updating 2220b67..0096a2d
-Fast-forward
-...
-$ git log --graph
-* commit 0096a2dfa2b4e4c40011213b6cce12ee73833ca9 (HEAD -> main, fixbug)
-|     fixbug: Fri 15 Sep 2023 11:48:53 ADT
-| 
-* commit fd900fa0c05632757f45fd6fee236eb84c99bb94
-|     fixbug: Fri 15 Sep 2023 11:48:27 ADT
-| 
-* commit 2220b67f9c8ccf5f47e51bff7bd3a3fca6e141b6
-      main: Fri 15 Sep 2023 11:47:54 ADT
 ```
-
-**Commit history of all branches** looks like this now (and you can delete `fixbug`branch safely now):
-
-```shell
-	  A---B fixbug
-	 / 
-...E---A---B main
-```
-
-Assume we didn't do a fast-forward merge instead we do a three-way merge here:
-
-```shell
       A---B fixbug
      /
-...--E main
-```
-
-```shell
-$ git switch main
-$ git merge --no-ff fixbug
-Merge made by the 'ort' strategy.
-$ git log --graph         
-*   commit 52204f34cf6d0bdd6456c8e4830e0948b3c8b308 (HEAD -> main)
-| \     Merge branch 'fixbug'
-| | 
-| * commit 0096a2dfa2b4e4c40011213b6cce12ee73833ca9 (fixbug)
-| |     fixbug: Fri 15 Sep 2023 11:48:53 ADT
-| | 
-| * commit fd900fa0c05632757f45fd6fee236eb84c99bb94
-| /      fixbug: Fri 15 Sep 2023 11:48:27 ADT
-| 
-* commit 2220b67f9c8ccf5f47e51bff7bd3a3fca6e141b6
-      main: Fri 15 Sep 2023 11:47:54 AD
-```
-
-Now **the commit history of branch `main`** looks like this (there is a new commit `F` for merge, you can delete `fixbug` safely now):
-
-```shell
-      A---B fixbug
-     /   /
-...--E---F main
+...--E--F master
 ```
 
 {{% youtube "zOnwgxiC0OA" %}}
+
+Video: https://youtu.be/zOnwgxiC0OA
 
 ## 2. git rebase
 

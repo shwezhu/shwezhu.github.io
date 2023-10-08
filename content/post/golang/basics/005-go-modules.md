@@ -8,7 +8,27 @@ tags:
  - golang
 ---
 
-昨天做贪吃蛇的时候想用个第三方的库来读取键盘输入, 很小, 就直接创建一个go文件把内容复制了进去, 但import的时候却找不到包, 查了一下是Go的包管理机制和Java, Python的不太一样, 于是就有了这篇文章, 
+## 0. Publish your module
+
+Publish your module, first init go moudle as following format:
+
+```shell
+go mod init github.com/you_username/your_module_name
+# go mod init github.com/shwezhu/sessions  
+```
+
+**After** your code was pushed to the github, you can enter this:
+
+```shell
+git tag v1.0.0
+git push --tags v1.0.0
+```
+
+Then download your module in your other project:
+
+```go
+go get github.com/shwezhu/sessions
+```
 
 ## 1. `main` function and `main` package
 

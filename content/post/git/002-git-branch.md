@@ -29,7 +29,7 @@ Create branch:
 Switch branch:
 
 - `git switch <name>`, only can switch to the branches on your local repository
-- ``git checkout <name>`
+- `git checkout <name>`
 
 Delete branch:
 
@@ -93,20 +93,3 @@ Aborting
 所以结论是, **切换分支前, 一定要记得commit, 别在A分支修改你想提交到B分支的文件**.
 
 了解 stash: [git-stash Documentation](https://git-scm.com/docs/git-stash) 
-
-## 3. 重命名远程分支
-
-首先在 GitHub 修改分支名字, 之后GitHub会提醒: 
-
-The default branch has been renamed!
-
-` backup`  is now named ` hexo-blog` 
-
-If you have a local clone, you can update it by running the following commands.
-
-```shell
-git branch -m backup hexo-blog
-git fetch origin
-git branch -u origin/hexo-blog hexo-blog
-git remote set-head origin -a
-```
