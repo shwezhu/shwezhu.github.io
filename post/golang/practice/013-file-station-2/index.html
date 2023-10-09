@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>A File Station - Go - David&#39;s Blog</title>
+  <title>A File Station (2) - Go - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -40,20 +40,20 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="A File Station - Go" />
+<meta property="og:title" content="A File Station (2) - Go" />
 <meta property="og:description" content="1. Redirect status code When redirect a web page, the code looks like this in Go handler:
 1 2 3 4 5 6 // Have not logged in, redirect to login page. if session.IsNew() { http.Redirect(w, r, &#34;http://localhost:8080/login&#34;, http.StatusTemporaryRedirect) return } ... But when I refresh my browser which makes session.IsNew( is always true, then the web page didn&rsquo;t redirect, I don&rsquo;t know why, until I change the status code to http." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/practice/013-file-station-2/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-08T22:14:50+00:00" />
 <meta property="article:modified_time" content="2023-10-08T22:14:50+00:00" />
-<meta itemprop="name" content="A File Station - Go">
+<meta itemprop="name" content="A File Station (2) - Go">
 <meta itemprop="description" content="1. Redirect status code When redirect a web page, the code looks like this in Go handler:
 1 2 3 4 5 6 // Have not logged in, redirect to login page. if session.IsNew() { http.Redirect(w, r, &#34;http://localhost:8080/login&#34;, http.StatusTemporaryRedirect) return } ... But when I refresh my browser which makes session.IsNew( is always true, then the web page didn&rsquo;t redirect, I don&rsquo;t know why, until I change the status code to http."><meta itemprop="datePublished" content="2023-10-08T22:14:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-08T22:14:50+00:00" />
-<meta itemprop="wordCount" content="726">
+<meta itemprop="wordCount" content="1157">
 <meta itemprop="keywords" content="golang,http," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="A File Station - Go"/>
+<meta name="twitter:title" content="A File Station (2) - Go"/>
 <meta name="twitter:description" content="1. Redirect status code When redirect a web page, the code looks like this in Go handler:
 1 2 3 4 5 6 // Have not logged in, redirect to login page. if session.IsNew() { http.Redirect(w, r, &#34;http://localhost:8080/login&#34;, http.StatusTemporaryRedirect) return } ... But when I refresh my browser which makes session.IsNew( is always true, then the web page didn&rsquo;t redirect, I don&rsquo;t know why, until I change the status code to http."/>
 
@@ -128,7 +128,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">A File Station - Go</h1>
+      <h1 class="post-title">A File Station (2) - Go</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-10-08 </span>
@@ -149,11 +149,9 @@
       <ul>
         <li><a href="#1-redirect-status-code">1. Redirect status code</a></li>
         <li><a href="#2-fetch-in-javascript">2. <code>fetch()</code> in javascript</a></li>
-        <li><a href="#3-preventdefault">3. <code>preventDefault()</code></a>
-          <ul>
-            <li></li>
-          </ul>
-        </li>
+        <li><a href="#3-preventdefault">3. <code>preventDefault()</code></a></li>
+        <li><a href="#4-relative-path">4. Relative path</a></li>
+        <li><a href="#5-dont-use-formdata-to-send-username-and-password">5. Don&rsquo;t use <code>FormData</code> to send username and password</a></li>
       </ul>
     </li>
   </ul>
@@ -286,7 +284,7 @@
 <p>What do you mean with this? Mostly the default behavior is kind of implied. When you click a button, the onclick event fires. When you click the submit button, the form is submitted. When the windows scrolls, the onscroll event fires.</p>
 <p>Source: <a href="https://stackoverflow.com/a/17401436/16317008">https://stackoverflow.com/a/17401436/16317008</a></p>
 <p><code>event.preventDefault()</code> basically prevents event to fire. In the case of <code>submit</code> event. <code>event.preventDefault()</code> will prevent your form to submit. We normally prevent <code>submit</code> behaviour to check some validation before submitting the form or we need to change values of our input fields or we want to submit using <code>ajax</code> calls. For this purpose, we prevent form to be submitted by using <code>event.preventDefault()</code>.</p>
-<h4 id="4-relative-path">4. Relative path</h4>
+<h2 id="4-relative-path">4. Relative path</h2>
 <p>You can write relative path directly for the endpoint, because the browser know the <code>Origin</code>, when you make POST or GET request, it will know where should go.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -323,7 +321,144 @@
 </span></span><span class="line"><span class="cl">http.Redirect(w, r, &#34;/login&#34;, http.StatusPermanentRedirect)
 </span></span></code></pre></td></tr></table>
 </div>
+</div><h2 id="5-dont-use-formdata-to-send-username-and-password">5. Don&rsquo;t use <code>FormData</code> to send username and password</h2>
+<p>The parse form code in Go:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">e</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">ParseForm</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">err</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to parse username and password: %v&#34;</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">username</span> <span class="p">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Form</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;username&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">password</span> <span class="p">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Form</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;password&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
 </div>
+</div><p>According to <a href="https://pkg.go.dev/net/http#Request.ParseForm">Golang docs</a> for <code>ParseForm() </code>:</p>
+<p>For other HTTP methods, or when the Content-Type <strong>is not</strong> application/x-www-form-urlencoded, the request Body is not read, and <code>r.PostForm</code> is initialized to a non-nil, empty value. I have talked this at <a href="https://davidzhu.xyz/post/golang/practice/010-go-web-2/">Parse Form Data in Go Server - David&rsquo;s Blog</a>.</p>
+<p>When you use fetch to send form data by this way:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// don&#39;t use new FormData to send username and password
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">let</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;login-form&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;/login&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">headers</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;Content-Type&#34;</span><span class="o">:</span><span class="s2">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">body</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then the actual request body sent by browser will be:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;username&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">david
+</span></span><span class="line"><span class="cl">------WebKitFormBoundaryGx7UioRfdfhdT5U5
+</span></span><span class="line"><span class="cl">Content-Disposition: form-data; name=&#34;password&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">778899sS
+</span></span><span class="line"><span class="cl">------WebKitFormBoundaryGx7UioRfdfhdT5U5--
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This is not correct, the suggestion to get a correct request body is to not set header explictly:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;/login&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//headers:{&#34;Content-Type&#34;:&#34;application/x-www-form-urlencoded&#34;},
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">body</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then the correct form data will be sent:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">username: david
+</span></span><span class="line"><span class="cl">password: 778899s
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>However, if you don&rsquo;t set <code>Content-Type</code> header explicitly, then the browser will make it to this automatically:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// received on server
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="p">:[</span><span class="nx">multipart</span><span class="o">/</span><span class="nx">form</span><span class="o">-</span><span class="nx">data</span><span class="p">;</span> <span class="nx">boundary</span><span class="p">=</span><span class="o">----</span><span class="nx">WebKitFormBoundaryBcoBib8rzQP0rq2W</span><span class="p">]</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But this will make golang <code>ParseForm </code> method ignore the request body, so you cannot get the username and password. The correct way to send form data with fetch is like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URLSearchParams</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">pair</span> <span class="k">of</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;login-form&#34;</span><span class="p">)))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">data</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">String</span><span class="p">(</span><span class="nx">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;/login&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//headers:{&#34;Content-Type&#34;:&#34;application/x-www-form-urlencoded&#34;},
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">body</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>I find this solution on <a href="https://stackoverflow.com/a/46642899/16317008">an answer at Stackoverflow</a>, the problem caused by <code>new FormData()</code>:</p>
+<p>To quote <a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData">MDN on <code>FormData</code></a> (emphasis mine):</p>
+<blockquote>
+<p>The <strong><code>FormData</code></strong> interface provides a way to easily construct a set of key/value pairs representing form fields and their values, which can then be easily sent using the <code>XMLHttpRequest.send()</code> method. <strong>It uses the same format a form would use if the encoding type were set to <code>&quot;multipart/form-data&quot;</code></strong>.</p>
+</blockquote>
+<p>So when using <code>FormData</code> you are locking yourself into <code>multipart/form-data</code>. There is no way to send a <code>FormData</code> object as the body and <em>not</em> sending data in the <code>multipart/form-data</code> format.</p>
+<p>If you want to send the data as <code>application/x-www-form-urlencoded</code> you will either have to specify the body as an URL-encoded string, or pass a <a href="https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams"><code>URLSearchParams</code></a> object.</p>
+
     </div>
 
     <div class="post-copyright">
@@ -347,7 +482,11 @@
           <a href="/tags/http/">http</a>
           </div>
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/build-website/006-ufw-aws-sg/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">ufw vs  AWS Security Group</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
         <a class="next" href="/post/python/practice/003-openssl-issue/">
             <span class="next-text nav-default">urllib3 not compatible with openssl issue - python</span>
             <span class="next-text nav-mobile">Next</span>

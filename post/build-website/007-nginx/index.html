@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Nginx - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Common used commands 1 2 3 4 5 6 7 8 9 10 11 $ sudo apt install nginx # check if nginx is running $ systemctl status nginx # stop nginx service $ sudo systemctl stop nginx # start nginx service $ sudo systemctl start nginx # restart $ sudo systemctl restart nginx # make configuration changes, Nginx can reload without dropping connections: $ sudo systemctl reload nginx By default, Nginx is configured to start automatically when the server boots." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/build-website/007-nginx/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Nginx" />
+<meta property="og:description" content="1. Common used commands 1 2 3 4 5 6 7 8 9 10 11 $ sudo apt install nginx # check if nginx is running $ systemctl status nginx # stop nginx service $ sudo systemctl stop nginx # start nginx service $ sudo systemctl start nginx # restart $ sudo systemctl restart nginx # make configuration changes, Nginx can reload without dropping connections: $ sudo systemctl reload nginx By default, Nginx is configured to start automatically when the server boots." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/build-website/007-nginx/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-09T14:01:50+00:00" />
+<meta property="article:modified_time" content="2023-10-09T14:01:50+00:00" />
+<meta itemprop="name" content="Nginx">
+<meta itemprop="description" content="1. Common used commands 1 2 3 4 5 6 7 8 9 10 11 $ sudo apt install nginx # check if nginx is running $ systemctl status nginx # stop nginx service $ sudo systemctl stop nginx # start nginx service $ sudo systemctl start nginx # restart $ sudo systemctl restart nginx # make configuration changes, Nginx can reload without dropping connections: $ sudo systemctl reload nginx By default, Nginx is configured to start automatically when the server boots."><meta itemprop="datePublished" content="2023-10-09T14:01:50+00:00" />
+<meta itemprop="dateModified" content="2023-10-09T14:01:50+00:00" />
+<meta itemprop="wordCount" content="759">
+<meta itemprop="keywords" content="build website,cs basics," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Nginx"/>
+<meta name="twitter:description" content="1. Common used commands 1 2 3 4 5 6 7 8 9 10 11 $ sudo apt install nginx # check if nginx is running $ systemctl status nginx # stop nginx service $ sudo systemctl stop nginx # start nginx service $ sudo systemctl start nginx # restart $ sudo systemctl restart nginx # make configuration changes, Nginx can reload without dropping connections: $ sudo systemctl reload nginx By default, Nginx is configured to start automatically when the server boots."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Nginx</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-10-09 </span>
+        <div class="post-category">
+            <a href="/categories/build-website/"> build website </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-common-used-commands">1. Common used commands</a></li>
+        <li><a href="#2-why-use-nginx">2. Why use Nginx</a></li>
+        <li><a href="#3-use-cases-of-nginx">3. Use cases of Nginx</a></li>
+        <li><a href="#4-config-nginx">4. Config Nginx</a>
+          <ul>
+            <li><a href="#41-setting-up-virtual-servers">4.1. Setting up virtual servers</a></li>
+            <li><a href="#42-example">4.2. Example</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-common-used-commands">1. Common used commands</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo apt install nginx
+</span></span><span class="line"><span class="cl"><span class="c1"># check if nginx is running</span>
+</span></span><span class="line"><span class="cl">$ systemctl status nginx 
+</span></span><span class="line"><span class="cl"><span class="c1"># stop nginx service</span>
+</span></span><span class="line"><span class="cl">$ sudo systemctl stop nginx
+</span></span><span class="line"><span class="cl"><span class="c1"># start nginx service</span>
+</span></span><span class="line"><span class="cl">$ sudo systemctl start nginx
+</span></span><span class="line"><span class="cl"><span class="c1"># restart</span>
+</span></span><span class="line"><span class="cl">$ sudo systemctl restart nginx
+</span></span><span class="line"><span class="cl"><span class="c1"># make configuration changes, Nginx can reload without dropping connections:</span>
+</span></span><span class="line"><span class="cl">$ sudo systemctl reload nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>By default, Nginx is configured to start automatically when the server boots. If this is not what you want, you can disable this behavior by typing:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo systemctl disable nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>To re-enable the service to start up at boot, you can type:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo systemctl <span class="nb">enable</span> nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="2-why-use-nginx">2. Why use Nginx</h2>
+<p>If you stop nginx service and there is no other web server is running on your server (listening and responding <code>80</code> port), then when you browse <code>http://your_server_ip</code>, it will timeout.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo systemctl stop nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If you start nginx service, then when you browse <code>http://your_server_ip</code>, you will get a welcome to Nginx web page.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo systemctl start nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-use-cases-of-nginx">3. Use cases of Nginx</h2>
+<p>Load Balancing: Nginx can distribute incoming HTTP requests across multiple backend servers to achieve load balancing. For example, if you have multiple web servers running on different AWS EC2 servers, Nginx can evenly distribute incoming requests among them, improving overall performance and ensuring high availability.</p>
+<p><a href="https://www.youtube.com/watch?v=RXXRguaHZs0">Reverse Proxy</a>: Nginx can act as a reverse proxy, receiving HTTP requests from clients and forwarding them to backend servers. This provides an additional layer of security by hiding the internal server details and allowing you to perform tasks such as SSL termination, caching, and request filtering.</p>
+<blockquote>
+<p>A <strong>reverse proxy</strong> is a method used to achieve <strong>load balancing</strong>, which is the ultimate objective. Load balancing, however, can also be accomplished using alternative methods apart from a reverse proxy.</p>
+</blockquote>
+<h2 id="4-config-nginx">4. Config Nginx</h2>
+<h3 id="41-setting-up-virtual-servers">4.1. Setting up virtual servers</h3>
+<p>A virtual server is defined by a <code>server</code> directive in the <code>http</code> context, it is possible to add multiple <code>server</code> in the <code>http</code> context to define multiple virtual servers. for example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">http</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Server configuration
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Server configuration
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <code>server</code> configuration block usually includes a <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#listen">listen</a> directive to specify the IP address and port (or Unix domain socket and path) on which the server listens for requests. Both IPv4 and IPv6 addresses are accepted; enclose IPv6 addresses in square brackets.</p>
+<p>The example below shows configuration of a server that listens on IP address 127.0.0.1 and port 8080:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">listen</span> <span class="n">127.0.0.1</span><span class="p">:</span><span class="mi">8080</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Additional server configuration
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># or
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">listen</span>      <span class="mi">80</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">server_name</span> <span class="s">example.org</span> <span class="s">www.example.org</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="42-example">4.2. Example</h3>
+<p><code>server</code>: The <code>server directive</code> is used to define the configuration for a virtual server. It specifies the domain name, IP address, and port on which the server will listen for incoming requests. You can have multiple server blocks in the http context to define different virtual servers with their own configurations.</p>
+<p><code>location</code>: The <code>location directive</code> is used to define how Nginx handles requests for specific URL patterns.</p>
+<p><code>upstream</code>: The <code>upstream directive</code> is used to define a group of servers that Nginx can distribute requests to. It is primarily used for configuring load balancing.</p>
+<p>To demonstrate, I wrote a coplicated example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">http</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">upstream</span> <span class="s">my_servers</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="kn">server</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">8087</span> <span class="s">weight=10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="kn">server</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">8088</span> <span class="s">weight=2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="kn">server</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">8089</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#listen 80;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">#server_name example.com; # or ip
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    		<span class="kn">listen</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">80</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kn">root</span> <span class="s">/var/www/html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kn">index</span> <span class="s">index.html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kn">proxy_pass</span> <span class="s">http://my_servers</span><span class="p">;</span> <span class="c1"># &#39;my_servers&#39; is the name of upstream
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You can write a simpe <code>server</code> add it into the <code>http</code> in <code>nginx.conf</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">#listen 80;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="c1">#server_name example.com; # or ip
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="kn">listen</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">80</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="kn">root</span> <span class="s">/var/www/html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="kn">index</span> <span class="s">index.html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ nginx -s reload
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then you need add a simple html file under the root path of this server which is  <code>/var/www/html</code> we defined above, then you can access the webpage that you wrote at<code>/var/www/html/index.html</code> by browse <code>http://18.209.22.189/</code>. Because the port is 80 we don&rsquo;t need to prevode in url here.</p>
+<blockquote>
+<p>Note: if cannot access, don&rsquo;t forget to check your firewall, both uwf and ec2 security group if your server is running on AWS.</p>
+</blockquote>
+<p>References:</p>
+<ul>
+<li><a href="https://juejin.cn/post/6844904106541203464">https://juejin.cn/post/6844904106541203464</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-20-04">How To Install Nginx on Ubuntu 20.04 | DigitalOcean</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-10-09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/build-website/">build website</a>
+          <a href="/tags/cs-basics/">cs basics</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/build-website/006-ufw-aws-sg/">
+            <span class="next-text nav-default">ufw vs  AWS Security Group</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -121,6 +121,54 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/database/redis/003-caching/">Caching Strategies and What should be Cached</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-01 </span>
+      <div class="post-category">
+          <a href="/categories/database/"> database </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Previous post: https://davidzhu.xyz/post/database/redis/004-session-vs-cache/
+A paragraph I like, and share it here with you:
+“The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places and at the wrong times; premature optimization is the root of all evil (or at least most of it) in programming.” - Donald Knuth
+Premature optimization is always a disaster. It&rsquo;s not too late to add caching when actual bottlenecks are discovered after deployment or users&rsquo; feedback.
+    </div>
+    <div class="read-more">
+      <a href="/post/database/redis/003-caching/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/011-redis-store-source-code/">Gorilla Sessions RedisStore Source Code Analysis</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-01 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/practice/"> practice </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      To prevent data race, store.Get() always creates a new session (or make a copy) and returns the session to user.
+1 2 3 4 5 6 7 // Get a session. // A copied one or new session. session, _ = store.Get(req, &#34;session-key&#34;) // Add a value. session.Values[&#34;foo&#34;] = &#34;bar&#34; // Save. _ = sessions.Save(req, rsp) Let&rsquo;s check the source code, the Get() method of Redistore:
+1 2 3 func (s *RediStore) Get(r *http.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/practice/011-redis-store-source-code/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/database/redis/001-intro-redis/">Introduce Redis - In-memory Database</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-10-01 </span>
@@ -308,56 +356,6 @@ Usually a URL Sometimes url followed by a '?' and query string: http://example.c
     </div>
     <div class="read-more">
       <a href="/post/cs-basics/018-http-messages/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/cs-basics/017-curl/">Curl Basics</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-09-22 </span>
-      <div class="post-category">
-          <a href="/categories/cs-basics/"> cs basics </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      POST data with Curl The Content-Type header can be application/json, application/x-www-form-urlencoded, multipart/form-data, the first two is usually used with posting form data to server, the third is used to upload file to the server.
-The format of application/json is '{&quot;username&quot;:&quot;davidzhu&quot;, &quot;password&quot;:&quot;778899a&quot;}'.
-The format of application/x-www-form-urlencoded is &quot;username=davidzhu&amp;password=778899a&quot; .
-e.g.,
-POST x-www-form-urlencoded format form data to server:
-1 2 # curl will set the request header to &#39;application/x-www-form-urlencoded&#39; by default curl localhost:8080/hello -d &#34;username=davidzhu&amp;password=778899a&#34; POST json format data with curl:
-    </div>
-    <div class="read-more">
-      <a href="/post/cs-basics/017-curl/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/009-go-web-1/">The Router of Go Web App - ServeMux</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-09-19 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/practice/"> practice </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      This article enlightened by:
-Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTTP Web Services after Eight Years 1. Hello world - 2 ways 1.1. Implementing a Handler Interface - way 1 To run a server, we need to implement http.Handler interface:
-1 2 3 type Handler interface{ ServeHTTP(ResponseWriter, *Request) } To achieve that we need to create an empty struct and provide a method for it:
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/practice/009-go-web-1/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
