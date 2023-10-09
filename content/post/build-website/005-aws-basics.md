@@ -3,7 +3,6 @@ title: AWS EC2 - Basic Settings of a Server
 date: 2023-09-09 15:53:57
 categories:
  - build website
- - aws
 tags:
  - aws
  - build website
