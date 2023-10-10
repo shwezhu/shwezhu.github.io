@@ -24,7 +24,7 @@ I saw [a question](https://stackoverflow.com/questions/23072889/why-go-programs-
 
 It's said that Golang is the *compiled* language, but what does it mean by *compiled*? If golang application is compiled to machine code, why can't I just distribute the binary (of course on corresponding arch and platform) instead of `go install` stuff?
 
-> Once you compile a binary you *can* distribute it onto machines with the same architecture. You don't need go real time envorionment such as `go install,` `go run,` etc, which are just necessary for compilation.
+> Once you compile a binary you *can* distribute it onto machines with the same architecture. You don't need go real time envorionment such as `go install,` `go run,` etc, which are just necessary for compilation. 
 
 The go code:
 
@@ -105,7 +105,7 @@ $ ./server
 running...
 ```
 
-So the statement is true: Once you compile a binary you *can* distribute it onto machines with the same architecture. You don't need go real time envorionment to run it. 
+So the statement is true: Once you compile a binary you *can* distribute it onto machines with the same architecture. You don't need go real time envorionment to run it. **This is the power of compiled language.** 
 
 ## 3. Cross-compilation
 
@@ -153,4 +153,3 @@ do
 done
 ```
 
-## 4. Static linking vs dynamic linking 
