@@ -121,6 +121,51 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/007-network-programming-go/">Analyse Three-way Handshake with Wireshark - Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-13 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/practice/"> practice </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Client:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 func main() { // Three-way handshake included this step // Note that we&#39;re connecting to port 9000 on the server, // not use port 9000 to connect the server. conn, err := net.Dial(&#34;tcp&#34;, &#34;:9000&#34;) if err != nil { log.Fatalf(&#34;couldn&#39;t connect to the server: %v&#34;, err) } buf := make([]byte, 15) // send data to server, the data will be copied into kernel space // and encapsulated into tcp segment -&gt; ip packet -&gt; ethernet frame if _, err := conn.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/practice/007-network-programming-go/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/cs-basics/016-wireshark/">Wireshark</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-09-13 </span>
+      <div class="post-category">
+          <a href="/categories/cs-basics/"> cs basics </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. Structure 2. Capture filter 2.1. Selcet netowk interface en0 Physical network interface utun0~4 VIrtual netwrok interface used for tunneling, learn more: Working with TUN Device on MacOS - David&rsquo;s Blog loopback interface: 127.0.0.1 When you learn network programming and run a echo server and client on your loacl machine, you should select the loopback interface, not the en0 interface. 2.2. Specify filter rules Filter by port:
+1 tcp port 9000 3.
+    </div>
+    <div class="read-more">
+      <a href="/post/cs-basics/016-wireshark/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/cs-basics/011-tun-device-macos/">Working with TUN Device on MacOS</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-09-12 </span>
@@ -290,52 +335,6 @@ In the physical world, tunneling is a way to cross terrain or boundaries that co
     </div>
     <div class="read-more">
       <a href="/post/cs-basics/012-ddos-attack/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/cs-basics/010-tun-tap-device/">TUN/TAP Devices</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-09-08 </span>
-      <div class="post-category">
-          <a href="/categories/cs-basics/"> cs basics </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. TUN/TAP Devices In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
-A network interface can be a physical device, called network interface controller (NIC), such as an ethernet card or wireless adapter, or a virtual device, such as a TUN or TAP interface.
-    </div>
-    <div class="read-more">
-      <a href="/post/cs-basics/010-tun-tap-device/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/008-error-handling/">Error handling - Go</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-09-08 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/basics/"> basics </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1.error interface The error type is an interface type. An error variable represents any value that can describe itself as a string.
-1 2 3 type error interface { Error() string } Interface error is a built-in type, as with all other built in types, is predeclared in the universe block. The most commonly-used error implementation is the errors package’s unexported errorString type.
-1 2 3 4 5 6 7 8 // errorString is a trivial implementation of error.
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/basics/008-error-handling/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
