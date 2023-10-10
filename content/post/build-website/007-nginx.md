@@ -148,6 +148,10 @@ Then you need add a simple html file under the root path of this server which is
 
 > Note: if cannot access, don't forget to check your firewall, both uwf and ec2 security group if your server is running on AWS. 
 
+{{% youtube "sCJcusORiE8" %}}
+
+Video: https://youtu.be/sCJcusORiE8?si=OFtCDNu-3gbkiy3_
+
 References:
 
 - https://juejin.cn/post/6844904106541203464
