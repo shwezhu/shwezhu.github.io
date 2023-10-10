@@ -61,7 +61,7 @@ The assignment `VAR=10` sets the value of the variable `VAR` to 10. To print the
 
 It is not suitable for scientific computing or anything that requires decimals, such as financial calculations. 
 
-## 3. for loop syntax
+## 3. for loop  and array
 
 ```shell
 for item in (list)
@@ -69,6 +69,18 @@ do
 	command_one
 	command_two
 	...
+done
+```
+
+***e.g.,*** 
+
+```shell
+#!/usr/bin/bash
+archs=(amd64 arm64 ppc64le ppc64 s390x)
+
+for arch in ${archs}
+do
+	env GOOS=linux GOARCH=${arch} go build -o prepnode_${arch}
 done
 ```
 

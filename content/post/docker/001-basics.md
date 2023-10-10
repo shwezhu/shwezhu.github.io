@@ -5,6 +5,7 @@ categories:
  - docker
 tags:
  - docker
+ - golang
 ---
 
 {{% youtube "Ozb9mZg7MVM" %}}
@@ -241,39 +242,26 @@ RUN CGO_ENABLED=1 GOOS=linux go build -o /server .
 ...
 ```
 
-Then it works, but because my computer is arm64, and my EC2 server is amd64, so I need built a amd64 image:
+Then it works, but because my computer is linux/arm64, and my EC2 server is linux/amd64:
 
-```dockerfile
-FROM --platform=linux/amd64 golang:alpine
+```shell
+$ docker run -p 80:80 shwezhu/file-station:v1
+WARNING: The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64) and no specific platform was requested
+```
 
-LABEL authors="David"
+so I need built a linux/amd64 image:
 
-# All the following command will treated as inside this folder of docker
-WORKDIR /app
-# copy all the files of our project into the /app folder of docker
-COPY ./ ./
-RUN go mod download
-
-EXPOSE 80
-
-RUN apk update
-RUN apk add \
-  g++ \
-  git \
-  musl-dev \
-  go \
-  tesseract-ocr-dev
-
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /server .
-
-CMD ["/server"]
+```shell
+$ docker buildx build --platform linux/amd64 -t shwezhu/file-station:v2 .
 ```
 
 It takes about 5 mintues to build this image. 
 
-Note that if you don't add `--platform=linux/amd64` after `FROM` then you will get error:
+Docker images can support multiple platforms, which means that a single image may contain variants for different architectures, and sometimes for different operating systems, such as Windows.
 
-```
-1.346 # runtime/cgo
-1.346 gcc: error: unrecognized command-line option '-m64'
-```
+When you run an image with multi-platform support, Docker automatically selects the image that matches your OS and architecture.
+
+Most of the Docker Official Images on Docker Hub provide a [variety of architecturesopen_in_new](https://github.com/docker-library/official-images#architectures-other-than-amd64). For example, the `busybox` image supports `amd64`, `arm32v5`, `arm32v6`, `arm32v7`, `arm64v8`, `i386`, `ppc64le`, and `s390x`. When running this image on an `x86_64` / `amd64` machine, the `amd64` variant is pulled and run.
+
+Learn more: 
+
