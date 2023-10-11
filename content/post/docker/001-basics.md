@@ -255,7 +255,7 @@ so I need built a linux/amd64 image:
 $ docker buildx build --platform linux/amd64 -t shwezhu/file-station:v2 .
 ```
 
-It takes about 5 mintues to build this image. 
+Because there is `--platform linux/amd64`, so you can remove `CGO_ENABLED=1 GOOS=linux` from `RUN CGO_ENABLED=1 GOOS=linux go build -o /server .` It takes about 5 mintues to build this image. 
 
 Docker images can support multiple platforms, which means that a single image may contain variants for different architectures, and sometimes for different operating systems, such as Windows.
 
