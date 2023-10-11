@@ -14,6 +14,38 @@ Video: https://youtu.be/Ozb9mZg7MVM?si=zFkftI_gXloSrZLh
 
 Assume the `Dockerfile` under the `file-station` folder. 
 
+## 0. Docker client commands
+
+```shell
+# -t image_name:tag_name
+$ docker build -t go-learning:1 . 
+$ docker image ls -a
+$ docker rmi shwezhu/file-station:v1
+# if docker is in-use, delete with -f
+$ docker rmi -f shwezhu/file-station:v1
+
+# container
+$ docker container ls -a
+$ docker rm container_id
+
+# run an image 
+# --rm automatically removes the container when it exits,
+# if you don't use this flag, the container won't be deleted,
+# you can use 'docker container ls -a' to check
+$ docker run --rm docker-learning:v1 
+# -d: Run container in background
+$ docker run -d -p 80:80 --rm go-learning:1
+# -it: allocates a pseudo-TTY and attaches it to the container
+# then you can use command line to intercat with the current running container
+$ docker run -it --rm docker-learning:v1 sh
+
+# publish an image
+$ docker push shwezhu/file-station:v1
+
+# pull an image
+$ docker pull davidzhu/file-station:v1
+```
+
 ## 1. Dockerfile
 
 ```dockerfile
@@ -76,21 +108,6 @@ $ docker build -t go-learning:1 .
 The `build` command optionally takes a `--tag` or `-t` flag. This flag is used to label the image with a string value, which is easy for humans to read and recognise. If you do not pass a `--tag`, Docker will use `latest` as the default value.
 
 > When use `-t` with `dcoker build`  ensure that the `FROM` instruction in the *Dockerfile* does not specify the `latest` tag explicitly. If the FROM instruction is like FROM base_image:latest, it will inherit the "latest" tag from the base image. Which means `-t` won't take effect. 
-
-After build image, you can check your images:
-
-```shell
-$ docker image ls                      
-REPOSITORY    TAG       IMAGE ID       CREATED          SIZE
-go-learning   1         5907982380c7   11 seconds ago   299MB
-```
-
-Delete your image:
-
-```shell
-# docker rmi image_name:tage_name
-$ docker rmi go-learning:1
-```
 
 ## 3. `.dockerignore` File
 
@@ -171,17 +188,6 @@ $ docker run -d -p 80:80 go-learning:1
 0908f98ed45af3f6481e49031a9cc24aa5e7c1bd77a375da07371880812415f6
 ```
 
-### 4.4. Operations on containers
-
-```shell
-$ docker ps
-CONTAINER ID   IMAGE           COMMAND     CREATED          STATUS          PORTS                          NAMES
-0908f98ed45a   go-learning:1   "/server"   45 seconds ago   Up 44 seconds   0.0.0.0:80->80/tcp, 8080/tcp   stupefied_hellman
-
-$ docker stop stupefied_hellman
-stupefied_hellman
-```
-
 Source: https://docs.docker.com/language/golang/run-containers/
 
 ## 5. Share your image
@@ -252,7 +258,7 @@ WARNING: The requested image's platform (linux/arm64) does not match the detecte
 so I need built a linux/amd64 image:
 
 ```shell
-$ docker buildx build --platform linux/amd64 -t shwezhu/file-station:v2 .
+$ docker build --platform linux/amd64 -t shwezhu/file-station:v2 .
 ```
 
 Because there is `--platform linux/amd64`, so you can remove `CGO_ENABLED=1 GOOS=linux` from `RUN CGO_ENABLED=1 GOOS=linux go build -o /server .` It takes about 5 mintues to build this image. 
@@ -262,6 +268,4 @@ Docker images can support multiple platforms, which means that a single image ma
 When you run an image with multi-platform support, Docker automatically selects the image that matches your OS and architecture.
 
 Most of the Docker Official Images on Docker Hub provide a [variety of architecturesopen_in_new](https://github.com/docker-library/official-images#architectures-other-than-amd64). For example, the `busybox` image supports `amd64`, `arm32v5`, `arm32v6`, `arm32v7`, `arm64v8`, `i386`, `ppc64le`, and `s390x`. When running this image on an `x86_64` / `amd64` machine, the `amd64` variant is pulled and run.
-
-Learn more: 
 
