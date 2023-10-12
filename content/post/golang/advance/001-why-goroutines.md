@@ -1,5 +1,5 @@
 ---
-title: Goroutines Model - Go Advanced
+title: Goroutines Model
 date: 2023-08-24 14:58:18
 categories:
  - golang

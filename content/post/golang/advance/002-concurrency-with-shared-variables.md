@@ -1,5 +1,5 @@
 ---
-title: Concurrency with Shared Variables - Go Advanced
+title: Concurrency with Shared Variables
 date: 2023-08-24 19:16:59
 categories:
  - golang

@@ -124,10 +124,6 @@ func BenchmarkFibComplete(b *testing.B) {
 }
 ```
 
-
-
-
-
 References:
 
 - https://pkg.go.dev/testing#hdr-Benchmarks
