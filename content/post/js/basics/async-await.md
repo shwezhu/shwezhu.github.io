@@ -1,6 +1,6 @@
 ---
-title: Javascript 中的 Promise 对象和异步函数
-date: 2023-06-16 00:34:29
+title: Promise Object in Javascript
+date: 2023-10-13 11:26:29
 categories:
   - javascript
   - basics
@@ -8,78 +8,56 @@ tags:
   - javascript
 ---
 
-## 1. Promise
+## 1. Concurrency models
 
-想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下, 
+- Processes
+- ﻿﻿Threads (system or green)
+- ﻿﻿**Futures**
+- ﻿﻿Coroutines
+- ﻿﻿CSP
+- ﻿﻿Actor
 
-```javascript
-// 创建一个 Promise 对象, 注意参数, 以及参数的参数, 😂
-const myPromise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        resolve('Hi, World!');
-    }, 100);
-});
+Learn more: [java - What's the difference between a Future and a Promise? - Stack Overflow](https://stackoverflow.com/questions/14541975/whats-the-difference-between-a-future-and-a-promise)
 
-console.log(myPromise);
+## 2. Promise
 
-setTimeout(() => {
-    console.log(myPromise);
-}, 200)
-```
+Essentially, a promise is a returned object to which you attach callbacks, instead of passing callbacks into a function. 
 
-打印如下:
+ Imagine a function, `createAudioFileAsync()`, which asynchronously generates a sound file given a configuration record and two callback functions: one called if the audio file is successfully created, and the other called if an error occurs.
 
-```
-Promise { <pending> }
-Promise { 'Hi, World!' }
-```
-
-可以看到, 刚开始 `myPromise` 的状态是 pending, 过了 100ms 之后调用了 `resolve()` , 使 promise 变成非 pending 状态, 此时打印 `myPromise` 可以看到其值就是 `resolve()` 的参数, 这样很麻烦, 因为我们还得故意让程序睡眠 200ms 才能打印出其值, 
-
-我们知道每个 promise 对象都有一个 `then()` 方法, 该方法在 promise 对象的状态为 not pending 的时候会被自动调用, 所以上面的代码可以改进一下:
+Here's some code that uses `createAudioFileAsync()`:
 
 ```js
-const myPromise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        resolve('Hi, World!');
-    }, 100);
-});
+function successCallback(result) {
+  console.log(`Audio file ready at URL: ${result}`);
+}
 
-myPromise.then((value) => {
-    console.log(value)
-})
+function failureCallback(error) {
+  console.error(`Error generating audio file: ${error}`);
+}
 
-// Hi, World!
+createAudioFileAsync(audioSettings, successCallback, failureCallback);
 ```
 
-这里注意, `then()` 的参数是一个函数(假设改函数叫 func), 则函数 func 只可接受一个参数, 这个参数就是 `then()` 用来传递 promise 对象的值的, 在这里也就是字符串 `'Hi, World!'`, 所以你看这里, 当 `myPromise` 状态为 not pending 时, 其函数 `then()` 才会被调用, 然后`then()` 会把 `myPromise` 的值这里也就是 `'Hi, World!'` 当作参数传递给那个 callback function, 这一点很重要, 即 `then()` 会自动把其所属的 promise 对象的值作为参数传递给其 callback function, 
+If `createAudioFileAsync()` were rewritten to return a promise, you would attach your callbacks to it instead:
 
-另外注意, `then()` 并不会阻塞程序, 就好像是 JS 引擎会持续监控处于 pending 状态的 promise 对象, 当这些 promise 对象状态为 not pending 时, 他们的 `then()` 函数就会被自动调用, 
+JSCopy to Clipboard
 
 ```js
-const myPromise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        resolve('Hi, World!');
-    }, 100);
-});
-
-myPromise.then((value) => {
-    console.log(value)
-})
-
-console.log(myPromise)
+createAudioFileAsync(audioSettings).then(successCallback, failureCallback);
 ```
 
-上面这段代码会打印:
+## 3. Create a promise object
+
+You can create a promise using the promise constructor like this:
 
 ```js
-Promise { <pending> }
-Hi, World!
+let promise = new Promise(function(resolve, reject) {    
+    // Make an asynchronous call and either resolve or reject
+});
 ```
 
-证明 `then()` 并不会阻塞程序, 经过了这个例子你知道了 Promise 对象是什么吧? 有两个状态, pending 和 not pending, js 引擎会根据 promise 对象的状态来调用其 `then()` 函数, 怎么改变一个 promise 对象的状态呢?  调用创建 promise 对象的时候穿进来的两个参数即 `resolve()` 或 `reject()`, 
-
-来看看专业描述:
+The **`Promise`** object represents the eventual completion (or failure) of an asynchronous operation and its resulting value.
 
 A promise in JavaScript is an object that may **produce** a single value in the future: either a resolved value, or a reason that it's not resolved (e.g., a network error occurred). It will be in one of 3 possible states: 
 
@@ -87,9 +65,39 @@ A promise in JavaScript is an object that may **produce** a single value in the 
 - **Rejected:** e.g., `reject()` was called
 - **Pending:** not yet fulfilled or rejected
 
-Each promise object has a `then()` method, and the *eventual state* of a *pending promise* can either be ***fulfilled*** with a value or ***rejected*** with a reason (error). 
+The *eventual state* of a pending promise can either be *fulfilled* with a value or *rejected* with a reason (error). When either of these options occur, the associated handlers queued up by a promise's `then` method are called. 
 
-## 2. async & await 
+**e.g.,** 
+
+```js
+const fs = require('fs');
+
+// Returns a promise
+function readFileAsync(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.promises.readFile(filePath, 'utf-8')
+      .then(data => {
+        resolve(data); // Resolve the Promise with the file data
+      })
+      .catch(error => {
+        reject(error); // Reject the Promise if there's an error
+      });
+  });
+}
+
+// Attach callbacks to the returned promise object with its 'then()' function
+readFileAsync('./book.txt')
+  .then(data => {
+    console.log('File content:', data);
+  })
+  .catch(error => {
+    console.error('Error reading the file:', error);
+  });
+```
+
+The Promise object knows when to call the `.then()` method (which contains `console.log('File content:', data);`) or the `.catch()` method (which contains `console.error('Error reading the file:', error);`) based on how the Promise is resolved or rejected.
+
+## 4. async & await 
 
 知道了什么是 Promise 对象后, 再来看异步函数, 
 
@@ -217,7 +225,7 @@ The arguments of `then` are optional, for instance,  `catch(failureCallback)` is
 
 也就是说我们上面调用的 promise 对象的 `then()` 函数, 其实是有两个参数的, 即第一个参数是当 promise 对象状态为 `Fulfilled` 的时候调用的, 第二个参数是当该 promise 对象的状态为 `Rejected` 也就是执行失败的时候调用的, 一般我们写成 `.catch(failureCallback)` 而不是 `.then(null, failureCallback)` 
 
-参考:
+References:
 
 - [Using promises - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
 - [async function - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
