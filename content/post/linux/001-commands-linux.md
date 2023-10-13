@@ -12,10 +12,13 @@ tags:
 You can use `xxx --help `, `man xxx`, `tldr you-command` to check the usage of the command. 
 
 ```shell
+$ systemctl status systemd-resolved
+$ sudo netstat -anp | grep 127.0.0.53
 # server is a go executable file, will print: server: Mach-O 64-bit executable arm64
-$ file server 
+$ file server
 # Print details about the current machine and the operating system running on it.
 $ uname -a
+$ otool/xdd
 # -type f is for file, -type d is for directory, -iname is case-insensitive
 $ find themes/source/css -name "*header*" -type f
 # n: line number, r: recursive
