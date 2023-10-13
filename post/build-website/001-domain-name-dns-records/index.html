@@ -48,7 +48,7 @@
 <meta itemprop="name" content="域名分级和DNS记录之何为www">
 <meta itemprop="description" content="1. DNS Records: A &amp; CNAME 购买域名后给域名指定的ip地址, 则要为其添加 A 类型的 DNS Record, 把域名和服务器IP关联就需要为域名添加 A 记录, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填"><meta itemprop="datePublished" content="2023-04-23T00:15:30+00:00" />
 <meta itemprop="dateModified" content="2023-04-23T00:15:30+00:00" />
-<meta itemprop="wordCount" content="1892">
+<meta itemprop="wordCount" content="1117">
 <meta itemprop="keywords" content="build website," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="域名分级和DNS记录之何为www"/>
 <meta name="twitter:description" content="1. DNS Records: A &amp; CNAME 购买域名后给域名指定的ip地址, 则要为其添加 A 类型的 DNS Record, 把域名和服务器IP关联就需要为域名添加 A 记录, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填"/>
@@ -148,7 +148,6 @@
             <li><a href="#21-dns-hierarchy">2.1. DNS Hierarchy</a></li>
           </ul>
         </li>
-        <li><a href="#3-dns-查询过程">3. DNS 查询过程</a></li>
       </ul>
     </li>
   </ul>
@@ -223,24 +222,7 @@
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">HOSTNAME.SLD.TLD.root
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/001-domain-name-dns-records/d.png" alt=""></p>
-<h2 id="3-dns-查询过程">3. DNS 查询过程</h2>
-<blockquote>
-<p>DNS 中的域名都是用<strong>句点</strong>来分隔的，比如 <code>www.server.com</code>，这里的句点代表了不同层次之间的<strong>界限</strong>。在域名中，<strong>越靠右</strong>的位置表示其层级<strong>越高</strong>。毕竟域名是外国人发明，所以思维和中国人相反，比如说一个城市地点的时候，外国喜欢从小到大的方式顺序说起（如 XX 街道 XX 区 XX 市 XX 省），而中国则喜欢从大到小的顺序（如 XX 省 XX 市 XX 区 XX 街道）。根域是在最顶层，它的下一层就是 com 顶级域，再下面是 server.com。</p>
-</blockquote>
-<p>浏览器首先看一下自己的缓存里有没有，如果没有就向操作系统的缓存要，还没有就检查本机域名解析文件 <code>hosts</code>，如果还是没有，就会 DNS 服务器进行查询，查询的过程如下：</p>
-<ol>
-<li>客户端首先会发出一个 DNS 请求，问 <a href="https://www.server.com">www.server.com</a> 的 IP 是啥，并发给本地 DNS 服务器（也就是客户端的 TCP/IP 设置中填写的 DNS 服务器地址）。</li>
-<li>本地域名服务器收到客户端的请求后，如果缓存里的表格能找到 <a href="https://www.server.com">www.server.com</a>，则它直接返回 IP 地址。如果没有，本地 DNS 会去问它的根域名服务器：“老大， 能告诉我 <a href="https://www.server.com">www.server.com</a> 的 IP 地址吗？” 根域名服务器是最高层次的，它不直接用于域名解析，但能指明一条道路。</li>
-<li>根 DNS 收到来自本地 DNS 的请求后，发现后置是 .com，说：“www.server.com 这个域名归 .com 区域管理”，我给你 .com 顶级域名服务器地址给你，你去问问它吧。”</li>
-<li>本地 DNS 收到顶级域名服务器的地址后，发起请求问“老二， 你能告诉我 <a href="https://www.server.com">www.server.com</a> 的 IP 地址吗？”</li>
-<li>顶级域名服务器说：“我给你负责 <a href="https://www.server.com">www.server.com</a> 区域的权威 DNS 服务器的地址，你去问它应该能问到”。</li>
-<li>本地 DNS 于是转向问权威 DNS 服务器：“老三，www.server.com对应的IP是啥呀？” server.com 的权威 DNS 服务器，它是域名解析结果的原出处。为啥叫权威呢？就是我的域名我做主。</li>
-<li>权威 DNS 服务器查询后将对应的 IP 地址 X.X.X.X 告诉本地 DNS。</li>
-<li>本地 DNS 再将 IP 地址返回客户端，客户端和目标建立连接。</li>
-</ol>
-<p>至此，我们完成了 DNS 的解析过程。现在总结一下，整个过程我画成了一个图。</p>
-<p><img src="/001-domain-name-dns-records/33.webp" alt="33"></p>
+</div><img src="/001-domain-name-dns-records/d.png" style="zoom:33%;" />
 
     </div>
 
