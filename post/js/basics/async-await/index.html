@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Javascript 中的 Promise 对象和异步函数 - David&#39;s Blog</title>
+  <title>Promise Object in Javascript - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Promise 想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下, 1 2 3 4 5 6 7 8 9 10 11 12 // 创建一个 Promise 对象, 注意参数, 以及参数的" />
+<meta name="author" content="David" /><meta name="description" content="1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&amp;rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise Essentially, a promise" />
 
 
 
@@ -39,19 +39,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Javascript 中的 Promise 对象和异步函数" />
-<meta property="og:description" content="1. Promise 想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下, 1 2 3 4 5 6 7 8 9 10 11 12 // 创建一个 Promise 对象, 注意参数, 以及参数的" />
+<meta property="og:title" content="Promise Object in Javascript" />
+<meta property="og:description" content="1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise Essentially, a promise" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/js/basics/async-await/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2023-06-16T00:34:29+00:00" />
-<meta property="article:modified_time" content="2023-06-16T00:34:29+00:00" />
-<meta itemprop="name" content="Javascript 中的 Promise 对象和异步函数">
-<meta itemprop="description" content="1. Promise 想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下, 1 2 3 4 5 6 7 8 9 10 11 12 // 创建一个 Promise 对象, 注意参数, 以及参数的"><meta itemprop="datePublished" content="2023-06-16T00:34:29+00:00" />
-<meta itemprop="dateModified" content="2023-06-16T00:34:29+00:00" />
-<meta itemprop="wordCount" content="2379">
+<meta property="article:published_time" content="2023-10-13T11:26:29+00:00" />
+<meta property="article:modified_time" content="2023-10-13T11:26:29+00:00" />
+<meta itemprop="name" content="Promise Object in Javascript">
+<meta itemprop="description" content="1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise Essentially, a promise"><meta itemprop="datePublished" content="2023-10-13T11:26:29+00:00" />
+<meta itemprop="dateModified" content="2023-10-13T11:26:29+00:00" />
+<meta itemprop="wordCount" content="2104">
 <meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Javascript 中的 Promise 对象和异步函数"/>
-<meta name="twitter:description" content="1. Promise 想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下, 1 2 3 4 5 6 7 8 9 10 11 12 // 创建一个 Promise 对象, 注意参数, 以及参数的"/>
+<meta name="twitter:title" content="Promise Object in Javascript"/>
+<meta name="twitter:description" content="1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise Essentially, a promise"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,10 +124,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Javascript 中的 Promise 对象和异步函数</h1>
+      <h1 class="post-title">Promise Object in Javascript</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2023-06-16 </span>
+        <span class="post-time"> 2023-10-13 </span>
         <div class="post-category">
             <a href="/categories/javascript/"> javascript </a>
             <a href="/categories/basics/"> basics </a>
@@ -143,8 +143,10 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#1-promise">1. Promise</a></li>
-        <li><a href="#2-async--await">2. async &amp; await</a></li>
+        <li><a href="#1-concurrency-models">1. Concurrency models</a></li>
+        <li><a href="#2-promise">2. Promise</a></li>
+        <li><a href="#3-create-a-promise-object">3. Create a promise object</a></li>
+        <li><a href="#4-async--await">4. async &amp; await</a></li>
       </ul>
     </li>
   </ul>
@@ -152,8 +154,77 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-promise">1. Promise</h2>
-<p>想看异步函数还是得先看看新标准 ES2015 中介绍的 Promise 是什么, 看个例子, 直观感受一下,</p>
+      <h2 id="1-concurrency-models">1. Concurrency models</h2>
+<ul>
+<li>Processes</li>
+<li>﻿﻿Threads (system or green)</li>
+<li>﻿﻿<strong>Futures</strong></li>
+<li>﻿﻿Coroutines</li>
+<li>﻿﻿CSP</li>
+<li>﻿﻿Actor</li>
+</ul>
+<p>Learn more: <a href="https://stackoverflow.com/questions/14541975/whats-the-difference-between-a-future-and-a-promise">java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow</a></p>
+<h2 id="2-promise">2. Promise</h2>
+<p>Essentially, a promise is a returned object to which you attach callbacks, instead of passing callbacks into a function.</p>
+<p>Imagine a function, <code>createAudioFileAsync()</code>, which asynchronously generates a sound file given a configuration record and two callback functions: one called if the audio file is successfully created, and the other called if an error occurs.</p>
+<p>Here&rsquo;s some code that uses <code>createAudioFileAsync()</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">successCallback</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Audio file ready at URL: </span><span class="si">${</span><span class="nx">result</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">failureCallback</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`Error generating audio file: </span><span class="si">${</span><span class="nx">error</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">createAudioFileAsync</span><span class="p">(</span><span class="nx">audioSettings</span><span class="p">,</span> <span class="nx">successCallback</span><span class="p">,</span> <span class="nx">failureCallback</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If <code>createAudioFileAsync()</code> were rewritten to return a promise, you would attach your callbacks to it instead:</p>
+<p>JSCopy to Clipboard</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">createAudioFileAsync</span><span class="p">(</span><span class="nx">audioSettings</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">successCallback</span><span class="p">,</span> <span class="nx">failureCallback</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-create-a-promise-object">3. Create a promise object</h2>
+<p>You can create a promise using the promise constructor like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">promise</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>    
+</span></span><span class="line"><span class="cl">    <span class="c1">// Make an asynchronous call and either resolve or reject
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <strong><code>Promise</code></strong> object represents the eventual completion (or failure) of an asynchronous operation and its resulting value.</p>
+<p>A promise in JavaScript is an object that may <strong>produce</strong> a single value in the future: either a resolved value, or a reason that it&rsquo;s not resolved (e.g., a network error occurred). It will be in one of 3 possible states:</p>
+<ul>
+<li><strong>Fulfilled:</strong> e.g., <code>resolve()</code> was called</li>
+<li><strong>Rejected:</strong> e.g., <code>reject()</code> was called</li>
+<li><strong>Pending:</strong> not yet fulfilled or rejected</li>
+</ul>
+<p>The <em>eventual state</em> of a pending promise can either be <em>fulfilled</em> with a value or <em>rejected</em> with a reason (error). When either of these options occur, the associated handlers queued up by a promise&rsquo;s <code>then</code> method are called.</p>
+<p><strong>e.g.,</strong></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -168,114 +239,46 @@
 </span><span class="lnt">10
 </span><span class="lnt">11
 </span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// 创建一个 Promise 对象, 注意参数, 以及参数的参数, 😂
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">myPromise</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;Hi, World!&#39;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="p">},</span> <span class="mi">100</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">});</span>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myPromise</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Returns a promise
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">function</span> <span class="nx">readFileAsync</span><span class="p">(</span><span class="nx">filePath</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fs</span><span class="p">.</span><span class="nx">promises</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">filePath</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">resolve</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span> <span class="c1">// Resolve the Promise with the file data
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="p">})</span>
+</span></span><span class="line"><span class="cl">      <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">reject</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span> <span class="c1">// Reject the Promise if there&#39;s an error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="p">});</span>
+</span></span><span class="line"><span class="cl">  <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myPromise</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="mi">200</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Attach callbacks to the returned promise object with its &#39;then()&#39; function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">readFileAsync</span><span class="p">(</span><span class="s1">&#39;./book.txt&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;File content:&#39;</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Error reading the file:&#39;</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">});</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>打印如下:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Promise { &lt;pending&gt; }
-</span></span><span class="line"><span class="cl">Promise { &#39;Hi, World!&#39; }
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>可以看到, 刚开始 <code>myPromise</code> 的状态是 pending, 过了 100ms 之后调用了 <code>resolve()</code> , 使 promise 变成非 pending 状态, 此时打印 <code>myPromise</code> 可以看到其值就是 <code>resolve()</code> 的参数, 这样很麻烦, 因为我们还得故意让程序睡眠 200ms 才能打印出其值,</p>
-<p>我们知道每个 promise 对象都有一个 <code>then()</code> 方法, 该方法在 promise 对象的状态为 not pending 的时候会被自动调用, 所以上面的代码可以改进一下:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">myPromise</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;Hi, World!&#39;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="p">},</span> <span class="mi">100</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">});</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">myPromise</span><span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">})</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Hi, World!
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><p>这里注意, <code>then()</code> 的参数是一个函数(假设改函数叫 func), 则函数 func 只可接受一个参数, 这个参数就是 <code>then()</code> 用来传递 promise 对象的值的, 在这里也就是字符串 <code>'Hi, World!'</code>, 所以你看这里, 当 <code>myPromise</code> 状态为 not pending 时, 其函数 <code>then()</code> 才会被调用, 然后<code>then()</code> 会把 <code>myPromise</code> 的值这里也就是 <code>'Hi, World!'</code> 当作参数传递给那个 callback function, 这一点很重要, 即 <code>then()</code> 会自动把其所属的 promise 对象的值作为参数传递给其 callback function,</p>
-<p>另外注意, <code>then()</code> 并不会阻塞程序, 就好像是 JS 引擎会持续监控处于 pending 状态的 promise 对象, 当这些 promise 对象状态为 not pending 时, 他们的 <code>then()</code> 函数就会被自动调用,</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">myPromise</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;Hi, World!&#39;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="p">},</span> <span class="mi">100</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">});</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">myPromise</span><span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">})</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myPromise</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>上面这段代码会打印:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nb">Promise</span> <span class="p">{</span> <span class="o">&lt;</span><span class="nx">pending</span><span class="o">&gt;</span> <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="nx">Hi</span><span class="p">,</span> <span class="nx">World</span><span class="o">!</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>证明 <code>then()</code> 并不会阻塞程序, 经过了这个例子你知道了 Promise 对象是什么吧? 有两个状态, pending 和 not pending, js 引擎会根据 promise 对象的状态来调用其 <code>then()</code> 函数, 怎么改变一个 promise 对象的状态呢?  调用创建 promise 对象的时候穿进来的两个参数即 <code>resolve()</code> 或 <code>reject()</code>,</p>
-<p>来看看专业描述:</p>
-<p>A promise in JavaScript is an object that may <strong>produce</strong> a single value in the future: either a resolved value, or a reason that it&rsquo;s not resolved (e.g., a network error occurred). It will be in one of 3 possible states:</p>
-<ul>
-<li><strong>Fulfilled:</strong> e.g., <code>resolve()</code> was called</li>
-<li><strong>Rejected:</strong> e.g., <code>reject()</code> was called</li>
-<li><strong>Pending:</strong> not yet fulfilled or rejected</li>
-</ul>
-<p>Each promise object has a <code>then()</code> method, and the <em>eventual state</em> of a <em>pending promise</em> can either be <em><strong>fulfilled</strong></em> with a value or <em><strong>rejected</strong></em> with a reason (error).</p>
-<h2 id="2-async--await">2. async &amp; await</h2>
+</div><p>The Promise object knows when to call the <code>.then()</code> method (which contains <code>console.log('File content:', data);</code>) or the <code>.catch()</code> method (which contains <code>console.error('Error reading the file:', error);</code>) based on how the Promise is resolved or rejected.</p>
+<h2 id="4-async--await">4. async &amp; await</h2>
 <p>知道了什么是 Promise 对象后, 再来看异步函数,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -454,7 +457,7 @@
 </div>
 </div><p>The arguments of <code>then</code> are optional, for instance,  <code>catch(failureCallback)</code> is short for <code>then(null, failureCallback)</code></p>
 <p>也就是说我们上面调用的 promise 对象的 <code>then()</code> 函数, 其实是有两个参数的, 即第一个参数是当 promise 对象状态为 <code>Fulfilled</code> 的时候调用的, 第二个参数是当该 promise 对象的状态为 <code>Rejected</code> 也就是执行失败的时候调用的, 一般我们写成 <code>.catch(failureCallback)</code> 而不是 <code>.then(null, failureCallback)</code></p>
-<p>参考:</p>
+<p>References:</p>
 <ul>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises">Using promises - JavaScript | MDN</a></li>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">async function - JavaScript | MDN</a></li>
@@ -472,7 +475,7 @@
   <p class="copyright-item">
     <span class="item-title">LastMod</span>
     <span class="item-content">
-        2023-06-16
+        2023-10-13
         
     </span>
   </p>
@@ -484,13 +487,9 @@
           <a href="/tags/javascript/">javascript</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/python/basics/001-collections/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Python Basics</span>
-            <span class="prev-text nav-mobile">Prev</span>
-          </a>
-        <a class="next" href="/post/other/002-modules-golang-python-javascript/">
-            <span class="next-text nav-default">Python Golang Javascript中的模块对比以及Python中的__name__</span>
+        
+        <a class="next" href="/post/docker/004-cgo-cross-compilation/">
+            <span class="next-text nav-default">CGO Cross Compilation Issue in Docker</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>
