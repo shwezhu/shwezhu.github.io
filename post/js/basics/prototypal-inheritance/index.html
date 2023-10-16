@@ -48,7 +48,7 @@
 <meta itemprop="name" content="JS 继承之 Prototype Chain 的意义">
 <meta itemprop="description" content="1. JS 对象的特殊行为 在说继承之前, 还要提一下 JS 对象很违反直觉的一个行为, 即属性可以通过对象创建之后赋值自动添加, 举个例子, 1 2 3 4 5 6 7 8 9 10"><meta itemprop="datePublished" content="2023-06-21T11:08:32+00:00" />
 <meta itemprop="dateModified" content="2023-06-21T11:08:32+00:00" />
-<meta itemprop="wordCount" content="1907">
+<meta itemprop="wordCount" content="1847">
 <meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="JS 继承之 Prototype Chain 的意义"/>
 <meta name="twitter:description" content="1. JS 对象的特殊行为 在说继承之前, 还要提一下 JS 对象很违反直觉的一个行为, 即属性可以通过对象创建之后赋值自动添加, 举个例子, 1 2 3 4 5 6 7 8 9 10"/>
@@ -181,7 +181,7 @@
 </span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">student</span><span class="p">)</span>  <span class="c1">// { name: &#39;John&#39;, study: [Function: study], age: 99 }
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>这个行为很重要下面会用到, 要分清只有尝试读取属性值的时候, 在本对象找不到对应属性(property), 才会去其 prototype 去找, 若是赋值, 然后本对象没有该属性, 就会直接为此对象创建新的属性, 如下:</p>
+</div><p>只有尝试读取属性值的时候, 在本对象找不到对应属性(property), 才会去其 prototype 去找, <strong>在赋值里, 若本对象没有该属性, 就会直接为此对象创建新的属性</strong>, 如下:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -230,10 +230,9 @@
 </blockquote>
 <p>If you know Java or C++, you should be familiar with the inheritance concept. <strong>In this programming paradigm</strong>, a class is a blueprint for creating objects. If you want a new class to reuse the functionality of an existing class, you can create a new class that extends the existing class. This is called <strong>classical inheritance</strong>.</p>
 <blockquote>
-<p>JavaScript doesn’t use <strong>classical inheritance</strong>. Instead, it uses <strong>prototypal inheritance</strong>.</p>
+<p>JavaScript doesn’t use <strong>classical inheritance</strong>. Instead, it uses <strong>prototypal inheritance</strong>. In prototypal inheritance, an object “inherits” properties from another object via the <code>prototype</code> linkage.</p>
 </blockquote>
-<p>In prototypal inheritance, an object “inherits” properties from another object via the <code>prototype</code> linkage.</p>
-<p>在 <a href="https://davidzhu.xyz/2023/06/20/JS/Basics/prototype/">说说 JS 中的 Prototype</a> 中提到 JS 的每个对象都有个 prototype 属性, 我们可以通过以下两种方式引用一个对象的 prototype:</p>
+<p>在 <a href="https://davidzhu.xyz/post/js/basics/prototype/">说说 JS 中的 Prototype</a> 中提到 JS 的每个对象都有个 prototype 属性, 我们可以通过以下两种方式引用一个对象的 prototype:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -287,22 +286,20 @@
 </span><span class="lnt">24
 </span><span class="lnt">25
 </span><span class="lnt">26
-</span><span class="lnt">27
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Jack&#39;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">  <span class="nx">greet</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">      <span class="c1">// 注意这个 this 用的很有名堂, 在继承中如 student.getPrototypeOf(person)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="c1">// 然后当通过 student 对象的 prototype chain 查找到 greet() 函数时
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="c1">// this 会变为 student, 所以此时 下面这行代码等价于 console.log(&#39;hello, from &#39; + student.name);
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;hello, from &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// for student.getPrototypeOf(person), this will below will become to:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="c1">// console.log(&#39;hello, from &#39; + student.name)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;hello, from &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">  <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">student</span> <span class="o">=</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">  <span class="nx">study</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="s1">&#39;study&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="s1">&#39;study&#39;</span><span class="p">;</span><span class="o">\</span>
 </span></span><span class="line"><span class="cl">  <span class="p">},</span>
 </span></span><span class="line"><span class="cl">  <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">person</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -498,9 +495,9 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><blockquote>
-<p>Unlike other programming languages such as Java and C#, JavaScript classes are syntactic sugar over the <strong>prototypal inheritance</strong>. In other words, ES6 classes are just special functions. 但是 class declarations are not <strong>hoisted</strong> like function declarations.</p>
+<p>Unlike other programming languages such as Java and C#, JavaScript classes are syntactic sugar over the <strong>prototypal inheritance</strong>. In other words, ES6 classes are just special functions. But class declarations are not <strong>hoisted</strong> like function declarations.</p>
 </blockquote>
-<p><a href="https://davidzhu.xyz/2023/06/20/JS/Basics/prototype/">说说 JS 中的 Prototype</a>  中提到的 <code>obj.prototype</code> 和 <code>obj.__proto__</code> 不是一个东西, 当定义一个普通的对象之后 (不是函数) 它们的 <code>obj.prototype</code> 是 <code>undefined</code>, 而当定义一个函数之后, 这个函数的<code>func.prototype</code>会被自动创建, 并且值为一个空对象<code>{}</code>:</p>
+<p><a href="https://davidzhu.xyz/2023/06/20/JS/Basics/prototype/">说说 JS 中的 Prototype</a>  中提到的 <code>obj.prototype</code> 和 <code>obj.__proto__</code> 不是一个东西, 当定义一个普通的对象之后 (不是函数) 它们的 <code>obj.prototype</code> 是 <code>undefined</code>, 而当定义函数之后, 这个函数的<code>func.prototype</code>会被自动创建, 并且值为一个空对象<code>{}</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -564,7 +561,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">john</span><span class="p">.</span><span class="nx">getName</span><span class="p">());</span> <span class="c1">// John Doe
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>第一步发生在定义函数Person后:</p>
+</div><p>第一步发生在定义函数Person时:</p>
 <ol>
 <li>
 <p><code>Person.prototype</code> 被创建, 并被赋值为一个空对象<code>{}</code></p>
@@ -574,7 +571,7 @@
 </li>
 </ol>
 <p>此时 <code>Person.prototype </code>不再是个空对象, 而是有一个名为<code>getName</code>函数的对象<code>{ getName: [Function (anonymous)] }</code></p>
-<p>之后三步发生在调用<code>new</code>关键字后:</p>
+<p>之后三步发生在调用<code>new Person(&quot;John Doe&quot;)</code>时:</p>
 <ol start="3">
 <li>新创建空对象<code>{}</code>并赋值给john</li>
 <li>执行<code>john.__proto__ = Person.prototype</code></li>
