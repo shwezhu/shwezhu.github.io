@@ -84,21 +84,6 @@ do
 done
 ```
 
-**e.g., ** 
-
-```shell
-# move all folders in current directory into anoter folder
-# just keep files
-for file in *;
-do
-  if [[ -d "$file" ]]; then
-	  mv "$file" 	"/Users/David/blogs/static/$file"
-	fi
-done
-```
-
-**e.g.,** 
-
 ```shell
 # rename all file under current folder form lowercase to capital
 for file in *; 

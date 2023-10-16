@@ -24,11 +24,11 @@ const person = {
     greet: function () {
         return 'Hi, I am' + this.name;
     }
-};
+}
 
-console.log(person.prototype);
-console.log(person.__proto__);
-console.log(Object.getPrototypeOf(person));
+console.log(person.prototype)
+console.log(person.__proto__)
+console.log(Object.getPrototypeOf(person))
 
 // undefined
 // [Object: null prototype] {}
@@ -51,7 +51,7 @@ const person = {
 
 const student = {
   age: 13,
-  // 注意看这, 赋值
+  // Check the assignment here:
   __proto__: person
 }
 
