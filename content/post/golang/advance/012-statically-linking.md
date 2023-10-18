@@ -22,7 +22,7 @@ C/C++ programs are built in two main phases (ignore the preprocess, assemble):
 
 2. Linking - produces executable code (.exe or .dll)
 
-   - ***executable file*** with an extension of `exe` in DOS and `.out` in UNIX OS
+   - ***executable file*** with an extension of `exe` in DOS and `.out` in UNIX OSL
 
 ## 2. Static linking and dynamic linking
 

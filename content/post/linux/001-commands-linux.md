@@ -12,6 +12,7 @@ tags:
 You can use `xxx --help `, `man xxx`, `tldr you-command` to check the usage of the command. 
 
 ```shell
+$ ls -lh xxx
 $ systemctl status systemd-resolved
 $ sudo netstat -anp | grep 127.0.0.53
 # server is a go executable file, will print: server: Mach-O 64-bit executable arm64
