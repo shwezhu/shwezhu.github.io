@@ -132,7 +132,7 @@ If you’re coming from other relational databases, you might wonder what the di
 
 ## 8. Index adds places and time overhead
 
-**Time overheader** is easy to understand, indexes add to the cost of inserts, updates, and deletes because each index must be updated. 
+**Time overhead** is easy to understand, indexes add to the cost of inserts, updates, and deletes because each index must be updated. 
 
 **For taking up place,** there is an example: try to think our book or dictionary which have index (table of contents) which helps us to find the content quickly, the table of contents usually has multiple pages, just like this, index in a table also will take up some place which makes a table bigger. 
 

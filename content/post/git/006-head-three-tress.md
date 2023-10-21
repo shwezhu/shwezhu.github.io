@@ -44,9 +44,9 @@ That's what happens when `HEAD` points directly to a commit. This is called a de
 
 ### 2.2. What can HEAD attach to?
 
-`HEAD` can point to a commit, yes, but typically it does not. Let me say that again. ***Typically `HEAD` does not point to a commit.*** It points to a branch reference. It is *attached* to that branch, and when you do certain things (e.g., `commit` or [`reset`](https://stackoverflow.com/a/54934887/7936744)), the attached branch will move along with `HEAD`. 
+`HEAD` can point to a commit, yes, but typically it does not. Let me say that again. Typically `HEAD` does not point to a commit. It points to a branch reference. It is *attached* to that branch, and when you do certain things (e.g., `commit` or [`reset`](https://stackoverflow.com/a/54934887/7936744)), the attached branch will move along with `HEAD`. 
 
-`HEAD` is you. It points to whatever you checked out, wherever you are. Typically that is not a commit, it is a local branch. If `HEAD` *does* point to a commit (or tag), even if it's the same commit (or tag) that a branch also points to, you (and `HEAD`) have been detached from that branch. Since you don't have a branch attached to you, the branch won't follow along with you as you make new commits. The `HEAD`, however, will.
+`HEAD` is you. It points to whatever you checked out, wherever you are. **Typically that is not a commit, it is a local branch.** If `HEAD` *does* point to a commit (or tag), even if it's the same commit (or tag) that a branch also points to, you (and `HEAD`) have been detached from that branch. Since you don't have a branch attached to you, the branch won't follow along with you as you make new commits. The `HEAD`, however, will.
 
 {{% youtube "GN36mrrM12k" %}}
 

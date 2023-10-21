@@ -62,31 +62,19 @@ DROP COLUMN email;
 4. Do not add a column with the same name as its table and vice versa.
 5. I generally (not always) have a auto increment PK. I use the following convention: `tablename_id` (e.g. `foo_id`, `foo_bar_id`, etc.).
 
-## 3. 数据类型
+## 3. Store string
 
-### 3.1. 数值类型
+The most commonly used string data types in the context of databases are CHAR and VARCHAR. TEXT and LONGTEXT are also commonly used string data types. 
 
-整数值的范围越大，那么占用的空间就越大，合理设置数据类型很关键, 浮点数小数一般都会用DESCIMAL数据类型。
+**`char(10)` vs `varchar(10) `**
 
-**人员年龄字段的数据类型选择**
+When you define a column as CHAR(10), it will always occupy 10 characters of storage, regardless of the actual data length. If you store a string shorter than 10 characters, it will be padded with spaces to fill up the remaining space.
 
-```mysql
-age TINYINT UNSIGNED
-```
+When you define a column as VARCHAR(10), you store a string shorter than 10 characters, it will use only the necessary amount of storage, without any padding. 
 
-### 3.2. 字符串类型
+In general, the performance difference between CHAR and VARCHAR is usually negligible unless you're dealing with extremely large datasets or have specific performance requirements. 
 
-在字符串数据类型中使用最多的就是CHAR和VARCHAR两种, TEXT和LONGTESXT也是常用的字符串数据类型
-
-**CHAR 和 VARCHAR 的区别**
-
-> 无论使用 CHAR 还是 VARCHAR 都需要指定字符串的长度, 例如`char(10) varchar(10)`。
->
-> CHAR 是定长字符串, 当我们指定存储字符串的长度为10, 如果写入的文本字符串的数量不够10个, 则会以空格进行填充, 性能比VARCHAR好。
->
-> VARCHAR 是变长字符串, 当我们指定存储字符串的长度为10, 写入了几个文本字符串就算几个, **不会用空格进行补充**, 由于需要计算写入的字符串数量与总长度进行比较, 因此 VARCHAR 的性能略低与 CHAR。
-
-当明确指定该字段写入的字符串数量，并且一定会写入指定数量的字符串时，选择 CHAR 作为数据类型。当不固定用户会写入多少个字符串时，但是由文字数量限制，此时就使用 VARCHAR 作为数据类型。例如用户名是无法固定的，采用 VARCHAR 作为数据类型。
+> When the length of strings to be written to the field is explicitly specified choose CHAR as the data type. When the number of strings that users will input is not fixed, but there is a limit based on the number of characters, use VARCHAR as the data type. For example, for a username that can vary in length, VARCHAR is used as the data type.
 
 ## 4. 存储时间
 
