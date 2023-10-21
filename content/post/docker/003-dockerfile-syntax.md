@@ -121,9 +121,7 @@ Everything after the image name gets passed to the ENTRYPOINT as its arguments, 
 
 ### 4.2. How Does ENTRYPOINT Work
 
-The[ ENTRYPOINT Dockerfile instruction](https://docs.docker.com/engine/reference/builder/#entrypoint) sets the **process**(进程) that’s executed when your container starts. 
-
-In this example, the container will run `/usr/bin/my-app`:
+The[ ENTRYPOINT Dockerfile instruction](https://docs.docker.com/engine/reference/builder/#entrypoint) sets the **process**(进程) that’s executed when your container starts. In this example, the container will run `/usr/bin/my-app`:
 
 ```dockerfile
 ENTRYPOINT ["/usr/bin/my-app"]
