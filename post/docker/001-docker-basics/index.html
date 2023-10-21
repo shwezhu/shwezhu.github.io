@@ -51,7 +51,7 @@
 <meta itemprop="description" content="Video: https://youtu.be/Ozb9mZg7MVM?si=zFkftI_gXloSrZLh
 1. Docker client commands 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 #-------------- build and delete image -------------- $ docker build -t go-learning:1 . $ docker rmi shwezhu/file-station:v1 # if docker is in-use, delete with -f $ docker rmi -f shwezhu/file-station:v1 $ docker image ls -a #------------------ run image ---------------------- # --rm automatically removes the container when it exits, # -d: Run container in background $ docker run -d -p 80:80 --rm go-learning:1 # -it: allocates a pseudo-TTY and attaches it to the container # then you can use command line to intercat with the current running container $ docker run -it --rm docker-learning:v1 sh #------------- show and delete container -------------- $ docker container ls -a $ docker rm container_id # publish and pull image to repo $ docker push shwezhu/file-station:v1 $ docker pull davidzhu/file-station:v1 2."><meta itemprop="datePublished" content="2023-10-09T21:09:35+00:00" />
 <meta itemprop="dateModified" content="2023-10-09T21:09:35+00:00" />
-<meta itemprop="wordCount" content="1261">
+<meta itemprop="wordCount" content="1439">
 <meta itemprop="keywords" content="docker,golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Docker Basic Operations"/>
 <meta name="twitter:description" content="Video: https://youtu.be/Ozb9mZg7MVM?si=zFkftI_gXloSrZLh
@@ -151,9 +151,9 @@
         <li><a href="#3-build-image">3. Build image</a></li>
         <li><a href="#4-dockerignore-file">4. <code>.dockerignore</code> File</a></li>
         <li><a href="#5-image-vs-container">5. Image vs container</a></li>
-        <li><a href="#6-share-your-image">6. Share your image</a></li>
-        <li><a href="#7-install-docker-on-ubuntu">7. Install docker on Ubuntu</a></li>
-        <li><a href="#8-build-cgo-with-errors">8. Build cgo with errors</a></li>
+        <li><a href="#6-image-with-cross-platform">6. Image with cross platform</a></li>
+        <li><a href="#7-share-your-image">7. Share your image</a></li>
+        <li><a href="#8-build-cgo-errors---solved">8. Build cgo errors - solved</a></li>
       </ul>
     </li>
   </ul>
@@ -312,7 +312,13 @@
 <p>An image is composed of multiple stacked layers, like layers in a photo editor, each changing something in the environment. Images contain the code or binary, runtimes, dependencies, and other filesystem objects to run an application. The image relies on the host operating system (OS) kernel. For example, to build a web server image, start with an image that includes Ubuntu Linux (a base OS). Then, add packages like Apache and PHP on top.</p>
 <p><strong>Think of a Docker container as a running image instance</strong>. You can create many containers from the same image, each with its own unique data and state. Although images are not the only way to create containers, they are a common method.</p>
 <p>Source: <a href="https://circleci.com/blog/docker-image-vs-container/">Docker image vs container: What are the differences? | CircleCI</a></p>
-<h2 id="6-share-your-image">6. Share your image</h2>
+<h2 id="6-image-with-cross-platform">6. Image with cross platform</h2>
+<p>Docker images are typically built for a specific CPU architecture, such as x86-64 (64-bit Intel/AMD processors). When you pull a Docker image from a registry, it will contain the binaries and libraries compiled for that specific architecture.</p>
+<p>By default, Docker images are built for the architecture of the system where the image is built. However, it is possible to build and run Docker images for different architectures using a technique called multi-architecture or cross-platform support.</p>
+<p><strong>Docker images can support multiple platforms</strong>, which means that a single image may contain variants for different architectures, and sometimes for different operating systems, such as Windows. When you run an image with multi-platform support, Docker automatically selects the image that matches your OS and architecture.</p>
+<p>Most of the Docker Official Images on Docker Hub provide a <a href="https://github.com/docker-library/official-images#architectures-other-than-amd64">variety of architecturesopen_in_new</a>. For example, the <code>busybox</code> image supports <code>amd64</code>, <code>arm32v5</code>, <code>arm32v6</code>, <code>arm32v7</code>, <code>arm64v8</code>, <code>i386</code>, <code>ppc64le</code>, and <code>s390x</code>. When running this image on an <code>x86_64</code> / <code>amd64</code> machine, the <code>amd64</code> variant is pulled and run.</p>
+<p>Learn more: <a href="https://docs.docker.com/build/building/multi-platform/">Multi-platform images | Docker Docs</a></p>
+<h2 id="7-share-your-image">7. Share your image</h2>
 <p>Learn more: <a href="https://docs.docker.com/get-started/04_sharing_app/">https://docs.docker.com/get-started/04_sharing_app/</a></p>
 <p>Note that the image name should be same to the remote repository, the name of your image should include your docker hub username:</p>
 <div class="highlight"><div class="chroma">
@@ -332,9 +338,7 @@
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ docker push shwezhu/file-station:v1
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="7-install-docker-on-ubuntu">7. Install docker on Ubuntu</h2>
-<p><a href="https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04">How To Install and Use Docker on Ubuntu 20.04 | DigitalOcean</a></p>
-<p>Then pull the shared repository:</p>
+</div><p>Then pull the shared repository on another machine:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -352,7 +356,10 @@
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo docker run -d -p 80:80 shwezhu/file-station:v1
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="8-build-cgo-with-errors">8. Build cgo with errors</h2>
+</div><blockquote>
+<p>Make sure the image suits the cpu architecture: <a href="https://docs.docker.com/build/building/multi-platform/#building-multi-platform-images">Building multi-platform images</a></p>
+</blockquote>
+<h2 id="8-build-cgo-errors---solved">8. Build cgo errors - solved</h2>
 <p>When run image:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
