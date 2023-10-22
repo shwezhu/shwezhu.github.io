@@ -176,8 +176,8 @@
   
   <div class="post-content">
     <div class="post-summary">
-      1. Redirect status code When redirect a web page, the code looks like this in Go handler:
-1 2 3 4 5 6 // Have not logged in, redirect to login page. if session.IsNew() { http.Redirect(w, r, &#34;http://localhost:8080/login&#34;, http.StatusTemporaryRedirect) return } ... But when I refresh my browser which makes session.IsNew( is always true, then the web page didn&rsquo;t redirect, I don&rsquo;t know why, until I change the status code to http.
+      1. Redirect status code Different redirect status code can cause browser behave differently.
+1 2 3 4 StatusMovedPermanently = 301 // RFC 9110, 15.4.2 StatusFound = 302 // RFC 9110, 15.4.3 StatusTemporaryRedirect = 307 // RFC 9110, 15.4.8 StatusPermanentRedirect = 308 // RFC 9110, 15.4.9 An unauthorized user make a request to /home which needs authorized state to access, because he has not authorized, so he will be redirect to /login, if you respond a 308 code from server, then the unauthorized user will be redirect to /login, this woks fine.
     </div>
     <div class="read-more">
       <a href="/post/golang/practice/013-file-station-2/" class="read-more-link">Read more...</a>

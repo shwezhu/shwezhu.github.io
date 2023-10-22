@@ -16,8 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Redirect status code When redirect a web page, the code looks like this in Go handler:
-1 2 3 4 5 6 // Have not logged in, redirect to login page. if session.IsNew() { http.Redirect(w, r, &amp;#34;http://localhost:8080/login&amp;#34;, http.StatusTemporaryRedirect) return } ... But when I refresh my browser which makes session.IsNew( is always true, then the web page didn&amp;rsquo;t redirect, I don&amp;rsquo;t know why, until I change the status code to http." />
+<meta name="author" content="David" /><meta name="description" content="1. Redirect status code Different redirect status code can cause browser behave differently.
+1 2 3 4 StatusMovedPermanently = 301 // RFC 9110, 15.4.2 StatusFound = 302 // RFC 9110, 15.4.3 StatusTemporaryRedirect = 307 // RFC 9110, 15.4.8 StatusPermanentRedirect = 308 // RFC 9110, 15.4.9 An unauthorized user make a request to /home which needs authorized state to access, because he has not authorized, so he will be redirect to /login, if you respond a 308 code from server, then the unauthorized user will be redirect to /login, this woks fine." />
 
 
 
@@ -41,21 +41,21 @@
 
 
 <meta property="og:title" content="A File Station (2) - Go" />
-<meta property="og:description" content="1. Redirect status code When redirect a web page, the code looks like this in Go handler:
-1 2 3 4 5 6 // Have not logged in, redirect to login page. if session.IsNew() { http.Redirect(w, r, &#34;http://localhost:8080/login&#34;, http.StatusTemporaryRedirect) return } ... But when I refresh my browser which makes session.IsNew( is always true, then the web page didn&rsquo;t redirect, I don&rsquo;t know why, until I change the status code to http." />
+<meta property="og:description" content="1. Redirect status code Different redirect status code can cause browser behave differently.
+1 2 3 4 StatusMovedPermanently = 301 // RFC 9110, 15.4.2 StatusFound = 302 // RFC 9110, 15.4.3 StatusTemporaryRedirect = 307 // RFC 9110, 15.4.8 StatusPermanentRedirect = 308 // RFC 9110, 15.4.9 An unauthorized user make a request to /home which needs authorized state to access, because he has not authorized, so he will be redirect to /login, if you respond a 308 code from server, then the unauthorized user will be redirect to /login, this woks fine." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shaowenzhu.top/post/golang/practice/013-file-station-2/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-08T22:14:50+00:00" />
 <meta property="article:modified_time" content="2023-10-08T22:14:50+00:00" />
 <meta itemprop="name" content="A File Station (2) - Go">
-<meta itemprop="description" content="1. Redirect status code When redirect a web page, the code looks like this in Go handler:
-1 2 3 4 5 6 // Have not logged in, redirect to login page. if session.IsNew() { http.Redirect(w, r, &#34;http://localhost:8080/login&#34;, http.StatusTemporaryRedirect) return } ... But when I refresh my browser which makes session.IsNew( is always true, then the web page didn&rsquo;t redirect, I don&rsquo;t know why, until I change the status code to http."><meta itemprop="datePublished" content="2023-10-08T22:14:50+00:00" />
+<meta itemprop="description" content="1. Redirect status code Different redirect status code can cause browser behave differently.
+1 2 3 4 StatusMovedPermanently = 301 // RFC 9110, 15.4.2 StatusFound = 302 // RFC 9110, 15.4.3 StatusTemporaryRedirect = 307 // RFC 9110, 15.4.8 StatusPermanentRedirect = 308 // RFC 9110, 15.4.9 An unauthorized user make a request to /home which needs authorized state to access, because he has not authorized, so he will be redirect to /login, if you respond a 308 code from server, then the unauthorized user will be redirect to /login, this woks fine."><meta itemprop="datePublished" content="2023-10-08T22:14:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-08T22:14:50+00:00" />
-<meta itemprop="wordCount" content="1157">
+<meta itemprop="wordCount" content="815">
 <meta itemprop="keywords" content="golang,http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="A File Station (2) - Go"/>
-<meta name="twitter:description" content="1. Redirect status code When redirect a web page, the code looks like this in Go handler:
-1 2 3 4 5 6 // Have not logged in, redirect to login page. if session.IsNew() { http.Redirect(w, r, &#34;http://localhost:8080/login&#34;, http.StatusTemporaryRedirect) return } ... But when I refresh my browser which makes session.IsNew( is always true, then the web page didn&rsquo;t redirect, I don&rsquo;t know why, until I change the status code to http."/>
+<meta name="twitter:description" content="1. Redirect status code Different redirect status code can cause browser behave differently.
+1 2 3 4 StatusMovedPermanently = 301 // RFC 9110, 15.4.2 StatusFound = 302 // RFC 9110, 15.4.3 StatusTemporaryRedirect = 307 // RFC 9110, 15.4.8 StatusPermanentRedirect = 308 // RFC 9110, 15.4.9 An unauthorized user make a request to /home which needs authorized state to access, because he has not authorized, so he will be redirect to /login, if you respond a 308 code from server, then the unauthorized user will be redirect to /login, this woks fine."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -148,10 +148,9 @@
     <li>
       <ul>
         <li><a href="#1-redirect-status-code">1. Redirect status code</a></li>
-        <li><a href="#2-fetch-in-javascript">2. <code>fetch()</code> in javascript</a></li>
-        <li><a href="#3-preventdefault">3. <code>preventDefault()</code></a></li>
-        <li><a href="#4-relative-path">4. Relative path</a></li>
-        <li><a href="#5-dont-use-formdata-to-send-username-and-password">5. Don&rsquo;t use <code>FormData</code> to send username and password</a></li>
+        <li><a href="#2-preventdefault">2. <code>preventDefault()</code></a></li>
+        <li><a href="#3-relative-path">3. Relative path</a></li>
+        <li><a href="#4-dont-use-new-formdata-to-send-username-and-password">4. Don&rsquo;t use <code>new FormData()</code> to send username and password</a></li>
       </ul>
     </li>
   </ul>
@@ -160,34 +159,7 @@
 </div>
     <div class="post-content">
       <h2 id="1-redirect-status-code">1. Redirect status code</h2>
-<p>When redirect a web page, the code looks like this in Go handler:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Have not logged in, redirect to login page.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="nx">session</span><span class="p">.</span><span class="nf">IsNew</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="nx">http</span><span class="p">.</span><span class="nf">Redirect</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="s">&#34;http://localhost:8080/login&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusTemporaryRedirect</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">  <span class="k">return</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">...</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>But when I refresh my browser which makes <code>session.IsNew(</code> is always <code>true</code>, then the web page didn&rsquo;t redirect, I don&rsquo;t know why, until I change the status code to <code>http.StatusFound</code> or <code>http.StatusMovedPermanently</code> then when I refresh the web page, the redirect woks fine.</p>
-<p>This is because the status code <code>http.StatusPermanentRedirect</code>, <code>307</code> whicih tells clients making subsequent requests for this resource should use the old URI. Whereas <code>301</code> tells cilents making subsequent requests for this resource should use the new URI. I learn this in <a href="https://stackoverflow.com/a/4764456/16317008">an good explanation</a>:</p>
-<ul>
-<li><strong>301</strong>: Permanent redirect. Clients making subsequent requests for this resource should use the new URI. Clients should <strong>not</strong> follow the redirect automatically for POST/PUT/DELETE requests.</li>
-<li><strong>302</strong>: Redirect for undefined reason. Clients making subsequent requests for this resource should <strong>not</strong> use the new URI. Clients should <strong>not</strong> follow the redirect automatically for POST/PUT/DELETE requests.</li>
-<li><strong>303</strong>: Redirect for undefined reason. Typically, &lsquo;Operation has completed, continue elsewhere.&rsquo; Clients making subsequent requests for this resource should <strong>not</strong> use the new URI. Clients <strong>should</strong> follow the redirect for POST/PUT/DELETE requests, but <strong>use GET for the follow-up request</strong>.</li>
-<li><strong>307</strong>: Temporary redirect. Resource may return to this location at a later point. Clients making subsequent requests for this resource should use the old URI. Clients should <strong>not</strong> follow the redirect automatically for POST/PUT/DELETE requests.</li>
-</ul>
-<p>Status code constant in Go:</p>
+<p>Different redirect status code can <strong>cause browser behave differently</strong>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -202,90 +174,16 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">StatusPermanentRedirect</span> <span class="p">=</span> <span class="mi">308</span> <span class="c1">// RFC 9110, 15.4.9
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="2-fetch-in-javascript">2. <code>fetch()</code> in javascript</h2>
-<p>One of my router looks like this in Go:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">s</span><span class="p">.</span><span class="nx">router</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/logout&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">authenticatedOnly</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">handleLogout</span><span class="p">))</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>and the <code>s.authenticatedOnly()</code> method looks like this:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Acts as a filter which only allow the logged in request to pass.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Server</span><span class="p">)</span> <span class="nf">authenticatedOnly</span><span class="p">(</span><span class="nx">f</span> <span class="kd">func</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="o">*</span><span class="nx">sessions</span><span class="p">.</span><span class="nx">Session</span><span class="p">))</span> <span class="nx">http</span><span class="p">.</span><span class="nx">HandlerFunc</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="c1">// Check if user has logged in.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">session</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">store</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="s">&#34;session_id&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="o">...</span>
-</span></span><span class="line"><span class="cl">		<span class="nf">f</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">session</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The JavaScript code looks like this:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;logout-btn&#34;</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;click&#34;</span><span class="p">,</span> <span class="nx">logout</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">logout</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&#34;http://localhost:8080/logout&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// fetch sends GET method by default 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">      <span class="p">...</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>But when I clicked the logout button, the handler <code>authenticatedOnly()</code> never get called, but when I make a POST method with fetch, it works, I don&rsquo;t know why:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">url</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl"><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="3-preventdefault">3. <code>preventDefault()</code></h2>
+</div><p>An unauthorized user make a request to <code>/home </code> which needs authorized state to access, because he has not authorized, so he will be redirect to <code>/login</code>, if you respond a 308 code from server, then the unauthorized user will be redirect to <code>/login</code>, this woks fine. But 308 tell the brower all following http requests for <code>/home</code> need be redirected to <code>/login</code> even the user login successfully, you can clear the browser cache to reset, make sure don&rsquo;t repond a wrong status code.</p>
+<h2 id="2-preventdefault">2. <code>preventDefault()</code></h2>
 <p><strong>1.in what else situation we can use preventDefault()?</strong></p>
 <p>Actually any type of event, you can stop its default behavior with the <code>preventDefault();</code> So not only submit buttons, but keypresses, scrolling events, you name it and you can prevent it from happening. Or if you&rsquo;d like add your own logic to the default behavior, think of logging an event or anything of your choice.</p>
 <p><strong>2.how could I find out all the browsers default behaviour? e.g. if I click a button, what is the browsers default behaviour?</strong></p>
 <p>What do you mean with this? Mostly the default behavior is kind of implied. When you click a button, the onclick event fires. When you click the submit button, the form is submitted. When the windows scrolls, the onscroll event fires.</p>
 <p>Source: <a href="https://stackoverflow.com/a/17401436/16317008">https://stackoverflow.com/a/17401436/16317008</a></p>
 <p><code>event.preventDefault()</code> basically prevents event to fire. In the case of <code>submit</code> event. <code>event.preventDefault()</code> will prevent your form to submit. We normally prevent <code>submit</code> behaviour to check some validation before submitting the form or we need to change values of our input fields or we want to submit using <code>ajax</code> calls. For this purpose, we prevent form to be submitted by using <code>event.preventDefault()</code>.</p>
-<h2 id="4-relative-path">4. Relative path</h2>
-<p>You can write relative path directly for the endpoint, because the browser know the <code>Origin</code>, when you make POST or GET request, it will know where should go.</p>
+<h2 id="3-relative-path">3. Relative path</h2>
+<p>You can write relative path directly for the endpoint, because the browser know the <code>Origin</code>, when you make POST or GET request, it knows where should go.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -321,7 +219,7 @@
 </span></span><span class="line"><span class="cl">http.Redirect(w, r, &#34;/login&#34;, http.StatusPermanentRedirect)
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="5-dont-use-formdata-to-send-username-and-password">5. Don&rsquo;t use <code>FormData</code> to send username and password</h2>
+</div><h2 id="4-dont-use-new-formdata-to-send-username-and-password">4. Don&rsquo;t use <code>new FormData()</code> to send username and password</h2>
 <p>The parse form code in Go:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -342,7 +240,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>According to <a href="https://pkg.go.dev/net/http#Request.ParseForm">Golang docs</a> for <code>ParseForm() </code>:</p>
+<blockquote>
 <p>For other HTTP methods, or when the Content-Type <strong>is not</strong> application/x-www-form-urlencoded, the request Body is not read, and <code>r.PostForm</code> is initialized to a non-nil, empty value. I have talked this at <a href="https://davidzhu.xyz/post/golang/practice/010-go-web-2/">Parse Form Data in Go Server - David&rsquo;s Blog</a>.</p>
+</blockquote>
 <p>When you use fetch to send form data by this way:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -352,11 +252,9 @@
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span><span class="lnt">6
-</span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// don&#39;t use new FormData to send username and password
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">let</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;login-form&#34;</span><span class="p">))</span>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;login-form&#34;</span><span class="p">))</span>
 </span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;/login&#34;</span><span class="p">,</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">  <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">  <span class="nx">headers</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;Content-Type&#34;</span><span class="o">:</span><span class="s2">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">},</span>
@@ -415,7 +313,7 @@
 </span></span><span class="line"><span class="cl">password: 778899s
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>However, if you don&rsquo;t set <code>Content-Type</code> header explicitly, then the browser will make it to this automatically:</p>
+</div><p>However, if you don&rsquo;t set <code>Content-Type</code> header explicitly, the browser will set Content-Type header to <code>multipart/form-data</code> automatically:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -426,7 +324,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="p">:[</span><span class="nx">multipart</span><span class="o">/</span><span class="nx">form</span><span class="o">-</span><span class="nx">data</span><span class="p">;</span> <span class="nx">boundary</span><span class="p">=</span><span class="o">----</span><span class="nx">WebKitFormBoundaryBcoBib8rzQP0rq2W</span><span class="p">]</span> 
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>But this will make golang <code>ParseForm </code> method ignore the request body, so you cannot get the username and password. The correct way to send form data with fetch is like this:</p>
+</div><p>Golang&rsquo;s <code>ParseForm()</code> method will ignore the request body, so you cannot get the username and password. The correct way to send form data with fetch is like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
