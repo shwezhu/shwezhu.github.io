@@ -23,7 +23,7 @@ Learn more: [java - What's the difference between a Future and a Promise? - Stac
 
 Essentially, a promise is a returned object to which you attach callbacks, instead of passing callbacks into a function. 
 
- Imagine a function, `createAudioFileAsync()`, which asynchronously generates a sound file given a configuration record and two callback functions: one called if the audio file is successfully created, and the other called if an error occurs.
+Imagine a function, `createAudioFileAsync()`, which asynchronously generates a sound file given a configuration record and two callback functions: one called if the audio file is successfully created, and the other called if an error occurs.
 
 Here's some code that uses `createAudioFileAsync()`:
 
