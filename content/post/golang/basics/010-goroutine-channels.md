@@ -105,7 +105,7 @@ func main() {
 
 #### 2.4.1 Read on a closed channel
 
-A closed channel returns its default value as many times as it is called:
+A closed channel returns the default value of that type:
 
 ```go
 func main() {
