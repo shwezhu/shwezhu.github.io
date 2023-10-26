@@ -33,7 +33,7 @@ There are functions for memory allocation, creating threads, and input/output op
 
 It's important to clarify that the **runtime library includes both static and dynamic libraries**. The term "runtime library" is used for a general term. 
 
-Strictly speaking, tthe term `library` and `header` are not same. `Library` are the implementations of the `header`, which exist as binary files (the static library `.a`/`.lib` or the dynamic library `.so`/`.dll` ), whereas headers are `.h` files. 
+**The term `library` (runtime library) and `header` are not same**. `Library` are the implementations of the `header`, which exist as binary files (the static library `.a`/`.lib` or the dynamic library `.so`/`.dll` ), whereas headers are `.h` files. 
 
 Therefore, we usually cannot find the source code of the implementation of C standard library, such as function `printf()`, the implementation of these functions are provided as compiled binary files. But you can find the glibc's implementation of `printf()` on  the internet, because glibc is open source. 
 

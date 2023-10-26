@@ -12,6 +12,9 @@ tags:
 // get data from bytes.Buffer
 bytes := buff.Bytes()
 str := string(bytes)
+// Ext returns the file name extension used by path.
+ext := path.Ext(filename)
+// 
 ```
 
 ## Rules

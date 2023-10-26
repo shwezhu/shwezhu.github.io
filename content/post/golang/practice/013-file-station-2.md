@@ -147,3 +147,14 @@ To quote [MDN on `FormData`](https://developer.mozilla.org/en-US/docs/Web/API/Fo
 So when using `FormData` you are locking yourself into `multipart/form-data`. There is no way to send a `FormData` object as the body and *not* sending data in the `multipart/form-data` format.
 
 If you want to send the data as `application/x-www-form-urlencoded` you will either have to specify the body as an URL-encoded string, or pass a [`URLSearchParams`](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) object. 
+
+## 5. Send image
+
+```go
+func handleBackgroundImage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Disposition", "attachment; filename=draw1.png")
+	w.Header().Set("Content-Type", "application/octet-stream")
+	http.ServeFile(w, r, "./template/draw1.png")
+}
+```
+
