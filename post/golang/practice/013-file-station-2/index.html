@@ -51,7 +51,7 @@
 <meta itemprop="description" content="1. Redirect status code Different redirect status code can cause browser behave differently.
 1 2 3 4 StatusMovedPermanently = 301 // RFC 9110, 15.4.2 StatusFound = 302 // RFC 9110, 15.4.3 StatusTemporaryRedirect = 307 // RFC 9110, 15.4.8 StatusPermanentRedirect = 308 // RFC 9110, 15.4.9 An unauthorized user make a request to /home which needs authorized state to access, because he has not authorized, so he will be redirect to /login, if you respond a 308 code from server, then the unauthorized user will be redirect to /login, this woks fine."><meta itemprop="datePublished" content="2023-10-08T22:14:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-08T22:14:50+00:00" />
-<meta itemprop="wordCount" content="815">
+<meta itemprop="wordCount" content="838">
 <meta itemprop="keywords" content="golang,http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="A File Station (2) - Go"/>
 <meta name="twitter:description" content="1. Redirect status code Different redirect status code can cause browser behave differently.
@@ -151,6 +151,7 @@
         <li><a href="#2-preventdefault">2. <code>preventDefault()</code></a></li>
         <li><a href="#3-relative-path">3. Relative path</a></li>
         <li><a href="#4-dont-use-new-formdata-to-send-username-and-password">4. Don&rsquo;t use <code>new FormData()</code> to send username and password</a></li>
+        <li><a href="#5-send-image">5. Send image</a></li>
       </ul>
     </li>
   </ul>
@@ -356,7 +357,24 @@
 </blockquote>
 <p>So when using <code>FormData</code> you are locking yourself into <code>multipart/form-data</code>. There is no way to send a <code>FormData</code> object as the body and <em>not</em> sending data in the <code>multipart/form-data</code> format.</p>
 <p>If you want to send the data as <code>application/x-www-form-urlencoded</code> you will either have to specify the body as an URL-encoded string, or pass a <a href="https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams"><code>URLSearchParams</code></a> object.</p>
-
+<h2 id="5-send-image">5. Send image</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">handleBackgroundImage</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Disposition&#34;</span><span class="p">,</span> <span class="s">&#34;attachment; filename=draw1.png&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/octet-stream&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">http</span><span class="p">.</span><span class="nf">ServeFile</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="s">&#34;./template/draw1.png&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
     </div>
 
     <div class="post-copyright">
