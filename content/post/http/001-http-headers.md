@@ -118,19 +118,42 @@ Learn more: [What is cache-control? | Cache explained | Cloudflare](https://www.
 
 ### 5. `Authorization ` & `WWW-Authenticate`
 
-The HTTP **`Authorization`** **request header** can be used to provide credentials that authenticate a user agent with a server, allowing access to a protected resource.
+HTTP supports the use of several authentication mechanisms to control access to pages and other resources. These mechanisms are all based around the use of the `401` status code and the `WWW-Authenticate` response header.
 
-The HTTP **`WWW-Authenticate`** **response header** defines the [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication) methods ("challenges") that might be used to gain access to a specific resource. 
+The most widely used **HTTP authentication mechanisms** are:
+
+- **Basic:** the client sends the user name and password as unencrypted base64 encoded text. It should only be used with HTTPS, as the password can be easily captured and reused over HTTP.
+
+- **Digest:** the client sends a hashed form of the password to the server. Although, the password cannot be captured over HTTP, it may be possible to replay requests using the hashed password.
+- **NTLM:** this uses a secure challenge/response mechanism that prevents password capture or replay attacks over HTTP. However, the authentication is per connection and will only work with HTTP/1.1 persistent connections. For this reason, it may not work through all HTTP proxies and can introduce large numbers of network roundtrips if connections are regularly closed by the web server.
+
+In this section, we will just discuss the **Basic authentication mechanism**:
+
+If an HTTP receives an anonymous request for a protected resource it can force the use of Basic authentication by rejecting the request with a `401` (Access Denied) status code and setting the `WWW-Authenticate` response header as shown below:
+
+```http
+HTTP/1.1 401 Access Denied
+WWW-Authenticate: Basic realm="My Server"
+Content-Length: 0
+```
+
+The word **Basic** in the **WWW-Authenticate** selects the authentication mechanism that the HTTP client must use to access the resource. The **realm** string can be set to any value to identify the secure area and may used by HTTP clients to manage passwords. Most web browsers will display a login dialog when this response is received, allowing the user to enter a username and password. This information is then used to retry the request with an `Authorization` request header:
+
+```http
+GET /securefiles/ HTTP/1.1
+Host: www.httpwatch.com
+Authorization: Basic aHR0cHdhdGNoOmY=
+```
+
+The **Authorization** specifies the authentication mechanism (in this case **Basic**) followed by the username and password. Although, the string **aHR0cHdhdGNoOmY=** may look encrypted it is simply a base64 encoded version of <username>:<password>. In this example, the un-encoded string **"httpwatch:foo"** was used and would be readily available to anyone who could intercept the HTTP request.
+
+- The HTTP **`Authorization`** **request header** can be used to provide credentials that authenticate a user agent with a server, allowing access to a protected resource.
+
+- The HTTP **`WWW-Authenticate`** **response header** defines the [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication) methods ("challenges") that might be used to gain access to a specific resource. 
+
+Learn more: http://www.httpwatch.com/httpgallery/authentication/
 
 > The **`Authorization`** header is usually, but not always, sent after the user agent first attempts to request a protected resource without credentials. The server responds with a [`401`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401) `Unauthorized` message that includes at least one [`WWW-Authenticate`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/WWW-Authenticate) header. This header indicates what authentication schemes can be used to access the resource (and any additional information needed by the client to use them). 
-
-[RFC 7235](https://datatracker.ietf.org/doc/html/rfc7235) defines the HTTP authentication framework, which can be used by a server to [challenge](https://developer.mozilla.org/en-US/docs/Glossary/Challenge) a client request, and by a client to provide authentication information.
-
-The challenge and response flow works like this:
-
-1. The server responds to a client with a [`401`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401) (Unauthorized) response status and provides information on how to authorize with a [`WWW-Authenticate`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/WWW-Authenticate) response header containing at least one challenge.
-2. A client that wants to authenticate itself with the server can then do so by including an [`Authorization`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) request header with the credentials.
-3. Usually a client will present a password prompt to the user and will then issue the request including the correct `Authorization` header.
 
 > **Warning:** The "Basic" authentication scheme used in the diagram above sends the credentials **encoded but not encrypted**. This would be completely insecure unless the exchange was over a secure connection (HTTPS/TLS).
 
@@ -150,6 +173,14 @@ func(w http.ResponseWriter, r *http.Request) {
   http.Error(w, "Unauthorized", http.StatusUnauthorized)
 }
 ```
+
+`Basic realm="restricted"`, what does this mean?
+
+In short, endpoints in the same realm should share credentials. If your credentials work for a endpoint with the realm `"restricted"`, it should be assumed that the same username and password combination should work for another endpoint with the same realm.
+
+How to group pages (endpoints) with realm?
+
+`realm` value doesn't have magic, you still need apply the auth middleware for each endpoint at server side. But different value of realm will instruct browser use different credentials (username, password) for the different request url automatically. The concept of realms in the context of authentication is primarily used to instruct the client (typically a web browser) to send different credentials for different request URLs automatically. The server-side implementation still requires applying the authentication middleware to each endpoint. 
 
 Code credit to: [Go BasicAuth](https://www.alexedwards.net/blog/basic-authentication-in-go)
 
