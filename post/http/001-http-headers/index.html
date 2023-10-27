@@ -51,7 +51,7 @@ Request headers contain more information about the resource to be fetched, or ab
 <meta itemprop="description" content="0. Header types Headers can be grouped according to their contexts:
 Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport."><meta itemprop="datePublished" content="2023-10-26T09:58:10+00:00" />
 <meta itemprop="dateModified" content="2023-10-26T09:58:10+00:00" />
-<meta itemprop="wordCount" content="1194">
+<meta itemprop="wordCount" content="1591">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="HTTP Headers"/>
 <meta name="twitter:description" content="0. Header types Headers can be grouped according to their contexts:
@@ -288,18 +288,59 @@ Request headers contain more information about the resource to be fetched, or ab
 </blockquote>
 <p>Learn more: <a href="https://www.cloudflare.com/learning/cdn/glossary/what-is-cache-control/">What is cache-control? | Cache explained | Cloudflare</a></p>
 <h3 id="5-authorization---www-authenticate">5. <code>Authorization </code> &amp; <code>WWW-Authenticate</code></h3>
+<p>HTTP supports the use of several authentication mechanisms to control access to pages and other resources. These mechanisms are all based around the use of the <code>401</code> status code and the <code>WWW-Authenticate</code> response header.</p>
+<p>The most widely used <strong>HTTP authentication mechanisms</strong> are:</p>
+<ul>
+<li>
+<p><strong>Basic:</strong> the client sends the user name and password as unencrypted base64 encoded text. It should only be used with HTTPS, as the password can be easily captured and reused over HTTP.</p>
+</li>
+<li>
+<p><strong>Digest:</strong> the client sends a hashed form of the password to the server. Although, the password cannot be captured over HTTP, it may be possible to replay requests using the hashed password.</p>
+</li>
+<li>
+<p><strong>NTLM:</strong> this uses a secure challenge/response mechanism that prevents password capture or replay attacks over HTTP. However, the authentication is per connection and will only work with HTTP/1.1 persistent connections. For this reason, it may not work through all HTTP proxies and can introduce large numbers of network roundtrips if connections are regularly closed by the web server.</p>
+</li>
+</ul>
+<p>In this section, we will just discuss the <strong>Basic authentication mechanism</strong>:</p>
+<p>If an HTTP receives an anonymous request for a protected resource it can force the use of Basic authentication by rejecting the request with a <code>401</code> (Access Denied) status code and setting the <code>WWW-Authenticate</code> response header as shown below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">401</span> <span class="ne">Access Denied</span>
+</span></span><span class="line"><span class="cl"><span class="n">WWW-Authenticate</span><span class="o">:</span> <span class="l">Basic realm=&#34;My Server&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Length</span><span class="o">:</span> <span class="l">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The word <strong>Basic</strong> in the <strong>WWW-Authenticate</strong> selects the authentication mechanism that the HTTP client must use to access the resource. The <strong>realm</strong> string can be set to any value to identify the secure area and may used by HTTP clients to manage passwords. Most web browsers will display a login dialog when this response is received, allowing the user to enter a username and password. This information is then used to retry the request with an <code>Authorization</code> request header:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">GET</span> <span class="nn">/securefiles/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">www.httpwatch.com</span>
+</span></span><span class="line"><span class="cl"><span class="n">Authorization</span><span class="o">:</span> <span class="l">Basic aHR0cHdhdGNoOmY=</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <strong>Authorization</strong> specifies the authentication mechanism (in this case <strong>Basic</strong>) followed by the username and password. Although, the string <strong>aHR0cHdhdGNoOmY=</strong> may look encrypted it is simply a base64 encoded version of <username>:<password>. In this example, the un-encoded string <strong>&ldquo;httpwatch:foo&rdquo;</strong> was used and would be readily available to anyone who could intercept the HTTP request.</p>
+<ul>
+<li>
 <p>The HTTP <strong><code>Authorization</code></strong> <strong>request header</strong> can be used to provide credentials that authenticate a user agent with a server, allowing access to a protected resource.</p>
+</li>
+<li>
 <p>The HTTP <strong><code>WWW-Authenticate</code></strong> <strong>response header</strong> defines the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP authentication</a> methods (&ldquo;challenges&rdquo;) that might be used to gain access to a specific resource.</p>
+</li>
+</ul>
+<p>Learn more: <a href="http://www.httpwatch.com/httpgallery/authentication/">http://www.httpwatch.com/httpgallery/authentication/</a></p>
 <blockquote>
 <p>The <strong><code>Authorization</code></strong> header is usually, but not always, sent after the user agent first attempts to request a protected resource without credentials. The server responds with a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"><code>401</code></a> <code>Unauthorized</code> message that includes at least one <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/WWW-Authenticate"><code>WWW-Authenticate</code></a> header. This header indicates what authentication schemes can be used to access the resource (and any additional information needed by the client to use them).</p>
 </blockquote>
-<p><a href="https://datatracker.ietf.org/doc/html/rfc7235">RFC 7235</a> defines the HTTP authentication framework, which can be used by a server to <a href="https://developer.mozilla.org/en-US/docs/Glossary/Challenge">challenge</a> a client request, and by a client to provide authentication information.</p>
-<p>The challenge and response flow works like this:</p>
-<ol>
-<li>The server responds to a client with a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"><code>401</code></a> (Unauthorized) response status and provides information on how to authorize with a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/WWW-Authenticate"><code>WWW-Authenticate</code></a> response header containing at least one challenge.</li>
-<li>A client that wants to authenticate itself with the server can then do so by including an <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization"><code>Authorization</code></a> request header with the credentials.</li>
-<li>Usually a client will present a password prompt to the user and will then issue the request including the correct <code>Authorization</code> header.</li>
-</ol>
 <blockquote>
 <p><strong>Warning:</strong> The &ldquo;Basic&rdquo; authentication scheme used in the diagram above sends the credentials <strong>encoded but not encrypted</strong>. This would be completely insecure unless the exchange was over a secure connection (HTTPS/TLS).</p>
 </blockquote>
@@ -337,7 +378,11 @@ Request headers contain more information about the resource to be fetched, or ab
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Code credit to: <a href="https://www.alexedwards.net/blog/basic-authentication-in-go">Go BasicAuth</a></p>
+</div><p><code>Basic realm=&quot;restricted&quot;</code>, what does this mean?</p>
+<p>In short, endpoints in the same realm should share credentials. If your credentials work for a endpoint with the realm <code>&quot;restricted&quot;</code>, it should be assumed that the same username and password combination should work for another endpoint with the same realm.</p>
+<p>How to group pages (endpoints) with realm?</p>
+<p><code>realm</code> value doesn&rsquo;t have magic, you still need apply the auth middleware for each endpoint at server side. But different value of realm will instruct browser use different credentials (username, password) for the different request url automatically. The concept of realms in the context of authentication is primarily used to instruct the client (typically a web browser) to send different credentials for different request URLs automatically. The server-side implementation still requires applying the authentication middleware to each endpoint.</p>
+<p>Code credit to: <a href="https://www.alexedwards.net/blog/basic-authentication-in-go">Go BasicAuth</a></p>
 <p>HTTP authentication framework: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP authentication - HTTP | MDN</a></p>
 <p>Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization">Authorization - HTTP | MDN</a></p>
 
