@@ -2,9 +2,8 @@
 title: Curl Basics
 date: 2023-09-22 22:58:30
 categories:
- - cs basics
+ - http
 tags:
- - cs basics
  - http
 ---
 

@@ -2,9 +2,8 @@
 title: HTTP Messages
 date: 2023-09-23 09:51:30
 categories:
- - cs basics
+ - http
 tags:
- - cs basics
  - http
 typora-root-url: ../../../static
 ---
@@ -79,7 +78,7 @@ Many different headers can appear in an HTTP request. They can be divided in sev
 - [Request headers](https://developer.mozilla.org/en-US/docs/Glossary/Request_header), like [`User-Agent`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) or [`Accept`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept), modify the request by specifying it further (like [`Accept-Language`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language)), by giving context (like [`Referer`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer)), or by conditionally restricting it (like [`If-None`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None)).
 - [Representation headers](https://developer.mozilla.org/en-US/docs/Glossary/Representation_header) like [`Content-Type`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) that describe the original format of the message data and any encoding applied (only present if the message has a body).
 
-![a](/018-http/a.png)
+![a](/004-http-messages/a1.png)
 
 #### 1.1.3. Body
 
@@ -104,7 +103,7 @@ HTTP Reponse also contains three parts:
 - Body
   - Same as http request.
 
-![b](/018-http/b.png)
+![b](/004-http-messages/b1.png)
 
 Source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages
 
@@ -122,48 +121,13 @@ Form data is sent with the request body. Therefore, when there is sensitive data
 
 ### 2.2. Server side
 
-#### 2.2.1. Go Web
+#### 2.2.1. Go web
 
-When POST data to server, the `Content-Type` header in the request is important, for example in Go there is a method to parse the form data in the request:
+For all requests, `ParseForm()` parses the **raw query** from the URL and updates r.Form. For POST, PUT, and PATCH requests, **it also reads the request body**, parses it as a form and puts the results into both r.PostForm and r.Form. When the `Content-Type` is not application/x-www-form-urlencoded, the request Body is not read. 
 
-```
-// Parse username and password in form.
-_ = req.ParseForm()
-username := req.Form.Get("username")
-password := req.Form.Get("password")
-```
+Learn more: [Some HTTP Issues with Go - David's Blog](https://davidzhu.xyz/post/golang/practice/012-http-related/#4-parse-form-and-query-string)
 
-Let's check the `ParseForm()` method in the doc:
-
-```go
-func (r *Request) ParseForm() error
-```
-
-ParseForm populates `r.Form` and `r.PostForm`. 
-
-**For all requests**, `ParseForm()` parses the raw query from the URL and updates r.Form.
-
-For POST, PUT, and PATCH requests, **it also reads** the request body, parses it as a form and puts the results into both r.PostForm and r.Form. Request body parameters take precedence over URL query string values in r.Form. 
-
-For other HTTP methods, or when the Content-Type is not `application/x-www-form-urlencoded`, the request Body is not read, and r.PostForm is initialized to a non-nil, empty value. 
-
-This means when you call `r.ParseForm()`, for all types of request, it will try to parse the query string resides in thr url automatically, and put the data (key-value) into `r.Form`  which is a map in `Go`. If your request is POST, PUT, PATCH **and** the `Content-Type` header of the request is `application/x-www-form-urlencoded`, `r.ParseForm()` will also try to parse the request body, and if there are same data parsed from request body, they will take place of the data parsed from query string. Otherwise the request body will be ignored by `r.ParseForm()`. 
-
-This means the command below will achieve same thing for Go server if the server call `ParseForm()` to parse form:
-
-```shell
-# with -d option curl will make request POST automatically
-curl localhost:8080/hello -d "username=davidzhu&password=778899a" 
-curl -X POST "localhost:8080/hello?username=david&password=778899a"
-```
-
-Reference: https://pkg.go.dev/net/http#Request.ParseForm
-
-Learn more about curl: https://davidzhu.xyz/post/cs-basics/017-curl/
-
-Learn more about Go parse form and request body: https://davidzhu.xyz/post/golang/practice/010-go-web-2/
-
-#### 2.2.2. Spring Web
+#### 2.2.2. Spring web
 
 If your server is wiritten in Java Spring, and you need to POST form data to the server, you need to set your `Content-Type` header of your request to `application/json`. 
 
@@ -199,7 +163,7 @@ A `POST` request is typically sent via an [HTML form](https://developer.mozilla.
 - `multipart/form-data`: each value is sent as a block of data ("body part"), with a user agent-defined delimiter ("boundary") separating each part. The keys are given in the `Content-Disposition` header of each part.
 - `text/plain`
 
-![a](/018-http-messages/a.png)
+![a](/004-http-messages/a.png)
 
 Source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST
 
@@ -225,9 +189,9 @@ Let's say I have a html code like this:
 
 And when I push the regiser buttion to submit the form, the http request looks like this:
 
-![c](/018-http-messages/c.png)
+![c](/004-http-messages/c.png)
 
-![d](/018-http-messages/d.png)
+![d](/004-http-messages/d.png)
 
 As you can see the form data resides in the request body, not in the URL.  
 
@@ -290,52 +254,3 @@ err := decoder.Decode(&user)
 print(user.password)
 print(user.username)
 ```
-
-## 5. Some common headers
-
-### 5.1. cooke
-
-There are two headers related to cookie, one is `Set-Cookie` header another is `Cookie` header. 
-
-After receiving an HTTP request, a server can send one or more [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) headers with the response. The browser usually stores the cookie and sends it with requests made to the same server inside a [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) HTTP header.
-
-For example, a response from server contains cookie headers may looks like this:
-
-```
-HTTP/2.0 200 OK
-Content-Type: text/html
-Set-Cookie: yummy_cookie=choco
-Set-Cookie: tasty_cookie=strawberry
-
-[page content]
-```
-
-A HTTP request may looks like this below:
-
-```
-GET /sample_page.html HTTP/2.0
-Host: www.example.org
-Cookie: yummy_cookie=choco; tasty_cookie=strawberry
-```
-
-Therefore, when I want set cookie manually for my http request, I'll probably do something like this (I do this in Go):
-
-```go
-req, _ := http.NewRequest(http.MethodPost, "/chat", your_encoded_message)
-// set content-type header
-req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-// set cookie header (cookie is a key value data)
-req.Header.Set("Cookie", "session_id=xxxxxxxxxxx")
-...
-```
-
-If I want get cookie from repsonse, I'll probably retrieve the cookie like this:
-
-```go
-response := makeRequest(...)
-my_cooke := response.Header().Get("Set-Cookie") 
-```
-
-Cookie is just a header which having no doubt resides in the header of HTTP mesages, don't overthinking. 
-
-Reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies

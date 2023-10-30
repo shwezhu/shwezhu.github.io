@@ -2,9 +2,8 @@
 title: HTTPS vs VPN vs Proxy
 date: 2023-09-10 10:54:30
 categories:
- - cs basics
+ - http
 tags:
- - cs basics
  - cryptography
  - http
  - cybersecurity

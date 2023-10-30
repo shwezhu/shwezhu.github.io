@@ -1,6 +1,6 @@
 ---
 title: Some HTTP Issues with Go
-date: 2023-10-29 11:130:50
+date: 2023-10-29 11:30:50
 categories:
  - golang
  - practice
@@ -71,7 +71,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-### 2. Relative path
+## 2. Relative path
 
 You can write relative path directly for the endpoint, because the browser know the **Origin**, when you make HTTP request, it knows where should go.
 
@@ -88,9 +88,9 @@ And it's ok to write relative path when redirect in Go code:
 http.Redirect(w, r, "/login", http.StatusFound)
 ```
 
-### 3. Redirection
+## 3. Redirection
 
-#### 3.1. Redirect at front end
+### 3.1. Redirect at front end
 
 For redirection, you can use js code to redirect based on the status code passed from server:
 
@@ -108,15 +108,15 @@ if (!response.ok) {
 window.location = "/home"
 ```
 
-#### 3.2. Redirect at server with `Location` header
+### 3.2. Redirect at server with `Location` header
 
 Learn more: [HTTP Headers - David's Blog](https://davidzhu.xyz/post/http/001-http-headers/)
 
-#### 3.3. Redirect at server with `http.Redirect()` method
+### 3.3. Redirect at server with `http.Redirect()` method
 
 See above **Relative path** section.
 
-### 4. Parse form and query string
+## 4. Parse form and query string
 
 ```go
 func (r *Request) ParseForm() error
@@ -124,6 +124,11 @@ func (r *Request) ParseForm() error
 
 For all requests, `ParseForm()` parses the **raw query** from the URL and updates r.Form. For POST, PUT, and PATCH requests, **it also reads the request body**, parses it as a form and puts the results into both r.PostForm and r.Form. Request body parameters take precedence over URL query string values in r.Form. For other HTTP methods, **or when the Content-Type is not application/x-www-form-urlencoded, the request Body is not read**. 
 
-Therefore, you can pass data in the query string or in the request body at front end, when you want 
+Therefore, you can pass data in query string or in the request body. When you pass data with request body and the `Content-Type` header is `application/x-www-form-urlencoded`, it will be same to sending data with query stirng. 
+
+The `Content-Type` header can be `application/json`, `application/x-www-form-urlencoded`, `multipart/form-data`, learn more: [Curl Basics - David's Blog](https://davidzhu.xyz/post/cs-basics/017-curl/) 
+
+How to send form data in `application/x-www-form-urlencoded` format: [Tricks in Javascript - David's Blog](https://davidzhu.xyz/post/js/practice/001-tricks/#4-send-username-and-password-form)
 
 Learn more: [http package - net/http - Go Packages](https://pkg.go.dev/net/http#Request.ParseForm)
+

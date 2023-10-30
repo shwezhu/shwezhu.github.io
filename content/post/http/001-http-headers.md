@@ -190,5 +190,52 @@ HTTP authentication framework: [HTTP authentication - HTTP | MDN](https://develo
 
 Learn more: [Authorization - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
 
+### 6. cookie
+
+There are two headers related to cookie, one is `Set-Cookie` header another is `Cookie` header. 
+
+After receiving an HTTP request, a server can send one or more [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) headers with the response. The browser usually stores the cookie and sends it with requests made to the same server inside a [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) HTTP header.
+
+For example, a response from server contains cookie headers may looks like this:
+
+```
+HTTP/2.0 200 OK
+Content-Type: text/html
+Set-Cookie: yummy_cookie=choco
+Set-Cookie: tasty_cookie=strawberry
+
+[page content]
+```
+
+A HTTP request may looks like this below:
+
+```
+GET /sample_page.html HTTP/2.0
+Host: www.example.org
+Cookie: yummy_cookie=choco; tasty_cookie=strawberry
+```
+
+Therefore, when I want set cookie manually for my http request, I'll probably do something like this (I do this in Go):
+
+```go
+req, _ := http.NewRequest(http.MethodPost, "/chat", your_encoded_message)
+// set content-type header
+req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+// set cookie header (cookie is a key value data)
+req.Header.Set("Cookie", "session_id=xxxxxxxxxxx")
+...
+```
+
+If I want get cookie from repsonse, I'll probably retrieve the cookie like this:
+
+```go
+response := makeRequest(...)
+my_cooke := response.Header().Get("Set-Cookie") 
+```
+
+Cookie is just a header which having no doubt resides in the header of HTTP mesages, don't overthinking. 
+
+Reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies
+
 
 

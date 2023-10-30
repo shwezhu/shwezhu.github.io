@@ -2,9 +2,8 @@
 title: CSRF Attack and CORS
 date: 2023-10-06 18:29:57
 categories:
- - cs basics
+ - http
 tags:
-  - cs basics
   - cybersecurity
   - http
 ---

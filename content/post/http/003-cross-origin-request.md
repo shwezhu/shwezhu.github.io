@@ -1,11 +1,9 @@
 ---
-title: A File Station (1) - Go 
+title: Cross-origin Request HTTP
 date: 2023-10-06 20:28:50
 categories:
- - golang
- - practice
+ - http
 tags:
- - golang
  - http
 ---
 
