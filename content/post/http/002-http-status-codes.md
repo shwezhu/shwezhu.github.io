@@ -39,3 +39,9 @@ learn more:
 
 - https://stackoverflow.com/a/55008140/16317008
 - https://stackoverflow.com/a/58492986/16317008
+
+### 2. Redirect in practice
+
+Different redirect status code can **cause browser behave differently**. 
+
+An unauthorized user make a request to `/home ` which needs authorized state to access, because he has not authorized, so he will be redirect to `/login`, if you respond a 308 code from server, then the unauthorized user will be redirect to `/login`, this woks fine. But 308 tell the brower all following http requests for `/home` need be redirected to `/login` even the user login successfully, you can clear the browser cache to reset, make sure don't repond a wrong status code. 

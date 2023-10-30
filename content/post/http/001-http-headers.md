@@ -81,6 +81,8 @@ func (s *server) handleMkdir(w http.ResponseWriter, r *http.Request, currentPath
 ```
 
 > Note that `Location` is a response header. 
+>
+> Ajax call in js doesn't need redirection to go back to the current page. 
 
 Status code 303: [HTTP Status Codes - David's Blog](https://davidzhu.xyz/post/http/002-http-status-codes/)
 
@@ -187,4 +189,6 @@ Code credit to: [Go BasicAuth](https://www.alexedwards.net/blog/basic-authentica
 HTTP authentication framework: [HTTP authentication - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)
 
 Learn more: [Authorization - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
+
+
 
