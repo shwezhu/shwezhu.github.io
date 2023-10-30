@@ -51,7 +51,7 @@
 <meta itemprop="description" content="1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;
 303: temporary redirect, changing the method to GET. Example usage: if the browser sent POST to /register."><meta itemprop="datePublished" content="2023-10-26T15:30:05+00:00" />
 <meta itemprop="dateModified" content="2023-10-26T15:30:05+00:00" />
-<meta itemprop="wordCount" content="382">
+<meta itemprop="wordCount" content="478">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="HTTP Status Codes"/>
 <meta name="twitter:description" content="1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;
@@ -149,6 +149,7 @@
         <li>
           <ul>
             <li><a href="#1-redirect">1. Redirect</a></li>
+            <li><a href="#2-redirect-in-practice">2. Redirect in practice</a></li>
           </ul>
         </li>
       </ul>
@@ -212,6 +213,9 @@ The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a
 <li><a href="https://stackoverflow.com/a/55008140/16317008">https://stackoverflow.com/a/55008140/16317008</a></li>
 <li><a href="https://stackoverflow.com/a/58492986/16317008">https://stackoverflow.com/a/58492986/16317008</a></li>
 </ul>
+<h3 id="2-redirect-in-practice">2. Redirect in practice</h3>
+<p>Different redirect status code can <strong>cause browser behave differently</strong>.</p>
+<p>An unauthorized user make a request to <code>/home </code> which needs authorized state to access, because he has not authorized, so he will be redirect to <code>/login</code>, if you respond a 308 code from server, then the unauthorized user will be redirect to <code>/login</code>, this woks fine. But 308 tell the brower all following http requests for <code>/home</code> need be redirected to <code>/login</code> even the user login successfully, you can clear the browser cache to reset, make sure don&rsquo;t repond a wrong status code.</p>
 
     </div>
 
@@ -235,7 +239,11 @@ The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a
           <a href="/tags/http/">http</a>
           </div>
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/js/practice/001-tricks/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Tricks in Javascript</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
         <a class="next" href="/post/http/001-http-headers/">
             <span class="next-text nav-default">HTTP Headers</span>
             <span class="next-text nav-mobile">Next</span>

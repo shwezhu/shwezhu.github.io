@@ -39,16 +39,6 @@ On Linux or a Mac, if you add this to /etc/hosts, facebook no longer exists:
     </item>
     
     <item>
-      <title>A File Station (2) - Go</title>
-      <link>https://shaowenzhu.top/post/golang/practice/013-file-station-2/</link>
-      <pubDate>Sun, 08 Oct 2023 22:14:50 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/practice/013-file-station-2/</guid>
-      <description>1. Redirect status code Different redirect status code can cause browser behave differently.
-1 2 3 4 StatusMovedPermanently = 301 // RFC 9110, 15.4.2 StatusFound = 302 // RFC 9110, 15.4.3 StatusTemporaryRedirect = 307 // RFC 9110, 15.4.8 StatusPermanentRedirect = 308 // RFC 9110, 15.4.9 An unauthorized user make a request to /home which needs authorized state to access, because he has not authorized, so he will be redirect to /login, if you respond a 308 code from server, then the unauthorized user will be redirect to /login, this woks fine.</description>
-    </item>
-    
-    <item>
       <title>HTTPS SSL TLS</title>
       <link>https://shaowenzhu.top/post/cs-basics/003-ssl-secure-communication/</link>
       <pubDate>Sat, 07 Oct 2023 08:30:26 +0000</pubDate>
@@ -131,6 +121,17 @@ POST x-www-form-urlencoded format form data to server:
       <description>HTTPS is used for encryption, VPN is too. What&amp;rsquo;s difference?
 In previou post we talked about Is HTTPS Secure Enough?, and we concluded that https is secure itself which means no one can decrypt the data without the session key. However there still are some security issues in HTTPS, the man-in-the-middle attack, for example.
 Why do I need a VPN if https connections are secure? A VPN will secure all of the traffic between point A and point B in a tunnel.</description>
+    </item>
+    
+    <item>
+      <title>Some HTTP Issues with Go</title>
+      <link>https://shaowenzhu.top/post/golang/practice/014-http-related/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/practice/014-http-related/</guid>
+      <description>1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &amp;#34;asset=&amp;#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically,
+js code:
+1 2 3 4 5 6 async function getUrl(filepath) { const filename = &amp;#34;back ground.</description>
     </item>
     
   </channel>
