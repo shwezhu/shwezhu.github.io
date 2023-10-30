@@ -6,7 +6,18 @@
     <description>Recent content in Posts on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 28 Oct 2023 22:54:02 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 29 Oct 2023 11:30:50 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Some HTTP Issues with Go</title>
+      <link>https://shaowenzhu.top/post/golang/practice/012-http-related/</link>
+      <pubDate>Sun, 29 Oct 2023 11:30:50 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/practice/012-http-related/</guid>
+      <description>1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &amp;#34;asset=&amp;#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically,
+js code:
+1 2 3 4 5 6 async function getUrl(filepath) { const filename = &amp;#34;back ground.</description>
+    </item>
+    
     <item>
       <title>Tricks in Javascript</title>
       <link>https://shaowenzhu.top/post/js/practice/001-tricks/</link>
@@ -182,11 +193,11 @@ Source: https://en.wikipedia.org/wiki/HTTPS#Network_layers
     </item>
     
     <item>
-      <title>A File Station (1) - Go</title>
-      <link>https://shaowenzhu.top/post/golang/practice/012-file-station-1/</link>
+      <title>Cross-origin Request HTTP</title>
+      <link>https://shaowenzhu.top/post/http/003-cross-origin-request/</link>
       <pubDate>Fri, 06 Oct 2023 20:28:50 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/golang/practice/012-file-station-1/</guid>
+      <guid>https://shaowenzhu.top/post/http/003-cross-origin-request/</guid>
       <description>1. Upload file to web server with HTTP request The html code:
 1 2 &amp;lt;input id=&amp;#34;upload-file&amp;#34; type=&amp;#34;file&amp;#34; /&amp;gt; &amp;lt;input id=&amp;#34;upload-file-btn&amp;#34; type=&amp;#34;submit&amp;#34; value=&amp;#34;upload&amp;#34; /&amp;gt; I fInd the docs about fetch and write code like this to upload file to the server with http request:
 1 2 3 4 5 6 7 8 9 10 11 12 13 document.getElementById(&amp;#34;upload-file-btn&amp;#34;).addEventListener(&amp;#34;click&amp;#34;, uploadFile) async function uploadFile() { const url = &amp;#34;http://127.0.0.1:8080/upload&amp;#34; const fileInput = document.getElementById(&amp;#34;upload-file&amp;#34;) const formData = new FormData() formData.</description>
@@ -194,10 +205,10 @@ Source: https://en.wikipedia.org/wiki/HTTPS#Network_layers
     
     <item>
       <title>CSRF Attack and CORS</title>
-      <link>https://shaowenzhu.top/post/cs-basics/019-csrf-attack/</link>
+      <link>https://shaowenzhu.top/post/http/007-csrf-attack/</link>
       <pubDate>Fri, 06 Oct 2023 18:29:57 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/cs-basics/019-csrf-attack/</guid>
+      <guid>https://shaowenzhu.top/post/http/007-csrf-attack/</guid>
       <description>1. Cross-Origin Resource Sharing (CORS) Cross-origin resource sharing (CORS) can be understood as a controlled relaxation of the same-origin policy.
 1.1. How does cross-origin resource sharing work? In standard internet communication, your browser sends an HTTP request to the application server, receives data as an HTTP response, and displays it. In browser terminology, the current browser URL is called the current origin and the third-party URL is cross-origin.
 When you make a cross-origin request, this is the request-response process:</description>
@@ -339,10 +350,10 @@ The format of application/x-www-form-urlencoded is &amp;quot;username=davidzhu&a
     
     <item>
       <title>HTTP Messages</title>
-      <link>https://shaowenzhu.top/post/cs-basics/018-http-messages/</link>
+      <link>https://shaowenzhu.top/post/http/004-http-messages/</link>
       <pubDate>Sat, 23 Sep 2023 09:51:30 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/cs-basics/018-http-messages/</guid>
+      <guid>https://shaowenzhu.top/post/http/004-http-messages/</guid>
       <description>1. HTTP Messages 1.1. HTTP Requests 1.1.1. Start line A start line contains three parts:
 Their start-line contain three elements:
 An HTTP method, a verb (like GET, PUT or POST) or a noun (like HEAD or OPTIONS), that describes the action to be performed. The request target
@@ -352,10 +363,10 @@ Usually a URL Sometimes url followed by a &#39;?&#39; and query string: http://e
     
     <item>
       <title>Curl Basics</title>
-      <link>https://shaowenzhu.top/post/cs-basics/017-curl/</link>
+      <link>https://shaowenzhu.top/post/http/005-curl/</link>
       <pubDate>Fri, 22 Sep 2023 22:58:30 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/cs-basics/017-curl/</guid>
+      <guid>https://shaowenzhu.top/post/http/005-curl/</guid>
       <description>POST data with Curl The Content-Type header can be application/json, application/x-www-form-urlencoded, multipart/form-data, the first two is usually used with posting form data to server, the third is used to upload file to the server.
 The format of application/json is &#39;{&amp;quot;username&amp;quot;:&amp;quot;davidzhu&amp;quot;, &amp;quot;password&amp;quot;:&amp;quot;778899a&amp;quot;}&#39;.
 The format of application/x-www-form-urlencoded is &amp;quot;username=davidzhu&amp;amp;password=778899a&amp;quot; .
@@ -492,10 +503,10 @@ If applied, this commit will 1. Things to avoid when creating commits Sending la
     
     <item>
       <title>HTTPS vs VPN vs Proxy</title>
-      <link>https://shaowenzhu.top/post/cs-basics/015-https-vpn/</link>
+      <link>https://shaowenzhu.top/post/http/006-https-vpn/</link>
       <pubDate>Sun, 10 Sep 2023 10:54:30 +0000</pubDate>
       
-      <guid>https://shaowenzhu.top/post/cs-basics/015-https-vpn/</guid>
+      <guid>https://shaowenzhu.top/post/http/006-https-vpn/</guid>
       <description>HTTPS is used for encryption, VPN is too. What&amp;rsquo;s difference?
 In previou post we talked about Is HTTPS Secure Enough?, and we concluded that https is secure itself which means no one can decrypt the data without the session key. However there still are some security issues in HTTPS, the man-in-the-middle attack, for example.
 Why do I need a VPN if https connections are secure? A VPN will secure all of the traffic between point A and point B in a tunnel.</description>
@@ -1509,17 +1520,6 @@ From a correctness standpoint, you don&amp;rsquo;t need to know. Each variable i
       <guid>https://shaowenzhu.top/post/git/004-git-fetch-origin/</guid>
       <description>1. git fetch The git fetch command downloads commits, files, and refs from a remote repository into your local repo. Fetching is what you do when you want to see what everybody else has been working on. Git isolates fetched content from existing local content; it has absolutely no effect on your local development work.
 Fetch all of the branches from the repository. This also downloads all of the required commits and files from the other repository.</description>
-    </item>
-    
-    <item>
-      <title>Some HTTP Issues with Go</title>
-      <link>https://shaowenzhu.top/post/golang/practice/014-http-related/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/practice/014-http-related/</guid>
-      <description>1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &amp;#34;asset=&amp;#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically,
-js code:
-1 2 3 4 5 6 async function getUrl(filepath) { const filename = &amp;#34;back ground.</description>
     </item>
     
   </channel>

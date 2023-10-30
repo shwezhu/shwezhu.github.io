@@ -51,7 +51,7 @@ Request headers contain more information about the resource to be fetched, or ab
 <meta itemprop="description" content="0. Header types Headers can be grouped according to their contexts:
 Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport."><meta itemprop="datePublished" content="2023-10-26T09:58:10+00:00" />
 <meta itemprop="dateModified" content="2023-10-26T09:58:10+00:00" />
-<meta itemprop="wordCount" content="1605">
+<meta itemprop="wordCount" content="1804">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="HTTP Headers"/>
 <meta name="twitter:description" content="0. Header types Headers can be grouped according to their contexts:
@@ -154,6 +154,7 @@ Request headers contain more information about the resource to be fetched, or ab
             <li><a href="#3-location">3. <code>Location</code></a></li>
             <li><a href="#4-cache-control">4. <code>Cache-Control</code></a></li>
             <li><a href="#5-authorization---www-authenticate">5. <code>Authorization </code> &amp; <code>WWW-Authenticate</code></a></li>
+            <li><a href="#6-cookie">6. cookie</a></li>
           </ul>
         </li>
       </ul>
@@ -386,6 +387,73 @@ Request headers contain more information about the resource to be fetched, or ab
 <p>Code credit to: <a href="https://www.alexedwards.net/blog/basic-authentication-in-go">Go BasicAuth</a></p>
 <p>HTTP authentication framework: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP authentication - HTTP | MDN</a></p>
 <p>Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization">Authorization - HTTP | MDN</a></p>
+<h3 id="6-cookie">6. cookie</h3>
+<p>There are two headers related to cookie, one is <code>Set-Cookie</code> header another is <code>Cookie</code> header.</p>
+<p>After receiving an HTTP request, a server can send one or more <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie"><code>Set-Cookie</code></a> headers with the response. The browser usually stores the cookie and sends it with requests made to the same server inside a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie"><code>Cookie</code></a> HTTP header.</p>
+<p>For example, a response from server contains cookie headers may looks like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">HTTP/2.0 200 OK
+</span></span><span class="line"><span class="cl">Content-Type: text/html
+</span></span><span class="line"><span class="cl">Set-Cookie: yummy_cookie=choco
+</span></span><span class="line"><span class="cl">Set-Cookie: tasty_cookie=strawberry
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[page content]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>A HTTP request may looks like this below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">GET /sample_page.html HTTP/2.0
+</span></span><span class="line"><span class="cl">Host: www.example.org
+</span></span><span class="line"><span class="cl">Cookie: yummy_cookie=choco; tasty_cookie=strawberry
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Therefore, when I want set cookie manually for my http request, I&rsquo;ll probably do something like this (I do this in Go):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">req</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">NewRequest</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">MethodPost</span><span class="p">,</span> <span class="s">&#34;/chat&#34;</span><span class="p">,</span> <span class="nx">your_encoded_message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// set content-type header
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">req</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// set cookie header (cookie is a key value data)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">req</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Cookie&#34;</span><span class="p">,</span> <span class="s">&#34;session_id=xxxxxxxxxxx&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If I want get cookie from repsonse, I&rsquo;ll probably retrieve the cookie like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">response</span> <span class="o">:=</span> <span class="nf">makeRequest</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">my_cooke</span> <span class="o">:=</span> <span class="nx">response</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;Set-Cookie&#34;</span><span class="p">)</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Cookie is just a header which having no doubt resides in the header of HTTP mesages, don&rsquo;t overthinking.</p>
+<p>Reference: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies">https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies</a></p>
 
     </div>
 

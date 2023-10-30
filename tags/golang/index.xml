@@ -6,7 +6,18 @@
     <description>Recent content in golang on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 10 Oct 2023 12:09:35 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 29 Oct 2023 11:30:50 +0000</lastBuildDate><atom:link href="https://shaowenzhu.top/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Some HTTP Issues with Go</title>
+      <link>https://shaowenzhu.top/post/golang/practice/012-http-related/</link>
+      <pubDate>Sun, 29 Oct 2023 11:30:50 +0000</pubDate>
+      
+      <guid>https://shaowenzhu.top/post/golang/practice/012-http-related/</guid>
+      <description>1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &amp;#34;asset=&amp;#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically,
+js code:
+1 2 3 4 5 6 async function getUrl(filepath) { const filename = &amp;#34;back ground.</description>
+    </item>
+    
     <item>
       <title>Statically Compiling Go Programs</title>
       <link>https://shaowenzhu.top/post/golang/advance/012-statically-linking/</link>
@@ -39,17 +50,6 @@ Source: https://stackoverflow.com/a/897303/16317008
       
       <guid>https://shaowenzhu.top/post/docker/001-docker-basics/</guid>
       <description>1. Docker client commands 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 #-------------- build and delete image -------------- $ docker build -t go-learning:1 . $ docker rmi shwezhu/file-station:v1 # if docker is in-use, delete with -f $ docker rmi -f shwezhu/file-station:v1 $ docker image ls -a #------------------ run image ---------------------- # --rm automatically removes the container when it exits, # -d: Run container in background $ docker run -d -p 80:80 --rm go-learning:1 # -it: allocates a pseudo-TTY and attaches it to the container # then you can use command line to intercat with the current running container $ docker run -it --rm docker-learning:v1 sh #------------- show and delete container -------------- $ docker container ls -a $ docker rm container_id # publish and pull image to repo $ docker push shwezhu/file-station:v1 $ docker pull davidzhu/file-station:v1 2.</description>
-    </item>
-    
-    <item>
-      <title>A File Station (1) - Go</title>
-      <link>https://shaowenzhu.top/post/golang/practice/012-file-station-1/</link>
-      <pubDate>Fri, 06 Oct 2023 20:28:50 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/practice/012-file-station-1/</guid>
-      <description>1. Upload file to web server with HTTP request The html code:
-1 2 &amp;lt;input id=&amp;#34;upload-file&amp;#34; type=&amp;#34;file&amp;#34; /&amp;gt; &amp;lt;input id=&amp;#34;upload-file-btn&amp;#34; type=&amp;#34;submit&amp;#34; value=&amp;#34;upload&amp;#34; /&amp;gt; I fInd the docs about fetch and write code like this to upload file to the server with http request:
-1 2 3 4 5 6 7 8 9 10 11 12 13 document.getElementById(&amp;#34;upload-file-btn&amp;#34;).addEventListener(&amp;#34;click&amp;#34;, uploadFile) async function uploadFile() { const url = &amp;#34;http://127.0.0.1:8080/upload&amp;#34; const fileInput = document.getElementById(&amp;#34;upload-file&amp;#34;) const formData = new FormData() formData.</description>
     </item>
     
     <item>
@@ -464,17 +464,6 @@ From a correctness standpoint, you don&amp;rsquo;t need to know. Each variable i
       <guid>https://shaowenzhu.top/post/golang/basics/003-collections/</guid>
       <description>1. Declare &amp;amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&amp;rsquo;s length is part of its type, so arrays cannot be resized.
 2. Declare &amp;amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices have a capacity and length property.</description>
-    </item>
-    
-    <item>
-      <title>Some HTTP Issues with Go</title>
-      <link>https://shaowenzhu.top/post/golang/practice/014-http-related/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://shaowenzhu.top/post/golang/practice/014-http-related/</guid>
-      <description>1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &amp;#34;asset=&amp;#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically,
-js code:
-1 2 3 4 5 6 async function getUrl(filepath) { const filename = &amp;#34;back ground.</description>
     </item>
     
   </channel>
