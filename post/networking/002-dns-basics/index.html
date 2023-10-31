@@ -27,7 +27,7 @@ The main components of the DNS are DNS servers. All DNS servers fall into one of
 <meta name="generator" content="Hugo 0.111.3 with theme even" />
 
 
-<link rel="canonical" href="https://shaowenzhu.top/post/networking/002-dns-basics/" />
+<link rel="canonical" href="https://davidzhu.xyz/post/networking/002-dns-basics/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -44,14 +44,14 @@ The main components of the DNS are DNS servers. All DNS servers fall into one of
 <meta property="og:description" content="1. DNS DNS stands for Domain Name System, and it is a distributed hierarchical system that translates human-readable domain names into IP addresses. The process of DNS resolution involves converting a hostname (such as www.example.com) into a computer-friendly IP address (such as 192.168.1.1).
 The main components of the DNS are DNS servers. All DNS servers fall into one of four categories: Recursive resolvers, root nameservers, TLD nameservers, and authoritative nameservers." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://shaowenzhu.top/post/networking/002-dns-basics/" /><meta property="article:section" content="post" />
+<meta property="og:url" content="https://davidzhu.xyz/post/networking/002-dns-basics/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-31T09:50:20+00:00" />
 <meta property="article:modified_time" content="2023-10-31T09:50:20+00:00" />
 <meta itemprop="name" content="DNS Concepts (NameServer(NS), DNS Records and Caching)">
 <meta itemprop="description" content="1. DNS DNS stands for Domain Name System, and it is a distributed hierarchical system that translates human-readable domain names into IP addresses. The process of DNS resolution involves converting a hostname (such as www.example.com) into a computer-friendly IP address (such as 192.168.1.1).
 The main components of the DNS are DNS servers. All DNS servers fall into one of four categories: Recursive resolvers, root nameservers, TLD nameservers, and authoritative nameservers."><meta itemprop="datePublished" content="2023-10-31T09:50:20+00:00" />
 <meta itemprop="dateModified" content="2023-10-31T09:50:20+00:00" />
-<meta itemprop="wordCount" content="1031">
+<meta itemprop="wordCount" content="1091">
 <meta itemprop="keywords" content="networking," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="DNS Concepts (NameServer(NS), DNS Records and Caching)"/>
 <meta name="twitter:description" content="1. DNS DNS stands for Domain Name System, and it is a distributed hierarchical system that translates human-readable domain names into IP addresses. The process of DNS resolution involves converting a hostname (such as www.example.com) into a computer-friendly IP address (such as 192.168.1.1).
@@ -158,6 +158,7 @@ The main components of the DNS are DNS servers. All DNS servers fall into one of
         <li><a href="#3-dns-caching">3. DNS caching</a>
           <ul>
             <li><a href="#31-browser-dns-caching">3.1. Browser DNS caching</a></li>
+            <li><a href="#33-recursive-resolver-caching">3.3. Recursive resolver caching</a></li>
           </ul>
         </li>
       </ul>
@@ -208,8 +209,11 @@ The main components of the DNS are DNS servers. All DNS servers fall into one of
 <p>When the recursive resolver inside the ISP receives a DNS query, like all previous steps, it will also check to see if the requested host-to-IP-address translation is already stored inside its local persistence layer.</p>
 <p>Source: <a href="https://www.cloudflare.com/learning/dns/what-is-dns/">What is DNS? | How DNS works | Cloudflare</a></p>
 <blockquote>
-<p>Note that checking <code>/etc/hosts</code> happens before DNS, it happens before DNS resolution process.</p>
+<p>Note that checking <code>/etc/hosts</code> happens before DNS.</p>
 </blockquote>
+<h3 id="33-recursive-resolver-caching">3.3. Recursive resolver caching</h3>
+<p>We have mentioned above, during DNS resolution process, <strong>the recursive resolver will cache information received from authoritative nameservers</strong>.</p>
+<p>A DNS resolver will save responses to IP address queries for a certain amount of time. In this way, the resolver can respond to future queries much more quickly, without needing to communicate with the many servers involved in the typical DNS resolution process.</p>
 
     </div>
 
@@ -259,10 +263,8 @@ The main components of the DNS are DNS servers. All DNS servers fall into one of
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
-      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
       <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
-  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
 </div>
 
 <div class="copyright">

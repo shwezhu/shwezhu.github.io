@@ -16,7 +16,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. nslookup 2. dig " />
+<meta name="author" content="David" /><meta name="description" content="1. nslookup Nslookup (stands for “Name Server Lookup”) is a useful command for getting information from the DNS server. It is a network administration tool for querying the Domain Name System (DNS) to obtain domain name or IP address mapping or any other specific DNS record.
+nslookup followed by the domain name will display the “A Record” (IP Address) of the domain:
+1 2 3 4 5 6 7 8 # basic DNS lookup $ nslookup google." />
 
 
 
@@ -26,7 +28,7 @@
 <meta name="generator" content="Hugo 0.111.3 with theme even" />
 
 
-<link rel="canonical" href="https://shaowenzhu.top/post/networking/006-commands-in-network/" />
+<link rel="canonical" href="https://davidzhu.xyz/post/networking/006-commands-in-network/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -40,18 +42,24 @@
 
 
 <meta property="og:title" content="Commands Commonly Used in Networking" />
-<meta property="og:description" content="1. nslookup 2. dig " />
+<meta property="og:description" content="1. nslookup Nslookup (stands for “Name Server Lookup”) is a useful command for getting information from the DNS server. It is a network administration tool for querying the Domain Name System (DNS) to obtain domain name or IP address mapping or any other specific DNS record.
+nslookup followed by the domain name will display the “A Record” (IP Address) of the domain:
+1 2 3 4 5 6 7 8 # basic DNS lookup $ nslookup google." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://shaowenzhu.top/post/networking/006-commands-in-network/" /><meta property="article:section" content="post" />
+<meta property="og:url" content="https://davidzhu.xyz/post/networking/006-commands-in-network/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-31T15:23:08+00:00" />
 <meta property="article:modified_time" content="2023-10-31T15:23:08+00:00" />
 <meta itemprop="name" content="Commands Commonly Used in Networking">
-<meta itemprop="description" content="1. nslookup 2. dig "><meta itemprop="datePublished" content="2023-10-31T15:23:08+00:00" />
+<meta itemprop="description" content="1. nslookup Nslookup (stands for “Name Server Lookup”) is a useful command for getting information from the DNS server. It is a network administration tool for querying the Domain Name System (DNS) to obtain domain name or IP address mapping or any other specific DNS record.
+nslookup followed by the domain name will display the “A Record” (IP Address) of the domain:
+1 2 3 4 5 6 7 8 # basic DNS lookup $ nslookup google."><meta itemprop="datePublished" content="2023-10-31T15:23:08+00:00" />
 <meta itemprop="dateModified" content="2023-10-31T15:23:08+00:00" />
-<meta itemprop="wordCount" content="4">
+<meta itemprop="wordCount" content="311">
 <meta itemprop="keywords" content="networking," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Commands Commonly Used in Networking"/>
-<meta name="twitter:description" content="1. nslookup 2. dig "/>
+<meta name="twitter:description" content="1. nslookup Nslookup (stands for “Name Server Lookup”) is a useful command for getting information from the DNS server. It is a network administration tool for querying the Domain Name System (DNS) to obtain domain name or IP address mapping or any other specific DNS record.
+nslookup followed by the domain name will display the “A Record” (IP Address) of the domain:
+1 2 3 4 5 6 7 8 # basic DNS lookup $ nslookup google."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -152,7 +160,114 @@
 </div>
     <div class="post-content">
       <h2 id="1-nslookup">1. <code>nslookup</code></h2>
+<p><strong>Nslookup</strong> (stands for “Name Server Lookup”) is a useful command for getting information from the DNS server. It is a network administration tool for querying the Domain Name System (DNS) to obtain domain name or IP address mapping or any other specific DNS record.</p>
+<p><code>nslookup</code> followed by the domain name will display the “A Record” (IP Address) of the domain:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># basic DNS lookup</span>
+</span></span><span class="line"><span class="cl">$ nslookup google.com                             
+</span></span><span class="line"><span class="cl">Server:		192.168.2.1
+</span></span><span class="line"><span class="cl">Address:	192.168.2.1#53
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Non-authoritative answer:
+</span></span><span class="line"><span class="cl">Name:	google.com
+</span></span><span class="line"><span class="cl">Address: 142.250.81.238
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You can also do the reverse DNS look-up by providing the IP Address as an argument to nslookup:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ nslookup 18.219.46.189                          
+</span></span><span class="line"><span class="cl">Server:		192.168.2.1
+</span></span><span class="line"><span class="cl">Address:	192.168.2.1#53
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Non-authoritative answer:
+</span></span><span class="line"><span class="cl">189.46.219.18.in-addr.arpa	<span class="nv">name</span> <span class="o">=</span> ec2-18-219-46-189.us-east-2.compute.amazonaws.com.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Authoritative answers can be found from:
+</span></span><span class="line"><span class="cl">46.219.18.in-addr.arpa	<span class="nv">nameserver</span> <span class="o">=</span> ns1-24-us-east-2.ec2-rdns.amazonaws.com.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Lookup for an ns record of domain:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ nslookup -type<span class="o">=</span>ns google.com
+</span></span><span class="line"><span class="cl">Server:		192.168.2.1
+</span></span><span class="line"><span class="cl">Address:	192.168.2.1#53
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Non-authoritative answer:
+</span></span><span class="line"><span class="cl">google.com	<span class="nv">nameserver</span> <span class="o">=</span> ns1.google.com.
+</span></span><span class="line"><span class="cl">google.com	<span class="nv">nameserver</span> <span class="o">=</span> ns3.google.com.
+</span></span><span class="line"><span class="cl">....
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Source: <a href="https://www.geeksforgeeks.org/nslookup-command-in-linux-with-examples/">Nslookup Command in Linux with Examples - GeeksforGeeks</a></p>
 <h2 id="2-dig">2. <code>dig</code></h2>
+<p><strong>dig</strong> command stands for <em><strong>Domain Information Groper</strong></em>. It is used for retrieving information about DNS name servers. Dig command replaces older tools such as <a href="https://www.geeksforgeeks.org/nslookup-command-in-linux-with-examples/">nslooku</a>p and the <a href="https://www.geeksforgeeks.org/host-command-in-linux-with-examples/">host</a>.</p>
+<p>To query domain “A” record:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ dig geeksforgeeks.org
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This command causes dig to look up the “A” record for the domain name “geeksforgeeks.org”. A record refers to IPV4 IP. Similarly, if record type is set as “AAAA”, this would return IPV6 IP.</p>
+<p>To query domain “A” record with <strong>+short</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ dig geeksforgeeks.org +short
+</span></span><span class="line"><span class="cl">34.218.62.116
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Specifying name servers:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ dig geeksforgeeks.org @8.8.8.8
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>By default, dig command will query the name servers listed in “/etc/resolv.conf” to perform a DNS lookup. We can change it by using @ symbol followed by a hostname or IP address of the name server.</p>
+</blockquote>
 
     </div>
 
@@ -178,7 +293,7 @@
       <nav class="post-nav">
         <a class="prev" href="/post/networking/005-gfw-dns/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">GFW and DNS Poisoning</span>
+            <span class="prev-text nav-default">DNS spoofing and - GFW</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         <a class="next" href="/post/networking/002-dns-basics/">
@@ -202,10 +317,8 @@
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
-      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
       <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
-  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
 </div>
 
 <div class="copyright">
