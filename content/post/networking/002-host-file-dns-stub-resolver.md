@@ -1,15 +1,15 @@
 ---
-title: DNS Config Basics
+title: DNS Stub and Recursive Resolver - Config Files
 date: 2023-10-13 14:03:57
 categories:
-  - network
+ - networking
 tags:
-  - network
+ - networking
 ---
 
 ## 1. `/etc/hosts` and `/etc/resolv.conf`
 
-Before DNS, we had hosts files that held a list of the IP address of hosts you needed to know about. They're still a thing and are king, and **looked at first**.
+**Before DNS**, we had hosts files that held a list of the IP address of hosts you needed to know about. They're still a thing and are king, and **looked at first**. 
 
 On Linux or a Mac, if you add this to `/etc/hosts`, facebook no longer exists:
 
@@ -34,6 +34,10 @@ References:
 - https://www.baeldung.com/linux/dns-resolv-conf-file
 
 ## 2. Local resolver & recursive resolver 
+
+> Recursive resolver usually located at remote acts as a DNS server, whereas, a DNS stub resolver running on client devices. 
+>
+> Most Internet users use a recursive resolver provided by their ISP, but there are other options available; for example [Cloudflare's 1.1.1.1](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) or 8.8.8.8 provided by Google. 
 
 I check the `/etc/resolv.conf` file on my machine and get:
 
@@ -85,7 +89,7 @@ Current DNS Server: 172.31.0.2
         DNS Domain: us-east-2.compute.internal
 ```
 
-> ***DNS stub resolver*** used to initiate DNS queries, and it sends the DNS query to the **recursive resolver**, which then performs the actual DNS resolution process (usually provided by an internet service provider or a public DNS resolver like Google's 8.8.8.8).
+> ***DNS stub resolver*** used to initiate DNS queries, and it sends the DNS query to the **recursive resolver**, which then performs the actual DNS resolution process (usually provided by an internet service provider or a public DNS resolver like Google's 8.8.8.8). 
 
 References: https://zhuanlan.zhihu.com/p/101275725
 

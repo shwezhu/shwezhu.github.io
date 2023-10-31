@@ -2,9 +2,9 @@
 title: Wireshark Basics 
 date: 2023-09-13 16:52:30
 categories:
-  - network
+ - networking
 tags:
-  - network
+ - networking
 typora-root-url: ../../../static
 ---
 
