@@ -78,4 +78,11 @@ When the recursive resolver inside the ISP receives a DNS query, like all previo
 
 Source: [What is DNS? | How DNS works | Cloudflare](https://www.cloudflare.com/learning/dns/what-is-dns/)
 
-> Note that checking `/etc/hosts` happens before DNS, it happens before DNS resolution process.
+> Note that checking `/etc/hosts` happens before DNS.
+
+### 3.3. Recursive resolver caching
+
+We have mentioned above, during DNS resolution process, **the recursive resolver will cache information received from authoritative nameservers**. 
+
+A DNS resolver will save responses to IP address queries for a certain amount of time. In this way, the resolver can respond to future queries much more quickly, without needing to communicate with the many servers involved in the typical DNS resolution process.
+

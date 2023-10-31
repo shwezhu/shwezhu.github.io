@@ -7,6 +7,7 @@ tags:
  - cybersecurity
  - http
  - networking
+typora-root-url: ../../../static
 ---
 
 ### 1. Man-in-the-middle attack
@@ -29,10 +30,33 @@ Learn more: [CSRF Attack and CORS - David's Blog](https://davidzhu.xyz/post/http
 
 SSL stripping attacks, also known as SSL strip, SSL downgrade, or HTTP downgrade attacks, strip the encryption offered by HTTPS, reducing the connection to the less-secure HTTP. 
 
-### 5. DNS poisoning
-DNS hijacking, DNS poisoning, or DNS redirection is the practice of subverting the resolution of Domain Name System (DNS) queries. This can be achieved by malware that **overrides a computer's TCP/IP configuration** to point at a **rogue DNS server** under the control of an attacker, or through modifying the behaviour of a trusted DNS server so that it does not comply with internet standards.
+In order to [“strip” the SSL](https://avicoder.me/2016/02/22/SSLstrip-for-newbies/), an attacker intervenes in the redirection of the HTTP to the secure HTTPS protocol and intercepts a request from the user to the server. The attacker will then continue to establish an HTTPS connection between himself and the server, and an unsecured HTTP connection with the user, acting as a “bridge” between them.
 
-These modifications may be made for malicious purposes such as phishing, for self-serving purposes by Internet service providers (ISPs), by the Great Firewall of China and public/router-based online DNS server providers to direct users' web traffic to the ISP's own web servers where advertisements can be served, statistics collected, or other purposes of the ISP; and by DNS service providers to block access to selected domains as a form of censorship.
+<img src="/004-common-attacks/a.png" alt="a" style="zoom:50%;" />
+
+How can the SSL strip trick both the browser and the website’s server? The SSL strip takes advantage of the way most users come to SSL websites. The majority of visitors connect to a website’s page that redirects through a 302 redirect, or they arrive on an SSL page via a link from a non-SSL site. If the victim wants, for instance, to buy a product and types the URL www.buyme.com in the address bar, the browser connects to the attacker's machine and waits for a response from the server. In an SSL strip, the attacker, in turn, forwards the victim’s request to the online shop’s server and receives the secure HTTPS payment page. For example https://www.buyme.com. At this point, the attacker has complete control over the secure payment page. He downgrades it from HTTPS to HTTP and sends it back to the victim’s browser. The browser is now redirected to http://www.buyme.com. From now onward, all the victim’s data will be transferred in plain text format, and the attacker will be able to intercept it. Meanwhile, the website’s server will think that it has successfully established the secure connection, which indeed it has—but with the attacker’s machine, not the victim’s.
+
+#### 4.1. Enable SSL sitewide at all websites
+
+To mitigate this threat, financial institutions and technology firms have [already enabled](https://venafi.com/blog/https-should-be-implemented-everywhereincluding-static-websites/) HTTPS on a site-wide basis. Enabling HTTPS encrypts the connection between a browser and the website, thereby securing sensitive data transmissions. Therefore it makes perfect sense for banks and high-profile technology firms to enable HTTPS on their dynamic websites because of the transaction of important and sensitive information.
+
+#### 4.2. Why enable HSTS?
+
+In addition to enabling HTTPS on a site-wide basis, corporations should weigh the benefits of enabling [HSTS](https://www.globalsign.com/en/blog/what-is-hsts-and-how-do-i-use-it/) (HTTP Strict Transport Security), which is a web security policy mechanism that helps to protect websites against SSL stripping attacks and cookie hijacking. **It allows** **web servers to declare that** web browsers should interact with them using only secure HTTPS connections, and never via the insecure HTTP protocol.
+
+When a web application issues HSTS Policy to user browsers, conformant user browsers will [automatically redirect](https://www.owasp.org/index.php/HTTP_Strict_Transport_Security_Cheat_Sheet) any insecure HTTP requests to HTTPS for the target website. In addition, when a man-in-the-middle attacker attempts to intercept traffic from a victim using an invalid certificate, HSTS does not allow the user to override the invalid certificate warning message. By having a HSTS policy installed, it will be nearly impossible for the attackers to intercept any information at all!
+
+Source: [What Are SSL Stripping Attacks? | Venafi](https://venafi.com/blog/what-are-ssl-stripping-attacks/)
+
+### 5. DNS hijacking
+
+To prevent DNS hijacking, first, you have to know the different kinds of attacks. DNS hijacking can take four different forms:
+
+1. **Local DNS hijacking:** An attacker installs [Trojan software](https://www.fortinet.com/resources/cyberglossary/trojan-horse-virus) on a user's computer, then modifies the local DNS settings (cahnge its DNS server to a Rogue DNS server). 
+2. **DNS hijacking using a router:** Many routers have weak firmware or use the default passwords they were shipped with. Attackers can take advantage of this to hack a router and change its DNS settings, which will affect everyone that uses that router.
+3. **Man-in-the-middle (MITM) attacks:** Attackers use [man-in-the-middle attack techniques](https://www.fortinet.com/resources/cyberglossary/man-in-the-middle-attack) to intercept communications between users and a [DNS server](https://www.fortinet.com/resources/cyberglossary/dynamic-dns). They then direct the target to malicious websites.
+
+DNS hijacking, DNS poisoning, or DNS redirection is the practice of subverting the resolution of Domain Name System (DNS) queries. This can be achieved by malware that **overrides a computer's TCP/IP configuration** to point at a **rogue DNS server** under the control of an attacker, or through modifying the behaviour of a trusted DNS server so that it does not comply with internet standards. 
 
 >  ...overrides a computer's TCP/IP configuration...point at a **rogue DNS server** 
 >
@@ -47,29 +71,17 @@ These modifications may be made for malicious purposes such as phishing, for sel
 
 Learn more: [DHCP Basics - David's Blog](https://davidzhu.xyz/post/network/003-dhcp/)
 
-Reference: [DNS hijacking](https://en.wikipedia.org/wiki/DNS_hijacking)
+References: 
 
-### 6. DNS cache poisoning
+[DNS hijacking](https://en.wikipedia.org/wiki/DNS_hijacking)
 
+[What Is DNS Hijacking? How to Detect & Prevent It | Fortinet](https://www.fortinet.com/resources/cyberglossary/dns-hijacking)
 
+### 6. DNS spoofing (DNS cache poisoning)
 
+> **DNS hijacking** refers to the act of a hacker **manipulating DNS settings** on a user's device or network, redirecting DNS requests to a malicious DNS server to control DNS resolution outcomes.
+>
+> **DNS cache poisoning**, on the other hand, involves the hacker **deceiving DNS resolvers** by injecting malicious DNS responses into their cache, which are later served to other users making requests for the same domain, leading them to access incorrect IP addresses.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Learn more: [GFW and DNS Poisoning - David's Blog](https://davidzhu.xyz/post/networking/005-gfw-dns/)
 
