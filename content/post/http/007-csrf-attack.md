@@ -4,8 +4,8 @@ date: 2023-10-06 18:29:57
 categories:
  - http
 tags:
-  - cybersecurity
-  - http
+ - cybersecurity
+ - http
 ---
 
 ## 1. Cross-Origin Resource Sharing (CORS)

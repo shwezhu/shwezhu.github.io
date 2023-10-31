@@ -6,7 +6,7 @@ categories:
 tags:
  - cs basics
  - c
-typora-root-url: ../../../static
+typora-root-url: ../../../../static
 ---
 
 ## 1. ISO the International Organization for Standardization
@@ -19,7 +19,7 @@ For example, the outcome of their discussions in 1999 is the **C99 standard**, f
 
 - the C/C++ API — a collection of classes, functions and macros that developers use in their C/C++ programs. It is called the **Standard Library**. 
 
-<img src="/021-c-library/a.png" alt="a" style="zoom:50%;" />
+<img src="/001-standard-library/a.png" alt="a" style="zoom:50%;" />
 
 No implementation, just a specifications. 
 
@@ -159,7 +159,7 @@ As you can see, the dynamically linked binary is very small just 1`6k` compared 
 
 > “Any problem in computer science can be solved by another layer of indirection.”
 
-<img src="/021-c-library/b.png" alt="b" style="zoom:50%;" />
+<img src="/001-standard-library/b.png" alt="a" style="zoom:50%;" />
 
 每个层次之间都须要相互通信，既然须要通信就必须有一个通信的协议，我们一般将其称为接口（Interface），接口的下面那层是接口的提供者，由它定义接口；接口的上面那层是接口的使用者，它使用该接口来实现所需要的功能.
 

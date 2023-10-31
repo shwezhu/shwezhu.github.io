@@ -1,16 +1,16 @@
 ---
-title: Wireshark
+title: Wireshark Basics 
 date: 2023-09-13 16:52:30
 categories:
- - cs basics
+  - network
 tags:
- - cs basics
+  - network
 typora-root-url: ../../../static
 ---
 
 ## 1. Structure
 
-![a](/016-wireshark/a.png)
+![a](/001-wireshark/a.png)
 
 ## 2. Capture filter
 
@@ -38,4 +38,3 @@ tcp port 9000
 References:
 
 - [CaptureFilters - Wireshark](https://wiki.wireshark.org/CaptureFilters)
-- 
