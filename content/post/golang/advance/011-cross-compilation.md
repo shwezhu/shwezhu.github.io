@@ -10,17 +10,13 @@ tags:
 
 ## 1. What is cross compilation?
 
-[Cross-compilation](http://en.wikipedia.org/wiki/Cross_compilation) is the act of compiling code for one computer system (often known as the target) on a different system, called the host.
-
-It's a very useful technique, for instance when the target system is too small to host the compiler and all relevant files.
-
-Common examples include many embedded systems, but also typical game consoles.
+[Cross-compilation](http://en.wikipedia.org/wiki/Cross_compilation) is the process of compiling code for one computer system (often known as the target) on a different system, called the host. It's a very useful technique, for instance when the target system is too small to host the compiler and all relevant files. Common examples include many embedded systems, but also typical game consoles.
 
 Source: https://stackoverflow.com/a/897303/16317008
 
 ## 2. An example
 
-I saw [a question](https://stackoverflow.com/questions/23072889/why-go-programs-need-runtime-support/23072968#23072968) on Stackoverflow, and try to prove this:
+There is [a question](https://stackoverflow.com/questions/23072889/why-go-programs-need-runtime-support/23072968#23072968) on Stackoverflow:
 
 It's said that Golang is the *compiled* language, but what does it mean by *compiled*? If golang application is compiled to machine code, why can't I just distribute the binary (of course on corresponding arch and platform) instead of `go install` stuff?
 
@@ -105,7 +101,7 @@ $ ./server
 running...
 ```
 
-So the statement is true: Once you compile a binary you *can* distribute it onto machines with the same architecture. You don't need go real time envorionment to run it. **This is the power of compiled language.** 
+So the statement is true but not accurate, it should be: once you compile a binary you *can* distribute it onto machines **with the same architecture**. You don't need go real time envorionment to run it. This is the power of compiled language. 
 
 ## 3. Cross-compilation
 

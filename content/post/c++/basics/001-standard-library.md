@@ -2,10 +2,10 @@
 title: Intros of C Standard Library
 date: 2023-10-17 17:58:57
 categories:
- - cs basics
+ - c++
 tags:
- - cs basics
  - c
+ - c++
 typora-root-url: ../../../../static
 ---
 

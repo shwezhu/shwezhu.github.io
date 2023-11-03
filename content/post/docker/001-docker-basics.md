@@ -35,7 +35,7 @@ $ docker push shwezhu/file-station:v1
 $ docker pull davidzhu/file-station:v1
 ```
 
-## 2. Dockerfile example
+## 2. Dockerfile
 
 ```dockerfile
 FROM golang:alpine
@@ -45,35 +45,10 @@ WORKDIR /app
 # copy all the files of our project into the /app folder of docker
 COPY ./ ./
 RUN go mod download
-
-# Optional:
-# To bind to a TCP port, runtime parameters must be supplied to the docker command.
-# But we can document in the Dockerfile what ports
-# the application is going to listen on by default.
-# https://docs.docker.com/engine/reference/builder/#expose
-EXPOSE 8080
-
-# GOOS=linux: set target os to linux
-# CGO_ENABLED=0: CGO is a feature in the Go programming language used for calling C code, 
-# this parameter's purpose is to disable CGO.
-# 'go build -o /server .': 'go build' is a command, '-o /server' output,
-# '.' tells the compiler to build the Go program located in the current directory.
-RUN CGO_ENABLED=0 GOOS=linux  go build -o /server .
+RUN go build -o /server
 
 CMD ["/server"]
 ```
-
-To simplify things, and because this is a simple application, we statically compile the binary by setting `CGO_ENABLED=0`. This means that the resulting binary will not be linked to any C libraries. If your application uses any system libraries (like the system’s cryptography library) then you will not be able to statically compile the binary like this.
-
-```shell
-$ docker run -p 80:80 shwezhu/file-station:v1
-2023/10/10 02:06:25 failed to connect database
-
-2023/10/10 02:06:25 /app/main.go:12
-[error] failed to initialize database, got error Binary was compiled with 'CGO_ENABLED=0', go-sqlite3 requires cgo to work. This is a stub
-```
-
-Source: [Containerize Your Go Developer Environment - Part 1 | Docker](https://www.docker.com/blog/containerize-your-go-developer-environment-part-1/)
 
 ## 3. Build image
 
