@@ -132,3 +132,31 @@ How to send form data in `application/x-www-form-urlencoded` format: [Tricks in 
 
 Learn more: [http package - net/http - Go Packages](https://pkg.go.dev/net/http#Request.ParseForm)
 
+## 5. Check the type of the request
+
+When You are starting a HTTP/s server You use either `ListenAndServe` or `ListenAndServeTLS` or both together on different ports. If You are using just one of them, then from `Listen..` it's obvious which scheme request is using and You don't need a way to check and set it. But if You are serving on both HTTP and HTTP/s then You can use `request.TLS` state. if its `nil` it means it's HTTP.
+
+```golang
+// TLS allows HTTP servers and other software to record
+// information about the TLS connection on which the request
+// was received. This field is not filled in by ReadRequest.
+// The HTTP server in this package sets the field for
+// TLS-enabled connections before invoking a handler;
+// otherwise it leaves the field nil.
+// This field is ignored by the HTTP client.
+TLS *tls.ConnectionState
+```
+
+an example:
+
+```go
+func index(w http.ResponseWriter, r *http.Request) {
+    scheme := "http"
+    if r.TLS != nil {
+        scheme = "https"
+    }
+    w.Write([]byte(fmt.Sprintf("%v://%v%v", scheme, r.Host, r.RequestURI)))
+}
+```
+
+Source: https://stackoverflow.com/a/76143800/16317008
