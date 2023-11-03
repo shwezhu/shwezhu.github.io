@@ -54,7 +54,7 @@ js code:
 js code:
 1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground."><meta itemprop="datePublished" content="2023-10-29T11:30:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-29T11:30:50+00:00" />
-<meta itemprop="wordCount" content="495">
+<meta itemprop="wordCount" content="682">
 <meta itemprop="keywords" content="golang,http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Some HTTP Issues with Go"/>
 <meta name="twitter:description" content="1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or &#43; automatically,
@@ -161,6 +161,7 @@ js code:
           </ul>
         </li>
         <li><a href="#4-parse-form-and-query-string">4. Parse form and query string</a></li>
+        <li><a href="#5-check-the-type-of-the-request">5. Check the type of the request</a></li>
       </ul>
     </li>
   </ul>
@@ -342,6 +343,52 @@ js code:
 <p>The <code>Content-Type</code> header can be <code>application/json</code>, <code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, learn more: <a href="https://davidzhu.xyz/post/cs-basics/017-curl/">Curl Basics - David&rsquo;s Blog</a></p>
 <p>How to send form data in <code>application/x-www-form-urlencoded</code> format: <a href="https://davidzhu.xyz/post/js/practice/001-tricks/#4-send-username-and-password-form">Tricks in Javascript - David&rsquo;s Blog</a></p>
 <p>Learn more: <a href="https://pkg.go.dev/net/http#Request.ParseForm">http package - net/http - Go Packages</a></p>
+<h2 id="5-check-the-type-of-the-request">5. Check the type of the request</h2>
+<p>When You are starting a HTTP/s server You use either <code>ListenAndServe</code> or <code>ListenAndServeTLS</code> or both together on different ports. If You are using just one of them, then from <code>Listen..</code> it&rsquo;s obvious which scheme request is using and You don&rsquo;t need a way to check and set it. But if You are serving on both HTTP and HTTP/s then You can use <code>request.TLS</code> state. if its <code>nil</code> it means it&rsquo;s HTTP.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="c1">// TLS allows HTTP servers and other software to record
+</span></span></span><span class="line"><span class="cl"><span class="c1">// information about the TLS connection on which the request
+</span></span></span><span class="line"><span class="cl"><span class="c1">// was received. This field is not filled in by ReadRequest.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// The HTTP server in this package sets the field for
+</span></span></span><span class="line"><span class="cl"><span class="c1">// TLS-enabled connections before invoking a handler;
+</span></span></span><span class="line"><span class="cl"><span class="c1">// otherwise it leaves the field nil.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// This field is ignored by the HTTP client.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">TLS</span> <span class="o">*</span><span class="nx">tls</span><span class="p">.</span><span class="nx">ConnectionState</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>an example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">index</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">scheme</span> <span class="o">:=</span> <span class="s">&#34;http&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">r</span><span class="p">.</span><span class="nx">TLS</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">scheme</span> <span class="p">=</span> <span class="s">&#34;https&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">w</span><span class="p">.</span><span class="nf">Write</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%v://%v%v&#34;</span><span class="p">,</span> <span class="nx">scheme</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Host</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">RequestURI</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Source: <a href="https://stackoverflow.com/a/76143800/16317008">https://stackoverflow.com/a/76143800/16317008</a></p>
 
     </div>
 
