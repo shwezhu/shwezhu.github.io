@@ -16,9 +16,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
-standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary.
-Note that net use cgo does&amp;rsquo;t mean that all its implementation is cgo, cgo is just used for Name Resolution and some teivial features." />
+<meta name="author" content="David" /><meta name="description" content="Previous post: Statically Linking in C - David&amp;rsquo;s Blog
+1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
+standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary." />
 
 
 
@@ -42,24 +42,24 @@ Note that net use cgo does&amp;rsquo;t mean that all its implementation is cgo, 
 
 
 <meta property="og:title" content="Static Linking Go Programs" />
-<meta property="og:description" content="1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
-standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary.
-Note that net use cgo does&rsquo;t mean that all its implementation is cgo, cgo is just used for Name Resolution and some teivial features." />
+<meta property="og:description" content="Previous post: Statically Linking in C - David&rsquo;s Blog
+1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
+standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/golang/advance/012-statically-linking/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-10T12:09:35+00:00" />
 <meta property="article:modified_time" content="2023-10-10T12:09:35+00:00" />
 <meta itemprop="name" content="Static Linking Go Programs">
-<meta itemprop="description" content="1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
-standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary.
-Note that net use cgo does&rsquo;t mean that all its implementation is cgo, cgo is just used for Name Resolution and some teivial features."><meta itemprop="datePublished" content="2023-10-10T12:09:35+00:00" />
+<meta itemprop="description" content="Previous post: Statically Linking in C - David&rsquo;s Blog
+1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
+standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary."><meta itemprop="datePublished" content="2023-10-10T12:09:35+00:00" />
 <meta itemprop="dateModified" content="2023-10-10T12:09:35+00:00" />
-<meta itemprop="wordCount" content="1293">
+<meta itemprop="wordCount" content="1301">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Static Linking Go Programs"/>
-<meta name="twitter:description" content="1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
-standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary.
-Note that net use cgo does&rsquo;t mean that all its implementation is cgo, cgo is just used for Name Resolution and some teivial features."/>
+<meta name="twitter:description" content="Previous post: Statically Linking in C - David&rsquo;s Blog
+1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
+standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -165,7 +165,8 @@ Note that net use cgo does&rsquo;t mean that all its implementation is cgo, cgo 
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-static-linking-on-linux">1. Static linking on linux</h2>
+      <p>Previous post: <a href="https://davidzhu.xyz/post/c++/basics/002-statically-linking/">Statically Linking in C - David&rsquo;s Blog</a></p>
+<h2 id="1-static-linking-on-linux">1. Static linking on linux</h2>
 <p>Go creates <strong>static binaries</strong> by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run <code>file</code> on it.</p>
 <p>standard packages <code>os/user</code> and <code>net</code>  use cgo, so importing either (directly or indirectly) will result in a dynamic binary.</p>
 <blockquote>
@@ -287,7 +288,7 @@ Note that net use cgo does&rsquo;t mean that all its implementation is cgo, cgo 
 </span></span><span class="line"><span class="cl">	/lib64/ld-linux-x86-64.so.2 <span class="o">(</span>0x00007f4cd6612000<span class="o">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>As you can see, the binary file is dynamically linked.</p>
+</div><p>The binary file is dynamically linked as we expected.</p>
 <h3 id="11-disable-dynamically-linking-with--cgo_enabled0">1.1. Disable dynamically linking with <code> CGO_ENABLED=0</code></h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
