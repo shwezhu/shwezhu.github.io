@@ -23,11 +23,13 @@ Learn more: [HTTP headers - HTTP | MDN](https://developer.mozilla.org/en-US/docs
 
 The `Content-Type` header can be `application/json`, `application/x-www-form-urlencoded`, `multipart/form-data`, the first two is usually used with posting form data to server, the third is used to upload file to the server.
 
+- `application/x-www-form-urlencoded`: the keys and values are encoded in key-value tuples separated by `'&'`, with a `'='` between the key and the value. 
+  - The format of `application/x-www-form-urlencoded` is `"username=davidzhu&password=778899a" `. 
 - The format of `application/json` is `'{"username":"davidzhu", "password":"778899a"}'`. 
+- `multipart/form-data`: each value is sent as a block of data ("body part"), with a user agent-defined delimiter ("boundary") separating each part. The keys are given in the `Content-Disposition` header of each part.
+- `text/plain`
 
-- The format of `application/x-www-form-urlencoded` is `"username=davidzhu&password=778899a" `. 
-
-Post file to server:
+Post file to server (You can indicate the content-type in `enctype` as below):
 
 ```html
 <form method="POST" action="{{.CurrentPath}}?upload" enctype="multipart/form-data">
