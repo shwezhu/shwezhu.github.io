@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>HTTP 2.0 Binary Framing - David&#39;s Blog</title>
+  <title>HTTP 2.0 (Binary Frame, Server Push, Header Compression) - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,9 +16,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Streams, messages, and frames At the core of all performance enhancements of HTTP/2 is the new binary framing layer, which dictates how the HTTP messages are encapsulated and transferred between the client and server.
-The introduction of the new binary framing mechanism changes how the data is exchanged between the client and server. To describe this process, let’s familiarize ourselves with the HTTP/2 terminology:
-Stream: A bidirectional flow of bytes within an established connection, which may carry one or more messages." />
+<meta name="author" content="David" /><meta name="description" content="Source: Introduction to HTTP/2 | Google Developers
+1. Binary Framing 1.1. Streams, messages, and frames At the core of all performance enhancements of HTTP/2 is the new binary framing layer, which dictates how the HTTP messages are encapsulated and transferred between the client and server.
+The introduction of the new binary framing mechanism changes how the data is exchanged between the client and server. To describe this process, let’s familiarize ourselves with the HTTP/2 terminology:" />
 
 
 
@@ -41,25 +41,25 @@ Stream: A bidirectional flow of bytes within an established connection, which ma
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="HTTP 2.0 Binary Framing" />
-<meta property="og:description" content="1. Streams, messages, and frames At the core of all performance enhancements of HTTP/2 is the new binary framing layer, which dictates how the HTTP messages are encapsulated and transferred between the client and server.
-The introduction of the new binary framing mechanism changes how the data is exchanged between the client and server. To describe this process, let’s familiarize ourselves with the HTTP/2 terminology:
-Stream: A bidirectional flow of bytes within an established connection, which may carry one or more messages." />
+<meta property="og:title" content="HTTP 2.0 (Binary Frame, Server Push, Header Compression)" />
+<meta property="og:description" content="Source: Introduction to HTTP/2 | Google Developers
+1. Binary Framing 1.1. Streams, messages, and frames At the core of all performance enhancements of HTTP/2 is the new binary framing layer, which dictates how the HTTP messages are encapsulated and transferred between the client and server.
+The introduction of the new binary framing mechanism changes how the data is exchanged between the client and server. To describe this process, let’s familiarize ourselves with the HTTP/2 terminology:" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/http/004-http-v2-binary-frame/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-11-04T00:45:30+00:00" />
 <meta property="article:modified_time" content="2023-11-04T00:45:30+00:00" />
-<meta itemprop="name" content="HTTP 2.0 Binary Framing">
-<meta itemprop="description" content="1. Streams, messages, and frames At the core of all performance enhancements of HTTP/2 is the new binary framing layer, which dictates how the HTTP messages are encapsulated and transferred between the client and server.
-The introduction of the new binary framing mechanism changes how the data is exchanged between the client and server. To describe this process, let’s familiarize ourselves with the HTTP/2 terminology:
-Stream: A bidirectional flow of bytes within an established connection, which may carry one or more messages."><meta itemprop="datePublished" content="2023-11-04T00:45:30+00:00" />
+<meta itemprop="name" content="HTTP 2.0 (Binary Frame, Server Push, Header Compression)">
+<meta itemprop="description" content="Source: Introduction to HTTP/2 | Google Developers
+1. Binary Framing 1.1. Streams, messages, and frames At the core of all performance enhancements of HTTP/2 is the new binary framing layer, which dictates how the HTTP messages are encapsulated and transferred between the client and server.
+The introduction of the new binary framing mechanism changes how the data is exchanged between the client and server. To describe this process, let’s familiarize ourselves with the HTTP/2 terminology:"><meta itemprop="datePublished" content="2023-11-04T00:45:30+00:00" />
 <meta itemprop="dateModified" content="2023-11-04T00:45:30+00:00" />
-<meta itemprop="wordCount" content="364">
+<meta itemprop="wordCount" content="542">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="HTTP 2.0 Binary Framing"/>
-<meta name="twitter:description" content="1. Streams, messages, and frames At the core of all performance enhancements of HTTP/2 is the new binary framing layer, which dictates how the HTTP messages are encapsulated and transferred between the client and server.
-The introduction of the new binary framing mechanism changes how the data is exchanged between the client and server. To describe this process, let’s familiarize ourselves with the HTTP/2 terminology:
-Stream: A bidirectional flow of bytes within an established connection, which may carry one or more messages."/>
+<meta name="twitter:title" content="HTTP 2.0 (Binary Frame, Server Push, Header Compression)"/>
+<meta name="twitter:description" content="Source: Introduction to HTTP/2 | Google Developers
+1. Binary Framing 1.1. Streams, messages, and frames At the core of all performance enhancements of HTTP/2 is the new binary framing layer, which dictates how the HTTP messages are encapsulated and transferred between the client and server.
+The introduction of the new binary framing mechanism changes how the data is exchanged between the client and server. To describe this process, let’s familiarize ourselves with the HTTP/2 terminology:"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -132,7 +132,7 @@ Stream: A bidirectional flow of bytes within an established connection, which ma
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">HTTP 2.0 Binary Framing</h1>
+      <h1 class="post-title">HTTP 2.0 (Binary Frame, Server Push, Header Compression)</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-11-04 </span>
@@ -150,8 +150,14 @@ Stream: A bidirectional flow of bytes within an established connection, which ma
   <ul>
     <li>
       <ul>
-        <li><a href="#1-streams-messages-and-frames">1. Streams, messages, and frames</a></li>
-        <li><a href="#2-request-and-response-multiplexing">2. Request and response multiplexing</a></li>
+        <li><a href="#1-binary-framing">1. Binary Framing</a>
+          <ul>
+            <li><a href="#11-streams-messages-and-frames">1.1. Streams, messages, and frames</a></li>
+            <li><a href="#12-request-and-response-multiplexing">1.2. Request and response multiplexing</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-server-push">2. Server push</a></li>
+        <li><a href="#3-header-compression">3. Header compression</a></li>
       </ul>
     </li>
   </ul>
@@ -159,7 +165,9 @@ Stream: A bidirectional flow of bytes within an established connection, which ma
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-streams-messages-and-frames">1. Streams, messages, and frames</h2>
+      <p>Source: <a href="https://web.archive.org/web/20220126192113/https://developers.google.com/web/fundamentals/performance/http2">Introduction to HTTP/2  |  Google Developers</a></p>
+<h2 id="1-binary-framing">1. Binary Framing</h2>
+<h3 id="11-streams-messages-and-frames">1.1. Streams, messages, and frames</h3>
 <p>At the core of all performance enhancements of HTTP/2 is the new binary framing layer, which dictates how the HTTP messages are encapsulated and transferred between the client and server.</p>
 <p>The introduction of the new binary framing mechanism changes how the data is exchanged between the client and server. To describe this process, let’s familiarize ourselves with the HTTP/2 terminology:</p>
 <ul>
@@ -176,8 +184,19 @@ Stream: A bidirectional flow of bytes within an established connection, which ma
 </ul>
 <img src="/004-http-v2-binary-frame/cc.png" alt="cc" style="zoom:33%;" />
 <p>In short, HTTP/2 breaks down the HTTP protocol communication into an exchange of binary-encoded frames, which are then mapped to messages that belong to a particular stream, all of which are <strong>multiplexed</strong> within a single TCP connection. This is the foundation that enables all other features and performance optimizations provided by the HTTP/2 protocol.</p>
-<h2 id="2-request-and-response-multiplexing">2. Request and response multiplexing</h2>
-<p>With HTTP/1.x, if the client wants to make multiple parallel requests to improve performance, then multiple TCP connections must be used (see <a href="https://web.archive.org/web/20220126192113/https://hpbn.co/http1x/#using-multiple-tcp-connections">Using Multiple TCP Connections</a> ). This behavior is a direct consequence of the HTTP/1.x delivery model, which ensures that only one response can be delivered at a time (response queuing) per connection. Worse, this also results in head-of-line blocking and inefficient use of the underlying TCP connection. I have talked this in <a href="">previous post</a>.</p>
+<h3 id="12-request-and-response-multiplexing">1.2. Request and response multiplexing</h3>
+<p>With HTTP/1.x, if the client wants to make multiple parallel requests to improve performance, then multiple TCP connections must be used (see <a href="https://web.archive.org/web/20220126192113/https://hpbn.co/http1x/#using-multiple-tcp-connections">Using Multiple TCP Connections</a> ). This behavior is a direct consequence of the HTTP/1.x delivery model, which ensures that only one response can be delivered at a time (response queuing) per connection. Worse, this also results in head-of-line blocking and inefficient use of the underlying TCP connection. I have talked this in <a href="https://davidzhu.xyz/post/http/004-http-versions/">previous post</a>.</p>
+<p>The new binary framing layer in HTTP/2 removes these limitations, and enables full request and response multiplexing, by allowing the client and server to break down an HTTP message into independent frames, interleave them, and then reassemble them on the other end.</p>
+<p>&hellip;.</p>
+<p>Learn more: <a href="https://web.archive.org/web/20220126192113/https://developers.google.com/web/fundamentals/performance/http2">Introduction to HTTP/2  |  Web Fundamentals  |  Google Developers</a></p>
+<h2 id="2-server-push">2. Server push</h2>
+<p>Another powerful new feature of HTTP/2 is the ability of the server to send multiple responses for a single client request. That is, in addition to the response to the original request, the server can push additional resources to the client, without the client having to request each one explicitly.</p>
+<img src="/004-http-v2-binary-frame/aa.png" alt="aa" style="zoom:50%;" />
+<blockquote>
+<p><strong>Note:</strong> HTTP/2 breaks away from the strict request-response semantics and enables one-to-many and server-initiated push workflows that open up a world of new interaction possibilities both within and outside the browser. This is an enabling feature that will have important long-term consequences both for how we think about the protocol, and where and how it is used.</p>
+</blockquote>
+<h2 id="3-header-compression">3. Header compression</h2>
+<p>&hellip;</p>
 
     </div>
 
@@ -202,8 +221,8 @@ Stream: A bidirectional flow of bytes within an established connection, which ma
           </div>
       <nav class="post-nav">
         
-        <a class="next" href="/post/http/004-http-versions/">
-            <span class="next-text nav-default">HTTP 1.1 vs HTTP 2.0</span>
+        <a class="next" href="/post/http/008-form-post-query-string/">
+            <span class="next-text nav-default">Form Data &amp; Query String</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

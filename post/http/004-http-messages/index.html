@@ -54,7 +54,7 @@ A start-line describing the requests to be implemented, or its status of whether
 HTTP requests, and responses, share similar structure and are composed of:
 A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP headers specifying the request, or describing the body included in the message."><meta itemprop="datePublished" content="2023-09-23T09:51:30+00:00" />
 <meta itemprop="dateModified" content="2023-09-23T09:51:30+00:00" />
-<meta itemprop="wordCount" content="1535">
+<meta itemprop="wordCount" content="633">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="HTTP Messages"/>
 <meta name="twitter:description" content="1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server.
@@ -159,18 +159,6 @@ A start-line describing the requests to be implemented, or its status of whether
           </ul>
         </li>
         <li><a href="#3-http-responses">3. HTTP Responses</a></li>
-        <li><a href="#2-form-data-vs-query-string">2. Form data vs query string</a>
-          <ul>
-            <li><a href="#21-client-side">2.1. Client side</a></li>
-            <li><a href="#22-server-side">2.2. Server side</a></li>
-          </ul>
-        </li>
-        <li><a href="#3-post-data">3. POST data</a>
-          <ul>
-            <li><a href="#31-example-in-real-code">3.1. Example in real code</a></li>
-          </ul>
-        </li>
-        <li><a href="#4-form-data-restriction">4. Form data restriction</a></li>
       </ul>
     </li>
   </ul>
@@ -321,179 +309,7 @@ A start-line describing the requests to be implemented, or its status of whether
 </li>
 </ul>
 <p>Reference: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages">HTTP Messages - HTTP | MDN</a></p>
-<h2 id="2-form-data-vs-query-string">2. Form data vs query string</h2>
-<h3 id="21-client-side">2.1. Client side</h3>
-<p>Query string resides in the url:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">http://www.blabla.com?a=1&amp;b=2
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Form data is sent with the request body. Therefore, when there is sensitive data, we usually put data in the form not the query string. Because the requested URL might show up in <strong>Web server logs</strong> and <strong>browser history/bookmarks</strong> which is not a good thing. <a href="https://stackoverflow.com/a/830092/16317008">source</a></p>
-<h3 id="22-server-side">2.2. Server side</h3>
-<h4 id="221-go-web">2.2.1. Go web</h4>
-<p>For all requests, <code>ParseForm()</code> parses the <strong>raw query</strong> from the URL and updates r.Form. For POST, PUT, and PATCH requests, <strong>it also reads the request body</strong>, parses it as a form and puts the results into both r.PostForm and r.Form. When the <code>Content-Type</code> is not application/x-www-form-urlencoded, the request Body is not read.</p>
-<p>Learn more: <a href="https://davidzhu.xyz/post/golang/practice/012-http-related/#4-parse-form-and-query-string">Some HTTP Issues with Go - David&rsquo;s Blog</a></p>
-<h4 id="222-spring-web">2.2.2. Spring web</h4>
-<p>If your server is wiritten in Java Spring, and you need to POST form data to the server, you need to set your <code>Content-Type</code> header of your request to <code>application/json</code>.</p>
-<p>When we write test we usually use <code>curl</code> command, looks like this:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ curl localhost:8080/hello -d <span class="s1">&#39;{&#34;username&#34;:&#34;davidzhu&#34;, &#34;password&#34;:&#34;778899a&#34;}&#39;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>However, this command with <code>-d</code> option will set <code>Content-Type</code> header to <code>application/x-www-form-urlencoded</code>  by default, which is not accepted on Spring&rsquo;s side.</p>
-<p>Therefore you have to set <code>Content-Type</code> explicitly:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ curl localhost:8080/postbody 
-</span></span><span class="line"><span class="cl">		-d <span class="s1">&#39;{&#34;username&#34;:&#34;davidzhu&#34;, &#34;password&#34;:&#34;778899a&#34;}&#39;</span> 
-</span></span><span class="line"><span class="cl">		-H <span class="s2">&#34;Content-Type: application/json&#34;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Note the format of the <code>-d</code> is josn format not url query string format: <code>&quot;username=davidzhu&amp;password=778899a&quot;</code>, this format is <code>application/x-www-form-urlencoded</code>, not <code>application/json</code>.</p>
-<p>Source: <a href="https://stackoverflow.com/a/7173011/16317008">https://stackoverflow.com/a/7173011/16317008</a></p>
-<p>Learn more about curl post: <a href="https://reqbin.com/req/c-dwjszac0/curl-post-json-example">https://reqbin.com/req/c-dwjszac0/curl-post-json-example</a></p>
-<h2 id="3-post-data">3. POST data</h2>
-<p>The <strong>HTTP <code>POST</code> method</strong> sends data to the server. The type of the body of the request is indicated by the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type"><code>Content-Type</code></a> header.</p>
-<p>A <code>POST</code> request is typically sent via an <a href="https://developer.mozilla.org/en-US/docs/Learn/Forms">HTML form</a> and results in a change on the server. In this case, the content type is selected by putting the adequate string in the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#enctype"><code>enctype</code></a> attribute of the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form"><code>form</code></a>  element or the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#formenctype"><code>formenctype</code></a> attribute of the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"><code>input</code></a> or <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button"><code>button</code></a> elements:</p>
-<ul>
-<li><code>application/x-www-form-urlencoded</code>: the keys and values are encoded in key-value tuples separated by <code>'&amp;'</code>, with a <code>'='</code> between the key and the value.</li>
-<li><code>multipart/form-data</code>: each value is sent as a block of data (&ldquo;body part&rdquo;), with a user agent-defined delimiter (&ldquo;boundary&rdquo;) separating each part. The keys are given in the <code>Content-Disposition</code> header of each part.</li>
-<li><code>text/plain</code></li>
-</ul>
-<p><img src="/004-http-messages/a.png" alt="a"></p>
-<p>Source: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST">https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST</a></p>
-<h3 id="31-example-in-real-code">3.1. Example in real code</h3>
-<p>Let&rsquo;s say I have a html code like this:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&#34;http://localhost:8080/postform&#34;</span> <span class="na">method</span><span class="o">=</span><span class="s">&#34;post&#34;</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;form-example&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;form-example&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">label</span> <span class="na">for</span><span class="o">=</span><span class="s">&#34;username&#34;</span><span class="p">&gt;</span>username<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;usernam&#34;</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;username&#34;</span> <span class="na">required</span> <span class="p">/&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;form-example&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">label</span> <span class="na">for</span><span class="o">=</span><span class="s">&#34;password&#34;</span><span class="p">&gt;</span>password<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;password&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;passwor&#34;</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;password&#34;</span> <span class="na">required</span> <span class="p">/&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;form-example&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;submit&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;register&#34;</span> <span class="p">/&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>And when I push the regiser buttion to submit the form, the http request looks like this:</p>
-<p><img src="/004-http-messages/c.png" alt="c"></p>
-<p><img src="/004-http-messages/d.png" alt="d"></p>
-<p>As you can see the form data resides in the request body, not in the URL.</p>
-<p>Sometimes when you put data in the URL as a query string <strong>or</strong> put data in the form, and make a POST request, these two cases may result same thing (the server will get same data), which gives you a wrong impression that form data wil be put into URL too.</p>
-<p>Looks like this:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ curl -X POST localhost:8080/postform -d <span class="s2">&#34;username=davidzhu&amp;password=778899a&#34;</span> 
-</span></span><span class="line"><span class="cl">$ curl -X POST <span class="s2">&#34;localhost:8080/postform?username=david&amp;password=778899a&#34;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The server may get same data for these two command, this is because the server may try to parse the query string and form data at the same time, we have talked this above in Go web.</p>
-<h2 id="4-form-data-restriction">4. Form data restriction</h2>
-<p>As we talk above, form data can only be these three type by by default:<code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, <code>text/plain</code>, and you have to set the <code>Content-Type</code> to the corresponding type with correct format.</p>
-<p>If you want <code>application/json</code> type, you need encode the form data into josn at client and decode the request body at server side. Besides, don&rsquo;t forget to set the <code>Content-Type</code> header to <code>application/json</code> which will tell the server the data format resides in the request body.</p>
-<p><a href="https://stackoverflow.com/a/22195153/16317008">An answer</a> from stackoverflow, hope it will help:</p>
-<p>HTML provides no way to generate JSON from form data. If you really want to handle it from the client, then you would have to resort to using JavaScript to:</p>
-<ol>
-<li>gather your data from the form via DOM</li>
-<li>organise it in an object or array</li>
-<li>generate JSON with <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify">JSON.stringify</a></li>
-<li>POST it with <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest">XMLHttpRequest</a></li>
-</ol>
-<p>You&rsquo;d probably be better off sticking to <code>application/x-www-form-urlencoded</code> data and processing that on the server instead of JSON. Your form doesn&rsquo;t have any complicated hierarchy that would benefit from a JSON data structure.</p>
-<p>This is same in Go, if you want send json data in the request body, you should encode it into bytes and decode request body at server:</p>
-<p>client:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// string in back quote is raw string which means
-</span></span></span><span class="line"><span class="cl"><span class="c1">// the double quote here will lose its special meaning
-</span></span></span><span class="line"><span class="cl"><span class="c1">// decode the json string into 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">reader_json</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">NewReader</span><span class="p">(</span><span class="s">`{&#34;username&#34;: &#34;david&#34;, &#34;password&#34;: &#34;my_password&#34;}`</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="nx">r</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">NewRequest</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">MethodPost</span><span class="p">,</span> <span class="s">&#34;/postbody&#34;</span><span class="p">,</span> <span class="nx">reader_json</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="nx">r</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/json&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">...</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>server:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Parse username and password in form.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">info</span> <span class="kd">struct</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="nx">Username</span> <span class="kt">string</span> <span class="s">`json:&#34;username&#34;`</span>
-</span></span><span class="line"><span class="cl">  <span class="nx">Password</span> <span class="kt">string</span> <span class="s">`json:&#34;password&#34;`</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="nx">user</span> <span class="o">:=</span> <span class="nx">info</span><span class="p">{}</span>
-</span></span><span class="line"><span class="cl"><span class="c1">// note that r.Body is an io.Reader
-</span></span></span><span class="line"><span class="cl"><span class="c1">// which means decoder.Decode() method will consume data stroed in r.Body
-</span></span></span><span class="line"><span class="cl"><span class="c1">// you cannot read same data twice
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">decoder</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">NewDecoder</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">Body</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="nx">err</span> <span class="o">:=</span> <span class="nx">decoder</span><span class="p">.</span><span class="nf">Decode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">user</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">password</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">username</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div>
+
     </div>
 
     <div class="post-copyright">
