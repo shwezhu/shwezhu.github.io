@@ -100,7 +100,7 @@ $ curl -X POST localhost:8080/postform -d "username=davidzhu&password=778899a"
 $ curl -X POST "localhost:8080/postform?username=david&password=778899a"
 ```
 
-The server may get same data for these two command, this is because the server may try to parse the query string and form data at the same time, I have talked this in Go web. 
+The server may get same data for these two command, this is because the server may try to parse the query string and form data at the same time, I have talked this in [previous post](https://davidzhu.xyz/post/golang/practice/012-http-related/#4-parse-form-and-query-string). 
 
 ## 4. Form data restriction
 
@@ -110,7 +110,7 @@ If you want `application/json` type, you need encode the form data into josn at 
 
 [An answer](https://stackoverflow.com/a/22195153/16317008) from stackoverflow, hope it will help:
 
-HTML provides no way to generate JSON from form data. If you really want to handle it from the client, then you would have to resort to using JavaScript to:
+**HTML provides no way to generate JSON from form data**. If you really want to handle it from the client, then you would have to resort to using JavaScript to:
 
 1. gather your data from the form via DOM
 2. organise it in an object or array

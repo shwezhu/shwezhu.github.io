@@ -29,26 +29,7 @@ The `Content-Type` header can be `application/json`, `application/x-www-form-url
 - `multipart/form-data`: each value is sent as a block of data ("body part"), with a user agent-defined delimiter ("boundary") separating each part. The keys are given in the `Content-Disposition` header of each part.
 - `text/plain`
 
-Post file to server (You can indicate the content-type in `enctype` as below):
-
-```html
-<form method="POST" action="{{.CurrentPath}}?upload" enctype="multipart/form-data">
-    <input type="file" name="file" required/>
-    <button type="submit">upload</button>
-</form>
-```
-
-> HTML provides no way to generate JSON from *form data*. You'd probably be better off sticking to `application/x-www-form-urlencoded` data and processing that on the server instead of JSON. Your form doesn't have any complicated hierarchy that would benefit from a JSON data structure. Source: https://stackoverflow.com/a/22195153/16317008
->
-
-If you really want to handle it from the client, then you would have to resort to using JavaScript to: 
-
-1. gather your data from the form via DOM
-2. organise it in an object or array
-3. generate JSON with [JSON.stringify](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify)
-4. POST it with XMLHttpRequest
-
-Learn more: [Curl Basics - David's Blog](https://davidzhu.xyz/post/cs-basics/017-curl/)
+HTML provides no way to generate JSON from form data, learn more: [Form Data & Query String - David's Blog](https://davidzhu.xyz/post/http/008-form-post-query-string/#4-form-data-restriction)
 
 ### 2. `Access-Control-Allow-Origin`
 
