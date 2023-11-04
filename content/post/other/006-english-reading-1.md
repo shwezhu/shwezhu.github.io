@@ -7,6 +7,16 @@ tags:
  - other
 ---
 
+These problems were at **the forefront of the minds** of HTTP/2 developers, 
+
+That said, unless you are implementing a web server (or a custom client) by working with raw TCP sockets, then you won’t see any difference: all the new, low-level framing is performed by the client and server **on your behalf**. 
+
+> If you are unable to attend a meeting, you might ask someone to attend "**on your behalf**," meaning that they will participate in the meeting and represent your interests and opinions in **your absence**.
+
+In fact, there are some developers who **advocate for** building extremely **fine‑grained** 10–100 LOC services.
+
+> Nginx wrote a fantastic series on the various concepts of microservices, [**please give this a read**](https://web.archive.org/web/20220124115000/https://www.nginx.com/blog/introduction-to-microservices/).
+
 When the topic of high-performance, in-memory caching surfaces, Redis **invariably** stands out. **Renowned** for its speed, flexibility, and rich feature set, Redis has cemented its position as a top-tier caching solution. For Go developers **keen on** optimizing application performance, understanding Redis becomes **pivotal**.
 
 Go’s concurrency features, paired with Redis’s in-memory data structure store, allows developers to implement robust caching mechanisms, **elevating** the Go-Redis performance to **new heights**.

@@ -8,6 +8,8 @@ tags:
  - golang
 ---
 
+Previous post: [Statically Linking in C - David's Blog](https://davidzhu.xyz/post/c++/basics/002-statically-linking/)
+
 ## 1. Static linking on linux
 
 Go creates **static binaries** by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run `file` on it. 
@@ -80,7 +82,7 @@ $ ldd server
 	/lib64/ld-linux-x86-64.so.2 (0x00007f4cd6612000)
 ```
 
-As you can see, the binary file is dynamically linked. 
+The binary file is dynamically linked as we expected. 
 
 ### 1.1. Disable dynamically linking with ` CGO_ENABLED=0` 
 

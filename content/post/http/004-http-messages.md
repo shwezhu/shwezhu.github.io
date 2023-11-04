@@ -8,11 +8,24 @@ tags:
 typora-root-url: ../../../static
 ---
 
-## 1. HTTP Messages
+## 1. Intro of HTTP messages
 
-### 1.1. HTTP Requests
+There are two types of messages: ***requests*** sent by the client to trigger an action on the server, and ***responses***, the answer from the server.
 
-#### 1.1.1. Start line
+HTTP requests, and responses, share similar structure and are composed of:
+
+1. A `start-line` describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line.
+2. An optional set of `HTTP headers` specifying the request, or describing the body included in the message.
+3. A `blank line` indicating all meta-information for the request has been sent.
+4. An optional `body` containing data associated with the request (like content of an HTML form), or the document associated with a response. The presence of the body and its size is specified by the start-line and HTTP headers.
+
+![aa](/004-http-messages/aa.png)
+
+The `start-line` and `HTTP headers` of the HTTP message are collectively known as the ***head*** of the requests, whereas its `payload` is known as the ***body***.
+
+## 2. HTTP Requests
+
+### 2.1. Start line
 
 A start line contains three parts:
 
@@ -29,7 +42,7 @@ A start line contains three parts:
 POST www.example.com/test.html?username=alibaba HTTP/1.1
 ```
 
-#### 1.1.2. Headers
+### 2.2. Headers
 
 An HTTP header consists of its case-insensitive name followed by a colon (`:`), then by its value. Whitespace before the value is ignored. This is an HTTP header:
 
@@ -80,7 +93,7 @@ Many different headers can appear in an HTTP request. They can be divided in sev
 
 ![a](/004-http-messages/a1.png)
 
-#### 1.1.3. Body
+### 2.3. Body
 
 The final part of the request is its body. Not all requests have one: requests fetching resources, like `GET`, `HEAD`, `DELETE`, or `OPTIONS`, usually don't need one. Some requests send data to the server in order to update it: as often the case with `POST` requests (containing HTML form data).
 
@@ -89,7 +102,7 @@ Bodies can be broadly divided into two categories:
 - Single-resource bodies, consisting of one single file, defined by the two headers: [`Content-Type`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) and [`Content-Length`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length).
 - [Multiple-resource bodies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#multipartform-data), consisting of a multipart body, each containing a different bit of information. This is typically associated with [HTML Forms](https://developer.mozilla.org/en-US/docs/Learn/Forms).
 
-### 1.2. HTTP Responses
+## 3. HTTP Responses
 
 HTTP Reponse also contains three parts:
 
@@ -103,9 +116,7 @@ HTTP Reponse also contains three parts:
 - Body
   - Same as http request.
 
-![b](/004-http-messages/b1.png)
-
-Source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages
+Reference: [HTTP Messages - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages)
 
 ## 2. Form data vs query string
 
@@ -212,7 +223,7 @@ As we talk above, form data can only be these three type by by default:`applicat
 
 If you want `application/json` type, you need encode the form data into josn at client and decode the request body at server side. Besides, don't forget to set the `Content-Type` header to `application/json` which will tell the server the data format resides in the request body. 
 
-[A answer](https://stackoverflow.com/a/22195153/16317008) from stackoverflow, hope it will help:
+[An answer](https://stackoverflow.com/a/22195153/16317008) from stackoverflow, hope it will help:
 
 HTML provides no way to generate JSON from form data. If you really want to handle it from the client, then you would have to resort to using JavaScript to:
 
