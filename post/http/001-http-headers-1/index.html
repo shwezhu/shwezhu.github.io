@@ -51,7 +51,7 @@ Request headers contain more information about the resource to be fetched, or ab
 <meta itemprop="description" content="0. Header types Headers can be grouped according to their contexts:
 Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport."><meta itemprop="datePublished" content="2023-10-26T09:58:10+00:00" />
 <meta itemprop="dateModified" content="2023-10-26T09:58:10+00:00" />
-<meta itemprop="wordCount" content="1868">
+<meta itemprop="wordCount" content="1765">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="HTTP Headers (1)"/>
 <meta name="twitter:description" content="0. Header types Headers can be grouped according to their contexts:
@@ -185,32 +185,7 @@ Request headers contain more information about the resource to be fetched, or ab
 <li><code>multipart/form-data</code>: each value is sent as a block of data (&ldquo;body part&rdquo;), with a user agent-defined delimiter (&ldquo;boundary&rdquo;) separating each part. The keys are given in the <code>Content-Disposition</code> header of each part.</li>
 <li><code>text/plain</code></li>
 </ul>
-<p>Post file to server (You can indicate the content-type in <code>enctype</code> as below):</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">&#34;POST&#34;</span> <span class="na">action</span><span class="o">=</span><span class="s">&#34;{{.CurrentPath}}?upload&#34;</span> <span class="na">enctype</span><span class="o">=</span><span class="s">&#34;multipart/form-data&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;file&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;file&#34;</span> <span class="na">required</span><span class="p">/&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;submit&#34;</span><span class="p">&gt;</span>upload<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><blockquote>
-<p>HTML provides no way to generate JSON from <em>form data</em>. You&rsquo;d probably be better off sticking to <code>application/x-www-form-urlencoded</code> data and processing that on the server instead of JSON. Your form doesn&rsquo;t have any complicated hierarchy that would benefit from a JSON data structure. Source: <a href="https://stackoverflow.com/a/22195153/16317008">https://stackoverflow.com/a/22195153/16317008</a></p>
-</blockquote>
-<p>If you really want to handle it from the client, then you would have to resort to using JavaScript to:</p>
-<ol>
-<li>gather your data from the form via DOM</li>
-<li>organise it in an object or array</li>
-<li>generate JSON with <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify">JSON.stringify</a></li>
-<li>POST it with XMLHttpRequest</li>
-</ol>
-<p>Learn more: <a href="https://davidzhu.xyz/post/cs-basics/017-curl/">Curl Basics - David&rsquo;s Blog</a></p>
+<p>HTML provides no way to generate JSON from form data, learn more: <a href="https://davidzhu.xyz/post/http/008-form-post-query-string/#4-form-data-restriction">Form Data &amp; Query String - David&rsquo;s Blog</a></p>
 <h3 id="2-access-control-allow-origin">2. <code>Access-Control-Allow-Origin</code></h3>
 <p>Adding <code>Access-Control-Allow-Origin: *</code> header in http response on web server side is not safe. When the &ldquo;Access-Control-Allow-Origin&rdquo; header is set to &ldquo;*&rdquo;, it means that any website, regardless of its origin, can make <strong>cross-origin</strong> requests to the server and access its resources. This opens up the server to potential attacks, including cross-site scripting (XSS) and cross-site request forgery (CSRF).</p>
 <p>The Same-Origin Policy (SOP) is a security feature <strong>enforced by web browsers</strong> that restricts web pages (javascript) from interacting with resources (such as making requests or accessing data) from different origins.</p>

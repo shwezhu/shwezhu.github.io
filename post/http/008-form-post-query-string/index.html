@@ -264,12 +264,12 @@
 </span></span><span class="line"><span class="cl">$ curl -X POST <span class="s2">&#34;localhost:8080/postform?username=david&amp;password=778899a&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>The server may get same data for these two command, this is because the server may try to parse the query string and form data at the same time, I have talked this in Go web.</p>
+</div><p>The server may get same data for these two command, this is because the server may try to parse the query string and form data at the same time, I have talked this in <a href="https://davidzhu.xyz/post/golang/practice/012-http-related/#4-parse-form-and-query-string">previous post</a>.</p>
 <h2 id="4-form-data-restriction">4. Form data restriction</h2>
 <p>As we talk above, form data can only be these three type by by default:<code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, <code>text/plain</code>, and you have to set the <code>Content-Type</code> to the corresponding type with correct format.</p>
 <p>If you want <code>application/json</code> type, you need encode the form data into josn at client and decode the request body at server side. Besides, don&rsquo;t forget to set the <code>Content-Type</code> header to <code>application/json</code> which will tell the server the data format resides in the request body.</p>
 <p><a href="https://stackoverflow.com/a/22195153/16317008">An answer</a> from stackoverflow, hope it will help:</p>
-<p>HTML provides no way to generate JSON from form data. If you really want to handle it from the client, then you would have to resort to using JavaScript to:</p>
+<p><strong>HTML provides no way to generate JSON from form data</strong>. If you really want to handle it from the client, then you would have to resort to using JavaScript to:</p>
 <ol>
 <li>gather your data from the form via DOM</li>
 <li>organise it in an object or array</li>
