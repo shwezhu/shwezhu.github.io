@@ -2,9 +2,8 @@
 title: Working with TUN Device on MacOS
 date: 2023-09-12 08:31:59
 categories:
- - cs basics
+ - networking
 tags:
- - cs basics
  - networking
 ---
 
@@ -49,7 +48,7 @@ utun5: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1500
 >
 > Source: https://superuser.com/a/1446061/1689666
 
-## 2. utun is an instance of TUN device
+## 2. `utun` is an instance of TUN device
 
 **You can think `utun*` is an instance of TUN device on Mac, a TUN device can have many instances.**
 

@@ -19,7 +19,7 @@ typora-root-url: ../../../static
 - `en0` 
   - Physical network interface
 - utun0~4
-  - VIrtual netwrok interface used for tunneling, learn more: [Working with TUN Device on MacOS - David's Blog](https://davidzhu.xyz/post/cs-basics/011-tun-device/)
+  - VIrtual netwrok interface used for tunneling, learn more: [Working with TUN Device on MacOS - David's Blog](https://davidzhu.xyz/post/cs-basics/011-tun-device-macos/)
 - loopback interface: 127.0.0.1
   - When you learn network programming and run a echo server and client on your loacl machine, you should select the `loopback` interface, not the `en0` interface. 
 

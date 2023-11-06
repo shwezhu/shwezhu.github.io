@@ -2,10 +2,8 @@
 title: DDoS Attack
 date: 2023-09-09 09:29:57
 categories:
- - cs basics
+  - networking
 tags:
-  - cs basics
-  - build website
   - networking
   - cybersecurity
 ---

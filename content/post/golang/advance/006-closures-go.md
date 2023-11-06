@@ -44,7 +44,7 @@ pos:   6   0x140000b0018
 neg:  -6   0x140000b0020
 ```
 
-As we see above,  when the anonymous function defined in the `adder()` access `sum`, it looks like accessing a global variable, because even the function `adder()` has returned we still can access variable `sum`. However, there are "two" `sum` actually, they are isolated and each has its own address. 
+As we see above,  when the anonymous function defined in the `adder()` access `sum`, it looks like accessing a global variable, even the function `adder()` has returned we still can access variable `sum`. However, there are "two" `sum` actually, they are isolated and each has its own address. 
 
 You should note that we return an anonymous function here, function is first-class citizen in golang just like javascript, it's a gift don't fear it. 
 
