@@ -10,7 +10,7 @@ tags:
 
 ## 1. Tunneling
 
-In [previous post](https://davidzhu.xyz/post/cs-basics/011-tun-device/), we know that ***TUN*** and ***TAP*** are two different kernel virtual network devices, which are used for **tunneling** purposes. In this post, we'll discuss what is tunneling and coomon tunneling protocols. 
+In [previous post](https://davidzhu.xyz/post/networking/007-tun-tap-device/), we know that ***TUN*** and ***TAP*** are two different kernel virtual network devices, which are used for **tunneling** purposes. In this post, we'll discuss what is tunneling and coomon tunneling protocols. 
 
 In the physical world, tunneling is a way to cross terrain or boundaries that could not normally be crossed. Similarly, in networking, tunnels are a method for transporting data across a network using protocols that are not supported by that network. **Tunneling works by encapsulating packets: wrapping packets inside of other packets.** 
 

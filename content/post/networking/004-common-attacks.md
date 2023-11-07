@@ -20,7 +20,7 @@ https://davidzhu.xyz/post/cs-basics/002-ssh/
 
 ### 2. DDoS attack
 
-Learn more: [DDoS Attack - David's Blog](https://davidzhu.xyz/post/cs-basics/012-ddos-attack/)
+Learn more: [DDoS Attack - David's Blog](https://davidzhu.xyz/post/networking/004-ddos-attack/)
 
 ### 3. CSRF attack
 
