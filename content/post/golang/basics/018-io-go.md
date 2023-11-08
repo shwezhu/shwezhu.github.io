@@ -8,7 +8,20 @@ tags:
  - golang
 ---
 
+## 1. Open and read file
 
+```go
+file, err := os.Open(filepath)
+if err != nil {
+  ...
+}
+
+buf := make([]byte, 512)
+n, err := file.Read(buf)
+if err != nil {
+  ...
+}
+```
 
 
 
