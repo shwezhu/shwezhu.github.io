@@ -16,9 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="bytes, bufio, io,
-The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time. In a case where you are reading or writing a lot of data, buffered I/O can be much faster than normal I/O.
-Golang Bufio (A Complete Guide)" />
+<meta name="author" content="David" /><meta name="description" content="1. Open and read file 1 2 3 4 5 6 7 8 9 10 file, err := os.Open(filepath) if err != nil { ... } buf := make([]byte, 512) n, err := file.Read(buf) if err != nil { ... } bytes, bufio, io,
+The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time." />
 
 
 
@@ -42,24 +41,21 @@ Golang Bufio (A Complete Guide)" />
 
 
 <meta property="og:title" content="IO in Go" />
-<meta property="og:description" content="bytes, bufio, io,
-The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time. In a case where you are reading or writing a lot of data, buffered I/O can be much faster than normal I/O.
-Golang Bufio (A Complete Guide)" />
+<meta property="og:description" content="1. Open and read file 1 2 3 4 5 6 7 8 9 10 file, err := os.Open(filepath) if err != nil { ... } buf := make([]byte, 512) n, err := file.Read(buf) if err != nil { ... } bytes, bufio, io,
+The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/golang/basics/018-io-go/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-09-14T21:57:04+00:00" />
 <meta property="article:modified_time" content="2023-09-14T21:57:04+00:00" />
 <meta itemprop="name" content="IO in Go">
-<meta itemprop="description" content="bytes, bufio, io,
-The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time. In a case where you are reading or writing a lot of data, buffered I/O can be much faster than normal I/O.
-Golang Bufio (A Complete Guide)"><meta itemprop="datePublished" content="2023-09-14T21:57:04+00:00" />
+<meta itemprop="description" content="1. Open and read file 1 2 3 4 5 6 7 8 9 10 file, err := os.Open(filepath) if err != nil { ... } buf := make([]byte, 512) n, err := file.Read(buf) if err != nil { ... } bytes, bufio, io,
+The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time."><meta itemprop="datePublished" content="2023-09-14T21:57:04+00:00" />
 <meta itemprop="dateModified" content="2023-09-14T21:57:04+00:00" />
-<meta itemprop="wordCount" content="72">
+<meta itemprop="wordCount" content="113">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="IO in Go"/>
-<meta name="twitter:description" content="bytes, bufio, io,
-The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time. In a case where you are reading or writing a lot of data, buffered I/O can be much faster than normal I/O.
-Golang Bufio (A Complete Guide)"/>
+<meta name="twitter:description" content="1. Open and read file 1 2 3 4 5 6 7 8 9 10 file, err := os.Open(filepath) if err != nil { ... } buf := make([]byte, 512) n, err := file.Read(buf) if err != nil { ... } bytes, bufio, io,
+The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -147,11 +143,46 @@ Golang Bufio (A Complete Guide)"/>
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-open-and-read-file">1. Open and read file</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
-      <p>bytes, bufio, io,</p>
+      <h2 id="1-open-and-read-file">1. Open and read file</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">file</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="nx">filepath</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">buf</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">n</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">file</span><span class="p">.</span><span class="nf">Read</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>bytes, bufio, io,</p>
 <p>The main difference between buffered I/O and normal I/O is that buffered I/O reads or writes data in chunks rather than one byte at a time. While on the other side normal I/O reads or writes data one byte at a time. In a case where you are reading or writing a lot of data, buffered I/O can be much faster than normal I/O.</p>
 <p><a href="https://www.kelche.co/blog/go/golang-bufio/">Golang Bufio (A Complete Guide)</a></p>
 
