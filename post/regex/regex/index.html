@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>正则表达式常用符号 - David&#39;s Blog</title>
+  <title>Regex Basics - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="注意 Bash一般都是用“ ”来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用‘ ’进行quote. You should always" />
+<meta name="author" content="David" /><meta name="description" content="1. ?, *, ., &#43; &#43; one occurrences of the preceding element * zero occurrence of the preceding element ? zero or one occurrences of the preceding element . matches any single character (exclude newlines) 2. \b To match &amp;ldquo;port&amp;rdquo; and &amp;ldquo;ports&amp;rdquo; but not match &amp;ldquo;export&amp;rdquo;, &amp;ldquo;portable&amp;rdquo;, &amp;ldquo;important&amp;rdquo;, use \bports?\b. Here, \b indicates a boundary, where there cannot be other word characters on either side. Word characters refer to English" />
 
 
 
@@ -39,19 +39,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="正则表达式常用符号" />
-<meta property="og:description" content="注意 Bash一般都是用“ ”来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用‘ ’进行quote. You should always" />
+<meta property="og:title" content="Regex Basics" />
+<meta property="og:description" content="1. ?, *, ., &#43; &#43; one occurrences of the preceding element * zero occurrence of the preceding element ? zero or one occurrences of the preceding element . matches any single character (exclude newlines) 2. \b To match &ldquo;port&rdquo; and &ldquo;ports&rdquo; but not match &ldquo;export&rdquo;, &ldquo;portable&rdquo;, &ldquo;important&rdquo;, use \bports?\b. Here, \b indicates a boundary, where there cannot be other word characters on either side. Word characters refer to English" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/regex/regex/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-01T23:14:22+00:00" />
 <meta property="article:modified_time" content="2023-05-01T23:14:22+00:00" />
-<meta itemprop="name" content="正则表达式常用符号">
-<meta itemprop="description" content="注意 Bash一般都是用“ ”来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用‘ ’进行quote. You should always"><meta itemprop="datePublished" content="2023-05-01T23:14:22+00:00" />
+<meta itemprop="name" content="Regex Basics">
+<meta itemprop="description" content="1. ?, *, ., &#43; &#43; one occurrences of the preceding element * zero occurrence of the preceding element ? zero or one occurrences of the preceding element . matches any single character (exclude newlines) 2. \b To match &ldquo;port&rdquo; and &ldquo;ports&rdquo; but not match &ldquo;export&rdquo;, &ldquo;portable&rdquo;, &ldquo;important&rdquo;, use \bports?\b. Here, \b indicates a boundary, where there cannot be other word characters on either side. Word characters refer to English"><meta itemprop="datePublished" content="2023-05-01T23:14:22+00:00" />
 <meta itemprop="dateModified" content="2023-05-01T23:14:22+00:00" />
-<meta itemprop="wordCount" content="1650">
+<meta itemprop="wordCount" content="1319">
 <meta itemprop="keywords" content="regex," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="正则表达式常用符号"/>
-<meta name="twitter:description" content="注意 Bash一般都是用“ ”来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用‘ ’进行quote. You should always"/>
+<meta name="twitter:title" content="Regex Basics"/>
+<meta name="twitter:description" content="1. ?, *, ., &#43; &#43; one occurrences of the preceding element * zero occurrence of the preceding element ? zero or one occurrences of the preceding element . matches any single character (exclude newlines) 2. \b To match &ldquo;port&rdquo; and &ldquo;ports&rdquo; but not match &ldquo;export&rdquo;, &ldquo;portable&rdquo;, &ldquo;important&rdquo;, use \bports?\b. Here, \b indicates a boundary, where there cannot be other word characters on either side. Word characters refer to English"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +124,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">正则表达式常用符号</h1>
+      <h1 class="post-title">Regex Basics</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-05-01 </span>
@@ -142,16 +142,11 @@
   <ul>
     <li>
       <ul>
-        <li>
-          <ul>
-            <li><a href="#1---">1. <code>?</code>, <code>*</code>, <code>.</code></a></li>
-            <li><a href="#2-d-w-s">2. <code>\d</code>, <code>\w</code>, <code>\s</code></a></li>
-            <li><a href="#3-b">3. <code>\b</code></a></li>
-            <li><a href="#4-">4. <code>+</code></a></li>
-            <li><a href="#5---">5. <code>$</code> &amp; <code>^</code></a></li>
-            <li><a href="#6-eg">6. e.g.,</a></li>
-          </ul>
-        </li>
+        <li><a href="#1----">1. <code>?</code>, <code>*</code>, <code>.</code>, <code>+</code></a></li>
+        <li><a href="#2-b">2. <code>\b</code></a></li>
+        <li><a href="#3-">3. <code>[]</code></a></li>
+        <li><a href="#4---">4. <code>$</code> &amp; <code>^</code></a></li>
+        <li><a href="#5-eg">5. e.g.</a></li>
       </ul>
     </li>
   </ul>
@@ -159,116 +154,31 @@
   </div>
 </div>
     <div class="post-content">
-      <p>注意 Bash一般都是用<code>“ ”</code>来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用<code>‘ ’</code>进行quote.</p>
-<blockquote>
-<p>You should always <a href="https://www.gnu.org/software/bash/manual/bash.html#Quoting">quote</a> regular expressions for <code>grep</code>&ndash;and <a href="https://www.gnu.org/software/bash/manual/bash.html#Single-Quotes">single quotes</a> are usually best.  来源: <a href="https://askubuntu.com/a/957504/1690738">https://askubuntu.com/a/957504/1690738</a></p>
-</blockquote>
-<h3 id="1---">1. <code>?</code>, <code>*</code>, <code>.</code></h3>
-<p><code>?</code> The question mark indicates zero or one occurrences of the <strong>preceding element</strong>. For example, <code>colou?r</code> matches both &ldquo;color&rdquo; and &ldquo;colour&rdquo;. 英文的 &ldquo;颜色&rdquo; 一字, 有两种拼法: color 及 colour。 用 regexp 表达, 可以一石两鸟: colou?r 其中的 ? 表示 「前面的字符可有可无」</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;colour\ncolor\ncolouur\n&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;colou?r&#39;</span>
-</span></span><span class="line"><span class="cl">colour
-</span></span><span class="line"><span class="cl">color
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><code>*</code> The <strong>asterisk</strong> indicates zero or more occurrences of the preceding element. For example, ab*c matches &ldquo;ac&rdquo;, &ldquo;abc&rdquo;, &ldquo;abbc&rdquo;, &ldquo;abbbc&rdquo;, and so on.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;colour\ncolor\ncolouur\n&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;colou*r&#39;</span>                          
-</span></span><span class="line"><span class="cl">colour
-</span></span><span class="line"><span class="cl">color
-</span></span><span class="line"><span class="cl">colouur
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><code>.</code>Matches any single character (many applications exclude newlines, and exactly which characters are considered newlines is flavor-, character-encoding-, and platform-specific, but it is safe to assume that the line feed character is included). Within POSIX bracket expressions, the dot character matches a literal dot. For example, <code>a.c</code> matches &ldquo;abc&rdquo;, etc., but <code>[a.c]</code> matches only &ldquo;a&rdquo;, &ldquo;.&rdquo;, or &ldquo;c&rdquo;.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;colour\ncolor\ncolouur\n&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;colo.r&#39;</span>                           
-</span></span><span class="line"><span class="cl">colour
-</span></span><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;colour\ncolor\ncolouur\n&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;colou.r&#39;</span>                          
-</span></span><span class="line"><span class="cl">colouur
-</span></span></code></pre></td></tr></table>
-</div>
-</div><table>
+      <h2 id="1----">1. <code>?</code>, <code>*</code>, <code>.</code>, <code>+</code></h2>
+<table>
 <thead>
 <tr>
 <th><code>+</code></th>
-<th>代表出現1次以上</th>
+<th>one occurrences of the preceding element</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>*</code></td>
-<td>代表出現0次以上</td>
+<td>zero occurrence of the preceding element</td>
 </tr>
 <tr>
 <td><code>?</code></td>
-<td>代表出現0次或1次</td>
+<td>zero or one occurrences of the preceding element</td>
+</tr>
+<tr>
+<td><code>.</code></td>
+<td>matches any single character (exclude newlines)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="2-d-w-s">2. <code>\d</code>, <code>\w</code>, <code>\s</code></h3>
-<ul>
-<li><code>\d</code> 其实就是 <code>[0-9]</code>, &ldquo;任何一个数字&rdquo;</li>
-<li><code>\D</code> 其实就是 <code>[^0-9]</code>, &ldquo;任何一个非数字&rdquo;</li>
-<li><code>\w</code> 其实就是 <code>[a-zA-Z0-9_]</code>, &ldquo;任何一个文数字&rdquo;</li>
-<li><code>\W</code> 其实就是 <code>[^a-zA-Z0-9_]</code>, &ldquo;任何一个非文数字&rdquo;</li>
-<li><code>\s</code> 其实就是 <code>[ \t\n]</code>, &ldquo;任何一个空白类字符&rdquo;,  注意<code>[ \t\n]</code>是前面故意有个空格,</li>
-<li><code>\S</code> 其实就是 <code>[^ \t\n]</code>, &ldquo;任何一个非空白类字符&rdquo;</li>
-</ul>
-<p>计数用, 表达 「前面的样版重复出现多少次」 的 quantifier:</p>
-<ul>
-<li><code>{5}</code> 重复 5 次</li>
-<li><code>{3,7}</code> 重复 3 到 7 次</li>
-<li><code>{3,}</code> 重复至少 3 次</li>
-<li><code>?</code> 可有可无。 相当于 <code>{0,1}</code></li>
-<li><code>*</code> 重复出现任意次， 包含 0 次。 相当于 <code>{0,}</code></li>
-<li><code>+</code> 重复出现任意次, 至少 1 次。 相当于 <code>{1,}</code></li>
-</ul>
-<p>国内的手机号是11位, 所以要查手机号, 我们可以简单的查找大于等于11位数字的字符串, 下面用7位的举例子,</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;12345\n12345678\n123\n234567\n1234567&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;\d{7}&#39;</span>        
-</span></span><span class="line"><span class="cl"><span class="m">12345678</span>
-</span></span><span class="line"><span class="cl"><span class="m">1234567</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>如果想要查找就是7位的数字呢?</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;12345\n12345678\n123\n234567\n1234567&#34;</span> <span class="p">|</span> ggrep -E <span class="s1">&#39;\b[0-9]{7}\b&#39;</span> 
-</span></span><span class="line"><span class="cl"><span class="m">1234567</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h3 id="3-b">3. <code>\b</code></h3>
-<p>想要找 &ldquo;port&rdquo; 与 &ldquo;ports&rdquo;, 但又不希望找到 &ldquo;export&rdquo;, &ldquo;portable&rdquo;, &ldquo;important&rdquo; 等等一大堆不相关的单字, 该怎么办? 用 <code>\bports?\b</code> 这里的<code> \b</code> 表示 boundary, 旁边不可有其他文数字。 所谓文数字, 就是英文本母, 数字, 及底线 &ldquo;_&quot;。</p>
+<h2 id="2-b">2. <code>\b</code></h2>
+<p>To match &ldquo;port&rdquo; and &ldquo;ports&rdquo; but not match &ldquo;export&rdquo;, &ldquo;portable&rdquo;, &ldquo;important&rdquo;, use \bports?\b. Here, \b indicates a boundary, where there cannot be other word characters on either side. Word characters refer to English letters, numbers and underscore &ldquo;_&rdquo;. So \bports?\b will match &ldquo;port&rdquo; or &ldquo;ports&rdquo; only if they appear as a full word by themselves, not as part of another word.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -281,27 +191,77 @@
 </span></span><span class="line"><span class="cl">There are many ports...
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="4-">4. <code>+</code></h3>
-<p>The pattern <code>a+</code> will match one or more occurrences of the letter &lsquo;a&rsquo;. It will match strings like &ldquo;a&rdquo;, &ldquo;aa&rdquo;, &ldquo;aaa&rdquo;, and so on, but it will not match an empty string or a string without any &lsquo;a&rsquo; characters.</p>
+</div><p>Please note that Bash generally uses &ldquo;double quotes&rdquo; to quote strings, in order to avoid potential misparsing, we should use &lsquo;single quotes&rsquo; when quoting any regular expressions.</p>
+<blockquote>
+<p>You should always <a href="https://www.gnu.org/software/bash/manual/bash.html#Quoting">quote</a> regular expressions for <code>grep</code>&ndash;and <a href="https://www.gnu.org/software/bash/manual/bash.html#Single-Quotes">single quotes</a> are usually best. <a href="https://askubuntu.com/a/957504/1690738">https://askubuntu.com/a/957504/1690738</a></p>
+</blockquote>
+<h2 id="3-">3. <code>[]</code></h2>
+<p>A string of characters enclosed in square brackets (<code>[]</code>) matches any <strong>one character</strong> in that string. If the first character in the brackets is a caret (<code>^</code>), it matches any character <em>except</em> those in the string. For example, <code>[abc]</code> matches a, b, or c, but not x, y, or z. However, <code>[^abc]</code> matches x, y, or z, but not a, b, or c.</p>
+<p>A minus sign (-) within square brackets indicates a range of consecutive ASCII characters. For example, <code>[0-9]</code> is the same as <code>[0123456789]</code>.</p>
+<p>If any special character, such as backslash (<code>\</code>), asterisk (<code>*</code>), or plus sign (<code>+</code>), is immediately after the left square bracket, it doesn&rsquo;t have its special meaning and is considered to be one of the characters to match.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Match</th>
+<th>Not match</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[0-9]</code></td>
+<td>1, 2, 3</td>
+<td>12, 01, 22</td>
+</tr>
+<tr>
+<td><code>[a-zA-Z0-9_]</code></td>
+<td>a, E, 2, _</td>
+<td>ab, 56</td>
+</tr>
+<tr>
+<td><code>END[.]</code></td>
+<td>END.</td>
+<td>END;   END DO</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>[ \t\n]</code>, &ldquo;任何一个空白类字符&rdquo;,  注意<code>[ \t\n]</code>是前面故意有个空格,</li>
+<li><code>[^ \t\n]</code>, &ldquo;任何一个非空白类字符&rdquo;</li>
+</ul>
+<p>计数用, 表达 「前面的样版重复出现多少次」 的 quantifier:</p>
+<ul>
+<li><code>{5}</code> 重复 5 次</li>
+<li><code>{3,7}</code> 重复 3 到 7 次</li>
+<li><code>{3,}</code> 重复至少 3 次</li>
+<li><code>{0,}</code>重复出现任意次, 包含 0 次</li>
+<li><code>{1,}</code> 重复出现任意次, 至少 1 次</li>
+</ul>
+<p>国内的手机号是11位, 所以要查手机号, 我们可以简单的查找大于等于11位数字的字符串, 下面用7位的举例子,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;aaa\nadd\nsra\ndfgh&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;a+&#39;</span>
-</span></span><span class="line"><span class="cl">aaa
-</span></span><span class="line"><span class="cl">add
-</span></span><span class="line"><span class="cl">sra
-</span></span><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;aaa\nadd\nsra\ndfgh&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;\ba+\b&#39;</span>
-</span></span><span class="line"><span class="cl">aaa
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;12345\n12345678\n123\n234567\n1234567&#34;</span> <span class="p">|</span> egrep <span class="s1">&#39;[0-9]{7}&#39;</span>        
+</span></span><span class="line"><span class="cl"><span class="m">12345678</span>
+</span></span><span class="line"><span class="cl"><span class="m">1234567</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="5---">5. <code>$</code> &amp; <code>^</code></h3>
+</div><p>如果想要查找就是准确的7位的数字呢?</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;12345\n12345678\n123\n234567\n1234567&#34;</span> <span class="p">|</span> ggrep -E <span class="s1">&#39;\b[0-9]{7}\b&#39;</span> 
+</span></span><span class="line"><span class="cl"><span class="m">1234567</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4---">4. <code>$</code> &amp; <code>^</code></h2>
 <p><code>$</code> The pattern <code>hello$</code> will match the word &ldquo;hello&rdquo; only if it appears at the end of a line.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -347,7 +307,7 @@
 </span></span><span class="line"><span class="cl"><span class="m">123</span> hello
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="6-eg">6. e.g.,</h3>
+</div><h2 id="5-eg">5. e.g.</h2>
 <p>在一篇文章当中, 抓出所有 「看起来像是机场代码的字符串」 (例如 TPE 台北, KHH 高雄, LAX 洛杉矶, &hellip; 等等): <code>\b[A-Z][A-Z][A-Z]\b</code>。 这里的 <code>[A-Z]</code> 是 [ABCDEFGHIJKLMNOPQRSTUVWXYZ] 的简写, 意思是 「任何一个大写字母」</p>
 <p>如何在一大片文本, 银行账号, 信用卡号&hellip; 当中, 找出看来像是移动电话号码的字符串, 例如 0912345678 或是 0912-345678 或是 0912-345-678 之类的? <code>09\d\d-?\d\d\d-?\d\d\d</code> 这里的<code> \d</code> 是 [0-9] 的简写, 这又是 [0123456789] 的简写, 意思是 「任何一个数字字符」</p>
 <p>想要找一组数字 ip (例如 168.95.1.1 或 163.17.9.176 之类的) 印象中在某个文件内曾看过, 但既不记得精确的数字, 也不记得在那个文件看过, 该怎么办? 可以搜索 <code>\d+\.\d+\.\d+\.\d+</code> 抓出所有数字 ip。 这里的<code> +</code> 表示 「前面的东西, 可以重复出现 1 次, 2 次, 3 次, &hellip; 任意次」。 因为 . 在 regexp 当中有特殊的意义: 「任何一个字符」; 但在这里我们就是要找 &ldquo;.&rdquo; 于是在前面加上 \ 以取消它的特殊意义。</p>
@@ -396,7 +356,7 @@
 </span></span><span class="line"><span class="cl">$ ls /etc/ <span class="p">|</span> egrep <span class="s1">&#39;\.\w+$&#39;</span>  
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>参考:</p>
+</div><p>References:</p>
 <ul>
 <li>
 <p><a href="https://www.cyut.edu.tw/~ckhung/b/re/intro.php">Regexp 是什么东东?</a></p>
