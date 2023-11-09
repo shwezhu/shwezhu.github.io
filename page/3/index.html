@@ -121,6 +121,29 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/bugs/006-cgo-docker-image-build-error/">CGO Compile Error Building Docker Image</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-21 </span>
+      <div class="post-category">
+          <a href="/categories/bugs/"> bugs </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      I choose a sqilte3 library which uses cgo, the Dockerfile:
+1 2 3 4 5 6 7 8 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN CGO_ENABLED=0 GOOS=linux go build -o /server . CMD [&#34;/server&#34;] After build successfully and run image:
+1 2 3 $ docker run -p 80:80 shwezhu/file-station:v1 2023/10/10 02:15:15 /app/main.go:12 [error] failed to initialize database, got error Binary was compiled with &#39;CGO_ENABLED=0&#39;, go-sqlite3 requires cgo to work.
+    </div>
+    <div class="read-more">
+      <a href="/post/bugs/006-cgo-docker-image-build-error/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/c&#43;&#43;/basics/001-standard-library/">Intros of C Standard Library</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-10-17 </span>
@@ -315,27 +338,6 @@ Source: https://stackoverflow.com/a/897303/16317008
     </div>
     <div class="read-more">
       <a href="/post/docker/001-docker-basics/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/build-website/007-nginx/">Nginx</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-10-09 </span>
-      <div class="post-category">
-          <a href="/categories/build-website/"> build website </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Common used commands 1 2 3 4 5 6 7 8 9 10 11 $ sudo apt install nginx # check if nginx is running $ systemctl status nginx # stop nginx service $ sudo systemctl stop nginx # start nginx service $ sudo systemctl start nginx # restart $ sudo systemctl restart nginx # make configuration changes, Nginx can reload without dropping connections: $ sudo systemctl reload nginx By default, Nginx is configured to start automatically when the server boots.
-    </div>
-    <div class="read-more">
-      <a href="/post/build-website/007-nginx/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
