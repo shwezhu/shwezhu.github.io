@@ -1,5 +1,5 @@
 ---
-title: 正则表达式常用符号
+title: Regex Basics
 date: 2023-05-01 23:14:22
 categories:
  - regex
@@ -7,79 +7,17 @@ tags:
  - regex
 ---
 
-注意 Bash一般都是用`“ ”`来quote字符串, 所以为了有时候bash解释错误, 我们写任何Regex表达式的时候都用`‘ ’`进行quote. 
+## 1. `?`, `*`, `.`, `+`
 
->  You should always [quote](https://www.gnu.org/software/bash/manual/bash.html#Quoting) regular expressions for `grep`--and [single quotes](https://www.gnu.org/software/bash/manual/bash.html#Single-Quotes) are usually best.  来源: https://askubuntu.com/a/957504/1690738
+| `+`  | one occurrences of the preceding element         |
+| ---- | ------------------------------------------------ |
+| `*`  | zero occurrence of the preceding element         |
+| `?`  | zero or one occurrences of the preceding element |
+| `.`  | matches any single character (exclude newlines)  |
 
-### 1. `?`, `*`, `.`
+## 2. `\b`
 
-`?` The question mark indicates zero or one occurrences of the **preceding element**. For example, `colou?r` matches both "color" and "colour". 英文的 "颜色" 一字, 有两种拼法: color 及 colour。 用 regexp 表达, 可以一石两鸟: colou?r 其中的 ? 表示 「前面的字符可有可无」
-
-```shell
-$ printf "colour\ncolor\ncolouur\n" | egrep 'colou?r'
-colour
-color
-```
-
-`*` The **asterisk** indicates zero or more occurrences of the preceding element. For example, ab*c matches "ac", "abc", "abbc", "abbbc", and so on.
-
-```shell
-$ printf "colour\ncolor\ncolouur\n" | egrep 'colou*r'                          
-colour
-color
-colouur
-```
-
-`.`Matches any single character (many applications exclude newlines, and exactly which characters are considered newlines is flavor-, character-encoding-, and platform-specific, but it is safe to assume that the line feed character is included). Within POSIX bracket expressions, the dot character matches a literal dot. For example, `a.c` matches "abc", etc., but `[a.c]` matches only "a", ".", or "c".
-
-```shell
-$ printf "colour\ncolor\ncolouur\n" | egrep 'colo.r'                           
-colour
-$ printf "colour\ncolor\ncolouur\n" | egrep 'colou.r'                          
-colouur
-```
-
-| `+`  | 代表出現1次以上  |
-| ---- | ---------------- |
-| `*`  | 代表出現0次以上  |
-| `?`  | 代表出現0次或1次 |
-
-### 2. `\d`, `\w`, `\s` 
-
-- `\d` 其实就是 `[0-9]`, "任何一个数字"
-- `\D` 其实就是 `[^0-9]`, "任何一个非数字"
-- `\w` 其实就是 `[a-zA-Z0-9_]`, "任何一个文数字"
-- `\W` 其实就是 `[^a-zA-Z0-9_]`, "任何一个非文数字"
-- `\s` 其实就是 `[ \t\n]`, "任何一个空白类字符",  注意`[ \t\n]`是前面故意有个空格, 
-- `\S` 其实就是 `[^ \t\n]`, "任何一个非空白类字符"
-
-计数用, 表达 「前面的样版重复出现多少次」 的 quantifier:
-
-- `{5}` 重复 5 次
-- `{3,7}` 重复 3 到 7 次
-- `{3,}` 重复至少 3 次
-- `?` 可有可无。 相当于 `{0,1}`
-- `*` 重复出现任意次， 包含 0 次。 相当于 `{0,}`
-- `+` 重复出现任意次, 至少 1 次。 相当于 `{1,}`
-
-国内的手机号是11位, 所以要查手机号, 我们可以简单的查找大于等于11位数字的字符串, 下面用7位的举例子, 
-
-```shell
-$ printf "12345\n12345678\n123\n234567\n1234567" | egrep '\d{7}'        
-12345678
-1234567
-```
-
-如果想要查找就是7位的数字呢?
-
-```shell
-$ printf "12345\n12345678\n123\n234567\n1234567" | ggrep -E '\b[0-9]{7}\b' 
-1234567
-```
-
-### 3. `\b`
-
-想要找 "port" 与 "ports", 但又不希望找到 "export", "portable", "important" 等等一大堆不相关的单字, 该怎么办? 用 `\bports?\b` 这里的` \b` 表示 boundary, 旁边不可有其他文数字。 所谓文数字, 就是英文本母, 数字, 及底线 "_"。
+To match "port" and "ports" but not match "export", "portable", "important", use \bports?\b. Here, \b indicates a boundary, where there cannot be other word characters on either side. Word characters refer to English letters, numbers and underscore "_". So \bports?\b will match "port" or "ports" only if they appear as a full word by themselves, not as part of another word.
 
 ```shell
 $ printf "The port is...\nTo export it...\nThere are many ports...\nportable" | egrep '\bports?\b'
@@ -87,20 +25,51 @@ The port is...
 There are many ports...
 ```
 
-### 4. `+`
+Please note that Bash generally uses "double quotes" to quote strings, in order to avoid potential misparsing, we should use 'single quotes' when quoting any regular expressions.
 
-The pattern `a+` will match one or more occurrences of the letter 'a'. It will match strings like "a", "aa", "aaa", and so on, but it will not match an empty string or a string without any 'a' characters.
+>  You should always [quote](https://www.gnu.org/software/bash/manual/bash.html#Quoting) regular expressions for `grep`--and [single quotes](https://www.gnu.org/software/bash/manual/bash.html#Single-Quotes) are usually best. https://askubuntu.com/a/957504/1690738
+
+## 3. `[]`
+
+A string of characters enclosed in square brackets (`[]`) matches any **one character** in that string. If the first character in the brackets is a caret (`^`), it matches any character *except* those in the string. For example, `[abc]` matches a, b, or c, but not x, y, or z. However, `[^abc]` matches x, y, or z, but not a, b, or c.
+
+A minus sign (-) within square brackets indicates a range of consecutive ASCII characters. For example, `[0-9]` is the same as `[0123456789]`. 
+
+If any special character, such as backslash (`\`), asterisk (`*`), or plus sign (`+`), is immediately after the left square bracket, it doesn't have its special meaning and is considered to be one of the characters to match.
+
+|                | Match      | Not match     |
+| -------------- | ---------- | ------------- |
+| `[0-9]`        | 1, 2, 3    | 12, 01, 22    |
+| `[a-zA-Z0-9_]` | a, E, 2, _ | ab, 56        |
+| `END[.]`       | END.       | END;   END DO |
+
+- `[ \t\n]`, "任何一个空白类字符",  注意`[ \t\n]`是前面故意有个空格, 
+-  `[^ \t\n]`, "任何一个非空白类字符"
+
+计数用, 表达 「前面的样版重复出现多少次」 的 quantifier:
+
+- `{5}` 重复 5 次
+- `{3,7}` 重复 3 到 7 次
+- `{3,}` 重复至少 3 次
+-  `{0,}`重复出现任意次, 包含 0 次
+- `{1,}` 重复出现任意次, 至少 1 次
+
+国内的手机号是11位, 所以要查手机号, 我们可以简单的查找大于等于11位数字的字符串, 下面用7位的举例子, 
 
 ```shell
-$ printf "aaa\nadd\nsra\ndfgh" | egrep 'a+'
-aaa
-add
-sra
-$ printf "aaa\nadd\nsra\ndfgh" | egrep '\ba+\b'
-aaa
+$ printf "12345\n12345678\n123\n234567\n1234567" | egrep '[0-9]{7}'        
+12345678
+1234567
 ```
 
-### 5. `$` & `^`
+如果想要查找就是准确的7位的数字呢?
+
+```shell
+$ printf "12345\n12345678\n123\n234567\n1234567" | ggrep -E '\b[0-9]{7}\b' 
+1234567
+```
+
+## 4. `$` & `^`
 
 `$` The pattern `hello$` will match the word "hello" only if it appears at the end of a line.
 
@@ -129,7 +98,7 @@ Hell 123
 123 hello
 ```
 
-### 6. e.g., 
+## 5. e.g.
 
 在一篇文章当中, 抓出所有 「看起来像是机场代码的字符串」 (例如 TPE 台北, KHH 高雄, LAX 洛杉矶, ... 等等): `\b[A-Z][A-Z][A-Z]\b`。 这里的 `[A-Z]` 是 [ABCDEFGHIJKLMNOPQRSTUVWXYZ] 的简写, 意思是 「任何一个大写字母」
 
@@ -155,7 +124,7 @@ hello
 $ ls /etc/ | egrep '\.\w+$'  
 ```
 
-参考:
+References:
 
 - [Regexp 是什么东东?](https://www.cyut.edu.tw/~ckhung/b/re/intro.php)
 

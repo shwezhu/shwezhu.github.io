@@ -18,7 +18,8 @@ $ ls -lh xxx
 # dns stub status
 $ systemctl status systemd-resolved
 $ sudo netstat -anp | grep 127.0.0.53
-# server is a go executable file, will print: server: Mach-O 64-bit executable arm64
+# server is an executable binary compiled from Go program, 
+# this will print: server: Mach-O 64-bit executable arm64
 $ file server
 # Print details about the current machine and the operating system running on it.
 $ uname -a
@@ -32,7 +33,7 @@ $ grep -nr 'ul$'' themes/source/css
 # curl -v verbose
 curl localhost:8080 -H "Content-Type: application/json" -d "{"username":"david", age:3}" -v
 # make a file executable
-$ chmod u+x test.sh
+$ chmod +x test.sh
 # check your ip on Mac
 $ ipconfig getifaddr en0 
 # >: overwirte, >> append
