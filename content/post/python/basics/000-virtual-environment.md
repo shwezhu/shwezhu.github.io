@@ -1,5 +1,5 @@
 ---
-title: Python Basics
+title: Virtual Environment Python
 date: 2023-11-09 19:12:40
 categories:
   - python
@@ -126,6 +126,7 @@ hello
 
 use `pip-autoremove` to remove a package plus unused dependencies.
 ```shell
+pip list
 # install pip-autoremove
 pip install pip-autoremove
 # remove "somepackage" plus its dependencies:

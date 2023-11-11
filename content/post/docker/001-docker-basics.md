@@ -8,46 +8,48 @@ tags:
  - golang
 ---
 
-## 1. Docker client commands
-
-```shell
-#-------------- build and delete image --------------
-$ docker build -t go-learning:1 . 
-$ docker rmi shwezhu/file-station:v1
-# if docker is in-use, delete with -f
-$ docker rmi -f shwezhu/file-station:v1
-$ docker image ls -a
-
-#------------------ run image ----------------------
-# --rm automatically removes the container when it exits,
-# -d: Run container in background
-$ docker run -d -p 80:80 --rm go-learning:1
-# -it: allocates a pseudo-TTY and attaches it to the container
-# then you can use command line to intercat with the current running container
-$ docker run -it --rm docker-learning:v1 sh
-
-#------------- show and delete container --------------
-$ docker container ls -a
-$ docker rm container_id
-
-# publish and pull image to repo
-$ docker push shwezhu/file-station:v1
-$ docker pull davidzhu/file-station:v1
-```
-
-## 2. Dockerfile
+## 1. Dockerfile example
 
 ```dockerfile
 FROM golang:alpine
 
-# All the following command will treated as inside this folder of docker
 WORKDIR /app
-# copy all the files of our project into the /app folder of docker
 COPY ./ ./
 RUN go mod download
-RUN go build -o /server
+RUN go build -o server
 
-CMD ["/server"]
+ENTRYPOINT ["./server"]
+CMD ["-p", "80"]
+
+# docker build [--platform linux/amd64] -t shwezhu/file-server:v1.0 .
+# [docker push shwezhu/file-server:v1.0]
+# [docker pull davidzhu/file-server:v1.0]
+# sudo docker run -d -p 80:80 --rm shwezhu/file-server:v1.0
+```
+
+## 2. Docker commands
+
+```shell
+#------------- show --------------
+$ docker container ls -a
+$ docker image ls -a
+
+#-------------- build and delete --------------
+$ docker build -t davidzhu/go-learning:v1.0 .
+$ docker rmi shwezhu/file-station:v1	# if docker is in-use, delete with -f
+$ docker rm container_id
+
+#------------------ run image ----------------------
+# --rm automatically removes the container when it exits,
+# -d: Run container in background
+$ docker run -d -p 80:80 --rm davidzhu/go-learning:v1.0
+# -it: allocates a pseudo-TTY and attaches it to the container
+# then you can use command line to intercat with the current running container
+$ docker run -it --rm davidzhu/go-learning:v1.0 sh
+
+# publish and pull image from repo
+$ docker push shwezhu/file-station:v1
+$ docker pull davidzhu/file-station:v1
 ```
 
 ## 3. Build image
@@ -91,33 +93,3 @@ Docker images are typically built for a specific CPU architecture, such as x86-6
 Most of the Docker Official Images on Docker Hub provide a [variety of architecturesopen_in_new](https://github.com/docker-library/official-images#architectures-other-than-amd64). For example, the `busybox` image supports `amd64`, `arm32v5`, `arm32v6`, `arm32v7`, `arm64v8`, `i386`, `ppc64le`, and `s390x`. When running this image on an `x86_64` / `amd64` machine, the `amd64` variant is pulled and run.
 
 Learn more: [Multi-platform images | Docker Docs](https://docs.docker.com/build/building/multi-platform/)
-
-## 7. Share your image
-
-Learn more: https://docs.docker.com/get-started/04_sharing_app/
-
-Note that the image name should be same to the remote repository, the name of your image should include your docker hub username:
-
-```shell
-$ docker build -t davidzhu/go-learning:1 . 
-```
-
-Then push:
-
-```shell
-$ docker push shwezhu/file-station:v1
-```
-
-Then pull the shared repository on another machine:
-
-```shell
-$ sudo docker pull davidzhu/file-station:v1
-```
-
-Then run the image in docker container:
-
-```shell
-$ sudo docker run -d -p 80:80 shwezhu/file-station:v1
-```
-
-> Make sure the image suits the cpu architecture: [Building multi-platform images](https://docs.docker.com/build/building/multi-platform/#building-multi-platform-images)

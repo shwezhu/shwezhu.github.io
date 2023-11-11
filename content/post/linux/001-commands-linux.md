@@ -12,6 +12,9 @@ tags:
 You can use `xxx --help `, `man xxx`, `tldr you-command` to check the usage of the command. 
 
 ```shell
+# display information about running processes
+# kill PID
+$ ps -ef
 # "A Dog" = git log --all --decorate --oneline --graph
 $ git log --all --decorate --oneline --graph
 $ ls -lh xxx

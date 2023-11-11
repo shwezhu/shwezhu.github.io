@@ -1,5 +1,5 @@
 ---
-title: 利用Openai API实现自己的Chat AI Bot
+title: ChatGPT Bot
 date: 2023-06-06 22:28:25
 categories:
   - python
