@@ -243,7 +243,8 @@ On Linux or a Mac, if you add this to /etc/hosts, facebook no longer exists:
   
   <div class="post-content">
     <div class="post-summary">
-      1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&rsquo;t exist, it will be created even if it&rsquo;s not used in any subsequent Dockerfile instruction. The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path
+      1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&rsquo;t exist, it will be created even if it&rsquo;s not used in any subsequent Dockerfile instruction.
+The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path of the previous WORKDIR instruction.
     </div>
     <div class="read-more">
       <a href="/post/docker/003-dockerfile-syntax/" class="read-more-link">Read more...</a>
@@ -334,7 +335,7 @@ Source: https://stackoverflow.com/a/897303/16317008
   
   <div class="post-content">
     <div class="post-summary">
-      1. Docker client commands 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 #-------------- build and delete image -------------- $ docker build -t go-learning:1 . $ docker rmi shwezhu/file-station:v1 # if docker is in-use, delete with -f $ docker rmi -f shwezhu/file-station:v1 $ docker image ls -a #------------------ run image ---------------------- # --rm automatically removes the container when it exits, # -d: Run container in background $ docker run -d -p 80:80 --rm go-learning:1 # -it: allocates a pseudo-TTY and attaches it to the container # then you can use command line to intercat with the current running container $ docker run -it --rm docker-learning:v1 sh #------------- show and delete container -------------- $ docker container ls -a $ docker rm container_id # publish and pull image to repo $ docker push shwezhu/file-station:v1 $ docker pull davidzhu/file-station:v1 2.
+      1. Dockerfile example 1 2 3 4 5 6 7 8 9 10 11 12 13 14 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN go build -o server ENTRYPOINT [&#34;./server&#34;] CMD [&#34;-p&#34;, &#34;80&#34;] # docker build [--platform linux/amd64] -t shwezhu/file-server:v1.0 . # [docker push shwezhu/file-server:v1.0] # [docker pull davidzhu/file-server:v1.0] # sudo docker run -d -p 80:80 --rm shwezhu/file-server:v1.0 2. Docker commands 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 #------------- show -------------- $ docker container ls -a $ docker image ls -a #-------------- build and delete -------------- $ docker build -t davidzhu/go-learning:v1.
     </div>
     <div class="read-more">
       <a href="/post/docker/001-docker-basics/" class="read-more-link">Read more...</a>

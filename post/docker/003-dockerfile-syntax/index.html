@@ -16,7 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&amp;rsquo;t exist, it will be created even if it&amp;rsquo;s not used in any subsequent Dockerfile instruction. The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path" />
+<meta name="author" content="David" /><meta name="description" content="1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&amp;rsquo;t exist, it will be created even if it&amp;rsquo;s not used in any subsequent Dockerfile instruction.
+The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path of the previous WORKDIR instruction." />
 
 
 
@@ -40,18 +41,21 @@
 
 
 <meta property="og:title" content="Dockerfile Synatax" />
-<meta property="og:description" content="1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&rsquo;t exist, it will be created even if it&rsquo;s not used in any subsequent Dockerfile instruction. The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path" />
+<meta property="og:description" content="1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&rsquo;t exist, it will be created even if it&rsquo;s not used in any subsequent Dockerfile instruction.
+The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path of the previous WORKDIR instruction." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/docker/003-dockerfile-syntax/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-11T12:27:35+00:00" />
 <meta property="article:modified_time" content="2023-10-11T12:27:35+00:00" />
 <meta itemprop="name" content="Dockerfile Synatax">
-<meta itemprop="description" content="1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&rsquo;t exist, it will be created even if it&rsquo;s not used in any subsequent Dockerfile instruction. The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path"><meta itemprop="datePublished" content="2023-10-11T12:27:35+00:00" />
+<meta itemprop="description" content="1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&rsquo;t exist, it will be created even if it&rsquo;s not used in any subsequent Dockerfile instruction.
+The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path of the previous WORKDIR instruction."><meta itemprop="datePublished" content="2023-10-11T12:27:35+00:00" />
 <meta itemprop="dateModified" content="2023-10-11T12:27:35+00:00" />
-<meta itemprop="wordCount" content="1214">
+<meta itemprop="wordCount" content="744">
 <meta itemprop="keywords" content="docker," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Dockerfile Synatax"/>
-<meta name="twitter:description" content="1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&rsquo;t exist, it will be created even if it&rsquo;s not used in any subsequent Dockerfile instruction. The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path"/>
+<meta name="twitter:description" content="1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&rsquo;t exist, it will be created even if it&rsquo;s not used in any subsequent Dockerfile instruction.
+The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path of the previous WORKDIR instruction."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -145,14 +149,8 @@
         <li><a href="#1-workdir">1. WORKDIR</a></li>
         <li><a href="#2-copy">2. COPY</a></li>
         <li><a href="#3-run-vs-cmd">3. RUN vs CMD</a></li>
-        <li><a href="#4-entrypoint-vs-cmd">4. ENTRYPOINT vs CMD</a>
-          <ul>
-            <li><a href="#41-an-example">4.1. An example</a></li>
-            <li><a href="#42-how-does-entrypoint-work">4.2. How Does ENTRYPOINT Work</a></li>
-            <li><a href="#43-difference-between-docker-run-and-entrypoint">4.3. Difference between <code>docker run</code> and ENTRYPOINT</a></li>
-          </ul>
-        </li>
-        <li><a href="#5-entrypoint-vs-cmd">5. ENTRYPOINT vs CMD</a></li>
+        <li><a href="#4-entrypoint-vs-cmd">4. ENTRYPOINT vs CMD</a></li>
+        <li><a href="#5-docker-run-vs-entrypoint">5. <code>docker run</code> vs <code>ENTRYPOINT</code></a></li>
       </ul>
     </li>
   </ul>
@@ -200,20 +198,14 @@
 </span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">COPY</span> ./test ./<span class="err">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>And when build the image, we use <code>docker build -t docker-learning:v1 .</code></p>
-<p>So the <code>COPY ./test ./</code> will be executed when we build the image, what <code>COPY ./test ./</code> does is just <strong>copy</strong> all the files under <code>./test</code> on your computer into the <code>/app</code> folder of the container. Because <code>./</code> means current folder, and we set  our current folder to <code>/app</code> by using <code>WORKDIR /app</code> in <code>Dockerfile</code>.</p>
+</div><p>The <code>COPY ./test ./</code> will be executed when building the image, what <code>COPY ./test ./</code> does is <strong>copy</strong> all the files under <code>./test</code> on your computer into the <code>/app</code> folder of the container. Because <code>./</code> means current folder, and we set  our current folder to <code>/app</code> by using <code>WORKDIR /app</code> in <code>Dockerfile</code>.</p>
 <blockquote>
 <p>Note that  <code>.dockerignore</code> file is not considered here, if you add <code>.dockerignore</code> file, then before execute <code>COPY ./test ./</code>,  docker will check the <code>.dockerignore</code> file first, if the file in the <code>./test</code> folder machs the file list in <code>.dockerignore</code> file, then <code>COPY ./test ./</code> will skip that file.</p>
 </blockquote>
 <p>And note that the build command <code>docker build -t docker-learning:v1 .</code>, the last <code>.</code> sign is used to specify the context, in <code>COPY ./test ./</code>, the <code>./test</code> is the <code>test</code> folder under the context.</p>
-<p>You can build a image and run it with <code>docker run -it --rm docker-learning:v1 sh</code> to check.</p>
 <h2 id="3-run-vs-cmd">3. RUN vs CMD</h2>
 <p><code>RUN</code> - command triggers while we build the docker image.</p>
 <p><code>CMD</code> - command triggers while we launch the created docker image.</p>
-<blockquote>
-<p>There can only be one <code>CMD</code> instruction in a <code>Dockerfile</code>. If you list more than one <code>CMD</code> then only the last <code>CMD</code> will take effect.</p>
-</blockquote>
-<p>You can check the output when build a image:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -226,41 +218,30 @@
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">FROM</span><span class="s"> ubuntu</span><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c"># The following will run when build image</span><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">WORKDIR</span><span class="s"> /app</span><span class="err">
+<pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">WORKDIR</span><span class="s"> /app</span><span class="err">
 </span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">COPY</span> ./ ./<span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> go mod download<span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> go build -o server<span class="err">
 </span></span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c"># The following will run when run image</span><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;pwd&#34;</span><span class="p">]</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;./server&#34;</span><span class="p">,</span> <span class="s2">&#34;-p&#34;</span><span class="p">,</span> <span class="s2">&#34;80&#34;</span><span class="p">]</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c"># sudo docker run -p 80:80 --rm file-server:v1.0</span><span class="err">
 </span></span></span></code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ docker build -t docker-learning:v1 .
-</span></span><span class="line"><span class="cl"><span class="o">=</span>&gt; CACHED <span class="o">[</span>2/4<span class="o">]</span> WORKDIR /app          0.0s
-</span></span><span class="line"><span class="cl"><span class="o">=</span>&gt; <span class="o">[</span>3/4<span class="o">]</span> COPY ./ ./                   0.0s
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Note that there just are <code>COPY ./ ./</code> and <code>WORKDIR /app</code> get triggered, and when I run the image, <code>CMD [&quot;pwd&quot;] </code> get triggered.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ docker run --rm docker-learning:v1  
-</span></span><span class="line"><span class="cl">/app
-</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="4-entrypoint-vs-cmd">4. ENTRYPOINT vs CMD</h2>
-<h3 id="41-an-example">4.1. An example</h3>
+<p>CMD and ENTRYPOINT are two Dockerfile instructions that together define the command that runs when your container starts. <em>ENTRYPOINT</em> sets the process to run, while <em>CMD</em> supplies default arguments to that process.</p>
+<ul>
+<li><strong>ENTRYPOINT</strong> is the <strong>process</strong> that’s executed inside the container.
+<ul>
+<li>Images can <strong>only have one <code>ENTRYPOINT</code></strong>. If you repeat the Dockerfile instruction more than once, the last one will apply. When an image is created without an ENTRYPOINT, Docker defaults to using <code>/bin/sh -c</code>.</li>
+</ul>
+</li>
+<li><strong>CMD</strong> is the default set of <strong>arguments</strong> that are supplied to the ENTRYPOINT process.
+<ul>
+<li>There <strong>can only be one <code>CMD</code> instructio</strong>n in a <code>Dockerfile</code>. If you list more than one <code>CMD</code> then only the last <code>CMD</code> will take effect.</li>
+</ul>
+</li>
+</ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -268,83 +249,13 @@
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">FROM</span><span class="s"> alpine:latest</span><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">ENTRYPOINT</span> <span class="p">[</span><span class="s2">&#34;ls&#34;</span><span class="p">]</span><span class="err">
+<pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">ENTRYPOINT</span> <span class="p">[</span><span class="s2">&#34;./server&#34;</span><span class="p">]</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;-p&#34;</span><span class="p">,</span> <span class="s2">&#34;80&#34;</span><span class="p">]</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c"># same as: CMD [&#34;./server&#34;, &#34;-p&#34;, &#34;80&#34;]</span><span class="err">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>After build the image and run the image:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ docker build -t docker-learning:v1 . 
-</span></span><span class="line"><span class="cl">...
-</span></span><span class="line"><span class="cl">$ docker run --rm docker-learning:v1
-</span></span><span class="line"><span class="cl">bin
-</span></span><span class="line"><span class="cl">dev
-</span></span><span class="line"><span class="cl">etc
-</span></span><span class="line"><span class="cl">home
-</span></span><span class="line"><span class="cl">...
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The ENTRYPOINT instruction here means Docker runs the <code>ls</code> command when the container starts. As because no <code>CMD</code> is set, the command is called without arguments. You can pass arguments directly through to the command by appending them to your <code>docker run</code> statement:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ docker run --rm docker-learning:v1 -all
-</span></span><span class="line"><span class="cl">total <span class="m">64</span>
-</span></span><span class="line"><span class="cl">drwxr-xr-x    <span class="m">1</span> root     root          <span class="m">4096</span> Oct <span class="m">11</span> 19:05 .
-</span></span><span class="line"><span class="cl">drwxr-xr-x    <span class="m">1</span> root     root          <span class="m">4096</span> Oct <span class="m">11</span> 19:05 ..
-</span></span><span class="line"><span class="cl">-rwxr-xr-x    <span class="m">1</span> root     root             <span class="m">0</span> Oct <span class="m">11</span> 19:05 .dockerenv
-</span></span><span class="line"><span class="cl">...
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Everything after the image name gets passed to the ENTRYPOINT as its arguments, resulting in <code>ls -all</code> being called in the container.</p>
-<h3 id="42-how-does-entrypoint-work">4.2. How Does ENTRYPOINT Work</h3>
-<p>The<a href="https://docs.docker.com/engine/reference/builder/#entrypoint"> ENTRYPOINT Dockerfile instruction</a> sets the <strong>process</strong>(进程) that’s executed when your container starts. In this example, the container will run <code>/usr/bin/my-app</code>:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">ENTRYPOINT</span> <span class="p">[</span><span class="s2">&#34;/usr/bin/my-app&#34;</span><span class="p">]</span><span class="err">
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><p>The somewhat misleadingly named <a href="https://docs.docker.com/engine/reference/builder/#cmd">CMD instruction</a> sets the default arguments that are passed to the ENTRYPOINT process. It determines the final form of the command string that will be executed. In the following example, the container will run <code>/usr/bin/my-app help</code>:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">ENTRYPOINT</span> <span class="p">[</span><span class="s2">&#34;/usr/bin/my-app&#34;</span><span class="p">]</span><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;help&#34;</span><span class="p">]</span><span class="err">
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><blockquote>
-<p>Images can only have one ENTRYPOINT. If you repeat the Dockerfile instruction more than once, the last one will apply. When an image is created without an ENTRYPOINT, Docker defaults to using <code>/bin/sh -c</code>.</p>
-</blockquote>
-<blockquote>
-<p>There can only be one <code>CMD</code> instruction in a <code>Dockerfile</code>. If you list more than one <code>CMD</code> then only the last <code>CMD</code> will take effect.</p>
-</blockquote>
-<h3 id="43-difference-between-docker-run-and-entrypoint">4.3. Difference between <code>docker run</code> and ENTRYPOINT</h3>
-<p>The <a href="https://docs.docker.com/engine/reference/commandline/run"><code>docker run</code> command</a> starts a new container using a specified image. When no further arguments are given, the process that runs in the container will exactly match the ENTRYPOINT and CMD defined in the image:</p>
+</div><h2 id="5-docker-run-vs-entrypoint">5. <code>docker run</code> vs <code>ENTRYPOINT</code></h2>
+<p>The <a href="https://docs.docker.com/engine/reference/commandline/run"><code>docker run</code> command</a> starts a new container using a specified image. When no further arguments are given, the process that runs in the container will exactly match the ENTRYPOINT and CMD defined in the image.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -355,19 +266,7 @@
 </span></span><span class="line"><span class="cl">$ docker run my-image:latest
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>You can change the CMD by supplying arguments to the <code>docker run</code> command, after the name of your image:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Executes /usr/bin/my-app version</span>
-</span></span><span class="line"><span class="cl">$ docker run my-image:latest version
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Note that this <em>always</em> changes the CMD, not the ENTRYPOINT. Therefore, the <code>docker run</code> command <strong>starts</strong> new containers <strong>and</strong> <strong>sets</strong> the CMD that’s passed as arguments (<code>version</code> here) to the image’s ENTRYPOINT.</p>
-<p>Technically, it is possible to override the ENTRYPOINT using <code>docker run</code> by setting its <code>--entrypoint</code> flag. Although this is rarely required, the technique can be useful if you want to launch a shell inside a container, such as to inspect the contents of an image’s filesystem:</p>
+</div><p>Technically, it is possible to override the ENTRYPOINT using <code>docker run</code> by setting its <code>--entrypoint</code> flag. Although this is rarely required, the technique can be useful if you want to launch a shell inside a container, such as to inspect the contents of an image’s filesystem:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -418,52 +317,6 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Both of these are same, because the default entrypoint is <code>/bin/sh -c</code>.</p>
-<h2 id="5-entrypoint-vs-cmd">5. ENTRYPOINT vs CMD</h2>
-<p>CMD and ENTRYPOINT are two Dockerfile instructions that together define the command that runs when your container starts. <em>ENTRYPOINT</em> sets the process to run, while <em>CMD</em> supplies default arguments to that process.</p>
-<ul>
-<li><strong>ENTRYPOINT</strong> is the <strong>process</strong> that’s executed inside the container.</li>
-<li><strong>CMD</strong> is the default set of <strong>arguments</strong> that are supplied to the ENTRYPOINT process.</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">FROM</span><span class="s"> alpine:latest</span><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">ENTRYPOINT</span> <span class="p">[</span><span class="s2">&#34;ls&#34;</span><span class="p">]</span><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;-all&#34;</span><span class="p">]</span><span class="err">
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ docker run --rm docker-learning:v1
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>equals to:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">FROM</span><span class="s"> alpine:latest</span><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">ENTRYPOINT</span> <span class="p">[</span><span class="s2">&#34;ls&#34;</span><span class="p">]</span><span class="err">
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ docker run --rm docker-learning:v1 -all
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>So in this case the CMD is overwritten.</p>
 <p>Reference:</p>
 <ul>
 <li><a href="https://docs.docker.com/engine/reference/builder/">Dockerfile reference | Docker Docs</a></li>
