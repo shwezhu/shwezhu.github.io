@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="" />
+<meta name="author" content="David" /><meta name="description" content="1. OSPF, BGP and MPLS OSPF: OSPF is an interior gateway protocol (IGP) used for routing within an autonomous system (AS). It determines the best paths for routing packets based on metrics such as bandwidth, delay, and cost. ﻿﻿BGP: BGP is an exterior gateway protocol (EGP) used for routing between autonomous systems. It enables the exchange of routing information between different networks and determines the best paths between ASes. ﻿﻿MPLS: MPLS is not a routing protocol but a forwarding mechanism that operates at the network layer." />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="MPLS" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="1. OSPF, BGP and MPLS OSPF: OSPF is an interior gateway protocol (IGP) used for routing within an autonomous system (AS). It determines the best paths for routing packets based on metrics such as bandwidth, delay, and cost. ﻿﻿BGP: BGP is an exterior gateway protocol (EGP) used for routing between autonomous systems. It enables the exchange of routing information between different networks and determines the best paths between ASes. ﻿﻿MPLS: MPLS is not a routing protocol but a forwarding mechanism that operates at the network layer." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/networking/008-mpls/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-09-10T08:27:59+00:00" />
 <meta property="article:modified_time" content="2023-09-10T08:27:59+00:00" />
 <meta itemprop="name" content="MPLS">
-<meta itemprop="description" content=""><meta itemprop="datePublished" content="2023-09-10T08:27:59+00:00" />
+<meta itemprop="description" content="1. OSPF, BGP and MPLS OSPF: OSPF is an interior gateway protocol (IGP) used for routing within an autonomous system (AS). It determines the best paths for routing packets based on metrics such as bandwidth, delay, and cost. ﻿﻿BGP: BGP is an exterior gateway protocol (EGP) used for routing between autonomous systems. It enables the exchange of routing information between different networks and determines the best paths between ASes. ﻿﻿MPLS: MPLS is not a routing protocol but a forwarding mechanism that operates at the network layer."><meta itemprop="datePublished" content="2023-09-10T08:27:59+00:00" />
 <meta itemprop="dateModified" content="2023-09-10T08:27:59+00:00" />
-<meta itemprop="wordCount" content="0">
+<meta itemprop="wordCount" content="779">
 <meta itemprop="keywords" content="networking," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="MPLS"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:description" content="1. OSPF, BGP and MPLS OSPF: OSPF is an interior gateway protocol (IGP) used for routing within an autonomous system (AS). It determines the best paths for routing packets based on metrics such as bandwidth, delay, and cost. ﻿﻿BGP: BGP is an exterior gateway protocol (EGP) used for routing between autonomous systems. It enables the exchange of routing information between different networks and determines the best paths between ASes. ﻿﻿MPLS: MPLS is not a routing protocol but a forwarding mechanism that operates at the network layer."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -138,11 +138,64 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-ospf-bgp-and-mpls">1. OSPF, BGP and MPLS</a></li>
+        <li><a href="#2-mpls">2. MPLS</a>
+          <ul>
+            <li><a href="#21-basic-concepts">2.1. Basic concepts</a></li>
+            <li><a href="#22-fecs">2.2. FECs</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
-      
+      <h2 id="1-ospf-bgp-and-mpls">1. OSPF, BGP and MPLS</h2>
+<ul>
+<li>OSPF: OSPF is an interior gateway protocol (IGP) used for routing within an autonomous system (AS). It determines the best paths for routing packets based on metrics such as bandwidth, delay, and cost.</li>
+<li>﻿﻿BGP: BGP is an exterior gateway protocol (EGP) used for routing between autonomous systems. It enables the exchange of routing information between different networks and determines the best paths between ASes.</li>
+<li>﻿﻿MPLS: MPLS is not a routing protocol but a forwarding mechanism that operates at the network layer. It uses labels to encapsulate packets, creating virtual paths called Label Switched Paths (LSPs). MPLS allows for efficient forwarding and traffic engineering by quickly switching packets based on labels instead of performing complex IP routing.</li>
+</ul>
+<blockquote>
+<p><strong>Routers</strong> refer to internal <strong>routing tables</strong> to make decisions about how to route packets along network paths. A routing table records the paths that packets should take to reach every destination that the router is responsible for.</p>
+</blockquote>
+<h2 id="2-mpls">2. MPLS</h2>
+<h3 id="21-basic-concepts">2.1. Basic concepts</h3>
+<p>In a network that uses MPLS, each packet is assigned to a class called a forwarding equivalence class (FEC). The network paths that packets can take are called label-switched paths (LSP). A packet&rsquo;s class (FEC) determines which path (LSP) the packet will be assigned to. Packets with the same FEC follow the same LSP.</p>
+<p>Each packet has one or more <strong>labels</strong> attached, and all labels are contained in an <strong>MPLS header</strong>, which is added on top of all the other headers attached to a packet. <strong>FECs</strong> are listed within each packet&rsquo;s labels. Routers do not examine the packet&rsquo;s other headers; they can essentially ignore the IP header. Instead, they examine the packet&rsquo;s label and direct the packet to the right <strong>LSP</strong>.</p>
+<p>Because MPLS-supporting routers only need to see the MPLS labels attached to a given packet, MPLS can work with almost any protocol (hence the name &ldquo;multiprotocol&rdquo;). It does not matter how the rest of the packet is formatted, as long as the router can read the MPLS labels at the front of the packet.</p>
+<img src="/008-mpls/aa.png" alt="aa" style="zoom:33%;" />
+<ul>
+<li>Label value: the name says it all, this is where you will find the value of the label.</li>
+<li>EXP: these are the three experimental bits. These are used for QoS, normally the IP precedence value of the IP packet will be copied here.</li>
+<li>S: this is the “bottom of stack” bit. With MPLS it’s possible to add more than one label, you’ll see why in some of the MPLS VPN lessons. When this bit is set to one, it’s the last MPLS header. When it’s set to zero then there is one or more MPLS headers left.</li>
+<li>TTL: just like in the IP header, this is the time to live field. You can use this for traces in the MPLS network. Each hop decrements the TTL by one.</li>
+</ul>
+<h3 id="22-fecs">2.2. FECs</h3>
+<blockquote>
+<p>FEC is a term used in MPLS networks to describe a set of incoming packets with similar characteristics, allowing those packets to be allocated the same label and forwarded down the same LSP (Label Switched Path). <a href="https://www.mpirical.com/glossary/fec-forwarding-equivalence-class.">FEC - Forwarding Equivalence Class</a></p>
+</blockquote>
+<p>In previous part we said: <strong>FECs</strong> are listed within each packet&rsquo;s labels. But, wait, how?</p>
+<p>An FEC is a set of packets that a single router:</p>
+<p>(1) Forwards to the same next hop;</p>
+<p>(2) Out the same interface; and</p>
+<p>(3) With the same treatment (such as queuing).</p>
+<p>First let’s look at how a packet is forwarded across a path toward a destination using regular IP processes. A packet arrives at R1, and its destination IP address is examined. A lookup is performed at R1, the packet’s FEC (next-hop, outgoing interface, and forwarding treatment) is determined, and with that information the packet is forwarded to the next hop router R2. R2 then repeats the process: The FEC is determined and the packet is forwarded to R3. R3 again determines the packet’s FEC and forwards it to R4.</p>
+<p>When an unlabeled packet enters the ingress router and needs to be passed on to an MPLS <a href="https://en.wikipedia.org/wiki/Tunneling_protocol">tunnel</a>, the router first determines the FEC for the packet and then inserts one or more labels in the packet&rsquo;s newly created MPLS header. The packet is then passed on to the next hop router for this tunnel. In an MPLS network the FEC is determined only once, at the ingress to an LSP, rather than at every router hop along the path.</p>
+<p>When a packet reaches an MPLS router, the router examines the topmost label in the label stack. It looks up the label in its forwarding table to determine the associated FEC.</p>
+<p>References:</p>
+<ul>
+<li><a href="https://www.cloudflare.com/learning/network-layer/what-is-mpls/">What is MPLS (multiprotocol label switching)? | Cloudflare</a></li>
+<li><a href="https://networklessons.com/mpls/mpls-labels-and-devices">MPLS Labels and Devices</a></li>
+<li><a href="https://www.networkworld.com/article/2350449/understanding-the-role-of-fecs-in-mpls.html">Understanding the Role of FECs in MPLS | Network World</a></li>
+</ul>
+
     </div>
 
     <div class="post-copyright">
