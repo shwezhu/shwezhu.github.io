@@ -56,7 +56,7 @@ iTerm2 — Snazzy theme
       <pubDate>Sun, 05 Nov 2023 20:01:08 +0000</pubDate>
       
       <guid>https://davidzhu.xyz/post/grpc/002-proto-buffer/</guid>
-      <description>Project structure:
+      <description>1. Basics Project structure:
 1 2 3 4 5 6 7 8 9 . ├── client │ └── main.go ├── go.mod ├── proto │ └── chat │ └──chat.proto └── server └── main.go 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 syntax = &amp;#34;proto3&amp;#34;; // When compile for Go code, need this, the path under the project, no project folder name option go_package = &amp;#34;proto/chat&amp;#34;; // same as Go, it&amp;#39;s the parent folder of this file.</description>
     </item>
     
@@ -319,7 +319,7 @@ Source: https://stackoverflow.com/a/897303/16317008
       <pubDate>Mon, 09 Oct 2023 21:09:35 +0000</pubDate>
       
       <guid>https://davidzhu.xyz/post/docker/001-docker-basics/</guid>
-      <description>1. Dockerfile example 1 2 3 4 5 6 7 8 9 10 11 12 13 14 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN go build -o server ENTRYPOINT [&amp;#34;./server&amp;#34;] CMD [&amp;#34;-p&amp;#34;, &amp;#34;80&amp;#34;] # docker build [--platform linux/amd64] -t shwezhu/file-server:v1.0 . # [docker push shwezhu/file-server:v1.0] # [docker pull davidzhu/file-server:v1.0] # sudo docker run -d -p 80:80 --rm shwezhu/file-server:v1.0 2. Docker commands 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 #------------- show -------------- $ docker container ls -a $ docker image ls -a #-------------- build and delete -------------- $ docker build -t davidzhu/go-learning:v1.</description>
+      <description>1. Dockerfile example 1 2 3 4 5 6 7 8 9 10 11 12 13 14 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN go build -o server ENTRYPOINT [&amp;#34;./server&amp;#34;] CMD [&amp;#34;-p&amp;#34;, &amp;#34;80&amp;#34;] # docker build [--platform linux/amd64] -t shwezhu/file-server:v1.0 . # [docker push shwezhu/file-server:v1.0] # [docker pull davidzhu/file-server:v1.0] # sudo docker run -d -p 80:80 --rm shwezhu/file-server:v1.0 2. Docker commands 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 # volumes aaa must exist before use this, check: &amp;#39;docker volume ls&amp;#39;, &amp;#39;docker inspect volume_name&amp;#39; $ sudo docker run -d -p 80:80 --name file-server --mount source=aaa,target=/app --rm shwezhu/file-server:v1.</description>
     </item>
     
     <item>
@@ -679,6 +679,15 @@ If applied, this commit will 1. Things to avoid when creating commits Sending la
       <description>HTTPS is used for encryption, VPN is too. What&amp;rsquo;s difference?
 In previou post we talked about Is HTTPS Secure Enough?, and we concluded that https is secure itself which means no one can decrypt the data without the session key. However there still are some security issues in HTTPS, the man-in-the-middle attack, for example.
 Why do I need a VPN if https connections are secure? A VPN will secure all of the traffic between point A and point B in a tunnel.</description>
+    </item>
+    
+    <item>
+      <title>MPLS</title>
+      <link>https://davidzhu.xyz/post/networking/008-mpls/</link>
+      <pubDate>Sun, 10 Sep 2023 08:27:59 +0000</pubDate>
+      
+      <guid>https://davidzhu.xyz/post/networking/008-mpls/</guid>
+      <description></description>
     </item>
     
     <item>
@@ -1543,7 +1552,7 @@ From a correctness standpoint, you don&amp;rsquo;t need to know. Each variable i
       
       <guid>https://davidzhu.xyz/post/linux/001-commands-linux/</guid>
       <description>1. Some Commands You can use xxx --help , man xxx, tldr you-command to check the usage of the command.
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 # display information about running processes # kill PID $ ps -ef # &amp;#34;A Dog&amp;#34; = git log --all --decorate --oneline --graph $ git log --all --decorate --oneline --graph $ ls -lh xxx # dns stub status $ systemctl status systemd-resolved $ sudo netstat -anp | grep 127.</description>
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 $ zip -r root.zip root # display information about running processes # kill PID $ ps -ef # &amp;#34;A Dog&amp;#34; = git log --all --decorate --oneline --graph $ git log --all --decorate --oneline --graph $ ls -lh xxx # dns stub status $ systemctl status systemd-resolved # server is an executable binary compiled from Go program, # this will print: server: Mach-O 64-bit executable arm64 $ file server # Print details about the current machine and the operating system running on it.</description>
     </item>
     
     <item>

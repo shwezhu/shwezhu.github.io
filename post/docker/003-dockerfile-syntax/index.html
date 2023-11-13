@@ -51,7 +51,7 @@ The WORKDIR instruction can be used multiple times in a Dockerfile. If a relativ
 <meta itemprop="description" content="1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&rsquo;t exist, it will be created even if it&rsquo;s not used in any subsequent Dockerfile instruction.
 The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path of the previous WORKDIR instruction."><meta itemprop="datePublished" content="2023-10-11T12:27:35+00:00" />
 <meta itemprop="dateModified" content="2023-10-11T12:27:35+00:00" />
-<meta itemprop="wordCount" content="744">
+<meta itemprop="wordCount" content="785">
 <meta itemprop="keywords" content="docker," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Dockerfile Synatax"/>
 <meta name="twitter:description" content="1. WORKDIR 1 WORKDIR /path/to/workdir The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn&rsquo;t exist, it will be created even if it&rsquo;s not used in any subsequent Dockerfile instruction.
@@ -148,9 +148,13 @@ The WORKDIR instruction can be used multiple times in a Dockerfile. If a relativ
       <ul>
         <li><a href="#1-workdir">1. WORKDIR</a></li>
         <li><a href="#2-copy">2. COPY</a></li>
-        <li><a href="#3-run-vs-cmd">3. RUN vs CMD</a></li>
-        <li><a href="#4-entrypoint-vs-cmd">4. ENTRYPOINT vs CMD</a></li>
-        <li><a href="#5-docker-run-vs-entrypoint">5. <code>docker run</code> vs <code>ENTRYPOINT</code></a></li>
+        <li><a href="#3-run-vs-cmd-vs-entrypoint">3. RUN vs CMD vs ENTRYPOINT</a>
+          <ul>
+            <li><a href="#31-example">3.1. Example</a></li>
+            <li><a href="#32-concepts">3.2. Concepts</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-docker-run-vs-entrypoint">4. <code>docker run</code> vs <code>ENTRYPOINT</code></a></li>
       </ul>
     </li>
   </ul>
@@ -203,9 +207,9 @@ The WORKDIR instruction can be used multiple times in a Dockerfile. If a relativ
 <p>Note that  <code>.dockerignore</code> file is not considered here, if you add <code>.dockerignore</code> file, then before execute <code>COPY ./test ./</code>,  docker will check the <code>.dockerignore</code> file first, if the file in the <code>./test</code> folder machs the file list in <code>.dockerignore</code> file, then <code>COPY ./test ./</code> will skip that file.</p>
 </blockquote>
 <p>And note that the build command <code>docker build -t docker-learning:v1 .</code>, the last <code>.</code> sign is used to specify the context, in <code>COPY ./test ./</code>, the <code>./test</code> is the <code>test</code> folder under the context.</p>
-<h2 id="3-run-vs-cmd">3. RUN vs CMD</h2>
-<p><code>RUN</code> - command triggers while we build the docker image.</p>
-<p><code>CMD</code> - command triggers while we launch the created docker image.</p>
+<h2 id="3-run-vs-cmd-vs-entrypoint">3. RUN vs CMD vs ENTRYPOINT</h2>
+<h3 id="31-example">3.1. Example</h3>
+<p><em>ENTRYPOINT</em> sets the process to run, while <strong><em>CMD</em> supplies default arguments to that process</strong>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -215,7 +219,6 @@ The WORKDIR instruction can be used multiple times in a Dockerfile. If a relativ
 </span><span class="lnt">5
 </span><span class="lnt">6
 </span><span class="lnt">7
-</span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">WORKDIR</span><span class="s"> /app</span><span class="err">
@@ -223,24 +226,58 @@ The WORKDIR instruction can be used multiple times in a Dockerfile. If a relativ
 </span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> go mod download<span class="err">
 </span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> go build -o server<span class="err">
 </span></span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;./server&#34;</span><span class="p">,</span> <span class="s2">&#34;-p&#34;</span><span class="p">,</span> <span class="s2">&#34;80&#34;</span><span class="p">]</span><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c"># sudo docker run -p 80:80 --rm file-server:v1.0</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">ENTRYPOINT</span> <span class="p">[</span><span class="s2">&#34;./server&#34;</span><span class="p">]</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;-p&#34;</span><span class="p">,</span> <span class="s2">&#34;80&#34;</span><span class="p">]</span><span class="err">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="4-entrypoint-vs-cmd">4. ENTRYPOINT vs CMD</h2>
-<p>CMD and ENTRYPOINT are two Dockerfile instructions that together define the command that runs when your container starts. <em>ENTRYPOINT</em> sets the process to run, while <em>CMD</em> supplies default arguments to that process.</p>
+</div><p>When run image:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">docker run -p 80:80 --rm file-server:v1.0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The command <code>./server -p 80</code> will run in the container. By the way, thr <code>CMD</code> could be overwritten by <code>docker run</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ENTRYPOINT <span class="o">[</span><span class="s2">&#34;./server&#34;</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">CMD <span class="o">[</span><span class="s2">&#34;-p&#34;</span>, <span class="s2">&#34;9000&#34;</span><span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When run image:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo docker run -p 8080:8080 --rm file-server:v1.0 -port <span class="m">8080</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The command <code>./server -port 8080</code> will run, not <code>./server -p 9000</code></p>
+<h3 id="32-concepts">3.2. Concepts</h3>
 <ul>
-<li><strong>ENTRYPOINT</strong> is the <strong>process</strong> that’s executed inside the container.
+<li><strong><code>ENTRYPOINT</code></strong> is the process that’s executed inside the container.
 <ul>
-<li>Images can <strong>only have one <code>ENTRYPOINT</code></strong>. If you repeat the Dockerfile instruction more than once, the last one will apply. When an image is created without an ENTRYPOINT, Docker defaults to using <code>/bin/sh -c</code>.</li>
+<li>Images can only have one <code>ENTRYPOINT</code>. If you repeat the Dockerfile instruction more than once, the last one will apply. When an image is created without an ENTRYPOINT, Docker defaults to using <code>/bin/sh -c</code>.</li>
 </ul>
 </li>
-<li><strong>CMD</strong> is the default set of <strong>arguments</strong> that are supplied to the ENTRYPOINT process.
+<li><strong><code>CMD</code></strong> is the default set of arguments that are supplied to the ENTRYPOINT process.
 <ul>
-<li>There <strong>can only be one <code>CMD</code> instructio</strong>n in a <code>Dockerfile</code>. If you list more than one <code>CMD</code> then only the last <code>CMD</code> will take effect.</li>
+<li>There can only be one <code>CMD</code> instruction in a <code>Dockerfile</code>. If you list more than one <code>CMD</code> then only the last <code>CMD</code> will take effect.</li>
+<li><code>CMD</code> - command triggers while we launch the created docker image.</li>
 </ul>
 </li>
+<li><strong><code>RUN</code></strong> - command triggers while we build the docker image.</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -254,7 +291,7 @@ The WORKDIR instruction can be used multiple times in a Dockerfile. If a relativ
 </span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c"># same as: CMD [&#34;./server&#34;, &#34;-p&#34;, &#34;80&#34;]</span><span class="err">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="5-docker-run-vs-entrypoint">5. <code>docker run</code> vs <code>ENTRYPOINT</code></h2>
+</div><h2 id="4-docker-run-vs-entrypoint">4. <code>docker run</code> vs <code>ENTRYPOINT</code></h2>
 <p>The <a href="https://docs.docker.com/engine/reference/commandline/run"><code>docker run</code> command</a> starts a new container using a specified image. When no further arguments are given, the process that runs in the container will exactly match the ENTRYPOINT and CMD defined in the image.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

@@ -48,7 +48,7 @@
 <meta itemprop="name" content="ChatGPT Bot">
 <meta itemprop="description" content="1. 任务类型 每次朝 ChatGPT 发送一个任务本质就是朝 openai 提供的 api endpoints 发送请求, 根据任务类型有多种不同的 api, 具体任务类型有: Completions: Given a prompt, the model will return one or more predicted completions. 1 POST https://api.openai.com/v1/completions Chat: Given"><meta itemprop="datePublished" content="2023-06-06T22:28:25+00:00" />
 <meta itemprop="dateModified" content="2023-06-06T22:28:25+00:00" />
-<meta itemprop="wordCount" content="2045">
+<meta itemprop="wordCount" content="2094">
 <meta itemprop="keywords" content="python," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="ChatGPT Bot"/>
 <meta name="twitter:description" content="1. 任务类型 每次朝 ChatGPT 发送一个任务本质就是朝 openai 提供的 api endpoints 发送请求, 根据任务类型有多种不同的 api, 具体任务类型有: Completions: Given a prompt, the model will return one or more predicted completions. 1 POST https://api.openai.com/v1/completions Chat: Given"/>
@@ -502,7 +502,45 @@
 </span></span><span class="line"><span class="cl"><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>参考:</p>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># ***************** make request *****************#</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">BASE_ENDPOINT</span><span class="si">}</span><span class="s2">/chat/completions&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">json</span><span class="o">=</span><span class="n">body</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_raw</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="n">json_str</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">json_obj</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">[</span><span class="mi">5</span><span class="p">:])</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">json_obj</span><span class="p">[</span><span class="s1">&#39;choices&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;delta&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="n">json_obj</span><span class="p">[</span><span class="s1">&#39;choices&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;delta&#39;</span><span class="p">][</span><span class="s1">&#39;content&#39;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>References:</p>
 <ul>
 <li><a href="https://www.makeuseof.com/chatgpt-api-complete-guide/?newsletter_popup=1">A Complete Guide to the ChatGPT API</a></li>
 <li><a href="https://levelup.gitconnected.com/fixing-importerror-urllib3-v2-0-5fbfe8576957">Fixing ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+ | Level Up Coding</a></li>
