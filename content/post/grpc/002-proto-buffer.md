@@ -7,6 +7,8 @@ tags:
  - grpc
 ---
 
+## 1. Basics
+
 Project structure:
 
 ```
@@ -64,3 +66,5 @@ Project structure:
 ```
 
 Learn more: [Go Protobuf Tips](https://jbrandhorst.com/post/go-protobuf-tips/)
+
+## 2. 

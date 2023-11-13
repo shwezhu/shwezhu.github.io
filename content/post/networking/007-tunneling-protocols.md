@@ -2,9 +2,8 @@
 title: Tunneling Protocols
 date: 2023-09-10 08:27:59
 categories:
- - cs basics
+ - networking
 tags:
- - cs basics
  - networking
 ---
 

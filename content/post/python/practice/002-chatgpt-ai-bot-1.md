@@ -223,7 +223,26 @@ openai.ChatCompletion.create(
 )
 ```
 
-参考:
+```python
+# ***************** make request *****************#
+with httpx.stream(
+        method='POST',
+        url=f"{BASE_ENDPOINT}/chat/completions",
+        headers=headers,
+        json=body) as r:
+    for chunk in r.iter_raw():
+        json_str = chunk.decode("utf-8").splitlines()[0]
+        try:
+            json_obj = json.loads(json_str[5:])
+        except ValueError:
+            continue
+        if len(json_obj['choices'][0]['delta']) != 0:
+            print(json_obj['choices'][0]['delta']['content'], end="")
+        else:
+            continue
+```
+
+References:
 
 - [A Complete Guide to the ChatGPT API](https://www.makeuseof.com/chatgpt-api-complete-guide/?newsletter_popup=1)
 - [Fixing ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+ | Level Up Coding](https://levelup.gitconnected.com/fixing-importerror-urllib3-v2-0-5fbfe8576957)

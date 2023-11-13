@@ -30,6 +30,11 @@ CMD ["-p", "80"]
 ## 2. Docker commands
 
 ```shell
+# volumes aaa must exist before use this, check: 'docker volume ls', 'docker inspect volume_name'
+$ sudo docker run -d -p 80:80 --name file-server --mount source=aaa,target=/app --rm shwezhu/file-server:v1.0 -p 80 -max 2000
+# mysql-volume is the container name
+$ docker exec -it mysql-volume bash
+
 #------------- show --------------
 $ docker container ls -a
 $ docker image ls -a
@@ -46,6 +51,8 @@ $ docker run -d -p 80:80 --rm davidzhu/go-learning:v1.0
 # -it: allocates a pseudo-TTY and attaches it to the container
 # then you can use command line to intercat with the current running container
 $ docker run -it --rm davidzhu/go-learning:v1.0 sh
+# specify the container name
+$ docker run --name mysql-volume ...
 
 # publish and pull image from repo
 $ docker push shwezhu/file-station:v1

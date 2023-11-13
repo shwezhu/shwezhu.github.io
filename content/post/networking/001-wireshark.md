@@ -39,7 +39,7 @@ Learn more: [CaptureFilters](https://wiki.wireshark.org/CaptureFilters)
 
 ## 3. Display filter
 
-
+[DisplayFilters](https://wiki.wireshark.org/DisplayFilters)
 
 References:
 

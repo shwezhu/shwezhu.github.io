@@ -45,11 +45,11 @@ The `COPY ./test ./` will be executed when building the image, what `COPY ./test
 
 And note that the build command `docker build -t docker-learning:v1 .`, the last `.` sign is used to specify the context, in `COPY ./test ./`, the `./test` is the `test` folder under the context. 
 
-## 3. RUN vs CMD
+## 3. RUN vs CMD vs ENTRYPOINT
 
-`RUN` - command triggers while we build the docker image.
+### 3.1. Example
 
-`CMD` - command triggers while we launch the created docker image.
+*ENTRYPOINT* sets the process to run, while ***CMD* supplies default arguments to that process**.
 
 ```dockerfile
 WORKDIR /app
@@ -57,19 +57,41 @@ COPY ./ ./
 RUN go mod download
 RUN go build -o server
 
-CMD ["./server", "-p", "80"]
-
-# sudo docker run -p 80:80 --rm file-server:v1.0
+ENTRYPOINT ["./server"]
+CMD ["-p", "80"]
 ```
 
-## 4. ENTRYPOINT vs CMD
+When run image:
 
-CMD and ENTRYPOINT are two Dockerfile instructions that together define the command that runs when your container starts. *ENTRYPOINT* sets the process to run, while *CMD* supplies default arguments to that process.
+```shell
+docker run -p 80:80 --rm file-server:v1.0
+```
 
-- **ENTRYPOINT** is the **process** that’s executed inside the container.
-  - Images can **only have one `ENTRYPOINT`**. If you repeat the Dockerfile instruction more than once, the last one will apply. When an image is created without an ENTRYPOINT, Docker defaults to using `/bin/sh -c`.
-- **CMD** is the default set of **arguments** that are supplied to the ENTRYPOINT process.
-  - There **can only be one `CMD` instructio**n in a `Dockerfile`. If you list more than one `CMD` then only the last `CMD` will take effect.
+The command `./server -p 80` will run in the container. By the way, thr `CMD` could be overwritten by `docker run`:
+
+```shell
+...
+
+ENTRYPOINT ["./server"]
+CMD ["-p", "9000"]
+```
+
+When run image:
+
+```shell
+sudo docker run -p 8080:8080 --rm file-server:v1.0 -port 8080
+```
+
+The command `./server -port 8080` will run, not `./server -p 9000`
+
+### 3.2. Concepts
+
+- **`ENTRYPOINT`** is the process that’s executed inside the container.
+  - Images can only have one `ENTRYPOINT`. If you repeat the Dockerfile instruction more than once, the last one will apply. When an image is created without an ENTRYPOINT, Docker defaults to using `/bin/sh -c`.
+- **`CMD`** is the default set of arguments that are supplied to the ENTRYPOINT process.
+  - There can only be one `CMD` instruction in a `Dockerfile`. If you list more than one `CMD` then only the last `CMD` will take effect.
+  - `CMD` - command triggers while we launch the created docker image.
+- **`RUN`** - command triggers while we build the docker image.
 
 ```dockerfile
 ENTRYPOINT ["./server"]
@@ -77,7 +99,7 @@ CMD ["-p", "80"]
 # same as: CMD ["./server", "-p", "80"]
 ```
 
-## 5. `docker run` vs `ENTRYPOINT`
+## 4. `docker run` vs `ENTRYPOINT`
 
 The [`docker run` command](https://docs.docker.com/engine/reference/commandline/run) starts a new container using a specified image. When no further arguments are given, the process that runs in the container will exactly match the ENTRYPOINT and CMD defined in the image.
 

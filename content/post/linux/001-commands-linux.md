@@ -12,6 +12,7 @@ tags:
 You can use `xxx --help `, `man xxx`, `tldr you-command` to check the usage of the command. 
 
 ```shell
+$ zip -r root.zip root
 # display information about running processes
 # kill PID
 $ ps -ef
@@ -20,7 +21,6 @@ $ git log --all --decorate --oneline --graph
 $ ls -lh xxx
 # dns stub status
 $ systemctl status systemd-resolved
-$ sudo netstat -anp | grep 127.0.0.53
 # server is an executable binary compiled from Go program, 
 # this will print: server: Mach-O 64-bit executable arm64
 $ file server
