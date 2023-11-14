@@ -6,6 +6,7 @@ categories:
 tags:
  - concurrency
  - cs basics
+typora-root-url: ../../../static
 ---
 
 Original: https://qr.ae/pyztor
@@ -37,7 +38,7 @@ Imagine how much RAM is wasted for 10,000 threads if you could even spawn that m
 
 **Memory usage of multi-threaded Apache vs single-threaded nginx:**
 
-![1](/009-multithread-singlethread-server/1.png)
+<img src="/009-multithread-singlethread-server/1.png" alt="1" style="zoom: 50%;" />
 
 Incidentally, this is the reason why Ryan Dahl used a non-blocking I/O and a single-threaded event loop in Node.js and he still uses the same idea in Deno, because that is the way to write high performance network servers (contrary to what you might read in other answers here).
 
