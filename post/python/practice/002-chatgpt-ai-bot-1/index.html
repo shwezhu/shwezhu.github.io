@@ -16,7 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. 任务类型 每次朝 ChatGPT 发送一个任务本质就是朝 openai 提供的 api endpoints 发送请求, 根据任务类型有多种不同的 api, 具体任务类型有: Completions: Given a prompt, the model will return one or more predicted completions. 1 POST https://api.openai.com/v1/completions Chat: Given" />
+<meta name="author" content="David" /><meta name="description" content="1. Official docs Make request for the RESTful API of OpenAI: API Reference - OpenAI API Error status code for HTTP response: Error codes - OpenAI API Stream cookbook.openai.com/examples/how_to_stream_completions How to Print ChatGPT API Response as a Stream – PuppyCoding 2. Stream message If you write code like this:
+1 2 3 respense = openai.create(...) for chunk in response: print(chunk.choices[0].delta.get(&amp;#34;content&amp;#34;, &amp;#34;&amp;#34;), end=&amp;#34;&amp;#34;) You probably won&amp;rsquo;t get the result you want, your program will print line by line, not word by word." />
 
 
 
@@ -40,18 +41,21 @@
 
 
 <meta property="og:title" content="ChatGPT Bot" />
-<meta property="og:description" content="1. 任务类型 每次朝 ChatGPT 发送一个任务本质就是朝 openai 提供的 api endpoints 发送请求, 根据任务类型有多种不同的 api, 具体任务类型有: Completions: Given a prompt, the model will return one or more predicted completions. 1 POST https://api.openai.com/v1/completions Chat: Given" />
+<meta property="og:description" content="1. Official docs Make request for the RESTful API of OpenAI: API Reference - OpenAI API Error status code for HTTP response: Error codes - OpenAI API Stream cookbook.openai.com/examples/how_to_stream_completions How to Print ChatGPT API Response as a Stream – PuppyCoding 2. Stream message If you write code like this:
+1 2 3 respense = openai.create(...) for chunk in response: print(chunk.choices[0].delta.get(&#34;content&#34;, &#34;&#34;), end=&#34;&#34;) You probably won&rsquo;t get the result you want, your program will print line by line, not word by word." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/python/practice/002-chatgpt-ai-bot-1/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2023-06-06T22:28:25+00:00" />
-<meta property="article:modified_time" content="2023-06-06T22:28:25+00:00" />
+<meta property="article:published_time" content="2023-11-04T00:07:25+00:00" />
+<meta property="article:modified_time" content="2023-11-04T00:07:25+00:00" />
 <meta itemprop="name" content="ChatGPT Bot">
-<meta itemprop="description" content="1. 任务类型 每次朝 ChatGPT 发送一个任务本质就是朝 openai 提供的 api endpoints 发送请求, 根据任务类型有多种不同的 api, 具体任务类型有: Completions: Given a prompt, the model will return one or more predicted completions. 1 POST https://api.openai.com/v1/completions Chat: Given"><meta itemprop="datePublished" content="2023-06-06T22:28:25+00:00" />
-<meta itemprop="dateModified" content="2023-06-06T22:28:25+00:00" />
-<meta itemprop="wordCount" content="2094">
+<meta itemprop="description" content="1. Official docs Make request for the RESTful API of OpenAI: API Reference - OpenAI API Error status code for HTTP response: Error codes - OpenAI API Stream cookbook.openai.com/examples/how_to_stream_completions How to Print ChatGPT API Response as a Stream – PuppyCoding 2. Stream message If you write code like this:
+1 2 3 respense = openai.create(...) for chunk in response: print(chunk.choices[0].delta.get(&#34;content&#34;, &#34;&#34;), end=&#34;&#34;) You probably won&rsquo;t get the result you want, your program will print line by line, not word by word."><meta itemprop="datePublished" content="2023-11-04T00:07:25+00:00" />
+<meta itemprop="dateModified" content="2023-11-04T00:07:25+00:00" />
+<meta itemprop="wordCount" content="387">
 <meta itemprop="keywords" content="python," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="ChatGPT Bot"/>
-<meta name="twitter:description" content="1. 任务类型 每次朝 ChatGPT 发送一个任务本质就是朝 openai 提供的 api endpoints 发送请求, 根据任务类型有多种不同的 api, 具体任务类型有: Completions: Given a prompt, the model will return one or more predicted completions. 1 POST https://api.openai.com/v1/completions Chat: Given"/>
+<meta name="twitter:description" content="1. Official docs Make request for the RESTful API of OpenAI: API Reference - OpenAI API Error status code for HTTP response: Error codes - OpenAI API Stream cookbook.openai.com/examples/how_to_stream_completions How to Print ChatGPT API Response as a Stream – PuppyCoding 2. Stream message If you write code like this:
+1 2 3 respense = openai.create(...) for chunk in response: print(chunk.choices[0].delta.get(&#34;content&#34;, &#34;&#34;), end=&#34;&#34;) You probably won&rsquo;t get the result you want, your program will print line by line, not word by word."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -127,7 +131,7 @@
       <h1 class="post-title">ChatGPT Bot</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2023-06-06 </span>
+        <span class="post-time"> 2023-11-04 </span>
         <div class="post-category">
             <a href="/categories/python/"> python </a>
             </div>
@@ -142,16 +146,13 @@
   <ul>
     <li>
       <ul>
-        <li>
+        <li><a href="#1-official-docs">1. Official docs</a></li>
+        <li><a href="#2-stream-message">2. Stream message</a>
           <ul>
-            <li><a href="#1-任务类型">1. 任务类型</a></li>
-            <li><a href="#2-不同的模型">2. 不同的模型</a></li>
-            <li><a href="#3-chathttpsplatformopenaicomdocsapi-referencechat-vs-completionshttpsplatformopenaicomdocsapi-referencecompletions-模型用哪个">3. <a href="https://platform.openai.com/docs/api-reference/chat">Chat</a> vs <a href="https://platform.openai.com/docs/api-reference/completions">Completions</a> 模型用哪个?</a></li>
-            <li><a href="#4-request-参数">4. Request 参数</a></li>
-            <li><a href="#5-使用-openai-package-发送-http-请求">5. 使用 openai package 发送 http 请求</a></li>
-            <li><a href="#6-记住之前的聊天内容">6. 记住之前的聊天内容</a></li>
+            <li><a href="#3-task-types">3. Task types</a></li>
           </ul>
         </li>
+        <li><a href="#4-openai-package-error-urllib3-only-supports-openssl">4. Openai package error: urllib3 only supports OpenSSL</a></li>
       </ul>
     </li>
   </ul>
@@ -159,8 +160,52 @@
   </div>
 </div>
     <div class="post-content">
-      <h3 id="1-任务类型">1. 任务类型</h3>
-<p>每次朝 ChatGPT 发送一个任务本质就是朝 openai 提供的 api endpoints 发送请求, 根据任务类型有多种不同的 api, 具体任务类型有:</p>
+      <h2 id="1-official-docs">1. Official docs</h2>
+<ul>
+<li>Make request for the RESTful API of OpenAI: <a href="https://platform.openai.com/docs/api-reference/chat/create">API Reference - OpenAI API</a></li>
+<li>Error status code for HTTP response: <a href="https://platform.openai.com/docs/guides/error-codes">Error codes - OpenAI API</a></li>
+<li>Stream <a href="https://cookbook.openai.com/examples/how_to_stream_completions">cookbook.openai.com/examples/how_to_stream_completions</a>
+<ul>
+<li><a href="https://puppycoding.com/2023/07/08/stream-chatgpt-response/">How to Print ChatGPT API Response as a Stream – PuppyCoding</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="2-stream-message">2. Stream message</h2>
+<p>If you write code like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">respense</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;content&#34;</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You probably won&rsquo;t get the result you want, your program will print line by line, not word by word.</p>
+<p>The actual reason is that Python buffers the chunks before printing them, whereas we want them printed as soon as they’re ready. To do this, we add a <code>flush = True</code> parameter to tell Python to flush the buffer with each chunk.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">handle_stream</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">          <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">print</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Normally output to a file or the console is buffered, with text output at least <strong>until you print a newline</strong>. The flush makes sure that any output that is buffered goes to the destination. <a href="https://stackoverflow.com/a/15608262/16317008">https://stackoverflow.com/a/15608262/16317008</a></p>
+</blockquote>
+<h3 id="3-task-types">3. Task types</h3>
 <ul>
 <li><a href="https://platform.openai.com/docs/api-reference/completions">Completions</a>: Given a prompt, the model will return one or more predicted completions.</li>
 </ul>
@@ -194,191 +239,8 @@
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">POST https://api.openai.com/v1/images/generations
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>如果想处理图片, 那就向 <code>https://api.openai.com/v1/images/generations</code> 发送 http 请求, 当然还要加上一些 parameters, 具体下面会介绍, 还有其它类型的任务具体可参照<a href="https://platform.openai.com/docs/api-reference">官方文档</a>,</p>
-<h3 id="2-不同的模型">2. 不同的模型</h3>
-<p>不同的类型支持的模型不同, 常见的model如下:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left"></th>
-<th style="text-align:left">MODEL FAMILIES</th>
-<th style="text-align:left">API ENDPOINT</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Newer models (2023–)</td>
-<td style="text-align:left">gpt-4, gpt-3.5-turbo</td>
-<td style="text-align:left"><a href="https://api.openai.com/v1/chat/completions">https://api.openai.com/v1/chat/completions</a></td>
-</tr>
-<tr>
-<td style="text-align:left">Older models (2020–2022)</td>
-<td style="text-align:left">text-davinci-003, text-davinci-002, davinci, curie, babbage, ada</td>
-<td style="text-align:left"><a href="https://api.openai.com/v1/completions">https://api.openai.com/v1/completions</a></td>
-</tr>
-</tbody>
-</table>
-<p>想象不同的模型和任务类型的区别, 其实就是不同的任务类型对应不同的的 api endpoints, 如 <a href="https://platform.openai.com/docs/api-reference/chat">Chat</a> 的 api endpoint 为 <code>https://api.openai.com/v1/chat/completions</code>, <a href="https://platform.openai.com/docs/api-reference/completions">Completions</a> 的api endpoint为 <code>https://api.openai.com/v1/completions</code>, 然后不同的类型支持的模型不同, 前者 <a href="https://platform.openai.com/docs/api-reference/chat">Chat</a> 支持 <code>gpt-4</code> 和 <code>gpt-3.5-turbo</code> , 后者 <a href="https://platform.openai.com/docs/api-reference/completions">Completions</a>  支持 <code>text-davinci-003</code> ,</p>
-<h3 id="3-chathttpsplatformopenaicomdocsapi-referencechat-vs-completionshttpsplatformopenaicomdocsapi-referencecompletions-模型用哪个">3. <a href="https://platform.openai.com/docs/api-reference/chat">Chat</a> vs <a href="https://platform.openai.com/docs/api-reference/completions">Completions</a> 模型用哪个?</h3>
-<p>当然是使用 Chat, 因为它支持 <code>gpt-4</code> 和 <code>gpt-3.5-turbo</code> model, 而 Completions 不支持, 它支持 <code>text-davinci-003</code> model,</p>
-<p>The difference between these APIs derives mainly from the underlying GPT models that are available in each. The <strong>chat completions</strong> API is the interface to our most capable model (<code>gpt-4</code>), and our most cost effective model (<code>gpt-3.5-turbo</code>). For reference, <code>gpt-3.5-turbo</code> performs at a similar capability level to <code>text-davinci-003</code> but at 10% the price per token!</p>
-<h3 id="4-request-参数">4. Request 参数</h3>
-<p>选择好任务类型了, 接下来就是发送 http 请求, 我们要向 ChatGPT 提供我们的问题吧, 怎么提供呢, 通过 http 请求参数, 接下来就介绍一下参数, 上面只是知道了不同的任务类型对应不同的 url, 仅仅发送 GET 请求还不行, 需要加一些必要的参数如max_token, key, 以及 prompt 或 message, 这也是最重要一个参数即我们的信息内容也就是我们的问题.</p>
-<p>对于上面的任务类型, 下文使用 Completions, 所以每次的 http 请求的 url 为: <code>https://api.openai.com/v1/completions</code>, 先介绍一下该任务类型的参数, 至于其它任务类型的参数<a href="https://platform.openai.com/docs/api-reference">官方文档</a>都有介绍, 在这也不一一陈述,</p>
-<p><strong><code>model</code></strong>: 必填参数, 即你使用哪个 model, 如是 gpt-3.5-turbo 还是 gpt-4, 关于 model 选择建议, 官方也有说: <a href="https://platform.openai.com/docs/guides/gpt/which-model-should-i-use">which-model-should-i-us</a></p>
-<p><strong><code>prompt</code></strong>: 这个也是最重要的参数了, 就是我们的问题, 要求 GPT 做的事</p>
-<p><strong><code>max_tokens</code></strong>: 这个参数就涉及到开销💰了, 就是限制回答的 token size, 另外文档解释容易 confuse 的地方是 <code>prompt + maxt_token &lt; context length</code>, 一般模型的 context length 是2048, 但新的貌似都是 4096 了, gpt-4 貌似更多, 即对一般的模型你的 prompt token size 加上参数 <code>max_tokens</code> 不可以超过 2048, 不仅疑问, 如果我们设置了更小的 <code>max_tokens</code>, 那 gpt 会不会每次回答都尝试用简短的内容来说, 这样肯定导致不好的效果, 测试了一下, 如果你设置了很小的 <code>max_tokens</code>, gpt 的回复会直接被 cut off, 并然后看到<a href="https://community.openai.com/t/question-regarding-max-tokens/16259">论坛</a>也有人关注这个问题, 一个人的回答如下: I asked the support and they clarified that GPT-3 will <strong>not</strong> attempt to create shorter texts with a smaller <code>max_tokens</code> value. The text will indeed just be cut off. So in my case, I guess it makes sense to use a higher value to have more “wiggle room”.</p>
-<p><strong><code>temperature</code></strong>: 范围 0-2, Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.</p>
-<p><strong><code>user</code></strong>: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. <a href="https://platform.openai.com/docs/guides/safety-best-practices/end-user-ids">Learn more</a>.</p>
-<p>任务类型 Completions 的其它参数不一一介绍, 可以去文档查看, 下面举个完整请求的例子, 根据openai文档, Completions 的 http 请求格式如下(除了参数 <code>model</code> , 其它参数都可省略), 注意看目的 url, 别弄错了,</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">curl https://api.openai.com/v1/completions <span class="se">\
-</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -H <span class="s2">&#34;Content-Type: application/json&#34;</span> <span class="se">\
-</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -H <span class="s2">&#34;Authorization: Bearer </span><span class="nv">$OPENAI_API_KEY</span><span class="s2">&#34;</span> <span class="se">\
-</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -d <span class="s1">&#39;{
-</span></span></span><span class="line"><span class="cl"><span class="s1">    &#34;model&#34;: &#34;gpt-3.5-turbo&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s1">    &#34;prompt&#34;: &#34;Say this is a test&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s1">    &#34;max_tokens&#34;: 7,
-</span></span></span><span class="line"><span class="cl"><span class="s1">    &#34;temperature&#34;: 0
-</span></span></span><span class="line"><span class="cl"><span class="s1">  }&#39;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>如果请求成功, 会返回一个包含回答的 json 对象, 用 python 实现 :</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">api_key</span> <span class="o">=</span> <span class="s1">&#39;YOUR_API&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="n">api_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.openai.com/v1/completions&#39;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="s2">&#34;model&#34;</span><span class="p">:</span> <span class="s2">&#34;text-davinci-003&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="s2">&#34;temperature&#34;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="s2">&#34;prompt&#34;</span><span class="p">:</span> <span class="s2">&#34;Hi, who are you&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;application/json&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Authorization&#34;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&#34;Bearer </span><span class="si">{</span><span class="n">api_key</span><span class="si">}</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">api_url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
-</span></span><span class="line"><span class="cl"><span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error:&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><blockquote>
-<p>注意对于 <a href="https://platform.openai.com/docs/api-reference/completions">Completions</a>, 参数 <code>prompt</code> 是可选的即可有可无, 但若你要使用 <a href="https://platform.openai.com/docs/api-reference/chat">Chat</a>, 就需要使用参数 <code>message</code> 代替 <code>prompt</code> 来提供我们对GPT的问题, 且 <code>message</code> 不可省略, 关于参数 <code>message</code> 的介绍可参考 <a href="https://platform.openai.com/docs/api-reference/chat">Chat</a> 的文档,</p>
-</blockquote>
-<p>还记得 Completions 和 Chat 是什么吗? 就是第一节介绍的不同类型的任务, 他们对应不同的 url, 对于 Chat, 请求格式如下, 其实格式并没变, 只是个别参数和目的 url 变了, 具体实现可参考上面 Completions 类型的实现,</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">curl https://api.openai.com/v1/chat/completions <span class="se">\
-</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -H <span class="s2">&#34;Content-Type: application/json&#34;</span> <span class="se">\
-</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -H <span class="s2">&#34;Authorization: Bearer </span><span class="nv">$OPENAI_API_KEY</span><span class="s2">&#34;</span> <span class="se">\
-</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -d <span class="s1">&#39;{
-</span></span></span><span class="line"><span class="cl"><span class="s1">    &#34;model&#34;: &#34;gpt-3.5-turbo&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s1">    &#34;messages&#34;: [{&#34;role&#34;: &#34;user&#34;, &#34;content&#34;: &#34;Hello!&#34;}]
-</span></span></span><span class="line"><span class="cl"><span class="s1">  }&#39;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h3 id="5-使用-openai-package-发送-http-请求">5. 使用 openai package 发送 http 请求</h3>
-<p>另外也可以使用官方提供的 Python 库发送 http 请求:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">pip3 install openai
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>之后发送 http 就很简单:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">openai</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">openai</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="s2">&#34;YOUR_API_KEY&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># 这里 openai.ChatCompletion 其实就是我们上面的任务类型选择, 显然这里选择的是 Chat, </span>
-</span></span><span class="line"><span class="cl"><span class="c1"># 即目的 url 是 https://api.openai.com/v1/chat/completions</span>
-</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">ChatCompletion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">    <span class="n">model</span><span class="o">=</span><span class="s2">&#34;gpt-3.5-turbo&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="n">temperature</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;Who won the 2018 FIFA world cup?&#34;</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="p">]</span>
-</span></span><span class="line"><span class="cl"><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;choices&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;message&#39;</span><span class="p">][</span><span class="s1">&#39;content&#39;</span><span class="p">])</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h4 id="51-报错-urllib3-版本问题">5.1. 报错: urllib3 版本问题</h4>
-<p>导入openai包后运行, 报错:</p>
+</div><h2 id="4-openai-package-error-urllib3-only-supports-openssl">4. Openai package error: urllib3 only supports OpenSSL</h2>
+<p>After import openai package, an error occurred:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -387,7 +249,7 @@
 <pre tabindex="0" class="chroma"><code class="language-v" data-lang="v"><span class="line"><span class="cl"><span class="nc">ImportError</span><span class="p">:</span> <span class="nv">urllib3</span> <span class="nv">v2</span><span class="mf">.0</span> <span class="nv">only</span> <span class="nv">supports</span> <span class="nc">OpenSSL</span> <span class="mf">1.1.1</span><span class="o">+</span><span class="p">,</span> <span class="nv">currently</span> <span class="nv">the</span> <span class="s1">&#39;ssl&#39;</span> <span class="kn">module</span> <span class="k">is</span> <span class="nv">compiled</span> <span class="nv">with</span> <span class="nc">LibreSSL</span> <span class="mf">2.8.3</span><span class="p">.</span> <span class="nc">See</span><span class="p">:</span> <span class="nv">https</span><span class="p">:</span><span class="c1">//github.com/urllib3/urllib3/issues/2168
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>一点一点分析, <a href="https://urllib3.readthedocs.io/en/stable/">urllib3</a> 就是python用来发http请求的package, 即http客户端, 用法如下:</p>
+</div><p><a href="https://urllib3.readthedocs.io/en/stable/">urllib3</a> is a Python package for making HTTP requests, which is an HTTP client (like a browser):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -406,141 +268,8 @@
 </span></span><span class="line"><span class="cl"><span class="sa">b</span><span class="s2">&#34;User-agent: *</span><span class="se">\n</span><span class="s2">Disallow: /deny</span><span class="se">\n</span><span class="s2">&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>解决办法可参考: <a href="https://davidzhu.xyz/post/python/practice/003-openssl-issue/">https://davidzhu.xyz/post/python/practice/003-openssl-issue/</a></p>
-<h3 id="6-记住之前的聊天内容">6. 记住之前的聊天内容</h3>
-<p>http 无状态, openai 服务器那边也没在应用层实现维护状态的机制, 所以是无记忆的, 需要我们自己来维护聊天历史, 即每次把历史聊天记录发给 gpt, 才能实现 “记忆” 功能, 看到一个很好的例子, 具体过程如下:</p>
-<p>第一次</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Note: you need to be using OpenAI Python v0.27.0 for the code below to work</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">openai</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">openai</span><span class="o">.</span><span class="n">ChatCompletion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">  <span class="n">model</span><span class="o">=</span><span class="s2">&#34;gpt-3.5-turbo&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">  <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;system&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;You are a helpful assistant.&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;Hello&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">    <span class="p">]</span>
-</span></span><span class="line"><span class="cl"><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>第二次就要带着第一次的问题和回答, 当然这样也会用掉更多的 tokens, 啥你不知道tokens是啥? 是money 💰</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Note: you need to be using OpenAI Python v0.27.0 for the code below to work</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">openai</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">openai</span><span class="o">.</span><span class="n">ChatCompletion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">  <span class="n">model</span><span class="o">=</span><span class="s2">&#34;gpt-3.5-turbo&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">  <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;system&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;You are a helpful assistant.&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;Hello&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;assistant&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;Hello, how can I help you?&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;who is more stylish Pikachu or Neo&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">    <span class="p">]</span>
-</span></span><span class="line"><span class="cl"><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>第三次:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Note: you need to be using OpenAI Python v0.27.0 for the code below to work</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">openai</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">openai</span><span class="o">.</span><span class="n">ChatCompletion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">  <span class="n">model</span><span class="o">=</span><span class="s2">&#34;gpt-3.5-turbo&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">  <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;system&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;You are a helpful assistant.&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;Hello&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;assistant&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;Hello, how can I help you&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;What is more stylish Pikachu or Neo&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;assistant&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;Well Neo of course&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;Why?&#34;</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">    <span class="p">]</span>
-</span></span><span class="line"><span class="cl"><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># ***************** make request *****************#</span>
-</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">BASE_ENDPOINT</span><span class="si">}</span><span class="s2">/chat/completions&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="n">json</span><span class="o">=</span><span class="n">body</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_raw</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">        <span class="n">json_str</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">json_obj</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">[</span><span class="mi">5</span><span class="p">:])</span>
-</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">json_obj</span><span class="p">[</span><span class="s1">&#39;choices&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;delta&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="n">json_obj</span><span class="p">[</span><span class="s1">&#39;choices&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;delta&#39;</span><span class="p">][</span><span class="s1">&#39;content&#39;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>References:</p>
+</div><p>Solution: <a href="https://davidzhu.xyz/post/python/practice/003-openssl-issue/">https://davidzhu.xyz/post/python/practice/003-openssl-issue/</a></p>
+<p>References:</p>
 <ul>
 <li><a href="https://www.makeuseof.com/chatgpt-api-complete-guide/?newsletter_popup=1">A Complete Guide to the ChatGPT API</a></li>
 <li><a href="https://levelup.gitconnected.com/fixing-importerror-urllib3-v2-0-5fbfe8576957">Fixing ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+ | Level Up Coding</a></li>
@@ -560,7 +289,7 @@
   <p class="copyright-item">
     <span class="item-title">LastMod</span>
     <span class="item-content">
-        2023-06-06
+        2023-11-04
         
     </span>
   </p>
@@ -572,13 +301,13 @@
           <a href="/tags/python/">python</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/js/nodejs/nodejs-introduction/">
+        <a class="prev" href="/post/http/004-http-v2-binary-frame/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Nodejs Intro</span>
+            <span class="prev-text nav-default">HTTP 2.0 (Binary Frame, Server Push, Header Compression)</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
-        <a class="next" href="/post/cs-basics/002-ssh/">
-            <span class="next-text nav-default">实现ssh免密登陆 ssh如何验证远程主机真实性</span>
+        <a class="next" href="/post/http/008-form-post-query-string/">
+            <span class="next-text nav-default">Form Data &amp; Query String</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>
