@@ -1,6 +1,6 @@
 ---
 title: ChatGPT Bot
-date: 2023-11-04 00:07:25
+date: 2023-11-14 00:07:25
 categories:
   - python
 tags:
@@ -21,7 +21,8 @@ If you write code like this:
 ```python
 respense = openai.create(...)
 for chunk in response:
-    print(chunk.choices[0].delta.get("content", ""), end="")
+    if chunk.choices[0].delta.content is not None:
+          print(chunk.choices[0].delta.content, end="", flush=True)
 ```
 
 You probably won't get the result you want, your program will print line by line, not word by word. 
