@@ -16,10 +16,18 @@ FROM golang:alpine
 WORKDIR /app
 COPY ./ ./
 RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux  go build -o /server .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /server .
 
-CMD ["/server"]
+CMD ["./server"]
 ```
+
+> The `CGO_ENABLED=0` is to disable cgo. `GOOS=linux` and `GOARCH=arm64` is used for cross compilation in Go. Because I build this on my macOS arm64 machine, and I want build for Ubuntu amd64 machine, so I choose `GOOS=linux` `GOARCH=arm64`. 
+>
+> Learn more: 
+>
+> [Static Linking Go Programs - David's Blog](https://davidzhu.xyz/post/golang/advance/012-statically-linking/)
+>
+> [Cross Compilation - Go - David's Blog](https://davidzhu.xyz/post/golang/advance/011-cross-compilation/)
 
 After build successfully and run image:
 
@@ -29,7 +37,7 @@ $ docker run -p 80:80 shwezhu/file-station:v1
 [error] failed to initialize database, got error Binary was compiled with 'CGO_ENABLED=0', go-sqlite3 requires cgo to work. This is a stub
 ```
 
-Then change the dockerfile above to:
+As you can see, apparently I will get an error, because my Go code use the `go-sqlite3 ` package which implemented by pure cgo, if I disable cgo with `CGO_ENABLED=0`, this will wrong. Then I change the dockerfile to:
 
 ```dockerfile
 ...
@@ -37,29 +45,29 @@ Then change the dockerfile above to:
 RUN apk add --no-cache --update go gcc g++
 RUN go build -o /server .
 
-CMD ["/server"]
+CMD ["./server"]
 ```
 
-And build with command:
+And build image with command:
 
 ```shell
 $ docker build -t shwezhu/file-station:v2 .
 ```
 
-Because my local machine is linux/arm64, the image was built to arm64 by default, but my EC2 server is linux/amd64, there is an error when run the image on EC2 server:
+There is an error when run the image on EC2 server:
 
 ```shell
 $ docker run -p 80:80 shwezhu/file-station:v1
 WARNING: The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64) and no specific platform was requested
 ```
 
-I need to built an image for  linux/amd64 architecture:
+Because my local machine is arm64, which means the image will be built to arm64 by default, but my EC2 server is linux/amd64, so there is an error occurred. With `--platform`, you can specify the platform this image built for:
 
 ```shell
 $ docker build --platform linux/amd64 -t shwezhu/file-station:v2 .
 ```
 
-Because there is `--platform linux/amd64`, you can remove `CGO_ENABLED=1 GOOS=linux`. It takes about 5 mintues to build this image. 
+*Go* is a statically *compiled* language. To execute a *Go* binary on a machine, it must be *compiled* for the matching operating system and processor architecture. So there is cross-compilation in Go. 
 
-> Docker images are typically built for a specific CPU architecture, such as x86-64 (64-bit Intel/AMD processors). By default, Docker images are built for the architecture of the system where the image is built. 
+`--platform` is used to build [multi-platform docker images](https://docs.docker.com/build/building/multi-platform/), not build Go binary for another platform. You should know the difference between these concepts. 
 

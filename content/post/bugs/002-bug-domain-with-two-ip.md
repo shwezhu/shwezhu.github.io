@@ -92,3 +92,11 @@ davidzhu.xyz.       300 IN  A   144.202.12.32
 ```
 
 所以这也知道了为啥通过域名使用ssh连接服务器总是超时了, 吗的, target ip都不是对的, 怎么可能连接的上
+
+---
+
+另外如果使用了 cloudflare https 代理, 一般都是先修改域名的 NS 为 cloudfalre 指定的 NS, 然后建立 https 代理, 但是有些电脑可能因为 DNS cache 问题, 通过 https 访问你的域名可能会失败, 此时应该尝试修改本地 DNS cache, 
+
+注意, DNS cache 一般 chrome 保存了一份, 操作系统也会保存一份, 因此两个地方都要考虑进去, 
+
+关于DNS: [DHCP Basics - David's Blog](https://davidzhu.xyz/post/networking/003-dhcp/)
