@@ -238,8 +238,7 @@ Request headers contain more information about the resource to be fetched, or ab
       
       <guid>https://davidzhu.xyz/post/bugs/006-cgo-docker-image-build-error/</guid>
       <description>I choose a sqilte3 library which uses cgo, the Dockerfile:
-1 2 3 4 5 6 7 8 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN CGO_ENABLED=0 GOOS=linux go build -o /server . CMD [&amp;#34;/server&amp;#34;] After build successfully and run image:
-1 2 3 $ docker run -p 80:80 shwezhu/file-station:v1 2023/10/10 02:15:15 /app/main.go:12 [error] failed to initialize database, got error Binary was compiled with &amp;#39;CGO_ENABLED=0&amp;#39;, go-sqlite3 requires cgo to work.</description>
+1 2 3 4 5 6 7 8 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /server . CMD [&amp;#34;./server&amp;#34;] The CGO_ENABLED=0 is to disable cgo. GOOS=linux and GOARCH=arm64 is used for cross compilation in Go. Because I build this on my macOS arm64 machine, and I want build for Ubuntu amd64 machine, so I choose GOOS=linux GOARCH=arm64.</description>
     </item>
     
     <item>
@@ -269,16 +268,6 @@ On Linux or a Mac, if you add this to /etc/hosts, facebook no longer exists:
       
       <guid>https://davidzhu.xyz/post/js/basics/async-await/</guid>
       <description>1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&amp;rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise Essentially, a promise</description>
-    </item>
-    
-    <item>
-      <title>CGO Cross Compilation Issue in Docker</title>
-      <link>https://davidzhu.xyz/post/docker/004-cgo-cross-compilation/</link>
-      <pubDate>Wed, 11 Oct 2023 15:27:35 +0000</pubDate>
-      
-      <guid>https://davidzhu.xyz/post/docker/004-cgo-cross-compilation/</guid>
-      <description>1. A compile issue with gcc 1 2 3 4 5 6 7 8 9 FROM golang:alpine WORKDIR /app COPY ./ ./ # Note that the `WORKDIR` instruction sets the working directory # for any `RUN`, `CMD`, ... instructions that follow it in the `Dockerfile`. RUN go build -o server . CMD [&amp;#34;./server&amp;#34;] Then I got:
-1 2 3 4 5 $ docker build -t docker-learning:v1 . =&amp;gt; ERROR [4/4] RUN go build -o server .</description>
     </item>
     
     <item>

@@ -14,8 +14,7 @@
       
       <guid>https://davidzhu.xyz/post/bugs/006-cgo-docker-image-build-error/</guid>
       <description>I choose a sqilte3 library which uses cgo, the Dockerfile:
-1 2 3 4 5 6 7 8 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN CGO_ENABLED=0 GOOS=linux go build -o /server . CMD [&amp;#34;/server&amp;#34;] After build successfully and run image:
-1 2 3 $ docker run -p 80:80 shwezhu/file-station:v1 2023/10/10 02:15:15 /app/main.go:12 [error] failed to initialize database, got error Binary was compiled with &amp;#39;CGO_ENABLED=0&amp;#39;, go-sqlite3 requires cgo to work.</description>
+1 2 3 4 5 6 7 8 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /server . CMD [&amp;#34;./server&amp;#34;] The CGO_ENABLED=0 is to disable cgo. GOOS=linux and GOARCH=arm64 is used for cross compilation in Go. Because I build this on my macOS arm64 machine, and I want build for Ubuntu amd64 machine, so I choose GOOS=linux GOARCH=arm64.</description>
     </item>
     
     <item>

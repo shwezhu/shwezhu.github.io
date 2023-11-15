@@ -155,8 +155,7 @@ Request headers contain more information about the resource to be fetched, or ab
   <div class="post-content">
     <div class="post-summary">
       I choose a sqilte3 library which uses cgo, the Dockerfile:
-1 2 3 4 5 6 7 8 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN CGO_ENABLED=0 GOOS=linux go build -o /server . CMD [&#34;/server&#34;] After build successfully and run image:
-1 2 3 $ docker run -p 80:80 shwezhu/file-station:v1 2023/10/10 02:15:15 /app/main.go:12 [error] failed to initialize database, got error Binary was compiled with &#39;CGO_ENABLED=0&#39;, go-sqlite3 requires cgo to work.
+1 2 3 4 5 6 7 8 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /server . CMD [&#34;./server&#34;] The CGO_ENABLED=0 is to disable cgo. GOOS=linux and GOARCH=arm64 is used for cross compilation in Go. Because I build this on my macOS arm64 machine, and I want build for Ubuntu amd64 machine, so I choose GOOS=linux GOARCH=arm64.
     </div>
     <div class="read-more">
       <a href="/post/bugs/006-cgo-docker-image-build-error/" class="read-more-link">Read more...</a>
@@ -226,28 +225,6 @@ On Linux or a Mac, if you add this to /etc/hosts, facebook no longer exists:
     </div>
     <div class="read-more">
       <a href="/post/js/basics/async-await/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/docker/004-cgo-cross-compilation/">CGO Cross Compilation Issue in Docker</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-10-11 </span>
-      <div class="post-category">
-          <a href="/categories/docker/"> docker </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. A compile issue with gcc 1 2 3 4 5 6 7 8 9 FROM golang:alpine WORKDIR /app COPY ./ ./ # Note that the `WORKDIR` instruction sets the working directory # for any `RUN`, `CMD`, ... instructions that follow it in the `Dockerfile`. RUN go build -o server . CMD [&#34;./server&#34;] Then I got:
-1 2 3 4 5 $ docker build -t docker-learning:v1 . =&gt; ERROR [4/4] RUN go build -o server .
-    </div>
-    <div class="read-more">
-      <a href="/post/docker/004-cgo-cross-compilation/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
@@ -340,6 +317,27 @@ Source: https://stackoverflow.com/a/897303/16317008
     </div>
     <div class="read-more">
       <a href="/post/golang/advance/011-cross-compilation/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/docker/001-docker-basics/">Docker Basics</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-09 </span>
+      <div class="post-category">
+          <a href="/categories/docker/"> docker </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. Dockerfile example 1 2 3 4 5 6 7 8 9 10 11 12 13 14 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN go build -o server ENTRYPOINT [&#34;./server&#34;] CMD [&#34;-p&#34;, &#34;80&#34;] # docker build [--platform linux/amd64] -t shwezhu/file-server:v1.0 . # [docker push shwezhu/file-server:v1.0] # [docker pull davidzhu/file-server:v1.0] # sudo docker run -d -p 80:80 --rm shwezhu/file-server:v1.0 2. Docker commands 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 # volumes aaa must exist before use this, check: &#39;docker volume ls&#39;, &#39;docker inspect volume_name&#39; $ sudo docker run -d -p 80:80 --name file-server --mount source=aaa,target=/app --rm shwezhu/file-server:v1.
+    </div>
+    <div class="read-more">
+      <a href="/post/docker/001-docker-basics/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
