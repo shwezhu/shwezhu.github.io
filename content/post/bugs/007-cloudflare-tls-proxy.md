@@ -1,5 +1,5 @@
 ---
-title: Coudflare TLS encryption 520 Error Code and too Many Redirections
+title: Coudflare TLS encryption 520 Error Code & too Many Redirections
 date: 2023-11-15 20:09:22
 categories:
  - bugs
@@ -65,3 +65,6 @@ func main() {
 
 Learn more: https://luyuhuang.tech/2020/06/03/cloudflare-free-https.html
 
+> After you config this, the DNS needs time to take effect (you change the nameservers of your domain to Cloudfalre from the defatult nameservers, this needs time to take effect) 
+>
+> If you still cannot have https or always cannot access your website with https and the cloudflare displays your website is active on their server, then you may try if your server listening 443 port and try to clear the DNS cache of your client computer (chrome + system DNS cache). Learn more: [DNS Concepts (NameServer(NS), DNS Records and Caching) - David's Blog](https://davidzhu.xyz/post/networking/002-dns-basics/)

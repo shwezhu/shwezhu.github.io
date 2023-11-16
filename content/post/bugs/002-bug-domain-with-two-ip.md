@@ -99,6 +99,6 @@ davidzhu.xyz.       300 IN  A   144.202.12.32
 
 注意, DNS cache 一般 chrome 保存了一份, 操作系统也会保存一份, 因此两个地方都要考虑进去, 
 
-关于DNS: [DHCP Basics - David's Blog](https://davidzhu.xyz/post/networking/003-dhcp/)
+关于DNS: [DNS Concepts (NameServer(NS), DNS Records and Caching) - David's Blog](https://davidzhu.xyz/post/networking/002-dns-basics/)
 
 了解更多: [HTTPS Works on some computers but not others? - Website, Application, Performance / Security - Cloudflare Community](https://community.cloudflare.com/t/https-works-on-some-computers-but-not-others/15922)
