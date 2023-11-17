@@ -5,14 +5,18 @@ categories:
   - python
 tags:
   - python
+typora-root-url: ../../../../static
 ---
 
-## 1. Official docs
+## 1. Official Docs
 
 - Make request for the RESTful API of OpenAI: [API Reference - OpenAI API](https://platform.openai.com/docs/api-reference/chat/create)
 - Error status code for HTTP response: [Error codes - OpenAI API](https://platform.openai.com/docs/guides/error-codes)
 - Stream [cookbook.openai.com/examples/how_to_stream_completions](https://cookbook.openai.com/examples/how_to_stream_completions)
   - [How to Print ChatGPT API Response as a Stream – PuppyCoding](https://puppycoding.com/2023/07/08/stream-chatgpt-response/)
+- Cookbook: https://cookbook.openai.com/
+
+![aa](/002-chatgpt-ai-bot-1/aa.png)
 
 ## 2. Stream message
 

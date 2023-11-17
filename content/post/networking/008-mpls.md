@@ -47,11 +47,63 @@ An FEC is a set of packets that a single router:
 
 (3) With the same treatment (such as queuing).
 
-First let’s look at how a packet is forwarded across a path toward a destination using regular IP processes. A packet arrives at R1, and its destination IP address is examined. A lookup is performed at R1, the packet’s FEC (next-hop, outgoing interface, and forwarding treatment) is determined, and with that information the packet is forwarded to the next hop router R2. R2 then repeats the process: The FEC is determined and the packet is forwarded to R3. R3 again determines the packet’s FEC and forwards it to R4.
+### 2.3. Step-by-Step a packet in MPLS network
 
-When an unlabeled packet enters the ingress router and needs to be passed on to an MPLS [tunnel](https://en.wikipedia.org/wiki/Tunneling_protocol), the router first determines the FEC for the packet and then inserts one or more labels in the packet's newly created MPLS header. The packet is then passed on to the next hop router for this tunnel. In an MPLS network the FEC is determined only once, at the ingress to an LSP, rather than at every router hop along the path. 
+1. **Packet Enters the MPLS Network:**
+   - Imagine a data packet entering an MPLS network at an 'ingress router'.
+   - The ingress router examines the header of the packet (like destination IP address).
+2. **Label Assignment:**
+   - Based on this examination, the router assigns a 'label' to the packet. This label is a short, fixed-length identifier.
+   - The process of assigning a label is known as 'label imposition'.
+   - Each label corresponds to a pre-determined path through the network, known as a Label Switched Path (LSP).
+3. **Packet Travels through the MPLS Network:**
+   - Once the packet has been labeled, it is sent into the MPLS network.
+   - As it reaches each router (or label switch router, LSR) in the MPLS network, the router does not need to examine the IP header. Instead, it looks at the label.
+   - Based on the label, the LSR quickly determines where to send the packet next. This is a process called 'label switching'.
+   - The LSR may also swap the packet's existing label with a new label before forwarding it (label swapping). This is done to maintain the correct routing path as defined by the LSP.
+4. **Approaching the Exit of the MPLS Network:**
+   - As the packet approaches the end of its path through the MPLS network, it reaches an 'egress router'.
+   - The egress router removes the MPLS label from the packet, a process known as 'label popping'.
+5. **Packet Leaves the MPLS Network:**
+   - After the label is removed, the packet is forwarded based on its original IP header.
+   - It is now back in a standard IP-based network and can be routed to its final destination using traditional IP routing methods.
 
-When a packet reaches an MPLS router, the router examines the topmost label in the label stack. It looks up the label in its forwarding table to determine the associated FEC. 
+## 3. OSPF, BGP and MPLS
+
+So each packet has a LSP theoretically? which means each packet belongs to a FEC, and each FEC has a LSP, the LSP built by using the routing table formed by OSPF and BGP
+
+Yes, your understanding is on the right track. In MPLS (Multiprotocol Label Switching) networks, the concept of Forwarding Equivalence Classes (FECs) and Label Switched Paths (LSPs) is fundamental. Let's break down these concepts:
+
+### 3.1. Forwarding Equivalence Class (FEC)
+
+- A FEC is essentially a group of IP packets that are forwarded in the same manner (same path, same treatment).
+- Each packet that enters an MPLS network is assigned to a FEC.
+- The assignment is based on criteria like destination IP address, IP protocol type, source IP address, and even Layer 4 ports.
+- The idea is that all packets within a FEC will follow the same LSP and receive similar forwarding treatment.
+
+Label Switched Path (LSP)
+
+- An LSP is a pre-established path that packets in a particular FEC will follow through the MPLS network.
+- LSPs are set up by the MPLS control plane, which can use signaling protocols like RSVP-TE or LDP.
+- Once an LSP is established, labels are assigned and used to forward the packets along this path.
+
+### 3.2. Interaction with OSPF and BGP
+
+- OSPF and BGP are used to form the routing table, which provides the necessary information about network topology and available paths.
+- OSPF is typically used within an autonomous system (internal routing), while BGP is used between autonomous systems (external routing).
+- The information from OSPF and BGP helps in determining the best paths for the LSPs.
+- Once the best paths are identified, MPLS signaling protocols set up LSPs along these paths, and labels are distributed to the routers (LSRs) on these paths.
+
+### 3.3. Practical Example
+
+- Imagine a packet entering an MPLS network destined for a specific IP address.
+- This packet is assigned to a FEC based on its destination IP.
+- An LSP for this FEC has already been established using OSPF or BGP routing information.
+- The ingress router assigns an MPLS label to the packet based on its FEC.
+- The packet is then forwarded through the MPLS network, with each router making forwarding decisions based solely on the MPLS label.
+- When the packet reaches the egress router of the MPLS network, the MPLS label is removed, and the packet is forwarded based on its original IP header.
+
+In this way, each packet is associated with a FEC, and each FEC has its LSP. The LSPs are constructed using the routing tables formed by OSPF and BGP, ensuring that packets are forwarded efficiently and along optimal paths within the MPLS network. 
 
 References: 
 
