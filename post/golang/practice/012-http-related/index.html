@@ -54,7 +54,7 @@ js code:
 js code:
 1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground."><meta itemprop="datePublished" content="2023-10-29T11:30:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-29T11:30:50+00:00" />
-<meta itemprop="wordCount" content="682">
+<meta itemprop="wordCount" content="756">
 <meta itemprop="keywords" content="golang,http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Some HTTP Issues with Go"/>
 <meta name="twitter:description" content="1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or &#43; automatically,
@@ -152,16 +152,17 @@ js code:
     <li>
       <ul>
         <li><a href="#1-parse-raw-query-string">1. Parse raw query string</a></li>
-        <li><a href="#2-relative-path">2. Relative path</a></li>
-        <li><a href="#3-redirection">3. Redirection</a>
+        <li><a href="#2-rurlpath-vs-rurlrawpath">2. <code>r.URL.Path</code> vs <code>r.URL.RawPath</code></a></li>
+        <li><a href="#3-relative-path">3. Relative path</a></li>
+        <li><a href="#4-redirection">4. Redirection</a>
           <ul>
-            <li><a href="#31-redirect-at-front-end">3.1. Redirect at front end</a></li>
-            <li><a href="#32-redirect-at-server-with-location-header">3.2. Redirect at server with <code>Location</code> header</a></li>
-            <li><a href="#33-redirect-at-server-with-httpredirect-method">3.3. Redirect at server with <code>http.Redirect()</code> method</a></li>
+            <li><a href="#41-redirect-at-front-end">4.1. Redirect at front end</a></li>
+            <li><a href="#42-redirect-at-server-with-location-header">4.2. Redirect at server with <code>Location</code> header</a></li>
+            <li><a href="#43-redirect-at-server-with-httpredirect-method">4.3. Redirect at server with <code>http.Redirect()</code> method</a></li>
           </ul>
         </li>
-        <li><a href="#4-parse-form-and-query-string">4. Parse form and query string</a></li>
-        <li><a href="#5-check-the-type-of-the-request">5. Check the type of the request</a></li>
+        <li><a href="#5-parse-form-and-query-string">5. Parse form and query string</a></li>
+        <li><a href="#6-check-the-type-of-the-request">6. Check the type of the request</a></li>
       </ul>
     </li>
   </ul>
@@ -269,7 +270,60 @@ js code:
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="2-relative-path">2. Relative path</h2>
+</div><h2 id="2-rurlpath-vs-rurlrawpath">2. <code>r.URL.Path</code> vs <code>r.URL.RawPath</code></h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">u</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">url</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="s">&#34;http://example.com/x/xx%20a&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">log</span><span class="p">.</span><span class="nf">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Path:&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">Path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;RawPath:&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">RawPath</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;EscapedPath:&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nf">EscapedPath</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">Path</span><span class="p">:</span> <span class="o">/</span><span class="nx">x</span><span class="o">/</span><span class="nx">xx</span> <span class="nx">a</span>
+</span></span><span class="line"><span class="cl"><span class="nx">RawPath</span><span class="p">:</span> 
+</span></span><span class="line"><span class="cl"><span class="nx">EscapedPath</span><span class="p">:</span> <span class="o">/</span><span class="nx">x</span><span class="o">/</span><span class="nx">xx</span><span class="o">%</span><span class="mi">20</span><span class="nx">a</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If url changes to &ldquo;<a href="http://example.com/x/xx%2Fa%22">http://example.com/x/xx%2Fa&quot;</a>, then will print:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Path: /x/xx/a
+</span></span><span class="line"><span class="cl">RawPath: /x/xx%2Fa
+</span></span><span class="line"><span class="cl">EscapedPath: /x/xx%2Fa
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In general, code should call <code>EscapedPath()</code> instead of reading <code>u.RawPath</code> directly.</p>
+<p>Learn more:</p>
+<p><a href="https://pkg.go.dev/net/url#URL.EscapedPath">https://pkg.go.dev/net/url#URL.EscapedPath</a></p>
+<h2 id="3-relative-path">3. Relative path</h2>
 <p>You can write relative path directly for the endpoint, because the browser know the <strong>Origin</strong>, when you make HTTP request, it knows where should go.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -294,8 +348,8 @@ js code:
 </span></span><span class="line"><span class="cl">http.Redirect(w, r, &#34;/login&#34;, http.StatusFound)
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="3-redirection">3. Redirection</h2>
-<h3 id="31-redirect-at-front-end">3.1. Redirect at front end</h3>
+</div><h2 id="4-redirection">4. Redirection</h2>
+<h3 id="41-redirect-at-front-end">4.1. Redirect at front end</h3>
 <p>For redirection, you can use js code to redirect based on the status code passed from server:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -325,11 +379,11 @@ js code:
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="s2">&#34;/home&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="32-redirect-at-server-with-location-header">3.2. Redirect at server with <code>Location</code> header</h3>
+</div><h3 id="42-redirect-at-server-with-location-header">4.2. Redirect at server with <code>Location</code> header</h3>
 <p>Learn more: <a href="https://davidzhu.xyz/post/http/001-http-headers/">HTTP Headers - David&rsquo;s Blog</a></p>
-<h3 id="33-redirect-at-server-with-httpredirect-method">3.3. Redirect at server with <code>http.Redirect()</code> method</h3>
+<h3 id="43-redirect-at-server-with-httpredirect-method">4.3. Redirect at server with <code>http.Redirect()</code> method</h3>
 <p>See above <strong>Relative path</strong> section.</p>
-<h2 id="4-parse-form-and-query-string">4. Parse form and query string</h2>
+<h2 id="5-parse-form-and-query-string">5. Parse form and query string</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -343,7 +397,7 @@ js code:
 <p>The <code>Content-Type</code> header can be <code>application/json</code>, <code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, learn more: <a href="https://davidzhu.xyz/post/cs-basics/017-curl/">Curl Basics - David&rsquo;s Blog</a></p>
 <p>How to send form data in <code>application/x-www-form-urlencoded</code> format: <a href="https://davidzhu.xyz/post/js/practice/001-tricks/#4-send-username-and-password-form">Tricks in Javascript - David&rsquo;s Blog</a></p>
 <p>Learn more: <a href="https://pkg.go.dev/net/http#Request.ParseForm">http package - net/http - Go Packages</a></p>
-<h2 id="5-check-the-type-of-the-request">5. Check the type of the request</h2>
+<h2 id="6-check-the-type-of-the-request">6. Check the type of the request</h2>
 <p>When You are starting a HTTP/s server You use either <code>ListenAndServe</code> or <code>ListenAndServeTLS</code> or both together on different ports. If You are using just one of them, then from <code>Listen..</code> it&rsquo;s obvious which scheme request is using and You don&rsquo;t need a way to check and set it. But if You are serving on both HTTP and HTTP/s then You can use <code>request.TLS</code> state. if its <code>nil</code> it means it&rsquo;s HTTP.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

@@ -121,6 +121,52 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/http/004-http-v2-binary-frame/">HTTP 2.0 (Binary Frame, Server Push, Header Compression)</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-11-04 </span>
+      <div class="post-category">
+          <a href="/categories/http/"> http </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Source: Introduction to HTTP/2 | Google Developers
+1. Binary Framing 1.1. Streams, messages, and frames At the core of all performance enhancements of HTTP/2 is the new binary framing layer, which dictates how the HTTP messages are encapsulated and transferred between the client and server.
+The introduction of the new binary framing mechanism changes how the data is exchanged between the client and server. To describe this process, let’s familiarize ourselves with the HTTP/2 terminology:
+    </div>
+    <div class="read-more">
+      <a href="/post/http/004-http-v2-binary-frame/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/http/008-form-post-query-string/">Form Data &amp; Query String</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-11-04 </span>
+      <div class="post-category">
+          <a href="/categories/http/"> http </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. Form data vs query string 1.1. Client side Query string resides in the url:
+1 http://www.blabla.com?a=1&amp;b=2 Form data is sent with the request body. Therefore, when there is sensitive data, we usually put data in the form not the query string. Because the requested URL might show up in Web server logs and browser history/bookmarks which is not a good thing. source
+1.2. Server side 1.2.1. Go web For all requests, ParseForm() parses the raw query from the URL and updates r.
+    </div>
+    <div class="read-more">
+      <a href="/post/http/008-form-post-query-string/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/http/004-http-versions/">HTTP 1.1 vs HTTP 2.0</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-11-03 </span>
@@ -300,52 +346,6 @@ A: I can&rsquo;t see any technical reason why HTTP needs to be completely blocke
     </div>
     <div class="read-more">
       <a href="/post/http/001-http-headers-2/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/012-http-related/">Some HTTP Issues with Go</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-10-29 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/practice/"> practice </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically,
-js code:
-1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground.
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/practice/012-http-related/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/js/practice/001-tricks/">Tricks in Javascript</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-10-28 </span>
-      <div class="post-category">
-          <a href="/categories/javascript/"> javascript </a>
-          <a href="/categories/practice/"> practice </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. click copy 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 &lt;p id=&#34;url-text&#34; style=&#34;display: none&#34;&gt;{{.SharedUrl}}&lt;/p&gt; &lt;button onclick=&#34;copyText()&#34;&gt;share&lt;/button&gt; &lt;script&gt; function copyText() { const copyText = document.getElementById(&#34;url-text&#34;); navigator.clipboard.writeText(copyText.textContent) .then(() =&gt; { alert(&#34;successfully copied&#34;); }) .catch(() =&gt; { alert(&#34;something went wrong&#34;); }); } &lt;/script&gt; 2. preventDefault() event.preventDefault() basically prevents event to fire. In the case of submit event. event.preventDefault() will prevent your form to submit. We normally prevent submit behaviour to check some validation before submitting the form or we need to change values of our input fields or we want to submit using ajax calls.
-    </div>
-    <div class="read-more">
-      <a href="/post/js/practice/001-tricks/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
