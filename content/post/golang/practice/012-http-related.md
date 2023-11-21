@@ -71,7 +71,41 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-## 2. Relative path
+## 2. `r.URL.Path` vs `r.URL.RawPath`
+
+```go
+func main() {
+	u, err := url.Parse("http://example.com/x/xx%20a")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Path:", u.Path)
+	fmt.Println("RawPath:", u.RawPath)
+	fmt.Println("EscapedPath:", u.EscapedPath())
+}
+```
+
+```go
+Path: /x/xx a
+RawPath: 
+EscapedPath: /x/xx%20a
+```
+
+If url changes to "http://example.com/x/xx%2Fa", then will print:
+
+```
+Path: /x/xx/a
+RawPath: /x/xx%2Fa
+EscapedPath: /x/xx%2Fa
+```
+
+In general, code should call `EscapedPath()` instead of reading `u.RawPath` directly. 
+
+Learn more: 
+
+https://pkg.go.dev/net/url#URL.EscapedPath
+
+## 3. Relative path
 
 You can write relative path directly for the endpoint, because the browser know the **Origin**, when you make HTTP request, it knows where should go.
 
@@ -88,9 +122,9 @@ And it's ok to write relative path when redirect in Go code:
 http.Redirect(w, r, "/login", http.StatusFound)
 ```
 
-## 3. Redirection
+## 4. Redirection
 
-### 3.1. Redirect at front end
+### 4.1. Redirect at front end
 
 For redirection, you can use js code to redirect based on the status code passed from server:
 
@@ -108,15 +142,15 @@ if (!response.ok) {
 window.location = "/home"
 ```
 
-### 3.2. Redirect at server with `Location` header
+### 4.2. Redirect at server with `Location` header
 
 Learn more: [HTTP Headers - David's Blog](https://davidzhu.xyz/post/http/001-http-headers/)
 
-### 3.3. Redirect at server with `http.Redirect()` method
+### 4.3. Redirect at server with `http.Redirect()` method
 
 See above **Relative path** section.
 
-## 4. Parse form and query string
+## 5. Parse form and query string
 
 ```go
 func (r *Request) ParseForm() error
@@ -132,7 +166,7 @@ How to send form data in `application/x-www-form-urlencoded` format: [Tricks in 
 
 Learn more: [http package - net/http - Go Packages](https://pkg.go.dev/net/http#Request.ParseForm)
 
-## 5. Check the type of the request
+## 6. Check the type of the request
 
 When You are starting a HTTP/s server You use either `ListenAndServe` or `ListenAndServeTLS` or both together on different ports. If You are using just one of them, then from `Listen..` it's obvious which scheme request is using and You don't need a way to check and set it. But if You are serving on both HTTP and HTTP/s then You can use `request.TLS` state. if its `nil` it means it's HTTP.
 

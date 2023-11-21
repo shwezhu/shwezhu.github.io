@@ -14,7 +14,7 @@ tags:
 
 Python 中的 Modules 就是源文件, 导入 module 也很简单, 就是 `import + file_name`, 如一个源文件 `foo.py`  就是一个 module, 导入这个 module 也很简单即 `import foo`, 然后通过 `foo.sayHello()` 来调用模块 `foo` 里面的函数或类或变量, 
 
- 这里要说个变量 `__name__`, 刚说了导入 module 的方法, 变量 `__name__` 的作用就是当执行此源文件时即 `python foo.py`, `__name__` 的值为 `__main__`, 当我们在另一个源文件如 `test.py` 中导入了 module `foo`, 然后执行 `python test.py`, 此时 `foo.py` 中的 `__name__` 的值为 `foo`, 举例:
+这里要说个变量 `__name__`, 刚说了导入 module 的方法, 变量 `__name__` 的作用就是当执行此源文件时即 `python foo.py`, `__name__` 的值为 `__main__`, 当我们在另一个源文件如 `test.py` 中导入了 module `foo`, 然后执行 `python test.py`, 此时 `foo.py` 中的 `__name__` 的值为 `foo`, 举例:
 
 `foo.py`:
 

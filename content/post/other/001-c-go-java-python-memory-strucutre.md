@@ -11,8 +11,6 @@ tags:
  - other
 ---
 
-声明: 很多知识尤其是GC相关也是刚接触, 里面很可能会有不正确的观点, 会在接下来的学习中不断的修改, 当作自己的笔记, 用质疑的心态去读... 英文部分皆是拷贝的其它文章和官方文档, 链接都在文章末尾, 
-
 ## 1. C
 
 C has three different pools of memory: 
@@ -21,7 +19,7 @@ C has three different pools of memory:
 -  **stack**: local variable storage (automatic, continuous memory).
 - **heap**: dynamic storage (large pool of memory, not allocated in contiguous order).
 
-### 1.1. Static Memory
+### 1.1. Static memory
 
 Static memory persists throughout the entire life of the program, and is usually used to store things like *global* variables, or variables created with the static clause. If a variable is declared *outside* of a function, it is considered global, meaning it is accessible anywhere in the program. Global variables are static, and there is only one copy for the entire program. Inside a function the variable is allocated on the stack. It is also possible to force a variable to be static using the **static** clause. For example, the same variable created inside a function using the static clause would allow it to be stored in static memory.
 
@@ -29,7 +27,7 @@ Static memory persists throughout the entire life of the program, and is usually
 static int theforce;
 ```
 
-### 1.2. Stack Memory
+### 1.2. Stack memory
 
 The *stack* is used to store variables used on the inside of a function (including the `main()` function). It’s a LIFO, “**L**ast-**I**n,-**F**irst-**O**ut”, structure. Every time a function declares a new variable it is “pushed” onto the stack. Then when a function finishes running, all the variables associated with that function on the stack are deleted, and the memory they use is freed up. This leads to the “local” scope of function variables. The stack is a special region of memory, and automatically managed by the CPU – so you don’t have to allocate or deallocate memory. Stack memory is divided into successive frames where each time a function is called, it allocates itself a fresh stack frame.
 
@@ -51,7 +49,7 @@ Oh, and heap memory requires you to use pointers.
 
 在这先讨论一下C和Java的heap和stack, 首先是heap:
 
-C 与 Java对待heap上内容的处理方式可以说是完全不同, 前者必须手动管理而后者完全是GC自动清理, 主要原因还是 Java引入了GC可以自动管理heap上存储的内容, C 的内存结构很简单, 堆栈和静态, 而Java里则在heap里衍生出了constant pool, method area等东西, 具体可以参考我的另一篇文章: [Java内存结构](https://davidzhu.xyz/2023/05/14/Java/Basics/Memory-Structure/), 弄明白了Java里的概念, 自然可以区分对比C, 
+C 与 Java对待heap上内容的处理方式可以说是完全不同, 前者必须手动管理而后者完全是GC自动清理, 主要原因还是 Java引入了GC可以自动管理heap上存储的内容, C 的内存结构很简单, 堆栈和静态, 而Java里则在heap里衍生出了constant pool, method area等东西, 具体可以参考我的另一篇文章: [Java内存结构](https://davidzhu.xyz/post/java/basics/005-memory-structure/), 弄明白了Java里的概念, 自然可以区分对比C, 
 
 相对C, Java不仅有 GC 而且引入了 reference 的概念, 有人可能会说 C 里不也有引用吗那个`&`, 不好意思那是C++的, 
 
@@ -80,7 +78,7 @@ The storage location does have an effect on writing efficient programs. When pos
 
 In the current compilers, if a variable has its address taken, that variable is a candidate for allocation on the heap. However, a basic *escape analysis* recognizes some cases when such variables will not live past the return from the function and can reside on the stack. 
 
-当然go里也有new关键字, 就像C里的malloc, new在heap上创建struct, 然后返回其地址, 这里也要说一下, 不知道你发现没, heap都是由GC管理, stack即都是线程或者函数stack frame所在的地方, 当函数返回时自动被清理, 具体细节关于Golang内存结构, 因为太多了, 打算专门记录几篇文章, 不在这讨论了, 
+当然go里也有new关键字, 就像C里的malloc, new在heap上创建struct, 然后返回其地址, 这里也要说一下, heap都是由GC管理, stack即都是线程或者函数stack frame所在的地方, 当函数返回时自动被清理, 具体细节关于Golang内存结构, 因为太多了, 打算专门记录几篇文章, 不在这讨论了, 
 
 [1]:  Java, Python都是对象在heap, 指向对象的变量又叫引用reference, 存储在stack上
 
@@ -122,7 +120,7 @@ Since CPython is the reference implementation, all new rules and specifications 
 
 In this article, we will discuss the internals of memory management of CPython. Please note: Other implementations, such as *Jython* and *IronPython*, may implement memory management in a different way.
 
-As CPython is implemented in the C programming language, let’s first understand two important functions related to memory management in C: `malloc` and `free`! 这个已经知道是啥了, 就不放到这了, 原文链接在下面, 
+As CPython is implemented in the C programming language, let’s first understand two important functions related to memory management in C: `malloc` and `free`! 
 
 ### 4.2. Variables in Python
 
@@ -140,7 +138,7 @@ As discussed earlier, when the above code is executed, CPython internally create
 
 We can access the integer object in the Python program using the variable `a`.
 
-> 读到这可以看出Java还不是真正的万物皆对象(如果想在heap上创建primitive对象 需要Integer声明创建), 但Python就是所有的东西都是对象, 即使是一个int类型, 甚至一个函数也是个对象, 另外Java与python的GC(Python中不叫GC叫Python memory manager)对对象的管理方式基本上是一样的, 即分为引用和对象两部分, 引用在stack, 对象在heap, 不像c++那种在函数里声明的就是局部对象(不是malloc和new), 对于Java与python来说无论你在哪创建一个对象, 他们都会被创建到heap上, 且根据引用计数来判断对象是否reachable, 然后判断是否回收对象, 所以你完全可以返回一个“局部对象”的引用, 但C++中, 肯定就不行了, 这会造成野指针问题, 
+> 读到这可以看出Java还不是真正的万物皆对象 (如果想在heap上创建primitive对象 需要Integer声明创建), 但Python就是所有的东西都是对象, 即使是一个int类型, 甚至一个函数也是个对象, 另外Java与python的GC (Python中不叫GC叫Python memory manager)对对象的管理方式基本上是一样的, 即分为引用和对象两部分, 引用在stack, 对象在heap, 不像c++那种在函数里声明的就是局部对象(除malloc和new), 对于Java与python来说无论你在哪创建一个对象, 他们都会被创建到heap上, 且根据引用计数来判断对象是否reachable, 然后判断是否回收对象, 所以你完全可以返回一个“局部对象”的引用, 但C++中, 肯定就不行了, 这会造成野指针问题, 
 
 Let's assign this integer object to another variable `b`:
 
@@ -197,28 +195,28 @@ Hence, CPython introduces various techniques to reduce the number of times we ha
 
 关于Golang的讨论请参考:[Golang值传递分析之传递指针的规则介绍(Methods, Functions & interface value) | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/16/Golang/Basics/methods-pass-by-value/?highlight=%E5%80%BC%E4%BC%A0%E9%80%92)
 
-Java, Golang, C 都是 pass by value, C 的不再讨论, 在这说一下Java函数传reference的时候传的是reference的值, 即地址:
+Python, Java, Golang, C 都是 pass by value, 只是 Java 有 reference 的的概念, 当 reference 作为参数时, 被拷贝的仍是 reference 的value, 即地址, 给我们一个错觉即java是 "pass by reference not value":
 
 ```java
 void foo(Person p) {...}
 
 // main()
 Person jack = new Person(18, “jack”);
-foo(p);
+foo(jack); // 创建另一个 reference p, 与 reference jack 指向同一个对象, 即 passed by value
 ```
 
-变量`jack`存的是对象`Person(18, “jack”)`在heap上的地址, 假入是`0x7D`, 那变量`p`的值也是`0x7D`, 如果在函数`foo`中我们执行如下:
+变量 `jack` 是个reference, 它指向的对象 `Person(18, “jack”)` 在heap上的地址是 `0x7D`: 
 
 ```java
 void foo(Person p) {
-  p.name = "John"
-  p = new Person(17, "AK")
+  p.name = "John" // 修改了 reference p 所指对象的 name 属性
+  p = new Person(17, "AK")	// reference p 指向了另一个对象, 并不会影响reference jack
 }
 ```
 
-调用了函数`foo`后, 变量`jack`的值变了吗? 肯定没有, jack的值依然是`Person(18, “jack”)`的地址`0x7D`, 谁变了呢? 答案是`Person(18, “jack”)`, 该对象的name属性变成了`John`, 而变了`p`只是从最初的地址即`0x7D`变成了另一个对象`Person(17, "AK")`的地址, 
+所以在这个函数调用中, 最初的那个对象, 即 `Person jack = new Person(18, “jack”)`  的 name 属性改变了, 以及 reference `p` 的值改变了, 这都与 reference `jack` 无关, `jack` 指向的依然是之前的那个对象, 
 
-虽然Golang也是值传递, 但和Java还很不一样, Golang的表现更像C, 因为Golang里没有对象和引用的概念, 只有变量和其value, 所以你传递一个变量的时候, 就是把那个变量的value当参数传递, 而不是所指向对象的地址, 至于该变量是分配在stack上还是heap上, 在上面介绍Golang的时候我们已经说过, 不再赘述, 
+虽然Golang也是值传递, 但和Java还很不一样, Golang的表现更像C, **因为Golang里没有对象和引用的概念**, 只有 variable 和 value: 
 
 ```go
 type Person struct {
@@ -246,9 +244,11 @@ foo1: 0x14000114030
 foo2: 0x14000114018
 ```
 
-最后看一下python, 关于python也可以认为是pass by value, 行为和Java完全一样, 即传递的都是引用的值(对象的地址), 再强调一遍在python所有的值都是对象, 变量就是引用即存储对象的地址, 
+最后看一下 python, 关于 python 也可以认为是 pass by value, 行为和Java完全一样, 即传递的都是引用的值(对象的地址), 再强调一遍在python所有的值都是对象, 变量就是引用即存储对象的地址, 
 
 - If you pass a *mutable* object into a method, the method gets a reference to that same object and you can mutate it to your heart's delight, but if you rebind the reference in the method, the outer scope will know nothing about it, and after you're done, the outer reference will still point at the original object. 
+  - integer, str are immutable objects
+
 - If you pass an *immutable* object to a method, you still can't rebind the outer reference, and you can't even mutate the object.
 
 ```shell
