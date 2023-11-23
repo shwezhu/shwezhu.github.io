@@ -54,7 +54,7 @@ js code:
 js code:
 1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground."><meta itemprop="datePublished" content="2023-10-29T11:30:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-29T11:30:50+00:00" />
-<meta itemprop="wordCount" content="756">
+<meta itemprop="wordCount" content="763">
 <meta itemprop="keywords" content="golang,http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Some HTTP Issues with Go"/>
 <meta name="twitter:description" content="1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or &#43; automatically,
@@ -323,6 +323,7 @@ js code:
 </div><p>In general, code should call <code>EscapedPath()</code> instead of reading <code>u.RawPath</code> directly.</p>
 <p>Learn more:</p>
 <p><a href="https://pkg.go.dev/net/url#URL.EscapedPath">https://pkg.go.dev/net/url#URL.EscapedPath</a></p>
+<p><a href="https://davidzhu.xyz/post/http/009-url-encoding/">URL Encoding (Percent Encoding) - David&rsquo;s Blog</a></p>
 <h2 id="3-relative-path">3. Relative path</h2>
 <p>You can write relative path directly for the endpoint, because the browser know the <strong>Origin</strong>, when you make HTTP request, it knows where should go.</p>
 <div class="highlight"><div class="chroma">
