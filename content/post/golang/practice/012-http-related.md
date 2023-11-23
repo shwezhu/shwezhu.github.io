@@ -105,6 +105,8 @@ Learn more:
 
 https://pkg.go.dev/net/url#URL.EscapedPath
 
+[URL Encoding (Percent Encoding) - David's Blog](https://davidzhu.xyz/post/http/009-url-encoding/)
+
 ## 3. Relative path
 
 You can write relative path directly for the endpoint, because the browser know the **Origin**, when you make HTTP request, it knows where should go.
