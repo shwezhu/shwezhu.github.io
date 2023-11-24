@@ -1,5 +1,5 @@
 ---
-title: Python 
+title: Variable Parameter Python
 date: 2023-09-07 22:51:26
 categories:
   - python
