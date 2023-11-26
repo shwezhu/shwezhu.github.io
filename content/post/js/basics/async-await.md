@@ -141,6 +141,7 @@ fetch('https://example.com')
 
 - 每个 Promise 对象都有一个 `then()` 和 `catch()` 方法, 
 - 每个异步函数都会返回一个 promise,  explicitly or implicitly, 
+- ` catch`  会捕获 之前 所有promise 中发生的异常, 因此只用在最后调用一次就好了
 
 所以上面我们可以写成 `fetch().then(...)` 的原因是 `fetch()` 是个异步函数, 所以它也会返回一个 promise 对象, 因此 `fetch()` 后面的`.then()` 调用的其实是 `fetch()` 所返回的 promise 对象的 `then()` 函数,  
 

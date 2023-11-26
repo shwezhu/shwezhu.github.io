@@ -76,15 +76,6 @@ sayHello()
 
 > As of right now ES6 import, export is [always compiled to CommonJS](https://babeljs.io/en/repl#?browsers=&build=&builtIns=false&spec=false&loose=false&code_lz=JYWwDg9gTgLgBAbzgCwKYBt0QIxwL5wBmUEIcA5AHQD0amE5AUIwMYQB2AzhOqpVgHMAFHSzYhASglwgA&debug=false&forceAllTransforms=false&shippedProposals=false&circleciRepo=&evaluate=false&fileSize=false&timeTravel=false&sourceType=module&lineWrap=true&presets=es2015%2Creact%2Cstage-2&prettier=false&targets=&version=7.8.4&externalPlugins=), so there is **no benefit** using one or other. Although usage of ES6 is recommended since it should be advantageous when native support from browsers released. The reason being, you can import partials from one file while with CommonJS you have to require all of the file. [source](https://stackoverflow.com/a/60331886/16317008)
 
-### 2.1. Advantages of ES Modules over CommonJS
-
-1. Static Analysis: ES modules are designed to be statically analyzable, while CommonJS modules are not. This means that the import and export statements can be analyzed at build time, enabling tools to optimize the code and generate smaller, more efficient bundles.
-2. Native Support in Browsers: ES modules are natively supported in modern browsers, while CommonJS modules are not. This means that there's no need for additional build tools or plugins to use ES modules in the browser.
-3. Better Performance: ES modules are designed to be loaded statically, while CommonJS modules are mainly loaded dynamically and synchronously. This can lead to slower performance and a blocking of the main thread. Static analysis refers to the process of analyzing code without executing it, and dynamic imports introduce runtime behavior into a module system. This means that the exact module that will be imported cannot be determined until the code is executed, making it difficult to analyze the module dependencies and relationships ahead of time (AOT).
-4. Improved Code Organization: ES modules provide a way to specify the dependencies between different parts of your code, making it easier to understand and maintain your codebase.
-
-Source: https://dev.to/costamatheus97/es-modules-and-commonjs-an-overview-1i4b
-
 ## 3. ES2015 New Features
 
 - ECMAScript 2015 introduces two new ways of declaring variables: `let` and `const`. 

@@ -21,7 +21,7 @@ Recall a paragraph which introduces js engine:
 
 ### 2. npm
 
-just like pip for Python, npm is a packages manager for js, 
+Just like pip for Python, npm is a packages manager for js, 
 
 ```shell
 npm init
@@ -29,8 +29,6 @@ npm install xxx --save
 ```
 
 ### 3. Install
-
-One way:
 
 ```shell
 # which will insatll both nodejs and npm
@@ -49,7 +47,7 @@ This package will install:
 
 test: `npm --version`, `node --version` 
 
-### 3.1. Install on IDEA
+### 4. Install on IDEA
 
 Go to Settings->Plugins,  search and install `Node.js`, then the code below will work fine:
 
