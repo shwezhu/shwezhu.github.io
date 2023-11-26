@@ -48,7 +48,7 @@
 <meta itemprop="name" content="Promise Object in Javascript">
 <meta itemprop="description" content="1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise Essentially, a promise"><meta itemprop="datePublished" content="2023-10-13T11:26:29+00:00" />
 <meta itemprop="dateModified" content="2023-10-13T11:26:29+00:00" />
-<meta itemprop="wordCount" content="2104">
+<meta itemprop="wordCount" content="2140">
 <meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Promise Object in Javascript"/>
 <meta name="twitter:description" content="1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise Essentially, a promise"/>
@@ -347,6 +347,7 @@
 <ul>
 <li>每个 Promise 对象都有一个 <code>then()</code> 和 <code>catch()</code> 方法,</li>
 <li>每个异步函数都会返回一个 promise,  explicitly or implicitly,</li>
+<li><code> catch</code>  会捕获 之前 所有promise 中发生的异常, 因此只用在最后调用一次就好了</li>
 </ul>
 <p>所以上面我们可以写成 <code>fetch().then(...)</code> 的原因是 <code>fetch()</code> 是个异步函数, 所以它也会返回一个 promise 对象, 因此 <code>fetch()</code> 后面的<code>.then()</code> 调用的其实是 <code>fetch()</code> 所返回的 promise 对象的 <code>then()</code> 函数,</p>
 <p>另外需要注意的是, 调用 <code>fetch()</code> 后, <code>fetch()</code> <strong>立即</strong>就返回了个 promise 对象, 只是这时该 promise 对象的状态为 pending, 当 <code>fetch()</code> 的操作完成, 即当 <code>resolve()</code> 或 <code>reject()</code> 被调用的时候, 该 promise 对象的状态 变为 not pending, 此时此 promise 的函数 <code>then()</code> 将会被自动调用,</p>
