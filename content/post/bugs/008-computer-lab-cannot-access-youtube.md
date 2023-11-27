@@ -63,5 +63,8 @@ It's possible the DNS server you queried was having a problem and couldn't reply
 
 However, given that you did this from a "public computer," the most likely explanation is that **your DNS lookup was blocked by the network's firewall**. It's common for network administrators to require that DNS lookups originating from nodes on the internal network be done using approved DNS servers. These can either be DNS servers under the administrator's control, or specific public DNS servers selected by the admin.
 
+突然想到 DNS 缓存在 Chrome 上也有备份, 于是去查了一下是不是可以修改 DNS server 在 Chrome 上, (在电脑上没有管理员权限), 
 
+真的有, 具体参考(privacy-security -> Advanced -> Use Secure DNS): [How to Change DNS Server in Google Chrome on Computer and Mobile? - MiniTool](https://www.minitool.com/news/how-to-change-dns-server-in-google-chrome.html)
 
+然后可以在Chrome上通过域名访问我的网站了, 终于不用输入 IP 了每次, nnd
