@@ -48,7 +48,7 @@
 <meta itemprop="name" content="排查实验室电脑无法访问一些网站">
 <meta itemprop="description" content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时, 首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需"><meta itemprop="datePublished" content="2023-11-22T21:43:22+00:00" />
 <meta itemprop="dateModified" content="2023-11-22T21:43:22+00:00" />
-<meta itemprop="wordCount" content="405">
+<meta itemprop="wordCount" content="571">
 <meta itemprop="keywords" content="bugs,networking," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="排查实验室电脑无法访问一些网站"/>
 <meta name="twitter:description" content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时, 首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需"/>
@@ -188,6 +188,32 @@
 </div>
 </div><p>可以看到被重定向到了谷歌页面, 当时在实验室也是这种情况, 查了一下, 这确实是正确的地址, 只是<a href="https://stackoverflow.com/questions/5142030/why-does-the-resolved-ip-of-youtube-com-direct-to-google-com">谷歌给重定向</a>了, 所以不是DNS的问题, 那应该就是防火墙的问题, 下次去实验室再看看,</p>
 <p>另外上面 nskookup 返回的是 <a href="https://davidzhu.xyz/post/networking/006-commands-in-network/">Non-authoritative answer</a>, 意思是 ip 地址不是由该域名的 NS 服务器返回的, 而是从 DNS cache获取的, 所以 Non-authoritative answer 并不是代表不安全或者不可靠, 但可能不是最新的, 比如你的域名刚更新了 NS server, 加了层 Cloudflare 的 https 加密代理, 即 <code>your_domain-&gt;proxy-ip-&gt;your_ip</code>, 而学校的 DNS cache 里缓存的却是你之前的 ip, 即 <code>your_domain -&gt; your_ip</code>, 那代理就不会生效,</p>
+<hr>
+<p>去实验室查了一下我域名的NS, 竟然 time-out:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">c: \Users\student&gt;nslookup shaowenzhu.top
+</span></span><span class="line"><span class="cl">Server: Unknown
+</span></span><span class="line"><span class="cl">Address:192.168.102.1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">DNS request timed out.
+</span></span><span class="line"><span class="cl">timeout was 2 seconds.
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查了一下, 看到了一个与我<a href="https://superuser.com/questions/1303128/why-does-nslookup-return-dns-request-timed-out">相似的问题</a>:</p>
+<p><em>DNS request timed out</em> means NSLookup submitted the query to the DNS server, but did not get a response.</p>
+<p>It&rsquo;s possible the DNS server you queried was having a problem and couldn&rsquo;t reply. Network errors could be to blame as well.</p>
+<p>However, given that you did this from a &ldquo;public computer,&rdquo; the most likely explanation is that <strong>your DNS lookup was blocked by the network&rsquo;s firewall</strong>. It&rsquo;s common for network administrators to require that DNS lookups originating from nodes on the internal network be done using approved DNS servers. These can either be DNS servers under the administrator&rsquo;s control, or specific public DNS servers selected by the admin.</p>
 
     </div>
 
