@@ -1,11 +1,11 @@
 ---
-title: 解决 npm 无法安装 packages 到本地文件夹问题
+title: npm总是安装package到全局问题 (已解决)
 date: 2023-06-27 11:24:35
 categories:
  - bugs
 tags:
  - bugs
- - nodejs
+ - javascript
 ---
 
 使用 `npm install xxx`, 然后总是安装到 `~/node_modules/`, 查了好多, 有的说用 `npm config list   `查看 global 的值, 改为 false 什么, 都没有用, 

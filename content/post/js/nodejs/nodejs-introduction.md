@@ -6,7 +6,6 @@ categories:
   - nodejs
 tags:
   - javascript
-  - nodejs
 ---
 
 ### 1. Intro
@@ -45,7 +44,10 @@ This package will install:
 •	npm v8.15.0 to /usr/local/bin/npm
 ```
 
-test: `npm --version`, `node --version` 
+```
+npm -v
+node -v
+```
 
 ### 4. Install on IDEA
 
