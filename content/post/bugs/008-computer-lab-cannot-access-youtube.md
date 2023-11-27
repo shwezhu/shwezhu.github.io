@@ -41,3 +41,27 @@ Resolving www.google.com (www.google.com)... 142.250.80.36
 
 另外上面 nskookup 返回的是 [Non-authoritative answer](https://davidzhu.xyz/post/networking/006-commands-in-network/), 意思是 ip 地址不是由该域名的 NS 服务器返回的, 而是从 DNS cache获取的, 所以 Non-authoritative answer 并不是代表不安全或者不可靠, 但可能不是最新的, 比如你的域名刚更新了 NS server, 加了层 Cloudflare 的 https 加密代理, 即 `your_domain->proxy-ip->your_ip`, 而学校的 DNS cache 里缓存的却是你之前的 ip, 即 `your_domain -> your_ip`, 那代理就不会生效, 
 
+---
+
+去实验室查了一下我域名的NS, 竟然 time-out:
+
+```
+c: \Users\student>nslookup shaowenzhu.top
+Server: Unknown
+Address:192.168.102.1
+
+DNS request timed out.
+timeout was 2 seconds.
+...
+```
+
+查了一下, 看到了一个与我[相似的问题](https://superuser.com/questions/1303128/why-does-nslookup-return-dns-request-timed-out):
+
+*DNS request timed out* means NSLookup submitted the query to the DNS server, but did not get a response.
+
+It's possible the DNS server you queried was having a problem and couldn't reply. Network errors could be to blame as well.
+
+However, given that you did this from a "public computer," the most likely explanation is that **your DNS lookup was blocked by the network's firewall**. It's common for network administrators to require that DNS lookups originating from nodes on the internal network be done using approved DNS servers. These can either be DNS servers under the administrator's control, or specific public DNS servers selected by the admin.
+
+
+
