@@ -20,9 +20,9 @@ A JavaScript object has properties associated with it. A property of an object c
 
 ## Data Types in JS
 
-JS的Types可以分为两大类`primitive values` and `objects`.
+类型可以分为两大类 `primitive values` and `objects` (和 Java 相似, Java 的是 [primitive types 和 reference type](https://davidzhu.xyz/post/java/basics/006-variables-vs-references/))
 
-**1. Primitive values** (immutable datum represented directly at the lowest level of the language)
+**1. Primitive values** (**immutable datum** represented directly at the lowest level of the language)
 
 + Boolean type
 

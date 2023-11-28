@@ -11,6 +11,16 @@ tags:
  - other
 ---
 
+## 0. In short
+
+
+
+
+
+
+
+
+
 ## 1. C
 
 C has three different pools of memory: 
@@ -84,7 +94,7 @@ In the current compilers, if a variable has its address taken, that variable is 
 
 ## 3. Java
 
-这个好写, 之前研究过, 上面也与C进行对比了, 比较懒: [Java内存结构 | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/14/Java/Basics/Memory-Structure/)
+这个好写, 之前研究过, 上面也与C进行对比了, 比较懒: [Java中变量(Variables)和引用(References)的区别 - David's Blog](https://davidzhu.xyz/post/java/basics/006-variables-vs-references/)
 
 ## 4. Python
 
@@ -195,7 +205,7 @@ Hence, CPython introduces various techniques to reduce the number of times we ha
 
 关于Golang的讨论请参考:[Golang值传递分析之传递指针的规则介绍(Methods, Functions & interface value) | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/16/Golang/Basics/methods-pass-by-value/?highlight=%E5%80%BC%E4%BC%A0%E9%80%92)
 
-Python, Java, Golang, C 都是 pass by value, 只是 Java 有 reference 的的概念, 当 reference 作为参数时, 被拷贝的仍是 reference 的value, 即地址, 给我们一个错觉即java是 "pass by reference not value":
+Python, Java, Golang, C, JS 都是 pass by value, 只是 Java 有 reference 的的概念, 当 reference 作为参数时, 被拷贝的仍是 reference 的value, 即地址, 给我们一个错觉即java是 "pass by reference not value":
 
 ```java
 void foo(Person p) {...}

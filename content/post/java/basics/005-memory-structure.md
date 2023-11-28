@@ -8,7 +8,7 @@ tags:
  - Java
 ---
 
-请先阅读(若链接无效可以搜索站内文章): [Java中变量(Variables)和引用(References)的区别 | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/14/Java/Basics/Variables-vs-References/)
+请先阅读(若链接无效可以搜索站内文章): [Java中变量(Variables)和引用(References)的区别 - David's Blog](https://davidzhu.xyz/post/java/basics/006-variables-vs-references/)
 
 ## 1. JVM Run-Time Data Areas
 
