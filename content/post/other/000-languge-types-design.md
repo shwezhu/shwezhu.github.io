@@ -11,7 +11,13 @@ tags:
  - javascript
 ---
 
-## 1. Statically vs dynamically typing
+## 1. Compiled vs interpreted language
+
+Programming languages are for humans to read and understand. The program (source code) must be translated into machine language so that the computer can execute the program. **The time when this translation occurs** depends on whether the programming language is a **compiled language** or an **interpreted language**. Instead of translating the source code into machine language before the executable file is created, an interpreter converts the source code into machine language at the same time the program runs. So you can't say a language doesn’t have compilation step, because any language needs to be translated to machine code.  
+
+## 2. Statically vs dynamically typing
+
+Also know as statically/dynamically typed, **static/dynamic language**. 
 
 Static Typing:
 
@@ -42,7 +48,7 @@ str = "Hello" # it is a string
 str = 5       # now it is an integer; perfectly OK
 ```
 
-## 2. Strong vs weak typing
+## 3. Strong vs weak typing
 
 The strong/weak typing in a language is related to **implicit type conversions** (partly taken from @Dario's answer):
 
@@ -64,7 +70,7 @@ Static typing allows for checking type correctness at compile time. Statically t
 
 Source: https://stackoverflow.com/a/34004765/16317008
 
-## 3. Conclusion
+## 4. Conclusion
 
 Dynamically typing languages (where type checking happens at run time) can also be strongly typed (Python for example). 
 
