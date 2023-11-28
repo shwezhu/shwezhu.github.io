@@ -29,7 +29,7 @@ And you will get instructions for updating your nameserver of your domain. After
 
 ![b](/007-cloudflare-tls-proxy/b.png)
 
-> **Note:** choose full mode, otherwise you may get [ERR_TOO_MANY_REDIRECTS](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/) when access your website on your browser. 
+> **Note:** choose `full mode`, don't use `flexbile mode`, otherwise you **probably would** get [ERR_TOO_MANY_REDIRECTS](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/) when access your website. 
 
 ### 2.2. Install TLS certificate
 
@@ -40,6 +40,8 @@ Create `cert.pem` and `cert.key` on your server and copy the corresponding file 
 ```
 client <----tls-1----> cloudflare <----tls-2----> your server
 ```
+
+> So you cannot login your server with `ssh user@your_domain` any more.
 
 The generated two files `cert.pem` and `cert.key` is used for encryption between your server and Cloudflare. 
 
@@ -65,6 +67,29 @@ func main() {
 
 Learn more: https://luyuhuang.tech/2020/06/03/cloudflare-free-https.html
 
-> After you config this, the DNS needs time to take effect (you change the nameservers of your domain to Cloudfalre from the defatult nameservers, this needs time to take effect) 
+> After config this, the DNS needs time to take effect (you change the nameservers of your domain to Cloudfalre from the defatult nameservers, this needs time to take effect) 
 >
-> If you still cannot have https or always cannot access your website with https and the cloudflare displays your website is active on their server, then you may try if your server listening 443 port and try to clear the DNS cache of your client computer (chrome + system DNS cache). Learn more: [DNS Concepts (NameServer(NS), DNS Records and Caching) - David's Blog](https://davidzhu.xyz/post/networking/002-dns-basics/)
+> If there still no HTTPS connection but the cloudflare displays your website **is active** on their service, you may try to check if your server is listening on 443 port and try to flush the DNS cache of your client computer (chrome + system DNS cache). Learn more: [DNS Concepts (NameServer(NS), DNS Records and Caching) - David's Blog](https://davidzhu.xyz/post/networking/002-dns-basics/)
+
+BTW, you can check if your domain is proxied by the Cloudflare with nslookup command, which will get the `A Record` by default (IPv4) address of your domain, but in this case, with Cloudfalre proxy, you should get the ip of Cloudfalre Name Server. 
+
+```shell
+❯ nslookup shaowenzhu.top
+Non-authoritative answer:
+Name:	shaowenzhu.top
+Address: 172.67.171.207 # not my domain's real ip, it's Cloudfalre
+Name:	shaowenzhu.top
+Address: 104.21.47.185 # not my domain's real ip, it's Cloudfalre
+
+❯ nslookup -type=soa davidzhu.xyz
+Authoritative answers can be found from:
+davidzhu.xyz	nameserver = ns1.dnsowl.com.
+davidzhu.xyz	nameserver = ns2.dnsowl.com.
+davidzhu.xyz	nameserver = ns3.dnsowl.com.
+
+# your domain's real ip
+❯ nslookup davidzhu.xyz ns1.dnsowl.com
+Name:	davidzhu.xyz
+Address: 185.199.108.153
+```
+
