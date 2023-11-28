@@ -51,7 +51,7 @@
 <meta itemprop="description" content="1. Web crawler A Web crawler, sometimes called a spider or spiderbot and often shortened to crawler, is an Internet bot that systematically browses the World Wide Web and that is typically operated by search engines for the purpose of Web indexing (web spidering). Web crawler
 2. Headless browser A headless browser is a web browser that operates without a graphical user interface (GUI). It runs in the background and interacts with web pages programmatically, just like a regular browser, but without displaying the web page to the user."><meta itemprop="datePublished" content="2023-11-26T19:29:35+00:00" />
 <meta itemprop="dateModified" content="2023-11-26T19:29:35+00:00" />
-<meta itemprop="wordCount" content="173">
+<meta itemprop="wordCount" content="584">
 <meta itemprop="keywords" content="crawler," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Basic Concepts"/>
 <meta name="twitter:description" content="1. Web crawler A Web crawler, sometimes called a spider or spiderbot and often shortened to crawler, is an Internet bot that systematically browses the World Wide Web and that is typically operated by search engines for the purpose of Web indexing (web spidering). Web crawler
@@ -149,7 +149,9 @@
         <li><a href="#1-web-crawler">1. Web crawler</a></li>
         <li><a href="#2-headless-browser">2. Headless browser</a></li>
         <li><a href="#3-playwright-library">3. Playwright library</a></li>
-        <li><a href="#4">4.</a></li>
+        <li><a href="#4-javascript-rendering">4. JavaScript rendering</a></li>
+        <li><a href="#5-anti-scraping">5. Anti-Scraping</a></li>
+        <li><a href="#6-is-there-an-easy-way-to-tell-if-a-website-will-allow-scrapers-or-not">6. Is there an easy way to tell if a website will allow scrapers or not?</a></li>
       </ul>
     </li>
   </ul>
@@ -166,7 +168,36 @@
 <blockquote>
 <p><em>Playwright</em> is a framework for Web Testing and Automation. It allows testing Chromium, Firefox and WebKit with a single API.  <a href="https://github.com/microsoft/playwright">microsoft/playwright</a></p>
 </blockquote>
-<h2 id="4">4.</h2>
+<h2 id="4-javascript-rendering">4. JavaScript rendering</h2>
+<p>JavaScript rendering is the process of executing JavaScript on a page to make changes in the page&rsquo;s structure or content. It&rsquo;s also called client-side rendering, the opposite of server-side rendering. Some modern websites render on the client, some on the server and many cutting edge websites render some things on the server and other things on the client.</p>
+<p>Javascript uses the <strong>document object model (DOM)</strong> to manipulate the DOM elements. <strong>Rendering</strong> refers to showing the output in the browser.</p>
+<p>Learn more:</p>
+<ul>
+<li>
+<p><a href="https://www.educative.io/answers/what-is-javascript-rendering">What is JavaScript rendering?</a></p>
+</li>
+<li>
+<p><a href="https://crawlee.dev/docs/guides/javascript-rendering">JavaScript rendering | Crawlee</a></p>
+</li>
+</ul>
+<h2 id="5-anti-scraping">5. Anti-Scraping</h2>
+<p>It refers to all techniques, tools, and approaches to protect online data against scraping. In other words, anti-scraping makes it more difficult to automatically extract data from a web page. Specifically, <strong>it&rsquo;s about identifying and blocking requests from bots or malicious users</strong>.</p>
+<p>Learn more: <a href="https://www.zenrows.com/blog/anti-scraping#user-behavior-analysis">7 Anti-Scraping Techniques You Need to Know - ZenRows</a></p>
+<h2 id="6-is-there-an-easy-way-to-tell-if-a-website-will-allow-scrapers-or-not">6. Is there an easy way to tell if a website will allow scrapers or not?</h2>
+<p>To find out if the website allows scraping then check out:</p>
+<ul>
+<li><strong>Robots.txt file:</strong> This will say which pages can you access with a scraper.</li>
+<li><strong>Terms &amp; Conditions:</strong> Their T&amp;Cs will normally say if they permit scraping, programmatic access, etc.</li>
+<li><strong>Presence of Anti-Bot Protection:</strong> If you are getting ban pages from Cloudflare, Distill Network, Imperva, DataDome, etc. then it is highly likely that the website doesn&rsquo;t want you to scrape them.</li>
+</ul>
+<p>If you are getting blocked but still want to scrape the website then you can do the following:</p>
+<ul>
+<li><strong>User-Agents &amp; Headers:</strong> You need to use fake user-agents when scraping as most HTTP clients clearly identify themselves by default, giving you away as a scraper. Better yet you should use full fake browser headers that match what a real browser should send to a website. More about <a href="https://scrapeops.io/web-scraping-playbook/web-scraping-guide-header-user-agents/">how to optimize and generate browser headers here</a>.</li>
+<li><strong>Rotating Proxies:</strong> You should send your requests via a rotating proxy pool that will make it harder for the website to detect you as a scraper. Residential &amp; Mobile proxies are better than datacenter proxies but are a lot more expensive. <a href="https://scrapeops.io/proxy-providers/comparison/">You can compare proxy provider plans here</a>.</li>
+<li><strong>Fortified Headless Browser:</strong> Depending on the anti-bot protection the website is using you make need to use a fortified headless browser that can solve its JS challenges without giving its identity away. Your options include the <a href="https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth">Puppeteer stealth plugin</a> and <a href="https://github.com/ultrafunkamsterdam/undetected-chromedriver">Selenium undetected-chromedriver</a>.</li>
+</ul>
+<p>Wrote more about it here <a href="https://scrapeops.io/web-scraping-playbook/web-scraping-without-getting-blocked/">Guide to Web Scraping Without Getting Blocked</a>.</p>
+<p>Learn more: <a href="https://www.reddit.com/r/webscraping/comments/xvqd6r/comment/ir4m0xx/?utm_source=share&amp;utm_medium=web2x&amp;context=3">https://www.reddit.com/r/webscraping/comments/xvqd6r/comment/ir4m0xx/?utm_source=share&amp;utm_medium=web2x&amp;context=3</a></p>
 
     </div>
 
@@ -190,7 +221,7 @@
           <a href="/tags/crawler/">crawler</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/crawler/002-clawlee-get-started/">
+        <a class="prev" href="/post/crawler/003-clawlee-get-started/">
             <i class="iconfont icon-left"></i>
             <span class="prev-text nav-default">Clawlee Library - Get Started</span>
             <span class="prev-text nav-mobile">Prev</span>

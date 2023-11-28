@@ -57,7 +57,7 @@ There are two steps to enable end-to-end encryption with Cloudflare.:
 Add your domain to Cloudflare Create and install TLS certificate to your server 1.1. Add your domain to Cloudflare Go to this website: https://dash.cloudflare.com/
 And you will get instructions for updating your nameserver of your domain."><meta itemprop="datePublished" content="2023-11-15T20:09:22+00:00" />
 <meta itemprop="dateModified" content="2023-11-15T20:09:22+00:00" />
-<meta itemprop="wordCount" content="341">
+<meta itemprop="wordCount" content="473">
 <meta itemprop="keywords" content="bugs,docker,golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Coudflare TLS encryption 520 Error Code &amp; too Many Redirections"/>
 <meta name="twitter:description" content="1. Enable end-to-end encryption with Cloudflare Getting a official TLS certificate is too expensive, so I decide to use Cloudflare TLS proxy to enable TLS connection between the client and my server.
@@ -180,7 +180,7 @@ And you will get instructions for updating your nameserver of your domain."/>
 <p>And you will get instructions for updating your nameserver of your domain. After change your nameserver, waite about one hour, your site will be <strong>active</strong> on Cloudflare. Then you can choose the TLS encryption mode:</p>
 <p><img src="/007-cloudflare-tls-proxy/b.png" alt="b"></p>
 <blockquote>
-<p><strong>Note:</strong> choose full mode, otherwise you may get <a href="https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/">ERR_TOO_MANY_REDIRECTS</a> when access your website on your browser.</p>
+<p><strong>Note:</strong> choose <code>full mode</code>, don&rsquo;t use <code>flexbile mode</code>, otherwise you <strong>probably would</strong> get <a href="https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/">ERR_TOO_MANY_REDIRECTS</a> when access your website.</p>
 </blockquote>
 <h3 id="22-install-tls-certificate">2.2. Install TLS certificate</h3>
 <p><img src="/007-cloudflare-tls-proxy/c.png" alt="c"></p>
@@ -193,7 +193,10 @@ And you will get instructions for updating your nameserver of your domain."/>
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">client &lt;----tls-1----&gt; cloudflare &lt;----tls-2----&gt; your server
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>The generated two files <code>cert.pem</code> and <code>cert.key</code> is used for encryption between your server and Cloudflare.</p>
+</div><blockquote>
+<p>So you cannot login your server with <code>ssh user@your_domain</code> any more.</p>
+</blockquote>
+<p>The generated two files <code>cert.pem</code> and <code>cert.key</code> is used for encryption between your server and Cloudflare.</p>
 <p>You can use these two file like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -232,10 +235,51 @@ And you will get instructions for updating your nameserver of your domain."/>
 </div></blockquote>
 <p>Learn more: <a href="https://luyuhuang.tech/2020/06/03/cloudflare-free-https.html">https://luyuhuang.tech/2020/06/03/cloudflare-free-https.html</a></p>
 <blockquote>
-<p>After you config this, the DNS needs time to take effect (you change the nameservers of your domain to Cloudfalre from the defatult nameservers, this needs time to take effect)</p>
-<p>If you still cannot have https or always cannot access your website with https and the cloudflare displays your website is active on their server, then you may try if your server listening 443 port and try to clear the DNS cache of your client computer (chrome + system DNS cache). Learn more: <a href="https://davidzhu.xyz/post/networking/002-dns-basics/">DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog</a></p>
+<p>After config this, the DNS needs time to take effect (you change the nameservers of your domain to Cloudfalre from the defatult nameservers, this needs time to take effect)</p>
+<p>If there still no HTTPS connection but the cloudflare displays your website <strong>is active</strong> on their service, you may try to check if your server is listening on 443 port and try to flush the DNS cache of your client computer (chrome + system DNS cache). Learn more: <a href="https://davidzhu.xyz/post/networking/002-dns-basics/">DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog</a></p>
 </blockquote>
-
+<p>BTW, you can check if your domain is proxied by the Cloudflare with nslookup command, which will get the <code>A Record</code> by default (IPv4) address of your domain, but in this case, with Cloudfalre proxy, you should get the ip of Cloudfalre Name Server.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">❯ nslookup shaowenzhu.top
+</span></span><span class="line"><span class="cl">Non-authoritative answer:
+</span></span><span class="line"><span class="cl">Name:	shaowenzhu.top
+</span></span><span class="line"><span class="cl">Address: 172.67.171.207 <span class="c1"># not my domain&#39;s real ip, it&#39;s Cloudfalre</span>
+</span></span><span class="line"><span class="cl">Name:	shaowenzhu.top
+</span></span><span class="line"><span class="cl">Address: 104.21.47.185 <span class="c1"># not my domain&#39;s real ip, it&#39;s Cloudfalre</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">❯ nslookup -type<span class="o">=</span>soa davidzhu.xyz
+</span></span><span class="line"><span class="cl">Authoritative answers can be found from:
+</span></span><span class="line"><span class="cl">davidzhu.xyz	<span class="nv">nameserver</span> <span class="o">=</span> ns1.dnsowl.com.
+</span></span><span class="line"><span class="cl">davidzhu.xyz	<span class="nv">nameserver</span> <span class="o">=</span> ns2.dnsowl.com.
+</span></span><span class="line"><span class="cl">davidzhu.xyz	<span class="nv">nameserver</span> <span class="o">=</span> ns3.dnsowl.com.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># your domain&#39;s real ip</span>
+</span></span><span class="line"><span class="cl">❯ nslookup davidzhu.xyz ns1.dnsowl.com
+</span></span><span class="line"><span class="cl">Name:	davidzhu.xyz
+</span></span><span class="line"><span class="cl">Address: 185.199.108.153
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
     </div>
 
     <div class="post-copyright">
