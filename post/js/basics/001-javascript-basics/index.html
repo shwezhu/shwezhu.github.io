@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>JS对象, 数据类型, 容器介绍 - David&#39;s Blog</title>
+  <title>Objects &amp; Collections in Javascript - David&#39;s Blog</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="JavaScript Objects 在其他语言,如C&#43;&#43;,Java, 我理解的对象是一个类的实例(instance), 即对象是和类分不开的, 你想使用一个对象必须要先call一" />
+<meta name="author" content="David" /><meta name="description" content="1. Javascript objects 在其他语言, 如C&#43;&#43;,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成. 可是在JS里面," />
 
 
 
@@ -39,19 +39,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="JS对象, 数据类型, 容器介绍" />
-<meta property="og:description" content="JavaScript Objects 在其他语言,如C&#43;&#43;,Java, 我理解的对象是一个类的实例(instance), 即对象是和类分不开的, 你想使用一个对象必须要先call一" />
+<meta property="og:title" content="Objects &amp; Collections in Javascript" />
+<meta property="og:description" content="1. Javascript objects 在其他语言, 如C&#43;&#43;,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成. 可是在JS里面," />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/js/basics/001-javascript-basics/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-06-20T20:51:31+00:00" />
 <meta property="article:modified_time" content="2023-06-20T20:51:31+00:00" />
-<meta itemprop="name" content="JS对象, 数据类型, 容器介绍">
-<meta itemprop="description" content="JavaScript Objects 在其他语言,如C&#43;&#43;,Java, 我理解的对象是一个类的实例(instance), 即对象是和类分不开的, 你想使用一个对象必须要先call一"><meta itemprop="datePublished" content="2023-06-20T20:51:31+00:00" />
+<meta itemprop="name" content="Objects &amp; Collections in Javascript">
+<meta itemprop="description" content="1. Javascript objects 在其他语言, 如C&#43;&#43;,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成. 可是在JS里面,"><meta itemprop="datePublished" content="2023-06-20T20:51:31+00:00" />
 <meta itemprop="dateModified" content="2023-06-20T20:51:31+00:00" />
-<meta itemprop="wordCount" content="1793">
+<meta itemprop="wordCount" content="1432">
 <meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="JS对象, 数据类型, 容器介绍"/>
-<meta name="twitter:description" content="JavaScript Objects 在其他语言,如C&#43;&#43;,Java, 我理解的对象是一个类的实例(instance), 即对象是和类分不开的, 你想使用一个对象必须要先call一"/>
+<meta name="twitter:title" content="Objects &amp; Collections in Javascript"/>
+<meta name="twitter:description" content="1. Javascript objects 在其他语言, 如C&#43;&#43;,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成. 可是在JS里面,"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,7 +124,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">JS对象, 数据类型, 容器介绍</h1>
+      <h1 class="post-title">Objects &amp; Collections in Javascript</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2023-06-20 </span>
@@ -143,10 +143,10 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#javascript-objects">JavaScript Objects</a></li>
-        <li><a href="#data-types-in-js">Data Types in JS</a></li>
-        <li><a href="#everything-is-an-object-in-javascript-really">&ldquo;everything is an object in Javascript&rdquo;, Really?</a></li>
-        <li><a href="#js-collections">JS Collections</a></li>
+        <li><a href="#1-javascript-objects">1. Javascript objects</a></li>
+        <li><a href="#2-data-types-in-js">2. Data types in JS</a></li>
+        <li><a href="#3-everything-is-an-object-in-javascript-really">3. &ldquo;everything is an object in Javascript&rdquo;, Really?</a></li>
+        <li><a href="#4-js-collections">4. JS Collections</a></li>
       </ul>
     </li>
   </ul>
@@ -154,73 +154,46 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="javascript-objects">JavaScript Objects</h2>
-<p>在其他语言,如C++,Java, 我理解的对象是一个类的实例(instance), 即对象是和类分不开的, 你想使用一个对象必须要先call一个类的constructor, 且Java则必须需要配合<code>new</code>关键字. 可是在JS里面, 类的概念变得模糊了, 我很少用到过<code>new</code>, 但又有人说说“JavaScript is designed on a simple object-based paradigm”, I‘m confused now.</p>
-<p>在JS里, 什么是variable, 什么是type, type和object的关系是什么? 什么又是value? 我尝试在迷惑中找出答案:</p>
-<p>An object is a collection of properties, and a property is an association between a name (or key) and a value. 对象是属性的集合, 属性呢就是name和value的关联. A cup is an object, with properties. A cup has a color, a design, weight, a material it is made of, etc. The same way, JavaScript objects can have properties, which define their characteristics. 杯子有颜色, 容量等属性, 颜色比如蓝色, 容量1000ml, <code>蓝色</code>, <code>1000ml</code>就是所谓的value, 这个value有type, 前者蓝色是string, 后者1000是number类型. <code>颜色=蓝色</code> 这就是对象的一个属性. 突然感觉JS里的对象更像是其他语言里的类, 只是js的对象没有构造函数, 不能实例化.</p>
-<p>A JavaScript object has properties associated with it. A property of an object can be explained as a variable that is attached to the object. Object properties are basically the same as ordinary JavaScript variables, except for the attachment to objects. 对象的属性就是变量, 也很好理解, 比如<code>cat.name = 'kitten'</code>, <code>const name = 'jack'</code>, 即变量可以有一个对应的value. 而这个value有其对应的type. 所以接下来看看js中的types.</p>
-<h2 id="data-types-in-js">Data Types in JS</h2>
-<p>类型可以分为两大类 <code>primitive values</code> and <code>objects</code> (和 Java 相似, Java 的是 <a href="https://davidzhu.xyz/post/java/basics/006-variables-vs-references/">primitive types 和 reference type</a>)</p>
+      <h2 id="1-javascript-objects">1. Javascript objects</h2>
+<p>在其他语言, 如C++,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成.</p>
+<p>可是在JS里面, 类的概念变得模糊了, 我很少用到 <code>new</code>, 但又有人说 “JavaScript is designed on a simple object-based paradigm”, I‘m confused now.</p>
+<p>什么是variable, type, type 和 object 的关系是什么? 什么又是value? 我尝试在迷惑中找出答案:</p>
+<blockquote>
+<p>Javascript is dynamic language, which means values have types, not variables.</p>
+<p>Values can have two main types: primitives (immutable), object.</p>
+</blockquote>
+<p>所以 object 是 data types 中的一种, 显然这和其他语言不一样, 那 object type 具体是什么呢?</p>
+<p>An object is a collection of properties, and a property is an association between a name (or key) and a value. A cup is an object, with properties. A cup has a color, a design, weight, a material it is made of, etc. The same way, JavaScript objects can have properties, which define their characteristics.</p>
+<p>杯子有颜色, 容量等属性, 颜色比如蓝色, 容量1000ml, <code>蓝色</code>, <code>1000ml</code>就是所谓的 value, 这个 value 有 type (type 可以是 object 或 primitives), 前者蓝色是string, 后者1000是number类型. <code>color=&quot;bule&quot;</code> 这就是对象的一个属性. 突然感觉JS里的对象更像是其他语言里的类, 只是js的对象没有构造函数, 不能实例化.</p>
+<p>所以现在搞清楚了什么是 object type, 那就看看另外的一个 primitives type,</p>
+<h2 id="2-data-types-in-js">2. Data types in JS</h2>
+<p>类型可以分为两大类 <code>primitive values</code> and <code>objects</code> (Java 的是 <a href="https://davidzhu.xyz/post/java/basics/006-variables-vs-references/">primitive types 和 reference type</a>)</p>
 <p><strong>1. Primitive values</strong> (<strong>immutable datum</strong> represented directly at the lowest level of the language)</p>
 <ul>
-<li>
-<p>Boolean type</p>
-</li>
-<li>
-<p>Null type</p>
-</li>
-<li>
-<p>Undefined type</p>
-</li>
-<li>
-<p>Number type: 比如上面例子中, 杯子的property: 容量的value: 1000, 的type就是 Number type</p>
-</li>
-<li>
-<p>BigInt type</p>
-</li>
-<li>
-<p>String type: 比如上面例子中, 杯子的property: 颜色的value: blue, 的type就是 String type</p>
-</li>
-<li>
-<p>Symbol type</p>
-</li>
+<li>Boolean type</li>
+<li>Null type</li>
+<li>Undefined type</li>
+<li>Number type: 比如上面例子中, 杯子的property: 容量的value: 1000, 的type就是 Number type</li>
+<li>String type: 比如上面例子中, 杯子的property: 颜色的value: blue, 的type就是 String type</li>
 </ul>
 <p><strong>2. Objects</strong> (collections of properties)</p>
-<p>而对象本身, 也有类型, 那就是 Object 类型.</p>
-<p>到这也算是弄清了其中的关系, object, value, type, variable. 这一切从杯子开始举例, 便可以捋清关系. 变量有type吗? 严格来说没有type, 是变量的value才有type. 对象和变量的关系呢? 变量的value可以是object, 这这是value的type就是Object.</p>
-<p><strong>下面这个就是js中的object, 希望你看了, 可以理解其中的含义</strong>:</p>
+<p>说白了 JS 中的对象就是个值, 只不过这个值的类型是对象, 到这也算是弄清了其中的关系, object, value, type, variable. 这一切从杯子开始举例, 便可以捋清关系. 变量有类型吗? 严格来说没有type, 是变量的值才有类型. 对象和变量的关系呢? 变量的值的类型可以是对象.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span><span class="nx">firstName</span><span class="o">:</span><span class="s2">&#34;John&#34;</span><span class="p">,</span> <span class="nx">lastName</span><span class="o">:</span><span class="s2">&#34;Doe&#34;</span><span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">50</span><span class="p">,</span> <span class="nx">eyeColor</span><span class="o">:</span><span class="s2">&#34;blue&#34;</span><span class="p">,</span> <span class="nx">eat</span><span class="o">:</span> <span class="p">(</span><span class="nx">food</span><span class="p">)=&gt;{}};</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// or
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl"><span class="nx">person</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="s2">&#34;John&#34;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="nx">person</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="s2">&#34;Doe&#34;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="nx">person</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="nx">person</span><span class="p">.</span><span class="nx">eyeColor</span> <span class="o">=</span> <span class="s2">&#34;blue&#34;</span><span class="p">;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>js 的object长得就很像json,如果改变一下写法</strong>, 所以在以后的学习中不要与json弄混, 尤其是React里面的一个js function<code>React.createElement()</code>, 它返回的就是 js object, 可以去<code>MyNotes/frontend/reactjs/JSX and Babel</code>的第二段介绍Babel编译器看看.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
@@ -230,13 +203,17 @@
 </span></span><span class="line"><span class="cl">    <span class="nx">eyeColor</span><span class="o">:</span><span class="s2">&#34;blue&#34;</span><span class="p">,</span> 
 </span></span><span class="line"><span class="cl">    <span class="nx">eat</span><span class="o">:</span> <span class="p">(</span><span class="nx">food</span><span class="p">)=&gt;{}</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// or
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">let</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nx">person</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="s2">&#34;John&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">person</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="s2">&#34;Doe&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">person</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">person</span><span class="p">.</span><span class="nx">eyeColor</span> <span class="o">=</span> <span class="s2">&#34;blue&#34;</span><span class="p">;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>看到这, 想到上文的一对句话:</p>
-<blockquote>
-<p>An object is a collection of properties, and a property is an association between a name (or key) and a value.</p>
-</blockquote>
-<h2 id="everything-is-an-object-in-javascript-really">&ldquo;everything is an object in Javascript&rdquo;, Really?</h2>
+</div><p><strong>JS 的对象长得很像 json</strong>, 所以在以后的学习中不要与json弄混.</p>
+<h2 id="3-everything-is-an-object-in-javascript-really">3. &ldquo;everything is an object in Javascript&rdquo;, Really?</h2>
 <p>No, not everything is an object in JavaScript. Many things that you interact with regularly (<code>strings</code>, <code>numbers</code>, <code>booleans</code>) are <strong>primitives</strong>, not <strong>objects</strong>. Unlike objects, primitive values are immutable. The situation is complicated by the fact that these <strong>primitives do have object wrappers</strong> (String, Number and Boolean); these objects have methods and properties while the primitives do not, but the primitives appear to have methods because JavaScript silently creates a wrapper object when code attempts to access any property of a primitive.</p>
 <p>For example, consider the following code:</p>
 <div class="highlight"><div class="chroma">
@@ -273,7 +250,7 @@
 <p>原文: <a href="https://stackoverflow.com/a/9110389/16317008">https://stackoverflow.com/a/9110389/16317008</a></p>
 <p>关于 JS 的数据讨论到这应该差不多了, JS 中的数据类型与传统的很不一样, 比如一般的语言单单一个数字就是 float, int, double, 而 js 只是简单的 number type, 另外还要注意它的 Undefined, Null 等类型,</p>
 <p>另外与 Java 相似, JS 中的值的类型分为 primitive 和对象两类, 相似的点在都有 primitive 类型, 但其primitive 又是 immutable的, Java 则不是, 当然还是 python 牛, 真正的万物皆对象, 即使一个 int 类型也是个对象, 但 python 的 int, string 是 immutable, Java里只有string对象是不可变的, 而 js, number type, string 都不可变, JS 的对象, 感觉就是为 json 而生,</p>
-<h2 id="js-collections">JS Collections</h2>
+<h2 id="4-js-collections">4. JS Collections</h2>
 <p>JS 里的容器不多, 常用的也就 Array, Map, Object, 至于 Array不用说了, 说一下 Object 和 Map, 挺像的他们, 都是保存的 key value, 区别好似 可以保存的 key 的 type 不同, 对于 Object, key的类型就是 string,</p>
 <blockquote>
 <p>The key difference is that Objects only support string and Symbol keys where as Maps support more or less any key type. <a href="https://stackoverflow.com/a/37994079/16317008">https://stackoverflow.com/a/37994079/16317008</a></p>
