@@ -11,16 +11,6 @@ tags:
  - other
 ---
 
-## 0. In short
-
-
-
-
-
-
-
-
-
 ## 1. C
 
 C has three different pools of memory: 

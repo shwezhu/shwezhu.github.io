@@ -8,7 +8,7 @@ tags:
  - golang
 ---
 
-## 1. Go is statically typed
+## 1. Go is statically typed (static language)
 
 Go is statically typed. Every variable has **only one static type**, that is, exactly one type known and fixed at compile time: `int`, `float32`, `*MyType`, `[]byte`, and so on. If we declare
 
