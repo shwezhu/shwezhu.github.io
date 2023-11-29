@@ -12,11 +12,13 @@ tags:
 typora-root-url: ../../../static
 ---
 
-Previous post: [Typing in Programming Language - Example - David's Blog](https://davidzhu.xyz/post/other/000-languge-types-practice/)
+# Data Types in Programming Languages
+
+> Programs are collections of instructions that manipulate data to produce a desired result. 
 
 ## 1. Javascript
 
-> As you have know that javascript is a dynamic language from previous, which means the values have types, not variables. 
+> As you have know that javascript is a dynamic language from [previous post](https://davidzhu.xyz/post/other/000-languge-types-practice/), which means the values have types, not variables. 
 
 All types except `Object` define immutable values represented directly at the lowest level of the language. We refer to values of these types as primitive values. 
 
@@ -123,5 +125,40 @@ Just as men and women are fundamentally different (according to John Gray, autho
 
 ## 4. Golang
 
+> Golang is static language (static typed), but golang has no concept of object, all are variables and values. 
+>
+> So you can think the variable have types or values have types, all are fine. 
+
+There is no object in Go, just variable and the value of a variable, we declare a variable of interface here:
+
+```go
+var r io.Reader
+```
+
+Then we say the type of variable `r` is `io.Reader`, not `r` is an object of `io.Reader`. Did you catch that?
+
+Btw, for simplicity reason, we usually use value/variable verbally. So here we can say `r` is a value of `io.Reader`, `r` is an interface value. Actually the variable `r` is just a nice name for address.
+
+> You can think all variables are references in Golang, then you probably wonder that where are the variables stored? Where is the value of the variable stored? Is this like what java has done?(reference stored on stack, value (object) stored on heap)
+>
+> The answer is no, learn more: [Lifetime of a Local Variable - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/004-lifetime-of-variables/)
+
 Learn more: [Value Variable and Types - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/001-value-variable-type/)
 
+## 5. C++
+
+> C++ is a static language which means **the variable have types, not values have types**. 
+
+C++ has variable, reference and object. A **variable** is a named object that can hold a value of a specific data type. A **reference** is an alias for a variable, which means that it refers to the same memory location as the variable it is referencing.  An **object** is used to store a value in memory. 
+
+A variable is an object that has a name (identifier). Naming our objects let us refer to them again later in the program. Although objects in C++ can be unnamed (anonymous), more often we name our objects using an identifier. An object with a name is called a **variable**.
+
+```c++
+int x; // define a variable named x, of type int
+```
+
+> In C++, we use objects to access memory. A named object is called a variable. Variables have an identifier, a type, and a value (and some other attributes that aren’t relevant here). A variable’s type is used to determine how the value in memory should be interpreted.
+
+> You can think of RAM as a series of numbered boxes that can be used to store data while the program is running. In some older programming languages (like Applesoft BASIC), you could directly access these boxes (e.g. you could write a statement to “go get the value stored in mailbox number 7532”).  In C++, direct memory access is discouraged. Instead, we access memory indirectly through an object. An **object** is a region of storage (usually memory) that can store a value, and has other associated properties. 
+>
+> [1.3 — Introduction to objects and variables – Learn C++](https://www.learncpp.com/cpp-tutorial/introduction-to-objects-and-variables/)

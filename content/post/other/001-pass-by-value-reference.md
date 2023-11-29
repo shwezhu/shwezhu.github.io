@@ -96,3 +96,5 @@ Learn more: [Everything Passed by Value - Go - David's Blog](https://davidzhu.xy
 ## 4. Java & C++
 
 Python, Java, Golang, C/C++, JS 都是 pass by value,  只是有了 reference, 当 reference 作为参数时, 被拷贝的仍是 reference 的 value, 即地址, 给我们一个错觉即 "pass by reference not value".
+
+C++ 还有另外一个应用, 传参尽量传 const reference 提高效率, 而 Java, python, JS, 每次传的都是 reference, 但是他们没有 const reference 的概念, 
