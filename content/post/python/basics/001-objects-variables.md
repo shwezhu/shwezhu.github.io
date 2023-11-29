@@ -28,19 +28,9 @@ When the above code is executed, CPython creates an object of type `integer` and
 
 The `type` indicates the type of the object in CPython, and the `value` field, as the name suggests, stores the value of the object (`100` in this case). We will discuss the `ref_count` field later in the article.
 
-![a](/001-objects-variables/a.png)
-
-> Memory management in Python involves a **private heap** containing all Python objects and data structures. The management of this private heap is ensured internally by the ***Python memory manager***. --[Memory Management — Python 3.11.3 documentation](https://docs.python.org/3/c-api/memory.html)
-
-可能你注意到了, 上面说的CPython是个啥?
+<img src="/001-objects-variables/a.png" alt="a" style="zoom:33%;" />
 
 > **CPython** is the default and most widely used implementation of the Python language. When we say Python, it essentially means we're referring to CPython. When you download Python from [python.org](https://www.python.org/), you basically download the CPython code. Thus, CPython is a program written in C language that implements all the rules and specifications defined by the Python language. CPython can be defined as both an interpreter and a compiler as it compiles Python code into bytecode before interpreting it.
-
-Since CPython is the reference implementation, all new rules and specifications of the Python language are first implemented by CPython.
-
-In this article, we will discuss the internals of memory management of CPython. Please note: Other implementations, such as *Jython* and *IronPython*, may implement memory management in a different way.
-
-As CPython is implemented in the C programming language, let’s first understand two important functions related to memory management in C: `malloc` and `free`! 
 
 ## 2. Variables in Python
 
@@ -54,7 +44,7 @@ a = 100
 
 As discussed earlier, when the above code is executed, CPython internally creates an object of type *integer*. The variable `a` points to this integer object as shown below:
 
-![b](/001-objects-variables/b.png)
+<img src="/001-objects-variables/b.png" alt="b" style="zoom:33%;" />
 
 We can access the integer object in the Python program using the variable `a`.
 
@@ -68,7 +58,7 @@ b = a
 
 When the above code is executed, the variables `a` and `b` both point to the same integer object, as shown below:
 
-![c](/001-objects-variables/c.png)
+<img src="/001-objects-variables/c.png" alt="c" style="zoom:33%;" />
 
 Let's now increment the value of the integer object by 1:
 
@@ -81,7 +71,7 @@ a = a + 1
 
 When the above code is executed, CPython creates a new integer object with the value `101` and makes variable `a` point to this new integer object. Variable `b` will continue to point to the integer object with the value `100`, as shown below:
 
-![d](/001-objects-variables/d.png)
+<img src="/001-objects-variables/d.png" alt="d" style="zoom:33%;" />
 
 Here, we can see that instead of overwriting the value of `100` with `101`, CPython creates a new object with the value `101` **because integers in Python are immutable**. Once created, they cannot be modified. Please note that **floats and string data types are also immutable in Python**.
 
@@ -109,4 +99,4 @@ We can see that CPython creates and deletes a large number of objects, even for 
 
 Hence, CPython introduces various techniques to reduce the number of times we have to call `malloc` and `free` for each small object creation and deletion. Let’s now understand how CPython manages memory!
 
-阅读更多: [Memory Management in Python - Honeybadger Developer Blog](https://www.honeybadger.io/blog/memory-management-in-python/)
+Learn more: [Memory Management in Python - Honeybadger Developer Blog](https://www.honeybadger.io/blog/memory-management-in-python/)

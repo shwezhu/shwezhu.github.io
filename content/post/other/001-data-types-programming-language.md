@@ -162,3 +162,7 @@ int x; // define a variable named x, of type int
 > You can think of RAM as a series of numbered boxes that can be used to store data while the program is running. In some older programming languages (like Applesoft BASIC), you could directly access these boxes (e.g. you could write a statement to “go get the value stored in mailbox number 7532”).  In C++, direct memory access is discouraged. Instead, we access memory indirectly through an object. An **object** is a region of storage (usually memory) that can store a value, and has other associated properties. 
 >
 > [1.3 — Introduction to objects and variables – Learn C++](https://www.learncpp.com/cpp-tutorial/introduction-to-objects-and-variables/)
+
+## 6. Conclusion
+
+Variables, values, types, the concepts of these terms may a little different. Don't need to remember what exactly these terms mean in each language, our goal is to know the behavior of the language so that we can use the language correctly and efficiently. Such as pass by value or reference, and if can return a reference of a locla variable. 
