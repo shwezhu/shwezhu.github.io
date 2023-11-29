@@ -82,10 +82,6 @@ In the current compilers, if a variable has its address taken, that variable is 
 
 [1]:  Java, Python都是对象在heap, 指向对象的变量又叫引用reference, 存储在stack上
 
-## 3. Java
-
-这个好写, 之前研究过, 上面也与C进行对比了, 比较懒: [Java中变量(Variables)和引用(References)的区别 - David's Blog](https://davidzhu.xyz/post/java/basics/006-variables-vs-references/)
-
 ## 4. Python
 
 ### 4.1. Objects in Python
@@ -190,85 +186,6 @@ We can see that CPython creates and deletes a large number of objects, even for 
 Hence, CPython introduces various techniques to reduce the number of times we have to call `malloc` and `free` for each small object creation and deletion. Let’s now understand how CPython manages memory!
 
 阅读更多: [Memory Management in Python - Honeybadger Developer Blog](https://www.honeybadger.io/blog/memory-management-in-python/)
-
-## 5. Pass by Value or Reference
-
-关于Golang的讨论请参考:[Golang值传递分析之传递指针的规则介绍(Methods, Functions & interface value) | 橘猫小八的鱼](https://davidzhu.xyz/2023/05/16/Golang/Basics/methods-pass-by-value/?highlight=%E5%80%BC%E4%BC%A0%E9%80%92)
-
-Python, Java, Golang, C, JS 都是 pass by value, 只是 Java 有 reference 的的概念, 当 reference 作为参数时, 被拷贝的仍是 reference 的value, 即地址, 给我们一个错觉即java是 "pass by reference not value":
-
-```java
-void foo(Person p) {...}
-
-// main()
-Person jack = new Person(18, “jack”);
-foo(jack); // 创建另一个 reference p, 与 reference jack 指向同一个对象, 即 passed by value
-```
-
-变量 `jack` 是个reference, 它指向的对象 `Person(18, “jack”)` 在heap上的地址是 `0x7D`: 
-
-```java
-void foo(Person p) {
-  p.name = "John" // 修改了 reference p 所指对象的 name 属性
-  p = new Person(17, "AK")	// reference p 指向了另一个对象, 并不会影响reference jack
-}
-```
-
-所以在这个函数调用中, 最初的那个对象, 即 `Person jack = new Person(18, “jack”)`  的 name 属性改变了, 以及 reference `p` 的值改变了, 这都与 reference `jack` 无关, `jack` 指向的依然是之前的那个对象, 
-
-虽然Golang也是值传递, 但和Java还很不一样, Golang的表现更像C, **因为Golang里没有对象和引用的概念**, 只有 variable 和 value: 
-
-```go
-type Person struct {
-	name string
-	age  int
-}
-
-func foo1(person Person) *Person {
-	return &person
-}
-
-func foo2(person *Person) *Person {
-	return person
-}
-
-func main() {
-	person := Person{"John", 18}
-	fmt.Printf("main: %p\n", &person)
-	fmt.Printf("foo1: %p\n", foo1(person))
-	fmt.Printf("foo2: %p\n", foo2(&person))
-}
-
-main: 0x14000114018
-foo1: 0x14000114030
-foo2: 0x14000114018
-```
-
-最后看一下 python, 关于 python 也可以认为是 pass by value, 行为和Java完全一样, 即传递的都是引用的值(对象的地址), 再强调一遍在python所有的值都是对象, 变量就是引用即存储对象的地址, 
-
-- If you pass a *mutable* object into a method, the method gets a reference to that same object and you can mutate it to your heart's delight, but if you rebind the reference in the method, the outer scope will know nothing about it, and after you're done, the outer reference will still point at the original object. 
-  - integer, str are immutable objects
-
-- If you pass an *immutable* object to a method, you still can't rebind the outer reference, and you can't even mutate the object.
-
-```shell
->>> def main():
-...     n = 9001
-...     print(f"Initial address of n: {id(n)}")
-...     increment(n)
-...     print(f"  Final address of n: {id(n)}")
-...
->>> def increment(x):
-...     print(f"Initial address of x: {id(x)}")
-...     x += 1
-...     print(f"  Final address of x: {id(x)}")
-...
->>> main()
-Initial address of n: 140562586057840
-Initial address of x: 140562586057840
-Final address of x: 140562586057968
-Final address of n: 140562586057840
-```
 
 最后: 对于C, C++,这种没有GC的语言的内存结构我们要清楚每一个细节, 什么时候对象被删除, 怎么删除, 分配在了哪, 对于有GC的, Golang, Java, Python这种GC的实现, 不用求于一下搞明白(也搞不明白), 因为这种语言主要的地方就在GC的设计, GC本身很复杂加上本多不同的算法, 可以留着慢慢的摸索探索, 之所以有GC的语言可以慢慢了解GC的机制是因为内存都是GC帮我们管理, 简单了解内存结构, pass by value or reference, 了解对象的清除机制即不会那么容易写出内存相关的错误, 这也是有GC的原因, 帮我们减少工作量, 等你以后有需求了, 自然就会了解, 当然这只是对新入门的来说, 如果本来很厉害..
 

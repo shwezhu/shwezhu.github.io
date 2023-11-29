@@ -9,6 +9,7 @@ tags:
  - golang
  - python
  - javascript
+typora-root-url: ../../../static
 ---
 
 Previous post: [Typing in Programming Language - Example - David's Blog](https://davidzhu.xyz/post/other/000-languge-types-practice/)
@@ -47,21 +48,80 @@ Learn more:
 
 ## 2. Python
 
-Python is a dynamic language which means **the values have types, not variables**. 
+> Python is a dynamic language which means **the values have types, not variables**. 
 
+In Python **all values are objects**, so doesn't like Java, there is no primitives, **all variable are references**. (Variables are associated with values, values have types)
 
+### 2.1. Data types
 
+Python has the following data types built-in by default, in these categories:
 
+| Text Type:      | `str`                              |
+| --------------- | ---------------------------------- |
+| Numeric Types:  | `int`, `float`, `complex`          |
+| Sequence Types: | `list`, `tuple`, `range`           |
+| Mapping Type:   | `dict`                             |
+| Set Types:      | `set`, `frozenset`                 |
+| Boolean Type:   | `bool`                             |
+| Binary Types:   | `bytes`, `bytearray`, `memoryview` |
+| None Type:      | `NoneType`                         |
 
+### 2.2. Mutable and immutable objects
 
+Everything in Python is an object. And all objects in Python can be either **mutable** or **immutable**. Mutable objects are those that allow you to change their value or data in place without affecting the object’s identity. In contrast, immutable objects don’t allow this kind of operation, you have to create a new objects of the same type with different values.
 
+Objects of built-in types like (***int**, float, bool, **str**, tuple, unicode*) are immutable. Objects of built-in types like (*list, set, dict*) are mutable. Custom classes are generally mutable.
 
+Find [a good explanation](https://stackoverflow.com/a/62177555/16317008): 
 
+> The integer is immutable. When you write x=5, x points to a memory location that holds 5. When you go on and code y=x, the variable y points to the same location as x.
+>
+> Then you type x+1=6, and now x points to a new location that holds 6, and not the previous location. ( Here, the integer still holds immutable because the original integer 5 still exists, but the variable x is not bound to it now. x is now bound to a new location. But y is still bound to the integer 5)
+>
+> But y still points to the same location that holds 5. So, integers are still immutable and this is how it works. To see it better, use id(x) or id(y) after every step.
+>
+> **The *variable* is not immutable; the `int` object *referred to* by the variable is.**
 
+## 3. Java
 
+> Java is a static language which means **the variable have types, not values have types**. 
 
+Types of variables in Java are divided into two categories—**primitive types** and **reference types**. 
 
+<img src="/001-data-types-programming-language/b.png" alt="b" style="zoom:33%;" />
 
+### 3.1. Primitive types
 
+The primitive types are `boolean`, `byte`, `char`, `short`, `int`, `long`, `float` and `double`. All other types are reference types. 
 
+• A primitive-type variable can store exactly one value of its declared type at a time.
+
+• Primitive-type instance variables are initialized by default. Variables of types `byte`, `char`, `short`, `int`, `long`, `float` and `double` are initialized to `0`. Variables of type `boolean` are initialized to `false`.
+
+### 3.2. Reference types
+
+Reference types in Java are non-primitive data types. It's called reference ecause it holds **the memory address** (or reference) of the objects.
+
+In Java, **all objects** are allocated on Heap. This is different from C++ where objects can be allocated memory either on Stack or on Heap. 
+
+- Whenever you use `new`, an object is created on the heap.
+- Local variables are stored on the stack. That includes primitives (such as `int`) and the **references** to any objects created. The actual objects themselves aren't created on the stack, as I mentioned when you use `new` they'll be created on the heap. https://stackoverflow.com/a/8061692/16317008
+
+```java
+// variable age: primitive, stored on stack
+int age = 77;
+// variable person: reference, stored on stack, 
+// its value is the address of the object stored on heap
+Person person = new Person();
+```
+
+<img src="/001-data-types-programming-language/a.png" alt="a" style="zoom: 33%;" />
+
+Just as men and women are fundamentally different (according to John Gray, author of Men Are from Mars, Women Are from Venus), **primitive variables** and **object reference variables** differ from each other in multiple ways. The basic difference is that **primitive variables store the actual values**, whereas reference variables store the addresses of the objects they refer to. Let’s assume that a class Person is already defined. If you create an int variable a, and an object reference variable person, they will store their values in memory as shown in figure 2.13. https://stackoverflow.com/a/32049775/16317008
+
+> Note that similar to Python, strings in Java are objects, and they are immutable. 
+
+## 4. Golang
+
+Learn more: [Value Variable and Types - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/001-value-variable-type/)
 
