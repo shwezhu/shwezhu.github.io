@@ -8,7 +8,17 @@ tags:
   - javascript
 ---
 
-### 1. click copy
+### 1. Delay function
+
+```js
+function delay(minutes) {
+    return new Promise(resolve => setTimeout(resolve, minutes * 1000 * 60));
+}
+
+// await delay(2)
+```
+
+### 2. Click copy
 
 ```html
 <p id="url-text" style="display: none">{{.SharedUrl}}</p>

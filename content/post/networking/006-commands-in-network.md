@@ -9,9 +9,7 @@ tags:
 
 ## 1. `nslookup`
 
-**Nslookup** (stands for “Name Server Lookup”) is a useful command for getting information from the DNS server. It is a network administration tool for querying the Domain Name System (DNS) to obtain domain name or IP address mapping or any other specific DNS record. 
-
-`nslookup` followed by the domain name will display the **“A Record”** (IP Address) of the domain:
+### 1.1. Query `A Record` 
 
 ```shell
 # basic DNS lookup
@@ -24,20 +22,7 @@ Name:	google.com
 Address: 142.250.81.238
 ```
 
-**Lookup for NS record of domain**:
-
-```shell
-$ nslookup -type=ns google.com
-Server:		192.168.2.1
-Address:	192.168.2.1#53
-
-Non-authoritative answer:
-google.com	nameserver = ns1.google.com.
-google.com	nameserver = ns3.google.com.
-....
-```
-
-You can also do the **reverse DNS look-up** by providing the IP Address as an argument to nslookup:
+### 1.2. Reverse DNS look-up
 
 ```shell
 $ nslookup 18.219.46.189                          
@@ -51,7 +36,18 @@ Authoritative answers can be found from:
 46.219.18.in-addr.arpa	nameserver = ns1-24-us-east-2.ec2-rdns.amazonaws.com.
 ```
 
-> *“**Non-authoritative answer**” is the expected output from nslookup in 99.9% of cases, so this warning can be safely ignored. Your ISP’s DNS server is what your computer (and nslookup) uses to get answers to DNS queries. Every website and domain has different authoritative DNS servers, and your ISP’s DNS server queries these authoritative DNS servers on your behalf. Because you got the answer indirectly via your ISP’s DNS server, nslookup tells you the answer is not authoritative.* [Source](https://ioflood.com/blog/what-is-the-meaning-of-non-authoritative-answer-given-by-nslookup-dns-demystified/)
+### 1.3. Query name server
+
+```shell
+$ nslookup -type=ns google.com
+Server:		192.168.2.1
+Address:	192.168.2.1#53
+
+Non-authoritative answer:
+google.com	nameserver = ns1.google.com.
+google.com	nameserver = ns3.google.com.
+....
+```
 
 When using the nslookup utility to query Domain Name System (DNS) servers, you could see the message “Non-authoritative answer.” This tells you that the DNS server you’re asking can’t ensure that it has the official, up-to-date information for the domain name or IP address you’re seeking up and is instead giving you a cached response that it got from another DNS server. 
 
@@ -63,9 +59,9 @@ Reference:
 
 [Why is “Non-authoritative answer” given by nslookup? DNS Explained](https://ioflood.com/blog/what-is-the-meaning-of-non-authoritative-answer-given-by-nslookup-dns-demystified/)
 
-## 2. Get authoritative answer
+### 1.4. Get authoritative answer
 
-1. Use the `nslookup` command to query the SOA (Start of Authority) record of the domain name. The SOA record contains information about the authoritative name servers for the domain. 
+**Step 1:** Use the `nslookup` command to query the SOA (Start of Authority) record of the domain name. The SOA record contains information about the authoritative name servers for the domain. 
 
 ```bash
 ❯ nslookup -type=soa davidzhu.xyz
@@ -78,7 +74,7 @@ davidzhu.xyz	nameserver = ns2.dnsowl.com.
 davidzhu.xyz	nameserver = ns3.dnsowl.com.
 ```
 
-2. Identify the primary name server from previous response:
+**Step 2:** Identify the primary name server from previous response:
 
 ```shell
 ❯ nslookup davidzhu.xyz ns1.dnsowl.com
@@ -89,29 +85,55 @@ Name:	davidzhu.xyz
 Address: 185.199.108.153
 ```
 
-## 3. `dig`
+## 2. `dig`
 
 **dig** command stands for ***Domain Information Groper***. It is used for retrieving information about DNS name servers. Dig command replaces older tools such as [nslooku](https://www.geeksforgeeks.org/nslookup-command-in-linux-with-examples/)p and the [host](https://www.geeksforgeeks.org/host-command-in-linux-with-examples/).
 
-To query domain “A” record:
+### 2.1. Query `A Record` 
 
-```shell
-$ dig geeksforgeeks.org
-```
-
-This command causes dig to look up the “A” record for the domain name “geeksforgeeks.org”. A record refers to IPV4 IP. Similarly, if record type is set as “AAAA”, this would return IPV6 IP.  
-
-To query domain “A” record with **+short**
+To query domain “A” record with `+short`:
 
 ```shell
 $ dig geeksforgeeks.org +short
 34.218.62.116
 ```
 
-Specifying name servers:
+Specify DNS server:
 
 ```shell
-$ dig geeksforgeeks.org @8.8.8.8
+$ dig geeksforgeeks.org +short @8.8.8.8
 ```
 
 > By default, dig command will query the name servers listed in “/etc/resolv.conf” to perform a DNS lookup. We can change it by using @ symbol followed by a hostname or IP address of the name server. 
+>
+> Learn more about `/etc/resolv.conf` and `/etc/hosts`: [DNS Stub and Recursive Resolver - Config Files - David's Blog](https://davidzhu.xyz/post/networking/002-host-file-dns-stub-resolver/)
+
+### 2.2. Reverse DNS lookup
+
+```shell
+❯ dig -x 18.219.46.189 +short
+ec2-18-219-46-189.us-east-2.compute.amazonaws.com.
+```
+
+### 2.3. Query name server
+
+```shell
+❯ dig davidzhu.xyz NS +short
+ns1.dnsowl.com.
+ns2.dnsowl.com.
+ns3.dnsowl.com.
+```
+
+## 3. dig vs nslookup
+
+1. `dig` Process:
+   - `dig` follows the standard DNS resolution process, starting with a query to the **root name servers** to obtain the list of TLD name servers.
+   - It then queries a TLD name server to obtain the authoritative name servers for the domain.
+   - After obtaining the **authoritative name servers**, `dig` sends a direct query to one of these name servers to retrieve the A record for the domain.
+   - The response obtained from `dig` is typically authoritative, as it comes directly from the authoritative name server responsible for the domain.
+2. `nslookup` Process:
+   - `nslookup` queries the DNS server configured on the local system by default. This DNS server may be provided by the ISP or manually configured.
+   - The response from `nslookup` may be non-authoritative, indicating that the DNS server providing the response is not the authoritative server for the queried domain. It may have obtained the response from its cache or forwarded the query to another DNS server.
+
+In summary, `dig` directly queries authoritative name servers to obtain DNS information, resulting in authoritative responses. On the other hand, `nslookup` queries the local DNS server, which may or may not provide authoritative responses, depending on its configuration and the nature of the query.
+

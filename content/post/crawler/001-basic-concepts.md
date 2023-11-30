@@ -45,7 +45,10 @@ To find out if the website allows scraping then check out:
 
 - **Robots.txt file:** This will say which pages can you access with a scraper.
 - **Terms & Conditions:** Their T&Cs will normally say if they permit scraping, programmatic access, etc.
-- **Presence of Anti-Bot Protection:** If you are getting ban pages from Cloudflare, Distill Network, Imperva, DataDome, etc. then it is highly likely that the website doesn't want you to scrape them.
+  - Check the link below, at the end there is: *You will not access the Site through automated or non-human means, such as with bots, scripts or otherwise;....*
+  - When you login you usually see: I have read and understood the [Privacy Policy and the Terms of Use](https://ais.usvisa-info.com/en-ca/niv/information/privacy_policy). 
+
+- **Presence of Anti-Bot Protection:** If you are getting ban pages from Cloudflare, Distill Network, Imperva, DataDome, etc. then it is highly likely that the website doesn't want you to scrape them. 
 
 If you are getting blocked but still want to scrape the website then you can do the following:
 

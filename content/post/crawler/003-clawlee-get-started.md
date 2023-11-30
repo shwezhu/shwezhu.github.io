@@ -107,7 +107,3 @@ You can learn a lot from this:
 
 
 
-
-
-
-

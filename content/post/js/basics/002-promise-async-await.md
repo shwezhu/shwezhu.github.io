@@ -100,6 +100,14 @@ await main();
 SyntaxError: await is only valid in async functions and the top level bodies of modules
 ```
 
+This is another syntax to call async function:
+
+```js
+(async () => {
+  await main()
+})()
+```
+
 ### 3.2. With Promise chain 
 
 ```js

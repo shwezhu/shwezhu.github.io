@@ -34,7 +34,7 @@ $ find themes/source/css -name "*header*" -type f
 # n: line number, r: recursive
 $ grep -nr 'ul$'' themes/source/css
 # curl -v verbose
-curl localhost:8080 -H "Content-Type: application/json" -d "{"username":"david", age:3}" -v
+$ curl localhost:8080 -H "Content-Type: application/json" -d "{"username":"david", age:3}" -v
 # make a file executable
 $ chmod +x test.sh
 # check your ip on Mac
