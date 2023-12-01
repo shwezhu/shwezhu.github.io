@@ -12,9 +12,7 @@ typora-root-url: ../../../static
 
 ## 1. Enable end-to-end encryption with Cloudflare
 
-Getting a official TLS certificate is too expensive, so I decide to use Cloudflare TLS proxy to enable TLS connection between the client and my server. 
-
-There are two steps to enable end-to-end encryption with Cloudflare.:
+Getting a official TLS certificate is too expensive, so I decide to use Cloudflare [proxied DNS records](https://developers.cloudflare.com/dns/manage-dns-records/reference/proxied-dns-records/) enable TLS connection. There is an article talks [how it works](https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/). There are two steps to add your domain to Cloudflare:
 
 - Add your domain to Cloudflare
 - Create and install TLS certificate to your server

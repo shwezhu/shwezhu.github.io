@@ -15,6 +15,8 @@ A Web crawler, sometimes called a spider or spiderbot and often shortened to cra
 
 A headless browser is a web browser that operates without a graphical user interface (GUI). It runs in the background and interacts with web pages programmatically, just like a regular browser, but without displaying the web page to the user. Headless browsers are commonly used in web crawling and scraping applications.
 
+Learn more: [Web Scraping Without Getting Blocked | ScrapeOps](https://scrapeops.io/web-scraping-playbook/web-scraping-without-getting-blocked/)
+
 ## 3. Playwright library
 
 Playwright is an open-source automation library for browser testing and web scraping developed by Microsoft and launched on 31 January 2020, which has since become popular among programmers and web developers. Playwright provides the ability to automate browser tasks in Chromium, Firefox and WebKit with a single API. 
@@ -56,6 +58,6 @@ If you are getting blocked but still want to scrape the website then you can do 
 - **Rotating Proxies:** You should send your requests via a rotating proxy pool that will make it harder for the website to detect you as a scraper. Residential & Mobile proxies are better than datacenter proxies but are a lot more expensive. [You can compare proxy provider plans here](https://scrapeops.io/proxy-providers/comparison/).
 - **Fortified Headless Browser:** Depending on the anti-bot protection the website is using you make need to use a fortified headless browser that can solve its JS challenges without giving its identity away. Your options include the [Puppeteer stealth plugin](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth) and [Selenium undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver).
 
-Wrote more about it here [Guide to Web Scraping Without Getting Blocked](https://scrapeops.io/web-scraping-playbook/web-scraping-without-getting-blocked/).
+Learn more about it here [Guide to Web Scraping Without Getting Blocked](https://scrapeops.io/web-scraping-playbook/web-scraping-without-getting-blocked/).
 
 Learn more: https://www.reddit.com/r/webscraping/comments/xvqd6r/comment/ir4m0xx/?utm_source=share&utm_medium=web2x&context=3

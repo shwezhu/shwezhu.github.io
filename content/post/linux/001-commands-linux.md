@@ -12,6 +12,10 @@ tags:
 You can use `xxx --help `, `man xxx`, `tldr you-command` to check the usage of the command. 
 
 ```shell
+# detach a program from cli, after executed, exit cli, don't do Ctrl+C
+$ nohup ./server -p 8080
+# kill a specific program
+$ ps aux | grep ./server
 $ zip -r root.zip root
 # display information about running processes
 # kill PID
