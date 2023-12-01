@@ -5,14 +5,23 @@ categories:
  - build website
 tags:
  - build website
- - cs basics
 ---
 
 ## 1. `ufw` command
 
-The ufw command stands for "Uncomplicated Firewall" and it is a user-friendly command-line tool used to manage the firewall settings on Ubuntu and other Linux distributions. 
-
 ### 1.1. Commonly used ufw commands
+
+```shell
+# ubuntu @ ip-172-31-12-228
+$ sudo ufw status
+Status: inactive
+# ubuntu @ ip-172-31-12-228
+$ sudo ufw enable
+Command may disrupt existing ssh connections. Proceed with operation (y|n)? n
+Aborted
+```
+
+> **Note:** use `sudo ufw enable` carefully, because it may disrupt your ssh connection. 
 
 ```shell
 ufw enable: Enables the firewall, which starts enforcing the configured rules.
@@ -26,18 +35,6 @@ ufw deny <port>: Blocks incoming traffic on a specific port.
 ufw delete <rule>: Deletes a specific rule from the firewall. 
 # e.g., sudo ufw delete allow 80
 ```
-
-```shell
-# ubuntu @ ip-172-31-12-228
-$ sudo ufw status
-Status: inactive
-# ubuntu @ ip-172-31-12-228
-$ sudo ufw enable
-Command may disrupt existing ssh connections. Proceed with operation (y|n)? n
-Aborted
-```
-
-> **Note:** use `sudo ufw enable` carefully, because it may disrupt your ssh connection. 
 
 ### 1.2. `ufw app list`
 

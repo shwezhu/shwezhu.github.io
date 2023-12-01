@@ -6,7 +6,7 @@ categories:
 tags:
  - database
  - redis
- - go
+ - golang
 ---
 
 Previous post: https://davidzhu.xyz/post/database/redis/004-session-vs-cache/

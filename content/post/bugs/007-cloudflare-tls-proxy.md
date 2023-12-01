@@ -31,7 +31,7 @@ And you will get instructions for updating your nameserver of your domain. After
 
 > **Note:** choose `full mode`, don't use `flexbile mode`, otherwise you **probably would** get [ERR_TOO_MANY_REDIRECTS](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/) when access your website. 
 
-### 2.2. Install TLS certificate
+### 1.2. Install TLS certificate
 
 ![c](/007-cloudflare-tls-proxy/c.png)
 
@@ -93,3 +93,10 @@ Name:	davidzhu.xyz
 Address: 185.199.108.153
 ```
 
+## 2. Change VPS
+
+If you changed a vps, all you need to do is to change the A record of your domain on Cloudflare, you don't need to change the A record on your domain register website.
+
+> Cloudflare serves as a **reverse proxy**, directing all traffic for the specified proxied domain to the target IP address.
+
+![cc](/007-cloudflare-tls-proxy/cc.png)

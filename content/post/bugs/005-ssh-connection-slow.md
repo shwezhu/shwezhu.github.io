@@ -6,7 +6,6 @@ categories:
 tags:
  - bugs
  - ssh
- - aws
 ---
 
 Connecting to my aws server with ssh client is very slow, and after connected, the session is very slow too. 

@@ -49,6 +49,8 @@ $ dig +short davidzhu.xyz
 $ find . -depth -execdir rename -f 'y/A-Z/a-z/' {} \;
 # check files size under current folder, h: human-readable, *: all, s: sort
 $ du  -sh  *
+# disk usage
+$ df -lh
 ```
 
 ## 2. wget
