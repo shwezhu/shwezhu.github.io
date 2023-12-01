@@ -121,6 +121,30 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/advance/012-statically-linking/">Static Linking Go Programs</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-10 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/advance/"> advance </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Previous post: Statically Linking in C - David&rsquo;s Blog
+1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
+standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/advance/012-statically-linking/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/golang/advance/011-cross-compilation/">Cross Compilation - Go</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-10-10 </span>
@@ -198,8 +222,8 @@ Source: https://stackoverflow.com/a/897303/16317008
   
   <div class="post-content">
     <div class="post-summary">
-      1. ufw command The ufw command stands for &ldquo;Uncomplicated Firewall&rdquo; and it is a user-friendly command-line tool used to manage the firewall settings on Ubuntu and other Linux distributions.
-1.1. Commonly used ufw commands 1 2 3 4 5 6 7 8 9 10 ufw enable: Enables the firewall, which starts enforcing the configured rules. ufw disable: Disables the firewall, allowing all network traffic. ufw status: Displays the current status of the firewall and the rules that are in effect.
+      1. ufw command 1.1. Commonly used ufw commands 1 2 3 4 5 6 7 # ubuntu @ ip-172-31-12-228 $ sudo ufw status Status: inactive # ubuntu @ ip-172-31-12-228 $ sudo ufw enable Command may disrupt existing ssh connections. Proceed with operation (y|n)? n Aborted Note: use sudo ufw enable carefully, because it may disrupt your ssh connection.
+1 2 3 4 5 6 7 8 9 10 ufw enable: Enables the firewall, which starts enforcing the configured rules.
     </div>
     <div class="read-more">
       <a href="/post/build-website/006-ufw-aws-sg/" class="read-more-link">Read more...</a>
@@ -319,29 +343,6 @@ Generally speaking, as you move outside and away from your CPU, actions get orde
     </div>
     <div class="read-more">
       <a href="/post/golang/advance/010-defer-close/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/database/mysql/002-index-primary-key/">Index and Primary Key</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-10-03 </span>
-      <div class="post-category">
-          <a href="/categories/database/"> database </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Index concepts Learn more: https://www.oreilly.com/library/view/high-performance-mysql/0596003064/ch04.html
-2. When will index be created Primary Key: By default, when you define a primary key constraint on a column or set of columns using the PRIMARY KEY keyword, MySQL automatically creates an index on that column(s).
-1 2 3 4 5 6 7 # index will created on user_id column create table `user` ( `user_id` smallint not null auto_increment, `username` varchar(20) not null, `password` varchar(20) not null, primary key (`user_id`) ); Unique Constraints: When you define a unique constraint on a column or set of columns using the UNIQUE keyword, MySQL automatically creates an index to enforce uniqueness.
-    </div>
-    <div class="read-more">
-      <a href="/post/database/mysql/002-index-primary-key/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>

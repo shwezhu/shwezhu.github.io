@@ -22,8 +22,8 @@
       <pubDate>Mon, 09 Oct 2023 13:53:57 +0000</pubDate>
       
       <guid>https://davidzhu.xyz/post/build-website/006-ufw-aws-sg/</guid>
-      <description>1. ufw command The ufw command stands for &amp;ldquo;Uncomplicated Firewall&amp;rdquo; and it is a user-friendly command-line tool used to manage the firewall settings on Ubuntu and other Linux distributions.
-1.1. Commonly used ufw commands 1 2 3 4 5 6 7 8 9 10 ufw enable: Enables the firewall, which starts enforcing the configured rules. ufw disable: Disables the firewall, allowing all network traffic. ufw status: Displays the current status of the firewall and the rules that are in effect.</description>
+      <description>1. ufw command 1.1. Commonly used ufw commands 1 2 3 4 5 6 7 # ubuntu @ ip-172-31-12-228 $ sudo ufw status Status: inactive # ubuntu @ ip-172-31-12-228 $ sudo ufw enable Command may disrupt existing ssh connections. Proceed with operation (y|n)? n Aborted Note: use sudo ufw enable carefully, because it may disrupt your ssh connection.
+1 2 3 4 5 6 7 8 9 10 ufw enable: Enables the firewall, which starts enforcing the configured rules.</description>
     </item>
     
     <item>
@@ -40,12 +40,16 @@ Source: https://en.wikipedia.org/wiki/HTTPS#Network_layers
     </item>
     
     <item>
-      <title>AWS EC2 - Basic Settings of a Server</title>
-      <link>https://davidzhu.xyz/post/build-website/005-aws-basics/</link>
+      <title>Basic Configuration of VPS</title>
+      <link>https://davidzhu.xyz/post/build-website/005-vps-basic-config/</link>
       <pubDate>Sat, 09 Sep 2023 15:53:57 +0000</pubDate>
       
-      <guid>https://davidzhu.xyz/post/build-website/005-aws-basics/</guid>
-      <description>1 2 # Change password of supervisor $ sudo passwd ubuntu 1. Connect to EC2 Instance 1 2 3 4 5 6 7 8 9 10 11 12 13 14 $ ssh -i aws-key.pem root@your-ec2-ip-address The authenticity of host &amp;#39;xx.xx.xx.xx&amp;#39; can&amp;#39;t be established. ED25519 key fingerprint is SHA256:UULuI08gIJRb+vQnFPpjcSW7hAtLIgf5g. This key is not known by any other names Are you sure you want to continue connecting (yes/no/[fingerprint])? yes Warning: Permanently added &amp;#39;xx.</description>
+      <guid>https://davidzhu.xyz/post/build-website/005-vps-basic-config/</guid>
+      <description>1. Login without using keypairs Copy your ssh public key on your computer into the ~/.ssh/authorized_keys file on you EC2 instance.
+On you local machine:
+1 2 $ cat ~/.ssh/id_rsa.pub ... Copy the content into your EC2 instance:
+1 $ sudo vi .ssh/authorized_keys Then you can login directly:
+2. oh-my-zsh shell 1 2 3 sudo apt install zsh -y chsh -s /bin/zsh sh -c &amp;#34;$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)&amp;#34; 3. Set up ufw 1 2 3 4 5 6 7 8 9 10 11 12 ➜ ~ sudo ufw status Status: active To Action From -- ------ ---- 22/tcp ALLOW Anywhere 22/tcp (v6) ALLOW Anywhere (v6) # if you need 443, do this: ➜ ~ sudo ufw allow 443 Rule added Rule added (v6) Learn more: ufw vs AWS Security Group - David&amp;rsquo;s Blog</description>
     </item>
     
     <item>

@@ -48,7 +48,7 @@
 <meta itemprop="name" content="实现ssh免密登陆 ssh如何验证远程主机真实性">
 <meta itemprop="description" content="1. SSH 应对中间人攻击的方法 SSH 采用了公钥加密, 过程如下： （1）Remote Host 收到用户的登录请求, 把自己的公钥发给用户 （2）用户使用这个公钥, 将登"><meta itemprop="datePublished" content="2023-06-03T17:14:27+00:00" />
 <meta itemprop="dateModified" content="2023-06-03T17:14:27+00:00" />
-<meta itemprop="wordCount" content="2404">
+<meta itemprop="wordCount" content="2412">
 <meta itemprop="keywords" content="ssh,cryptography,cs basics,networking,cybersecurity," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="实现ssh免密登陆 ssh如何验证远程主机真实性"/>
 <meta name="twitter:description" content="1. SSH 应对中间人攻击的方法 SSH 采用了公钥加密, 过程如下： （1）Remote Host 收到用户的登录请求, 把自己的公钥发给用户 （2）用户使用这个公钥, 将登"/>
@@ -338,16 +338,18 @@
 <li>验证数字签名</li>
 </ul>
 <h3 id="32-具体操作">3.2. 具体操作</h3>
-<p>上面也说了, 远程主机需要使用用户的公钥来验证用户的身份, 以及加密随机数, 所以我们本地机器肯定要先生成一个公钥私钥然后把公钥存储到远程主机上, 生成方法:</p>
+<p>远程主机需要使用用户的公钥来验证用户的身份, 所以<strong>本地机器</strong>要生成公私钥:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ssh-keygen
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># generate ssh keys</span>
+</span></span><span class="line"><span class="cl">$ ssh-keygen
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>运行该命令后, 出现很多提示, 直接回车,  之后在<code>~/.ssh/</code>目录下, 会新生成两个文件：<code>id_rsa.pub</code>和<code>id_rsa</code>, 前者是你的公钥, 后者是你的私钥, 这时再输入下面的命令, 将公钥传送到远程主机host上面:</p>
+</div><p>一路回车之后在<code>~/.ssh/</code>会新生成两个文件：<code>id_rsa.pub</code>和<code>id_rsa</code>, 前者是你的公钥, 后者是你的私钥, 这时再输入下面的命令, 将公钥传送到远程主机host上面:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -365,8 +367,11 @@
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ssh root@144.202.16.29
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="4-authorized_keys-file">4. <code>authorized_keys</code> file</h2>
-<p>远程主机将用户的公钥保存在了<code>~/.ssh/authorized_keys</code>,</p>
+</div><blockquote>
+<p>其实你也可以直接编辑远程主机 <code>~/.ssh/authorized_keys</code> 文件, 把你本地主机的公钥的内容添加进去就行了, <code>ssh-copy-id root@144.202.16.29</code> 做的就是这件事. 下面我们会验证.</p>
+</blockquote>
+<h2 id="4-authorized_keys-file">4. <code>authorized_keys</code> file</h2>
+<p>上面 <code>ssh-copy-id root@144.202.16.29</code> 执行后, 本机公钥存储在了远程主机<code>~/.ssh/authorized_keys</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1

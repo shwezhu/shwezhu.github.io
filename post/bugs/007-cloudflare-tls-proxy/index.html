@@ -57,7 +57,7 @@ There are two steps to enable end-to-end encryption with Cloudflare.:
 Add your domain to Cloudflare Create and install TLS certificate to your server 1.1. Add your domain to Cloudflare Go to this website: https://dash.cloudflare.com/
 And you will get instructions for updating your nameserver of your domain."><meta itemprop="datePublished" content="2023-11-15T20:09:22+00:00" />
 <meta itemprop="dateModified" content="2023-11-15T20:09:22+00:00" />
-<meta itemprop="wordCount" content="473">
+<meta itemprop="wordCount" content="529">
 <meta itemprop="keywords" content="bugs,docker,golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Coudflare TLS encryption 520 Error Code &amp; too Many Redirections"/>
 <meta name="twitter:description" content="1. Enable end-to-end encryption with Cloudflare Getting a official TLS certificate is too expensive, so I decide to use Cloudflare TLS proxy to enable TLS connection between the client and my server.
@@ -157,9 +157,10 @@ And you will get instructions for updating your nameserver of your domain."/>
         <li><a href="#1-enable-end-to-end-encryption-with-cloudflare">1. Enable end-to-end encryption with Cloudflare</a>
           <ul>
             <li><a href="#11-add-your-domain-to-cloudflare">1.1. Add your domain to Cloudflare</a></li>
-            <li><a href="#22-install-tls-certificate">2.2. Install TLS certificate</a></li>
+            <li><a href="#12-install-tls-certificate">1.2. Install TLS certificate</a></li>
           </ul>
         </li>
+        <li><a href="#2-change-vps">2. Change VPS</a></li>
       </ul>
     </li>
   </ul>
@@ -182,7 +183,7 @@ And you will get instructions for updating your nameserver of your domain."/>
 <blockquote>
 <p><strong>Note:</strong> choose <code>full mode</code>, don&rsquo;t use <code>flexbile mode</code>, otherwise you <strong>probably would</strong> get <a href="https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/">ERR_TOO_MANY_REDIRECTS</a> when access your website.</p>
 </blockquote>
-<h3 id="22-install-tls-certificate">2.2. Install TLS certificate</h3>
+<h3 id="12-install-tls-certificate">1.2. Install TLS certificate</h3>
 <p><img src="/007-cloudflare-tls-proxy/c.png" alt="c"></p>
 <p>Create <code>cert.pem</code> and <code>cert.key</code> on your server and copy the corresponding file into these two files. Then you can use them.</p>
 <div class="highlight"><div class="chroma">
@@ -279,7 +280,13 @@ And you will get instructions for updating your nameserver of your domain."/>
 </span></span><span class="line"><span class="cl">Address: 185.199.108.153
 </span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div><h2 id="2-change-vps">2. Change VPS</h2>
+<p>If you changed a vps, all you need to do is to change the A record of your domain on Cloudflare, you don&rsquo;t need to change the A record on your domain register website.</p>
+<blockquote>
+<p>Cloudflare serves as a <strong>reverse proxy</strong>, directing all traffic for the specified proxied domain to the target IP address.</p>
+</blockquote>
+<p><img src="/007-cloudflare-tls-proxy/cc.png" alt="cc"></p>
+
     </div>
 
     <div class="post-copyright">
