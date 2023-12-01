@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&amp;rsquo;m trying to use ssh to connect my server with my domain name ssh root@www.davidzhu.xyz," />
+<meta name="author" content="David" /><meta name="description" content="问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&amp;rsquo;m trying to use ssh to connect my server with" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="启动Cloudflare代理导致无法通过域名解析出A记录中的IP" />
-<meta property="og:description" content="这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with my domain name ssh root@www.davidzhu.xyz," />
+<meta property="og:description" content="问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/bugs/002-bug-domain-with-two-ip/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-04-26T17:30:22+00:00" />
 <meta property="article:modified_time" content="2023-04-26T17:30:22+00:00" />
 <meta itemprop="name" content="启动Cloudflare代理导致无法通过域名解析出A记录中的IP">
-<meta itemprop="description" content="这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with my domain name ssh root@www.davidzhu.xyz,"><meta itemprop="datePublished" content="2023-04-26T17:30:22+00:00" />
+<meta itemprop="description" content="问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with"><meta itemprop="datePublished" content="2023-04-26T17:30:22+00:00" />
 <meta itemprop="dateModified" content="2023-04-26T17:30:22+00:00" />
-<meta itemprop="wordCount" content="1141">
+<meta itemprop="wordCount" content="675">
 <meta itemprop="keywords" content="bugs,build website," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="启动Cloudflare代理导致无法通过域名解析出A记录中的IP"/>
-<meta name="twitter:description" content="这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with my domain name ssh root@www.davidzhu.xyz,"/>
+<meta name="twitter:description" content="问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -138,11 +138,25 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#问题描述">问题描述:</a></li>
+            <li><a href="#更新"><strong>更新:</strong></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
-      <p>这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路,</p>
+      <h3 id="问题描述">问题描述:</h3>
+<p>这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路,</p>
 <p>I&rsquo;m trying to use <code>ssh</code> to connect my server with my domain name <code>ssh root@www.davidzhu.xyz</code>, but I always get timeout. However I can connect my server when use my server ip directly <code>ssh root@144.202.12.32</code>, so I was trying to use <code>tcpdump</code> to check what has happened, and I found when I use <code>ssh root@www.davidzhu.xyz</code>, there are two different target ip addresses like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -178,88 +192,20 @@
 </div><p>But I only have one A record on my domain, this is the DNS Record of my domain name (the third one is about the google search console):</p>
 <p><img src="/002-bug-domain-with-two-ip/a.png" alt=""></p>
 <p>惊不惊讶, <strong><code>dig</code>返回的两个IP地址竟然都与我域名的A记录不同</strong>!</p>
-<p>And I use cloudflare as my NS, cz I use it for free ssl. My two NS:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ dig chin.ns.cloudflare.com +short 
-</span></span><span class="line"><span class="cl">172.64.32.84
-</span></span><span class="line"><span class="cl">173.245.58.84
-</span></span><span class="line"><span class="cl">108.162.192.84
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">$ dig noel.ns.cloudflare.com +short
-</span></span><span class="line"><span class="cl">108.162.193.216
-</span></span><span class="line"><span class="cl">172.64.33.216
-</span></span><span class="line"><span class="cl">173.245.59.216
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>And I saw <a href="https://superuser.com/a/1780483/1689666">another guy</a> use <code>dig</code> command to check the ip of my domain name <code>www.davidzhu.xyz</code>,</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">dig davidzhu.xyz +short
-</span></span><span class="line"><span class="cl">144.202.12.32
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">dig www.davidzhu.xyz +short
-</span></span><span class="line"><span class="cl">144.202.12.32
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Is this about DNS cache on my mac? I tried to use something like this <code>sudo killall -HUP mDNSResponder</code>, but no help.</p>
 <hr>
-<p>在<a href="https://stackexchange.com/">Stack Exchange</a>上的大佬帮助下, 研究明白了返回两个与我A记录不同IP的原因,</p>
-<p>首先这并不是因为我本地电脑DNS缓存问题, 而是因为我在Cloudflare上启动了代理traffic, 即开启免费SSL证书, 我没证书, 他们有, 所有通过<code>http://www.davidzhu.xyz</code>访问我的流量会转发给他们然后变成<code>https</code>, 问题描述里的另一个人可以“正常”显示我的IP是因为当时我在Cloudflare的修改(启动Proxy, SSL)还没生效.</p>
-<p>当时猜测是因为我的域名使用了Cloudflare的NS, 因为我想的是NS存储的就是map(我域名和其对应的IP地址), 如果是我域名指定的NS出了问题那就是访问不到我的IP地址或者因为缓存问题多返回了一个错误的IP地址(即我购买域名的时候默认的IP, 虽然我早删掉了), 但其实并不是因缓存问题, 而是我在Cloudflare开启了Proxy,</p>
-<p>然后<a href="https://superuser.com/a/1781034/1689666">大佬</a>就想到了代理, 之前就是没想到代理也有IP地址, 即代理本质也是把所有请求都转发到另一台服务器(之前搞梯子竟然把这给忘了, 真是可恶).</p>
+<h3 id="更新"><strong>更新:</strong></h3>
+<p>原因是我的域名开启了 Cloudfalre 的 <a href="https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/">reverse proxy</a>, 通过域名获取到的是 Clouflare 的IP, 无法访问到我服务器真实IP:</p>
 <blockquote>
-<p>The reason that the domain has two IP addresses is that the domain was put under Cloudflare, and the way Cloudflare works is by proxying all your traffic through them (they have the SSL on their system, so it can&rsquo;t go directly to you.)</p>
+<p>When you add your application to Cloudflare, we use this network to sit in between requests and your origin server.</p>
+<p>Cloudflare does this by serving as a <strong>reverse proxy</strong> for your web traffic. All requests to and from your origin <strong>flow through Cloudflare</strong> and — as these requests pass through our network — we can apply various rules and optimizations to improve security, performance, and reliability.</p>
+<p>Learn more: <a href="https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/">How Cloudflare works · Cloudflare Fundamentals docs</a></p>
 </blockquote>
-<p>然后我把Cloudflare上的代理关了, 之后就得到了正确的IP地址:</p>
-<p><img src="/002-bug-domain-with-two-ip/b.png" alt=""></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ dig davidzhu.xyz +trace 
-</span></span><span class="line"><span class="cl">...
-</span></span><span class="line"><span class="cl">...
-</span></span><span class="line"><span class="cl">...
-</span></span><span class="line"><span class="cl">davidzhu.xyz.       <span class="m">3600</span>    IN  NS  chin.ns.cloudflare.com.
-</span></span><span class="line"><span class="cl">davidzhu.xyz.       <span class="m">3600</span>    IN  NS  noel.ns.cloudflare.com.
-</span></span><span class="line"><span class="cl"><span class="p">;;</span> Received <span class="m">581</span> bytes from 212.18.249.42#53<span class="o">(</span>generationxyz.nic.xyz<span class="o">)</span> in <span class="m">26</span> ms
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">davidzhu.xyz.       <span class="m">300</span> IN  A   144.202.12.32
-</span></span><span class="line"><span class="cl"><span class="p">;;</span> Received <span class="m">57</span> bytes from 173.245.58.84#53<span class="o">(</span>chin.ns.cloudflare.com<span class="o">)</span> in <span class="m">34</span> ms
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>所以这也知道了为啥通过域名使用ssh连接服务器总是超时了, 吗的, target ip都不是对的, 怎么可能连接的上</p>
+<p>关闭 Cloudflare 反向代理就可以通过域名获取到服务器真实IP了:</p>
+<p><img src="/002-bug-domain-with-two-ip/cc.png" alt="cc"></p>
+<p>另外通过这个机制, 若更换域名的 DNS Record, 就不用在购买域名的服务商那修改了, 只需要在服务商那把你域名的 NS 服务器修改为 Clouflare 的 NS 服务器, 之后修改域名的 DNS Record, 比如你服务器IP换了, 直接到 Cloudflare 这修改一下域名的 A Record 就可以了, 如上图,</p>
+<p>了解更多: <a href="https://davidzhu.xyz/post/bugs/007-cloudflare-tls-proxy/">Coudflare TLS encryption 520 Error Code &amp; too Many Redirections - David&rsquo;s Blog</a></p>
 <hr>
-<p>另外如果使用了 cloudflare https 代理, 一般都是先修改域名的 NS 为 cloudfalre 指定的 NS, 然后建立 https 代理, 但是有些电脑可能因为 DNS cache 问题, 通过 https 访问你的域名可能会失败, 此时应该尝试修改本地 DNS cache,</p>
+<p>另外如果使用了 cloudflare https 代理, 一般都是先修改域名的 NS 为 cloudfalre 指定的 NS, 但是有些电脑可能因为 DNS cache 问题, 通过 https 访问你的域名可能会失败, 此时应该尝试修改本地 DNS cache,</p>
 <p>注意, DNS cache 一般 chrome 保存了一份, 操作系统也会保存一份, 因此两个地方都要考虑进去,</p>
 <p>关于DNS: <a href="https://davidzhu.xyz/post/networking/002-dns-basics/">DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog</a></p>
 <p>了解更多: <a href="https://community.cloudflare.com/t/https-works-on-some-computers-but-not-others/15922">HTTPS Works on some computers but not others? - Website, Application, Performance / Security - Cloudflare Community</a></p>
