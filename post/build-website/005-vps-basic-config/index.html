@@ -60,7 +60,7 @@ On you local machine:
 1 $ sudo vi .ssh/authorized_keys Then you can login directly:
 2. oh-my-zsh shell 1 2 3 sudo apt install zsh -y chsh -s /bin/zsh sh -c &#34;$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)&#34; 3. Set up ufw 1 2 3 4 5 6 7 8 9 10 11 12 ➜ ~ sudo ufw status Status: active To Action From -- ------ ---- 22/tcp ALLOW Anywhere 22/tcp (v6) ALLOW Anywhere (v6) # if you need 443, do this: ➜ ~ sudo ufw allow 443 Rule added Rule added (v6) Learn more: ufw vs AWS Security Group - David&rsquo;s Blog"><meta itemprop="datePublished" content="2023-09-09T15:53:57+00:00" />
 <meta itemprop="dateModified" content="2023-09-09T15:53:57+00:00" />
-<meta itemprop="wordCount" content="227">
+<meta itemprop="wordCount" content="386">
 <meta itemprop="keywords" content="build website," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Basic Configuration of VPS"/>
 <meta name="twitter:description" content="1. Login without using keypairs Copy your ssh public key on your computer into the ~/.ssh/authorized_keys file on you EC2 instance.
@@ -238,7 +238,7 @@ On you local machine:
 </div>
 </div><p>Learn more: <a href="https://davidzhu.xyz/post/build-website/006-ufw-aws-sg/">ufw vs AWS Security Group - David&rsquo;s Blog</a></p>
 <h2 id="4-other-info">4. Other info</h2>
-<p>After basic settings, my Alpine Linux: 1 vCPUs, 512 MB RAM, 10G SSD, Vultr VPS:</p>
+<p>After basic settings, on <strong>Alpine Linux</strong>: 1 vCPUs, 512 MB RAM, 10G SSD, Vultr VPS:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -255,6 +255,26 @@ On you local machine:
 </span><span class="lnt">12
 </span><span class="lnt">13
 </span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ~ df -h
@@ -271,9 +291,30 @@ On you local machine:
 </span></span><span class="line"><span class="cl">Download: 1648.48 Mbit/s
 </span></span><span class="line"><span class="cl">Testing upload speed......................................................................................................
 </span></span><span class="line"><span class="cl">Upload: 1013.83 Mbit/s
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">❯ iperf -c 149.22.12.30 -i 3 -t 18 -R
+</span></span><span class="line"><span class="cl">[ ID] Interval       Transfer     Bandwidth
+</span></span><span class="line"><span class="cl">[ *1] 0.00-3.00 sec  77.2 MBytes   216 Mbits/sec
+</span></span><span class="line"><span class="cl">[ *1] 3.00-6.00 sec   105 MBytes   295 Mbits/sec
+</span></span><span class="line"><span class="cl">[ *1] 6.00-9.00 sec   101 MBytes   282 Mbits/sec
+</span></span><span class="line"><span class="cl">[ *1] 9.00-12.00 sec  82.3 MBytes   230 Mbits/sec
+</span></span><span class="line"><span class="cl">[ *1] 12.00-15.00 sec  87.4 MBytes   244 Mbits/sec
+</span></span><span class="line"><span class="cl">[ *1] 15.00-18.00 sec   101 MBytes   282 Mbits/sec
+</span></span><span class="line"><span class="cl">[ *1] 0.00-18.65 sec   575 MBytes   259 Mbits/sec
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">❯ iperf -c 149.22.12.30 -i 3 -t 18
+</span></span><span class="line"><span class="cl">[ ID] Interval       Transfer     Bandwidth
+</span></span><span class="line"><span class="cl">[  1] 0.00-3.00 sec   102 MBytes   286 Mbits/sec
+</span></span><span class="line"><span class="cl">[  1] 3.00-6.00 sec   104 MBytes   290 Mbits/sec
+</span></span><span class="line"><span class="cl">[  1] 6.00-9.00 sec   100 MBytes   281 Mbits/sec
+</span></span><span class="line"><span class="cl">[  1] 9.00-12.00 sec  82.0 MBytes   229 Mbits/sec
+</span></span><span class="line"><span class="cl">[  1] 12.00-15.00 sec  83.0 MBytes   232 Mbits/sec
+</span></span><span class="line"><span class="cl">[  1] 15.00-18.00 sec  72.0 MBytes   201 Mbits/sec
+</span></span><span class="line"><span class="cl">[  1] 0.00-18.10 sec   544 MBytes   252 Mbits/sec
 </span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div><p><img src="/005-vps-basic-config/aa.png" alt="aa"></p>
+
     </div>
 
     <div class="post-copyright">
