@@ -7,6 +7,7 @@ tags:
  - bugs
  - docker
  - golang
+ - build website
 typora-root-url: ../../../static
 ---
 
@@ -21,17 +22,17 @@ Getting a official TLS certificate is too expensive, so I decide to use Cloudfla
 
 Go to this website: https://dash.cloudflare.com/
 
-![aa](/007-cloudflare-tls-proxy/aa.png)
+![aa](/008-enable-cloudflare-reverse-proxy/aa.png)
 
 And you will get instructions for updating your nameserver of your domain. After change your nameserver, waite about one hour, your site will be **active** on Cloudflare. Then you can choose the TLS encryption mode:
 
-![b](/007-cloudflare-tls-proxy/b.png)
+![b](/008-enable-cloudflare-reverse-proxy/b.png)
 
 > **Note:** choose `full mode`, don't use `flexbile mode`, otherwise you **probably would** get [ERR_TOO_MANY_REDIRECTS](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/) when access your website. 
 
 ### 1.2. Install TLS certificate
 
-![c](/007-cloudflare-tls-proxy/c.png)
+![c](/008-enable-cloudflare-reverse-proxy/c.png)
 
 Create `cert.pem` and `cert.key` on your server and copy the corresponding file into these two files. Then you can use them. 
 
@@ -79,17 +80,9 @@ Address: 172.67.171.207 # not my domain's real ip, it's Cloudfalre
 Name:	shaowenzhu.top
 Address: 104.21.47.185 # not my domain's real ip, it's Cloudfalre
 
-❯ nslookup -type=soa davidzhu.xyz
-Authoritative answers can be found from:
-davidzhu.xyz	nameserver = ns1.dnsowl.com.
-davidzhu.xyz	nameserver = ns2.dnsowl.com.
-davidzhu.xyz	nameserver = ns3.dnsowl.com.
-
-# your domain's real ip
-❯ nslookup davidzhu.xyz ns1.dnsowl.com
-Name:	davidzhu.xyz
-Address: 185.199.108.153
 ```
+
+Learn more: [Add a site · Cloudflare Fundamentals docs](https://developers.cloudflare.com/fundamentals/setup/account-setup/add-site/)
 
 ## 2. Change VPS
 
@@ -97,4 +90,5 @@ If you changed a vps, all you need to do is to change the A record of your domai
 
 > Cloudflare serves as a **reverse proxy**, directing all traffic for the specified proxied domain to the target IP address.
 
-![cc](/007-cloudflare-tls-proxy/cc.png)
+![cc](/008-enable-cloudflare-reverse-proxy/cc.png)
+

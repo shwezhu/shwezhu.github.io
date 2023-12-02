@@ -56,7 +56,7 @@ But I only have one A record on my domain, this is the DNS Record of my domain n
 
 另外通过这个机制, 若更换域名的 DNS Record, 就不用在购买域名的服务商那修改了, 只需要在服务商那把你域名的 NS 服务器修改为 Clouflare 的 NS 服务器, 之后修改域名的 DNS Record, 比如你服务器IP换了, 直接到 Cloudflare 这修改一下域名的 A Record 就可以了, 如上图, 
 
-了解更多: [Coudflare TLS encryption 520 Error Code & too Many Redirections - David's Blog](https://davidzhu.xyz/post/bugs/007-cloudflare-tls-proxy/)
+了解更多: [Enable Coudflare Reverse Proxy - David's Blog](https://davidzhu.xyz/post/build-website/008-enable-cloudflare-reverse-proxy/)
 
 ---
 
@@ -68,3 +68,10 @@ But I only have one A record on my domain, this is the DNS Record of my domain n
 
 了解更多: [HTTPS Works on some computers but not others? - Website, Application, Performance / Security - Cloudflare Community](https://community.cloudflare.com/t/https-works-on-some-computers-but-not-others/15922)
 
+---
+
+其实这样有个好处, 就是别人无法通过你的域名接触到你的服务器, 因为每次请求你的域名, 都要经过 Cloudfalre 中转才能到你的服务器, 另外通过nslookup, dig也无法查到你服务器的真实IP, 返回的都是 Cloudflare 的IP. 
+
+> Because of [how Cloudflare works](https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/), all traffic to [proxied DNS records](https://developers.cloudflare.com/dns/manage-dns-records/reference/proxied-dns-records/) pass through Cloudflare before reaching your origin server. This means that your origin server will stop receiving traffic from individual visitor IP addresses and instead receive traffic from [Cloudflare IP addresses](https://www.cloudflare.com/ips), which are shared by all proxied hostnames.
+>
+> [Cloudflare IPs · Getting started · Learning paths](https://developers.cloudflare.com/learning-paths/get-started/concepts/cloudflare-ips/)
