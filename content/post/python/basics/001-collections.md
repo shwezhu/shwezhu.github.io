@@ -1,5 +1,5 @@
 ---
-title: Python Basics
+title: Collections in Python
 date: 2023-06-17 22:51:31
 categories:
   - python
@@ -17,10 +17,87 @@ tags:
 
 ```python
 arr = [1, 2, 3]
-print(arr[-1]) # 4
+print(arr[-1]) # 3
 print(arr[0]) # 1
+print(arr[:-2]) # [1]
 print(arr[-4]) # error: out of range
 ```
+
+### 1.2. Reslice makes shallow copy
+
+```python
+cat = {
+    "name": "Coco",
+    "age": 3.5,
+}
+
+original_list = [cat, 2, 3, 4, 5]
+copied_list = original_list[:3]
+
+print("Original list:", original_list)
+print("Copied list:", copied_list)
+
+copied_list[1] = 999
+copied_list[0]["name"] = "Bella"
+
+print("Original list (after modification):", original_list)
+print("Copied list (after modification):", copied_list)
+```
+
+Output:
+
+```
+Original list: [{'name': 'Coco', 'age': 3.5}, 2, 3, 4, 5]
+Copied list: [{'name': 'Coco', 'age': 3.5}, 2, 3]
+Original list (after modification): [{'name': 'Bella', 'age': 3.5}, 2, 3, 4, 5]
+Copied list (after modification): [{'name': 'Bella', 'age': 3.5}, 999, 3]
+```
+
+> The [:] makes a **shallow copy** of the array, hence allowing you to modify your copy without damaging the original. The reason this also works for strings is that in Python, **Strings** are arrays of bytes representing Unicode characters. [What does [:] mean in Python?](https://blog.aaronmeese.com/what-does-mean-in-python-6831c027e43b)
+>
+> This is similar to reslicing in Golang, but not same, in Gloang the new slice shares a same underlying array with it resliced from, whereas Python will create a new list object directly. 
+
+### 1.3. Reslicing in Golang and Python
+
+**Python:** When you `new_list = old_list[start:end]`, a new list object is created and the elements from the specified slice are copied over (shallow copy) to this new list. This means the original list and the new list are completely independent of each other – changing one will not affect the other.
+
+```python
+# Python Example
+original_list = [1, 2, 3, 4, 5]
+sliced_list = original_list[:3]
+
+original_list[0] = 99
+sliced_list[1] = 101
+
+print("Original list:", original_list)
+print("Sliced list:", sliced_list)
+# output
+Original list: [99, 2, 3, 4, 5]
+Sliced list: [1, 101, 3]
+```
+
+**Go:** When you create a new slice from an existing array or slice (e.g., `newSlice := oldSlice[start:end]`), the new slice does not copy the elements. Instead, it refers to the same underlying array as the original slice. This means that modifying the elements of the new slice will also modify the corresponding elements in the original slice (and vice versa), as long as the modifications are within the bounds of both slices. However, if you append to the slice and the capacity of the underlying array is exceeded, Go will allocate a new array and copy the elements over, **causing the slices to diverge**.
+
+```go
+func main() {
+	originalSlice := []int{1, 2, 3, 4, 5}
+	newSlice := originalSlice[:3]
+
+	originalSlice[0] = 99 // This also changes newSlice[0]
+	newSlice[1] = 101  // This also changes originalSlice[1]
+
+	fmt.Println("Original slice:", originalSlice)
+	fmt.Println("New slice:", newSlice)
+}
+
+// ouput
+Original slice: [99 101 3 4 5]
+New slice: [99 101 3]
+```
+
+> A slice does not store any data, it just describes a section of an underlying array. 
+>
+> https://davidzhu.xyz/post/golang/basics/003-collections/
 
 ## 2. Dictionary
 

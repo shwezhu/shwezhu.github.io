@@ -60,6 +60,8 @@ if !ok {...}
 #### 2.1. Reslicing - imporve performance
 
 > Note that the elements has not been removed actually, they still in the underlying array. But this doesn't matter, the slice has been changed that's what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one. 
+>
+> I write a post about the difference between reslicing in Golang and Python:[Collections in Python - David's Blog](https://davidzhu.xyz/post/python/basics/001-collections/)
 
 Remove elements by reslicing:
 

@@ -122,9 +122,7 @@ The *heap* is the diametrical opposite of the stack. The *heap* is a large pool 
 
 Most of languages are designed with stack and heap, the concept of stack and heap are not mentioned in Javascript, but some concepts like the function stack frame, heap are shared among the modern languages designs. Our goal is to grab the lifetime of objects so that can write good and robust codes, not stack and heap. 
 
-
-
-参考:
+References:
 
 - [Memory in C – the stack, the heap, and static – The Craft of Coding](https://craftofcoding.wordpress.com/2015/12/07/memory-in-c-the-stack-the-heap-and-static/)
 - [When will a string be garbage collected in java - Stack Overflow](https://stackoverflow.com/questions/18406703/when-will-a-string-be-garbage-collected-in-java)
