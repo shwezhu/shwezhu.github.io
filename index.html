@@ -121,6 +121,29 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/python/practice/004-common-mistakes-tricks/">Common Mistakes and Tricks Python</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-12-03 </span>
+      <div class="post-category">
+          <a href="/categories/python/"> python </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. Slicing makes shallow copy of a list I have talked this nature of slicing in previous post, currently I came across a weird behavior when improt a variable from another package.
+messag.py:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 messages = [] def with_user(msg: str) -&gt; None: messages.append(msg) def trim_last_two_messages() -&gt; None: global messages print(&#34;in trim func, before trim, len of messages:&#34; + str(len(messages))) if len(messages) &gt; 2: messages = messages[:-2] print(&#34;in trim func, after trim, len of messages:&#34; + str(len(messages))) if __name__ == &#34;__main__&#34;: pass main.
+    </div>
+    <div class="read-more">
+      <a href="/post/python/practice/004-common-mistakes-tricks/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/bugs/009-go-server-handle-large-file/">Go File Server Cannot Handle Large Files</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-11-30 </span>
@@ -175,7 +198,8 @@ I write a file server in Go, when attempting to upload a file of approximately 2
   
   <div class="post-content">
     <div class="post-summary">
-      1. Python 1 2 3 4 5 6 7 8 9 10 11 12 13 def test_function(x, y): x += 1 y.append(4) def main(): a = 1 b = [2, 3] test_function(a, b) print(&#34;a =&#34;, a) print(&#34;b =&#34;, b) main() Output: 1 2 a = 1 b = [2, 3, 4] If you pass a mutable object into a method, the method gets a reference to that same object and
+      1. Python 1 2 3 4 5 6 7 8 9 10 11 12 13 def test_function(x, y): x += 1 y.append(4) def main(): a = 1 b = [2, 3] test_function(a, b) print(&#34;a =&#34;, a) print(&#34;b =&#34;, b) main() Output:
+1 2 a = 1 b = [2, 3, 4] If you pass a mutable object into a method, the method gets a reference to that same object and you can mutate it to your heart&rsquo;s delight, but if you rebind the reference in the method, the outer scope will know nothing about it, and after you&rsquo;re done, the outer reference will still point at the original object.
     </div>
     <div class="read-more">
       <a href="/post/other/001-pass-by-value-reference/" class="read-more-link">Read more...</a>
@@ -314,28 +338,6 @@ In JavaScript, the language has different types for storing data, and these type
     </div>
     <div class="read-more">
       <a href="/post/crawler/001-basic-concepts/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/python/basics/004-exception-handling/">Exception Handling &amp; Expensive or Not Python</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-11-24 </span>
-      <div class="post-category">
-          <a href="/categories/python/"> python </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. Basics concepts Try to understand the exception information (Traceback (most recent call last)) :
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 def foo(): print(10 * (1 / 0)) def main(): foo() if __name__ == &#34;__main__&#34;: main() Traceback (most recent call last): File &#34;main.py&#34;, line 10, in &lt;module&gt; main() File &#34;main.py&#34;, line 6, in main foo() File &#34;main.py&#34;, line 2, in foo print(10 * (1 / 0)) ZeroDivisionError: division by zero As you can see The last line of the error message indicates what happened: print(10 * (1 / 0)).
-    </div>
-    <div class="read-more">
-      <a href="/post/python/basics/004-exception-handling/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>

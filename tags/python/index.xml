@@ -6,7 +6,18 @@
     <description>Recent content in python on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 29 Nov 2023 14:51:31 +0000</lastBuildDate><atom:link href="https://davidzhu.xyz/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 03 Dec 2023 09:01:25 +0000</lastBuildDate><atom:link href="https://davidzhu.xyz/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Common Mistakes and Tricks Python</title>
+      <link>https://davidzhu.xyz/post/python/practice/004-common-mistakes-tricks/</link>
+      <pubDate>Sun, 03 Dec 2023 09:01:25 +0000</pubDate>
+      
+      <guid>https://davidzhu.xyz/post/python/practice/004-common-mistakes-tricks/</guid>
+      <description>1. Slicing makes shallow copy of a list I have talked this nature of slicing in previous post, currently I came across a weird behavior when improt a variable from another package.
+messag.py:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 messages = [] def with_user(msg: str) -&amp;gt; None: messages.append(msg) def trim_last_two_messages() -&amp;gt; None: global messages print(&amp;#34;in trim func, before trim, len of messages:&amp;#34; + str(len(messages))) if len(messages) &amp;gt; 2: messages = messages[:-2] print(&amp;#34;in trim func, after trim, len of messages:&amp;#34; + str(len(messages))) if __name__ == &amp;#34;__main__&amp;#34;: pass main.</description>
+    </item>
+    
     <item>
       <title>Objects &amp; Variables Python</title>
       <link>https://davidzhu.xyz/post/python/basics/001-objects-variables/</link>
@@ -22,7 +33,8 @@
       <pubDate>Tue, 28 Nov 2023 23:02:06 +0000</pubDate>
       
       <guid>https://davidzhu.xyz/post/other/001-pass-by-value-reference/</guid>
-      <description>1. Python 1 2 3 4 5 6 7 8 9 10 11 12 13 def test_function(x, y): x += 1 y.append(4) def main(): a = 1 b = [2, 3] test_function(a, b) print(&amp;#34;a =&amp;#34;, a) print(&amp;#34;b =&amp;#34;, b) main() Output: 1 2 a = 1 b = [2, 3, 4] If you pass a mutable object into a method, the method gets a reference to that same object and</description>
+      <description>1. Python 1 2 3 4 5 6 7 8 9 10 11 12 13 def test_function(x, y): x += 1 y.append(4) def main(): a = 1 b = [2, 3] test_function(a, b) print(&amp;#34;a =&amp;#34;, a) print(&amp;#34;b =&amp;#34;, b) main() Output:
+1 2 a = 1 b = [2, 3, 4] If you pass a mutable object into a method, the method gets a reference to that same object and you can mutate it to your heart&amp;rsquo;s delight, but if you rebind the reference in the method, the outer scope will know nothing about it, and after you&amp;rsquo;re done, the outer reference will still point at the original object.</description>
     </item>
     
     <item>
@@ -117,24 +129,14 @@ OpenSSL is a library, so there should be API interfaces. However, the more commo
     </item>
     
     <item>
-      <title>Python Basics</title>
+      <title>Collections in Python</title>
       <link>https://davidzhu.xyz/post/python/basics/001-collections/</link>
       <pubDate>Sat, 17 Jun 2023 22:51:31 +0000</pubDate>
       
       <guid>https://davidzhu.xyz/post/python/basics/001-collections/</guid>
       <description>1. List 1.1. Indexing right to left, use negative number, start from -1
 left to right, use positive number, start form 0
-1 2 3 4 arr = [1, 2, 3] print(arr[-1]) # 4 print(arr[0]) # 1 print(arr[-4]) # error: out of range 2. Dictionary 1 2 3 dict = {&amp;#39;a&amp;#39;: 1} print(dict[&amp;#39;b&amp;#39;]) # Raise a KeyError print(dict.get(&amp;#39;b&amp;#39;, 0)) # Print 0, with a default value e.g.,
-1 2 3 4 5 6 7 8 9 10 11 12 # calculate the frequency of the words def count_words(word_list): word_count = {} for word in word_list: if word in word_count: word_count[word] += 1 else: word_count[word] = 1 return word_count words = [&amp;#34;apple&amp;#34;, &amp;#34;banana&amp;#34;, &amp;#34;apple&amp;#34;, &amp;#34;cherry&amp;#34;, &amp;#34;banana&amp;#34;, &amp;#34;apple&amp;#34;] total, count = count_words(words) 3.</description>
-    </item>
-    
-    <item>
-      <title>Python Golang Javascript中的模块对比以及Python中的__name__</title>
-      <link>https://davidzhu.xyz/post/other/002-modules-golang-python-javascript/</link>
-      <pubDate>Wed, 14 Jun 2023 18:32:30 +0000</pubDate>
-      
-      <guid>https://davidzhu.xyz/post/other/002-modules-golang-python-javascript/</guid>
-      <description>Python Python 中的 Modules 就是源文件, 导入 module 也很简单, 就是 import + file_name, 如一个源文件 foo.py 就是一个 module, 导入这个 module 也很简单即 import foo, 然后通过 foo.sayHello() 来调用模块 foo 里面的函数或类或变量,</description>
+1 2 3 4 5 arr = [1, 2, 3] print(arr[-1]) # 3 print(arr[0]) # 1 print(arr[:-2]) # [1] print(arr[-4]) # error: out of range 1.2. Reslice makes shallow copy 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 cat = { &amp;#34;name&amp;#34;: &amp;#34;Coco&amp;#34;, &amp;#34;age&amp;#34;: 3.</description>
     </item>
     
     <item>
