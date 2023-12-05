@@ -54,7 +54,7 @@ No, a file is not automatically read into memory by opening it." />
 I found this answer talks about the open() sys call Linux on StackOverflow, which may give you hints on how os.Open() works:
 No, a file is not automatically read into memory by opening it."><meta itemprop="datePublished" content="2023-12-04T14:25:04+00:00" />
 <meta itemprop="dateModified" content="2023-12-04T14:25:04+00:00" />
-<meta itemprop="wordCount" content="1387">
+<meta itemprop="wordCount" content="1941">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="IO in Golang"/>
 <meta name="twitter:description" content="1. os.Open() loads entire file into memory? No, the os.Open() function in Golang does not load the entire file into RAM by default. It returns a file descriptor that allows you to read or write data from or to the file.
@@ -480,8 +480,121 @@ Note that <code>*os.File</code> doesn&rsquo;t equals to <code>os.File</code>, be
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="32-limit-the-size-of-http-request-body">3.2. Limit the size of HTTP request body</h3>
-<p>Limit the size of incoming request bodies.</p>
-<p>http.MaxBytesReader and http.Request.Body</p>
+<p>When handle the user upload file, you may handle like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">uploadHandler</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Parse the form data from the request
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">_</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">ParseMultipartForm</span><span class="p">(</span><span class="mi">10</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span><span class="p">)</span> <span class="c1">// Set a reasonable file size limit, e.g., 10MB
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Get the file from the request
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">file</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">FormFile</span><span class="p">(</span><span class="s">&#34;file&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Accroding to the documentation of <code>r.ParseMultipartForm()</code>:</p>
+<blockquote>
+<p>ParseMultipartForm parses a request body as multipart/form-data. <strong>The whole request body is parsed</strong> and up to a total of maxMemory bytes of its file parts are stored in memory, with the remainder stored on disk in temporary files. <a href="https://pkg.go.dev/net/http#Request.ParseMultipartForm">http package - net/http - Go Packages</a></p>
+</blockquote>
+<p>This means <code>r.ParseMultipartForm()</code> will parse the whole request body even if the uploaded file is larger than <code>maxMemory</code>. But think about another senario, if the client sends a vary large file, the server needs to handle all that data, which may consume the bandwith and CUP usage of the server.</p>
+<p>So we need to limit the size of incoming request bodies. We can use <code>http.MaxBytesReader()</code> to wrap the <code>http.Request.Body</code> like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">handleUpload</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">currentDir</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">error</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">r</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">MaxBytesReader</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Body</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nx">maxFileSize</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">ParseMultipartForm</span><span class="p">(</span><span class="nx">maxFileSize</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;file is too large:%v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">),</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusBadRequest</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// obtain file from parsed form.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">parsedFile</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">FormFile</span><span class="p">(</span><span class="s">&#34;file&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Let&rsquo;s see the <a href="https://pkg.go.dev/net/http#MaxBytesReader">documentation</a> of <code>http.MaxBytesReader()</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">MaxBytesReader</span><span class="p">(</span><span class="nx">w</span> <span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="nx">io</span><span class="p">.</span><span class="nx">ReadCloser</span><span class="p">,</span> <span class="nx">n</span> <span class="kt">int64</span><span class="p">)</span> <span class="nx">io</span><span class="p">.</span><span class="nx">ReadCloser</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>http.MaxBytesReader()</code>  accepts a <code>io.ReadCloser</code> and returns a <code>io.ReadCloser</code>. To be specific, <code>http.MaxBytesReader()</code> wraps the <code>http.Request.Body</code>(<code>io.ReadCloser</code>) to a <code>http.maxBytesReader</code> which implements the <code>io.ReadCloser</code> interface.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">MaxBytesReader</span><span class="p">(</span><span class="nx">w</span> <span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="nx">io</span><span class="p">.</span><span class="nx">ReadCloser</span><span class="p">,</span> <span class="nx">n</span> <span class="kt">int64</span><span class="p">)</span> <span class="nx">io</span><span class="p">.</span><span class="nx">ReadCloser</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">n</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span> <span class="c1">// Treat negative limits as equivalent to 0.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">n</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">maxBytesReader</span><span class="p">{</span><span class="nx">w</span><span class="p">:</span> <span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">:</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">i</span><span class="p">:</span> <span class="nx">n</span><span class="p">,</span> <span class="nx">n</span><span class="p">:</span> <span class="nx">n</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, what <code>http.MaxBytesReader()</code> does is just to wrap the <code>http.Request.Body</code> to another <code>io.ReadCloser</code>.</p>
+<p>Then you call <code>r.ParseMultipartForm()</code>, this is where the actual parsing and loading of data into memory occur. According to the documentation of <code>r.ParseMultipartForm()</code>, it will parse the whole request body. But <strong>the wrapped <code>http.Request.Body</code> will limit the size of the request body</strong>, if the incoming data exceeds <strong>maxFileSize</strong> during the reading and parsing process, the http.MaxBytesReader will trigger an error, effectively preventing the server from reading any more data from the client. This helps to protect against clients sending excessively large requests.</p>
+<p>Then what do you think about how the <code>r.ParseMultipartForm()</code> parse file from request body? Don&rsquo;t forget <code>http.Request.Body</code> is a <code>io.Reader</code> too, which means it has the <code>Read()</code> method.
+It actually calls the <code>Read()</code> method of <code>http.Request.Body</code> to read data from the request body.</p>
+<p>In the Read() method of <code>http.maxBytesReader</code>, it will check if the number of bytes read exceeds the limit, if so, it will return an error. You can check the source code of the Read() method of <code>http.maxBytesReader</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">maxBytesReader</span><span class="p">)</span> <span class="nf">Read</span><span class="p">(</span><span class="nx">p</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">l</span><span class="p">.</span><span class="nx">w</span><span class="p">.(</span><span class="nx">requestTooLarger</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">res</span><span class="p">.</span><span class="nf">requestTooLarge</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">l</span><span class="p">.</span><span class="nx">err</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">MaxBytesError</span><span class="p">{</span><span class="nx">l</span><span class="p">.</span><span class="nx">i</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">n</span><span class="p">,</span> <span class="nx">l</span><span class="p">.</span><span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>MaxBytesReader prevents clients from accidentally or maliciously sending a large request and wasting server resources. If possible, it tells the ResponseWriter to close the connection after the limit has been reached.</p>
+</blockquote>
 <h2 id="4-the-nature-of-ioreader">4. The nature of io.Reader</h2>
 <p>Readers in Go are used for reading data streams, and they have a crucial property: once you read data from a reader, that <strong>data is consumed</strong>. It&rsquo;s not possible to &lsquo;rewind&rsquo; or read the same data from the reader again unless the reader specifically supports such an operation.</p>
 <p>As what we did above, we read data from <code>*os.File</code>, <code>*bytes.Buffer</code>, and <code>net.Conn</code> which are all <code>io.Reader</code>. When we read the data into the buffer chunk by chunk, we didn&rsquo;t record or mark where we stop, but in next time we read from the reader, it will start from the last stop point. This is because the data is consumed. Let me demonstrate this:</p>

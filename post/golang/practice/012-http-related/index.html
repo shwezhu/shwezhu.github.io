@@ -54,7 +54,7 @@ js code:
 js code:
 1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground."><meta itemprop="datePublished" content="2023-10-29T11:30:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-29T11:30:50+00:00" />
-<meta itemprop="wordCount" content="1242">
+<meta itemprop="wordCount" content="1260">
 <meta itemprop="keywords" content="golang,http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Some HTTP Issues with Go"/>
 <meta name="twitter:description" content="1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or &#43; automatically,
@@ -570,8 +570,9 @@ js code:
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><strong>Usage of <code>ParseMultipartForm</code></strong>: This method parses the multipart form data from the request body. The <code>maxFileSize</code> parameter is used to limit the size of the in-memory buffer. If the file being uploaded is larger than this buffer, the rest of the data is stored in temporary files. However, it&rsquo;s important to note that <code>ParseMultipartForm</code> still reads the entire request body into memory, which could cause a spike in RAM usage.</p>
-<p><strong>Reading and Writing the File</strong>: The file is read from the form data and written to the destination path. The <code>io.Copy</code> function used here is efficient as it streams the data, but if the multipart form data is already loaded into memory, this would not reduce the memory usage (which means <code>io.Copy</code> couldn&rsquo;t help).</p>
+</div><p><strong><code>http.MaxBytesReader()</code></strong>: Doesn&rsquo;t load any data, it just wraps the request body with a <code>http.maxBytesReader</code>, learn more: <a href="https://davidzhu.xyz/post/golang/basics/018-io/">IO in Golang - David&rsquo;s Blog</a></p>
+<p><strong>Usage of <code>r.ParseMultipartForm(maxFileSize)</code></strong>: This is where the actual parsing of data (request body) occurs. The whole request body is parsed and <strong>up to a total of maxMemory bytes of its file parts are stored in memory</strong>, with the remainder stored on disk in temporary files. This will cause a spike in the usage of RAM, because it doesn&rsquo;t stream the data, it loads maxMemory bytes of data into memory, and the rest of data into disk <strong>one time</strong>. Learn more: <a href="https://davidzhu.xyz/post/golang/basics/018-io/">IO in Golang - David&rsquo;s Blog</a></p>
+<p><strong>Reading and Writing the File</strong>: The file is read from the form data and written to the destination path. The <code>io.Copy</code> function used here is efficient as <strong>it streams the data to dst file</strong>.</p>
 <h3 id="72-solution">7.2. Solution</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
