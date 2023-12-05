@@ -54,7 +54,7 @@ js code:
 js code:
 1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground."><meta itemprop="datePublished" content="2023-10-29T11:30:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-29T11:30:50+00:00" />
-<meta itemprop="wordCount" content="1260">
+<meta itemprop="wordCount" content="1381">
 <meta itemprop="keywords" content="golang,http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Some HTTP Issues with Go"/>
 <meta name="twitter:description" content="1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or &#43; automatically,
@@ -583,7 +583,46 @@ js code:
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><a href="https://pkg.go.dev/net/http#Request.MultipartReader">MultipartReader</a> returns a MIME multipart reader if this is a multipart/form-data or a multipart/mixed POST request, else returns nil and an error. Use this function instead of ParseMultipartForm to process the request body <strong>as a stream</strong>.</p>
-
+<p><strong>Note:</strong> When use <code>MultipartReader()</code>, you cannot use <code>http.MaxBytesReader()</code> to limit the size of incoming request bodies as what we did with <code>ParseMultipartForm()</code>.
+Because <code>r.ParseMultipartForm()</code> will return an error if the request body is larger than maxMemory, which <code>MultipartReader()</code> doesn&rsquo;t. If you try use <code>http.MaxBytesReader()</code> with <code>MultipartReader()</code>, when the request body exceeds the specified max size, <code>part, err := reader.NextPart()</code> will return an error:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">err.Error(): multipart: NextPart: http: request body too large
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You can do something like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">reader</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">MultipartReader</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">part</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">reader</span><span class="p">.</span><span class="nf">NextPart</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#34;multipart: NextPart: http: request body too large&#34;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="o">...</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="o">...</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
     </div>
 
     <div class="post-copyright">
