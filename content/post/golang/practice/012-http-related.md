@@ -196,3 +196,79 @@ func index(w http.ResponseWriter, r *http.Request) {
 ```
 
 Source: https://stackoverflow.com/a/76143800/16317008
+
+## 7. Receive file from http request
+
+### 7.1. Issue
+
+```go
+func (s *server) handleUpload(w http.ResponseWriter, r *http.Request, currentDir string) (error, int) {
+	maxFileSize := int64(s.maxFileSize * 1024 * 1024)
+
+	// limit the size of incoming request bodies.
+	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
+	// parse form from request body.
+  // !!!This will load the file into RAM
+	if err := r.ParseMultipartForm(maxFileSize); err != nil {
+		return fmt.Errorf("file is too large:%v", err), http.StatusBadRequest
+	}
+
+	// obtain file from parsed form.
+	parsedFile, parsedFileHeader, err := r.FormFile("file")
+	if errors.Is(err, http.ErrMissingFile) {
+		w.Header().Set("Location", r.URL.String())
+	}
+	if err != nil {
+		return err, http.StatusSeeOther
+	}
+	defer parsedFile.Close()
+
+	dstPath := filepath.Join(currentDir, filepath.Base(parsedFileHeader.Filename))
+	var dst *os.File
+	_, err = os.Stat(dstPath)
+	// the name of parsed file already exists, create a dst file with a new name.
+	if err == nil {
+		filename := strings.Split(parsedFileHeader.Filename, ".")[0] +
+			"_" +
+			strconv.FormatInt(time.Now().UnixNano(), 10) +
+			filepath.Ext(parsedFileHeader.Filename)
+		dst, err = os.Create(filepath.Join(currentDir, filename))
+	} else if os.IsNotExist(err) {
+		// the name of parsed file already exists, create a dst file with original name.
+		dst, err = os.Create(dstPath)
+	}
+	if err != nil {
+		return fmt.Errorf("failed to create file: %v", err), http.StatusInternalServerError
+	}
+	defer dst.Close()
+
+	_, err = io.Copy(dst, parsedFile)
+	if err != nil {
+		return fmt.Errorf("failed to copy file: %v", err), http.StatusInternalServerError
+	}
+
+	// considering the buffering mechanism, getting error when close a writable file is needed.
+	if err = dst.Close(); err != nil {
+		return fmt.Errorf("failed to close dst fileHtml: %v", err), http.StatusInternalServerError
+	}
+
+	// clean url and redirect
+	r.URL.RawQuery = ""
+	w.Header().Set("Location", r.URL.String())
+	w.WriteHeader(http.StatusSeeOther)
+	return nil, http.StatusSeeOther
+}
+```
+
+**Usage of `ParseMultipartForm`**: This method parses the multipart form data from the request body. The `maxFileSize` parameter is used to limit the size of the in-memory buffer. If the file being uploaded is larger than this buffer, the rest of the data is stored in temporary files. However, it's important to note that `ParseMultipartForm` still reads the entire request body into memory, which could cause a spike in RAM usage.
+
+**Reading and Writing the File**: The file is read from the form data and written to the destination path. The `io.Copy` function used here is efficient as it streams the data, but if the multipart form data is already loaded into memory, this would not reduce the memory usage (which means `io.Copy` couldn't help).
+
+### 7.2. Solution
+
+```go
+func (r *Request) MultipartReader() (*multipart.Reader, error)
+```
+
+[MultipartReader](https://pkg.go.dev/net/http#Request.MultipartReader) returns a MIME multipart reader if this is a multipart/form-data or a multipart/mixed POST request, else returns nil and an error. Use this function instead of ParseMultipartForm to process the request body **as a stream**.
+

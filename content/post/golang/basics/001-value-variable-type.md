@@ -6,7 +6,12 @@ categories:
  - basics
 tags:
  - golang
+typora-root-url: ../../../../static
 ---
+
+You should learn how to read the documentation provided Go, it's very important:
+
+![absd](/001-value-variable-type/absd.png)
 
 ## 1. Go is statically typed (static language)
 

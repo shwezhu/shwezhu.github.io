@@ -51,7 +51,7 @@ func main() {
 
 ## 2. First Try - Type `Admin` isn't `*Adimin`
 
-Because golang everything pass by value, even assignment will make a copy, therefore, at first I tried like this:
+Everything pass by value in Golang, even assignment will make a copy. Therefore, I tried something like this:
 
 ```go
 var user1 User
@@ -61,9 +61,9 @@ var user2 User
 user2 = *user1 // got an error: Invalid indirect of 'user1' (type 'User')
 ```
 
-This erorr says that user's type is `User` not `*User`, so we cannot dereference it. This reminds me that why `user1 = &Admin{name:"user1"}` doesn't cause an error?
+The erorr says that user's type is `User` not `*User`, so cannot dereference it. Why `user1 = &Admin{name:"user1"}` works fine?
 
-Shouldn't the code be `user1 = Admin{name:"user1"}`, because `Admin` implements interface `User`. But this cause an error aggin:
+An error occurred again below:
 
 ```go
 var user1 User
@@ -71,9 +71,9 @@ user1 = Admin{name:"user1"}
 // error: Cannot use 'Admin{name:"user1"}' (type Admin) as the type User Type does not implement 'User' as the 'Name' method has a pointer receiver. 
 ```
 
-This error is a little confusing, actually it says that type `Admin` doesn't implement interface `User`. You may wonder, you lied, `Admin` has implemented all methods of `User`, but wait, really?
+This is confusing, it says type `Admin` doesn't implement interface `User`. You may wonder, you lied, `Admin` has implemented all methods of `User`, but wait, really?
 
-In fact, it's not type `Admin` implementing interface `User` but type `*Admin`, check the definition of `Name()` and `SetName()` above, both of these two method have a pointer receiver, not a value receiver. This means **the `Name()` and `GetName()` method are in the [method set](https://golang.org/ref/spec#Method_sets) of the `*Admin` type, but not in that of `Admin`.**
+In fact, it's not type `Admin` implementing interface `User` but type `*Admin`. Checking the definition of `Name()` and `SetName()` above, both of these two method have a pointer receiver, not a value receiver. This means **the `Name()` and `GetName()` method are in the [method set](https://golang.org/ref/spec#Method_sets) of the `*Admin` type, but not in that of `Admin`.**
 
 Therefore, it's easy to understand why we can do:
 
@@ -93,14 +93,14 @@ If you change the receiver to value receiver in `Name()` and `GetName()`, then b
 
 This is strange we've talked that `*Admin` is not `Admin`, why `user1 = &Admin{name:"user1"}` works when we change method receiver to value receiver?
 
-This is not the type problem, even above, the error is not above the type, it's all about the [method set](https://golang.org/ref/spec#Method_sets), **if a type's method set has all methods of a interface, we say that type implements that interface**:
+It's all about the [method set](https://golang.org/ref/spec#Method_sets), **if a type's method set has all methods of a interface, we say that type implements that interface**:
 
 - The method set of a [defined type](https://go.dev/ref/spec#Type_definitions) `T` consists of all [methods](https://go.dev/ref/spec#Method_declarations) declared with receiver type `T`.
 - The method set of a pointer to a defined type `T` (where `T` is neither a pointer nor an interface) is the set of all methods declared with receiver `*T` or `T`.
 
 You can see the second point, the method set of a ponter type `T` is the set of all methods declared with receiver `*T` and `T`. Therefore, when we make the method receiver of `Name()` and `SetName()` into value receiver,  `Name()` and `SetName()` are in the method set of `*Admin` too. 
 
-enlightened by: 
+Enlightened by: 
 
 [pointers - How to copy an interface value in Go? - Stack Overflow ](https://stackoverflow.com/questions/37851500/how-to-copy-an-interface-value-in-go/37851764#37851764)
 
