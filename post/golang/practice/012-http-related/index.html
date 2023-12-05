@@ -54,7 +54,7 @@ js code:
 js code:
 1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground."><meta itemprop="datePublished" content="2023-10-29T11:30:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-29T11:30:50+00:00" />
-<meta itemprop="wordCount" content="763">
+<meta itemprop="wordCount" content="1242">
 <meta itemprop="keywords" content="golang,http," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Some HTTP Issues with Go"/>
 <meta name="twitter:description" content="1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or &#43; automatically,
@@ -163,6 +163,12 @@ js code:
         </li>
         <li><a href="#5-parse-form-and-query-string">5. Parse form and query string</a></li>
         <li><a href="#6-check-the-type-of-the-request">6. Check the type of the request</a></li>
+        <li><a href="#7-receive-file-from-http-request">7. Receive file from http request</a>
+          <ul>
+            <li><a href="#71-issue">7.1. Issue</a></li>
+            <li><a href="#72-solution">7.2. Solution</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -444,6 +450,138 @@ js code:
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Source: <a href="https://stackoverflow.com/a/76143800/16317008">https://stackoverflow.com/a/76143800/16317008</a></p>
+<h2 id="7-receive-file-from-http-request">7. Receive file from http request</h2>
+<h3 id="71-issue">7.1. Issue</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">handleUpload</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">currentDir</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">error</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">maxFileSize</span> <span class="o">:=</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">maxFileSize</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// limit the size of incoming request bodies.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">r</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">MaxBytesReader</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Body</span><span class="p">,</span> <span class="nx">maxFileSize</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// parse form from request body.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// !!!This will load the file into RAM
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">ParseMultipartForm</span><span class="p">(</span><span class="nx">maxFileSize</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;file is too large:%v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">),</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusBadRequest</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// obtain file from parsed form.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">parsedFile</span><span class="p">,</span> <span class="nx">parsedFileHeader</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">FormFile</span><span class="p">(</span><span class="s">&#34;file&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">Is</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ErrMissingFile</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Location&#34;</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nf">String</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusSeeOther</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">defer</span> <span class="nx">parsedFile</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">dstPath</span> <span class="o">:=</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">currentDir</span><span class="p">,</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Base</span><span class="p">(</span><span class="nx">parsedFileHeader</span><span class="p">.</span><span class="nx">Filename</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">dst</span> <span class="o">*</span><span class="nx">os</span><span class="p">.</span><span class="nx">File</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Stat</span><span class="p">(</span><span class="nx">dstPath</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// the name of parsed file already exists, create a dst file with a new name.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">filename</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nx">parsedFileHeader</span><span class="p">.</span><span class="nx">Filename</span><span class="p">,</span> <span class="s">&#34;.&#34;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">			<span class="s">&#34;_&#34;</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">strconv</span><span class="p">.</span><span class="nf">FormatInt</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">().</span><span class="nf">UnixNano</span><span class="p">(),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">filepath</span><span class="p">.</span><span class="nf">Ext</span><span class="p">(</span><span class="nx">parsedFileHeader</span><span class="p">.</span><span class="nx">Filename</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">dst</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="nx">filepath</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">currentDir</span><span class="p">,</span> <span class="nx">filename</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">os</span><span class="p">.</span><span class="nf">IsNotExist</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// the name of parsed file already exists, create a dst file with original name.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">dst</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="nx">dstPath</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to create file: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">),</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusInternalServerError</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">defer</span> <span class="nx">dst</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">io</span><span class="p">.</span><span class="nf">Copy</span><span class="p">(</span><span class="nx">dst</span><span class="p">,</span> <span class="nx">parsedFile</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to copy file: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">),</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusInternalServerError</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// considering the buffering mechanism, getting error when close a writable file is needed.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">dst</span><span class="p">.</span><span class="nf">Close</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to close dst fileHtml: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">),</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusInternalServerError</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// clean url and redirect
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span> <span class="p">=</span> <span class="s">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Location&#34;</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nf">String</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">w</span><span class="p">.</span><span class="nf">WriteHeader</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">StatusSeeOther</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusSeeOther</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Usage of <code>ParseMultipartForm</code></strong>: This method parses the multipart form data from the request body. The <code>maxFileSize</code> parameter is used to limit the size of the in-memory buffer. If the file being uploaded is larger than this buffer, the rest of the data is stored in temporary files. However, it&rsquo;s important to note that <code>ParseMultipartForm</code> still reads the entire request body into memory, which could cause a spike in RAM usage.</p>
+<p><strong>Reading and Writing the File</strong>: The file is read from the form data and written to the destination path. The <code>io.Copy</code> function used here is efficient as it streams the data, but if the multipart form data is already loaded into memory, this would not reduce the memory usage (which means <code>io.Copy</code> couldn&rsquo;t help).</p>
+<h3 id="72-solution">7.2. Solution</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Request</span><span class="p">)</span> <span class="nf">MultipartReader</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><span class="nx">multipart</span><span class="p">.</span><span class="nx">Reader</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a href="https://pkg.go.dev/net/http#Request.MultipartReader">MultipartReader</a> returns a MIME multipart reader if this is a multipart/form-data or a multipart/mixed POST request, else returns nil and an error. Use this function instead of ParseMultipartForm to process the request body <strong>as a stream</strong>.</p>
 
     </div>
 

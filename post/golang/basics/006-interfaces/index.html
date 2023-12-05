@@ -51,7 +51,7 @@
 <meta itemprop="description" content="1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&rsquo;ll show you. This is the backgroud code:
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a."><meta itemprop="datePublished" content="2023-09-02T19:58:32+00:00" />
 <meta itemprop="dateModified" content="2023-09-02T19:58:32+00:00" />
-<meta itemprop="wordCount" content="1340">
+<meta itemprop="wordCount" content="1299">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Interfaces and Methods Receivers - Go (Interface 1)"/>
 <meta name="twitter:description" content="1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&rsquo;ll show you. This is the backgroud code:
@@ -232,7 +232,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="2-first-try---type-admin-isnt-adimin">2. First Try - Type <code>Admin</code> isn&rsquo;t <code>*Adimin</code></h2>
-<p>Because golang everything pass by value, even assignment will make a copy, therefore, at first I tried like this:</p>
+<p>Everything pass by value in Golang, even assignment will make a copy. Therefore, I tried something like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -249,8 +249,8 @@
 </span></span><span class="line"><span class="cl"><span class="nx">user2</span> <span class="p">=</span> <span class="o">*</span><span class="nx">user1</span> <span class="c1">// got an error: Invalid indirect of &#39;user1&#39; (type &#39;User&#39;)
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>This erorr says that user&rsquo;s type is <code>User</code> not <code>*User</code>, so we cannot dereference it. This reminds me that why <code>user1 = &amp;Admin{name:&quot;user1&quot;}</code> doesn&rsquo;t cause an error?</p>
-<p>Shouldn&rsquo;t the code be <code>user1 = Admin{name:&quot;user1&quot;}</code>, because <code>Admin</code> implements interface <code>User</code>. But this cause an error aggin:</p>
+</div><p>The erorr says that user&rsquo;s type is <code>User</code> not <code>*User</code>, so cannot dereference it. Why <code>user1 = &amp;Admin{name:&quot;user1&quot;}</code> works fine?</p>
+<p>An error occurred again below:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -263,8 +263,8 @@
 </span></span><span class="line"><span class="cl"><span class="c1">// error: Cannot use &#39;Admin{name:&#34;user1&#34;}&#39; (type Admin) as the type User Type does not implement &#39;User&#39; as the &#39;Name&#39; method has a pointer receiver. 
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>This error is a little confusing, actually it says that type <code>Admin</code> doesn&rsquo;t implement interface <code>User</code>. You may wonder, you lied, <code>Admin</code> has implemented all methods of <code>User</code>, but wait, really?</p>
-<p>In fact, it&rsquo;s not type <code>Admin</code> implementing interface <code>User</code> but type <code>*Admin</code>, check the definition of <code>Name()</code> and <code>SetName()</code> above, both of these two method have a pointer receiver, not a value receiver. This means <strong>the <code>Name()</code> and <code>GetName()</code> method are in the <a href="https://golang.org/ref/spec#Method_sets">method set</a> of the <code>*Admin</code> type, but not in that of <code>Admin</code>.</strong></p>
+</div><p>This is confusing, it says type <code>Admin</code> doesn&rsquo;t implement interface <code>User</code>. You may wonder, you lied, <code>Admin</code> has implemented all methods of <code>User</code>, but wait, really?</p>
+<p>In fact, it&rsquo;s not type <code>Admin</code> implementing interface <code>User</code> but type <code>*Admin</code>. Checking the definition of <code>Name()</code> and <code>SetName()</code> above, both of these two method have a pointer receiver, not a value receiver. This means <strong>the <code>Name()</code> and <code>GetName()</code> method are in the <a href="https://golang.org/ref/spec#Method_sets">method set</a> of the <code>*Admin</code> type, but not in that of <code>Admin</code>.</strong></p>
 <p>Therefore, it&rsquo;s easy to understand why we can do:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -289,13 +289,13 @@
 </div>
 </div><p>If you change the receiver to value receiver in <code>Name()</code> and <code>GetName()</code>, then both <code>user1 = &amp;Admin{name:&quot;user1&quot;}</code> and  <code>user1 = Admin{name:&quot;user1&quot;}</code> will work fine.</p>
 <p>This is strange we&rsquo;ve talked that <code>*Admin</code> is not <code>Admin</code>, why <code>user1 = &amp;Admin{name:&quot;user1&quot;}</code> works when we change method receiver to value receiver?</p>
-<p>This is not the type problem, even above, the error is not above the type, it&rsquo;s all about the <a href="https://golang.org/ref/spec#Method_sets">method set</a>, <strong>if a type&rsquo;s method set has all methods of a interface, we say that type implements that interface</strong>:</p>
+<p>It&rsquo;s all about the <a href="https://golang.org/ref/spec#Method_sets">method set</a>, <strong>if a type&rsquo;s method set has all methods of a interface, we say that type implements that interface</strong>:</p>
 <ul>
 <li>The method set of a <a href="https://go.dev/ref/spec#Type_definitions">defined type</a> <code>T</code> consists of all <a href="https://go.dev/ref/spec#Method_declarations">methods</a> declared with receiver type <code>T</code>.</li>
 <li>The method set of a pointer to a defined type <code>T</code> (where <code>T</code> is neither a pointer nor an interface) is the set of all methods declared with receiver <code>*T</code> or <code>T</code>.</li>
 </ul>
 <p>You can see the second point, the method set of a ponter type <code>T</code> is the set of all methods declared with receiver <code>*T</code> and <code>T</code>. Therefore, when we make the method receiver of <code>Name()</code> and <code>SetName()</code> into value receiver,  <code>Name()</code> and <code>SetName()</code> are in the method set of <code>*Admin</code> too.</p>
-<p>enlightened by:</p>
+<p>Enlightened by:</p>
 <p><a href="https://stackoverflow.com/questions/37851500/how-to-copy-an-interface-value-in-go/37851764#37851764">pointers - How to copy an interface value in Go? - Stack Overflow </a></p>
 <p><a href="https://stackoverflow.com/questions/53701458/pointer-receiver-and-value-receiver-on-interfaces-in-golang">go - Pointer Receiver and Value Receiver on Interfaces in Golang - Stack Overflow</a></p>
 <h2 id="3-answer">3. Answer</h2>
