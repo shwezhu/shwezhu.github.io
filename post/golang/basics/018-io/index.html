@@ -54,7 +54,7 @@ No, a file is not automatically read into memory by opening it." />
 I found this answer talks about the open() sys call Linux on StackOverflow, which may give you hints on how os.Open() works:
 No, a file is not automatically read into memory by opening it."><meta itemprop="datePublished" content="2023-12-04T14:25:04+00:00" />
 <meta itemprop="dateModified" content="2023-12-04T14:25:04+00:00" />
-<meta itemprop="wordCount" content="1198">
+<meta itemprop="wordCount" content="1387">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="IO in Golang"/>
 <meta name="twitter:description" content="1. os.Open() loads entire file into memory? No, the os.Open() function in Golang does not load the entire file into RAM by default. It returns a file descriptor that allows you to read or write data from or to the file.
@@ -158,7 +158,13 @@ No, a file is not automatically read into memory by opening it."/>
             <li><a href="#22-common-types-implement-ioreader">2.2. Common types implement <code>io.Reader</code></a></li>
           </ul>
         </li>
-        <li><a href="#3-reader-wrapper">3. Reader wrapper</a></li>
+        <li><a href="#3-reader-wrapper">3. Reader wrapper</a>
+          <ul>
+            <li><a href="#31-read-user-input-from-the-console">3.1. Read user input from the console</a></li>
+            <li><a href="#32-limit-the-size-of-http-request-body">3.2. Limit the size of HTTP request body</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-the-nature-of-ioreader">4. The nature of io.Reader</a></li>
       </ul>
     </li>
   </ul>
@@ -417,6 +423,7 @@ Note that <code>*os.File</code> doesn&rsquo;t equals to <code>os.File</code>, be
 <li>read data (chunk by chunk) to the buffer</li>
 </ul>
 <h2 id="3-reader-wrapper">3. Reader wrapper</h2>
+<h3 id="31-read-user-input-from-the-console">3.1. Read user input from the console</h3>
 <p>Sometimes we want to add some extra functionality to a <code>io.Reader</code>, for example, when read user input from the console, we want use a specific delimiter to indicate the end of input. We can use a <code>bufio.Reader</code> to wrap the <code>os.Stdin</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -472,7 +479,38 @@ Note that <code>*os.File</code> doesn&rsquo;t equals to <code>os.File</code>, be
 </span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;You entered:&#34;</span><span class="p">,</span> <span class="nx">inputStr</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
+</div><h3 id="32-limit-the-size-of-http-request-body">3.2. Limit the size of HTTP request body</h3>
+<p>Limit the size of incoming request bodies.</p>
+<p>http.MaxBytesReader and http.Request.Body</p>
+<h2 id="4-the-nature-of-ioreader">4. The nature of io.Reader</h2>
+<p>Readers in Go are used for reading data streams, and they have a crucial property: once you read data from a reader, that <strong>data is consumed</strong>. It&rsquo;s not possible to &lsquo;rewind&rsquo; or read the same data from the reader again unless the reader specifically supports such an operation.</p>
+<p>As what we did above, we read data from <code>*os.File</code>, <code>*bytes.Buffer</code>, and <code>net.Conn</code> which are all <code>io.Reader</code>. When we read the data into the buffer chunk by chunk, we didn&rsquo;t record or mark where we stop, but in next time we read from the reader, it will start from the last stop point. This is because the data is consumed. Let me demonstrate this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">reader</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">NewReader</span><span class="p">(</span><span class="s">&#34;HelloWorld&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">buf</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">reader</span><span class="p">.</span><span class="nf">Read</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">buf</span><span class="p">))</span> <span class="c1">// Outputs: Hello
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">reader</span><span class="p">.</span><span class="nf">Read</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">buf</span><span class="p">))</span> <span class="c1">// Outputs: World
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
+</div><p>This applies to all readers, including <code>*os.File</code>, <code>*bytes.Buffer</code>, and <code>net.Conn</code>, etc.</p>
+
     </div>
 
     <div class="post-copyright">
