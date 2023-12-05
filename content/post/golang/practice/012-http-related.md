@@ -260,9 +260,11 @@ func (s *server) handleUpload(w http.ResponseWriter, r *http.Request, currentDir
 }
 ```
 
-**Usage of `ParseMultipartForm`**: This method parses the multipart form data from the request body. The `maxFileSize` parameter is used to limit the size of the in-memory buffer. If the file being uploaded is larger than this buffer, the rest of the data is stored in temporary files. However, it's important to note that `ParseMultipartForm` still reads the entire request body into memory, which could cause a spike in RAM usage.
+**`http.MaxBytesReader()`**: Doesn't load any data, it just wraps the request body with a `http.maxBytesReader`, learn more: [IO in Golang - David's Blog](https://davidzhu.xyz/post/golang/basics/018-io/)
 
-**Reading and Writing the File**: The file is read from the form data and written to the destination path. The `io.Copy` function used here is efficient as it streams the data, but if the multipart form data is already loaded into memory, this would not reduce the memory usage (which means `io.Copy` couldn't help).
+**Usage of `r.ParseMultipartForm(maxFileSize)`**: This is where the actual parsing of data (request body) occurs. The whole request body is parsed and **up to a total of maxMemory bytes of its file parts are stored in memory**, with the remainder stored on disk in temporary files. This will cause a spike in the usage of RAM, because it doesn't stream the data, it loads maxMemory bytes of data into memory, and the rest of data into disk **one time**. Learn more: [IO in Golang - David's Blog](https://davidzhu.xyz/post/golang/basics/018-io/)
+
+**Reading and Writing the File**: The file is read from the form data and written to the destination path. The `io.Copy` function used here is efficient as **it streams the data to dst file**.
 
 ### 7.2. Solution
 
