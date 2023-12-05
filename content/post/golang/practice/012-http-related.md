@@ -274,3 +274,25 @@ func (r *Request) MultipartReader() (*multipart.Reader, error)
 
 [MultipartReader](https://pkg.go.dev/net/http#Request.MultipartReader) returns a MIME multipart reader if this is a multipart/form-data or a multipart/mixed POST request, else returns nil and an error. Use this function instead of ParseMultipartForm to process the request body **as a stream**.
 
+**Note:** When use `MultipartReader()`, you cannot use `http.MaxBytesReader()` to limit the size of incoming request bodies as what we did with `ParseMultipartForm()`. 
+Because `r.ParseMultipartForm()` will return an error if the request body is larger than maxMemory, which `MultipartReader()` doesn't. If you try use `http.MaxBytesReader()` with `MultipartReader()`, when the request body exceeds the specified max size, `part, err := reader.NextPart()` will return an error:
+
+```
+err.Error(): multipart: NextPart: http: request body too large
+```
+
+You can do something like this:
+
+```go
+reader, err := r.MultipartReader()
+...
+for {
+	part, err := reader.NextPart()
+	if err != nil {
+		if err.Error() == "multipart: NextPart: http: request body too large" {
+		...
+		}
+		...
+	}
+}
+```
