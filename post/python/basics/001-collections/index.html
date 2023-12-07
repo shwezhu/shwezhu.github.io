@@ -54,7 +54,7 @@ left to right, use positive number, start form 0
 left to right, use positive number, start form 0
 1 2 3 4 5 arr = [1, 2, 3] print(arr[-1]) # 3 print(arr[0]) # 1 print(arr[:-2]) # [1] print(arr[-4]) # error: out of range 1.2. Reslice makes shallow copy 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 cat = { &#34;name&#34;: &#34;Coco&#34;, &#34;age&#34;: 3."><meta itemprop="datePublished" content="2023-06-17T22:51:31+00:00" />
 <meta itemprop="dateModified" content="2023-06-17T22:51:31+00:00" />
-<meta itemprop="wordCount" content="696">
+<meta itemprop="wordCount" content="599">
 <meta itemprop="keywords" content="python," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Collections in Python"/>
 <meta name="twitter:description" content="1. List 1.1. Indexing right to left, use negative number, start from -1
@@ -282,7 +282,7 @@ left to right, use positive number, start form 0
 </span></span><span class="line"><span class="cl"><span class="n">Sliced</span> <span class="nb">list</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><strong>Go:</strong> When you create a new slice from an existing array or slice (e.g., <code>newSlice := oldSlice[start:end]</code>), the new slice does not copy the elements. Instead, it refers to the same underlying array as the original slice. This means that modifying the elements of the new slice will also modify the corresponding elements in the original slice (and vice versa), as long as the modifications are within the bounds of both slices. However, if you append to the slice and the capacity of the underlying array is exceeded, Go will allocate a new array and copy the elements over, <strong>causing the slices to diverge</strong>.</p>
+</div><p><strong>Go:</strong> the new slice created from reslicing does not copy the elements. Instead, it refers to the same underlying array as the original slice.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -317,11 +317,7 @@ left to right, use positive number, start form 0
 </span></span><span class="line"><span class="cl"><span class="nx">New</span> <span class="nx">slice</span><span class="p">:</span> <span class="p">[</span><span class="mi">99</span> <span class="mi">101</span> <span class="mi">3</span><span class="p">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
-<p>A slice does not store any data, it just describes a section of an underlying array.</p>
-<p><a href="https://davidzhu.xyz/post/golang/basics/003-collections/">https://davidzhu.xyz/post/golang/basics/003-collections/</a></p>
-</blockquote>
-<h2 id="2-dictionary">2. Dictionary</h2>
+</div><h2 id="2-dictionary">2. Dictionary</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1

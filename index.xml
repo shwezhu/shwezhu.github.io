@@ -6,9 +6,20 @@
     <description>Recent content on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 06 Dec 2023 23:43:50 +0000</lastBuildDate><atom:link href="https://davidzhu.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Dec 2023 10:00:20 +0000</lastBuildDate><atom:link href="https://davidzhu.xyz/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Map - Go</title>
+      <title>Value, Variable and Types - Go</title>
+      <link>https://davidzhu.xyz/post/golang/basics/001-basics/</link>
+      <pubDate>Thu, 07 Dec 2023 10:00:20 +0000</pubDate>
+      
+      <guid>https://davidzhu.xyz/post/golang/basics/001-basics/</guid>
+      <description>You should learn how to read the documentation provided Go, it&amp;rsquo;s very important:
+1. static language Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
+1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt.</description>
+    </item>
+    
+    <item>
+      <title>map - Go</title>
       <link>https://davidzhu.xyz/post/golang/basics/003-map/</link>
       <pubDate>Wed, 06 Dec 2023 23:43:50 +0000</pubDate>
       
@@ -87,8 +98,7 @@ I write a file server in Go, when attempting to upload a file of approximately 2
       <guid>https://davidzhu.xyz/post/other/001-data-types-programming-language/</guid>
       <description>Data Types in Programming Languages Programs are collections of instructions that manipulate data to produce a desired result.
 1. Javascript As you have know that javascript is a dynamic language from previous post, which means the values have types, not variables.
-All types except Object define immutable values represented directly at the lowest level of the language. We refer to values of these types as primitive values.
-In JavaScript, the language has different types for storing data, and these types can be categorized into two main categories: objects and primitives.</description>
+Javascript value types can be categorized into two main categories: objects and primitives. Among these types, the objects are mutable, which means their values can be modified or changed after they are created.</description>
     </item>
     
     <item>
@@ -905,27 +915,6 @@ A network interface can be a physical device, called network interface controlle
     </item>
     
     <item>
-      <title>Assignment always Makes a Copy - Go</title>
-      <link>https://davidzhu.xyz/post/golang/basics/002-assignment-makes-copy/</link>
-      <pubDate>Tue, 05 Sep 2023 23:30:20 +0000</pubDate>
-      
-      <guid>https://davidzhu.xyz/post/golang/basics/002-assignment-makes-copy/</guid>
-      <description>Similar to C++, a variable is just an address location. But unlike C++, each variable defined in a Go program occupies a unique memory location. We have talked this in last post.
-1 2 3 4 5 6 7 func main() { kitten := Cat{Name: &amp;#34;Coco&amp;#34;} bella := kitten // makes a copy bella.Name = &amp;#34;Bella&amp;#34; fmt.Printf(&amp;#34;kitten.Name:%v, bella.Name:%v\n&amp;#34;, kitten.Name, bella.Name) } // kitten.Name:Coco, bella.Name:Bella Do not treat variable bella and kitten as a reference which point to a same object, that&amp;rsquo;s java and python.</description>
-    </item>
-    
-    <item>
-      <title>Value, Variable and Types - Go</title>
-      <link>https://davidzhu.xyz/post/golang/basics/001-value-variable-type/</link>
-      <pubDate>Tue, 05 Sep 2023 22:00:20 +0000</pubDate>
-      
-      <guid>https://davidzhu.xyz/post/golang/basics/001-value-variable-type/</guid>
-      <description>You should learn how to read the documentation provided Go, it&amp;rsquo;s very important:
-1. Go is statically typed (static language) Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
-1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt.</description>
-    </item>
-    
-    <item>
       <title>Unit Test Basic Commands - Go</title>
       <link>https://davidzhu.xyz/post/golang/advance/005-unit-test-commands/</link>
       <pubDate>Tue, 05 Sep 2023 15:10:18 +0000</pubDate>
@@ -964,8 +953,8 @@ The second is to avoid copying the value on each method call. This can be more e
       <pubDate>Sat, 02 Sep 2023 19:58:32 +0000</pubDate>
       
       <guid>https://davidzhu.xyz/post/golang/basics/006-interfaces/</guid>
-      <description>1. An Interesting Question I found an interesting question on stackoverflow, and find that interface in golang is different from other languages, I&amp;rsquo;ll show you. This is the backgroud code:
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a.</description>
+      <description>1. An interesting question I found an interesting question on stackoverflow, this is the code:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a.name = name } OP tries to copy user1&amp;rsquo;s value below:</description>
     </item>
     
     <item>
@@ -975,16 +964,6 @@ The second is to avoid copying the value on each method call. This can be more e
       
       <guid>https://davidzhu.xyz/post/golang/basics/017-interface-relearn/</guid>
       <description>Previouse posts: Interfaces and Methods Receivers - Go (Interface 1) Interface in Practice - Go (Interface 2) 1. Types and interfaces 1.1. Types Because reflection builds on the type system, let’s start with a refresher about types in Go. Go is statically typed. Every variable has a static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so</description>
-    </item>
-    
-    <item>
-      <title>Everything Passed by Value - Go</title>
-      <link>https://davidzhu.xyz/post/golang/basics/009-everything-passed-by-value/</link>
-      <pubDate>Sat, 02 Sep 2023 18:37:04 +0000</pubDate>
-      
-      <guid>https://davidzhu.xyz/post/golang/basics/009-everything-passed-by-value/</guid>
-      <description>Everything passed by value, we have talked that assignment makes a copy, value receiver makes a copy of the struct value on each method call, in this post I&amp;rsquo;ll show you argument is also passed by value.
-1. Everything passed by value As in all languages in the C family, everything in Go is passed by value. That is, a function always gets a copy of the thing being passed, as if there were an assignment statement assigning the value to the parameter.</description>
     </item>
     
     <item>
