@@ -54,7 +54,7 @@
 1. static language Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
 1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt."><meta itemprop="datePublished" content="2023-12-07T10:00:20+00:00" />
 <meta itemprop="dateModified" content="2023-12-07T10:00:20+00:00" />
-<meta itemprop="wordCount" content="1777">
+<meta itemprop="wordCount" content="1691">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Value, Variable and Types - Go"/>
 <meta name="twitter:description" content="You should learn how to read the documentation provided Go, it&rsquo;s very important:
@@ -161,21 +161,20 @@
         </li>
         <li><a href="#4-value-size">4. value size</a></li>
         <li><a href="#5-how-the-size-of-a-struct-value-is-calculated">5. how the size of a struct value is calculated?</a></li>
-        <li><a href="#3-variable-declarations">3. Variable declarations</a>
+        <li><a href="#6-variable-declarations">6. Variable declarations</a>
           <ul>
-            <li><a href="#31--vs-var">3.1. <code>:=</code> vs <code>var</code></a></li>
-            <li><a href="#32-zero-value">3.2. Zero value</a></li>
-            <li><a href="#32-var-vs-new--vs-make">3.2. <code>var</code> vs <code>new </code> vs <code>make</code></a></li>
+            <li><a href="#61--vs-var">6.1. <code>:=</code> vs <code>var</code></a></li>
+            <li><a href="#62-zero-value">6.2. Zero value</a></li>
+            <li><a href="#63-var-vs-new--vs-make">6.3. <code>var</code> vs <code>new </code> vs <code>make</code></a></li>
           </ul>
         </li>
-        <li><a href="#4-variable-redeclarations">4. Variable redeclarations</a></li>
-        <li><a href="#5-type-conversions">5. Type conversions</a></li>
-        <li><a href="#6-type-assertions">6. Type assertions</a>
+        <li><a href="#7-type-conversions">7. type conversions</a></li>
+        <li><a href="#8-type-assertions">8. Type assertions</a>
           <ul>
-            <li><a href="#71-type-assertion-use-case">7.1. Type assertion use case</a></li>
+            <li><a href="#81-basic-syntax">8.1. Basic syntax</a></li>
+            <li><a href="#82-use-case">8.2. use case</a></li>
           </ul>
         </li>
-        <li><a href="#8-conclusion">8. Conclusion</a></li>
       </ul>
     </li>
   </ul>
@@ -449,8 +448,8 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 <p>The sizes of two string values are always equal, same as string, the sizes of two slice values are also always equal. <strong>Values of a specified type always have the same value size.</strong></p>
 </blockquote>
 <p>Learn more: <a href="https://go101.org/article/value-copy-cost.html">Go Value Copy Costs -Go 101</a></p>
-<h2 id="3-variable-declarations">3. Variable declarations</h2>
-<h3 id="31--vs-var">3.1. <code>:=</code> vs <code>var</code></h3>
+<h2 id="6-variable-declarations">6. Variable declarations</h2>
+<h3 id="61--vs-var">6.1. <code>:=</code> vs <code>var</code></h3>
 <ul>
 <li>
 <p>The <em><strong><code>:=</code></strong></em> can <strong>only</strong> be used in inside a function, which is called <strong>short variable declarations</strong>.</p>
@@ -459,7 +458,7 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 <p>A <em><strong><code>var</code></strong></em> statement can be at package or function level, which is called <strong>regular variable declarations</strong>.</p>
 </li>
 </ul>
-<h3 id="32-zero-value">3.2. Zero value</h3>
+<h3 id="62-zero-value">6.2. Zero value</h3>
 <p><strong>Variables declared without an explicit initial value are given their zero value.</strong> The zero value is:</p>
 <ul>
 <li><code>0</code> for numeric types,</li>
@@ -513,7 +512,7 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 </span></span><span class="line"><span class="cl"><span class="o">*</span><span class="nx">cat</span> <span class="p">=</span> <span class="nx">kitten</span>  <span class="c1">// runtime error: invalid memory address or nil pointer dereference
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="32-var-vs-new--vs-make">3.2. <code>var</code> vs <code>new </code> vs <code>make</code></h3>
+</div><h3 id="63-var-vs-new--vs-make">6.3. <code>var</code> vs <code>new </code> vs <code>make</code></h3>
 <p>It&rsquo;s a little harder to justify <code>new</code>. The main thing it makes easier is creating pointers to non-composite types. The two functions below are equivalent. One&rsquo;s just a little more concise:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -559,48 +558,7 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 <p>why  <code>new()</code>: <a href="https://softwareengineering.stackexchange.com/a/216582">https://softwareengineering.stackexchange.com/a/216582</a></p>
 <p><code>new</code> vs <code>make</code>: <a href="https://stackoverflow.com/a/9322182/16317008">https://stackoverflow.com/a/9322182/16317008</a></p>
 <p><code>var</code> vs <code>make</code>: <a href="https://davidzhu.xyz/post/golang/basics/003-collections/#5-var-vs-make">https://davidzhu.xyz/post/golang/basics/003-collections/#5-var-vs-make</a></p>
-<h2 id="4-variable-redeclarations">4. Variable redeclarations</h2>
-<p>Unlike regular variable declarations, a short variable declaration may <em>redeclare</em> variables provided they were originally <strong>declared earlier in the same block</strong> <strong>with the same type</strong>, and <strong>at least one of the non-<a href="https://go.dev/ref/spec#Blank_identifier">blank</a> variables is new</strong>. As a consequence, redeclaration can only appear in a multi-variable short declaration. Redeclaration does not introduce a new variable; it just assigns a new value to the original.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">y</span><span class="p">,</span> <span class="nx">x</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">z</span><span class="p">,</span> <span class="nx">x</span> <span class="o">:=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="c1">// z must be new
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">z</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>This is useful when handle error,</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// func (s *memoryStore) generateID(n int) (string, error)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">id</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nf">generateID</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> 
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="c1">// func (r *Request) Cookie(name string) (*Cookie, error)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">c</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">Cookie</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="c1">// redeclare err 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">...</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="5-type-conversions">5. Type conversions</h2>
+<h2 id="7-type-conversions">7. type conversions</h2>
 <p>The expression <code>T(v)</code> converts the value <code>v</code> to the type <code>T</code>. Some numeric conversions:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -628,8 +586,8 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Unlike in C, in Go assignment between items of different type requires an explicit conversion, this enchances the type safety of Golang.</p>
-<h2 id="6-type-assertions">6. Type assertions</h2>
-<p>A <em>type assertion</em> provides access to an <strong>interface value&rsquo;s</strong> underlying concrete value.</p>
+<h2 id="8-type-assertions">8. Type assertions</h2>
+<h3 id="81-basic-syntax">8.1. Basic syntax</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -638,7 +596,7 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">str</span> <span class="o">:=</span> <span class="nx">value</span><span class="p">.(</span><span class="kt">string</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>But if it turns out that the value does not contain a string, the program will crash with a run-time error. To guard against that, use the &ldquo;comma, ok&rdquo; idiom to test, safely, whether the value is a string:</p>
+</div><p>If it turns out that the value does not contain a string, the program will crash with a run-time error. To guard against that, use the &ldquo;comma, ok&rdquo; idiom to test, safely, whether the value is a string:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -693,9 +651,7 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">ele</span><span class="p">,</span> <span class="nx">ok</span><span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">channel_name</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>If the value of <code>ok</code> is true, this indicates that the channel is open and read operations can be done.</p>
-<h3 id="71-type-assertion-use-case">7.1. Type assertion use case</h3>
-<p>Type assertion only can be used when value&rsquo;s type is interface,</p>
+</div><p>Type assertion provides access to an <strong>interface value&rsquo;s</strong> underlying concrete value. So it only can be used when value&rsquo;s type is interface:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -726,12 +682,48 @@ A variable is just an adress location. When assignments happens <code>str=&quot;
 </span></span><span class="line"><span class="cl"><span class="c1">// print: true
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="8-conclusion">8. Conclusion</h2>
-<ul>
-<li><code>ele, ok:= &lt;-channel_name</code>, <code>user, ok := users[&quot;milo&quot;]</code>, <code>str, ok := value.(string)</code></li>
-<li>type assertions only can be used by interface type.</li>
-<li>assignment, pass as an arguments and function return always makes a copy.</li>
-</ul>
+</div><h3 id="82-use-case">8.2. use case</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Copy</span><span class="p">(</span><span class="nx">dst</span> <span class="nx">Writer</span><span class="p">,</span> <span class="nx">src</span> <span class="nx">Reader</span><span class="p">)</span> <span class="p">(</span><span class="nx">written</span> <span class="kt">int64</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nf">copyBuffer</span><span class="p">(</span><span class="nx">dst</span><span class="p">,</span> <span class="nx">src</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">copyBuffer</span><span class="p">(</span><span class="nx">dst</span> <span class="nx">Writer</span><span class="p">,</span> <span class="nx">src</span> <span class="nx">Reader</span><span class="p">,</span> <span class="nx">buf</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="nx">written</span> <span class="kt">int64</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// If the reader has a WriteTo method, use it to do the copy.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// Avoids an allocation and a copy.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">wt</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">src</span><span class="p">.(</span><span class="nx">WriterTo</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">wt</span><span class="p">.</span><span class="nf">WriteTo</span><span class="p">(</span><span class="nx">dst</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Similarly, if the writer has a ReadFrom method, use it to do the copy.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">rt</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">dst</span><span class="p">.(</span><span class="nx">ReaderFrom</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">rt</span><span class="p">.</span><span class="nf">ReadFrom</span><span class="p">(</span><span class="nx">src</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>bytes.Reader implements io.WriterTo interface and io.Copy uses that for optimized copying. <a href="https://www.reddit.com/r/golang/comments/18cg8ou/comment/kcagsvd/?utm_source=share&amp;utm_medium=web2x&amp;context=3">source</a></p>
+</blockquote>
 
     </div>
 
