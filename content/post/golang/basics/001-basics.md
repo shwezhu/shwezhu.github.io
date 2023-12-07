@@ -169,15 +169,15 @@ a.name: string, 16
 
 Learn more: [Go Value Copy Costs -Go 101](https://go101.org/article/value-copy-cost.html)
 
-## 3. Variable declarations
+## 6. Variable declarations
 
-### 3.1. `:=` vs `var`
+### 6.1. `:=` vs `var`
 
 - The ***`:=`*** can **only** be used in inside a function, which is called **short variable declarations**. 
 
 - A ***`var`*** statement can be at package or function level, which is called **regular variable declarations**. 
 
-### 3.2. Zero value
+### 6.2. Zero value
 
 **Variables declared without an explicit initial value are given their zero value.** The zero value is:
 
@@ -211,7 +211,7 @@ var cat *Cat
 *cat = kitten  // runtime error: invalid memory address or nil pointer dereference
 ```
 
-### 3.2. `var` vs `new ` vs `make` 
+### 6.3. `var` vs `new ` vs `make` 
 
 It's a little harder to justify `new`. The main thing it makes easier is creating pointers to non-composite types. The two functions below are equivalent. One's just a little more concise:
 
@@ -246,32 +246,7 @@ why  `new()`: https://softwareengineering.stackexchange.com/a/216582
 
 `var` vs `make`: https://davidzhu.xyz/post/golang/basics/003-collections/#5-var-vs-make
 
-## 4. Variable redeclarations 
-
-Unlike regular variable declarations, a short variable declaration may *redeclare* variables provided they were originally **declared earlier in the same block** **with the same type**, and **at least one of the non-[blank](https://go.dev/ref/spec#Blank_identifier) variables is new**. As a consequence, redeclaration can only appear in a multi-variable short declaration. Redeclaration does not introduce a new variable; it just assigns a new value to the original. 
-
-```go
-func main() {
-	y, x := 1, 2
-	z, x := 2, 3 // z must be new
-	fmt.Println(x, y, z)
-}
-```
-
-This is useful when handle error, 
-
-```go
-// func (s *memoryStore) generateID(n int) (string, error)
-id, err := s.generateID(32) 
-if err != nil {
-	return nil, err
-}
-// func (r *Request) Cookie(name string) (*Cookie, error)
-c, err := r.Cookie(name) // redeclare err 
-...
-```
-
-## 5. Type conversions
+## 7. type conversions
 
 The expression `T(v)` converts the value `v` to the type `T`. Some numeric conversions:
 
@@ -291,15 +266,15 @@ u := uint(f)
 
 Unlike in C, in Go assignment between items of different type requires an explicit conversion, this enchances the type safety of Golang. 
 
-## 6. Type assertions
+## 8. Type assertions
 
-A *type assertion* provides access to an **interface value's** underlying concrete value. 
+### 8.1. Basic syntax 
 
 ```go
 str := value.(string)
 ```
 
-But if it turns out that the value does not contain a string, the program will crash with a run-time error. To guard against that, use the "comma, ok" idiom to test, safely, whether the value is a string:
+If it turns out that the value does not contain a string, the program will crash with a run-time error. To guard against that, use the "comma, ok" idiom to test, safely, whether the value is a string:
 
 ```go
 str, ok := value.(string)
@@ -331,11 +306,7 @@ similar syntax - 2:
 ele, ok:= <-channel_name
 ```
 
-If the value of `ok` is true, this indicates that the channel is open and read operations can be done. 
-
-### 7.1. Type assertion use case
-
-Type assertion only can be used when value's type is interface, 
+Type assertion provides access to an **interface value's** underlying concrete value. So it only can be used when value's type is interface:
 
 ```go
 var m map[interface{}]interface{}
@@ -355,8 +326,25 @@ fmt.Println(isMap)
 // print: true
 ```
 
-## 8. Conclusion
+### 8.2. use case
 
-- `ele, ok:= <-channel_name`, `user, ok := users["milo"]`, `str, ok := value.(string)` 
--  type assertions only can be used by interface type.
-- assignment, pass as an arguments and function return always makes a copy.
+```go
+func Copy(dst Writer, src Reader) (written int64, err error) {
+	return copyBuffer(dst, src, nil)
+}
+
+func copyBuffer(dst Writer, src Reader, buf []byte) (written int64, err error) {
+	// If the reader has a WriteTo method, use it to do the copy.
+	// Avoids an allocation and a copy.
+	if wt, ok := src.(WriterTo); ok {
+		return wt.WriteTo(dst)
+	}
+	// Similarly, if the writer has a ReadFrom method, use it to do the copy.
+	if rt, ok := dst.(ReaderFrom); ok {
+		return rt.ReadFrom(src)
+	}
+	...
+}
+```
+
+> bytes.Reader implements io.WriterTo interface and io.Copy uses that for optimized copying. [source](https://www.reddit.com/r/golang/comments/18cg8ou/comment/kcagsvd/?utm_source=share&utm_medium=web2x&context=3)
