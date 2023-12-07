@@ -51,7 +51,7 @@ Go’s arrays are values. An array variable denotes the entire array; it is not 
 <meta itemprop="description" content="1. Array An array&rsquo;s length is part of its type, so arrays cannot be resized. Its length is part of its type ([4]int and [5]int are distinct, incompatible types).
 Go’s arrays are values. An array variable denotes the entire array; it is not a pointer to the first array element (as would be the case in C). This means that when you assign or pass around an array value you will make a copy of its contents."><meta itemprop="datePublished" content="2023-12-06T23:40:59+00:00" />
 <meta itemprop="dateModified" content="2023-12-06T23:40:59+00:00" />
-<meta itemprop="wordCount" content="603">
+<meta itemprop="wordCount" content="705">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="slice &amp; array - Go"/>
 <meta name="twitter:description" content="1. Array An array&rsquo;s length is part of its type, so arrays cannot be resized. Its length is part of its type ([4]int and [5]int are distinct, incompatible types).
@@ -152,6 +152,7 @@ Go’s arrays are values. An array variable denotes the entire array; it is not 
           <ul>
             <li><a href="#21-slice-is-just-a-struct">2.1. Slice is just a Struct</a></li>
             <li><a href="#22-slicing">2.2. Slicing</a></li>
+            <li><a href="#23-var-vs-make">2.3. <code>var</code> vs <code>make()</code></a></li>
           </ul>
         </li>
         <li><a href="#3-commone-usage-of-slice">3. Commone usage of slice</a>
@@ -226,7 +227,36 @@ Go’s arrays are values. An array variable denotes the entire array; it is not 
 <blockquote>
 <p>There is a trick, we usually use <code>d = d[:0]</code> to generate a new slice <code>d</code> whose length is 0 but capacity not change, which can make program more efficient.</p>
 </blockquote>
-<h2 id="3-commone-usage-of-slice">3. Commone usage of slice</h2>
+<h3 id="23-var-vs-make">2.3. <code>var</code> vs <code>make()</code></h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">cats</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// or
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">dogs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We have know that any varibles declared with <code>var</code> without an explicit initial value are given their zero value, <code>nil</code> is zero for <code>map</code>, <code>slice</code> and <code>pointer</code>.</p>
+<p>Therefore, the value of <code>cats</code> is <code>nil</code> for sure, then for <code>make([]string, 0)</code>it allocates a memory with 0 elements, which means <code>dog != nil</code>. But there probably no difference when you use, because <strong>you can append a <code>nil</code> slice directly</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">expired</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// it&#39;s totally fine to do this:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">expired</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">expired</span><span class="p">,</span> <span class="s">&#34;hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">expired</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-commone-usage-of-slice">3. Commone usage of slice</h2>
 <h3 id="31-remove-elements-by-reslicing">3.1. Remove elements by reslicing</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -354,7 +384,11 @@ Go’s arrays are values. An array variable denotes the entire array; it is not 
           <a href="/tags/golang/">golang</a>
           </div>
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/golang/basics/003-map/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Map - Go</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
         <a class="next" href="/post/golang/basics/018-io/">
             <span class="next-text nav-default">IO in Golang</span>
             <span class="next-text nav-mobile">Next</span>
