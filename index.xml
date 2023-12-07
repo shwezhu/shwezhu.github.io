@@ -6,7 +6,17 @@
     <description>Recent content on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 04 Dec 2023 14:25:04 +0000</lastBuildDate><atom:link href="https://davidzhu.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Dec 2023 23:40:59 +0000</lastBuildDate><atom:link href="https://davidzhu.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>slice &amp; array - Go</title>
+      <link>https://davidzhu.xyz/post/golang/basics/003-array-slice/</link>
+      <pubDate>Wed, 06 Dec 2023 23:40:59 +0000</pubDate>
+      
+      <guid>https://davidzhu.xyz/post/golang/basics/003-array-slice/</guid>
+      <description>1. Array An array&amp;rsquo;s length is part of its type, so arrays cannot be resized. Its length is part of its type ([4]int and [5]int are distinct, incompatible types).
+Go’s arrays are values. An array variable denotes the entire array; it is not a pointer to the first array element (as would be the case in C). This means that when you assign or pass around an array value you will make a copy of its contents.</description>
+    </item>
+    
     <item>
       <title>IO in Golang</title>
       <link>https://davidzhu.xyz/post/golang/basics/018-io/</link>
@@ -911,7 +921,7 @@ A network interface can be a physical device, called network interface controlle
       
       <guid>https://davidzhu.xyz/post/golang/advance/005-unit-test-commands/</guid>
       <description>1. Useful commands 1 $ go test -run &amp;#34;ExampleSession|TestSession&amp;#34; -v Note that the -run flag is used for specifying test functions, not benchmarks, not fuzz test. Because example test is similar to test function, you can specify both example and test function with -run flag. If you want to specify benchmarks, use -bench flag:
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 -bench regexp Run only those benchmarks matching a regular expression.</description>
+1 2 3 4 5 6 7 8 9 10 -bench regexp Run benchmarks matching the regular expression.</description>
     </item>
     
     <item>
@@ -1085,17 +1095,6 @@ Brace Expansion - expanding values between braces, such as file{1.</description>
       
       <guid>https://davidzhu.xyz/post/git/practice/002-pushed-wrong-files/</guid>
       <description>问题描述 写完博客把内容 push 到了 GitHub, 发现有个文件 a.txt 不应该被追踪, a.txt 已经被追踪了, 原因分析 首先你可能会想到 直接在本地删除 a.txt commit, 然后 push 就行了, 可是即使这</description>
-    </item>
-    
-    <item>
-      <title>Relearn slice - Go</title>
-      <link>https://davidzhu.xyz/post/golang/basics/016-slice-relearn/</link>
-      <pubDate>Sat, 19 Aug 2023 21:43:59 +0000</pubDate>
-      
-      <guid>https://davidzhu.xyz/post/golang/basics/016-slice-relearn/</guid>
-      <description>1. Slice is not an Array The type [n]T is an array of n values of type T.
-An array&amp;rsquo;s length is part of its type, so arrays cannot be resized. The type []T is a slice with elements of type T.
-A slice is a dynamically-sized. Slices have a capacity and length property. The length and capacity of a slice s can be obtained using the expressions len(s) and cap(s).</description>
     </item>
     
     <item>
@@ -1631,8 +1630,10 @@ From a correctness standpoint, you don&amp;rsquo;t need to know.</description>
       <pubDate>Sat, 13 May 2023 10:23:59 +0000</pubDate>
       
       <guid>https://davidzhu.xyz/post/golang/basics/003-collections/</guid>
-      <description>1. Declare &amp;amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&amp;rsquo;s length is part of its type, so arrays cannot be resized.
-2. Declare &amp;amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices have a capacity and length property.</description>
+      <description>3. Maps A map value is a pointer to a runtime.hmap structure.
+When you write the statement
+1 m := make(map[int]int) The compiler replaces it with a call to runtime.makemap, which has the signature
+1 2 3 4 5 6 // makemap implements a Go map creation make(map[k]v, hint) // If the compiler has determined that the map or the first bucket // can be created on the stack, h and/or bucket may be non-nil.</description>
     </item>
     
     <item>

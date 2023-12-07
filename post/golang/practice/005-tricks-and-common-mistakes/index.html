@@ -54,7 +54,7 @@ Therefore, your function can return a slice directly or accept a slice as a argu
 A slice does not store any data, it just describes a section of an underlying array.
 Therefore, your function can return a slice directly or accept a slice as a argument."><meta itemprop="datePublished" content="2023-08-27T17:12:55+00:00" />
 <meta itemprop="dateModified" content="2023-08-27T17:12:55+00:00" />
-<meta itemprop="wordCount" content="1079">
+<meta itemprop="wordCount" content="732">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Tricks and Common Mistakes - Go"/>
 <meta name="twitter:description" content="1 2 3 4 5 6 // get data from bytes.Buffer bytes := buff.Bytes() str := string(bytes) // Ext returns the file name extension used by path. ext := path.Ext(filename) // Rules 1. Return a pointer or value I list some type to which you don&rsquo;t need to return a pointer point:
@@ -159,7 +159,6 @@ Therefore, your function can return a slice directly or accept a slice as a argu
         <li><a href="#tricks">Tricks</a>
           <ul>
             <li><a href="#1-map">1. <code>map</code></a></li>
-            <li><a href="#2-slice">2. slice</a></li>
             <li><a href="#3-handle-close">3. handle <code>close()</code></a></li>
           </ul>
         </li>
@@ -251,131 +250,7 @@ Therefore, your function can return a slice directly or accept a slice as a argu
 </span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="2-slice">2. slice</h3>
-<h4 id="21-reslicing---imporve-performance">2.1. Reslicing - imporve performance</h4>
-<blockquote>
-<p>Note that the elements has not been removed actually, they still in the underlying array. But this doesn&rsquo;t matter, the slice has been changed that&rsquo;s what we need. And this is why reslicing can improve performance, there is no new array was created, alwasys use the old one.</p>
-<p>I write a post about the difference between reslicing in Golang and Python:<a href="https://davidzhu.xyz/post/python/basics/001-collections/">Collections in Python - David&rsquo;s Blog</a></p>
-</blockquote>
-<p>Remove elements by reslicing:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">MemoryStore</span><span class="p">)</span> <span class="nf">gc</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">ticker</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">NewTicker</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">gcInterval</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">defer</span> <span class="nx">ticker</span><span class="p">.</span><span class="nf">Stop</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">expired</span> <span class="p">[]</span><span class="kt">string</span>
-</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="k">range</span> <span class="nx">ticker</span><span class="p">.</span><span class="nx">C</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// &#34;remove&#34; all elements in expired
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">expired</span> <span class="p">=</span> <span class="nx">expired</span><span class="p">[:</span><span class="mi">0</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// add elements to expired
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">...</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// after use the elements in expired, the elments is useless now, we can drop them
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// which is expired = expired[:0] above
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">expired</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="o">...</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Stimulate stack
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">stack</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">rune</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">pairs</span><span class="p">[</span><span class="nx">r</span><span class="p">];</span> <span class="nx">ok</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">stack</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">stack</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// reslice, &#34;delete&#34; the last one element
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">stack</span> <span class="p">=</span> <span class="nx">stack</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="nx">stack</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h4 id="22-passing-a-slice-to-channel">2.2. Passing a slice to channel</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">ready</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">  
-</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="kd">var</span> <span class="nx">expired</span> <span class="p">[]</span><span class="kt">string</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">expired</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">expired</span><span class="p">,</span> <span class="s">&#34;Coco&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">expired</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">expired</span><span class="p">,</span> <span class="s">&#34;Bella&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">ready</span><span class="o">&lt;-</span> <span class="nx">expired</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
-</span></span><span class="line"><span class="cl">  
-</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// this will block until there is a data sent to the channel &#34;ready&#34;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">for</span> <span class="nx">s</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ready</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">name</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span><span class="p">{</span>
-</span></span><span class="line"><span class="cl">				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="p">}</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
-</span></span><span class="line"><span class="cl">  
-</span></span><span class="line"><span class="cl">	<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Bacsuse a slice likes a pointer, the two goroutines above share a same underlying array. You have to consider if there is a data race, if yes, consider make a deep copy of the slice: <a href="https://davidzhu.xyz/post/golang/basics/009-everything-passed-by-value/">Everything Passed by Value - Go - David&rsquo;s Blog</a></p>
-<blockquote>
-<p>Note that <a href="https://github.com/golang/go/wiki/CommonMistakes">iteration variable is re-used in each iteration</a>.</p>
-</blockquote>
-<h3 id="3-handle-close">3. handle <code>close()</code></h3>
+</div><h3 id="3-handle-close">3. handle <code>close()</code></h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1

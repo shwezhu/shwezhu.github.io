@@ -155,8 +155,10 @@
   
   <div class="post-content">
     <div class="post-summary">
-      1. Declare &amp; Init Array 1 2 3 4 5 // Declaring an Array var arr [10]int // Initialize x := [5]int{} x := [...]int{10, 20, 30} Note: An array&rsquo;s length is part of its type, so arrays cannot be resized.
-2. Declare &amp; Init Slice An array has a fixed size. A slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. Slices have a capacity and length property.
+      3. Maps A map value is a pointer to a runtime.hmap structure.
+When you write the statement
+1 m := make(map[int]int) The compiler replaces it with a call to runtime.makemap, which has the signature
+1 2 3 4 5 6 // makemap implements a Go map creation make(map[k]v, hint) // If the compiler has determined that the map or the first bucket // can be created on the stack, h and/or bucket may be non-nil.
     </div>
     <div class="read-more">
       <a href="/post/golang/basics/003-collections/" class="read-more-link">Read more...</a>
