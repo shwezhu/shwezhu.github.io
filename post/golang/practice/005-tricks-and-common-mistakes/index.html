@@ -16,9 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1 2 3 4 5 6 // get data from bytes.Buffer bytes := buff.Bytes() str := string(bytes) // Ext returns the file name extension used by path. ext := path.Ext(filename) // Rules 1. Return a pointer or value I list some type to which you don&amp;rsquo;t need to return a pointer point:
-A slice does not store any data, it just describes a section of an underlying array.
-Therefore, your function can return a slice directly or accept a slice as a argument." />
+<meta name="author" content="David" /><meta name="description" content="Tricks 3. handle close() 1 2 3 4 5 6 7 8 9 10 11 12 13 // credit to: https://gist.github.com/benbjohnson/9eebd201ec096ab6430e1f33411e6427 func doSomething() error { f, err := os.Create(&amp;#34;foo&amp;#34;) if err != nil { return err } // ensure that it&amp;#39;s definitely closed by the end defer f.Close() if _, err := f.Write([]byte(&amp;#34;bar&amp;#34;); err != nil { return err } return f.Close() } Why we bother to care about getting error from f." />
 
 
 
@@ -42,24 +40,18 @@ Therefore, your function can return a slice directly or accept a slice as a argu
 
 
 <meta property="og:title" content="Tricks and Common Mistakes - Go" />
-<meta property="og:description" content="1 2 3 4 5 6 // get data from bytes.Buffer bytes := buff.Bytes() str := string(bytes) // Ext returns the file name extension used by path. ext := path.Ext(filename) // Rules 1. Return a pointer or value I list some type to which you don&rsquo;t need to return a pointer point:
-A slice does not store any data, it just describes a section of an underlying array.
-Therefore, your function can return a slice directly or accept a slice as a argument." />
+<meta property="og:description" content="Tricks 3. handle close() 1 2 3 4 5 6 7 8 9 10 11 12 13 // credit to: https://gist.github.com/benbjohnson/9eebd201ec096ab6430e1f33411e6427 func doSomething() error { f, err := os.Create(&#34;foo&#34;) if err != nil { return err } // ensure that it&#39;s definitely closed by the end defer f.Close() if _, err := f.Write([]byte(&#34;bar&#34;); err != nil { return err } return f.Close() } Why we bother to care about getting error from f." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/golang/practice/005-tricks-and-common-mistakes/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-27T17:12:55+00:00" />
 <meta property="article:modified_time" content="2023-08-27T17:12:55+00:00" />
 <meta itemprop="name" content="Tricks and Common Mistakes - Go">
-<meta itemprop="description" content="1 2 3 4 5 6 // get data from bytes.Buffer bytes := buff.Bytes() str := string(bytes) // Ext returns the file name extension used by path. ext := path.Ext(filename) // Rules 1. Return a pointer or value I list some type to which you don&rsquo;t need to return a pointer point:
-A slice does not store any data, it just describes a section of an underlying array.
-Therefore, your function can return a slice directly or accept a slice as a argument."><meta itemprop="datePublished" content="2023-08-27T17:12:55+00:00" />
+<meta itemprop="description" content="Tricks 3. handle close() 1 2 3 4 5 6 7 8 9 10 11 12 13 // credit to: https://gist.github.com/benbjohnson/9eebd201ec096ab6430e1f33411e6427 func doSomething() error { f, err := os.Create(&#34;foo&#34;) if err != nil { return err } // ensure that it&#39;s definitely closed by the end defer f.Close() if _, err := f.Write([]byte(&#34;bar&#34;); err != nil { return err } return f.Close() } Why we bother to care about getting error from f."><meta itemprop="datePublished" content="2023-08-27T17:12:55+00:00" />
 <meta itemprop="dateModified" content="2023-08-27T17:12:55+00:00" />
-<meta itemprop="wordCount" content="808">
+<meta itemprop="wordCount" content="479">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Tricks and Common Mistakes - Go"/>
-<meta name="twitter:description" content="1 2 3 4 5 6 // get data from bytes.Buffer bytes := buff.Bytes() str := string(bytes) // Ext returns the file name extension used by path. ext := path.Ext(filename) // Rules 1. Return a pointer or value I list some type to which you don&rsquo;t need to return a pointer point:
-A slice does not store any data, it just describes a section of an underlying array.
-Therefore, your function can return a slice directly or accept a slice as a argument."/>
+<meta name="twitter:description" content="Tricks 3. handle close() 1 2 3 4 5 6 7 8 9 10 11 12 13 // credit to: https://gist.github.com/benbjohnson/9eebd201ec096ab6430e1f33411e6427 func doSomething() error { f, err := os.Create(&#34;foo&#34;) if err != nil { return err } // ensure that it&#39;s definitely closed by the end defer f.Close() if _, err := f.Write([]byte(&#34;bar&#34;); err != nil { return err } return f.Close() } Why we bother to care about getting error from f."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -151,11 +143,6 @@ Therefore, your function can return a slice directly or accept a slice as a argu
   <ul>
     <li>
       <ul>
-        <li><a href="#rules">Rules</a>
-          <ul>
-            <li><a href="#1-return-a-pointer-or-value">1. Return a pointer or value</a></li>
-          </ul>
-        </li>
         <li><a href="#tricks">Tricks</a>
           <ul>
             <li><a href="#3-handle-close">3. handle <code>close()</code></a></li>
@@ -173,62 +160,7 @@ Therefore, your function can return a slice directly or accept a slice as a argu
   </div>
 </div>
     <div class="post-content">
-      <div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// get data from bytes.Buffer
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">bytes</span> <span class="o">:=</span> <span class="nx">buff</span><span class="p">.</span><span class="nf">Bytes</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="nx">str</span> <span class="o">:=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">bytes</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">// Ext returns the file name extension used by path.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ext</span> <span class="o">:=</span> <span class="nx">path</span><span class="p">.</span><span class="nf">Ext</span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">// 
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="rules">Rules</h2>
-<h3 id="1-return-a-pointer-or-value">1. Return a pointer or value</h3>
-<p>I list some type to which you don&rsquo;t need to return a pointer point:</p>
-<ul>
-<li>
-<p>A <strong>slice</strong> does not store any data, it just describes a section of an underlying array.</p>
-<ul>
-<li>Therefore, your function can return a slice directly or accept a slice as a argument.</li>
-<li>You don&rsquo;t need to return a pointer to a slice.</li>
-<li>learn more: <a href="https://davidzhu.xyz/post/golang/basics/016-slice-relearn/">https://davidzhu.xyz/post/golang/basics/016-slice-relearn/</a></li>
-</ul>
-</li>
-<li>
-<p>In Go, a <strong>string</strong> is in effect a read-only slice of bytes.</p>
-<ul>
-<li>Only use <code>*string</code> if you have to distinguish an empty string from no strings.</li>
-<li>learn more: <a href="https://davidzhu.xyz/post/golang/basics/015-string-runes-bytes">https://davidzhu.xyz/post/golang/basics/015-string-runes-bytes</a></li>
-</ul>
-</li>
-<li>
-<p><em>A <strong>map</strong> value is a pointer to a</em> <code>runtime.hmap</code> <em>structure.</em></p>
-<ul>
-<li>A map is just a pointer itself, therefore, you don&rsquo;t need returen a pinter of a map value.</li>
-<li>learn more: <a href="https://davidzhu.xyz/post/golang/basics/003-collections/#3-maps">https://davidzhu.xyz/post/golang/basics/003-collections/#3-maps</a></li>
-</ul>
-</li>
-<li>
-<p>Like maps, <strong>channels</strong> are allocated with <code>make</code>, and the resulting value acts as a reference to an underlying data structure.</p>
-</li>
-</ul>
-<blockquote>
-<p>As you can see, slice, string, map, channel is just a struct which holds the the reference to underlying value. You can think them are reference type, assigning or passing them is very cheap, but a array, normal struct, or peimitive types like integer,  boolean, which is a value type, when you assign or pass them, you need to consider the overhead. (assigning or passing an integer, small struct is very cheap)</p>
-<p>Generally, in practice, we seldom use pointer types whose base types are <code>slice</code> types, <code>map</code> types, <code>channel</code> types, <code>function</code> types, <code>string</code> types and <code>interface</code> types. The costs of copying values of these assumed base types are very small.</p>
-<p>Of curse, all are values in Golang, above is just for easy understanding and catagorizing,</p>
-<p>Maps, like channels, but <strong>unlike</strong> slices, are just pointers to <code>runtime</code> types. As you saw above, a map is just a pointer to a <code>runtime.hmap</code> structure.</p>
-<p>Source: <a href="https://go101.org/article/value-copy-cost.html">https://go101.org/article/value-copy-cost.html</a></p>
-</blockquote>
-<h2 id="tricks">Tricks</h2>
+      <h2 id="tricks">Tricks</h2>
 <h3 id="3-handle-close">3. handle <code>close()</code></h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
