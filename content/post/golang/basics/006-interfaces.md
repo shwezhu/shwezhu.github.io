@@ -8,9 +8,9 @@ tags:
  - golang
 ---
 
-## 1. An Interesting Question
+## 1. An interesting question
 
-I found an [interesting question](https://stackoverflow.com/questions/37851500/how-to-copy-an-interface-value-in-go/37851764#37851764) on stackoverflow, and find that interface in golang is different from other languages, I'll show you. This is the backgroud code:
+I found an [interesting question](https://stackoverflow.com/questions/37851500/how-to-copy-an-interface-value-in-go/37851764#37851764) on stackoverflow, this is the code:
 
 ```go
 type User interface {

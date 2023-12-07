@@ -1,6 +1,6 @@
 ---
 title: Value, Variable and Types - Go
-date: 2023-09-05 22:00:20
+date: 2023-12-07 10:00:20
 categories:
  - golang
  - basics
@@ -13,7 +13,7 @@ You should learn how to read the documentation provided Go, it's very important:
 
 ![absd](/001-value-variable-type/absd.png)
 
-## 1. Go is statically typed (static language)
+## 1. static language
 
 Go is statically typed. Every variable has **only one static type**, that is, exactly one type known and fixed at compile time: `int`, `float32`, `*MyType`, `[]byte`, and so on. If we declare
 
@@ -37,23 +37,9 @@ type Reader interface {
 
 > **Statically typed** means that before source code is compiled, the type associated with each and every single variable must be known.
 
-## 2. Value & variable
+## 2. value & variable
 
-**There is no object in Go, just variable and the value of a variable**, we declare a variable of interface here:
-
-```go
-var r io.Reader
-```
-
-Then we say the type of variable `r` is `io.Reader`, not `r` is an object of `io.Reader`. Did you catch that?
-
-Btw, for simplicity reason, we usually use value/variable verbally. So here we can say `r` is a value of `io.Reader`, `r` is an interface value. Actually the variable `r` is just a nice name for address. 
-
-> A variable is a **storage location** for holding a value. 
->
-> A variable is a **storage location** for holding a value. The set of permissible values is determined by the variable's type. 
->
-> Source: [The Go Programming Language Specification ](https://go.dev/ref/spec#Variables)
+**There is no object in Go**, just variable and the value of a variable. We usually use variable and value as a same thing verbally. 
 
 > I think is true in Go/C++/C :
 > A variable is just an adress location. When assignments happens `str="hello world"` : Instead of telling the computer store this series of bits in 0x015c5c15c1c5, you tell him to store it in `str`. `str` is just a nicer name of a memory adress location. 
@@ -62,7 +48,85 @@ Btw, for simplicity reason, we usually use value/variable verbally. So here we c
 >
 > Source: [Does operator := always cause a new copy to be created if assign without reference?](https://www.reddit.com/r/golang/comments/6v0aka/comment/dlwwvgn/?utm_source=share&utm_medium=web2x&context=3)
 
-### 2.1. Value size
+## 3. reference-type vs value-type
+
+Keep in mind these two things:
+
+1. There is just value-type in Go, no reference type, **reference-type vs value-type** is just for easy understanding and catagorizing, because reference is a very common concept in other languages like Java/Python. 
+
+2. Everything passed by value in Go. 
+	- All copy is shallow copy, that is, only the value of the variable is copied, not the underlying data.
+
+Go’s arrays are values. **An array variable denotes the entire array**; And everything passed by value, so when you assign or pass around an array variable you will make a copy of its all elements. 
+
+Slice is just a struct, it consists of three fields: a **pointer** to a underlying array, and its **length** and **capacity**. So When you assign or pass around a slice variable, the value of this variable is copied, but this is very cheap, just 3 words. 
+
+Did you catch that? All passed by value.
+
+> The terminology reference type has been removed from Go specification since Apr 3rd, 2013 (with the commit message: spec: Go has no 'reference types'), the terminology is still popularly used in Go community. https://github.com/go101/go101/wiki/About-the-terminology-%22reference-type%22-in-Go
+
+### 3.1. reference-type
+
+- A **slice** does not store any data, it just describes a section of an underlying array. 
+  - Therefore, your function can return a slice directly or accept a slice as a argument. 
+- In Go, a **string** is in effect a read-only slice of bytes. 
+  - Only use `*string` if you have to distinguish an empty string from no strings.
+- *A **map** value is a pointer to a* `runtime.hmap` *structure.* 
+  - A map is just a pointer itself, therefore, you don't need returen a pinter of a map value.
+- Like maps, **channels** are allocated with `make`, and the resulting value acts as a reference to an underlying data structure.
+
+> You don't need to return a pointer to a reference-type for better performance.
+
+### 3.2. value-type
+
+Actually, all are value-type in Go, but I'll list some you may mistake them as reference-type:
+
+- **array** 
+
+```go
+func main() {
+	arr_1 := [3]int{0, 0, 0}
+	arr_2 := arr_1
+	arr_2[0] = 99
+	arr_2[1] = 99
+
+	fmt.Println("arr_1:", arr_1)
+	fmt.Println("arr_2:", arr_2)
+}
+// output:
+arr_1: [0 0 0]
+arr_2: [99 99 0]
+```
+
+- **struct**
+
+```go
+type Cat struct {
+	Name string
+	Age  int
+}
+
+func main() {
+	cat_1 := Cat{
+		Name: "Coco",
+		Age:  1,
+	}
+
+	cat_2 := cat_1
+	cat_2.Name = "Bella"
+	
+	fmt.Println("cat_1:", cat_1)
+	fmt.Println("cat_2:", cat_2)
+}
+
+// output:
+cat_1: {Coco 1}
+cat_2: {Bella 1}
+```
+
+As you can see, when do modification on `cat_2`, `cat_1` is not affected.
+
+## 4. value size
 
 | Kinds of Types     | Value Size | [Required](https://golang.org/ref/spec#Size_and_alignment_guarantees) by [Go Specification](https://golang.org/ref/spec#Numeric_types) |
 | ------------------ | ---------- | ------------------------------------------------------------ |
@@ -76,7 +140,7 @@ Btw, for simplicity reason, we usually use value/variable verbally. So here we c
 
 NOTE: Here I call it **value size** not type size, this word is important, `var a int`, `a` is a **variable/value** whose type is `int`, and the size of this variable/value is 1 word on my arm64 cpmputer its size is 8 bytes. 
 
-### 2.2. How the size of a struct value is calculated?
+## 5. how the size of a struct value is calculated?
 
 The size of a value means how many bytes the [direct part](https://go101.org/article/value-part.html) of the value will occupy in memory. The indirect underlying parts of a value don't contribute to the size of the value. 
 

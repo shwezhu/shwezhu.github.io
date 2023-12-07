@@ -89,12 +89,10 @@ changed
 unchanged
 ```
 
-## 3. Golang
+## 3. Golang, Java, C++ & Javascript 
 
-Learn more: [Everything Passed by Value - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/009-everything-passed-by-value/)
-
-## 4. Java & C++
-
-Python, Java, Golang, C/C++, and JS are all pass by value, but they do have references. When a reference is used as a parameter, the copied value is still the value of the reference, namely the address, giving us the illusion of "pass by reference not value."
+Python, Java, C++ and JS are all pass by value, but they do have references. When you assign or pass a reference-type, the copied value is still the value of the reference, namely the address, giving us the illusion of "pass by reference not value."
 
 C++ has another application where passing const references is preferred to enhance efficiency. However, in Java, Python, and JS, references are passed every time, but they lack the concept of const references.
+
+Actually Golang doesn't have reference type (all are values), reference type often refers to the maps, slice, channels and strings in Golang which are pointers themselves or a struct holding a pointer to the underlying data structure. 

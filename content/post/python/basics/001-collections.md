@@ -76,7 +76,7 @@ Original list: [99, 2, 3, 4, 5]
 Sliced list: [1, 101, 3]
 ```
 
-**Go:** When you create a new slice from an existing array or slice (e.g., `newSlice := oldSlice[start:end]`), the new slice does not copy the elements. Instead, it refers to the same underlying array as the original slice. This means that modifying the elements of the new slice will also modify the corresponding elements in the original slice (and vice versa), as long as the modifications are within the bounds of both slices. However, if you append to the slice and the capacity of the underlying array is exceeded, Go will allocate a new array and copy the elements over, **causing the slices to diverge**.
+**Go:** the new slice created from reslicing does not copy the elements. Instead, it refers to the same underlying array as the original slice. 
 
 ```go
 func main() {
@@ -94,10 +94,6 @@ func main() {
 Original slice: [99 101 3 4 5]
 New slice: [99 101 3]
 ```
-
-> A slice does not store any data, it just describes a section of an underlying array. 
->
-> https://davidzhu.xyz/post/golang/basics/003-collections/
 
 ## 2. Dictionary
 

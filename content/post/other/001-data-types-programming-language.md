@@ -20,9 +20,7 @@ typora-root-url: ../../../static
 
 > As you have know that javascript is a dynamic language from [previous post](https://davidzhu.xyz/post/other/000-languge-types-practice/), which means the values have types, not variables. 
 
-All types except `Object` define immutable values represented directly at the lowest level of the language. We refer to values of these types as primitive values. 
-
-In JavaScript, the language has different types for storing data, and these types can be categorized into two main categories: **objects** and **primitives**. Among these types, the objects are mutable, which means their values can be modified or changed after they are created. On the other hand, the primitive types are immutable, meaning their values cannot be changed once they are assigned.
+Javascript value types can be categorized into two main categories: **objects** and **primitives**. Among these types, the **objects are mutable**, which means their values can be modified or changed after they are created. On the other hand, the **primitive types are immutable**, meaning their values cannot be changed once they are assigned.
 
 ### 1.1. Primitive types
 
@@ -125,25 +123,9 @@ Just as men and women are fundamentally different (according to John Gray, autho
 
 ## 4. Golang
 
-> Golang is static language (static typed), but golang has no concept of object, all are variables and values. 
->
-> So you can think the variable have types or values have types, all are fine. 
+> Golang is static language,  golang has no concept of object, all are values. So you can think the variable have types or values have types, all are fine. 
 
-There is no object in Go, just variable and the value of a variable, we declare a variable of interface here:
-
-```go
-var r io.Reader
-```
-
-Then we say the type of variable `r` is `io.Reader`, not `r` is an object of `io.Reader`. Did you catch that?
-
-Btw, for simplicity reason, we usually use value/variable verbally. So here we can say `r` is a value of `io.Reader`, `r` is an interface value. Actually the variable `r` is just a nice name for address.
-
-> You can think all variables are references in Golang, then you probably wonder that where are the variables stored? Where is the value of the variable stored? Is this like what java has done?(reference stored on stack, value (object) stored on heap)
->
-> The answer is no, learn more: [Lifetime of a Local Variable - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/004-lifetime-of-variables/)
-
-Learn more: [Value Variable and Types - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/001-value-variable-type/)
+Golang has no refernce-type, all are values. But there is a concept of pointer, some types like `slice`, `map`, `channel`, `function` which are a pointer or a struct that has a pointer element, we usually catagorize them as reference-type. 
 
 ## 5. C++
 
