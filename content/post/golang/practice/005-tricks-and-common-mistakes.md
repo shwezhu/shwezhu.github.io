@@ -36,24 +36,17 @@ I list some type to which you don't need to return a pointer point:
 
 - Like maps, **channels** are allocated with `make`, and the resulting value acts as a reference to an underlying data structure.
 
-> Generally, in practice, we seldom use pointer types whose base types are `slice` types, `map` types, `channel` types, `function` types, `string` types and `interface` types. The costs of copying values of these assumed base types are very small. 
+> As you can see, slice, string, map, channel is just a struct which holds the the reference to underlying value. You can think them are reference type, assigning or passing them is very cheap, but a array, normal struct, or peimitive types like integer,  boolean, which is a value type, when you assign or pass them, you need to consider the overhead. (assigning or passing an integer, small struct is very cheap)
+>
+> Generally, in practice, we seldom use pointer types whose base types are `slice` types, `map` types, `channel` types, `function` types, `string` types and `interface` types. The costs of copying values of these assumed base types are very small.
+>
+> Of curse, all are values in Golang, above is just for easy understanding and catagorizing, 
+>
+> Maps, like channels, but **unlike** slices, are just pointers to `runtime` types. As you saw above, a map is just a pointer to a `runtime.hmap` structure.  
 >
 > Source: https://go101.org/article/value-copy-cost.html
 
 ## Tricks
-
-### 1. `map`
-
-```go
-// as a counter
-counts := make(map[string]int)
-for name := range users {
-	counts[name]++
-}
-// check if exist, O(1)
-ele, ok := m["key"]
-if !ok {...}
-```
 
 ### 3. handle `close()`
 

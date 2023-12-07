@@ -52,6 +52,26 @@ New slice: [99 101 3]
 
 > There is a trick, we usually use `d = d[:0]` to generate a new slice `d` whose length is 0 but capacity not change, which can make program more efficient. 
 
+### 2.3. `var` vs `make()`
+
+
+```go
+var cats []string
+// or
+dogs := make([]string, 0)
+```
+
+We have know that any varibles declared with `var` without an explicit initial value are given their zero value, `nil` is zero for `map`, `slice` and `pointer`. 
+
+Therefore, the value of `cats` is `nil` for sure, then for `make([]string, 0)`it allocates a memory with 0 elements, which means `dog != nil`. But there probably no difference when you use, because **you can append a `nil` slice directly**:
+
+```go
+var expired []string
+// it's totally fine to do this:
+expired = append(expired, "hello")
+fmt.Println(expired)
+```
+
 ## 3. Commone usage of slice
 
 ### 3.1. Remove elements by reslicing
