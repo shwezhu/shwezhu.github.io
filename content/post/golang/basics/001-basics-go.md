@@ -11,7 +11,7 @@ typora-root-url: ../../../../static
 
 You should learn how to read the documentation provided Go, it's very important:
 
-![absd](/001-value-variable-type/absd.png)
+![absd](/001-basics-go/absd.png)
 
 ## 1. static language
 
@@ -74,6 +74,9 @@ Did you catch that? All passed by value.
 - *A **map** value is a pointer to a* `runtime.hmap` *structure.* 
   - A map is just a pointer itself, therefore, you don't need returen a pinter of a map value.
 - Like maps, **channels** are allocated with `make`, and the resulting value acts as a reference to an underlying data structure.
+- **Interface**, a value of interface type is a pointer actually, not just a pointer, but consists of it. 
+  - A variable of interface type stores a pair: the concrete value assigned to the variable, and that value’s type descriptor.
+
 
 > You don't need to return a pointer to a reference-type for better performance.
 

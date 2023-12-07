@@ -8,44 +8,6 @@ tags:
  - golang
 ---
 
-```go
-// get data from bytes.Buffer
-bytes := buff.Bytes()
-str := string(bytes)
-// Ext returns the file name extension used by path.
-ext := path.Ext(filename)
-// 
-```
-
-## Rules
-
-### 1. Return a pointer or value
-
-I list some type to which you don't need to return a pointer point:
-
-- A **slice** does not store any data, it just describes a section of an underlying array. 
-  - Therefore, your function can return a slice directly or accept a slice as a argument. 
-  - You don't need to return a pointer to a slice. 
-  - learn more: https://davidzhu.xyz/post/golang/basics/016-slice-relearn/
-- In Go, a **string** is in effect a read-only slice of bytes. 
-  - Only use `*string` if you have to distinguish an empty string from no strings.
-  - learn more: https://davidzhu.xyz/post/golang/basics/015-string-runes-bytes
-- *A **map** value is a pointer to a* `runtime.hmap` *structure.* 
-  - A map is just a pointer itself, therefore, you don't need returen a pinter of a map value.
-  - learn more: https://davidzhu.xyz/post/golang/basics/003-collections/#3-maps
-
-- Like maps, **channels** are allocated with `make`, and the resulting value acts as a reference to an underlying data structure.
-
-> As you can see, slice, string, map, channel is just a struct which holds the the reference to underlying value. You can think them are reference type, assigning or passing them is very cheap, but a array, normal struct, or peimitive types like integer,  boolean, which is a value type, when you assign or pass them, you need to consider the overhead. (assigning or passing an integer, small struct is very cheap)
->
-> Generally, in practice, we seldom use pointer types whose base types are `slice` types, `map` types, `channel` types, `function` types, `string` types and `interface` types. The costs of copying values of these assumed base types are very small.
->
-> Of curse, all are values in Golang, above is just for easy understanding and catagorizing, 
->
-> Maps, like channels, but **unlike** slices, are just pointers to `runtime` types. As you saw above, a map is just a pointer to a `runtime.hmap` structure.  
->
-> Source: https://go101.org/article/value-copy-cost.html
-
 ## Tricks
 
 ### 3. handle `close()`
