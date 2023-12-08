@@ -21,7 +21,7 @@ There are two reasons to use a pointer receiver:
 
 I'll explain it to you the different behaviors between pointer receiver and value receiver first, see the code below:
 
-```go
+```go 
 type Person struct {
 	name string
 }
@@ -50,7 +50,7 @@ func main() {
 
 As you can see here, value receiver method will make a copy of that "object". There is no object in golang, using term "object" here is for easy understanding. This is that if you want to avoid copying the value of the struct **on each method call**, try to use a pointer receiver. And if you want modify the value's fields, try to use a pointer receiver. 
 
- I find a snippet in go source code, e.g.,
+I find a snippet in go source code, e.g.,
 
 ```go
 type Handler interface {
@@ -125,74 +125,3 @@ A similar pitfall can occur with types that maintain slices of values, and of co
 
 In short, I think that you should prefer declaring methods on `*T` unless you have a strong reason to do otherwise.
 
-## 3. Pointer receiver - a practical example
-
- `error` interface:
-
-```go
-type error interface {
-    Error() string
-}
-```
-
- `errorString`  implements  `error` interface in package `errors` :
-
-```go
-// errorString is a trivial implementation of error.
-type errorString struct {
-    s string
-}
-
-func (e *errorString) Error() string {
-    return e.s
-}
-
-// New returns an error that formats as the given text.
-func New(text string) error {
-    return &errorString{text}
-}
-```
-
-If you can notice that, the return type of `New()` function is `error`, but it actually returns a pointer type `&errorString{text}`, why? I find a [good explaination](https://www.reddit.com/r/golang/comments/15rz3fe/question_about_errors_package/):
-
-The `Error()` method is implemented on `*errorString` (the pointer type), not `errorString` (the value type), so it's `*errorString` that implements the `error` interface, and so `New` must return `&errorString{..}` instead of `errorString{..}`.
-
-That distinction is also important to make `errors.New` act correctly on `==`. Docs for `errors.New` say:
-
-> Each call to New returns a distinct error value even if the text is identical.
-
-Translation:
-
-```
-e1 := errors.New("foo")
-e2 := errors.New("foo")
-fmt.Println(e1 == e2) // false
-```
-
-This works because it returns `&errorString{..}`, so the `==` compares the pointers (which are unique for each call to New) instead of the error messages.
-
-We can do a experiment:
-
-
-A custom struct `MyError` implements `error` interface:
-
-```go
-type MyError struct {
-	message string
-}
-
-func (receiver *MyError) Error() string {
-	return receiver.message
-}
-
-func New(text string) error {
-  // return &MyError{message: text} // correct way
-	return MyError{message: text} // The complier will complain
-}
-```
-
-```
-Cannot use 'MyError{message: text}' (type MyError) as the type error Type does not implement 'error' as the 'Error' method has a pointer receiver
-```
-
-Lear more about why it's doesn't work: [Interfaces in Go (and Methods Receivers) - David's Blog](https://davidzhu.xyz/post/golang/basics/006-interfaces/#2-first-try---type-admin-isnt-adimin)
