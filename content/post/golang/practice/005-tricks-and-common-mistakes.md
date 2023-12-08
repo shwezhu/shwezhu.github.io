@@ -10,7 +10,7 @@ tags:
 
 ## Tricks
 
-### 3. handle `close()`
+### 1. handle `close()`
 
 ```go
 // credit to: https://gist.github.com/benbjohnson/9eebd201ec096ab6430e1f33411e6427
