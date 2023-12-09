@@ -54,7 +54,7 @@
 1 2 3 type error interface { Error() string } Interface error is a built-in type, as with all other built in types, is predeclared in the universe block. The most commonly-used error implementation is the errors package’s unexported errorString type.
 1 2 3 4 5 6 7 8 // errorString is a trivial implementation of error."><meta itemprop="datePublished" content="2023-09-08T09:13:06+00:00" />
 <meta itemprop="dateModified" content="2023-09-08T09:13:06+00:00" />
-<meta itemprop="wordCount" content="1582">
+<meta itemprop="wordCount" content="1402">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Error handling - Go"/>
 <meta name="twitter:description" content="1.error interface The error type is an interface type. An error variable represents any value that can describe itself as a string.
@@ -152,7 +152,7 @@
     <li>
       <ul>
         <li><a href="#1error-interface">1.<code>error</code> interface</a></li>
-        <li><a href="#2-create-an-error-value">2. Create an error value</a>
+        <li><a href="#2-summarize-the-context">2. Summarize the context</a>
           <ul>
             <li><a href="#21-ways-to-create-an-error-value">2.1. Ways to create an error value</a></li>
             <li><a href="#22-summarize-the-context-when-create-an-error-value">2.2. Summarize the context when create an error value</a></li>
@@ -224,7 +224,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The type of function returns is an <code>error</code> but it actually returns a pointer, a little weird probably for newb from c++. In Go everything can implement a interface an <code>int</code>, <code>string</code> even a <code>pointer</code>. It&rsquo;s all about if the method set of that type contians all the methods declared in a interface, learn more: <a href="https://davidzhu.xyz/post/golang/basics/013-methods-receivers/#3-pointer-receiver---a-practical-example">Methods Receivers &amp; Concurrency - Go - David&rsquo;s Blog</a></p>
-<h2 id="2-create-an-error-value">2. Create an error value</h2>
+<h2 id="2-summarize-the-context">2. Summarize the context</h2>
 <h3 id="21-ways-to-create-an-error-value">2.1. Ways to create an error value</h3>
 <p>You can create an <code>error</code> with these functions:</p>
 <ul>
@@ -232,39 +232,8 @@
 <li><code>fmt.Errorf()</code>, often used to provide conetxt.</li>
 <li>Use a custom error type, typically used for provide error details.</li>
 </ul>
-<p>Note that <code>errors.New()</code> and <code>fmt.Errorf()</code> just return an error value that with the string you passed, not something magic. An error value likes an <code>int</code> value, struct value or pointer value. Learn more: <a href="https://go.dev/blog/errors-are-values">Errors are values</a></p>
-<p>e.g.,</p>
-<p>Functions usually need to return an error to indicate an abnormal state in Go. For example, the <code>os.Open</code> function returns a non-nil <code>error</code> value when it fails to open a file:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Open</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">file</span> <span class="o">*</span><span class="nx">File</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>If you want return an error you might want use <code>errors.New</code> which defined in <a href="https://go.dev/pkg/errors/">errors</a> package we have talked above:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Sqrt</span><span class="p">(</span><span class="nx">f</span> <span class="kt">float64</span><span class="p">)</span> <span class="p">(</span><span class="kt">float64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">f</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;math: square root of negative number&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// implementation
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h3 id="22-summarize-the-context-when-create-an-error-value">2.2. Summarize the context when create an error value</h3>
-<p><strong>It is the error implementation’s responsibility to summarize the context.</strong> The error returned by <code>os.Open</code> formats as “open /etc/passwd: permission denied,” not just “permission denied.” The error returned by our <code>Sqrt</code> is missing information about the invalid argument.</p>
-<p>To add that information, a useful function is the <code>fmt</code> package’s <code>Errorf</code>. It formats a string according to <code>Printf</code>’s rules and returns it as an <code>error</code> created by <code>errors.New</code>.</p>
+<h3 id="22-summarize-the-context-when-create-an-error-value">2.2. Summarize the context when create an error value</h3>
+<p><strong>It is the error implementation’s responsibility to summarize the context.</strong> The error returned by <code>os.Open</code> formats as “open /etc/passwd: permission denied,” not just “permission denied.”</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -283,8 +252,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Sometimes we usually return a new error value which contains the context:</p>
-<div class="highlight"><div class="chroma">
+</div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2

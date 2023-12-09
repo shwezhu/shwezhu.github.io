@@ -57,7 +57,7 @@ The first is so that the method can modify the value that its receiver points to
 The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
 &ldquo;the value&rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value."><meta itemprop="datePublished" content="2023-09-02T22:18:20+00:00" />
 <meta itemprop="dateModified" content="2023-09-02T22:18:20+00:00" />
-<meta itemprop="wordCount" content="1130">
+<meta itemprop="wordCount" content="816">
 <meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Methods Receivers &amp; Concurrency - Go"/>
 <meta name="twitter:description" content="1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
@@ -157,7 +157,6 @@ The second is to avoid copying the value on each method call. This can be more e
       <ul>
         <li><a href="#1-different-behaviors---pointer-and-value-receiver">1. Different behaviors - pointer and value receiver</a></li>
         <li><a href="#2-method-receivers-in-concurrency">2. Method receivers in concurrency</a></li>
-        <li><a href="#3-pointer-receiver---a-practical-example">3. Pointer receiver - a practical example</a></li>
       </ul>
     </li>
   </ul>
@@ -349,114 +348,6 @@ The second is to avoid copying the value on each method call. This can be more e
 </div>
 </div><p>A similar pitfall can occur with types that maintain slices of values, and of course there is the possibility for an <a href="http://dave.cheney.net/2015/11/18/wednesday-pop-quiz-spot-the-race">unintended data race</a>.</p>
 <p>In short, I think that you should prefer declaring methods on <code>*T</code> unless you have a strong reason to do otherwise.</p>
-<h2 id="3-pointer-receiver---a-practical-example">3. Pointer receiver - a practical example</h2>
-<p><code>error</code> interface:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="kt">error</span> <span class="kd">interface</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><code>errorString</code>  implements  <code>error</code> interface in package <code>errors</code> :</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// errorString is a trivial implementation of error.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">errorString</span> <span class="kd">struct</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">s</span> <span class="kt">string</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">errorString</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">s</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// New returns an error that formats as the given text.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">text</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">errorString</span><span class="p">{</span><span class="nx">text</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>If you can notice that, the return type of <code>New()</code> function is <code>error</code>, but it actually returns a pointer type <code>&amp;errorString{text}</code>, why? I find a <a href="https://www.reddit.com/r/golang/comments/15rz3fe/question_about_errors_package/">good explaination</a>:</p>
-<p>The <code>Error()</code> method is implemented on <code>*errorString</code> (the pointer type), not <code>errorString</code> (the value type), so it&rsquo;s <code>*errorString</code> that implements the <code>error</code> interface, and so <code>New</code> must return <code>&amp;errorString{..}</code> instead of <code>errorString{..}</code>.</p>
-<p>That distinction is also important to make <code>errors.New</code> act correctly on <code>==</code>. Docs for <code>errors.New</code> say:</p>
-<blockquote>
-<p>Each call to New returns a distinct error value even if the text is identical.</p>
-</blockquote>
-<p>Translation:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">e1 := errors.New(&#34;foo&#34;)
-</span></span><span class="line"><span class="cl">e2 := errors.New(&#34;foo&#34;)
-</span></span><span class="line"><span class="cl">fmt.Println(e1 == e2) // false
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>This works because it returns <code>&amp;errorString{..}</code>, so the <code>==</code> compares the pointers (which are unique for each call to New) instead of the error messages.</p>
-<p>We can do a experiment:</p>
-<p>A custom struct <code>MyError</code> implements <code>error</code> interface:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">MyError</span> <span class="kd">struct</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">message</span> <span class="kt">string</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">receiver</span> <span class="o">*</span><span class="nx">MyError</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">receiver</span><span class="p">.</span><span class="nx">message</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">text</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="c1">// return &amp;MyError{message: text} // correct way
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="nx">MyError</span><span class="p">{</span><span class="nx">message</span><span class="p">:</span> <span class="nx">text</span><span class="p">}</span> <span class="c1">// The complier will complain
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Cannot use &#39;MyError{message: text}&#39; (type MyError) as the type error Type does not implement &#39;error&#39; as the &#39;Error&#39; method has a pointer receiver
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Lear more about why it&rsquo;s doesn&rsquo;t work: <a href="https://davidzhu.xyz/post/golang/basics/006-interfaces/#2-first-try---type-admin-isnt-adimin">Interfaces in Go (and Methods Receivers) - David&rsquo;s Blog</a></p>
 
     </div>
 
