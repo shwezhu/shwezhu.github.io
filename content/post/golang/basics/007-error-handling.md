@@ -42,7 +42,7 @@ func New(text string) error {
 
 The type of function returns is an `error` but it actually returns a pointer, a little weird probably for newb from c++. In Go everything can implement a interface an `int`, `string` even a `pointer`. It's all about if the method set of that type contians all the methods declared in a interface, learn more: [Methods Receivers & Concurrency - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/013-methods-receivers/#3-pointer-receiver---a-practical-example)
 
-## 2. Create an error value
+## 2. Summarize the context
 
 ### 2.1. Ways to create an error value
 
@@ -52,32 +52,9 @@ You can create an `error` with these functions:
 - `fmt.Errorf()`, often used to provide conetxt. 
 - Use a custom error type, typically used for provide error details. 
 
-Note that `errors.New()` and `fmt.Errorf()` just return an error value that with the string you passed, not something magic. An error value likes an `int` value, struct value or pointer value. Learn more: [Errors are values](https://go.dev/blog/errors-are-values) 
-
-e.g.,
-
-Functions usually need to return an error to indicate an abnormal state in Go. For example, the `os.Open` function returns a non-nil `error` value when it fails to open a file:
-
-```go
-func Open(name string) (file *File, err error)
-```
-
-If you want return an error you might want use `errors.New` which defined in [errors](https://go.dev/pkg/errors/) package we have talked above:
-
-```go
-func Sqrt(f float64) (float64, error) {
-    if f < 0 {
-        return 0, errors.New("math: square root of negative number")
-    }
-    // implementation
-}
-```
-
 ### 2.2. Summarize the context when create an error value
 
-**It is the error implementation’s responsibility to summarize the context.** The error returned by `os.Open` formats as “open /etc/passwd: permission denied,” not just “permission denied.” The error returned by our `Sqrt` is missing information about the invalid argument.
-
-To add that information, a useful function is the `fmt` package’s `Errorf`. It formats a string according to `Printf`’s rules and returns it as an `error` created by `errors.New`.
+**It is the error implementation’s responsibility to summarize the context.** The error returned by `os.Open` formats as “open /etc/passwd: permission denied,” not just “permission denied.” 
 
 ```go
 func Sqrt(f float64) (float64, error) {
@@ -87,8 +64,6 @@ func Sqrt(f float64) (float64, error) {
     // implementation
 }
 ```
-
-Sometimes we usually return a new error value which contains the context:
 
 ```go
 if err != nil {

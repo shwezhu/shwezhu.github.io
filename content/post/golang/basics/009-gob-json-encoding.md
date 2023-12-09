@@ -24,21 +24,7 @@ But for a Go-specific environment, such as communicating between two servers wri
 
 > Gob is much more preferred when communicating between Go programs. However, gob is currently supported only in Go and, well, [C](https://code.google.com/archive/p/libgob/), so only ever use that when you're sure no program written in any other programming language will try to decode the values. [source](https://stackoverflow.com/questions/41179453/difference-between-encoding-gob-and-encoding-json) 
 
-### 2.2. Google’s protocol buffers misfeatures
-
-> **Protocol Buffers** is a free and open-source cross-platform data format used to serialize structured data. It is useful in developing programs that communicate with each other over a network or for storing data. [Wikipedia](https://en.wikipedia.org/wiki/Protocol_Buffers)
-
-Protocol buffers had a major effect on the design of gobs, but have three features that were deliberately avoided.
-
-First, protocol buffers only work on the data type we call a struct in Go. You can’t encode an integer or array at the top level, only a struct with fields inside it. That seems a pointless restriction, at least in Go. If all you want to send is an array of integers, why should you have to put it into a struct first?
-
-Next, a protocol buffer definition may specify that fields `T.x` and `T.y` are required to be present whenever a value of type `T` is encoded or decoded. Although such required fields may seem like a good idea, they are costly to implement because the **codec** must maintain a separate data structure while encoding and decoding, to be able to report when required fields are missing. They’re also a **maintenance problem**. Over time, one may want to modify the data definition to remove a required field, but that may cause existing clients of the data to crash. It’s better not to have them in the encoding at all. 
-
-> A **codec** is a device or computer program that encodes or decodes a data stream or signal. Codec is a portmanteau of coder/decoder. [Wikipedia](https://en.wikipedia.org/wiki/Codec)
-
-The third protocol buffer misfeature is default values. ... We decided to leave them out of gobs and fall back to Go’s trivial but effective defaulting rule: unless you set something otherwise, it has the “zero value” for that type - and it doesn’t need to be transmitted. 
-
-So gobs end up looking like a sort of generalized, simplified protocol buffer. How do they work?
+### 2.2. Google’s Protocol Buffers misfeatures
 
 Gobs implements thress important features compared with Google's Protocol Buffers:
 
@@ -208,7 +194,7 @@ Now try removing the `Register` and this won't work because gob wouldn't know ho
 
 ### 2.8. gob.Register 
 
-**Whem there is an interface, be careful**, you should figure out all the possiable concrete types (implementations) of the interface would be, and if these concrete type is not primitive type, you need register for them. You don't need to register for interface itself. 
+When there is an interface, be careful, you should figure out all the possiable concrete types (implementations) of the interface would be, and if these concrete type is not primitive type, you need register for them. **You don't need to register for interface itself**. 
 
 ```go
 gob.Register(map[string]int{})
@@ -442,8 +428,6 @@ References:
 - [go - gob.Register() by type or for each variable? - Stack Overflow](https://stackoverflow.com/questions/31467602/gob-register-by-type-or-for-each-variable)
 
 Learn more: 
-
-- [说说编码 - encoding| 橘猫小八的鱼](https://davidzhu.xyz/2023/06/01/CS-Basics/001-encoding/)
 
 - [Golang Benchmark: gob vs json](https://gist.github.com/evalphobia/a2ba2636acbc112f68dcd89e8b81d349)
 - [gob - The Go Programming Language](https://www.cs.ubc.ca/~bestchai/teaching/cs416_2015w2/go1.4.3-docs/pkg/encoding/gob/index.html)
