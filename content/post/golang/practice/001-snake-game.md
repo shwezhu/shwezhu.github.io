@@ -9,11 +9,9 @@ tags:
  - game
 ---
 
-Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 
-
 **地图**
 
-地图就是个二维数组`board`, 在Go里面叫Slice of slices, 不清楚可以看这篇[Golang容器之Array & Slice & Map ](https://davidzhu.xyz/2023/05/13/Golang/Basics/003-collections/), 该地图(二维数组)存储bool类型, 定义如下和结构如下:
+地图就是个二维数组`board`, 在Go里面叫Slice of slices, 该地图(二维数组)存储bool类型, 定义如下和结构如下:
 
 ```go
 // height = 4, width = 3
@@ -59,10 +57,10 @@ func draw() {
 	fmt.Print("\033[H\033[2J")
 	// original: 'for y, _ := range board { ... }'
 	for y := range board {
-		for x, xValue := range board[y] {
-			if !xValue && (food.x != x || food.y != y) {
+		for i, v := range board[y] {
+			if !v && (food.x != i || food.y != y) {
 				fmt.Print("□ ")
-			} else if !xValue && food.x == x && food.y == y {
+			} else if !v && food.x == i && food.y == y {
 				fmt.Print("★ ")
 			} else {
 				fmt.Print("■ ")
@@ -110,7 +108,7 @@ func update() {
 	}
 ```
 
-- 2 遍历`snake`, 使第`i`个元素的坐标等于第`i-1`个元素的坐标(`i>=1`),实现中间的身体看着是不动的, 其实每个节点都前进了
+- 2 遍历`snake`, 使第`i`个元素的坐标等于第`i-1`个元素的坐标(`i>=1`),中间的身体看着是不动的, 其实每个节点都前进了
 
 ```go
 length := len(snake)
@@ -118,14 +116,14 @@ length := len(snake)
 if length > 1 {
 	// make the value of each (i)th element equal to the (i-1)th value
 	for i := len(snake) - 1; i >= 1; i-- {
-	snake[i] = snake[i-1]
+		snake[i] = snake[i-1]
 	}
 }
 ```
 
 - 3 设置位置在蛇的最后一个节点即尾巴`(snake[len - 1].x, snake[len - 1].y)`的`board`元素为false, 因为在第2步尾巴已经变成倒数第二个元素的坐标了, 所以我们要把旧的尾巴坐标位置设置为false
 
-即这样只遍历了`snake`(一维数组)来实现更新地图, 具体吃食物增加节点就不介绍了, 逻辑很容易, 
+即这样只遍历了`snake`(一维数组)来实现更新地图.
 
 ----
 
@@ -145,10 +143,4 @@ for {
 $ go get github.com/eiannone/keyboard
 ```
 
-然后项目里就会多出`go.mod`和`mod.sum`文件, 里面保存了第三方库的版本, 有点像Java里的maven`pom.xml`, 或者是npm的`package.json`, 当然肯定是不一样的他们, 最近作业有点多, 还没仔细研究, 另外注意, 如果是在Goland上开发, 可能会报错`$GOPATH/go.mod exists but should not exist`, 这个原因是你项目设置了`Project GOPATH`, 在Goland设置里删除就好了, 以上这些和包相关的问题可以参考这篇文章 [Golang模块module和包package的使用之导入自定义包](https://davidzhu.xyz/2023/05/21/Golang/Basics/005-go-modules/)
-
-最后是关于线程, goroutine, 这个改天再研究, 研究了一下怎么关闭线程, 可以参考:[Golang Goroutine和Select](https://davidzhu.xyz/2023/05/21/Golang/Basics/011-goroutines-select/)
-
-[源码](https://gist.github.com/shwezhu/3def0433eb5656deebf07dc32e6eecc1)如下:
-
-{% gist 3def0433eb5656deebf07dc32e6eecc1 %}
+源码: https://gist.github.com/shwezhu/3def0433eb5656deebf07dc32e6eecc1

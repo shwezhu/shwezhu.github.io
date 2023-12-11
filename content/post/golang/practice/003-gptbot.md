@@ -49,7 +49,7 @@ This means that the recommendations for [sql.Open](https://golang.org/pkg/databa
 
 > **The returned DB is safe for concurrent** use by multiple goroutines and maintains its own pool of idle connections. Thus, the Open function should be called just once. It is rarely necessary to close a DB.
 
-also note that the connection pool can be configured as such, in both GORM v1 and v2:
+Also note that the connection pool can be configured as such, in both GORM v1 and v2:
 
 ```go
 // SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
@@ -72,7 +72,7 @@ When try to save data in session, we usually use the `Values` field of session, 
 session.Values["username"] = "Jack"
 ```
 
-The first problem I came across is that, you can save `int`, `bool`, `string` and other basic value into `session.Values[]` directly, but when you try to assign other type value, custom object, array to `session.Values["xxx"]` for example, you have to encode the value before assignment, so that `gorilla/session can` save data to Redis and read correctly for later request . Otherwise, you cannot get the value corrctly, I mean, after you **restart your server**, you cannot get the session stored in the Redis, **the `IsNew` will be always `true`,** this is because the encoing things, 
+The first problem I came across is that, you can save `int`, `bool`, `string` and other basic value into `session.Values[]` directly, but when you try to assign other type value, custom object, array to `session.Values["xxx"]` for example, you have to encode the value before assignment, so that `gorilla/session can` save data to Redis and read correctly for later request . Otherwise, you cannot get the value corrctly, I mean, after you **restart your server**, you cannot get the session stored in the Redis, **the `IsNew` will be always `true`,** this is because the encoing issues, 
 
 I want to save a slice into session, which is chat history, so I have to encode it before assign it to `session.Values["messages"]`, I'll choose `encoding/json` here, you can choose other encoding tech, `encoding/gob `for example, 
 
@@ -115,8 +115,6 @@ Otherwise, the session stored in Redis won't be deleted until 30 days later, and
 
 [go - Sessions variables in golang not saved while using gorilla sessions - Stack Overflow](https://stackoverflow.com/questions/21865681/sessions-variables-in-golang-not-saved-while-using-gorilla-sessions)
 
-## 4. Error hanlding
-
 Return and wrap error in low layer function (try to provide more context info), only handle errors and log info on the top of the function call stack. 
 
 ```go
@@ -146,7 +144,7 @@ func updateMessage(w http.ResponseWriter, r *http.Request, store *redistore.Redi
 
 Learn more: [Error handling - Go - David's Blog](https://davidzhu.xyz/post/golang/basics/008-error-handling/)
 
-## 5. Session or redis cache
+## 4. Session or redis cache
 
 I did some experiments , found that a query with gorm for sqlite3 takes about 380us, it's not that much, and there will no that many users can overwhelm my server, so I finally decide query the `tokens` value from database everytime when user make a request to chat with ChatGPT, 
 
@@ -166,7 +164,7 @@ fmt.Println(t.Sub(start))
 ..
 ```
 
-## 6. Session store
+## 5. Session store
 
 sessions need a place to store, in-memory, file or Redis, package [gorilla/sessions](https://github.com/gorilla/sessions) provides two way to save sessions, one is file, another is in-memory, 
 

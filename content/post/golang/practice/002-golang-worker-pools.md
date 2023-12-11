@@ -9,14 +9,14 @@ tags:
  - concurrency
 ---
 
-谷歌Go组的一个大佬Bryan C. Mills认为[Worker Pool在go里是anti-pattern](https://youtu.be/5zXAHh5tJqQ), 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的:
+有人认为[Worker Pool在go里是anti-pattern](https://youtu.be/5zXAHh5tJqQ), 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的:
 
 - 线程池的概念: 预先创建多个线程，线程池里的线程等待处理新来的任务，处理完之后线程并不会被销毁而是等待下一个任务。
 - 使用线程池的原因: 创建和销毁线程都消耗系统资源，如果你的程序需要**频繁地创建和销毁线程**那这时候就可以考虑使用线程池来提高程序的性能。
 
-注意以上这两点针对的是传统的线程创建销毁, 而goroutine是个轻量的线程, [官方文档](https://go.dev/tour/concurrency/1): *A goroutine is a lightweight thread managed by the Go runtime.* 即goroutine创建开销很小, 至于为什么很小以后会专门研究, 所以在下面的内容中 线程=goroutine, 
+注意以上这两点针对是OS级线程的创建销毁, goroutine模型并不是这样, 很轻量, 这也是不需要 wroker poll 的原因, 
 
-另外线程池 thread pool 是不是 worker pool 看法不一, 根据worker pool的实现, 下面这个描述感觉最贴切:
+另外线程池 thread pool 是不是 worker pool 看法不一, 下面这个描述感觉最贴切:
 
 > The **worker pool pattern** is a design in which a fixed number of workers are given a stream of tasks to process in a queue. [Go Worker Pools](https://shopify.engineering/leveraging-go-worker-pools)
 
@@ -41,8 +41,6 @@ for key := range keysChannel {
 
 上面这个程序就是遍历一个buffered channel, 如果该channel是空的, 那该段代码就会阻塞, 直到新的数据写入`keysChannel` ,
 
-如果buffer channel满了, 那写入的那行代码就会阻塞:
-
 ```go
 key := 0
 for {
@@ -54,7 +52,7 @@ for {
 
 上面这段程序即模拟持续产生数据写入到buffered channel: `keysChannel`, 若`keysChannel`满了, 那`keysChannel <- key`就会阻塞, 
 
-之前看到一句话描述线程池说*once the threads finish the task assigned, they make themselves available again for the next task*, 这句话在这就很有迷惑性, 其它语言不知道线程池具体怎么实现, 但是在go里根据上面我们讨论的, 根本没有所谓的*make themselves (threads) available again for the next task*, 即线程一直都在监听, 只是他们完成一个任务后就会接着完成下一个, 直到他们监听的那个buffered channel为空, 这时候他们是阻塞状态, 
+之前看到一句话描述线程池说 *once the threads finish the task assigned, they make themselves available again for the next task*, 这句话在这就很有迷惑性, 其它语言不知道线程池具体怎么实现, 但是在go里根据上面我们讨论的, 根本没有所谓的*make themselves (threads) available again for the next task*, 即线程一直都在监听, 只是他们完成一个任务后就会接着完成下一个, 直到他们监听的那个buffered channel为空, 这时候他们是阻塞状态, 
 
 另外实现线程池还用到了一个struct, `sync.WaitGroup` , 主要需要了解它的三个函数, `wg.Add()`, `wg.Done()`, `wg.Wait()`, 其中`wg.Add(1)`的意思使`wg`的counter加1, `wg.Done()`使counter减1,  最后`wg.Wait()`阻塞直到counter为0, 我们一般的逻辑是创建多个线程的时候, 每创建一个线程就调用`wg.Add(1)`使counter++, 当线程要被销毁的时候调用`wg.Done()`是counter--,  然后在main线程里的最后调用`wg.Wait()`, 即等待所有线程执行完毕程序结束, 
 
