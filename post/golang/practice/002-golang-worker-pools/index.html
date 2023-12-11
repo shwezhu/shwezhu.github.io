@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="谷歌Go组的一个大佬Bryan C. Mills认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解" />
+<meta name="author" content="David" /><meta name="description" content="有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="Go并发学习之实现一个Worker Pool" />
-<meta property="og:description" content="谷歌Go组的一个大佬Bryan C. Mills认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解" />
+<meta property="og:description" content="有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/golang/practice/002-golang-worker-pools/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-25T14:13:13+00:00" />
 <meta property="article:modified_time" content="2023-05-25T14:13:13+00:00" />
 <meta itemprop="name" content="Go并发学习之实现一个Worker Pool">
-<meta itemprop="description" content="谷歌Go组的一个大佬Bryan C. Mills认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解"><meta itemprop="datePublished" content="2023-05-25T14:13:13+00:00" />
+<meta itemprop="description" content="有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我"><meta itemprop="datePublished" content="2023-05-25T14:13:13+00:00" />
 <meta itemprop="dateModified" content="2023-05-25T14:13:13+00:00" />
-<meta itemprop="wordCount" content="1681">
+<meta itemprop="wordCount" content="1557">
 <meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Go并发学习之实现一个Worker Pool"/>
-<meta name="twitter:description" content="谷歌Go组的一个大佬Bryan C. Mills认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解"/>
+<meta name="twitter:description" content="有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -143,13 +143,13 @@
   </div>
 </div>
     <div class="post-content">
-      <p>谷歌Go组的一个大佬Bryan C. Mills认为<a href="https://youtu.be/5zXAHh5tJqQ">Worker Pool在go里是anti-pattern</a>, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的:</p>
+      <p>有人认为<a href="https://youtu.be/5zXAHh5tJqQ">Worker Pool在go里是anti-pattern</a>, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的:</p>
 <ul>
 <li>线程池的概念: 预先创建多个线程，线程池里的线程等待处理新来的任务，处理完之后线程并不会被销毁而是等待下一个任务。</li>
 <li>使用线程池的原因: 创建和销毁线程都消耗系统资源，如果你的程序需要<strong>频繁地创建和销毁线程</strong>那这时候就可以考虑使用线程池来提高程序的性能。</li>
 </ul>
-<p>注意以上这两点针对的是传统的线程创建销毁, 而goroutine是个轻量的线程, <a href="https://go.dev/tour/concurrency/1">官方文档</a>: <em>A goroutine is a lightweight thread managed by the Go runtime.</em> 即goroutine创建开销很小, 至于为什么很小以后会专门研究, 所以在下面的内容中 线程=goroutine,</p>
-<p>另外线程池 thread pool 是不是 worker pool 看法不一, 根据worker pool的实现, 下面这个描述感觉最贴切:</p>
+<p>注意以上这两点针对是OS级线程的创建销毁, goroutine模型并不是这样, 很轻量, 这也是不需要 wroker poll 的原因,</p>
+<p>另外线程池 thread pool 是不是 worker pool 看法不一, 下面这个描述感觉最贴切:</p>
 <blockquote>
 <p>The <strong>worker pool pattern</strong> is a design in which a fixed number of workers are given a stream of tasks to process in a queue. <a href="https://shopify.engineering/leveraging-go-worker-pools">Go Worker Pools</a></p>
 </blockquote>
@@ -176,7 +176,6 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>上面这个程序就是遍历一个buffered channel, 如果该channel是空的, 那该段代码就会阻塞, 直到新的数据写入<code>keysChannel</code> ,</p>
-<p>如果buffer channel满了, 那写入的那行代码就会阻塞:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -196,7 +195,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>上面这段程序即模拟持续产生数据写入到buffered channel: <code>keysChannel</code>, 若<code>keysChannel</code>满了, 那<code>keysChannel &lt;- key</code>就会阻塞,</p>
-<p>之前看到一句话描述线程池说<em>once the threads finish the task assigned, they make themselves available again for the next task</em>, 这句话在这就很有迷惑性, 其它语言不知道线程池具体怎么实现, 但是在go里根据上面我们讨论的, 根本没有所谓的<em>make themselves (threads) available again for the next task</em>, 即线程一直都在监听, 只是他们完成一个任务后就会接着完成下一个, 直到他们监听的那个buffered channel为空, 这时候他们是阻塞状态,</p>
+<p>之前看到一句话描述线程池说 <em>once the threads finish the task assigned, they make themselves available again for the next task</em>, 这句话在这就很有迷惑性, 其它语言不知道线程池具体怎么实现, 但是在go里根据上面我们讨论的, 根本没有所谓的<em>make themselves (threads) available again for the next task</em>, 即线程一直都在监听, 只是他们完成一个任务后就会接着完成下一个, 直到他们监听的那个buffered channel为空, 这时候他们是阻塞状态,</p>
 <p>另外实现线程池还用到了一个struct, <code>sync.WaitGroup</code> , 主要需要了解它的三个函数, <code>wg.Add()</code>, <code>wg.Done()</code>, <code>wg.Wait()</code>, 其中<code>wg.Add(1)</code>的意思使<code>wg</code>的counter加1, <code>wg.Done()</code>使counter减1,  最后<code>wg.Wait()</code>阻塞直到counter为0, 我们一般的逻辑是创建多个线程的时候, 每创建一个线程就调用<code>wg.Add(1)</code>使counter++, 当线程要被销毁的时候调用<code>wg.Done()</code>是counter&ndash;,  然后在main线程里的最后调用<code>wg.Wait()</code>, 即等待所有线程执行完毕程序结束,</p>
 <p>注意该实现并不是oo的实现,</p>
 <div class="highlight"><div class="chroma">

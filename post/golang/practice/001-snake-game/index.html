@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 地图 地图就是个二维数组b" />
+<meta name="author" content="David" /><meta name="description" content="地图 地图就是个二维数组board, 在Go里面叫Slice of slices, 该地图(二维数组)存储bool类型, 定义如下和结构如下: 1 2 3 4 5 6 7 8 9 10 11 12" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="用Go实现一个简单的贪吃蛇" />
-<meta property="og:description" content="Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 地图 地图就是个二维数组b" />
+<meta property="og:description" content="地图 地图就是个二维数组board, 在Go里面叫Slice of slices, 该地图(二维数组)存储bool类型, 定义如下和结构如下: 1 2 3 4 5 6 7 8 9 10 11 12" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/golang/practice/001-snake-game/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-05-20T19:59:09+00:00" />
 <meta property="article:modified_time" content="2023-05-20T19:59:09+00:00" />
 <meta itemprop="name" content="用Go实现一个简单的贪吃蛇">
-<meta itemprop="description" content="Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 地图 地图就是个二维数组b"><meta itemprop="datePublished" content="2023-05-20T19:59:09+00:00" />
+<meta itemprop="description" content="地图 地图就是个二维数组board, 在Go里面叫Slice of slices, 该地图(二维数组)存储bool类型, 定义如下和结构如下: 1 2 3 4 5 6 7 8 9 10 11 12"><meta itemprop="datePublished" content="2023-05-20T19:59:09+00:00" />
 <meta itemprop="dateModified" content="2023-05-20T19:59:09+00:00" />
-<meta itemprop="wordCount" content="1634">
+<meta itemprop="wordCount" content="1227">
 <meta itemprop="keywords" content="golang,game," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="用Go实现一个简单的贪吃蛇"/>
-<meta name="twitter:description" content="Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下: 地图 地图就是个二维数组b"/>
+<meta name="twitter:description" content="地图 地图就是个二维数组board, 在Go里面叫Slice of slices, 该地图(二维数组)存储bool类型, 定义如下和结构如下: 1 2 3 4 5 6 7 8 9 10 11 12"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -143,9 +143,8 @@
   </div>
 </div>
     <div class="post-content">
-      <p>Go也学了几天了, 在学习泛型和并发之前打算实践一下, 熟悉一下语法, 不然一直理论没有实践是很容易学懵的, 实现思路如下:</p>
-<p><strong>地图</strong></p>
-<p>地图就是个二维数组<code>board</code>, 在Go里面叫Slice of slices, 不清楚可以看这篇<a href="https://davidzhu.xyz/2023/05/13/Golang/Basics/003-collections/">Golang容器之Array &amp; Slice &amp; Map </a>, 该地图(二维数组)存储bool类型, 定义如下和结构如下:</p>
+      <p><strong>地图</strong></p>
+<p>地图就是个二维数组<code>board</code>, 在Go里面叫Slice of slices, 该地图(二维数组)存储bool类型, 定义如下和结构如下:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -236,10 +235,10 @@
 </span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;\033[H\033[2J&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">	<span class="c1">// original: &#39;for y, _ := range board { ... }&#39;
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="nx">y</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">xValue</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span><span class="p">[</span><span class="nx">y</span><span class="p">]</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">!</span><span class="nx">xValue</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">food</span><span class="p">.</span><span class="nx">x</span> <span class="o">!=</span> <span class="nx">x</span> <span class="o">||</span> <span class="nx">food</span><span class="p">.</span><span class="nx">y</span> <span class="o">!=</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">board</span><span class="p">[</span><span class="nx">y</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">!</span><span class="nx">v</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">food</span><span class="p">.</span><span class="nx">x</span> <span class="o">!=</span> <span class="nx">i</span> <span class="o">||</span> <span class="nx">food</span><span class="p">.</span><span class="nx">y</span> <span class="o">!=</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;□ &#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">!</span><span class="nx">xValue</span> <span class="o">&amp;&amp;</span> <span class="nx">food</span><span class="p">.</span><span class="nx">x</span> <span class="o">==</span> <span class="nx">x</span> <span class="o">&amp;&amp;</span> <span class="nx">food</span><span class="p">.</span><span class="nx">y</span> <span class="o">==</span> <span class="nx">y</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">!</span><span class="nx">v</span> <span class="o">&amp;&amp;</span> <span class="nx">food</span><span class="p">.</span><span class="nx">x</span> <span class="o">==</span> <span class="nx">i</span> <span class="o">&amp;&amp;</span> <span class="nx">food</span><span class="p">.</span><span class="nx">y</span> <span class="o">==</span> <span class="nx">y</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;★ &#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;■ &#34;</span><span class="p">)</span>
@@ -312,7 +311,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><ul>
-<li>2 遍历<code>snake</code>, 使第<code>i</code>个元素的坐标等于第<code>i-1</code>个元素的坐标(<code>i&gt;=1</code>),实现中间的身体看着是不动的, 其实每个节点都前进了</li>
+<li>2 遍历<code>snake</code>, 使第<code>i</code>个元素的坐标等于第<code>i-1</code>个元素的坐标(<code>i&gt;=1</code>),中间的身体看着是不动的, 其实每个节点都前进了</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -331,7 +330,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="nx">length</span> <span class="p">&gt;</span> <span class="mi">1</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="c1">// make the value of each (i)th element equal to the (i-1)th value
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">snake</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">snake</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">snake</span><span class="p">[</span><span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">snake</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">snake</span><span class="p">[</span><span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
@@ -339,7 +338,7 @@
 </div><ul>
 <li>3 设置位置在蛇的最后一个节点即尾巴<code>(snake[len - 1].x, snake[len - 1].y)</code>的<code>board</code>元素为false, 因为在第2步尾巴已经变成倒数第二个元素的坐标了, 所以我们要把旧的尾巴坐标位置设置为false</li>
 </ul>
-<p>即这样只遍历了<code>snake</code>(一维数组)来实现更新地图, 具体吃食物增加节点就不介绍了, 逻辑很容易,</p>
+<p>即这样只遍历了<code>snake</code>(一维数组)来实现更新地图.</p>
 <hr>
 <p><strong>总结</strong></p>
 <p>这次的小应用, 熟悉了slice的用法, 也熟悉了很多语法比如<code>:=</code>和<code>var</code>, 尤其是遍历slice以及loop的写法, 比如无限循环可写成:</p>
@@ -364,10 +363,7 @@
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go get github.com/eiannone/keyboard
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>然后项目里就会多出<code>go.mod</code>和<code>mod.sum</code>文件, 里面保存了第三方库的版本, 有点像Java里的maven<code>pom.xml</code>, 或者是npm的<code>package.json</code>, 当然肯定是不一样的他们, 最近作业有点多, 还没仔细研究, 另外注意, 如果是在Goland上开发, 可能会报错<code>$GOPATH/go.mod exists but should not exist</code>, 这个原因是你项目设置了<code>Project GOPATH</code>, 在Goland设置里删除就好了, 以上这些和包相关的问题可以参考这篇文章 <a href="https://davidzhu.xyz/2023/05/21/Golang/Basics/005-go-modules/">Golang模块module和包package的使用之导入自定义包</a></p>
-<p>最后是关于线程, goroutine, 这个改天再研究, 研究了一下怎么关闭线程, 可以参考:<a href="https://davidzhu.xyz/2023/05/21/Golang/Basics/011-goroutines-select/">Golang Goroutine和Select</a></p>
-<p><a href="https://gist.github.com/shwezhu/3def0433eb5656deebf07dc32e6eecc1">源码</a>如下:</p>
-<p>{% gist 3def0433eb5656deebf07dc32e6eecc1 %}</p>
+</div><p>源码: <a href="https://gist.github.com/shwezhu/3def0433eb5656deebf07dc32e6eecc1">https://gist.github.com/shwezhu/3def0433eb5656deebf07dc32e6eecc1</a></p>
 
     </div>
 

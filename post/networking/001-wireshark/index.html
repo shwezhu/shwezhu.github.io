@@ -51,7 +51,7 @@
 <meta itemprop="description" content="1. Structure 2. Capture filter 2.1. Selcet netowk interface en0 Physical network interface utun0~4 VIrtual netwrok interface used for tunneling, learn more: Working with TUN Device on MacOS - David&rsquo;s Blog loopback interface: 127.0.0.1 When you run a echo server and client on your local machine, you should select the loopback interface, not the en0 interface. 2.2. Specify filter rules Filter by port and protocol:
 1 tcp port 9000 Learn more: CaptureFilters"><meta itemprop="datePublished" content="2023-09-13T16:52:30+00:00" />
 <meta itemprop="dateModified" content="2023-09-13T16:52:30+00:00" />
-<meta itemprop="wordCount" content="140">
+<meta itemprop="wordCount" content="735">
 <meta itemprop="keywords" content="networking," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Wireshark Basics"/>
 <meta name="twitter:description" content="1. Structure 2. Capture filter 2.1. Selcet netowk interface en0 Physical network interface utun0~4 VIrtual netwrok interface used for tunneling, learn more: Working with TUN Device on MacOS - David&rsquo;s Blog loopback interface: 127.0.0.1 When you run a echo server and client on your local machine, you should select the loopback interface, not the en0 interface. 2.2. Specify filter rules Filter by port and protocol:
@@ -154,6 +154,7 @@
           </ul>
         </li>
         <li><a href="#3-display-filter">3. Display filter</a></li>
+        <li><a href="#4-practical-examples">4. Practical examples</a></li>
       </ul>
     </li>
   </ul>
@@ -162,7 +163,7 @@
 </div>
     <div class="post-content">
       <h2 id="1-structure">1. Structure</h2>
-<p><img src="/001-wireshark/a.png" alt="a"></p>
+<p><img src="/001-wireshark/aaa.png" alt="a"></p>
 <h2 id="2-capture-filter">2. Capture filter</h2>
 <h3 id="21-selcet-netowk-interface">2.1. Selcet netowk interface</h3>
 <ul>
@@ -203,6 +204,229 @@
 <ul>
 <li><a href="https://wiki.wireshark.org/CaptureFilters">CaptureFilters - Wireshark</a></li>
 </ul>
+<h2 id="4-practical-examples">4. Practical examples</h2>
+<p>Client:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Three-way handshake included this step
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// Note that we&#39;re connecting to port 9000 on the server,
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// not use port 9000 to connect the server.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">conn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">net</span><span class="p">.</span><span class="nf">Dial</span><span class="p">(</span><span class="s">&#34;tcp&#34;</span><span class="p">,</span> <span class="s">&#34;:9000&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">log</span><span class="p">.</span><span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;couldn&#39;t connect to the server: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">buf</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// send data to server, the data will be copied into kernel space
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// and encapsulated into tcp segment -&gt; ip packet -&gt; ethernet frame
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">conn</span><span class="p">.</span><span class="nf">Write</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;Hi, I am Coco\n&#34;</span><span class="p">));</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">log</span><span class="p">.</span><span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;couldn&#39;t send request: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Read data from server, the data are copied from kernel space
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// what happens in kernel space (network stack):
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// ethernet frame -&gt; ip packet -&gt; tcp segment
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// the data will be forwarded to this program.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// If the connection is closed, return error: io.EOF
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">conn</span><span class="p">.</span><span class="nf">Read</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">log</span><span class="p">.</span><span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;couldn&#39;t read server response: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">buf</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">_</span> <span class="p">=</span> <span class="nx">conn</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Server:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Obtain the port
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">port</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;:%s&#34;</span><span class="p">,</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Create a tcp listener on the given port
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">listener</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">net</span><span class="p">.</span><span class="nf">Listen</span><span class="p">(</span><span class="s">&#34;tcp&#34;</span><span class="p">,</span> <span class="nx">port</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;failed to create listener, err:&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">os</span><span class="p">.</span><span class="nf">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;listening on %s\n&#34;</span><span class="p">,</span> <span class="nx">listener</span><span class="p">.</span><span class="nf">Addr</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// listen for new connections
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Three-way handshake included
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// this connection will be assigned a new port (different from the port this server is listening)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// for sending and receiving data
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">conn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">listener</span><span class="p">.</span><span class="nf">Accept</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;failed to accept connection, err:&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="k">continue</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Pass an accepted connection to a handler goroutine
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">go</span> <span class="nf">handleConnection</span><span class="p">(</span><span class="nx">conn</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">handleConnection</span><span class="p">(</span><span class="nx">conn</span> <span class="nx">net</span><span class="p">.</span><span class="nx">Conn</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">defer</span> <span class="nx">conn</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">buf</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// read client request data, same as client side
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// if the connection is closed, return error: io.EOF
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">conn</span><span class="p">.</span><span class="nf">Read</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">EOF</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;failed to read data, err:&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;connection closed by client:&#34;</span><span class="p">,</span> <span class="nx">conn</span><span class="p">.</span><span class="nf">RemoteAddr</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;request: %s&#34;</span><span class="p">,</span> <span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">line</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%s&#34;</span><span class="p">,</span> <span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Same as on client side
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">conn</span><span class="p">.</span><span class="nf">Write</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">line</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Run server and client:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># server</span>
+</span></span><span class="line"><span class="cl">$ go run main.go <span class="m">9000</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># client</span>
+</span></span><span class="line"><span class="cl">$ go run main.go
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Wireshark:</p>
+<p><img src="/001-wireshark/a.png" alt="a"></p>
+<p>The first three is the three-way handshake packet,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[SYN] seq=0 len=0
+</span></span><span class="line"><span class="cl">[SYN] seq=0 ack=1 len=0
+</span></span><span class="line"><span class="cl">[SYN] seq=1 ack=1 len=0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that the length of the fifth packet:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># ACK sent with data</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>PSH, ACK<span class="o">]</span> ... <span class="nv">len</span><span class="o">=</span><span class="m">14</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/001-wireshark/b.png" alt="b"></p>
+<p><code>len</code> is the data&rsquo;s length, the first there packets are just three-way handshake there is no data sent, so <code>len=0</code>.</p>
+<p>The last four packets are TCP termination four-way hand-shake:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># ACK sent with FIN, this ACK is used to </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ack=16 confirms that client has received the 15 byte sent by server </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># and client expects seq=16 from server</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>FIN, ACK<span class="o">]</span> <span class="nv">seq</span><span class="o">=</span><span class="m">15</span> <span class="nv">ack</span><span class="o">=</span><span class="m">16</span> <span class="nv">len</span><span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>ACK<span class="o">]</span> <span class="nv">seq</span><span class="o">=</span><span class="m">16</span> <span class="nv">ack</span><span class="o">=</span><span class="m">16</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>The TCP <code>ACK</code> flag is used to confirm the last received byte by receiver.</p>
+<p>The <code>PSH</code> flag, on the other hand, is used to tell the server to push data to the application layer immediately.</p>
+</blockquote>
 
     </div>
 
@@ -226,9 +450,9 @@
           <a href="/tags/networking/">networking</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/golang/practice/007-network-programming-go/">
+        <a class="prev" href="/post/git/009-push-with-force/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Analyse Three-way Handshake with Wireshark - Go</span>
+            <span class="prev-text nav-default">Git Push with force</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         <a class="next" href="/post/networking/007-tun-device-macos/">
