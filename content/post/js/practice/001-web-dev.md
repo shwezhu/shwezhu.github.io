@@ -8,7 +8,7 @@ tags:
   - javascript
 ---
 
-### 1. Delay function
+## 1. Delay function
 
 ```js
 function delay(minutes) {
@@ -18,7 +18,7 @@ function delay(minutes) {
 // await delay(2)
 ```
 
-### 2. Click copy
+## 2. Click copy
 
 ```html
 <p id="url-text" style="display: none">{{.SharedUrl}}</p>
@@ -38,13 +38,7 @@ function delay(minutes) {
 </script>
 ```
 
-### 2. `preventDefault()`
-
-`event.preventDefault()` basically prevents event to fire. In the case of `submit` event. `event.preventDefault()` will prevent your form to submit. We normally prevent `submit` behaviour to check some validation before submitting the form or we need to change values of our input fields or we want to submit using `ajax` calls. For this purpose, we prevent form to be submitted by using `event.preventDefault()`. 
-
-Learn more: [preventDefault() Event Method](https://www.w3schools.com/jsref/event_preventdefault.asp)
-
-### 3. Relative path
+## 3. Relative path
 
 You can write relative path directly for the endpoint, because the browser know the **Origin**, when you make HTTP request, it knows where should go.
 
@@ -61,7 +55,9 @@ And it's ok to write relative path when redirect in Go code:
 http.Redirect(w, r, "/login", http.StatusFound)
 ```
 
-### 4. Send username and password form
+## 4. Send username and password form
+
+> If you have a login page with user name and password, do not tell users that they entered a wrong password. Tell them that they entered wrong credentials. You don’t want to give hackers a way to know if a user name is right or wrong. [source](https://www.reddit.com/r/PHPhelp/comments/14pwb53/comment/jqk830i/?utm_source=share&utm_medium=web2x&context=3) 
 
 Traditional way to submit a form:
 
@@ -73,11 +69,7 @@ Traditional way to submit a form:
 </form> 
 ```
 
-The form data will be sent to `/login` page of the server automatically. 
-
-However, sometimes we need get the status code from the server or validate the legality of the input, which means we cannot use the form directly, **we need to make a ajax request** with js code.
-
-After check the input, you may make ajax with `fetch()` to send form data:
+The form data will be sent to `/login` endpoint of the server automatically. After check the input, you may make ajax with `fetch()` to send form data:
 
 ```js
 let data = new FormData(document.getElementById("login-form"))
@@ -102,7 +94,7 @@ Content-Disposition: form-data; name="password"
 ------WebKitFormBoundaryGx7UioRfdfhdT5U5--
 ```
 
-This is not correct, and you will get error on the server side, the suggestion to get a correct request body is to not set header explictly:
+This is not correct and you will get error at the server, the suggestion to get a correct request body is to not set header explictly:
 
 ```js
 let response = await fetch("/login", {
@@ -119,11 +111,11 @@ username: david
 password: 778899s
 ```
 
-> Note that if you don't set `Content-Type` header explicitly, the browser will set Content-Type header to `multipart/form-data` automatically. 
+> **Note:** if you don't set `Content-Type` header explicitly, the browser will set Content-Type header to `multipart/form-data` automatically. 
 
-#### 4.1. Special situation in Go
+### 4.1. Special situation in Go
 
-If your server written in Go, you may parse form like this:
+If your server written in Go, you may parse the form like this:
 
 ```go
 if e := r.ParseForm(); err != nil {

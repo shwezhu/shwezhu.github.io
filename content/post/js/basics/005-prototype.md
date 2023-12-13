@@ -8,7 +8,7 @@ tags:
   - javascript
 ---
 
-`{}` 就是个空对象, `{}` 然鹅在 Python 里是个 dictionary, 
+`{}` 就是个空对象, `{}` 然鹅在 Python 里是个 dictionary, 当然 dictionary 也是个对象, 
 
 ## 1. Prototype
 

@@ -93,6 +93,10 @@ Upload: 1013.83 Mbit/s
 [  1] 12.00-15.00 sec  83.0 MBytes   232 Mbits/sec
 [  1] 15.00-18.00 sec  72.0 MBytes   201 Mbits/sec
 [  1] 0.00-18.10 sec   544 MBytes   252 Mbits/sec
+
+Interval: The time frame for the bandwidth measurement. For example, "0.00-3.00 sec" is the first 3 seconds of the test.
+Transfer: The amount of data transferred during the interval. For example, "69.9 MBytes" were transferred in the first 3 seconds.
+Bandwidth: The calculated network bandwidth during the interval. For example, in the first 3 seconds, the bandwidth was "195 Mbits/sec".
 ```
 
 ![aa](/005-vps-basic-config/aa.png)

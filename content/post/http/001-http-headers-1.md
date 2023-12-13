@@ -21,7 +21,7 @@ Learn more: [HTTP headers - HTTP | MDN](https://developer.mozilla.org/en-US/docs
 
 ### 1. `Content-Type` 
 
-The `Content-Type` header can be `application/json`, `application/x-www-form-urlencoded`, `multipart/form-data`, the first two is usually used with posting form data to server, the third is used to upload file to the server.
+Common values of `Content-Type` header can be `application/json`, `application/x-www-form-urlencoded`, `multipart/form-data`, the first two is usually used with posting form data to server, the third is used to upload file to the server.
 
 - `application/x-www-form-urlencoded`: the keys and values are encoded in key-value tuples separated by `'&'`, with a `'='` between the key and the value. 
   - The format of `application/x-www-form-urlencoded` is `"username=davidzhu&password=778899a" `. 
