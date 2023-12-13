@@ -6,329 +6,224 @@
     <description>Recent content in golang on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 07 Dec 2023 15:12:32 +0000</lastBuildDate><atom:link href="https://davidzhu.xyz/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Dec 2023 15:12:32 +0000</lastBuildDate>
+    <atom:link href="https://davidzhu.xyz/categories/golang/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Interfaces Basics - Go</title>
       <link>https://davidzhu.xyz/post/golang/basics/005-interfaces/</link>
       <pubDate>Thu, 07 Dec 2023 15:12:32 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/005-interfaces/</guid>
-      <description>1. Type Admin isn&amp;rsquo;t *Adimin I found an interesting question on stackoverflow, this is the code:
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a.name = name } OP tries to copy user1&amp;rsquo;s value below:</description>
+      <description>1. Type Admin isn&amp;rsquo;t *Adimin I found an interesting question on stackoverflow, this is the code:&#xA;1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a.name = name } OP tries to copy user1&amp;rsquo;s value below:</description>
     </item>
-    
     <item>
       <title>Value, Variable and Types - Go</title>
       <link>https://davidzhu.xyz/post/golang/basics/001-basics-go/</link>
       <pubDate>Thu, 07 Dec 2023 10:00:20 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/001-basics-go/</guid>
-      <description>You should learn how to read the documentation provided Go, it&amp;rsquo;s very important:
-1. static language Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare
-1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt.</description>
+      <description>You should learn how to read the documentation provided Go, it&amp;rsquo;s very important:&#xA;1. static language Go is statically typed. Every variable has only one static type, that is, exactly one type known and fixed at compile time: int, float32, *MyType, []byte, and so on. If we declare&#xA;1 2 3 4 type MyInt int var i int var j MyInt then i has type int and j has type MyInt.</description>
     </item>
-    
     <item>
       <title>map - Go</title>
       <link>https://davidzhu.xyz/post/golang/basics/003-map/</link>
       <pubDate>Wed, 06 Dec 2023 23:43:50 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/003-map/</guid>
-      <description>1. Basic concepts A map value is a pointer to a runtime.hmap structure, when you write the statement:
-1 m := make(map[int]int) The compiler replaces it with a call to runtime.makemap, which has the signature
-1 2 3 4 5 6 // makemap implements a Go map creation make(map[k]v, hint) // If the compiler has determined that the map or the first bucket // can be created on the stack, h and/or bucket may be non-nil.</description>
+      <description>1. Basic concepts A map value is a pointer to a runtime.hmap structure, when you write the statement:&#xA;1 m := make(map[int]int) The compiler replaces it with a call to runtime.makemap, which has the signature&#xA;1 2 3 4 5 6 // makemap implements a Go map creation make(map[k]v, hint) // If the compiler has determined that the map or the first bucket // can be created on the stack, h and/or bucket may be non-nil.</description>
     </item>
-    
     <item>
       <title>slice &amp; array - Go</title>
       <link>https://davidzhu.xyz/post/golang/basics/003-array-slice/</link>
       <pubDate>Wed, 06 Dec 2023 23:40:59 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/003-array-slice/</guid>
-      <description>1. Array An array&amp;rsquo;s length is part of its type, so arrays cannot be resized. Its length is part of its type ([4]int and [5]int are distinct, incompatible types).
-Go’s arrays are values. An array variable denotes the entire array; it is not a pointer to the first array element (as would be the case in C). This means that when you assign or pass around an array value you will make a copy of its contents.</description>
+      <description>1. Array An array&amp;rsquo;s length is part of its type, so arrays cannot be resized. Its length is part of its type ([4]int and [5]int are distinct, incompatible types).&#xA;Go’s arrays are values. An array variable denotes the entire array; it is not a pointer to the first array element (as would be the case in C). This means that when you assign or pass around an array value you will make a copy of its contents.</description>
     </item>
-    
     <item>
       <title>IO in Golang</title>
       <link>https://davidzhu.xyz/post/golang/basics/006-io/</link>
       <pubDate>Mon, 04 Dec 2023 14:25:04 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/006-io/</guid>
-      <description>1. os.Open() loads entire file into memory? No, the os.Open() function in Golang does not load the entire file into RAM by default. It returns a file descriptor that allows you to read or write data from or to the file.
-I found this answer talks about the open() sys call Linux on StackOverflow, which may give you hints on how os.Open() works:
-No, a file is not automatically read into memory by opening it.</description>
+      <description>1. os.Open() loads entire file into memory? No, the os.Open() function in Golang does not load the entire file into RAM by default. It returns a file descriptor that allows you to read or write data from or to the file.&#xA;I found this answer talks about the open() sys call Linux on StackOverflow, which may give you hints on how os.Open() works:&#xA;No, a file is not automatically read into memory by opening it.</description>
     </item>
-    
     <item>
       <title>Some HTTP Issues with Go</title>
       <link>https://davidzhu.xyz/post/golang/practice/007-http-related/</link>
       <pubDate>Sun, 29 Oct 2023 11:30:50 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/practice/007-http-related/</guid>
-      <description>1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &amp;#34;asset=&amp;#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically,
-js code:
-1 2 3 4 5 6 async function getUrl(filepath) { const filename = &amp;#34;back ground.</description>
+      <description>1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &amp;#34;asset=&amp;#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically,&#xA;js code:&#xA;1 2 3 4 5 6 async function getUrl(filepath) { const filename = &amp;#34;back ground.</description>
     </item>
-    
     <item>
       <title>Static Linking Go Programs</title>
       <link>https://davidzhu.xyz/post/golang/advance/012-statically-linking/</link>
       <pubDate>Tue, 10 Oct 2023 12:09:35 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/012-statically-linking/</guid>
-      <description>Previous post: Statically Linking in C - David&amp;rsquo;s Blog
-1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
-standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary.</description>
+      <description>Previous post: Statically Linking in C - David&amp;rsquo;s Blog&#xA;1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.&#xA;standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary.</description>
     </item>
-    
     <item>
       <title>Cross Compilation - Go</title>
       <link>https://davidzhu.xyz/post/golang/advance/011-cross-compilation/</link>
       <pubDate>Tue, 10 Oct 2023 11:09:35 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/011-cross-compilation/</guid>
-      <description>1. What is cross compilation? Cross-compilation is the process of compiling code for one computer system (often known as the target) on a different system, called the host. It&amp;rsquo;s a very useful technique, for instance when the target system is too small to host the compiler and all relevant files. Common examples include many embedded systems, but also typical game consoles.
-Source: https://stackoverflow.com/a/897303/16317008
-2. An example There is a question on Stackoverflow:</description>
+      <description>1. What is cross compilation? Cross-compilation is the process of compiling code for one computer system (often known as the target) on a different system, called the host. It&amp;rsquo;s a very useful technique, for instance when the target system is too small to host the compiler and all relevant files. Common examples include many embedded systems, but also typical game consoles.&#xA;Source: https://stackoverflow.com/a/897303/16317008&#xA;2. An example There is a question on Stackoverflow:</description>
     </item>
-    
     <item>
       <title>Don&#39;t Defer Close() on Writable Files - Go Notes</title>
       <link>https://davidzhu.xyz/post/golang/advance/010-defer-close/</link>
       <pubDate>Thu, 05 Oct 2023 18:52:56 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/010-defer-close/</guid>
-      <description>Why would you get an error from Close() but not an earlier Write() call? To answer that we need to take a brief, high-level detour into the area of computer architecture.
-Generally speaking, as you move outside and away from your CPU, actions get orders of magnitude slower. Writing to a CPU register is very fast. Accessing system RAM is quite slow in comparison. Doing I/O on disks or networks is an eternity.</description>
+      <description>Why would you get an error from Close() but not an earlier Write() call? To answer that we need to take a brief, high-level detour into the area of computer architecture.&#xA;Generally speaking, as you move outside and away from your CPU, actions get orders of magnitude slower. Writing to a CPU register is very fast. Accessing system RAM is quite slow in comparison. Doing I/O on disks or networks is an eternity.</description>
     </item>
-    
     <item>
       <title>Gorilla Sessions RedisStore Source Code Analysis</title>
       <link>https://davidzhu.xyz/post/golang/practice/006-gorilla-redis-store-code/</link>
       <pubDate>Sun, 01 Oct 2023 12:12:50 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/practice/006-gorilla-redis-store-code/</guid>
-      <description>To prevent data race, store.Get() always creates a new session (or make a copy) and returns the session to user.
-1 2 3 4 5 6 7 // Get a session. // A copied one or new session. session, _ = store.Get(req, &amp;#34;session-key&amp;#34;) // Add a value. session.Values[&amp;#34;foo&amp;#34;] = &amp;#34;bar&amp;#34; // Save. _ = sessions.Save(req, rsp) Let&amp;rsquo;s check the source code, the Get() method of Redistore:
-1 2 3 func (s *RediStore) Get(r *http.</description>
+      <description>To prevent data race, store.Get() always creates a new session (or make a copy) and returns the session to user.&#xA;1 2 3 4 5 6 7 // Get a session. // A copied one or new session. session, _ = store.Get(req, &amp;#34;session-key&amp;#34;) // Add a value. session.Values[&amp;#34;foo&amp;#34;] = &amp;#34;bar&amp;#34; // Save. _ = sessions.Save(req, rsp) Let&amp;rsquo;s check the source code, the Get() method of Redistore:&#xA;1 2 3 func (s *RediStore) Get(r *http.</description>
     </item>
-    
     <item>
       <title>Test &amp; Benchmark - Go</title>
       <link>https://davidzhu.xyz/post/golang/advance/009-benchmark-test/</link>
       <pubDate>Sat, 30 Sep 2023 09:58:56 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/009-benchmark-test/</guid>
-      <description>1. Benchmark 1.1. b.N loop Functions of the form
-1 func BenchmarkXxx(*testing.B) are considered benchmarks, and are executed by the go test command when its -bench flag is provided. Benchmarks are run sequentially.
-A sample benchmark function looks like this:
-1 2 3 4 5 func BenchmarkRandInt(b *testing.B) { for i := 0; i &amp;lt; b.N; i++ { rand.Int() } } The benchmark function must run the target code b.N times.</description>
+      <description>1. Benchmark 1.1. b.N loop Functions of the form&#xA;1 func BenchmarkXxx(*testing.B) are considered benchmarks, and are executed by the go test command when its -bench flag is provided. Benchmarks are run sequentially.&#xA;A sample benchmark function looks like this:&#xA;1 2 3 4 5 func BenchmarkRandInt(b *testing.B) { for i := 0; i &amp;lt; b.N; i++ { rand.Int() } } The benchmark function must run the target code b.N times.</description>
     </item>
-    
     <item>
       <title>Don&#39;t Overuse Channel - Go</title>
       <link>https://davidzhu.xyz/post/golang/advance/008-do-not-overuse-cahnnel/</link>
       <pubDate>Fri, 29 Sep 2023 20:44:55 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/008-do-not-overuse-cahnnel/</guid>
-      <description>In previous post we know that don&amp;rsquo;t mediate the access to shared memory with locks and mutexes instead share that memory by communicating. However, is this always true? Sometimes you may want mutex and lock not channels, it depends on the situation. Channel is a way help mutiple groutines communicate with each other. I find some posts and share it here:
-Use a sync.Mutex or a channel?
-One of Go&amp;rsquo;s mottos is &amp;ldquo;Share memory by communicating, don&amp;rsquo;t communicate by sharing memory.</description>
+      <description>In previous post we know that don&amp;rsquo;t mediate the access to shared memory with locks and mutexes instead share that memory by communicating. However, is this always true? Sometimes you may want mutex and lock not channels, it depends on the situation. Channel is a way help mutiple groutines communicate with each other. I find some posts and share it here:&#xA;Use a sync.Mutex or a channel?&#xA;One of Go&amp;rsquo;s mottos is &amp;ldquo;Share memory by communicating, don&amp;rsquo;t communicate by sharing memory.</description>
     </item>
-    
     <item>
       <title>Useful Types and Packages for IO - Go</title>
       <link>https://davidzhu.xyz/post/golang/advance/007-io-usages-go/</link>
       <pubDate>Tue, 26 Sep 2023 17:03:55 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/007-io-usages-go/</guid>
-      <description>1. bytes &amp;amp; strings packages Package strings implements simple functions to manipulate UTF-8 encoded strings.
-Package bytes implements functions for the manipulation of byte slices. It is analogous to the facilities of the strings package.
-1.1. Make http request When send POST request with json body, you can write code like this:
-1 2 3 4 5 jsonBytes := []byte(`{&amp;#34;username&amp;#34;:&amp;#34;coco&amp;#34;, &amp;#34;password&amp;#34;:&amp;#34;778899a&amp;#34;}`) r, _ := http.NewRequest(&amp;#34;POST&amp;#34;, &amp;#34;/login&amp;#34;, bytes.NewReader(jsonBytes)) r.Header.Set(&amp;#34;Content-Type&amp;#34;, &amp;#34;application/json&amp;#34;) w := httptest.</description>
+      <description>1. bytes &amp;amp; strings packages Package strings implements simple functions to manipulate UTF-8 encoded strings.&#xA;Package bytes implements functions for the manipulation of byte slices. It is analogous to the facilities of the strings package.&#xA;1.1. Make http request When send POST request with json body, you can write code like this:&#xA;1 2 3 4 5 jsonBytes := []byte(`{&amp;#34;username&amp;#34;:&amp;#34;coco&amp;#34;, &amp;#34;password&amp;#34;:&amp;#34;778899a&amp;#34;}`) r, _ := http.NewRequest(&amp;#34;POST&amp;#34;, &amp;#34;/login&amp;#34;, bytes.NewReader(jsonBytes)) r.Header.Set(&amp;#34;Content-Type&amp;#34;, &amp;#34;application/json&amp;#34;) w := httptest.</description>
     </item>
-    
     <item>
       <title>Parse Form Data in Go Server</title>
       <link>https://davidzhu.xyz/post/golang/practice/005-go-web-2/</link>
       <pubDate>Sat, 23 Sep 2023 18:08:55 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/practice/005-go-web-2/</guid>
-      <description>1. Content-Type header The Content-Type header can be application/json, application/x-www-form-urlencoded, multipart/form-data, the first two is usually used with posting form data to server, the third is used to upload file to the server.
-The format of application/json is &#39;{&amp;quot;username&amp;quot;:&amp;quot;davidzhu&amp;quot;, &amp;quot;password&amp;quot;:&amp;quot;778899a&amp;quot;}&#39;.
-The format of application/x-www-form-urlencoded is &amp;quot;username=davidzhu&amp;amp;password=778899a&amp;quot; .
-2. Parse query string and x-www-form-urlencoded data In previous post I have talked that r.ParseForm() will try to parse both query string and request body in Go, but there is a condition: the Content-Type header of the reuqest must be application/x-www-form-urlencoded and you have the correct format data in the request body.</description>
+      <description>1. Content-Type header The Content-Type header can be application/json, application/x-www-form-urlencoded, multipart/form-data, the first two is usually used with posting form data to server, the third is used to upload file to the server.&#xA;The format of application/json is &#39;{&amp;quot;username&amp;quot;:&amp;quot;davidzhu&amp;quot;, &amp;quot;password&amp;quot;:&amp;quot;778899a&amp;quot;}&#39;.&#xA;The format of application/x-www-form-urlencoded is &amp;quot;username=davidzhu&amp;amp;password=778899a&amp;quot; .&#xA;2. Parse query string and x-www-form-urlencoded data In previous post I have talked that r.ParseForm() will try to parse both query string and request body in Go, but there is a condition: the Content-Type header of the reuqest must be application/x-www-form-urlencoded and you have the correct format data in the request body.</description>
     </item>
-    
     <item>
       <title>The Router of Go Web App - ServeMux</title>
       <link>https://davidzhu.xyz/post/golang/practice/005-go-web-1/</link>
       <pubDate>Tue, 19 Sep 2023 23:49:55 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/practice/005-go-web-1/</guid>
-      <description>This article enlightened by:
-Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTTP Web Services after Eight Years 1. Hello world - 2 ways 1.1. Implementing a Handler Interface - way 1 To run a server, we need to implement http.Handler interface:
-1 2 3 type Handler interface{ ServeHTTP(ResponseWriter, *Request) } To achieve that we need to create an empty struct and provide a method for it:</description>
+      <description>This article enlightened by:&#xA;Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTTP Web Services after Eight Years 1. Hello world - 2 ways 1.1. Implementing a Handler Interface - way 1 To run a server, we need to implement http.Handler interface:&#xA;1 2 3 type Handler interface{ ServeHTTP(ResponseWriter, *Request) } To achieve that we need to create an empty struct and provide a method for it:</description>
     </item>
-    
     <item>
       <title>Function Closures - Go</title>
       <link>https://davidzhu.xyz/post/golang/advance/006-closures-go/</link>
       <pubDate>Mon, 18 Sep 2023 23:32:55 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/006-closures-go/</guid>
-      <description>Previous post: First-Class Functions - Go - David&amp;rsquo;s Blog
-1. What is closure Go functions may be closures. A closure is a function value that references variables from outside its body. The function may access and assign to the referenced variables; in this sense the function is &amp;ldquo;bound&amp;rdquo; to the variables.
-Closures - A Tour of Go
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 func adder() func(int) (int, *int) { sum := 0 return func(x int) (int, *int) { sum += x return sum, &amp;amp;sum } } func main() { pos, neg := adder(), adder() for i := 1; i &amp;lt;= 3; i++ { sum, addr := pos(i) fmt.</description>
+      <description>Previous post: First-Class Functions - Go - David&amp;rsquo;s Blog&#xA;1. What is closure Go functions may be closures. A closure is a function value that references variables from outside its body. The function may access and assign to the referenced variables; in this sense the function is &amp;ldquo;bound&amp;rdquo; to the variables.&#xA;Closures - A Tour of Go&#xA;1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 func adder() func(int) (int, *int) { sum := 0 return func(x int) (int, *int) { sum += x return sum, &amp;amp;sum } } func main() { pos, neg := adder(), adder() for i := 1; i &amp;lt;= 3; i++ { sum, addr := pos(i) fmt.</description>
     </item>
-    
     <item>
       <title>string, bytes, runes and characters - Go</title>
       <link>https://davidzhu.xyz/post/golang/basics/003-string-runes-bytes/</link>
       <pubDate>Mon, 11 Sep 2023 13:50:59 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/003-string-runes-bytes/</guid>
       <description>0. Make it eassy This is all this post is going to talk, if you know this, you don&amp;rsquo;t need to go through all this post. a string literal is a slice of bytes: 1 2 3 4 5 6 7 8 func main() { str := &amp;#34;汉&amp;#34; for i:=0; i&amp;lt;len(str); i++{ fmt.Printf(&amp;#34;%x &amp;#34;, str[i]) } } --------------------------- e6 b1</description>
     </item>
-    
     <item>
       <title>Error handling - Go</title>
       <link>https://davidzhu.xyz/post/golang/basics/007-error-handling/</link>
       <pubDate>Fri, 08 Sep 2023 09:13:06 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/007-error-handling/</guid>
-      <description>1.error interface The error type is an interface type. An error variable represents any value that can describe itself as a string.
-1 2 3 type error interface { Error() string } Interface error is a built-in type, as with all other built in types, is predeclared in the universe block. The most commonly-used error implementation is the errors package’s unexported errorString type.
-1 2 3 4 5 6 7 8 // errorString is a trivial implementation of error.</description>
+      <description>1.error interface The error type is an interface type. An error variable represents any value that can describe itself as a string.&#xA;1 2 3 type error interface { Error() string } Interface error is a built-in type, as with all other built in types, is predeclared in the universe block. The most commonly-used error implementation is the errors package’s unexported errorString type.&#xA;1 2 3 4 5 6 7 8 // errorString is a trivial implementation of error.</description>
     </item>
-    
     <item>
       <title>Unit Test Basic Commands - Go</title>
       <link>https://davidzhu.xyz/post/golang/advance/005-unit-test-commands/</link>
       <pubDate>Tue, 05 Sep 2023 15:10:18 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/005-unit-test-commands/</guid>
-      <description>1. Useful commands 1 $ go test -run &amp;#34;ExampleSession|TestSession&amp;#34; -v Note that the -run flag is used for specifying test functions, not benchmarks, not fuzz test. Because example test is similar to test function, you can specify both example and test function with -run flag. If you want to specify benchmarks, use -bench flag:
-1 2 3 4 5 6 7 8 9 10 -bench regexp Run benchmarks matching the regular expression.</description>
+      <description>1. Useful commands 1 $ go test -run &amp;#34;ExampleSession|TestSession&amp;#34; -v Note that the -run flag is used for specifying test functions, not benchmarks, not fuzz test. Because example test is similar to test function, you can specify both example and test function with -run flag. If you want to specify benchmarks, use -bench flag:&#xA;1 2 3 4 5 6 7 8 9 10 -bench regexp Run benchmarks matching the regular expression.</description>
     </item>
-    
     <item>
       <title>Methods Receivers &amp; Concurrency - Go</title>
       <link>https://davidzhu.xyz/post/golang/basics/004-methods-receivers/</link>
       <pubDate>Sat, 02 Sep 2023 22:18:20 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/004-methods-receivers/</guid>
-      <description>1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
-The first is so that the method can modify the value that its receiver points to.
-The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
-&amp;ldquo;the value&amp;rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value.</description>
+      <description>1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:&#xA;The first is so that the method can modify the value that its receiver points to.&#xA;The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.&#xA;&amp;ldquo;the value&amp;rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value.</description>
     </item>
-    
     <item>
       <title>encoding/gob &amp; encoding/json in Go</title>
       <link>https://davidzhu.xyz/post/golang/basics/009-gob-json-encoding/</link>
       <pubDate>Thu, 31 Aug 2023 11:38:20 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/009-gob-json-encoding/</guid>
-      <description>1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary.
-There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’s gob package.
-2. encoding/gob 2.1. Why gob Why define a new encoding? It’s a lot of work and redundant at that.</description>
+      <description>1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary.&#xA;There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’s gob package.&#xA;2. encoding/gob 2.1. Why gob Why define a new encoding? It’s a lot of work and redundant at that.</description>
     </item>
-    
     <item>
       <title>Tricks and Common Mistakes - Go</title>
       <link>https://davidzhu.xyz/post/golang/practice/004-tricks-and-common-mistakes/</link>
       <pubDate>Sun, 27 Aug 2023 17:12:55 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/practice/004-tricks-and-common-mistakes/</guid>
       <description>Tricks 1. handle close() 1 2 3 4 5 6 7 8 9 10 11 12 13 // credit to: https://gist.github.com/benbjohnson/9eebd201ec096ab6430e1f33411e6427 func doSomething() error { f, err := os.Create(&amp;#34;foo&amp;#34;) if err != nil { return err } // ensure that it&amp;#39;s definitely closed by the end defer f.Close() if _, err := f.Write([]byte(&amp;#34;bar&amp;#34;); err != nil { return err } return f.Close() } Why we bother to care about getting error from f.</description>
     </item>
-    
     <item>
       <title>Concurrency with Shared Variables</title>
       <link>https://davidzhu.xyz/post/golang/advance/002-concurrency-with-shared-variables/</link>
       <pubDate>Thu, 24 Aug 2023 19:16:59 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/002-concurrency-with-shared-variables/</guid>
       <description>1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.</description>
     </item>
-    
     <item>
       <title>Goroutines Model</title>
       <link>https://davidzhu.xyz/post/golang/advance/001-why-goroutines/</link>
       <pubDate>Thu, 24 Aug 2023 14:58:18 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/001-why-goroutines/</guid>
       <description>1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads 2. Goroutines and Threads 2.1. Growable Stacks Each OS thread has a fixed-size block of memory (often as large as 2MB) for its stack, the work area where it saves the local variables of function calls that are in progress or temporarily</description>
     </item>
-    
     <item>
       <title>Goroutine &amp; Channel - Go Basics</title>
       <link>https://davidzhu.xyz/post/golang/basics/008-goroutine-channels/</link>
       <pubDate>Thu, 24 Aug 2023 10:06:10 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/008-goroutine-channels/</guid>
       <description>1. Goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&amp;#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly</description>
     </item>
-    
     <item>
       <title>Golang Web - A Simple gptbot with Openai API</title>
       <link>https://davidzhu.xyz/post/golang/practice/003-gptbot/</link>
       <pubDate>Fri, 18 Aug 2023 09:20:57 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/practice/003-gptbot/</guid>
       <description>1. Introduction Source Code: gptbot 2. Database - gorm Don&amp;rsquo;t Open db connection for each request, initialize a global DB and use it for all requests. Close is one of the most misused methods, most application don&amp;rsquo;t need it, be sure you really need it. it is not necessary to close when crash, and you can still Close DB connection in V2. jinzhu - creator of gorm 1 2 3</description>
     </item>
-    
     <item>
       <title>Go Scheduler (2)</title>
       <link>https://davidzhu.xyz/post/golang/advance/004-go-scheduler-2/</link>
       <pubDate>Sun, 28 May 2023 18:06:20 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/004-go-scheduler-2/</guid>
       <description>0. Parrallelism is not concurrency Parallelism is about multiple tasks or subtasks of the same task that literally run at the same time on a hardware with multiple computing resources like multi-core processor, while concurrency is about multiple tasks which start, run, and complete in overlapping time periods, in no specific order. 1. Your program starts When your Go program starts up, it’s given a Logical Processor</description>
     </item>
-    
     <item>
       <title>Go Scheduler (1)</title>
       <link>https://davidzhu.xyz/post/golang/advance/003-go-scheduler-1/</link>
       <pubDate>Sun, 28 May 2023 17:48:19 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/advance/003-go-scheduler-1/</guid>
       <description>Source: Scheduling In Go : Part I - OS Scheduler 1. OS scheduler Your program is just a series of machine instructions that need to be executed one after the other sequentially. To make that happen, the operating system uses the concept of a Thread. It’s the job of the Thread to account for and sequentially execute the set of instructions it’s assigned. Execution</description>
     </item>
-    
     <item>
       <title>Go并发学习之实现一个Worker Pool</title>
       <link>https://davidzhu.xyz/post/golang/practice/002-golang-worker-pools/</link>
       <pubDate>Thu, 25 May 2023 14:13:13 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/practice/002-golang-worker-pools/</guid>
       <description>有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我</description>
     </item>
-    
     <item>
       <title>用Go实现一个简单的贪吃蛇</title>
       <link>https://davidzhu.xyz/post/golang/practice/001-snake-game/</link>
       <pubDate>Sat, 20 May 2023 19:59:09 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/practice/001-snake-game/</guid>
       <description>地图 地图就是个二维数组board, 在Go里面叫Slice of slices, 该地图(二维数组)存储bool类型, 定义如下和结构如下: 1 2 3 4 5 6 7 8 9 10 11 12</description>
     </item>
-    
     <item>
       <title>Lifetime of a Local Variable - Go</title>
       <link>https://davidzhu.xyz/post/golang/basics/002-lifetime-of-variables/</link>
       <pubDate>Mon, 15 May 2023 22:52:03 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/golang/basics/002-lifetime-of-variables/</guid>
-      <description>Returns a address of local variable Find codes below:
-1 2 3 4 func f() *int { v := 1 return &amp;amp;v } New to golang from cpp so don&amp;rsquo;t understand why can do this, this is returning a local variable&amp;rsquo;s address 😱. And find a doc talks about this:
-How do I know whether a variable is allocated on the heap or the stack?
-From a correctness standpoint, you don&amp;rsquo;t need to know.</description>
+      <description>Returns a address of local variable Find codes below:&#xA;1 2 3 4 func f() *int { v := 1 return &amp;amp;v } New to golang from cpp so don&amp;rsquo;t understand why can do this, this is returning a local variable&amp;rsquo;s address 😱. And find a doc talks about this:&#xA;How do I know whether a variable is allocated on the heap or the stack?&#xA;From a correctness standpoint, you don&amp;rsquo;t need to know.</description>
     </item>
-    
   </channel>
 </rss>

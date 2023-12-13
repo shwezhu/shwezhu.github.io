@@ -24,7 +24,7 @@ Generally speaking, as you move outside and away from your CPU, actions get orde
 
 
 
-<meta name="generator" content="Hugo 0.111.3 with theme even" />
+<meta name="generator" content="Hugo 0.121.1 with theme even" />
 
 
 <link rel="canonical" href="https://davidzhu.xyz/post/golang/advance/010-defer-close/" />
@@ -47,13 +47,13 @@ Generally speaking, as you move outside and away from your CPU, actions get orde
 <meta property="og:url" content="https://davidzhu.xyz/post/golang/advance/010-defer-close/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-05T18:52:56+00:00" />
 <meta property="article:modified_time" content="2023-10-05T18:52:56+00:00" />
+
 <meta itemprop="name" content="Don&#39;t Defer Close() on Writable Files - Go Notes">
 <meta itemprop="description" content="Why would you get an error from Close() but not an earlier Write() call? To answer that we need to take a brief, high-level detour into the area of computer architecture.
 Generally speaking, as you move outside and away from your CPU, actions get orders of magnitude slower. Writing to a CPU register is very fast. Accessing system RAM is quite slow in comparison. Doing I/O on disks or networks is an eternity."><meta itemprop="datePublished" content="2023-10-05T18:52:56+00:00" />
 <meta itemprop="dateModified" content="2023-10-05T18:52:56+00:00" />
 <meta itemprop="wordCount" content="570">
-<meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Don&#39;t Defer Close() on Writable Files - Go Notes"/>
+<meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Don&#39;t Defer Close() on Writable Files - Go Notes"/>
 <meta name="twitter:description" content="Why would you get an error from Close() but not an earlier Write() call? To answer that we need to take a brief, high-level detour into the area of computer architecture.
 Generally speaking, as you move outside and away from your CPU, actions get orders of magnitude slower. Writing to a CPU register is very fast. Accessing system RAM is quite slow in comparison. Doing I/O on disks or networks is an eternity."/>
 
@@ -167,15 +167,15 @@ Generally speaking, as you move outside and away from your CPU, actions get orde
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ERRORS
-</span></span><span class="line"><span class="cl">     The close() system call will fail if:
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">ERRORS</span>
+</span></span><span class="line"><span class="cl">     <span class="n">The</span> <span class="n">close</span><span class="p">()</span> <span class="n">system</span> <span class="n">call</span> <span class="n">will</span> <span class="n">fail</span> <span class="k">if</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">     [EBADF]            fildes is not a valid, active file descriptor.
+</span></span><span class="line"><span class="cl">     <span class="p">[</span><span class="n">EBADF</span><span class="p">]</span>            <span class="n">fildes</span> <span class="n">is</span> <span class="ow">not</span> <span class="n">a</span> <span class="n">valid</span><span class="p">,</span> <span class="n">active</span> <span class="n">file</span> <span class="n">descriptor</span><span class="o">.</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">     [EINTR]            Its execution was interrupted by a signal.
+</span></span><span class="line"><span class="cl">     <span class="p">[</span><span class="n">EINTR</span><span class="p">]</span>            <span class="n">Its</span> <span class="n">execution</span> <span class="n">was</span> <span class="n">interrupted</span> <span class="n">by</span> <span class="n">a</span> <span class="k">signal</span><span class="o">.</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">     [EIO]              A previously-uncommitted write(2) encountered an input/output
-</span></span><span class="line"><span class="cl">                        error.
+</span></span><span class="line"><span class="cl">     <span class="p">[</span><span class="n">EIO</span><span class="p">]</span>              <span class="n">A</span> <span class="n">previously</span><span class="o">-</span><span class="n">uncommitted</span> <span class="n">write</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="n">encountered</span> <span class="n">an</span> <span class="n">input</span><span class="o">/</span><span class="n">output</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">error</span><span class="o">.</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>EIO</code> is exactly the error we are worried about. It means that we’ve lost data trying to save it to disk, and our Go programs should absolutely not return a <code>nil</code> error in that case.</p>

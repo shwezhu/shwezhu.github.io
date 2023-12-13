@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.111.3 with theme even" />
+<meta name="generator" content="Hugo 0.121.1 with theme even" />
 
 
 <link rel="canonical" href="https://davidzhu.xyz/post/java/backend/007-spring-security/" />
@@ -45,12 +45,12 @@
 <meta property="og:url" content="https://davidzhu.xyz/post/java/backend/007-spring-security/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-08T20:58:54+00:00" />
 <meta property="article:modified_time" content="2023-08-08T20:58:54+00:00" />
+
 <meta itemprop="name" content="CSRF Filter &amp; ProviderManager &amp; AuthenticationProviders, Spring学习(七)">
 <meta itemprop="description" content="{% youtube iJ2muJniikY %} 视频内容位置: Cross Site Request Forgery: 1:16:00 CSRF Spring CSRF Filter 源码分析: 1:22:00 Trace level log 分析: 1:26:00 1 2 3 logging: level: org.springframework.security: TRACE 1:30:35 理论: AuthenticationManager, ProviderManager, AuthenticationProvider Authentication Object stands for either the request to login or the result of a successful login request , 上图中, 如"><meta itemprop="datePublished" content="2023-08-08T20:58:54+00:00" />
 <meta itemprop="dateModified" content="2023-08-08T20:58:54+00:00" />
 <meta itemprop="wordCount" content="2128">
-<meta itemprop="keywords" content="Java,Spring Boot," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="CSRF Filter &amp; ProviderManager &amp; AuthenticationProviders, Spring学习(七)"/>
+<meta itemprop="keywords" content="Java,Spring Boot," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="CSRF Filter &amp; ProviderManager &amp; AuthenticationProviders, Spring学习(七)"/>
 <meta name="twitter:description" content="{% youtube iJ2muJniikY %} 视频内容位置: Cross Site Request Forgery: 1:16:00 CSRF Spring CSRF Filter 源码分析: 1:22:00 Trace level log 分析: 1:26:00 1 2 3 logging: level: org.springframework.security: TRACE 1:30:35 理论: AuthenticationManager, ProviderManager, AuthenticationProvider Authentication Object stands for either the request to login or the result of a successful login request , 上图中, 如"/>
 
 <!--[if lte IE 9]>
@@ -206,19 +206,19 @@
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">AuthenticationManager</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Authentication</span> <span class="nf">authenticate</span><span class="o">(</span><span class="n">Authentication</span> <span class="n">authentication</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">AuthenticationException</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// 我们经常自己实现这个接口, 实现自定义 AuthenticationProvider
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">AuthenticationProvider</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="n">Authentication</span> <span class="nf">authenticate</span><span class="o">(</span><span class="n">Authentication</span> <span class="n">authentication</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">			<span class="kd">throws</span> <span class="n">AuthenticationException</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="kt">boolean</span> <span class="nf">supports</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">authentication</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">AuthenticationManager</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">Authentication</span><span class="w"> </span><span class="nf">authenticate</span><span class="p">(</span><span class="n">Authentication</span><span class="w"> </span><span class="n">authentication</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">AuthenticationException</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">// 我们经常自己实现这个接口, 实现自定义 AuthenticationProvider</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">AuthenticationProvider</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">Authentication</span><span class="w"> </span><span class="nf">authenticate</span><span class="p">(</span><span class="n">Authentication</span><span class="w"> </span><span class="n">authentication</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="kd">throws</span><span class="w"> </span><span class="n">AuthenticationException</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kt">boolean</span><span class="w"> </span><span class="nf">supports</span><span class="p">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">authentication</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Basically <code>AuthenticationProvider</code> is the specialized version of the <code>ProviderManager</code> that says I only deal with username password authentication tokens, I only deal with robot authentications, I only deal with over 2 login authentication tokens.</p>
 <p>And this allows you to extend Spring Security in a very specific place for changing the way someone logs in, <em>without having to write a custom filter that takes the request</em>, that does some transformation, maybe you don&rsquo;t need to go that far, maybe you have special rules around, you know the email of the user that comes in, well here an <code>AuthenticationProvider</code> would be good enough.</p>
@@ -253,29 +253,29 @@
 </span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DavidAuthenticationProvider</span> <span class="kd">implements</span> <span class="n">AuthenticationProvider</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">Authentication</span> <span class="nf">authenticate</span><span class="o">(</span><span class="n">Authentication</span> <span class="n">authentication</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">AuthenticationException</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">var</span> <span class="n">username</span> <span class="o">=</span> <span class="n">authentication</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="s">&#34;david&#34;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">username</span><span class="o">))</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">UsernamePasswordAuthenticationToken</span><span class="o">.</span><span class="na">authenticated</span><span class="o">(</span>
-</span></span><span class="line"><span class="cl">                    <span class="s">&#34;david&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">                    <span class="kc">null</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">                    <span class="n">AuthorityUtils</span><span class="o">.</span><span class="na">createAuthorityList</span><span class="o">(</span><span class="s">&#34;ROLE_admin&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">            <span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// What do we do in case it&#39;s not Daniel
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// Well we don&#39;t know what to do with this, like the user password this must be handled
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">//by some other AuthenticationProvider, so to Signal this, we&#39;re returning null
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">supports</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">authentication</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">UsernamePasswordAuthenticationToken</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">isAssignableFrom</span><span class="o">(</span><span class="n">authentication</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DavidAuthenticationProvider</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">AuthenticationProvider</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Authentication</span><span class="w"> </span><span class="nf">authenticate</span><span class="p">(</span><span class="n">Authentication</span><span class="w"> </span><span class="n">authentication</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">AuthenticationException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">authentication</span><span class="p">.</span><span class="na">getName</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s">&#34;david&#34;</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">username</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">UsernamePasswordAuthenticationToken</span><span class="p">.</span><span class="na">authenticated</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="s">&#34;david&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="kc">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">AuthorityUtils</span><span class="p">.</span><span class="na">createAuthorityList</span><span class="p">(</span><span class="s">&#34;ROLE_admin&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// What do we do in case it&#39;s not Daniel</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Well we don&#39;t know what to do with this, like the user password this must be handled</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//by some other AuthenticationProvider, so to Signal this, we&#39;re returning null</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">supports</span><span class="p">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">authentication</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">UsernamePasswordAuthenticationToken</span><span class="p">.</span><span class="na">class</span><span class="p">.</span><span class="na">isAssignableFrom</span><span class="p">(</span><span class="n">authentication</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><ul>
 <li>
@@ -329,14 +329,14 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">...</span>
-</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="na">formLogin</span><span class="o">(</span><span class="n">withDefaults</span><span class="o">())</span>
-</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="na">oauth2Login</span><span class="o">(</span><span class="n">withDefaults</span><span class="o">())</span>
-</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="na">addFilterBefore</span><span class="o">(</span><span class="k">new</span> <span class="n">RobotFilter</span><span class="o">(),</span> <span class="n">UsernamePasswordAuthenticationFilter</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">// 在这
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">.</span><span class="na">authenticationProvider</span><span class="o">(</span><span class="k">new</span> <span class="n">DavidAuthenticationProvider</span><span class="o">())</span>
-</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="na">build</span><span class="o">();</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">.</span><span class="na">formLogin</span><span class="p">(</span><span class="n">withDefaults</span><span class="p">())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">.</span><span class="na">oauth2Login</span><span class="p">(</span><span class="n">withDefaults</span><span class="p">())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">.</span><span class="na">addFilterBefore</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">RobotFilter</span><span class="p">(),</span><span class="w"> </span><span class="n">UsernamePasswordAuthenticationFilter</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">// 在这</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">.</span><span class="na">authenticationProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">DavidAuthenticationProvider</span><span class="p">())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">.</span><span class="na">build</span><span class="p">();</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><h4 id="14120-总结解释-为什么-我们应该自定义authenticationprovider-而不是-一个-filter"><code>1:41:20</code> 总结解释 为什么 我们应该自定义AuthenticationProvider 而不是 一个 FIlter</h4>
 <blockquote>
@@ -363,19 +363,19 @@
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="n">Authentication</span> <span class="nf">authenticate</span><span class="o">(</span><span class="n">Authentication</span> <span class="n">authentication</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">AuthenticationException</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">var</span> <span class="n">authRequest</span> <span class="o">=</span> <span class="o">(</span><span class="n">RobotAuthentication</span><span class="o">)</span> <span class="n">authentication</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">var</span> <span class="n">password</span> <span class="o">=</span> <span class="n">authRequest</span><span class="o">.</span><span class="na">getPassword</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">passwords</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">password</span><span class="o">))</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// 可以发现, 实现了Authentication接口的类一般有个 authenticated() 静态方法, 也可称为factory method
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 比如我们的自定义RobotAuthentication,再比如UsernamePasswordAuthenticationToken
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">return</span> <span class="n">RobotAuthentication</span><span class="o">.</span><span class="na">authenticated</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">       <span class="k">throw</span> <span class="k">new</span> <span class="n">BadCredentialsException</span><span class="o">(</span><span class="s">&#34;You are not Mr Robot 🤖️&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="n">Authentication</span><span class="w"> </span><span class="nf">authenticate</span><span class="p">(</span><span class="n">Authentication</span><span class="w"> </span><span class="n">authentication</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">AuthenticationException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">authRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">RobotAuthentication</span><span class="p">)</span><span class="w"> </span><span class="n">authentication</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">authRequest</span><span class="p">.</span><span class="na">getPassword</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">passwords</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">password</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 可以发现, 实现了Authentication接口的类一般有个 authenticated() 静态方法, 也可称为factory method</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 比如我们的自定义RobotAuthentication,再比如UsernamePasswordAuthenticationToken</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">RobotAuthentication</span><span class="p">.</span><span class="na">authenticated</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BadCredentialsException</span><span class="p">(</span><span class="s">&#34;You are not Mr Robot 🤖️&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>用这样的结构更好:</p>
 <div class="highlight"><div class="chroma">
@@ -391,16 +391,16 @@
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="n">Authentication</span> <span class="nf">authenticate</span><span class="o">(</span><span class="n">Authentication</span> <span class="n">authentication</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">AuthenticationException</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">var</span> <span class="n">authRequest</span> <span class="o">=</span> <span class="o">(</span><span class="n">RobotAuthentication</span><span class="o">)</span> <span class="n">authentication</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">var</span> <span class="n">password</span> <span class="o">=</span> <span class="n">authRequest</span><span class="o">.</span><span class="na">getPassword</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">passwords</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">password</span><span class="o">))</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">       <span class="k">throw</span> <span class="k">new</span> <span class="n">BadCredentialsException</span><span class="o">(</span><span class="s">&#34;You are not Mr Robot 🤖️&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">RobotAuthentication</span><span class="o">.</span><span class="na">authenticated</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="n">Authentication</span><span class="w"> </span><span class="nf">authenticate</span><span class="p">(</span><span class="n">Authentication</span><span class="w"> </span><span class="n">authentication</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">AuthenticationException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">authRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">RobotAuthentication</span><span class="p">)</span><span class="w"> </span><span class="n">authentication</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">authRequest</span><span class="p">.</span><span class="na">getPassword</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">passwords</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">password</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BadCredentialsException</span><span class="p">(</span><span class="s">&#34;You are not Mr Robot 🤖️&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">RobotAuthentication</span><span class="p">.</span><span class="na">authenticated</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><h4 id="-15600-authenticationprovider-调用顺序及优点"><code> 1:56:00</code> AuthenticationProvider 调用顺序及优点</h4>
 <div class="highlight"><div class="chroma">
@@ -443,9 +443,9 @@
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">...</span>
-</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="na">addFilterBefore</span><span class="o">(</span><span class="k">new</span> <span class="n">RobotFilter</span><span class="o">(</span><span class="n">authManager</span><span class="o">),</span> <span class="n">UsernamePasswordAuthenticationFilter</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">.</span><span class="na">addFilterBefore</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">RobotFilter</span><span class="p">(</span><span class="n">authManager</span><span class="p">),</span><span class="w"> </span><span class="n">UsernamePasswordAuthenticationFilter</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>从上面的输出我们会发现:</p>
 <div class="highlight"><div class="chroma">
@@ -466,10 +466,10 @@
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">...</span>
-</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="na">formLogin</span><span class="o">(</span><span class="n">withDefaults</span><span class="o">())</span>
-</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="na">httpBasic</span><span class="o">(</span><span class="n">withDefaults</span><span class="o">())</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">.</span><span class="na">formLogin</span><span class="p">(</span><span class="n">withDefaults</span><span class="p">())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">.</span><span class="na">httpBasic</span><span class="p">(</span><span class="n">withDefaults</span><span class="p">())</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>把 BasicAuthenticationFilter 加入到了 Security, 然后验证的时候正如输出那样, 一层一层的调用Filter, 进行匹配, 我们此时使用的是命令行 <code>curl -u &quot;&quot;</code> 进行验证的, 而 BasicAuthenticationFilter 就是做这个的, 如果我们把 BasicAuthenticationFilter 从我们的SecurityChian中移除也就是删除代码 <code>.httpBasic(withDefaults())</code>, 那我们通过 <code>curl -u</code> 提供的账号密码就不会被发现, 然后导致验证失败, 原因是所有的 filter 都被依次掉用完, 但依然没有发现匹配的,</p>
 <p><img src="/007-spring-security/10.png" alt="10"></p>
@@ -516,35 +516,35 @@
 </span><span class="lnt">28
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RobotLoginConfigurer</span> <span class="kd">extends</span> <span class="n">AbstractHttpConfigurer</span><span class="o">&lt;</span><span class="n">RobotLoginConfigurer</span><span class="o">,</span> <span class="n">HttpSecurity</span><span class="o">&gt;</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">passwords</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">HttpSecurity</span> <span class="n">builder</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// step 1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// initializes a bunch of objects
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// -&gt; AuthenticationProviders
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// all the AuthenticationProviders are populated at init() they&#39;re put in the builder,
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">builder</span><span class="o">.</span><span class="na">authenticationProvider</span><span class="o">(</span><span class="k">new</span> <span class="n">RobotAuthenticationProvider</span><span class="o">(</span><span class="n">passwords</span><span class="o">));</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">(</span><span class="n">HttpSecurity</span> <span class="n">builder</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// step 2
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// this also initializes objects, but can reuse objects from step 1, even from other configurers
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// -&gt; Filters
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// each filter chain may have their own AuthenticationManager
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">var</span> <span class="n">authenticationManager</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="na">getSharedObject</span><span class="o">(</span><span class="n">AuthenticationManager</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">builder</span><span class="o">.</span><span class="na">addFilterBefore</span><span class="o">(</span><span class="k">new</span> <span class="n">RobotFilter</span><span class="o">(</span><span class="n">authenticationManager</span><span class="o">),</span> <span class="n">UsernamePasswordAuthenticationFilter</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">RobotLoginConfigurer</span> <span class="nf">password</span><span class="o">(</span><span class="n">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">passwords</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">password</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RobotLoginConfigurer</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">AbstractHttpConfigurer</span><span class="o">&lt;</span><span class="n">RobotLoginConfigurer</span><span class="p">,</span><span class="w"> </span><span class="n">HttpSecurity</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">passwords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">HttpSecurity</span><span class="w"> </span><span class="n">builder</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// step 1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// initializes a bunch of objects</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// -&gt; AuthenticationProviders</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// all the AuthenticationProviders are populated at init() they&#39;re put in the builder,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">builder</span><span class="p">.</span><span class="na">authenticationProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">RobotAuthenticationProvider</span><span class="p">(</span><span class="n">passwords</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="n">HttpSecurity</span><span class="w"> </span><span class="n">builder</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// step 2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// this also initializes objects, but can reuse objects from step 1, even from other configurers</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// -&gt; Filters</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// each filter chain may have their own AuthenticationManager</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">authenticationManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="na">getSharedObject</span><span class="p">(</span><span class="n">AuthenticationManager</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">builder</span><span class="p">.</span><span class="na">addFilterBefore</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">RobotFilter</span><span class="p">(</span><span class="n">authenticationManager</span><span class="p">),</span><span class="w"> </span><span class="n">UsernamePasswordAuthenticationFilter</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">RobotLoginConfigurer</span><span class="w"> </span><span class="nf">password</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">password</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">passwords</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">password</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>WebSecurityConfig.java</code></p>
 <div class="highlight"><div class="chroma">
@@ -572,28 +572,28 @@
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Bean</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="n">SecurityFilterChain</span> <span class="nf">securityFilterChain</span><span class="o">(</span><span class="n">HttpSecurity</span> <span class="n">http</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">http</span>
-</span></span><span class="line"><span class="cl">        <span class="o">.</span><span class="na">authorizeHttpRequests</span><span class="o">(</span><span class="n">authorizeConfig</span> <span class="o">-&gt;</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="n">authorizeConfig</span><span class="o">.</span><span class="na">requestMatchers</span><span class="o">(</span><span class="s">&#34;/&#34;</span><span class="o">).</span><span class="na">permitAll</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">                    <span class="n">authorizeConfig</span><span class="o">.</span><span class="na">requestMatchers</span><span class="o">(</span><span class="s">&#34;/error&#34;</span><span class="o">).</span><span class="na">permitAll</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">                    <span class="n">authorizeConfig</span><span class="o">.</span><span class="na">requestMatchers</span><span class="o">(</span><span class="s">&#34;/favicon.ico&#34;</span><span class="o">).</span><span class="na">permitAll</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">                    <span class="n">authorizeConfig</span><span class="o">.</span><span class="na">anyRequest</span><span class="o">().</span><span class="na">authenticated</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">                <span class="o">})</span>
-</span></span><span class="line"><span class="cl">        <span class="o">.</span><span class="na">formLogin</span><span class="o">(</span><span class="n">withDefaults</span><span class="o">())</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// By calling httpBasic(), an instance of the BasicAuthenticationFilter is added to the filter chain.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// https://stackoverflow.com/a/57577530/16317008
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 为了实现通过 curl -u &#34;user:password&#34; http://localhost:8080/private 登录
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="o">.</span><span class="na">httpBasic</span><span class="o">(</span><span class="n">withDefaults</span><span class="o">())</span>
-</span></span><span class="line"><span class="cl">        <span class="o">.</span><span class="na">oauth2Login</span><span class="o">(</span><span class="n">withDefaults</span><span class="o">())</span> <span class="c1">// return HttpSecurity
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="o">.</span><span class="na">authenticationProvider</span><span class="o">(</span><span class="k">new</span> <span class="n">DavidAuthenticationProvider</span><span class="o">())</span> <span class="c1">// return HttpSecurity
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="k">new</span> <span class="n">RobotLoginConfigurer</span><span class="o">())</span> <span class="c1">// return Configurer
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="o">.</span><span class="na">password</span><span class="o">(</span><span class="s">&#34;beep-boop&#34;</span><span class="o">)</span> <span class="c1">// return Configurer
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="o">.</span><span class="na">password</span><span class="o">(</span><span class="s">&#34;boop-beep&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="na">build</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Bean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="n">SecurityFilterChain</span><span class="w"> </span><span class="nf">securityFilterChain</span><span class="p">(</span><span class="n">HttpSecurity</span><span class="w"> </span><span class="n">http</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">http</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="na">authorizeHttpRequests</span><span class="p">(</span><span class="n">authorizeConfig</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">authorizeConfig</span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="s">&#34;/&#34;</span><span class="p">).</span><span class="na">permitAll</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">authorizeConfig</span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="s">&#34;/error&#34;</span><span class="p">).</span><span class="na">permitAll</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">authorizeConfig</span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="s">&#34;/favicon.ico&#34;</span><span class="p">).</span><span class="na">permitAll</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">authorizeConfig</span><span class="p">.</span><span class="na">anyRequest</span><span class="p">().</span><span class="na">authenticated</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="na">formLogin</span><span class="p">(</span><span class="n">withDefaults</span><span class="p">())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// By calling httpBasic(), an instance of the BasicAuthenticationFilter is added to the filter chain.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// https://stackoverflow.com/a/57577530/16317008</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 为了实现通过 curl -u &#34;user:password&#34; http://localhost:8080/private 登录</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="na">httpBasic</span><span class="p">(</span><span class="n">withDefaults</span><span class="p">())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="na">oauth2Login</span><span class="p">(</span><span class="n">withDefaults</span><span class="p">())</span><span class="w"> </span><span class="c1">// return HttpSecurity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="na">authenticationProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">DavidAuthenticationProvider</span><span class="p">())</span><span class="w"> </span><span class="c1">// return HttpSecurity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="na">apply</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">RobotLoginConfigurer</span><span class="p">())</span><span class="w"> </span><span class="c1">// return Configurer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="na">password</span><span class="p">(</span><span class="s">&#34;beep-boop&#34;</span><span class="p">)</span><span class="w"> </span><span class="c1">// return Configurer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="na">password</span><span class="p">(</span><span class="s">&#34;boop-beep&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">http</span><span class="p">.</span><span class="na">build</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><h4 id="21040-lambda-dsl"><code>2:10:40</code> Lambda DSL</h4>
 

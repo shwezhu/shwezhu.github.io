@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.111.3 with theme even" />
+<meta name="generator" content="Hugo 0.121.1 with theme even" />
 
 
 <link rel="canonical" href="https://davidzhu.xyz/post/java/backend/003-jpa-hibernate-jdbc/" />
@@ -45,12 +45,12 @@
 <meta property="og:url" content="https://davidzhu.xyz/post/java/backend/003-jpa-hibernate-jdbc/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-07-30T16:55:47+00:00" />
 <meta property="article:modified_time" content="2023-07-30T16:55:47+00:00" />
+
 <meta itemprop="name" content="ORM vs JPA vs Hibernate &amp; JDBC vs MySQL Driver, Spring学习(三)">
 <meta itemprop="description" content="1. ORM Object-Relational Mapping (ORM) is a technique that lets you query and manipulate data from a database using an object-oriented paradigm. When most people say “ORM” they are referring to the library that implements this technique. Whichever ORM library you choose, they all use the same principles. There are a lot of ORM libraries around here: Java: Hibernate. PHP: Propel or Doctrine (I prefer the"><meta itemprop="datePublished" content="2023-07-30T16:55:47+00:00" />
 <meta itemprop="dateModified" content="2023-07-30T16:55:47+00:00" />
 <meta itemprop="wordCount" content="986">
-<meta itemprop="keywords" content="Java,Database," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="ORM vs JPA vs Hibernate &amp; JDBC vs MySQL Driver, Spring学习(三)"/>
+<meta itemprop="keywords" content="Java,Database," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="ORM vs JPA vs Hibernate &amp; JDBC vs MySQL Driver, Spring学习(三)"/>
 <meta name="twitter:description" content="1. ORM Object-Relational Mapping (ORM) is a technique that lets you query and manipulate data from a database using an object-oriented paradigm. When most people say “ORM” they are referring to the library that implements this technique. Whichever ORM library you choose, they all use the same principles. There are a lot of ORM libraries around here: Java: Hibernate. PHP: Propel or Doctrine (I prefer the"/>
 
 <!--[if lte IE 9]>
@@ -184,14 +184,14 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">database</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.sql.Connection</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.sql.SQLException</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Database</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">Connection</span> <span class="nf">connect</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">SQLException</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">database</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kn">import</span><span class="w"> </span><span class="nn">java.sql.Connection</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kn">import</span><span class="w"> </span><span class="nn">java.sql.SQLException</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Database</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Connection</span><span class="w"> </span><span class="nf">connect</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">SQLException</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>MysqlDatabase.java</code>:</p>
 <div class="highlight"><div class="chroma">
@@ -227,36 +227,36 @@
 </span><span class="lnt">29
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">database</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// java.sql.* 属于 Java SE API, 这就是 JDBC API
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">import</span> <span class="nn">java.sql.Connection</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.sql.DriverManager</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.sql.SQLException</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MysqlDatabase</span> <span class="kd">implements</span> <span class="n">Database</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="nf">MysqlDatabase</span><span class="o">(</span><span class="n">String</span> <span class="n">url</span><span class="o">,</span> <span class="n">String</span> <span class="n">user</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">user</span> <span class="o">=</span> <span class="n">user</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">password</span> <span class="o">=</span> <span class="n">password</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">Connection</span> <span class="nf">connect</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">try</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="c1">// You must load jdbc driver, otherwise you will get null for connection.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&#34;com.mysql.cj.jdbc.Driver&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ClassNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="c1">// Instead of printing error simply, you should do some logging here
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Cannot find sql drive: com.mysql.jdbc.Driver&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">DriverManager</span><span class="o">.</span><span class="na">getConnection</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">url</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">user</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">password</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">database</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">// java.sql.* 属于 Java SE API, 这就是 JDBC API</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kn">import</span><span class="w"> </span><span class="nn">java.sql.Connection</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kn">import</span><span class="w"> </span><span class="nn">java.sql.DriverManager</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kn">import</span><span class="w"> </span><span class="nn">java.sql.SQLException</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MysqlDatabase</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Database</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">MysqlDatabase</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">password</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">url</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">password</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Connection</span><span class="w"> </span><span class="nf">connect</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">SQLException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// You must load jdbc driver, otherwise you will get null for connection.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&#34;com.mysql.cj.jdbc.Driver&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">ClassNotFoundException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// Instead of printing error simply, you should do some logging here</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">err</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;Cannot find sql drive: com.mysql.jdbc.Driver&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">DriverManager</span><span class="p">.</span><span class="na">getConnection</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">url</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">user</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">password</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>GetTemperatureServlet.java</code></p>
 <div class="highlight"><div class="chroma">
@@ -296,40 +296,40 @@
 </span><span class="lnt">33
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">...</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">Connection</span> <span class="nf">getConnection</span><span class="o">()</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Database</span> <span class="n">database</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MysqlDatabase</span><span class="o">(</span><span class="s">&#34;jdbc:mysql://localhost:3306/greenhouse&#34;</span><span class="o">,</span> <span class="s">&#34;root&#34;</span><span class="o">,</span> <span class="s">&#34;778899&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Controller</span> <span class="n">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Controller</span><span class="o">(</span><span class="n">database</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Connection</span> <span class="n">conn</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="k">try</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">conn</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="na">getConnection</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">SQLException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">conn</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">JsonArray</span> <span class="nf">getData</span><span class="o">(</span><span class="n">String</span> <span class="n">sql</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">ResultSet</span> <span class="n">resultSet</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">PreparedStatement</span> <span class="n">statement</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DataEntity</span><span class="o">&gt;</span> <span class="n">results</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Connection</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">getConnection</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">try</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">statement</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">prepareStatement</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">            <span class="n">resultSet</span> <span class="o">=</span> <span class="n">statement</span><span class="o">.</span><span class="na">executeQuery</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">            <span class="k">while</span> <span class="o">(</span><span class="n">resultSet</span><span class="o">.</span><span class="na">next</span><span class="o">())</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                <span class="n">results</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">DataEntity</span><span class="o">(</span><span class="n">resultSet</span><span class="o">.</span><span class="na">getDouble</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="n">resultSet</span><span class="o">.</span><span class="na">getDate</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="na">toString</span><span class="o">()));</span>
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">SQLException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="o">...</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="n">Gson</span> <span class="n">gson</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Gson</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">        <span class="n">JsonElement</span> <span class="n">jsonElement</span> <span class="o">=</span> <span class="n">gson</span><span class="o">.</span><span class="na">toJsonTree</span><span class="o">(</span><span class="n">results</span><span class="o">,</span> <span class="k">new</span> <span class="n">TypeToken</span><span class="o">&lt;</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DataEntity</span><span class="o">&gt;&gt;(){}.</span><span class="na">getType</span><span class="o">());</span>
-</span></span><span class="line"><span class="cl">        <span class="o">...</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Connection</span><span class="w"> </span><span class="nf">getConnection</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Database</span><span class="w"> </span><span class="n">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MysqlDatabase</span><span class="p">(</span><span class="s">&#34;jdbc:mysql://localhost:3306/greenhouse&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;root&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;778899&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Controller</span><span class="w"> </span><span class="n">controller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Controller</span><span class="p">(</span><span class="n">database</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Connection</span><span class="w"> </span><span class="n">conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">controller</span><span class="p">.</span><span class="na">getConnection</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">SQLException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">logger</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">conn</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">JsonArray</span><span class="w"> </span><span class="nf">getData</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">sql</span><span class="p">,</span><span class="w"> </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">ResultSet</span><span class="w"> </span><span class="n">resultSet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">PreparedStatement</span><span class="w"> </span><span class="n">statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DataEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Connection</span><span class="w"> </span><span class="n">conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getConnection</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">conn</span><span class="p">.</span><span class="na">prepareStatement</span><span class="p">(</span><span class="n">sql</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">resultSet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">statement</span><span class="p">.</span><span class="na">executeQuery</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">resultSet</span><span class="p">.</span><span class="na">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">results</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">DataEntity</span><span class="p">(</span><span class="n">resultSet</span><span class="p">.</span><span class="na">getDouble</span><span class="p">(</span><span class="n">1</span><span class="p">),</span><span class="w"> </span><span class="n">resultSet</span><span class="p">.</span><span class="na">getDate</span><span class="p">(</span><span class="n">2</span><span class="p">).</span><span class="na">toString</span><span class="p">()));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">SQLException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Gson</span><span class="w"> </span><span class="n">gson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Gson</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">JsonElement</span><span class="w"> </span><span class="n">jsonElement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gson</span><span class="p">.</span><span class="na">toJsonTree</span><span class="p">(</span><span class="n">results</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TypeToken</span><span class="o">&lt;</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DataEntity</span><span class="o">&gt;&gt;</span><span class="p">(){}.</span><span class="na">getType</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>As code above, <code>ResultSet</code>, <code>PreparedStatement</code> and <code>Connection</code> they are all belong to <code>java.sql.*</code> which is part of <strong>java se api</strong>, namely, <strong>JDBC</strong>. So now you know that we don&rsquo;t commucate with MySQL database with <strong>MySQL Connector</strong> directly, actually, we conmmucate with MySQL(retrive &amp; insert data) with JDBC API(<code>java.sql.*</code>) and JDBC API commucate with <strong>MySQL Connector</strong>, and MySQL COnnector commucate with MySQL database.</p>
 <ul>

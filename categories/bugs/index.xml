@@ -6,93 +6,70 @@
     <description>Recent content in bugs on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 30 Nov 2023 21:43:22 +0000</lastBuildDate><atom:link href="https://davidzhu.xyz/categories/bugs/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 30 Nov 2023 21:43:22 +0000</lastBuildDate>
+    <atom:link href="https://davidzhu.xyz/categories/bugs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Go File Server Cannot Handle Large Files</title>
       <link>https://davidzhu.xyz/post/bugs/009-go-server-handle-large-file/</link>
       <pubDate>Thu, 30 Nov 2023 21:43:22 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/bugs/009-go-server-handle-large-file/</guid>
-      <description>1. Problem description I&amp;rsquo;ve discussed how to use Cloudflare as a reverse proxy for my web traffic in previous post.
-I write a file server in Go, when attempting to upload a file of approximately 200 MB, it becomes very slow (always uploading) and never succeed. Upon monitoring the server using tools like htop, it seems that the server might be unaware of the incoming large file upload. I come across a error by chance: 413 Request Entity Too Large.</description>
+      <description>1. Problem description I&amp;rsquo;ve discussed how to use Cloudflare as a reverse proxy for my web traffic in previous post.&#xA;I write a file server in Go, when attempting to upload a file of approximately 200 MB, it becomes very slow (always uploading) and never succeed. Upon monitoring the server using tools like htop, it seems that the server might be unaware of the incoming large file upload. I come across a error by chance: 413 Request Entity Too Large.</description>
     </item>
-    
     <item>
       <title>排查实验室电脑无法访问一些网站</title>
       <link>https://davidzhu.xyz/post/bugs/008-computer-lab-cannot-access-youtube/</link>
       <pubDate>Wed, 22 Nov 2023 21:43:22 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/bugs/008-computer-lab-cannot-access-youtube/</guid>
       <description>首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时, 首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需</description>
     </item>
-    
     <item>
       <title>Coudflare TLS encryption 520 Error Code &amp; too Many Redirections</title>
       <link>https://davidzhu.xyz/post/build-website/008-enable-cloudflare-reverse-proxy/</link>
       <pubDate>Wed, 15 Nov 2023 20:09:22 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/build-website/008-enable-cloudflare-reverse-proxy/</guid>
-      <description>1. Enable end-to-end encryption with Cloudflare Getting a official TLS certificate is too expensive, so I decide to use Cloudflare proxied DNS records enable TLS connection. There is an article talks how it works. There are two steps to add your domain to Cloudflare:
-Add your domain to Cloudflare Create and install TLS certificate to your server 1.1. Add your domain to Cloudflare Go to this website: https://dash.cloudflare.com/
-And you will get instructions for updating your nameserver of your domain.</description>
+      <description>1. Enable end-to-end encryption with Cloudflare Getting a official TLS certificate is too expensive, so I decide to use Cloudflare proxied DNS records enable TLS connection. There is an article talks how it works. There are two steps to add your domain to Cloudflare:&#xA;Add your domain to Cloudflare Create and install TLS certificate to your server 1.1. Add your domain to Cloudflare Go to this website: https://dash.cloudflare.com/&#xA;And you will get instructions for updating your nameserver of your domain.</description>
     </item>
-    
     <item>
       <title>CGO Compile Error Building Docker Image</title>
       <link>https://davidzhu.xyz/post/bugs/006-cgo-docker-image-build-error/</link>
       <pubDate>Sat, 21 Oct 2023 10:24:22 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/bugs/006-cgo-docker-image-build-error/</guid>
-      <description>I choose a sqilte3 library which uses cgo, the Dockerfile:
-1 2 3 4 5 6 7 8 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /server . CMD [&amp;#34;./server&amp;#34;] The CGO_ENABLED=0 is to disable cgo. GOOS=linux and GOARCH=arm64 is used for cross compilation in Go. Because I build this on my macOS arm64 machine, and I want build for Ubuntu amd64 machine, so I choose GOOS=linux GOARCH=arm64.</description>
+      <description>I choose a sqilte3 library which uses cgo, the Dockerfile:&#xA;1 2 3 4 5 6 7 8 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /server . CMD [&amp;#34;./server&amp;#34;] The CGO_ENABLED=0 is to disable cgo. GOOS=linux and GOARCH=arm64 is used for cross compilation in Go. Because I build this on my macOS arm64 machine, and I want build for Ubuntu amd64 machine, so I choose GOOS=linux GOARCH=arm64.</description>
     </item>
-    
     <item>
       <title>ssh session vary slow</title>
       <link>https://davidzhu.xyz/post/bugs/005-ssh-connection-slow/</link>
       <pubDate>Mon, 25 Sep 2023 14:30:22 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/bugs/005-ssh-connection-slow/</guid>
-      <description>Connecting to my aws server with ssh client is very slow, and after connected, the session is very slow too.
-Like input a command in the ssh session and you have to wait seconds to get the output, lots of latency.
-Then I think maybe there is a &amp;ldquo;bad&amp;rdquo; process which takes a lot of cpu usages makes my server in high load, or there is a high network traffic. Then I use top command to check, then I got this:</description>
+      <description>Connecting to my aws server with ssh client is very slow, and after connected, the session is very slow too.&#xA;Like input a command in the ssh session and you have to wait seconds to get the output, lots of latency.&#xA;Then I think maybe there is a &amp;ldquo;bad&amp;rdquo; process which takes a lot of cpu usages makes my server in high load, or there is a high network traffic. Then I use top command to check, then I got this:</description>
     </item>
-    
     <item>
       <title>npm总是安装package到全局问题 (已解决)</title>
       <link>https://davidzhu.xyz/post/bugs/001-npm-install-locally/</link>
       <pubDate>Tue, 27 Jun 2023 11:24:35 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/bugs/001-npm-install-locally/</guid>
       <description>使用 npm install xxx, 然后总是安装到 ~/node_modules/, 查了好多, 有的说用 npm config list 查看 global 的值, 改为 false 什么, 都没有用, 卸载 node 和 npm 重装依旧不能解决, 最后删除了 ~/node_modules/ 文件夹和 ~/ 下的所</description>
     </item>
-    
     <item>
       <title>grep不支持Negative Lookahead问题</title>
       <link>https://davidzhu.xyz/post/bugs/003-bug-regex-grep-lookahead/</link>
       <pubDate>Tue, 02 May 2023 22:29:30 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/bugs/003-bug-regex-grep-lookahead/</guid>
       <description>刚开始使用printf &amp;quot;123\n24567\n8930\n234\n&amp;quot; | egrep &#39;(?&amp;lt;!2)3&#39;提示egrep: repetition-operator operand invalid, 然后查到可以使用参数-P, 如下: 1 $ printf &amp;#34;123\n24567\n8930\n234\n&amp;#34; | grep -P &amp;#39;(?&amp;lt;!2)3&amp;#39; 但是仍然报错和上面</description>
     </item>
-    
     <item>
       <title>启动Cloudflare代理导致无法通过域名解析出A记录中的IP</title>
       <link>https://davidzhu.xyz/post/bugs/002-bug-domain-with-two-ip/</link>
       <pubDate>Wed, 26 Apr 2023 17:30:22 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/bugs/002-bug-domain-with-two-ip/</guid>
       <description>问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&amp;rsquo;m trying to use ssh to connect my server with</description>
     </item>
-    
     <item>
       <title>SSH连接远程主机出现的Connection Refused问题</title>
       <link>https://davidzhu.xyz/post/bugs/004-bug-ssh-connection-refused/</link>
       <pubDate>Sun, 23 Apr 2023 20:30:22 +0000</pubDate>
-      
       <guid>https://davidzhu.xyz/post/bugs/004-bug-ssh-connection-refused/</guid>
       <description>1 2 ssh root@144.202.12.32 ssh: connect to host 144.202.12.32 port 22: Connection refused 查的一些博客说修改mac设置成允许远程连接(这其实是允许别人连接你的mac电脑比如ssh localhost), 还有修改服务器里的配置文</description>
     </item>
-    
   </channel>
 </rss>

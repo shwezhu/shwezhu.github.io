@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.111.3 with theme even" />
+<meta name="generator" content="Hugo 0.121.1 with theme even" />
 
 
 <link rel="canonical" href="https://davidzhu.xyz/post/java/backend/004-thymeleaf/" />
@@ -45,12 +45,12 @@
 <meta property="og:url" content="https://davidzhu.xyz/post/java/backend/004-thymeleaf/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-01T13:55:48+00:00" />
 <meta property="article:modified_time" content="2023-08-01T13:55:48+00:00" />
+
 <meta itemprop="name" content="Thymeleaf, Spring学习(四)">
 <meta itemprop="description" content="实现功能 访问 http://localhost:8080/ 的时候主页列出所有的猫猫信息(name&#43;age), 可通过参数查找某个猫猫信息如 http://localhost:8080/?name=Max, 如果猫猫Max存在将会列出其信息, 不存在则进行"><meta itemprop="datePublished" content="2023-08-01T13:55:48+00:00" />
 <meta itemprop="dateModified" content="2023-08-01T13:55:48+00:00" />
 <meta itemprop="wordCount" content="1955">
-<meta itemprop="keywords" content="Java,Spring Boot," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Thymeleaf, Spring学习(四)"/>
+<meta itemprop="keywords" content="Java,Spring Boot," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Thymeleaf, Spring学习(四)"/>
 <meta name="twitter:description" content="实现功能 访问 http://localhost:8080/ 的时候主页列出所有的猫猫信息(name&#43;age), 可通过参数查找某个猫猫信息如 http://localhost:8080/?name=Max, 如果猫猫Max存在将会列出其信息, 不存在则进行"/>
 
 <!--[if lte IE 9]>
@@ -242,15 +242,15 @@
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@RestController</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreetingController</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">&#34;/greeting&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">Greeting</span> <span class="nf">greeting</span><span class="o">(</span><span class="nd">@RequestParam</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;name&#34;</span><span class="o">,</span> <span class="n">defaultValue</span> <span class="o">=</span> <span class="s">&#34;World&#34;</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// ...
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="k">return</span> <span class="k">new</span> <span class="n">Greeting</span><span class="o">();</span> <span class="c1">// 返回的Greeting会被spring自动转为json对象
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@RestController</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GreetingController</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&#34;/greeting&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Greeting</span><span class="w"> </span><span class="nf">greeting</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;name&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">defaultValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;World&#34;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Greeting</span><span class="p">();</span><span class="w"> </span><span class="c1">// 返回的Greeting会被spring自动转为json对象</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><blockquote>
 <p>该controller是个简单的 restful api, 用来返回简单的json数据, 若不理解此段代码可以到<a href="https://davidzhu.xyz/2023/07/29/Java/Backend/001-first-spring-boot-program/">第一个Spring Boot项目及踩坑总结 Spring学习(一) </a>查看相关注解的解释,</p>
@@ -268,15 +268,15 @@
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Controller</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainController</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">&#34;/&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">String</span> <span class="nf">home</span><span class="o">(</span><span class="n">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;title&#34;</span><span class="o">,</span> <span class="s">&#34;hello little kittens&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s">&#34;index&#34;</span><span class="o">;</span>  <span class="c1">// return index.html
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Controller</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MainController</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&#34;/&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">home</span><span class="p">(</span><span class="n">Model</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">model</span><span class="p">.</span><span class="na">addAttribute</span><span class="p">(</span><span class="s">&#34;title&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;hello little kittens&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&#34;index&#34;</span><span class="p">;</span><span class="w">  </span><span class="c1">// return index.html</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>对应的<code>index.html</code>代码如下:</p>
 <div class="highlight"><div class="chroma">

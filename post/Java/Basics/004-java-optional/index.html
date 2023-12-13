@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.111.3 with theme even" />
+<meta name="generator" content="Hugo 0.121.1 with theme even" />
 
 
 <link rel="canonical" href="https://davidzhu.xyz/post/java/basics/004-java-optional/" />
@@ -45,12 +45,12 @@
 <meta property="og:url" content="https://davidzhu.xyz/post/java/basics/004-java-optional/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-06T15:44:52+00:00" />
 <meta property="article:modified_time" content="2023-08-06T15:44:52+00:00" />
+
 <meta itemprop="name" content="Java 8 Optional &amp; Method Reference">
 <meta itemprop="description" content="1. Optional Class Java 8 Optional 定义如下: 1 2 3 // A container object which may or may not contain a non-null value. If a value is present, `isPresent()` will return `true` and `get()` will return the value. public final class Optional&lt;T&gt; extends Object 之前讨论的 java.lang.Class, 也是一个类包装器, 若一个函数的返"><meta itemprop="datePublished" content="2023-08-06T15:44:52+00:00" />
 <meta itemprop="dateModified" content="2023-08-06T15:44:52+00:00" />
 <meta itemprop="wordCount" content="908">
-<meta itemprop="keywords" content="Java," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Java 8 Optional &amp; Method Reference"/>
+<meta itemprop="keywords" content="Java," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Java 8 Optional &amp; Method Reference"/>
 <meta name="twitter:description" content="1. Optional Class Java 8 Optional 定义如下: 1 2 3 // A container object which may or may not contain a non-null value. If a value is present, `isPresent()` will return `true` and `get()` will return the value. public final class Optional&lt;T&gt; extends Object 之前讨论的 java.lang.Class, 也是一个类包装器, 若一个函数的返"/>
 
 <!--[if lte IE 9]>
@@ -166,10 +166,10 @@
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// A container object which may or may not contain a non-null value. If a value is present, `isPresent()` will return `true` and `get()` will return the value. 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Optional</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="kd">extends</span> <span class="n">Object</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// A container object which may or may not contain a non-null value. If a value is present, `isPresent()` will return `true` and `get()` will return the value. </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Optional</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">extends</span><span class="w"> </span><span class="n">Object</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>之前讨论的 <a href="https://davidzhu.xyz/2023/08/05/Java/Basics/002-reflection-object-class/"><code>java.lang.Class</code></a>, 也是一个类包装器, 若一个函数的返回值为 <code> Optional&lt;?&gt;</code> 则就是返回<code> Optional&lt;?&gt;</code> 的对象, 这很容易看出来, 不要加个泛型就迷了, 如一个方法的签名为 <code> public Cat foo();</code>  则该方法返回的一定是 <code> Cat</code>  的对象,</p>
 <p>Optional 就是为了减少我们的 null check 代码, Helps you avoid NullPointerException, 所以不要乱用 optional,  <a href="https://youtu.be/vKVzRbsMnTQ">下面这个视频</a>讲的很好:</p>
@@ -192,14 +192,14 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">(</span><span class="n">Authentication</span> <span class="n">authentication</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">authentication</span><span class="o">.</span><span class="na">getPrincipal</span><span class="o">())</span>
-</span></span><span class="line"><span class="cl">                <span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">OidcUser</span><span class="o">.</span><span class="na">class</span><span class="o">::</span><span class="n">isInstance</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">OidcUser</span><span class="o">.</span><span class="na">class</span><span class="o">::</span><span class="n">cast</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">OidcUser</span><span class="o">::</span><span class="n">getEmail</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">                <span class="o">.</span><span class="na">orElseGet</span><span class="o">(</span><span class="n">authentication</span><span class="o">::</span><span class="n">getName</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getName</span><span class="p">(</span><span class="n">Authentication</span><span class="w"> </span><span class="n">authentication</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Optional</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">authentication</span><span class="p">.</span><span class="na">getPrincipal</span><span class="p">())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">OidcUser</span><span class="p">.</span><span class="na">class</span><span class="p">::</span><span class="n">isInstance</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">OidcUser</span><span class="p">.</span><span class="na">class</span><span class="p">::</span><span class="n">cast</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">OidcUser</span><span class="p">::</span><span class="n">getEmail</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">.</span><span class="na">orElseGet</span><span class="p">(</span><span class="n">authentication</span><span class="p">::</span><span class="n">getName</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="21--filter">2.1. <code> filter()</code></h3>
 <p>简单分析一下 <code>filter()</code>,</p>
@@ -208,8 +208,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">filter</span><span class="o">(</span><span class="n">Predicate</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">predicate</span><span class="o">);</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">Predicate</span><span class="o">&lt;?</span><span class="w"> </span><span class="kd">super</span><span class="w"> </span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">predicate</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>关于 <code> filter()</code> 的介绍: <em>If a value is present, and the value matches the given predicate, return an Optional describing the value, otherwise return an empty Optional.</em> 这是什么意思呢?</p>
 <p>假设我们有个方法 getCat() 可以从数据库获取 Cat 对象, 然后我们调用它:</p>
@@ -218,8 +218,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Cat</span><span class="o">&gt;</span> <span class="n">optionalCat</span> <span class="o">=</span> <span class="n">getCat</span><span class="o">(</span><span class="s">&#34;Milo&#34;</span><span class="o">);</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Cat</span><span class="o">&gt;</span><span class="w"> </span><span class="n">optionalCat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getCat</span><span class="p">(</span><span class="s">&#34;Milo&#34;</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>此时 optionalCat 就是一个 Cat 对象的包装器, a Optional that describes the value, 然后我们接着做下面的事情:</p>
 <div class="highlight"><div class="chroma">
@@ -227,8 +227,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">optionalCat</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">cat</span> <span class="o">-&gt;</span> <span class="n">cat</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;Milo&#34;</span><span class="o">));</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">optionalCat</span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">cat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">cat</span><span class="p">.</span><span class="na">getName</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&#34;Milo&#34;</span><span class="p">));</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>如果 optionalCat 不为空, 且 lambada 表达式返回值为 true 即上面表述: <em>If a value is present, and the value matches the given predicate,</em> 则 <em>return an Optional describing the value</em>, 即相当于对 cat 对象进行二次筛选, 第一次不为空, 第二次需要 cat 名字为 “milo”, 若这俩条件都满足, 此时 filter() 才会返回一个 <code>Optional&lt;Cat&gt;</code> 对象, 也就是和最初的 optionalCat 相同, 若那两个条件有一个没满足, 则 filter()  返回一个空 Optional 对象,</p>
 <p>另外该方法参数类型是一个 functional interface, 即 <code> Predicate&lt;? super T&gt;</code> , 可以看看其定义,</p>
@@ -241,12 +241,12 @@
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@FunctionalInterface</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Predicate</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kt">boolean</span> <span class="nf">test</span><span class="o">(</span><span class="n">T</span> <span class="n">t</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">...</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@FunctionalInterface</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Predicate</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="n">t</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>如果你了解 functional interface, 不难发现对于这种参数类型我们可以直接传 lambda expression, 但是上面代码传的是 <code>OidcUser.class::isInstance</code> 这是什么鬼?  别慌, 这不是 c++ 的 namespace, 这是 Java 8 的新特性 Method Reference,</p>
 <blockquote>
@@ -260,8 +260,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span> <span class="nf">map</span><span class="o">(</span><span class="n">Function</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="n">T</span><span class="o">,?</span> <span class="kd">extends</span> <span class="n">U</span><span class="o">&gt;</span> <span class="n">mapper</span><span class="o">);</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="n">Function</span><span class="o">&lt;?</span><span class="w"> </span><span class="kd">super</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="o">?</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">U</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mapper</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>If a value is present, apply the provided mapping function to it, and if the result is non-null, return an <code>Optional</code> describing the result. Otherwise return an empty <code>Optional</code>.</p>
 <div class="highlight"><div class="chroma">
@@ -284,23 +284,23 @@
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Optional</span><span class="o">&lt;</span><span class="n">Cat</span><span class="o">&gt;</span> <span class="n">optionalCat</span> <span class="o">=</span> <span class="n">getCat</span><span class="o">(</span><span class="s">&#34;Milo&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="n">optionalCat</span>
-</span></span><span class="line"><span class="cl">                    <span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">cat</span> <span class="o">-&gt;</span> <span class="n">cat</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;Milo&#34;</span><span class="o">)</span> <span class="o">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">Cat</span><span class="o">::</span><span class="n">getAge</span><span class="o">)</span> 
-</span></span><span class="line"><span class="cl">                    <span class="o">.</span><span class="na">orElse</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">age</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">Cat</span><span class="o">&gt;</span> <span class="nf">getCat</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// 模拟查找数据
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">Cat</span> <span class="n">cat</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Cat</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">2</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">ofNullable</span><span class="o">(</span><span class="n">cat</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Main</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Cat</span><span class="o">&gt;</span><span class="w"> </span><span class="n">optionalCat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getCat</span><span class="p">(</span><span class="s">&#34;Milo&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">optionalCat</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">cat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">cat</span><span class="p">.</span><span class="na">getName</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&#34;Milo&#34;</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">Cat</span><span class="p">::</span><span class="n">getAge</span><span class="p">)</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="p">.</span><span class="na">orElse</span><span class="p">(</span><span class="n">0</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">age</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Cat</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getCat</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 模拟查找数据</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Cat</span><span class="w"> </span><span class="n">cat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Cat</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">2</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Optional</span><span class="p">.</span><span class="na">ofNullable</span><span class="p">(</span><span class="n">cat</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>若 filter() 返回的不是空 Optional, 且 Cat::getAge 没有返回空值, 则返回一个新的 Optional, 类型为 Optional<Integer>,  即 return an <code>Optional</code> describing the result,</p>
 
