@@ -24,9 +24,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-If there are whitespaces in query string, the [whitespace will be encoded](https://stackoverflow.com/a/1211256/16317008) to `%20` or `+` automatically, 
-
-js code:
+If there are whitespaces in query string, the [whitespace will be encoded](https://stackoverflow.com/a/1211256/16317008) to `%20` or `+` automatically, js code:
 
 ```javascript
 async function getUrl(filepath) {
@@ -37,9 +35,7 @@ async function getUrl(filepath) {
 }
 ```
 
-The request URL will be: `http://localhost:8080?filepath=back%20ground.png`. 
-
-Therefore, if you use `r.URL.RawQuery` in Go:
+The request URL will be: `http://localhost:8080?filepath=back%20ground.png`. Therefore, if you use `r.URL.RawQuery` in Go:
 
 ```go
 log.Println(r.URL.RawQuery)
@@ -53,7 +49,7 @@ This will print:
 2023/10/29 12:19:36 map[filepath:[back ground.png]]
 ```
 
-As you can see, `r.URL.RawQuer` isn't friendly to string with whitespace, you should try to use `r.URL.Query()` to emliminate the `%20` characters. 
+As you can see, `r.URL.RawQuery` isn't friendly to string with whitespace, you should try to use `r.URL.Query()` to emliminate the `%20` characters. 
 
 So the recommended way is as below:
 

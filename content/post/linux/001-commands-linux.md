@@ -36,7 +36,7 @@ $ xxd a.class
 # -type f is for file, -type d is for directory, -iname is case-insensitive
 $ find themes/source/css -name "*header*" -type f
 # n: line number, r: recursive
-$ grep -nr 'ul$'' themes/source/css
+$ grep -nr 'ul$' themes/source/css
 # curl -v verbose
 $ curl localhost:8080 -H "Content-Type: application/json" -d "{"username":"david", age:3}" -v
 # make a file executable
