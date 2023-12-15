@@ -292,8 +292,7 @@ A: I can&rsquo;t see any technical reason why HTTP needs to be completely blocke
   
   <div class="post-content">
     <div class="post-summary">
-      1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically,
-js code:
+      1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically, js code:
 1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground.
     </div>
     <div class="read-more">
