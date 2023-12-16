@@ -38,3 +38,6 @@ Or you can search some new APIs & Services and eanble it:
 
 ![008](/009-google-cloud/008.png)
 
+---
+
+![ee](/009-google-cloud/ee.png)
