@@ -8,9 +8,11 @@ tags:
   - javascript
 ---
 
-## 1. JS 对象的特殊行为
+## 1. Objects are values in Javascript
 
-在说继承之前, 还要提一下 JS 对象很违反直觉的一个行为, 即属性可以通过对象创建之后赋值自动添加, 举个例子, 
+> `{}` 就是个空对象, `{}` 在 Python 里是个 dictionary, 当然 dictionary 也是个对象, 
+
+在说继承之前还要提一下 JS 对象与其它语言不同的地方, 举个例子, 
 
 ```js
 const student = {
@@ -21,11 +23,17 @@ const student = {
 }
 
 console.log(student)  // { name: 'John', study: [Function: study] }
-student.age = 99
+student.age = 99 // 这里没有出错竟然!
 console.log(student)  // { name: 'John', study: [Function: study], age: 99 }
 ```
 
-只有尝试读取属性值的时候, 在本对象找不到对应属性(property), 才会去其 prototype 去找, **在赋值里, 若本对象没有该属性, 就会直接为此对象创建新的属性**, 如下:
+在其它面向对象语言里, 如果我们尝试赋值或者访问对象不存在的 field就会报错, 在 JS 里并不会, 当你尝试读取不存在的 feild 的时候 (包括 prototype chain, 下面会讨论) 才会报错, 
+
+原因是, JS 的对象与其它语言如 Java, Python不同, Java里对象的 fields 是有类决定的, 类似所有对象的蓝图, JS并不是,  JS里的对象不是由类创建的, 更像一个 map, 
+
+我们知道 JS 的值分为两类, Primitive values: immutable, object values: mutable, 这里的 mutable 其实就是指 你可以随意给对象增加属性, 一个对象就是一个value, 
+
+当尝试读取对象的属性时, 会触发 prototype chain, 看下面代码:
 
 ```js
 const person = {
@@ -34,7 +42,7 @@ const person = {
     console.log('hello from ' + this.name)
   },
 }
-// 注意为一个对象赋值prototype的方法是为其属性__proto__赋值, 
+// 注意: 通过对象属性 __proto__ 访问对象 prototype
 const student = {
   age: 13,
   __proto__: person
@@ -48,137 +56,70 @@ console.log(student)      // { age: 13, name: 'John' }
 student.sayHello()       // 因student无sayHello函数, 通过prototype chain查找sayHello函数, 找到后, sayHello中的this被替换为student
 ```
 
-## 2. Prototype Chain 的意义
+## 2. Prototype
+
+### 2.1. Ways to access prototype
+
+Every **object value** in JavaScript has a built-in property, which is called its `prototype`. The `prototype` is itself **an object value**, so the `prototype` will have its own `prototype`, making what's called a **prototype chain**. The chain ends when we reach a prototype that has `null` for its own prototype. 
+
+关于prototype有一个迷惑的地方, 通过`obj.prototype`访问到的并不是上面我们讨论的prototype, 只能通过`obj.__proto__`和全局函数`Object.getPrototypeOf()`来获取一个对象的`prototype`属性:
+
+```js
+const person = {
+    name: 'Jack',
+    greet: function () {
+        return 'Hi, I am' + this.name;
+    }
+}
+
+console.log(person.prototype)
+console.log(person.__proto__)
+console.log(Object.getPrototypeOf(person))
+
+// undefined
+// [Object: null prototype] {}
+// [Object: null prototype] {}
+```
+
+根据打印可以看出 `person.prototype`跟`person.__proto__`压根就不是一个东西, 
+
+### 2.2. Prototype 的获取与赋值
+
+`obj.__proto__` 不是访问对象 prototype 属性的标准方法, 因为有的browser可能没实现, 所以访问(只读)一般用`Object.getPrototypeOf(student)`, 通过创建该对象的时候为其 `__proto__` 属性赋值的方法给一个对象的 prototype 赋值, 如下: 
+
+```js
+const person = {
+  name: 'Jack',
+  sayHello: function () {
+    console.log('hello from ' + this.name)
+  },
+}
+
+const student = {
+  age: 13,
+  // Check the assignment here:
+  __proto__: person
+}
+
+console.log(Object.getPrototypeOf(student))  // { name: 'Jack', sayHello: [Function: sayHello] }
+
+// 或者创建对象后赋值, 
+student.__proto__ = person
+// 注意若student没有__proto__属性则这里自动为student创建__proto__并赋值, 赋值后我们就可以访问了
+// 所以这和上面我们说的不要通过 `obj.__proto__`  访问一个对象的 prototype 并不矛盾
+```
+
+## 3. Prototype Chain 的意义
 
 > Javascript is an object-based language, not a class-based language.
 
 If you know Java or C++, you should be familiar with the inheritance concept. **In this programming paradigm**, a class is a blueprint for creating objects. If you want a new class to reuse the functionality of an existing class, you can create a new class that extends the existing class. This is called **classical inheritance**.
 
-> JavaScript doesn’t use **classical inheritance**. Instead, it uses **prototypal inheritance**. In prototypal inheritance, an object “inherits” properties from another object via the `prototype` linkage.
+JavaScript doesn’t use **classical inheritance**. Instead, it uses **prototypal inheritance**. In prototypal inheritance, an object “inherits” properties from another object via the `prototype` linkage.
 
-在 [说说 JS 中的 Prototype](https://davidzhu.xyz/post/js/basics/prototype/) 中提到 JS 的每个对象都有个 prototype 属性, 我们可以通过以下两种方式引用一个对象的 prototype: 
+Prototype chain 的意义正是代替了传统语言中的继承机制, 只不过是对象之间的继承, 而不是类之间, 
 
-```javascript
-const person = {
-  name: 'Jack'
-}
-
-console.log(person.__proto__)
-console.log(Object.getPrototypeOf(person))  // standard way
-
-// [Object: null prototype] {}
-// [Object: null prototype] {}
-```
-
-prototype chain 的意义正是代替了传统语言中的继承机制, 只不过是对象之间的继承, 而不是类之间, 
-
-```js
-const person = {
-  name: 'Jack',
-  greet: function () {
-      // for student.getPrototypeOf(person), this will below will become to:
-      // console.log('hello, from ' + student.name)
-      console.log('hello, from ' + this.name)
-  }
-};
-
-const student = {
-  study: function () {
-      return 'study';\
-  },
-  __proto__: person
-}
-
-console.log(student.name);  //Jack, 访问的是 student prototype 的 name 属性
-// studnet.name='John' 相当于为 student 添加了个新的属性 name, 
-// 文章上面已经介绍这是JS对象的性质, 有点违反直觉, 
-student.name = 'John'; 
-console.log(student.name); // John, 访问的是 student 自己的 name 属性
-
-student.greet();  // hello, from John
-
-console.log(student.__proto__);  // { name: 'Jack', greet: [Function: greet] }
-console.log(Object.getPrototypeOf(student));  // { name: 'Jack', greet: [Function: greet] }
-```
-
-> When trying to access a property of an object, the property will not only be sought on the object but on the prototype of the object, the prototype of the prototype, and so on until either a property with a matching name is found or the end of the prototype chain is reached. [Inheritance and the prototype chain - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
-
-```js
-const o = {
-  a: 1,
-  b: 2,
-  // __proto__ sets the [[Prototype]]. It's specified here
-  // as another object literal.
-  __proto__: {
-    b: 3,
-    c: 4,
-  },
-};
-
-// o.[[Prototype]] has properties b and c.
-// o.[[Prototype]].[[Prototype]] is Object.prototype (we will explain
-// what that means later).
-// Finally, o.[[Prototype]].[[Prototype]].[[Prototype]] is null.
-// This is the end of the prototype chain, as null,
-// by definition, has no [[Prototype]].
-// Thus, the full prototype chain looks like:
-// { a: 1, b: 2 } ---> { b: 3, c: 4 } ---> Object.prototype ---> null
-
-console.log(o.a); // 1
-// Is there an 'a' own property on o? Yes, and its value is 1.
-
-console.log(o.b); // 2
-// Is there a 'b' own property on o? Yes, and its value is 2.
-// The prototype also has a 'b' property, but it's not visited.
-// This is called Property Shadowing
-
-console.log(o.c); // 4
-// Is there a 'c' own property on o? No, check its prototype.
-// Is there a 'c' own property on o.[[Prototype]]? Yes, its value is 4.
-
-console.log(o.d); // undefined
-// Is there a 'd' own property on o? No, check its prototype.
-// Is there a 'd' own property on o.[[Prototype]]? No, check its prototype.
-// o.[[Prototype]].[[Prototype]] is Object.prototype and
-// there is no 'd' property by default, check its prototype.
-// o.[[Prototype]].[[Prototype]].[[Prototype]] is null, stop searching,
-// no property found, return undefined.
-```
-
-然后再看个例子, 
-
-```js
-const parent = {
-  value: 2,
-  method() {
-    return this.value + 1;
-  },
-};
-
-console.log(parent.method()); // 3
-// When calling parent.method in this case, 'this' refers to parent
-
-// child is an object that inherits from parent
-const child = {
-  __proto__: parent,
-};
-console.log(child.method()); // 3
-// When child.method is called, 'this' refers to child.
-// So when child inherits the method of parent,
-// The property 'value' is sought on child. However, since child
-// doesn't have an own property called 'value', the property is
-// found on the [[Prototype]], which is parent.value.
-
-child.value = 4; // assign the value 4 to the property 'value' on child.
-// This shadows the 'value' property on parent.
-// The child object now looks like:
-// { value: 4, __proto__: { value: 2, method: [Function] } }
-console.log(child.method()); // 5
-// Since child now has the 'value' property, 'this.value' means
-// child.value instead
-```
-
-## 3. Javascript 不存在真正的类
+## 4. Javascript 不存在真正的类
 
 JS 不存在真正的类, 即使是ES6之后的类也不过是个语法糖 (syntactic sugar) 而已, 
 
@@ -198,7 +139,7 @@ console.log(typeof Person); //function
 
 > Unlike other programming languages such as Java and C#, JavaScript classes are syntactic sugar over the **prototypal inheritance**. In other words, ES6 classes are just special functions. But class declarations are not **hoisted** like function declarations. 
 
-[说说 JS 中的 Prototype](https://davidzhu.xyz/2023/06/20/JS/Basics/prototype/)  中提到的 `obj.prototype` 和 `obj.__proto__` 不是一个东西, 当定义一个普通的对象之后 (不是函数) 它们的 `obj.prototype` 是 `undefined`, 而当定义函数之后, 这个函数的`func.prototype`会被自动创建, 并且值为一个空对象`{}`:
+上面提到 `obj.prototype` 和 `obj.__proto__` 不是一个东西, 当创建对象后 (除函数对象) 它们的 `obj.prototype` 是 `undefined`, 而创建函数对象后, 这个函数的`func.prototype`会被自动创建, 并且值为一个空对象`{}`:
 
 ```js
 const func = function () {
@@ -247,6 +188,8 @@ console.log(john.getName()); // John Doe
 
 > 综上: The `john` object is an instance of the `Person` through **prototypal inheritance**. 
 
+参考: 
 
-
-参考: https://www.javascripttutorial.net/es6/javascript-class/
+- https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes
+- https://stackoverflow.com/a/34948211/16317008
+- https://www.javascripttutorial.net/es6/javascript-class/

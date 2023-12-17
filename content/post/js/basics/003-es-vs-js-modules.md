@@ -42,7 +42,7 @@ Source: https://stackoverflow.com/a/33748400/16317008
 
 ## 2. CommonJS vs ES Modules
 
-**CommonJS** is an older module system for JavaScript that was designed for server-side JavaScript development with Node.js. 
+**CommonJS** is an older module system for JavaScript that was designed for server-side JavaScript development with **Node.js**. 
 
 ```javascript
 // my-module.js

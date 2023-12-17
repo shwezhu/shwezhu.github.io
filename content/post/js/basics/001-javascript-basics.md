@@ -65,7 +65,7 @@ person.eyeColor = "blue";
 
 ## 3. "everything is an object in Javascript", Really? 
 
-No, not everything is an object in JavaScript. Many things that you interact with regularly (`strings`, `numbers`, `booleans`) are **primitives**, not **objects**. Unlike objects, primitive values are immutable. The situation is complicated by the fact that these **primitives do have object wrappers** (String, Number and Boolean); these objects have methods and properties while the primitives do not, but the primitives appear to have methods because JavaScript silently creates a wrapper object when code attempts to access any property of a primitive.
+No, not everything is an object in JavaScript. Many things that you interact with regularly (`strings`, `numbers`, `booleans`) are **primitives**, not **objects**. **Unlike objects, primitive values are immutable.** The situation is complicated by the fact that these primitives do have object wrappers (String, Number and Boolean); these objects have methods and properties while the primitives do not, but the primitives appear to have methods because JavaScript silently creates a wrapper object when code attempts to access any property of a primitive.
 
 For example, consider the following code:
 
@@ -89,19 +89,21 @@ s.bar = "cheese";
 alert(s.bar); // undefined
 ```
 
-This happens because the property is effectively defined on a String object that is immediately discarded.
+This happens because the property is effectively defined on a String object that is immediately discarded.'
 
-原文: https://stackoverflow.com/a/9110389/16317008
+Numbers and Booleans also behave this way. Functions, however, are fully-fledged objects, and inherit from `Object` (actually `Object.prototype`, but that's another topic). Functions therefore can do anything objects can, including having properties:
 
-关于 JS 的数据讨论到这应该差不多了, JS 中的数据类型与传统的很不一样, 比如一般的语言单单一个数字就是 float, int, double, 而 js 只是简单的 number type, 另外还要注意它的 Undefined, Null 等类型, 
+```js
+function foo() {}
+foo.bar = "tea";
+alert(foo.bar); // tea
+```
 
-另外与 Java 相似, JS 中的值的类型分为 primitive 和对象两类, 相似的点在都有 primitive 类型, 但其primitive 又是 immutable的, Java 则不是, 当然还是 python 牛, 真正的万物皆对象, 即使一个 int 类型也是个对象, 但 python 的 int, string 是 immutable, Java里只有string对象是不可变的, 而 js, number type, string 都不可变, JS 的对象, 感觉就是为 json 而生, 
+Original post: https://stackoverflow.com/a/9110389/16317008
 
 ## 4. JS Collections
 
-JS 里的容器不多, 常用的也就 Array, Map, Object, 至于 Array不用说了, 说一下 Object 和 Map, 挺像的他们, 都是保存的 key value, 区别好似 可以保存的 key 的 type 不同, 对于 Object, key的类型就是 string, 
-
-> The key difference is that Objects only support string and Symbol keys where as Maps support more or less any key type. https://stackoverflow.com/a/37994079/16317008
+> The key difference is that **Objects** only support string and Symbol keys where as **Maps** support more or less any key type. https://stackoverflow.com/a/37994079/16317008
 
 - The keys of an `Object` are [`Strings`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) or [`Symbols`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol), where they can be of any value for a `Map`.
 - You can get the `size` of a `Map` easily, while you have to manually keep track of size for an `Object`.
