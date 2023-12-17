@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Objects &amp; Collections in Javascript">
 <meta itemprop="description" content="1. Javascript objects 在其他语言, 如C&#43;&#43;,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成. 可是在JS里面,"><meta itemprop="datePublished" content="2023-06-20T20:51:31+00:00" />
 <meta itemprop="dateModified" content="2023-06-20T20:51:31+00:00" />
-<meta itemprop="wordCount" content="1432">
+<meta itemprop="wordCount" content="1183">
 <meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Objects &amp; Collections in Javascript"/>
 <meta name="twitter:description" content="1. Javascript objects 在其他语言, 如C&#43;&#43;,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成. 可是在JS里面,"/>
 
@@ -214,7 +214,7 @@
 </div>
 </div><p><strong>JS 的对象长得很像 json</strong>, 所以在以后的学习中不要与json弄混.</p>
 <h2 id="3-everything-is-an-object-in-javascript-really">3. &ldquo;everything is an object in Javascript&rdquo;, Really?</h2>
-<p>No, not everything is an object in JavaScript. Many things that you interact with regularly (<code>strings</code>, <code>numbers</code>, <code>booleans</code>) are <strong>primitives</strong>, not <strong>objects</strong>. Unlike objects, primitive values are immutable. The situation is complicated by the fact that these <strong>primitives do have object wrappers</strong> (String, Number and Boolean); these objects have methods and properties while the primitives do not, but the primitives appear to have methods because JavaScript silently creates a wrapper object when code attempts to access any property of a primitive.</p>
+<p>No, not everything is an object in JavaScript. Many things that you interact with regularly (<code>strings</code>, <code>numbers</code>, <code>booleans</code>) are <strong>primitives</strong>, not <strong>objects</strong>. <strong>Unlike objects, primitive values are immutable.</strong> The situation is complicated by the fact that these primitives do have object wrappers (String, Number and Boolean); these objects have methods and properties while the primitives do not, but the primitives appear to have methods because JavaScript silently creates a wrapper object when code attempts to access any property of a primitive.</p>
 <p>For example, consider the following code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -246,14 +246,24 @@
 </span></span><span class="line"><span class="cl"><span class="nx">alert</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">bar</span><span class="p">);</span> <span class="c1">// undefined
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>This happens because the property is effectively defined on a String object that is immediately discarded.</p>
-<p>原文: <a href="https://stackoverflow.com/a/9110389/16317008">https://stackoverflow.com/a/9110389/16317008</a></p>
-<p>关于 JS 的数据讨论到这应该差不多了, JS 中的数据类型与传统的很不一样, 比如一般的语言单单一个数字就是 float, int, double, 而 js 只是简单的 number type, 另外还要注意它的 Undefined, Null 等类型,</p>
-<p>另外与 Java 相似, JS 中的值的类型分为 primitive 和对象两类, 相似的点在都有 primitive 类型, 但其primitive 又是 immutable的, Java 则不是, 当然还是 python 牛, 真正的万物皆对象, 即使一个 int 类型也是个对象, 但 python 的 int, string 是 immutable, Java里只有string对象是不可变的, 而 js, number type, string 都不可变, JS 的对象, 感觉就是为 json 而生,</p>
+</div><p>This happens because the property is effectively defined on a String object that is immediately discarded.'</p>
+<p>Numbers and Booleans also behave this way. Functions, however, are fully-fledged objects, and inherit from <code>Object</code> (actually <code>Object.prototype</code>, but that&rsquo;s another topic). Functions therefore can do anything objects can, including having properties:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">foo</span><span class="p">.</span><span class="nx">bar</span> <span class="o">=</span> <span class="s2">&#34;tea&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">alert</span><span class="p">(</span><span class="nx">foo</span><span class="p">.</span><span class="nx">bar</span><span class="p">);</span> <span class="c1">// tea
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Original post: <a href="https://stackoverflow.com/a/9110389/16317008">https://stackoverflow.com/a/9110389/16317008</a></p>
 <h2 id="4-js-collections">4. JS Collections</h2>
-<p>JS 里的容器不多, 常用的也就 Array, Map, Object, 至于 Array不用说了, 说一下 Object 和 Map, 挺像的他们, 都是保存的 key value, 区别好似 可以保存的 key 的 type 不同, 对于 Object, key的类型就是 string,</p>
 <blockquote>
-<p>The key difference is that Objects only support string and Symbol keys where as Maps support more or less any key type. <a href="https://stackoverflow.com/a/37994079/16317008">https://stackoverflow.com/a/37994079/16317008</a></p>
+<p>The key difference is that <strong>Objects</strong> only support string and Symbol keys where as <strong>Maps</strong> support more or less any key type. <a href="https://stackoverflow.com/a/37994079/16317008">https://stackoverflow.com/a/37994079/16317008</a></p>
 </blockquote>
 <ul>
 <li>The keys of an <code>Object</code> are <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String"><code>Strings</code></a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol"><code>Symbols</code></a>, where they can be of any value for a <code>Map</code>.</li>
@@ -289,9 +299,9 @@
           <a href="/tags/javascript/">javascript</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/js/basics/005-prototype/">
+        <a class="prev" href="/post/js/basics/004-prototypal-inheritance/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">说说 JS 中的 Prototype</span>
+            <span class="prev-text nav-default">JS 继承之 Prototype Chain 的意义</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         <a class="next" href="/post/python/basics/001-collections/">
