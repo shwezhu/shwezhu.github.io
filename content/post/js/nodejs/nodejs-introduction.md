@@ -8,7 +8,7 @@ tags:
   - javascript
 ---
 
-### 1. Intro
+## 1. Intro
 
 Node. js is not a programming language. Rather, it's a `runtime environment` that's used to run JavaScript outside the browser. For example on the `server` or in the `command line`.
 
@@ -18,16 +18,27 @@ Recall a paragraph which introduces js engine:
 
 > A Node.js app runs in a `single process`, without creating a new thread for every request. Node.js provides a set of asynchronous I/O primitives in its standard library that prevent JavaScript code from blocking and generally, libraries in Node.js are written using non-blocking paradigms, making blocking behavior the exception rather than the norm.
 
-### 2. npm
+## 2. npm usage
 
 Just like pip for Python, npm is a packages manager for js, 
 
 ```shell
-npm init
-npm install xxx --save
+npm init: This command initializes a new Node.js project. It creates a package.json file which holds various metadata relevant to the project.
+
+npm install: This command is used to install dependencies listed in the package.json file. When used with the --save flag, it also updates the package.json file with the newly installed package.
+
+npm install <package-name>: This command installs a specific package. For example, npm install express installs the Express framework.
+
+npm install -g <package-name>: The -g flag installs the package globally, making it available as a command line tool.
+
+npm uninstall <package-name>: This command removes a package from the node_modules directory and updates the package.json file.
+
+npm update: This command updates the installed packages to their latest versions based on the version range specified in the package.json file.
+
+npm list: This command displays a tree of every package installed in the current project.
 ```
 
-### 3. Install
+## 3. Install
 
 ```shell
 # which will insatll both nodejs and npm
@@ -49,7 +60,7 @@ npm -v
 node -v
 ```
 
-### 4. Install on IDEA
+## 4. Install on IDEA
 
 Go to Settings->Plugins,  search and install `Node.js`, then the code below will work fine:
 

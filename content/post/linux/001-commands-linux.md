@@ -12,6 +12,7 @@ tags:
 You can use `xxx --help `, `man xxx`, `tldr you-command` to check the usage of the command. 
 
 ```shell
+$ brew services list
 # detach a program from cli, after executed, exit cli, don't do Ctrl+C
 $ nohup ./server -p 8080 &
 # kill a specific program

@@ -67,7 +67,7 @@ async function main() {
     let response
     try {
         // 'response' is not a Promise object, 
-        // it's the resolved value the Promise object
+        // it's the resolved value the in the Promise object
         response = await fetch('https://www.google.com');
     } catch (err) {
         console.error("an err happened");
@@ -116,6 +116,5 @@ fetch('https://www.google.com')
     .catch(err => console.error("An err occurred."))
 ```
 
-Because `fetch()` retuens a Promise object, we can call `then()` directly, like above. 
+Because `fetch()` retuens a Promise object, we can call `then()` directly, this looks more concise than ealier example.
 
-This looks more concise than ealier example.
