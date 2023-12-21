@@ -7,7 +7,7 @@ tags:
  - http
 ---
 
-## POST data with Curl
+## 1. POST data with Curl
 
 The `Content-Type` header can be `application/json`, `application/x-www-form-urlencoded`, `multipart/form-data`, the first two is usually used with posting form data to server, the third is used to upload file to the server.
 
@@ -65,6 +65,6 @@ Learn more about http request header: https://davidzhu.xyz/post/cs-basics/018-ht
 ```shell
 $ curl -X POST "localhost:8080/postform?username=david&password=778899a"
 # The code below won' work (you have to make it with double quote):
-$ curl -X POST localhost:8080/postform?username=david&password=778899a
+$ curl -X POST localhost:8080/postform?username=david&password=778899a # wrong
 ```
 

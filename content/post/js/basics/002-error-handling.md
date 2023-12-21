@@ -149,3 +149,5 @@ async function exampleFunction() {
 
 // Error caught in async function: Error in promise
 ```
+
+[Error handling with promises](https://javascript.info/promise-error-handling)
