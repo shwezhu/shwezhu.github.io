@@ -9,37 +9,21 @@ tags:
 
 ## 1. `/etc/hosts` and `/etc/resolv.conf`
 
-**Before DNS**, we had hosts files that held a list of the IP address of hosts you needed to know about. They're still a thing and are king, and **looked at first**. 
-
 On Linux or a Mac, if you add this to `/etc/hosts`, facebook no longer exists:
 
 ```
 127.0.0.1 facebook.com
 ```
 
+`/etc/hosts` is used to resolve hostnames to IP addresses on a local machine. They're **looked at first**. 
+
 Now... If you don't have an entry for a host in your host file, you need to ask someone what the IP is. That comes from a **resolver**.
-
-On Linux of Mac in `/etc/resolv.conf`:
-
-```shell
-nameserver 192.168.88.61
-nameserver 1.1.1.1
-```
-
-The first one is my DNS server, and the second one is Cloudflare. Also, note that **any changes made manually to the */etc/resolv.conf* configuration file is bound to be overwritten upon changes in the network or upon system reboot**.
-
-References: 
-
-- https://www.reddit.com/r/dns/comments/v4fxpe/comment/ib5c16m/?utm_source=share&utm_medium=web2x&context=3
-- https://www.baeldung.com/linux/dns-resolv-conf-file
 
 ## 2. Local resolver & recursive resolver 
 
 > Recursive resolver usually located at remote acts as a DNS server, whereas, a DNS stub resolver running on client devices. 
 >
 > Most Internet users use a recursive resolver provided by their ISP, but there are other options available; for example [Cloudflare's 1.1.1.1](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) or 8.8.8.8 provided by Google. 
-
-I check the `/etc/resolv.conf` file on my machine and get:
 
 ```shell
 $ cat /etc/resolv.conf
@@ -48,7 +32,7 @@ $ cat /etc/resolv.conf
 nameserver 127.0.0.53
 ```
 
-Here `127.0.0.53` is the DNS server address, you can also manually change it to the IP of any DNS server (for example, change it to the famous Google DNS 8.8.8.8).
+`127.0.0.53` is the DNS server address, you can also manually change it to the IP of any DNS server (for example, change it to the famous Google DNS 8.8.8.8).
 
 `127.x.x.x` are loopback addresses that point to the local machine and are bound to the ***"lo"*** (loopback) network device. So who is this DNS server `127.0.0.53`?
 
@@ -58,7 +42,7 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      
 udp        0      0 127.0.0.53:53           0.0.0.0:*                           96729/systemd-resol 
 ```
 
-From the output, we can see that the process uses  `127.0.0.53:53`  called ***systemd-resolve***. In `/etc/resolv.conf` it says that this file should not manually maintained. Rather, it is maintained by the ***systemd-resolved*** service. You can check its status:
+From the output, we can see that the process uses  `127.0.0.53:53`  called ***systemd-resolve***. In `/etc/resolv.conf` it says that it's maintained by the ***systemd-resolved*** service. So we can try to check its status with systemctl:
 
 ```shell
 $ systemctl status systemd-resolved
@@ -68,7 +52,7 @@ $ systemctl status systemd-resolved
      ....
 ```
 
-We have know that the current DNS server on this machine is ***systemd-resolve*** which a DNS stub. So, what is the IP address of the actual DNS server? We can use the following command to check:
+We have know that the current DNS server on this machine is ***systemd-resolve*** which a DNS stub (client). So, what is the IP address of the actual DNS server? We can use the following command to check:
 
 ```shell
 # $ systemd-resolve --status | grep "DNS Servers"

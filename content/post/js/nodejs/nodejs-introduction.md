@@ -20,7 +20,11 @@ Recall a paragraph which introduces js engine:
 
 ## 2. npm usage
 
-Just like pip for Python, npm is a packages manager for js, 
+`npm` is the package manager for JavaScript, commonly used with Node.js. It is widely used for **managing dependencies** in JavaScript projects and for **running scripts** defined in a project's `package.json` file.
+
+`npm` is known for its robust handling of scripts and automation tasks. The `package.json` file in a Node.js project allows developers to define various scripts for tasks like building, testing, and deploying applications.
+
+`pip`, by contrast, is more focused on the installation and management of Python packages. It doesn't inherently provide the same level of scripting and automation capabilities as npm does with Node.js.
 
 ```shell
 npm init: This command initializes a new Node.js project. It creates a package.json file which holds various metadata relevant to the project.
@@ -58,6 +62,9 @@ This package will install:
 ```
 npm -v
 node -v
+
+node -v: This command is used to print the version of Node.js that you’re currently using.
+node xxx.js: This command is used to execute a JavaScript file named xxx.js in Node.js.
 ```
 
 ## 4. Install on IDEA
