@@ -16,7 +16,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="" />
+<meta name="author" content="David" /><meta name="description" content="1. Conponents rendering This process of requesting and serving UI has three steps:
+Triggering a render
+Initial render. Re-renders when state updates, (or one of its ancestors’) state has been updated. Once the component has been initially rendered, you can trigger further renders by updating its state with the set function. Rendering the component
+After you trigger a render, React calls your components to figure out what to display on screen." />
 
 
 
@@ -40,18 +43,27 @@
 
 
 <meta property="og:title" content="React Basics" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="1. Conponents rendering This process of requesting and serving UI has three steps:
+Triggering a render
+Initial render. Re-renders when state updates, (or one of its ancestors’) state has been updated. Once the component has been initially rendered, you can trigger further renders by updating its state with the set function. Rendering the component
+After you trigger a render, React calls your components to figure out what to display on screen." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/react/001-react-basics/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-12-20T19:44:22+00:00" />
 <meta property="article:modified_time" content="2023-12-20T19:44:22+00:00" />
 
 <meta itemprop="name" content="React Basics">
-<meta itemprop="description" content=""><meta itemprop="datePublished" content="2023-12-20T19:44:22+00:00" />
+<meta itemprop="description" content="1. Conponents rendering This process of requesting and serving UI has three steps:
+Triggering a render
+Initial render. Re-renders when state updates, (or one of its ancestors’) state has been updated. Once the component has been initially rendered, you can trigger further renders by updating its state with the set function. Rendering the component
+After you trigger a render, React calls your components to figure out what to display on screen."><meta itemprop="datePublished" content="2023-12-20T19:44:22+00:00" />
 <meta itemprop="dateModified" content="2023-12-20T19:44:22+00:00" />
-<meta itemprop="wordCount" content="0">
+<meta itemprop="wordCount" content="1096">
 <meta itemprop="keywords" content="react," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="React Basics"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:description" content="1. Conponents rendering This process of requesting and serving UI has three steps:
+Triggering a render
+Initial render. Re-renders when state updates, (or one of its ancestors’) state has been updated. Once the component has been initially rendered, you can trigger further renders by updating its state with the set function. Rendering the component
+After you trigger a render, React calls your components to figure out what to display on screen."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -138,11 +150,228 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-conponents-rendering">1. Conponents rendering</a></li>
+        <li><a href="#2-common-hooks">2. Common hooks</a>
+          <ul>
+            <li><a href="#21-useeffect">2.1. useEffect</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-lifecycle">3. Lifecycle</a></li>
+        <li><a href="#4-usenavigate">4. useNavigate</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
-      
+      <h2 id="1-conponents-rendering">1. Conponents rendering</h2>
+<p>This process of requesting and serving UI has three steps:</p>
+<ul>
+<li>
+<p><strong>Triggering</strong> a render</p>
+<ul>
+<li>Initial render.</li>
+<li>Re-renders when state updates, (or one of its ancestors’) state has been updated. Once the component has been initially rendered, you can trigger further renders by updating its state with the <a href="https://react.dev/reference/react/useState#setstate"><code>set</code> function.</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Rendering</strong> the component</p>
+<ul>
+<li>After you trigger a render, React calls your components to figure out what to display on screen. <em><strong>“Rendering” is React calling your components.</strong></em></li>
+<li>The process of rendering is recursive.</li>
+</ul>
+</li>
+<li>
+<p>React <strong>commits</strong> changes to the DOM</p>
+<ul>
+<li>React will apply the minimal necessary operations (calculated while rendering!) to make the DOM match the latest rendering output.</li>
+<li>Think the clock and input example.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>The default behavior of rendering all components nested within the updated component is not optimal for performance if the updated component is very high in the tree. If you run into a performance issue, there are several opt-in ways to solve it described in the <a href="https://reactjs.org/docs/optimizing-performance.html">Performance</a> section. <strong>Don’t optimize prematurely!</strong></p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">Root</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;root&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="p">[</span><span class="nx">name</span><span class="p">,</span> <span class="nx">setName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">function</span> <span class="nx">handleNameChange</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">setName</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">          <span class="p">&lt;</span><span class="nt">input</span>
+</span></span><span class="line"><span class="cl">              <span class="na">type</span><span class="o">=</span><span class="s">&#34;text&#34;</span>
+</span></span><span class="line"><span class="cl">              <span class="na">value</span><span class="o">=</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">              <span class="na">onChange</span><span class="o">=</span><span class="p">{</span><span class="nx">handleNameChange</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">          <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// console.log(&#34;root&#34;) get executed everytime when you input something into the &lt;input&gt;
+</span></span></span><span class="line"><span class="cl"><span class="c1">// you can use useEffect() hook to prevent this behavior.
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><a href="https://stackoverflow.com/questions/50819162/why-is-my-function-being-called-twice-in-react">Why is my function being called twice in React?</a></p>
+<blockquote>
+<p>When developing in “Strict Mode”, React calls each component’s function twice, which can help surface mistakes caused by impure functions. <a href="https://react.dev/learn/render-and-commit">Source</a></p>
+</blockquote>
+<p>Learn more: <a href="https://react.dev/learn/render-and-commit">Render and Commit – React</a></p>
+<h2 id="2-common-hooks">2. Common hooks</h2>
+<h3 id="21-useeffect">2.1. useEffect</h3>
+<h4 id="211-what-is-useeffect">2.1.1. What is useEffect</h4>
+<p><code>useEffect</code> is a React Hook that lets you <a href="https://react.dev/learn/synchronizing-with-effects">synchronize a component with an external system.</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="cl"><span class="nx">useEffect</span><span class="p">(</span><span class="nx">setup</span><span class="p">,</span> <span class="nx">dependencies</span><span class="o">?</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>By default, your Effect will run <strong>after every render</strong>.</p>
+<ul>
+<li><strong>No Dependency (No Array)</strong>: If you don’t provide the second argument (the array), the effect runs after every rendering.</li>
+<li><strong>Empty Array (<code>[]</code>)</strong>: If you pass an empty array, the effect runs <strong>once after the initial rendering</strong>. This is similar to <code>componentDidMount</code> in class components.</li>
+<li><strong>With Dependencies</strong>: If you include values in the array, the effect will rerun when any of those values change. This is used for effects that should react to specific state changes or prop updates.</li>
+</ul>
+<h4 id="212-how-to-remove-unnecessary-effects">2.1.2. How to remove unnecessary Effects</h4>
+<ul>
+<li>Let’s say you want to filter a list before displaying it. You might feel tempted to write an Effect that updates a state variable when the list changes. However, this is inefficient. When you update the state, React will first call your component functions to calculate what should be on the screen. Then React will <a href="https://react.dev/learn/render-and-commit">“commit”</a> these changes to the DOM, updating the screen. Then React will run your Effects. If your Effect <em>also</em> immediately updates the state, this restarts the whole process from scratch! To avoid the unnecessary render passes, transform all the data at the top level of your components. <strong>That code will automatically re-run whenever your props or state change.</strong></li>
+<li><strong>You don’t need Effects to handle user events.</strong> For example, let’s say you want to send an <code>/api/buy</code> POST request and show a notification when the user buys a product. In the Buy button click event handler, you know exactly what happened. By the time an Effect runs, you don’t know <em>what</em> the user did (for example, which button was clicked). This is why you’ll usually handle user events in the corresponding event handlers.</li>
+</ul>
+<h4 id="213-update-state-in-useeffect-without-setting-dependency">2.1.3. Update state in useEffect without setting dependency</h4>
+<p>useEffect hook will be called after component rendering,  a state of the component updating will trigger the render of component, so if we update the state of a component, will this cause a loop?</p>
+<p>Updating a component&rsquo;s state within a <code>useEffect</code> hook can indeed cause a loop, but this depends on how you&rsquo;ve set up the effect and its dependency array.</p>
+<p>Learn more:</p>
+<ul>
+<li><a href="https://react.dev/reference/react/useEffect">useEffect – React</a></li>
+<li><a href="https://react.dev/learn/synchronizing-with-effects">Synchronizing with Effects – React</a></li>
+<li><a href="https://react.dev/learn/you-might-not-need-an-effect">You Might Not Need an Effect – React</a></li>
+</ul>
+<h2 id="3-lifecycle">3. Lifecycle</h2>
+<h2 id="4-usenavigate">4. useNavigate</h2>
+<p>root.jsx:8 You should call navigate() in a React.useEffect(), not when your component is first rendered.</p>
+<p>The warning message you&rsquo;re seeing suggests that you are calling <code>navigate()</code> directly during the initial render of your component, which is not the recommended practice in React. Instead, you should use <code>navigate()</code> within an effect (<code>React.useEffect</code>) or as a response to user interactions, like a button click.</p>
+<ol>
+<li>The condition <code>!posts</code> will be true for both <code>null</code> and <code>undefined</code>, covering the case where <code>posts</code> is not defined. It also covers empty strings, <code>false</code>, and <code>0</code>, though these cases are less likely based on your context.</li>
+<li>In JavaScript, if you want to check whether a variable <code>a</code> is either <code>null</code> or <code>undefined</code>, you can simplify the condition using the <code>==</code> operator instead of the <code>===</code> operator. The <code>==</code> operator performs type coercion and treats <code>null</code> and <code>undefined</code> as equal.</li>
+</ol>
+<p>In your current code, the <code>catch()</code> block is designed to catch errors that occur during the <code>fetch</code> request or in the initial part of the <code>.then()</code> chain. However, it doesn&rsquo;t catch errors that occur within the nested <code>.then()</code> where you are calling <code>res.json()</code>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">getPosts</span><span class="p">(</span><span class="nx">numPosts</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kr">await</span> <span class="nx">Post</span><span class="p">.</span><span class="nx">find</span><span class="p">().</span><span class="nx">limit</span><span class="p">(</span><span class="nx">numPosts</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// good: return Post.find().limit(numPosts);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Using <code>return await</code> inside an async function is redundant when returning the result directly. You can simply return the Promise itself, which is more efficient. The <code>await</code> keyword is useful when you need the resolved value for some processing within the function, but if you&rsquo;re just passing the promise along, you can return it directly.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">getPosts</span><span class="p">(</span><span class="nx">numPosts</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">Post</span><span class="p">.</span><span class="nx">find</span><span class="p">().</span><span class="nx">limit</span><span class="p">(</span><span class="nx">numPosts</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">handleGetPosts</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// here is wrong, same as above example
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kr">const</span> <span class="nx">posts</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">getPosts</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">posts</span>
+</span></span><span class="line"><span class="cl">    <span class="p">.</span><span class="nx">then</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="p">(</span><span class="nx">docs</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">200</span><span class="p">).</span><span class="nx">json</span><span class="p">(</span><span class="nx">docs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    <span class="p">.</span><span class="k">catch</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="nx">message</span><span class="o">:</span> <span class="sb">`internal error: </span><span class="si">${</span><span class="nx">err</span><span class="si">}</span><span class="sb">`</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Why I get TypeError: posts.then is not a function
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>The issue in your code is that you&rsquo;re using <code>await</code> incorrectly with the <code>getPosts</code> function. When you use <code>await</code>, it waits for the promise to resolve and returns the result directly. Therefore, <code>posts</code> in your code is not a promise but the actual result of the promise. This is why you&rsquo;re getting a &ldquo;TypeError: posts.then is not a function&rdquo; because <code>posts</code> is an array (or whatever <code>getPosts</code> returns), not a promise.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">handleGetPosts</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">posts</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">getPosts</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">200</span><span class="p">).</span><span class="nx">json</span><span class="p">(</span><span class="nx">posts</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="nx">message</span><span class="o">:</span> <span class="sb">`internal error: </span><span class="si">${</span><span class="nx">err</span><span class="si">}</span><span class="sb">`</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
     </div>
 
     <div class="post-copyright">
