@@ -39,8 +39,6 @@ The Same-Origin Policy (SOP) is a security feature **enforced by web browsers** 
 
 **CORS allows servers** to specify which origins are allowed to access their resources, even if they are from different origins. It provides a set of HTTP headers that the server includes in its responses to explicitly permit cross-origin requests from specific origins. 
 
-Learn more: [A File Station (1) - Go - David's Blog](https://davidzhu.xyz/post/golang/practice/012-file-station-1/)
-
 ### 3. `Location`
 
 The **`Location`** response header indicates the URL to redirect a page to. It only provides a meaning when served with a `3xx` (redirection) or `201` (created) status response.

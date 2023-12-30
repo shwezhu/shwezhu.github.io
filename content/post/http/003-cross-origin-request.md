@@ -7,78 +7,11 @@ tags:
  - http
 ---
 
-## 1. Upload file to web server with HTTP request
+## 1. CORS policy error
 
-The html code:
+> Access to fetch at 'http://127.0.0.1:8080/upload' from origin 'http://localhost:8080' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
 
-```html
-<input id="upload-file" type="file" />
-<input id="upload-file-btn" type="submit" value="upload" />
-```
-
-I fInd the [docs about fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) and write code like this to upload file to the server with http request:
-
-```javascript
-document.getElementById("upload-file-btn").addEventListener("click", uploadFile)
-async function uploadFile() {
-  const url = "http://127.0.0.1:8080/upload"
-  const fileInput = document.getElementById("upload-file")
-  const formData = new FormData()
-  formData.append("uploaded_file", fileInput.files[0])
-  let response = await fetch(url, {
-      method: "POST",
-      headers: {"Content-Type": "multipart/form-data"},
-      body: formData
-  }) 
-  if (!response.ok) {...}
-}
-```
-
-Then I got an error at my web server:
-
-```
-no multipart boundary param in Content-Type
-```
-
-I found an explanation on [stack overflow](https://stackoverflow.com/a/42985029/16317008), says that form boundary is the delimiter for the form data, and added boundary to the header:
-
-```javascript
-...
-let response = await fetch(url, {
-    method: "POST",
-    headers: {"Content-Type": "multipart/form-data; boundary=----WebKitFormBoundaryyEmKNDsBKjB7QEqu"},
-    body: formData
-})
-```
-
-Then got another error at server side:
-
-```
-multipart: NextPart: bufio: buffer full
-```
-
-And continue doing research on stackoverflow, find [a solution](https://stackoverflow.com/a/39281156/16317008): the solution to the problem is to explicitly set `Content-Type` to `undefined` so that your browser or whatever client you're using can set it and add that boundary value in there for you. 
-
-I removed the headers settings:
-
-```js
-let response = await fetch(url, {
-    method: "POST",
-    body: formData
-})
-```
-
-Then I got another error at the client side javascript console, so frustrated :(
-
-```
-Access to fetch at 'http://127.0.0.1:8080/upload' from origin 'http://localhost:8080' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
-```
-
-Three ways to solve this problem:
-
-- This is because the **target origin** is different from the [**origin**](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin), then I make the `fetch` function send request to `http://localhost:8080/upload` rather than `http://127.0.0.1:8080/upload`. Then the http request was sent successfully. 
-
-- Another way is to enable `no-cors` mode in `fetch`
+- One way is to enable `no-cors` mode in `fetch`
 
   ```js
   let response = await fetch(url, {
@@ -92,7 +25,7 @@ Three ways to solve this problem:
   - `mode: 'no-cors'` won’t magically make things work. In fact it makes things worse, because one effect it has is to tell browsers, *“Block my frontend JavaScript code from seeing contents of the response body and headers under all circumstances.”* Of course you never want that. 
   - What happens with cross-origin requests from frontend JavaScript is that browsers by default block frontend code from accessing resources **cross-origin**. (If you know what [origin](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin) is, you will understand the term "cross-origin" easily). If `Access-Control-Allow-Origin` header is specified in a response, then browser relax that blocking and allow your code to access the response. Source: https://stackoverflow.com/a/43268098/16317008
 
-- The last way is to enable cors on the server side by setting the response header: 
+- Another way is to enable cors on the server side by setting the response header: 
 
   - **It's a bad practice to allow `CORS *`**
 
@@ -104,11 +37,9 @@ Three ways to solve this problem:
   }
   ```
 
-> The first way is the correct way to solve this issue in this scenario. 
->
-> Enabling `no-cors` mode in `fetch` will prevent from accessing the response, which you don't want. 
->
-> Adding `Access-Control-Allow-Origin: *` header in http response on web server side is not safe. When the "Access-Control-Allow-Origin" header is set to "*", it means that any website, regardless of its origin, can make **cross-origin** requests to the server and access its resources. This opens up the server to potential attacks, including cross-site scripting (XSS) and cross-site request forgery (CSRF). 
+Enabling `no-cors` mode in `fetch` will prevent from accessing the response, which you don't want. 
+
+Adding `Access-Control-Allow-Origin: *` header in http response on web server side is not safe. When the "Access-Control-Allow-Origin" header is set to "*", it means that any website, regardless of its origin, can make **cross-origin** requests to the server and access its resources. This opens up the server to potential attacks, including cross-site scripting (XSS) and cross-site request forgery (CSRF). 
 
 ## 2. Why cross-origin requests could be insecure 
 
@@ -219,10 +150,6 @@ _, _ = fmt.Fprintf(w, "upload successful")
 The Same-Origin Policy (SOP) is a security feature **enforced by web browsers** that restricts web pages (javascript) from interacting with resources (such as making requests or accessing data) from different origins. 
 
 **CORS allows servers** to specify which origins are allowed to access their resources, even if they are from different origins. It provides a set of HTTP headers that the server includes in its responses to explicitly permit cross-origin requests from specific origins. 
-
-
-
-
 
 
 

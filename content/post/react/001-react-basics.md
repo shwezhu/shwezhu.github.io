@@ -7,6 +7,15 @@ tags:
  - react
 ---
 
+
+```js
+npm create vite@latest name-of-your-project -- --template react
+# follow prompts
+cd <your new project directory>
+npm install react-router-dom localforage match-sorter sort-by
+npm run dev
+```
+
 ## 1. Conponents rendering
 
 This process of requesting and serving UI has three steps:
@@ -54,48 +63,7 @@ export default function Root() {
 
 Learn more: [Render and Commit – React](https://react.dev/learn/render-and-commit)
 
-## 2. Common hooks
-
-### 2.1. useEffect
-
-#### 2.1.1. What is useEffect
-
-`useEffect` is a React Hook that lets you [synchronize a component with an external system.](https://react.dev/learn/synchronizing-with-effects)
-
-```jsx
-useEffect(setup, dependencies?)
-```
-
-By default, your Effect will run **after every render**.
-
-- **No Dependency (No Array)**: If you don’t provide the second argument (the array), the effect runs after every rendering.
-- **Empty Array (`[]`)**: If you pass an empty array, the effect runs **once after the initial rendering**. This is similar to `componentDidMount` in class components.
-- **With Dependencies**: If you include values in the array, the effect will rerun when any of those values change. This is used for effects that should react to specific state changes or prop updates.
-
-#### 2.1.2. How to remove unnecessary Effects
-
-- Let’s say you want to filter a list before displaying it. You might feel tempted to write an Effect that updates a state variable when the list changes. However, this is inefficient. When you update the state, React will first call your component functions to calculate what should be on the screen. Then React will [“commit”](https://react.dev/learn/render-and-commit) these changes to the DOM, updating the screen. Then React will run your Effects. If your Effect *also* immediately updates the state, this restarts the whole process from scratch! To avoid the unnecessary render passes, transform all the data at the top level of your components. **That code will automatically re-run whenever your props or state change.**
-- **You don’t need Effects to handle user events.** For example, let’s say you want to send an `/api/buy` POST request and show a notification when the user buys a product. In the Buy button click event handler, you know exactly what happened. By the time an Effect runs, you don’t know *what* the user did (for example, which button was clicked). This is why you’ll usually handle user events in the corresponding event handlers.
-
-#### 2.1.3. Update state in useEffect without setting dependency
-
-useEffect hook will be called after component rendering,  a state of the component updating will trigger the render of component, so if we update the state of a component, will this cause a loop?
-
-Updating a component's state within a `useEffect` hook can indeed cause a loop, but this depends on how you've set up the effect and its dependency array.
-
-Learn more: 
-
-- [useEffect – React](https://react.dev/reference/react/useEffect)
-- [Synchronizing with Effects – React](https://react.dev/learn/synchronizing-with-effects)
-- [You Might Not Need an Effect – React](https://react.dev/learn/you-might-not-need-an-effect)
-
-## 3. Lifecycle
-
-
-
-
-
-## 4. useNavigate
+## 2. useNavigate
 
 root.jsx:8 You should call navigate() in a React.useEffect(), not when your component is first rendered.
 
@@ -151,3 +119,37 @@ async function handleGetPosts(req, res) {
 }
 ```
 
+
+When you use multiple instances of the same component, each instance maintains its own independent state. This means if you have a `<Counter />` component, for example, and you use it three times in your app (there are three `<Counter />`), each `<Counter />` will have its own separate count state.
+
+In React, state updates may be asynchronous for performance reasons. This means after calling the state update function, the updated state might not be immediately reflected.
+
+```js
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  const handleClick = () => {
+    setCount(count + 1);
+    console.log(count); // This may not log the updated count
+  };
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={handleClick}>Increment</button>
+    </div>
+  );
+}
+```
+
+In this example, if you click the button, you might expect the console.log statement to print the updated count. However, due to the asynchronous nature of state updates, it might still show the previous count. This is because setCount doesn't update the count variable immediately.
+
+```js
+const handleClick = () => {
+  setCount(prevCount => {
+    const updatedCount = prevCount + 1;
+    console.log(updatedCount); // Correctly logs the updated count
+    return updatedCount;
+  });
+};
+```
