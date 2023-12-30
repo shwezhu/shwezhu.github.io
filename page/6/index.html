@@ -291,9 +291,9 @@ Source: https://en.wikipedia.org/wiki/HTTPS#Network_layers
   
   <div class="post-content">
     <div class="post-summary">
-      1. Upload file to web server with HTTP request The html code:
-1 2 &lt;input id=&#34;upload-file&#34; type=&#34;file&#34; /&gt; &lt;input id=&#34;upload-file-btn&#34; type=&#34;submit&#34; value=&#34;upload&#34; /&gt; I fInd the docs about fetch and write code like this to upload file to the server with http request:
-1 2 3 4 5 6 7 8 9 10 11 12 13 document.getElementById(&#34;upload-file-btn&#34;).addEventListener(&#34;click&#34;, uploadFile) async function uploadFile() { const url = &#34;http://127.0.0.1:8080/upload&#34; const fileInput = document.getElementById(&#34;upload-file&#34;) const formData = new FormData() formData.
+      1. CORS policy error Access to fetch at &lsquo;http://127.0.0.1:8080/upload&rsquo; from origin &lsquo;http://localhost:8080&rsquo; has been blocked by CORS policy: No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&rsquo;s mode to &rsquo;no-cors&rsquo; to fetch the resource with CORS disabled.
+One way is to enable no-cors mode in fetch
+1 2 3 4 5 let response = await fetch(url, { method: &#34;POST&#34;, body: formData, mode: &#34;no-cors&#34;, }) This will work fine but you should note that when the request is made with &ldquo;no-cors&rdquo; mode, the response&rsquo;s status code property is always 0.
     </div>
     <div class="read-more">
       <a href="/post/http/003-cross-origin-request/" class="read-more-link">Read more...</a>
