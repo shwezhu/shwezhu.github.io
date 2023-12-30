@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Cross-origin Request HTTP - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. CORS policy error Access to fetch at &amp;lsquo;http://127.0.0.1:8080/upload&amp;rsquo; from origin &amp;lsquo;http://localhost:8080&amp;rsquo; has been blocked by CORS policy: No &amp;lsquo;Access-Control-Allow-Origin&amp;rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&amp;rsquo;s mode to &amp;rsquo;no-cors&amp;rsquo; to fetch the resource with CORS disabled. One way is to enable no-cors mode in fetch 1 2 3 4 5 let response = await fetch(url, { method: &amp;#34;POST&amp;#34;, body:" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.121.1 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/http/003-cors-sop/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Cross-origin Request HTTP" />
+<meta property="og:description" content="1. CORS policy error Access to fetch at &lsquo;http://127.0.0.1:8080/upload&rsquo; from origin &lsquo;http://localhost:8080&rsquo; has been blocked by CORS policy: No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&rsquo;s mode to &rsquo;no-cors&rsquo; to fetch the resource with CORS disabled. One way is to enable no-cors mode in fetch 1 2 3 4 5 let response = await fetch(url, { method: &#34;POST&#34;, body:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/http/003-cors-sop/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-06T20:28:50+00:00" />
+<meta property="article:modified_time" content="2023-10-06T20:28:50+00:00" />
+
+<meta itemprop="name" content="Cross-origin Request HTTP">
+<meta itemprop="description" content="1. CORS policy error Access to fetch at &lsquo;http://127.0.0.1:8080/upload&rsquo; from origin &lsquo;http://localhost:8080&rsquo; has been blocked by CORS policy: No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&rsquo;s mode to &rsquo;no-cors&rsquo; to fetch the resource with CORS disabled. One way is to enable no-cors mode in fetch 1 2 3 4 5 let response = await fetch(url, { method: &#34;POST&#34;, body:"><meta itemprop="datePublished" content="2023-10-06T20:28:50+00:00" />
+<meta itemprop="dateModified" content="2023-10-06T20:28:50+00:00" />
+<meta itemprop="wordCount" content="1603">
+<meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Cross-origin Request HTTP"/>
+<meta name="twitter:description" content="1. CORS policy error Access to fetch at &lsquo;http://127.0.0.1:8080/upload&rsquo; from origin &lsquo;http://localhost:8080&rsquo; has been blocked by CORS policy: No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&rsquo;s mode to &rsquo;no-cors&rsquo; to fetch the resource with CORS disabled. One way is to enable no-cors mode in fetch 1 2 3 4 5 let response = await fetch(url, { method: &#34;POST&#34;, body:"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Cross-origin Request HTTP</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-10-06 </span>
+        <div class="post-category">
+            <a href="/categories/http/"> http </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-cors-policy-error">1. CORS policy error</a></li>
+        <li><a href="#2-why-need-access-control-allow-origin-header">2. Why need <code>Access-Control-Allow-Origin</code> header</a></li>
+        <li><a href="#3-why-access-control-allow-origin--could-be-insecure">3. Why <code>Access-Control-Allow-Origin: *</code> could be insecure</a></li>
+        <li><a href="#31-reasons">3.1. Reasons</a>
+          <ul>
+            <li><a href="#32-questions">3.2. Questions</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-cors-vs-sop">4. CORS vs SOP</a></li>
+        <li><a href="#5-same-origin-policy">5. Same-origin policy</a>
+          <ul>
+            <li><a href="#51-同源策略的关键点">5.1. 同源策略的关键点</a></li>
+            <li><a href="#52-例子">5.2. 例子</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-cors-policy-error">1. CORS policy error</h2>
+<blockquote>
+<p>Access to fetch at &lsquo;http://127.0.0.1:8080/upload&rsquo; from origin &lsquo;http://localhost:8080&rsquo; has been blocked by CORS policy: No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&rsquo;s mode to &rsquo;no-cors&rsquo; to fetch the resource with CORS disabled.</p>
+</blockquote>
+<ul>
+<li>
+<p>One way is to enable <code>no-cors</code> mode in <code>fetch</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">body</span><span class="o">:</span> <span class="nx">formData</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mode</span><span class="o">:</span> <span class="s2">&#34;no-cors&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>This will work fine but you should note that when the request is made with &ldquo;no-cors&rdquo; mode, the response&rsquo;s status code property is always 0. This is because <code>no-cors</code> mode restricts the information available in the response, including the status code.</li>
+<li><code>mode: 'no-cors'</code> won’t magically make things work. In fact it makes things worse, because one effect it has is to tell browsers, <em>“Block my frontend JavaScript code from seeing contents of the response body and headers under all circumstances.”</em> Of course you never want that.</li>
+<li>What happens with cross-origin requests from frontend JavaScript is that browsers by default block frontend code from accessing resources <strong>cross-origin</strong>. (If you know what <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin">origin</a> is, you will understand the term &ldquo;cross-origin&rdquo; easily). If <code>Access-Control-Allow-Origin</code> header is specified in a response, then browser relax that blocking and allow your code to access the response. Source: <a href="https://stackoverflow.com/a/43268098/16317008">https://stackoverflow.com/a/43268098/16317008</a></li>
+</ul>
+</li>
+<li>
+<p>Another way is to enable cors on the server side by setting the response header:</p>
+<ul>
+<li><strong>It&rsquo;s a bad practice to allow <code>CORS *</code></strong></li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">handler</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="p">...</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">w</span><span class="p">.</span><span class="nx">Header</span><span class="p">().</span><span class="nx">Set</span><span class="p">(</span><span class="s2">&#34;Access-Control-Allow-Origin&#34;</span><span class="p">,</span> <span class="s2">&#34;*&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Fprintf</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="s2">&#34;upload successful&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<p>Enabling <code>no-cors</code> mode in <code>fetch</code> will prevent from accessing the response, which you don&rsquo;t want.</p>
+<p>Adding <code>Access-Control-Allow-Origin: *</code> header in http response on web server side is not safe. When the &ldquo;Access-Control-Allow-Origin&rdquo; header is set to &ldquo;*&rdquo;, it means that any website, regardless of its origin, can make <strong>cross-origin</strong> requests to the server and access its resources. This opens up the server to potential attacks, including cross-site scripting (XSS) and cross-site request forgery (CSRF).</p>
+<h2 id="2-why-need-access-control-allow-origin-header">2. Why need <code>Access-Control-Allow-Origin</code> header</h2>
+<p>假设您有一个运行在 <code>https://api.myserver.com</code> 上的后端 API，和两个前端应用，分别运行在 <code>https://myapp.com</code> 和 <code>https://anotherapp.com</code> 上。您希望 <code>https://myapp.com</code> 能够访问您的后端 API，但不希望 <code>https://anotherapp.com</code> 或其他任何网站能够这样做。</p>
+<p><strong>不使用 CORS 的情况</strong></p>
+<p>如果不实施任何 CORS 策略，那么浏览器的同源策略（SOP）默认会阻止来自 <code>https://myapp.com</code> 的前端应用调用 <code>https://api.myserver.com</code> 上的 API。这是因为这两个 URL 有不同的源（不同的域名），所以浏览器会出于安全考虑阻止这样的请求。</p>
+<p><strong>使用 <code>Access-Control-Allow-Origin: *</code> 的情况</strong></p>
+<p>如果在您的后端服务器上设置 <code>Access-Control-Allow-Origin</code> 为 <code>*</code>，那么任何网站都可以请求您的 API。在这种情况下，<code>https://myapp.com</code> 和 <code>https://anotherapp.com</code> 以及任何其他网站都能够访问您的 API。虽然这样做方便了跨域访问，但同时也增加了安全风险，因为恶意网站也可以访问您的 API。</p>
+<p><strong>使用具体域名的情况</strong></p>
+<p>理想的做法是在后端服务器上设置 <code>Access-Control-Allow-Origin</code> 为 <code>https://myapp.com</code>。这样，只有来自 <code>https://myapp.com</code> 的请求被允许访问您的 API，而来自 <code>https://anotherapp.com</code> 或任何其他网站的请求都会被浏览器阻止。这种方式既允许了您需要的跨域访问，又保证了较高的安全性。</p>
+<h2 id="3-why-access-control-allow-origin--could-be-insecure">3. Why <code>Access-Control-Allow-Origin: *</code> could be insecure</h2>
+<h2 id="31-reasons">3.1. Reasons</h2>
+<p>Suppose there is a user who is logged into their banking website, which is hosted on <a href="https://bank.example.com">https://bank.example.com</a>. This means there is authentication cookie (probably a session_id) stored on the user&rsquo;s browser.</p>
+<p>Now, suppose an attacker creates a malicious website called <a href="https://evil.com">https://evil.com</a> and manages to trick a user into visiting it.</p>
+<p>The attacker&rsquo;s JavaScript code running on <a href="https://evil.com">https://evil.com</a> could make a <strong>cross-origin request</strong> to the banking website&rsquo;s API (<a href="https://bank.example.com/api/userdata">https://bank.example.com/api/userdata</a>) <strong>on behalf of the user&rsquo;s browser</strong>. If the user&rsquo;s browser does not enforce strict same-origin policy, or the server set header <code>Access-Control-Allow-Origin: *</code> in response, which mean the browser will allow this request to be sent.</p>
+<blockquote>
+<p>If the user has an authentication cookie for the legitimate site, the cookies will be sent along with the request. So the malicious site can perform transactions in the legitimate site on behalf of the user, <strong>despite not having direct access</strong> to the authentication cookie.</p>
+</blockquote>
+<h3 id="32-questions">3.2. Questions</h3>
+<p><strong>How does the server know where does the http request come from</strong>, e.g.,  <a href="https://evil.com/">https://evil.com</a> or <a href="https://bank.example.com">https://bank.example.com</a>:</p>
+<p>Through the <strong><code>Origin</code> header</strong> included in the request&rsquo;s headers, the <strong><code>Origin</code> header</strong> will be added by the web browser automatically:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="err">Origin: https://evil.com
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Could the hacker spoof the <code>Origin</code> header</strong> from <code>Origin: https://evil.com</code> to <code>Origin: https://bank.example.com</code>?</p>
+<p>Browsers are in control of setting the <code>Origin</code> header, and <strong>users can&rsquo;t override this value.</strong> So you won&rsquo;t see the <code>Origin</code> header spoofed from a browser. A malicious user could craft a curl request that manually sets the <code>Origin</code> header, but this request would come from outside a browser, and may not have browser-specific info (such as cookies).</p>
+<blockquote>
+<p>Remember: The <code>Access-Control-Allow-Origin</code> header in CORS only dictates which origins should be allowed to make cross-origin requests. Don&rsquo;t rely on it for anything more. <a href="https://stackoverflow.com/a/21058346/16317008">source </a></p>
+</blockquote>
+<h2 id="4-cors-vs-sop">4. CORS vs SOP</h2>
+<p>The Same-Origin Policy (SOP) is a security feature <strong>enforced by web browsers</strong> that restricts web pages (javascript) from interacting with resources (such as making requests or accessing data) from different origins.</p>
+<p><strong>CORS allows servers</strong> to specify which origins are allowed to access their resources, even if they are from different origins. It provides a set of HTTP headers that the server includes in its responses to explicitly permit cross-origin requests from specific origins.</p>
+<h2 id="5-same-origin-policy">5. Same-origin policy</h2>
+<h3 id="51-同源策略的关键点">5.1. 同源策略的关键点</h3>
+<ol>
+<li>
+<p><strong>限制数据读取</strong>：同源策略主要限制一个网页从不同源的服务器读取数据。这意味着一个网页上的脚本不能读取或操作另一个源的网页内容或响应数据。</p>
+</li>
+<li>
+<p><strong>不阻止发送请求</strong>：尽管同源策略阻止读取不同源的数据，但它并不阻止向不同源发送请求。这意味着，脚本可以向任何源发送请求，例如提交表单或发起 AJAX 请求。</p>
+</li>
+<li>
+<p><strong>安全和隐私</strong>：这种策略的目的是保护用户数据的安全和隐私，防止恶意网站访问或操作用户在其他网站上的敏感数据。</p>
+</li>
+</ol>
+<h3 id="52-例子">5.2. 例子</h3>
+<p>假设 Alice 在 <code>https://www.alicebank.com</code> 上登录了她的银行账户。然后，她访问了一个恶意网站 <code>https://www.badguy.com</code>。这个恶意网站包含一个脚本，尝试通过 AJAX 向 <code>https://www.alicebank.com</code> 发送请求。</p>
+<ul>
+<li>
+<p><strong>发送请求是允许的</strong>：恶意脚本可以向 <code>https://www.alicebank.com</code> 发送请求，这不违反同源策略。</p>
+</li>
+<li>
+<p><strong>读取响应受限</strong>：虽然恶意脚本发送了请求，但由于同源策略，它不能读取来自 <code>https://www.alicebank.com</code> 的响应数据。因此，Alice 的银行数据（如账户余额和交易信息）对于 <code>https://www.badguy.com</code> 来说是不可见的，从而保护了其安全。</p>
+</li>
+</ul>
+<p>总的来说，同源策略是一种安全机制，它允许向任何源发送请求，但限制了从其他源读取数据，从而保护用户免受跨源读取攻击的威胁。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-10-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/http/">http</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/http/006-https-ssl/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">HTTPS SSL TLS</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/advance/010-defer-close/">
+            <span class="next-text nav-default">Don&#39;t Defer Close() on Writable Files - Go Notes</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
