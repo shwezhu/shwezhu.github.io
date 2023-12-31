@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. CORS policy error Access to fetch at &amp;lsquo;http://127.0.0.1:8080/upload&amp;rsquo; from origin &amp;lsquo;http://localhost:8080&amp;rsquo; has been blocked by CORS policy: No &amp;lsquo;Access-Control-Allow-Origin&amp;rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&amp;rsquo;s mode to &amp;rsquo;no-cors&amp;rsquo; to fetch the resource with CORS disabled. One way is to enable no-cors mode in fetch 1 2 3 4 5 let response = await fetch(url, { method: &amp;#34;POST&amp;#34;, body:" />
+<meta name="author" content="David" /><meta name="description" content="1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &amp;#39;http://localhost:8080/&amp;#39; from origin &amp;#39;http://localhost:5173&amp;#39; has been blocked by CORS policy: Response to preflight" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="Cross-origin Request HTTP" />
-<meta property="og:description" content="1. CORS policy error Access to fetch at &lsquo;http://127.0.0.1:8080/upload&rsquo; from origin &lsquo;http://localhost:8080&rsquo; has been blocked by CORS policy: No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&rsquo;s mode to &rsquo;no-cors&rsquo; to fetch the resource with CORS disabled. One way is to enable no-cors mode in fetch 1 2 3 4 5 let response = await fetch(url, { method: &#34;POST&#34;, body:" />
+<meta property="og:description" content="1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/http/003-cors-sop/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-06T20:28:50+00:00" />
 <meta property="article:modified_time" content="2023-10-06T20:28:50+00:00" />
 
 <meta itemprop="name" content="Cross-origin Request HTTP">
-<meta itemprop="description" content="1. CORS policy error Access to fetch at &lsquo;http://127.0.0.1:8080/upload&rsquo; from origin &lsquo;http://localhost:8080&rsquo; has been blocked by CORS policy: No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&rsquo;s mode to &rsquo;no-cors&rsquo; to fetch the resource with CORS disabled. One way is to enable no-cors mode in fetch 1 2 3 4 5 let response = await fetch(url, { method: &#34;POST&#34;, body:"><meta itemprop="datePublished" content="2023-10-06T20:28:50+00:00" />
+<meta itemprop="description" content="1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight"><meta itemprop="datePublished" content="2023-10-06T20:28:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-06T20:28:50+00:00" />
-<meta itemprop="wordCount" content="1603">
+<meta itemprop="wordCount" content="1154">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Cross-origin Request HTTP"/>
-<meta name="twitter:description" content="1. CORS policy error Access to fetch at &lsquo;http://127.0.0.1:8080/upload&rsquo; from origin &lsquo;http://localhost:8080&rsquo; has been blocked by CORS policy: No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&rsquo;s mode to &rsquo;no-cors&rsquo; to fetch the resource with CORS disabled. One way is to enable no-cors mode in fetch 1 2 3 4 5 let response = await fetch(url, { method: &#34;POST&#34;, body:"/>
+<meta name="twitter:description" content="1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -142,21 +142,14 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#1-cors-policy-error">1. CORS policy error</a></li>
-        <li><a href="#2-why-need-access-control-allow-origin-header">2. Why need <code>Access-Control-Allow-Origin</code> header</a></li>
-        <li><a href="#3-why-access-control-allow-origin--could-be-insecure">3. Why <code>Access-Control-Allow-Origin: *</code> could be insecure</a></li>
-        <li><a href="#31-reasons">3.1. Reasons</a>
+        <li><a href="#1-cors-issue">1. CORS issue</a></li>
+        <li><a href="#2-how-to-fix-cors-issue">2. How to fix CORS issue</a>
           <ul>
-            <li><a href="#32-questions">3.2. Questions</a></li>
+            <li><a href="#21-简单场景">2.1. 简单场景</a></li>
+            <li><a href="#22-复杂场景">2.2. 复杂场景</a></li>
           </ul>
         </li>
-        <li><a href="#4-cors-vs-sop">4. CORS vs SOP</a></li>
-        <li><a href="#5-same-origin-policy">5. Same-origin policy</a>
-          <ul>
-            <li><a href="#51-同源策略的关键点">5.1. 同源策略的关键点</a></li>
-            <li><a href="#52-例子">5.2. 例子</a></li>
-          </ul>
-        </li>
+        <li><a href="#3-cors-vs-sop">3. CORS vs SOP</a></li>
       </ul>
     </li>
   </ul>
@@ -164,119 +157,83 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-cors-policy-error">1. CORS policy error</h2>
-<blockquote>
-<p>Access to fetch at &lsquo;http://127.0.0.1:8080/upload&rsquo; from origin &lsquo;http://localhost:8080&rsquo; has been blocked by CORS policy: No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested resource. If an opaque response serves your needs, set the request&rsquo;s mode to &rsquo;no-cors&rsquo; to fetch the resource with CORS disabled.</p>
-</blockquote>
-<ul>
-<li>
-<p>One way is to enable <code>no-cors</code> mode in <code>fetch</code></p>
+      <h2 id="1-cors-issue">1. CORS issue</h2>
+<p>My frontend application is deployed on <code>http://localhost:5173</code>, and backend application is deployed on <code>http://localhost:8080</code>. The frontend application sends HTTP requests to the backend application through <code>fetch</code>, but it fails with the following error:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
-</span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">body</span><span class="o">:</span> <span class="nx">formData</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">mode</span><span class="o">:</span> <span class="s2">&#34;no-cors&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl"><span class="p">})</span>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 显然没有服务器处理 OPTIONS 请求</span>
+</span></span><span class="line"><span class="cl">Access to fetch at <span class="s1">&#39;http://localhost:8080/&#39;</span> from origin <span class="s1">&#39;http://localhost:5173&#39;</span> has been blocked by CORS policy: Response to preflight request doesn<span class="s1">&#39;t pass access control check: It does not have HTTP ok status. 
+</span></span></span><span class="line"><span class="cl"><span class="s1">
+</span></span></span><span class="line"><span class="cl"><span class="s1">Access to fetch at &#39;</span>http://localhost:8080/api/chat<span class="s1">&#39; from origin &#39;</span>http://localhost:5173<span class="err">&#39;</span> has been blocked by CORS policy: Request header field content-type is not allowed by Access-Control-Allow-Headers in preflight response.
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
-<li>This will work fine but you should note that when the request is made with &ldquo;no-cors&rdquo; mode, the response&rsquo;s status code property is always 0. This is because <code>no-cors</code> mode restricts the information available in the response, including the status code.</li>
-<li><code>mode: 'no-cors'</code> won’t magically make things work. In fact it makes things worse, because one effect it has is to tell browsers, <em>“Block my frontend JavaScript code from seeing contents of the response body and headers under all circumstances.”</em> Of course you never want that.</li>
-<li>What happens with cross-origin requests from frontend JavaScript is that browsers by default block frontend code from accessing resources <strong>cross-origin</strong>. (If you know what <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin">origin</a> is, you will understand the term &ldquo;cross-origin&rdquo; easily). If <code>Access-Control-Allow-Origin</code> header is specified in a response, then browser relax that blocking and allow your code to access the response. Source: <a href="https://stackoverflow.com/a/43268098/16317008">https://stackoverflow.com/a/43268098/16317008</a></li>
-</ul>
-</li>
-<li>
-<p>Another way is to enable cors on the server side by setting the response header:</p>
-<ul>
-<li><strong>It&rsquo;s a bad practice to allow <code>CORS *</code></strong></li>
-</ul>
+</div><p>This is the famous CORS issue, and it is caused by the <strong>same-origin policy</strong> (SOP) enforced by web browsers.</p>
+<p>CORS is a feature built into browsers for added security. <strong>It prevents any random website from using your authenticated cookies</strong> to send an API request to your bank&rsquo;s website and do stuff like secretly withdraw money.</p>
+<p>想象一下, 如果你点进了一个恶意网站, 这个网站有个JS脚本使用比如 fetch 向你银行 /api/transfers 发送了一个请求, 如果浏览器没有 same-origin policy 限制, 那么这个请求就会被发送出去, 而且会自动带上你的银行网站的 cookie (一些请求头), 这样恶意网站就可以做一些你不知道的事情, 比如转账, 提现等等.</p>
+<p>但是, 有了 same-origin policy 限制, 那么这个请求就不会被浏览器发送出去, 因为这个请求的 origin 和你银行网站的 origin 不一样, 所以浏览器会阻止这个请求. Origin 是浏览器自动添加的请求头, 你不能修改它. Origin 包括三部分: 协议, 域名, 端口. 上面的例子 origin 就是 <code>http://localhost:5173</code> 和 <code>http://localhost:8080</code>, 前端页面的 js 代码是在 <code>http://localhost:5173</code> 运行的, 所以它的 origin 是 <code>http://localhost:5173</code>, 而后端的 API 是在 <code>http://localhost:8080</code> 运行的, 所以它的 origin 是 <code>http://localhost:8080</code>.</p>
+<p>所以理论上来说, 如果你的后端服务器不允许CORS, 那么除了跟你后端服务器同源(Origin)的前端页面, 其他的前端页面都不能在浏览器访问你的后端 API. 当然你可以在终端使用 curl 命令访问你的后端 API, 因为 curl 命令不是浏览器, 它不会自动添加 origin 请求头. 另外 React 的 create-react-app 也有一个 proxy 功能, 可以让你在开发环境下绕过 CORS 限制, 但是这个功能只在开发环境下有效, 生产环境下还是要你自己配置后端服务器的 CORS.</p>
+<h2 id="2-how-to-fix-cors-issue">2. How to fix CORS issue</h2>
+<h3 id="21-简单场景">2.1. 简单场景</h3>
+<p>解决的办法很简单, 在后端 API 的响应头里添加 <code>Access-Control-Allow-Origin: *</code> 就可以了. 但这仅限于一些简单的场景, 如 GET 请求. 可参考:</p>
+<h3 id="22-复杂场景">2.2. 复杂场景</h3>
+<p>如果你的 API 是 POST 请求, 并且需要带上一些请求头, 那么你可能还需要在响应头里添加 <code>Access-Control-Allow-Headers: *</code>, 这样才能让浏览器发送 POST 请求, 并且带上你需要的请求头. (具体规定可参考: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS</a>) 这也是为什么在有的前端JS fetch代码里, 你后端简单设置 <code>Access-Control-Allow-Origin: *</code> 就可以了, 但是有的并不会成功.</p>
+<p>除了设置上面两个响应头, 你还需要处理 OPTIONS 请求, 这是因为浏览器在发送跨域请求时, 会先发送一个 OPTIONS 请求, 用来询问服务器是否允许跨域请求, 如果服务器不允许, 那么浏览器就不会发送真正的请求.</p>
+<p>比如我的后端 API 需要客户端带上一个请求头 <code>Content-Type: application/json</code> 和 <code>Content-Type: xxxx</code>, 那么我就需要在响应头里添加 <code>Access-Control-Allow-Headers: Content-Type, Content-Type</code>, 或者 <code>Access-Control-Allow-Headers: *</code>, 这样浏览器发送HTTP请求时才会带上这两个请求头.</p>
+<p>使用 Golang 处理的话, 大致逻辑如下:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">handler</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="p">...</span>
-</span></span><span class="line"><span class="cl">  <span class="nx">w</span><span class="p">.</span><span class="nx">Header</span><span class="p">().</span><span class="nx">Set</span><span class="p">(</span><span class="s2">&#34;Access-Control-Allow-Origin&#34;</span><span class="p">,</span> <span class="s2">&#34;*&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Fprintf</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="s2">&#34;upload successful&#34;</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Server</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">enableCors</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">w</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Handle CORS preflighted request sent by browser.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="nx">r</span><span class="p">).</span><span class="nx">Method</span> <span class="o">==</span> <span class="s">&#34;OPTIONS&#34;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 真正的处理逻辑
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">s</span><span class="p">.</span><span class="nx">mux</span><span class="p">.</span><span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">enableCors</span><span class="p">(</span><span class="nx">w</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">(</span><span class="o">*</span><span class="nx">w</span><span class="p">).</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Access-Control-Allow-Origin&#34;</span><span class="p">,</span> <span class="s">&#34;*&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">(</span><span class="o">*</span><span class="nx">w</span><span class="p">).</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Access-Control-Allow-Methods&#34;</span><span class="p">,</span> <span class="s">&#34;POST, GET, OPTIONS&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// We need to allow the Authorization header to be sent to the backend.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">(</span><span class="o">*</span><span class="nx">w</span><span class="p">).</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Access-Control-Allow-Headers&#34;</span><span class="p">,</span> <span class="s">&#34;*&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">(</span><span class="o">*</span><span class="nx">w</span><span class="p">).</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Access-Control-Max-Age&#34;</span><span class="p">,</span> <span class="s">&#34;86400&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div></li>
-</ul>
-<p>Enabling <code>no-cors</code> mode in <code>fetch</code> will prevent from accessing the response, which you don&rsquo;t want.</p>
-<p>Adding <code>Access-Control-Allow-Origin: *</code> header in http response on web server side is not safe. When the &ldquo;Access-Control-Allow-Origin&rdquo; header is set to &ldquo;*&rdquo;, it means that any website, regardless of its origin, can make <strong>cross-origin</strong> requests to the server and access its resources. This opens up the server to potential attacks, including cross-site scripting (XSS) and cross-site request forgery (CSRF).</p>
-<h2 id="2-why-need-access-control-allow-origin-header">2. Why need <code>Access-Control-Allow-Origin</code> header</h2>
-<p>假设您有一个运行在 <code>https://api.myserver.com</code> 上的后端 API，和两个前端应用，分别运行在 <code>https://myapp.com</code> 和 <code>https://anotherapp.com</code> 上。您希望 <code>https://myapp.com</code> 能够访问您的后端 API，但不希望 <code>https://anotherapp.com</code> 或其他任何网站能够这样做。</p>
-<p><strong>不使用 CORS 的情况</strong></p>
-<p>如果不实施任何 CORS 策略，那么浏览器的同源策略（SOP）默认会阻止来自 <code>https://myapp.com</code> 的前端应用调用 <code>https://api.myserver.com</code> 上的 API。这是因为这两个 URL 有不同的源（不同的域名），所以浏览器会出于安全考虑阻止这样的请求。</p>
-<p><strong>使用 <code>Access-Control-Allow-Origin: *</code> 的情况</strong></p>
-<p>如果在您的后端服务器上设置 <code>Access-Control-Allow-Origin</code> 为 <code>*</code>，那么任何网站都可以请求您的 API。在这种情况下，<code>https://myapp.com</code> 和 <code>https://anotherapp.com</code> 以及任何其他网站都能够访问您的 API。虽然这样做方便了跨域访问，但同时也增加了安全风险，因为恶意网站也可以访问您的 API。</p>
-<p><strong>使用具体域名的情况</strong></p>
-<p>理想的做法是在后端服务器上设置 <code>Access-Control-Allow-Origin</code> 为 <code>https://myapp.com</code>。这样，只有来自 <code>https://myapp.com</code> 的请求被允许访问您的 API，而来自 <code>https://anotherapp.com</code> 或任何其他网站的请求都会被浏览器阻止。这种方式既允许了您需要的跨域访问，又保证了较高的安全性。</p>
-<h2 id="3-why-access-control-allow-origin--could-be-insecure">3. Why <code>Access-Control-Allow-Origin: *</code> could be insecure</h2>
-<h2 id="31-reasons">3.1. Reasons</h2>
-<p>Suppose there is a user who is logged into their banking website, which is hosted on <a href="https://bank.example.com">https://bank.example.com</a>. This means there is authentication cookie (probably a session_id) stored on the user&rsquo;s browser.</p>
-<p>Now, suppose an attacker creates a malicious website called <a href="https://evil.com">https://evil.com</a> and manages to trick a user into visiting it.</p>
-<p>The attacker&rsquo;s JavaScript code running on <a href="https://evil.com">https://evil.com</a> could make a <strong>cross-origin request</strong> to the banking website&rsquo;s API (<a href="https://bank.example.com/api/userdata">https://bank.example.com/api/userdata</a>) <strong>on behalf of the user&rsquo;s browser</strong>. If the user&rsquo;s browser does not enforce strict same-origin policy, or the server set header <code>Access-Control-Allow-Origin: *</code> in response, which mean the browser will allow this request to be sent.</p>
-<blockquote>
-<p>If the user has an authentication cookie for the legitimate site, the cookies will be sent along with the request. So the malicious site can perform transactions in the legitimate site on behalf of the user, <strong>despite not having direct access</strong> to the authentication cookie.</p>
-</blockquote>
-<h3 id="32-questions">3.2. Questions</h3>
-<p><strong>How does the server know where does the http request come from</strong>, e.g.,  <a href="https://evil.com/">https://evil.com</a> or <a href="https://bank.example.com">https://bank.example.com</a>:</p>
-<p>Through the <strong><code>Origin</code> header</strong> included in the request&rsquo;s headers, the <strong><code>Origin</code> header</strong> will be added by the web browser automatically:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="err">Origin: https://evil.com
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>Could the hacker spoof the <code>Origin</code> header</strong> from <code>Origin: https://evil.com</code> to <code>Origin: https://bank.example.com</code>?</p>
-<p>Browsers are in control of setting the <code>Origin</code> header, and <strong>users can&rsquo;t override this value.</strong> So you won&rsquo;t see the <code>Origin</code> header spoofed from a browser. A malicious user could craft a curl request that manually sets the <code>Origin</code> header, but this request would come from outside a browser, and may not have browser-specific info (such as cookies).</p>
-<blockquote>
-<p>Remember: The <code>Access-Control-Allow-Origin</code> header in CORS only dictates which origins should be allowed to make cross-origin requests. Don&rsquo;t rely on it for anything more. <a href="https://stackoverflow.com/a/21058346/16317008">source </a></p>
-</blockquote>
-<h2 id="4-cors-vs-sop">4. CORS vs SOP</h2>
+</div><h2 id="3-cors-vs-sop">3. CORS vs SOP</h2>
 <p>The Same-Origin Policy (SOP) is a security feature <strong>enforced by web browsers</strong> that restricts web pages (javascript) from interacting with resources (such as making requests or accessing data) from different origins.</p>
 <p><strong>CORS allows servers</strong> to specify which origins are allowed to access their resources, even if they are from different origins. It provides a set of HTTP headers that the server includes in its responses to explicitly permit cross-origin requests from specific origins.</p>
-<h2 id="5-same-origin-policy">5. Same-origin policy</h2>
-<h3 id="51-同源策略的关键点">5.1. 同源策略的关键点</h3>
-<ol>
-<li>
-<p><strong>限制数据读取</strong>：同源策略主要限制一个网页从不同源的服务器读取数据。这意味着一个网页上的脚本不能读取或操作另一个源的网页内容或响应数据。</p>
-</li>
-<li>
-<p><strong>不阻止发送请求</strong>：尽管同源策略阻止读取不同源的数据，但它并不阻止向不同源发送请求。这意味着，脚本可以向任何源发送请求，例如提交表单或发起 AJAX 请求。</p>
-</li>
-<li>
-<p><strong>安全和隐私</strong>：这种策略的目的是保护用户数据的安全和隐私，防止恶意网站访问或操作用户在其他网站上的敏感数据。</p>
-</li>
-</ol>
-<h3 id="52-例子">5.2. 例子</h3>
-<p>假设 Alice 在 <code>https://www.alicebank.com</code> 上登录了她的银行账户。然后，她访问了一个恶意网站 <code>https://www.badguy.com</code>。这个恶意网站包含一个脚本，尝试通过 AJAX 向 <code>https://www.alicebank.com</code> 发送请求。</p>
-<ul>
-<li>
-<p><strong>发送请求是允许的</strong>：恶意脚本可以向 <code>https://www.alicebank.com</code> 发送请求，这不违反同源策略。</p>
-</li>
-<li>
-<p><strong>读取响应受限</strong>：虽然恶意脚本发送了请求，但由于同源策略，它不能读取来自 <code>https://www.alicebank.com</code> 的响应数据。因此，Alice 的银行数据（如账户余额和交易信息）对于 <code>https://www.badguy.com</code> 来说是不可见的，从而保护了其安全。</p>
-</li>
-</ul>
-<p>总的来说，同源策略是一种安全机制，它允许向任何源发送请求，但限制了从其他源读取数据，从而保护用户免受跨源读取攻击的威胁。</p>
+<p>References:</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">Cross-Origin Resource Sharing (CORS) - HTTP | MDN</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy">Same-origin policy - Web security | MDN</a></p>
 
     </div>
 

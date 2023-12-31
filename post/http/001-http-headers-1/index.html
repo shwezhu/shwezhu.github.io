@@ -52,7 +52,7 @@ Request headers contain more information about the resource to be fetched, or ab
 <meta itemprop="description" content="0. Header types Headers can be grouped according to their contexts:
 Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport."><meta itemprop="datePublished" content="2023-10-26T09:58:10+00:00" />
 <meta itemprop="dateModified" content="2023-10-26T09:58:10+00:00" />
-<meta itemprop="wordCount" content="1756">
+<meta itemprop="wordCount" content="1653">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="HTTP Headers (1)"/>
 <meta name="twitter:description" content="0. Header types Headers can be grouped according to their contexts:
 Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport."/>
@@ -187,9 +187,10 @@ Request headers contain more information about the resource to be fetched, or ab
 </ul>
 <p>HTML provides no way to generate JSON from form data, learn more: <a href="https://davidzhu.xyz/post/http/008-form-post-query-string/#4-form-data-restriction">Form Data &amp; Query String - David&rsquo;s Blog</a></p>
 <h3 id="2-access-control-allow-origin">2. <code>Access-Control-Allow-Origin</code></h3>
-<p>Adding <code>Access-Control-Allow-Origin: *</code> header in http response on web server side is not safe. When the &ldquo;Access-Control-Allow-Origin&rdquo; header is set to &ldquo;*&rdquo;, it means that any website, regardless of its origin, can make <strong>cross-origin</strong> requests to the server and access its resources. This opens up the server to potential attacks, including cross-site scripting (XSS) and cross-site request forgery (CSRF).</p>
-<p>The Same-Origin Policy (SOP) is a security feature <strong>enforced by web browsers</strong> that restricts web pages (javascript) from interacting with resources (such as making requests or accessing data) from different origins.</p>
-<p><strong>CORS allows servers</strong> to specify which origins are allowed to access their resources, even if they are from different origins. It provides a set of HTTP headers that the server includes in its responses to explicitly permit cross-origin requests from specific origins.</p>
+<blockquote>
+<p><code>Access-Control-Allow-Origin</code> header allows servers to specify which origins <strong>are allowed to access their resources</strong>, even if they are from different origins.</p>
+</blockquote>
+<p>Learn more: <a href="https://davidzhu.xyz/post/http/003-cors-sop/">Cross-origin Request HTTP - David&rsquo;s Blog</a></p>
 <h3 id="3-location">3. <code>Location</code></h3>
 <p>The <strong><code>Location</code></strong> response header indicates the URL to redirect a page to. It only provides a meaning when served with a <code>3xx</code> (redirection) or <code>201</code> (created) status response.</p>
 <div class="highlight"><div class="chroma">
