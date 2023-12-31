@@ -103,3 +103,9 @@ Cloudflare only allows the following ports:
 8443
 
 Very easy, you don't need to do anything on Cloudflare, just allow the port on your server. Then you can access your website with `https://your_domain:port`. And your traffic will be encrypted by Cloudflare. 
+
+Learn more:
+
+[How to allow custom port - Website, Application, Performance / Security - Cloudflare Community](https://community.cloudflare.com/t/how-to-allow-custom-port/175855)
+
+[Network ports · Cloudflare Fundamentals docs](https://developers.cloudflare.com/fundamentals/reference/network-ports/)
