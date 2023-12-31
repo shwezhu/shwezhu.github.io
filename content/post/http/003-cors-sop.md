@@ -26,7 +26,7 @@ CORS is a feature built into browsers for added security. **It prevents any rand
 
 但是, 有了 same-origin policy 限制, 那么这个请求就不会被浏览器发送出去, 因为这个请求的 origin 和你银行网站的 origin 不一样, 所以浏览器会阻止这个请求. Origin 是浏览器自动添加的请求头, 你不能修改它. Origin 包括三部分: 协议, 域名, 端口. 上面的例子 origin 就是 `http://localhost:5173` 和 `http://localhost:8080`, 前端页面的 js 代码是在 `http://localhost:5173` 运行的, 所以它的 origin 是 `http://localhost:5173`, 而后端的 API 是在 `http://localhost:8080` 运行的, 所以它的 origin 是 `http://localhost:8080`. 
 
-所以理论上来说, 如果你的后端服务器不允许CORS, 那么除了跟你后端服务器同源(Origin)的前端页面, 其他的前端页面都不能在浏览器访问你的后端 API. 当然你可以在终端使用 curl 命令访问你的后端 API, 因为 curl 命令不是浏览器, 它不会自动添加 origin 请求头. 另外 React 的 create-react-app 也有一个 proxy 功能, 可以让你在开发环境下绕过 CORS 限制, 但是这个功能只在开发环境下有效, 生产环境下还是要你自己配置后端服务器的 CORS.
+所以理论上来说, 如果你的后端服务器不允许CORS, 那么除了跟你后端服务器同源(Origin)的前端页面, 其他的前端页面都不能在浏览器访问你的后端 API. 当然你可以在终端使用 curl 命令访问你的后端 API, 因为 curl 命令不是浏览器, 它不会自动添加 origin 请求头. 另外 React 的 create-react-app 也有一个 proxy 功能, 可以让你在开发环境下绕过 CORS 限制, 但是这个代理功能**只在开发环境下有效**, 生产环境下还是要你自己配置后端服务器的 CORS.
 
 ## 2. How to fix CORS issue
 
