@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="David" /><meta name="description" content="1. Structure 2. Capture filter 2.1. Selcet netowk interface en0 Physical network interface utun0~4 VIrtual netwrok interface used for tunneling, learn more: Working with TUN Device on MacOS - David&amp;rsquo;s Blog loopback interface: 127.0.0.1 When you run a echo server and client on your local machine, you should select the loopback interface, not the en0 interface. 2.2. Specify filter rules Filter by port and protocol:
-1 tcp port 9000 Learn more: CaptureFilters" />
+1 port 9000 Wireshark can only capture some specific ports that for HTTP package by default, so if you gonna capture HTTP package, make sure use the correct ports or goto settings to change the default ports." />
 
 
 
@@ -42,7 +42,7 @@
 
 <meta property="og:title" content="Wireshark Basics" />
 <meta property="og:description" content="1. Structure 2. Capture filter 2.1. Selcet netowk interface en0 Physical network interface utun0~4 VIrtual netwrok interface used for tunneling, learn more: Working with TUN Device on MacOS - David&rsquo;s Blog loopback interface: 127.0.0.1 When you run a echo server and client on your local machine, you should select the loopback interface, not the en0 interface. 2.2. Specify filter rules Filter by port and protocol:
-1 tcp port 9000 Learn more: CaptureFilters" />
+1 port 9000 Wireshark can only capture some specific ports that for HTTP package by default, so if you gonna capture HTTP package, make sure use the correct ports or goto settings to change the default ports." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/networking/001-wireshark/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-09-13T16:52:30+00:00" />
@@ -50,12 +50,12 @@
 
 <meta itemprop="name" content="Wireshark Basics">
 <meta itemprop="description" content="1. Structure 2. Capture filter 2.1. Selcet netowk interface en0 Physical network interface utun0~4 VIrtual netwrok interface used for tunneling, learn more: Working with TUN Device on MacOS - David&rsquo;s Blog loopback interface: 127.0.0.1 When you run a echo server and client on your local machine, you should select the loopback interface, not the en0 interface. 2.2. Specify filter rules Filter by port and protocol:
-1 tcp port 9000 Learn more: CaptureFilters"><meta itemprop="datePublished" content="2023-09-13T16:52:30+00:00" />
+1 port 9000 Wireshark can only capture some specific ports that for HTTP package by default, so if you gonna capture HTTP package, make sure use the correct ports or goto settings to change the default ports."><meta itemprop="datePublished" content="2023-09-13T16:52:30+00:00" />
 <meta itemprop="dateModified" content="2023-09-13T16:52:30+00:00" />
-<meta itemprop="wordCount" content="735">
+<meta itemprop="wordCount" content="734">
 <meta itemprop="keywords" content="networking," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Wireshark Basics"/>
 <meta name="twitter:description" content="1. Structure 2. Capture filter 2.1. Selcet netowk interface en0 Physical network interface utun0~4 VIrtual netwrok interface used for tunneling, learn more: Working with TUN Device on MacOS - David&rsquo;s Blog loopback interface: 127.0.0.1 When you run a echo server and client on your local machine, you should select the loopback interface, not the en0 interface. 2.2. Specify filter rules Filter by port and protocol:
-1 tcp port 9000 Learn more: CaptureFilters"/>
+1 port 9000 Wireshark can only capture some specific ports that for HTTP package by default, so if you gonna capture HTTP package, make sure use the correct ports or goto settings to change the default ports."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -190,20 +190,14 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">tcp port <span class="m">9000</span>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">port <span class="m">9000</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Learn more: <a href="https://wiki.wireshark.org/CaptureFilters">CaptureFilters</a></p>
-<blockquote>
-<p>Wireshark can only capture some specific ports that for HTTP package by default, so if you gonna capture HTTP package, make sure use the correct ports ir goto settings to change the default ports. If you ignore this, like to capture HTTP on port 9000, you probably jut get TCP package.</p>
-<p>You can find the allowed HTTP port on Preferences-&gt;Protocols-&gt;HTTP</p>
-</blockquote>
+</div><p>Wireshark can only capture some specific ports that for HTTP package by default, so if you gonna capture HTTP package, make sure use the correct ports or goto settings to change the default ports. If you ignore this, like to capture HTTP on port 9000, you probably jut get TCP package.</p>
+<p>You can find the allowed HTTP port on <code>Preferences-&gt;Protocols-&gt;HTTP</code></p>
+<p>Learn more: <a href="https://wiki.wireshark.org/CaptureFilters">CaptureFilters - Wireshark</a></p>
 <h2 id="3-display-filter">3. Display filter</h2>
-<p><a href="https://wiki.wireshark.org/DisplayFilters">DisplayFilters</a></p>
-<p>References:</p>
-<ul>
-<li><a href="https://wiki.wireshark.org/CaptureFilters">CaptureFilters - Wireshark</a></li>
-</ul>
+<p>Learn more: <a href="https://wiki.wireshark.org/DisplayFilters">DisplayFilters</a></p>
 <h2 id="4-practical-examples">4. Practical examples</h2>
 <p>Client:</p>
 <div class="highlight"><div class="chroma">

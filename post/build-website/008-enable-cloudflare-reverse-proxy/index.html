@@ -55,7 +55,7 @@ And you will get instructions for updating your nameserver of your domain." />
 Add your domain to Cloudflare Create and install TLS certificate to your server 1.1. Add your domain to Cloudflare Go to this website: https://dash.cloudflare.com/
 And you will get instructions for updating your nameserver of your domain."><meta itemprop="datePublished" content="2023-11-15T20:09:22+00:00" />
 <meta itemprop="dateModified" content="2023-11-15T20:09:22+00:00" />
-<meta itemprop="wordCount" content="494">
+<meta itemprop="wordCount" content="568">
 <meta itemprop="keywords" content="build website," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Coudflare TLS encryption 520 Error Code &amp; too Many Redirections"/>
 <meta name="twitter:description" content="1. Enable end-to-end encryption with Cloudflare Getting a official TLS certificate is too expensive, so I decide to use Cloudflare proxied DNS records enable TLS connection. There is an article talks how it works. There are two steps to add your domain to Cloudflare:
 Add your domain to Cloudflare Create and install TLS certificate to your server 1.1. Add your domain to Cloudflare Go to this website: https://dash.cloudflare.com/
@@ -157,6 +157,7 @@ And you will get instructions for updating your nameserver of your domain."/>
           </ul>
         </li>
         <li><a href="#2-change-vps">2. Change VPS</a></li>
+        <li><a href="#3-allow-custom-port">3. Allow custom port</a></li>
       </ul>
     </li>
   </ul>
@@ -260,6 +261,16 @@ And you will get instructions for updating your nameserver of your domain."/>
 <p>Cloudflare serves as a <strong>reverse proxy</strong>, directing all traffic for the specified proxied domain to the target IP address.</p>
 </blockquote>
 <p><img src="/008-enable-cloudflare-reverse-proxy/cc.png" alt="cc"></p>
+<h2 id="3-allow-custom-port">3. Allow custom port</h2>
+<p>The default port of https is 443. If you want to use other ports, you need to allow them with firewall first on your server.</p>
+<p>Cloudflare only allows the following ports:</p>
+<p>443
+2053
+2083
+2087
+2096
+8443</p>
+<p>Very easy, you don&rsquo;t need to do anything on Cloudflare, just allow the port on your server. Then you can access your website with <code>https://your_domain:port</code>. And your traffic will be encrypted by Cloudflare.</p>
 
     </div>
 

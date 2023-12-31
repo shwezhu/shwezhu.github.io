@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Cross-origin Request HTTP">
 <meta itemprop="description" content="1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight"><meta itemprop="datePublished" content="2023-10-06T20:28:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-06T20:28:50+00:00" />
-<meta itemprop="wordCount" content="1154">
+<meta itemprop="wordCount" content="1165">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Cross-origin Request HTTP"/>
 <meta name="twitter:description" content="1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight"/>
 
@@ -180,7 +180,7 @@
 <p>所以理论上来说, 如果你的后端服务器不允许CORS, 那么除了跟你后端服务器同源(Origin)的前端页面, 其他的前端页面都不能在浏览器访问你的后端 API. 当然你可以在终端使用 curl 命令访问你的后端 API, 因为 curl 命令不是浏览器, 它不会自动添加 origin 请求头. 另外 React 的 create-react-app 也有一个 proxy 功能, 可以让你在开发环境下绕过 CORS 限制, 但是这个功能只在开发环境下有效, 生产环境下还是要你自己配置后端服务器的 CORS.</p>
 <h2 id="2-how-to-fix-cors-issue">2. How to fix CORS issue</h2>
 <h3 id="21-简单场景">2.1. 简单场景</h3>
-<p>解决的办法很简单, 在后端 API 的响应头里添加 <code>Access-Control-Allow-Origin: *</code> 就可以了. 但这仅限于一些简单的场景, 如 GET 请求. 可参考:</p>
+<p>解决的办法很简单, 在后端 API 的响应头里添加 <code>Access-Control-Allow-Origin: *</code> 就可以了. 但这仅限于一些简单的场景, 如 GET 请求. 可参考: <a href="https://www.stackhawk.com/blog/golang-cors-guide-what-it-is-and-how-to-enable-it/">Golang CORS Guide: What It Is and How to Enable It</a></p>
 <h3 id="22-复杂场景">2.2. 复杂场景</h3>
 <p>如果你的 API 是 POST 请求, 并且需要带上一些请求头, 那么你可能还需要在响应头里添加 <code>Access-Control-Allow-Headers: *</code>, 这样才能让浏览器发送 POST 请求, 并且带上你需要的请求头. (具体规定可参考: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS</a>) 这也是为什么在有的前端JS fetch代码里, 你后端简单设置 <code>Access-Control-Allow-Origin: *</code> 就可以了, 但是有的并不会成功.</p>
 <p>除了设置上面两个响应头, 你还需要处理 OPTIONS 请求, 这是因为浏览器在发送跨域请求时, 会先发送一个 OPTIONS 请求, 用来询问服务器是否允许跨域请求, 如果服务器不允许, 那么浏览器就不会发送真正的请求.</p>
