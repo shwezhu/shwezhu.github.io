@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Common used commands 1 2 3 4 5 6 7 8 9 10 11 $ sudo apt install nginx # check if nginx is running $ systemctl status nginx # stop nginx service $ sudo systemctl stop nginx # start nginx service $ sudo systemctl start nginx # restart $ sudo systemctl restart nginx # make configuration changes, Nginx can reload without dropping connections: $ sudo systemctl reload nginx By default, Nginx is configured to start automatically when the server boots." />
+<meta name="author" content="David" /><meta name="description" content="1. Common used commands 1 2 3 4 5 6 $apt install nginx # ubuntu $apk add nginx # Alpine Linux # start $sudo systemctl start/stop/restart/status nginx $sudo service nginx start/stop/restart/status 2. Basic configurations 2.1. Configuration file 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 $vi /etc/nginx/http.d/default.conf # Alpine Linux server { listen 2087 ssl; server_name shaowenzhu.top www.shaowenzhu.top; ssl_certificate /root/tls/cert.pem; ssl_certificate_key /root/tls/cert.key; location / { root /var/www/html; try_files $uri $uri/ /index." />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="Nginx" />
-<meta property="og:description" content="1. Common used commands 1 2 3 4 5 6 7 8 9 10 11 $ sudo apt install nginx # check if nginx is running $ systemctl status nginx # stop nginx service $ sudo systemctl stop nginx # start nginx service $ sudo systemctl start nginx # restart $ sudo systemctl restart nginx # make configuration changes, Nginx can reload without dropping connections: $ sudo systemctl reload nginx By default, Nginx is configured to start automatically when the server boots." />
+<meta property="og:description" content="1. Common used commands 1 2 3 4 5 6 $apt install nginx # ubuntu $apk add nginx # Alpine Linux # start $sudo systemctl start/stop/restart/status nginx $sudo service nginx start/stop/restart/status 2. Basic configurations 2.1. Configuration file 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 $vi /etc/nginx/http.d/default.conf # Alpine Linux server { listen 2087 ssl; server_name shaowenzhu.top www.shaowenzhu.top; ssl_certificate /root/tls/cert.pem; ssl_certificate_key /root/tls/cert.key; location / { root /var/www/html; try_files $uri $uri/ /index." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/build-website/007-nginx/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-09T14:01:50+00:00" />
 <meta property="article:modified_time" content="2023-10-09T14:01:50+00:00" />
 
 <meta itemprop="name" content="Nginx">
-<meta itemprop="description" content="1. Common used commands 1 2 3 4 5 6 7 8 9 10 11 $ sudo apt install nginx # check if nginx is running $ systemctl status nginx # stop nginx service $ sudo systemctl stop nginx # start nginx service $ sudo systemctl start nginx # restart $ sudo systemctl restart nginx # make configuration changes, Nginx can reload without dropping connections: $ sudo systemctl reload nginx By default, Nginx is configured to start automatically when the server boots."><meta itemprop="datePublished" content="2023-10-09T14:01:50+00:00" />
+<meta itemprop="description" content="1. Common used commands 1 2 3 4 5 6 $apt install nginx # ubuntu $apk add nginx # Alpine Linux # start $sudo systemctl start/stop/restart/status nginx $sudo service nginx start/stop/restart/status 2. Basic configurations 2.1. Configuration file 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 $vi /etc/nginx/http.d/default.conf # Alpine Linux server { listen 2087 ssl; server_name shaowenzhu.top www.shaowenzhu.top; ssl_certificate /root/tls/cert.pem; ssl_certificate_key /root/tls/cert.key; location / { root /var/www/html; try_files $uri $uri/ /index."><meta itemprop="datePublished" content="2023-10-09T14:01:50+00:00" />
 <meta itemprop="dateModified" content="2023-10-09T14:01:50+00:00" />
-<meta itemprop="wordCount" content="761">
+<meta itemprop="wordCount" content="214">
 <meta itemprop="keywords" content="build website,cs basics," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Nginx"/>
-<meta name="twitter:description" content="1. Common used commands 1 2 3 4 5 6 7 8 9 10 11 $ sudo apt install nginx # check if nginx is running $ systemctl status nginx # stop nginx service $ sudo systemctl stop nginx # start nginx service $ sudo systemctl start nginx # restart $ sudo systemctl restart nginx # make configuration changes, Nginx can reload without dropping connections: $ sudo systemctl reload nginx By default, Nginx is configured to start automatically when the server boots."/>
+<meta name="twitter:description" content="1. Common used commands 1 2 3 4 5 6 $apt install nginx # ubuntu $apk add nginx # Alpine Linux # start $sudo systemctl start/stop/restart/status nginx $sudo service nginx start/stop/restart/status 2. Basic configurations 2.1. Configuration file 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 $vi /etc/nginx/http.d/default.conf # Alpine Linux server { listen 2087 ssl; server_name shaowenzhu.top www.shaowenzhu.top; ssl_certificate /root/tls/cert.pem; ssl_certificate_key /root/tls/cert.key; location / { root /var/www/html; try_files $uri $uri/ /index."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -143,12 +143,10 @@
     <li>
       <ul>
         <li><a href="#1-common-used-commands">1. Common used commands</a></li>
-        <li><a href="#2-why-use-nginx">2. Why use Nginx</a></li>
-        <li><a href="#3-use-cases-of-nginx">3. Use cases of Nginx</a></li>
-        <li><a href="#4-config-nginx">4. Config Nginx</a>
+        <li><a href="#2-basic-configurations">2. Basic configurations</a>
           <ul>
-            <li><a href="#41-setting-up-virtual-servers">4.1. Setting up virtual servers</a></li>
-            <li><a href="#42-example">4.2. Example</a></li>
+            <li><a href="#21-configuration-file">2.1. Configuration file</a></li>
+            <li><a href="#22-static-website">2.2. Static website</a></li>
           </ul>
         </li>
       </ul>
@@ -161,135 +159,24 @@
       <h2 id="1-common-used-commands">1. Common used commands</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo apt install nginx
-</span></span><span class="line"><span class="cl"><span class="c1"># check if nginx is running</span>
-</span></span><span class="line"><span class="cl">$ systemctl status nginx 
-</span></span><span class="line"><span class="cl"><span class="c1"># stop nginx service</span>
-</span></span><span class="line"><span class="cl">$ sudo systemctl stop nginx
-</span></span><span class="line"><span class="cl"><span class="c1"># start nginx service</span>
-</span></span><span class="line"><span class="cl">$ sudo systemctl start nginx
-</span></span><span class="line"><span class="cl"><span class="c1"># restart</span>
-</span></span><span class="line"><span class="cl">$ sudo systemctl restart nginx
-</span></span><span class="line"><span class="cl"><span class="c1"># make configuration changes, Nginx can reload without dropping connections:</span>
-</span></span><span class="line"><span class="cl">$ sudo systemctl reload nginx
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>By default, Nginx is configured to start automatically when the server boots. If this is not what you want, you can disable this behavior by typing:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo systemctl disable nginx
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>To re-enable the service to start up at boot, you can type:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo systemctl <span class="nb">enable</span> nginx
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="2-why-use-nginx">2. Why use Nginx</h2>
-<p>If you stop nginx service and there is no other web server is running on your server (listening and responding <code>80</code> port), then when you browse <code>http://your_server_ip</code>, it will timeout.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo systemctl stop nginx
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>If you start nginx service, then when you browse <code>http://your_server_ip</code>, you will get a welcome to Nginx web page.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo systemctl start nginx
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="3-use-cases-of-nginx">3. Use cases of Nginx</h2>
-<p>Load Balancing: Nginx can distribute incoming HTTP requests across multiple backend servers to achieve load balancing. For example, if you have multiple web servers running on different AWS EC2 servers, Nginx can evenly distribute incoming requests among them, improving overall performance and ensuring high availability.</p>
-<p><a href="https://www.youtube.com/watch?v=RXXRguaHZs0">Reverse Proxy</a>: Nginx can act as a reverse proxy, receiving HTTP requests from clients and forwarding them to backend servers. This provides an additional layer of security by hiding the internal server details and allowing you to perform tasks such as SSL termination, caching, and request filtering.</p>
-<blockquote>
-<p>A <strong>reverse proxy</strong> is a method used to achieve <strong>load balancing</strong>, which is the ultimate objective. Load balancing, however, can also be accomplished using alternative methods apart from a reverse proxy.</p>
-</blockquote>
-<h2 id="4-config-nginx">4. Config Nginx</h2>
-<h3 id="41-setting-up-virtual-servers">4.1. Setting up virtual servers</h3>
-<p>A virtual server is defined by a <code>server</code> directive in the <code>http</code> context, it is possible to add multiple <code>server</code> in the <code>http</code> context to define multiple virtual servers. for example:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">http</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1"># Server configuration
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1"># Server configuration
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nv">$apt</span> install nginx <span class="c1"># ubuntu</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$apk</span> add nginx <span class="c1"># Alpine Linux</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># start</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$sudo</span> systemctl start/stop/restart/status nginx
+</span></span><span class="line"><span class="cl"><span class="nv">$sudo</span> service nginx start/stop/restart/status
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>The <code>server</code> configuration block usually includes a <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#listen">listen</a> directive to specify the IP address and port (or Unix domain socket and path) on which the server listens for requests. Both IPv4 and IPv6 addresses are accepted; enclose IPv6 addresses in square brackets.</p>
-<p>The example below shows configuration of a server that listens on IP address 127.0.0.1 and port 8080:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">server</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kn">listen</span> <span class="n">127.0.0.1</span><span class="p">:</span><span class="mi">8080</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># Additional server configuration
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># or
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">server</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kn">listen</span>      <span class="mi">80</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="kn">server_name</span> <span class="s">example.org</span> <span class="s">www.example.org</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">#...
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h3 id="42-example">4.2. Example</h3>
-<p><code>server</code>: The <code>server directive</code> is used to define the configuration for a virtual server. It specifies the domain name, IP address, and port on which the server will listen for incoming requests. You can have multiple server blocks in the http context to define different virtual servers with their own configurations.</p>
-<p><code>location</code>: The <code>location directive</code> is used to define how Nginx handles requests for specific URL patterns.</p>
-<p><code>upstream</code>: The <code>upstream directive</code> is used to define a group of servers that Nginx can distribute requests to. It is primarily used for configuring load balancing.</p>
-<p>To demonstrate, I wrote a coplicated example:</p>
+</div><h2 id="2-basic-configurations">2. Basic configurations</h2>
+<h3 id="21-configuration-file">2.1. Configuration file</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -308,81 +195,52 @@
 </span><span class="lnt">14
 </span><span class="lnt">15
 </span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">http</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kn">upstream</span> <span class="s">my_servers</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">          <span class="kn">server</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">8087</span> <span class="s">weight=10</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">          <span class="kn">server</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">8088</span> <span class="s">weight=2</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">          <span class="kn">server</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">8089</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nv">$vi</span> /etc/nginx/http.d/default.conf <span class="c1"># Alpine Linux</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">#listen 80;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">#server_name example.com; # or ip
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    		<span class="kn">listen</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">80</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="kn">root</span> <span class="s">/var/www/html</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="kn">index</span> <span class="s">index.html</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="kn">proxy_pass</span> <span class="s">http://my_servers</span><span class="p">;</span> <span class="c1"># &#39;my_servers&#39; is the name of upstream
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">server <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      listen <span class="m">2087</span> ssl<span class="p">;</span>
+</span></span><span class="line"><span class="cl">      server_name shaowenzhu.top www.shaowenzhu.top<span class="p">;</span>
+</span></span><span class="line"><span class="cl">      ssl_certificate /root/tls/cert.pem<span class="p">;</span>
+</span></span><span class="line"><span class="cl">      ssl_certificate_key /root/tls/cert.key<span class="p">;</span>
+</span></span><span class="line"><span class="cl">      location / <span class="o">{</span>
+</span></span><span class="line"><span class="cl">          root /var/www/html<span class="p">;</span>
+</span></span><span class="line"><span class="cl">          try_files <span class="nv">$uri</span> <span class="nv">$uri</span>/ /index.html<span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="o">}</span>
+</span></span><span class="line"><span class="cl">      <span class="c1"># You may need this to prevent return 404 recursion.</span>
+</span></span><span class="line"><span class="cl">      <span class="nv">location</span> <span class="o">=</span> /404.html <span class="o">{</span>
+</span></span><span class="line"><span class="cl">              internal<span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>You can write a simpe <code>server</code> add it into the <code>http</code> in <code>nginx.conf</code>:</p>
+</div><p>Because the 443 port is used by my first server, so I use 2087 port for my second server. I use Cloudflare for reverse proxy, Cloudflare only allows the following ports: 443, 2053, 2083, 2087, 2096, 8443. So I choose 2087 port for this app.</p>
+<blockquote>
+<p>Don&rsquo;t forget allow 2087 port on your server firewall with command <code>sudo ufw allow 2087</code>.</p>
+</blockquote>
+<h3 id="22-static-website">2.2. Static website</h3>
+<p>Then access my website by <code>https://shaowenzhu.top:2087/</code> will get the static html file under <code>/var/www/html</code>.</p>
+<p>With Vite, you can use <code>vite build</code> to build your project, then copy the <code>dist</code> folder to <code>/var/www/html</code>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">server</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">      <span class="c1">#listen 80;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="c1">#server_name example.com; # or ip
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="kn">listen</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">80</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">      <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">          <span class="kn">root</span> <span class="s">/var/www/html</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">          <span class="kn">index</span> <span class="s">index.html</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">      <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ nginx -s reload
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">➜  /etc tree -L <span class="m">3</span> /var/www/html
+</span></span><span class="line"><span class="cl">/var/www/html
+</span></span><span class="line"><span class="cl">├── assets
+</span></span><span class="line"><span class="cl">│   └── index-r4STm7R-.js
+</span></span><span class="line"><span class="cl">├── index.html
+</span></span><span class="line"><span class="cl">└── vite.svg
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Then you need add a simple html file under the root path of this server which is  <code>/var/www/html</code> we defined above, then you can access the webpage that you wrote at<code>/var/www/html/index.html</code> by browse <code>http://18.209.22.189/</code>. Because the port is 80 we don&rsquo;t need to prevode in url here.</p>
-<blockquote>
-<p>Note: if cannot access, don&rsquo;t forget to check your firewall, both uwf and ec2 security group if your server is running on AWS.</p>
-</blockquote>
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-  <iframe src="https://www.youtube-nocookie.com/embed/sCJcusORiE8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
 </div>
-<p>Video: <a href="https://youtu.be/sCJcusORiE8?si=OFtCDNu-3gbkiy3">https://youtu.be/sCJcusORiE8?si=OFtCDNu-3gbkiy3</a>_</p>
-<p>References:</p>
-<ul>
-<li><a href="https://juejin.cn/post/6844904106541203464">https://juejin.cn/post/6844904106541203464</a></li>
-<li><a href="https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-20-04">How To Install Nginx on Ubuntu 20.04 | DigitalOcean</a></li>
-</ul>
-
     </div>
 
     <div class="post-copyright">
