@@ -32,7 +32,7 @@ CORS is a feature built into browsers for added security. **It prevents any rand
 
 ### 2.1. 简单场景
 
-解决的办法很简单, 在后端 API 的响应头里添加 `Access-Control-Allow-Origin: *` 就可以了. 但这仅限于一些简单的场景, 如 GET 请求. 可参考: 
+解决的办法很简单, 在后端 API 的响应头里添加 `Access-Control-Allow-Origin: *` 就可以了. 但这仅限于一些简单的场景, 如 GET 请求. 可参考: [Golang CORS Guide: What It Is and How to Enable It](https://www.stackhawk.com/blog/golang-cors-guide-what-it-is-and-how-to-enable-it/)
 
 ### 2.2. 复杂场景
 

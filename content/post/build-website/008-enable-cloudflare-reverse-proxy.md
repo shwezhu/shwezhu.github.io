@@ -89,3 +89,17 @@ If you changed a vps, all you need to do is to change the A record of your domai
 
 ![cc](/008-enable-cloudflare-reverse-proxy/cc.png)
 
+## 3. Allow custom port
+
+The default port of https is 443. If you want to use other ports, you need to allow them with firewall first on your server.
+
+Cloudflare only allows the following ports:
+
+443
+2053
+2083
+2087
+2096
+8443
+
+Very easy, you don't need to do anything on Cloudflare, just allow the port on your server. Then you can access your website with `https://your_domain:port`. And your traffic will be encrypted by Cloudflare. 

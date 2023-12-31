@@ -28,22 +28,18 @@ typora-root-url: ../../../static
 Filter by port and protocol:
 
 ```shell
-tcp port 9000
+port 9000
 ```
 
-Learn more: [CaptureFilters](https://wiki.wireshark.org/CaptureFilters)
+Wireshark can only capture some specific ports that for HTTP package by default, so if you gonna capture HTTP package, make sure use the correct ports or goto settings to change the default ports. If you ignore this, like to capture HTTP on port 9000, you probably jut get TCP package.  
 
-> Wireshark can only capture some specific ports that for HTTP package by default, so if you gonna capture HTTP package, make sure use the correct ports ir goto settings to change the default ports. If you ignore this, like to capture HTTP on port 9000, you probably jut get TCP package.  
->
-> You can find the allowed HTTP port on Preferences->Protocols->HTTP
+You can find the allowed HTTP port on `Preferences->Protocols->HTTP`
+
+Learn more: [CaptureFilters - Wireshark](https://wiki.wireshark.org/CaptureFilters)
 
 ## 3. Display filter
 
-[DisplayFilters](https://wiki.wireshark.org/DisplayFilters)
-
-References:
-
-- [CaptureFilters - Wireshark](https://wiki.wireshark.org/CaptureFilters)
+Learn more: [DisplayFilters](https://wiki.wireshark.org/DisplayFilters)
 
 ## 4. Practical examples 
 
