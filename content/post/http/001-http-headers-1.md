@@ -33,11 +33,9 @@ HTML provides no way to generate JSON from form data, learn more: [Form Data & Q
 
 ### 2. `Access-Control-Allow-Origin`
 
-Adding `Access-Control-Allow-Origin: *` header in http response on web server side is not safe. When the "Access-Control-Allow-Origin" header is set to "*", it means that any website, regardless of its origin, can make **cross-origin** requests to the server and access its resources. This opens up the server to potential attacks, including cross-site scripting (XSS) and cross-site request forgery (CSRF). 
+> `Access-Control-Allow-Origin` header allows servers to specify which origins **are allowed to access their resources**, even if they are from different origins. 
 
-The Same-Origin Policy (SOP) is a security feature **enforced by web browsers** that restricts web pages (javascript) from interacting with resources (such as making requests or accessing data) from different origins. 
-
-**CORS allows servers** to specify which origins are allowed to access their resources, even if they are from different origins. It provides a set of HTTP headers that the server includes in its responses to explicitly permit cross-origin requests from specific origins. 
+Learn more: [Cross-origin Request HTTP - David's Blog](https://davidzhu.xyz/post/http/003-cors-sop/)
 
 ### 3. `Location`
 
@@ -217,6 +215,3 @@ my_cooke := response.Header().Get("Set-Cookie")
 Cookie is just a header which having no doubt resides in the header of HTTP mesages, don't overthinking. 
 
 Reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies
-
-
-
