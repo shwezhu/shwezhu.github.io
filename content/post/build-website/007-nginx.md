@@ -1,6 +1,6 @@
 ---
 title: Nginx
-date: 2023-10-09 14:01:50
+date: 2023-12-30 14:01:50
 categories:
  - build website
 tags:
