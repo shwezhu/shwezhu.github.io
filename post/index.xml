@@ -6,8 +6,22 @@
     <description>Recent content in Posts on David&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 20 Dec 2023 22:50:37 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 02 Jan 2024 10:55:20 +0000</lastBuildDate>
     <atom:link href="https://davidzhu.xyz/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tricks &amp; Mistakes in Javascript</title>
+      <link>https://davidzhu.xyz/post/js/basics/001-tricks-mistakes/</link>
+      <pubDate>Tue, 02 Jan 2024 10:55:20 +0000</pubDate>
+      <guid>https://davidzhu.xyz/post/js/basics/001-tricks-mistakes/</guid>
+      <description>1. Falsy values In JavaScript, we have 6 falsy values:&#xA;false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these return false when they are evaluated.&#xA;1 2 3 4 // this just for simplicity, no this syntax if(false/0/&amp;#39;&amp;#39;/null/undefined/NaN) { console.log(&amp;#34;never executed&amp;#34;) } 2. Catching errors 2.1. Catching errors in async functions In JavaScript, try...catch blocks are designed to handle errors in synchronous code. However, they do not work as expected with asynchronous code, unless used in conjunction with async/await.</description>
+    </item>
+    <item>
+      <title>Nginx</title>
+      <link>https://davidzhu.xyz/post/build-website/007-nginx/</link>
+      <pubDate>Sat, 30 Dec 2023 14:01:50 +0000</pubDate>
+      <guid>https://davidzhu.xyz/post/build-website/007-nginx/</guid>
+      <description>1. Common used commands 1 2 3 4 5 6 $apt install nginx # ubuntu $apk add nginx # Alpine Linux # start $sudo systemctl start/stop/restart/status nginx $sudo service nginx start/stop/restart/status 2. Basic configurations 2.1. Configuration file 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 $vi /etc/nginx/http.d/default.conf # Alpine Linux server { listen 2087 ssl; server_name shaowenzhu.top www.shaowenzhu.top; ssl_certificate /root/tls/cert.pem; ssl_certificate_key /root/tls/cert.key; location / { root /var/www/html; try_files $uri $uri/ /index.</description>
+    </item>
     <item>
       <title>拍照构图技巧</title>
       <link>https://davidzhu.xyz/post/other/009-photography/</link>
@@ -16,11 +30,11 @@
       <description>1. 对角线构图 动景比较适合, 比如沙滩的海浪, 海上一群海鸥连成线, (PS. 下面这张是网图 另外也有对称线构图, 也可以找其他物体衬托, 主要看感觉, 2. 留白构</description>
     </item>
     <item>
-      <title>React Basics</title>
+      <title>React Basics &amp; Deployment</title>
       <link>https://davidzhu.xyz/post/react/001-react-basics/</link>
       <pubDate>Wed, 20 Dec 2023 19:44:22 +0000</pubDate>
       <guid>https://davidzhu.xyz/post/react/001-react-basics/</guid>
-      <description>1 2 3 4 5 npm create vite@latest name-of-your-project -- --template react # follow prompts cd &amp;lt;your new project directory&amp;gt; npm install react-router-dom localforage match-sorter sort-by npm run dev 1. Conponents rendering This process of requesting and serving UI has three steps:&#xA;Triggering a render&#xA;Initial render. Re-renders when state updates, (or one of its ancestors’) state has been updated. Once the component has been initially rendered, you can trigger further renders by updating its state with the set function.</description>
+      <description>1. Create project with Vite 1 2 3 4 npm create vite@latest name-of-your-project -- --template react cd &amp;lt;your new project directory&amp;gt; npm install react-router-dom localforage match-sorter sort-by npm run dev/npm run build The Proxy in vite.config.js just works for development mode. In production mode it doesn&amp;rsquo;t work.&#xA;The production mode means you run npm run build which will generate a dist folder. Then you can deploy that folder into your server.</description>
     </item>
     <item>
       <title>Error Handling Javascript</title>
@@ -378,13 +392,6 @@
       <pubDate>Mon, 09 Oct 2023 21:09:35 +0000</pubDate>
       <guid>https://davidzhu.xyz/post/docker/001-docker-basics/</guid>
       <description>1. Dockerfile example 1 2 3 4 5 6 7 8 9 10 11 12 13 14 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN go build -o server ENTRYPOINT [&amp;#34;./server&amp;#34;] CMD [&amp;#34;-p&amp;#34;, &amp;#34;80&amp;#34;] # docker build [--platform linux/amd64] -t shwezhu/file-server:v1.0 . # [docker push shwezhu/file-server:v1.0] # [docker pull davidzhu/file-server:v1.0] # sudo docker run -d -p 80:80 --rm shwezhu/file-server:v1.0 2. Docker commands 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 # check the output of the program running in the container $ docker logs container_name # volumes, mount the folder on the machine &amp;#39;~/root&amp;#39; to the &amp;#39;/app/root&amp;#39; dir of the container $ docker run --name file-server --rm -d -p 80:80 -v ~/root:/app/root shwezhu/file-server:v1.</description>
-    </item>
-    <item>
-      <title>Nginx</title>
-      <link>https://davidzhu.xyz/post/build-website/007-nginx/</link>
-      <pubDate>Mon, 09 Oct 2023 14:01:50 +0000</pubDate>
-      <guid>https://davidzhu.xyz/post/build-website/007-nginx/</guid>
-      <description>1. Common used commands 1 2 3 4 5 6 $apt install nginx # ubuntu $apk add nginx # Alpine Linux # start $sudo systemctl start/stop/restart/status nginx $sudo service nginx start/stop/restart/status 2. Basic configurations 2.1. Configuration file 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 $vi /etc/nginx/http.d/default.conf # Alpine Linux server { listen 2087 ssl; server_name shaowenzhu.top www.shaowenzhu.top; ssl_certificate /root/tls/cert.pem; ssl_certificate_key /root/tls/cert.key; location / { root /var/www/html; try_files $uri $uri/ /index.</description>
     </item>
     <item>
       <title>ufw vs  AWS Security Group</title>
