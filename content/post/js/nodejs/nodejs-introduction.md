@@ -3,7 +3,6 @@ title: Nodejs Intro
 date: 2023-06-11 19:45:27
 categories:
   - javascript
-  - nodejs
 tags:
   - javascript
 ---

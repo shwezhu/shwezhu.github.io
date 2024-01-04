@@ -2,9 +2,9 @@
 title: useEffect Hook in React
 date: 2023-20-26 19:49:22
 categories:
- - react
+ - front-end
 tags:
- - react
+ - front-end
 ---
 
 ## 1. When `useEffect` is called

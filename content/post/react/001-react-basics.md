@@ -2,9 +2,9 @@
 title: React Basics & Deployment
 date: 2023-12-20 19:44:22
 categories:
- - react
+ - front-end
 tags:
- - react
+ - front-end
 ---
 
 ## 1. Create project with Vite

@@ -32,6 +32,10 @@ A start line contains three parts:
 - Their *start-line* contain three elements:
   - An HTTP method, a verb (like `GET`, `PUT` or `POST`) or a noun (like HEAD or OPTIONS), that describes the action to be performed. 
 
+> GET 请求的结果可被浏览器和其他中间件(代理服务器)缓存，并且可能会被重复执行（例如，用户刷新页面时）。
+> 如果你是在用户点击某个按钮后通过 GET 请求来处理点赞功能，那么理论上，仅当用户再次点击这个按钮时，该 GET 请求才会被重新发送。如果你的前端逻辑确保了每次点击都对应一个点赞操作，那么不会因为浏览器页面刷新而导致重复提交。然而，即使是这种情况，使用 GET 请求来处理点赞动作仍然不是最佳实践，原因包括：
+> 非幂等性：点赞操作是非幂等的，因为每次操作都改变了服务器上的状态（即增加了点赞计数）。而 GET 请求应当是幂等的，即多次执行相同的请求应该具有相同的副作用。在这种情况下，多次点击按钮会导致多次点赞，违反了 GET 请求的幂等性原则。
+
 - The *request target* 
   - Usually a URL
   - Sometimes url followed by a `'?'` and **query string**: `http://example.com/?bar1=a&bar2=b`
