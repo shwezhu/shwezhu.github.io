@@ -16,9 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server.
-HTTP requests, and responses, share similar structure and are composed of:
-A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP headers specifying the request, or describing the body included in the message." />
+<meta name="author" content="David" /><meta name="description" content="1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server. HTTP requests, and responses, share similar structure and are composed of: A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP" />
 
 
 
@@ -42,24 +40,18 @@ A start-line describing the requests to be implemented, or its status of whether
 
 
 <meta property="og:title" content="HTTP Messages" />
-<meta property="og:description" content="1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server.
-HTTP requests, and responses, share similar structure and are composed of:
-A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP headers specifying the request, or describing the body included in the message." />
+<meta property="og:description" content="1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server. HTTP requests, and responses, share similar structure and are composed of: A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/http/004-http-messages/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-09-23T09:51:30+00:00" />
 <meta property="article:modified_time" content="2023-09-23T09:51:30+00:00" />
 
 <meta itemprop="name" content="HTTP Messages">
-<meta itemprop="description" content="1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server.
-HTTP requests, and responses, share similar structure and are composed of:
-A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP headers specifying the request, or describing the body included in the message."><meta itemprop="datePublished" content="2023-09-23T09:51:30+00:00" />
+<meta itemprop="description" content="1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server. HTTP requests, and responses, share similar structure and are composed of: A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP"><meta itemprop="datePublished" content="2023-09-23T09:51:30+00:00" />
 <meta itemprop="dateModified" content="2023-09-23T09:51:30+00:00" />
-<meta itemprop="wordCount" content="633">
+<meta itemprop="wordCount" content="934">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="HTTP Messages"/>
-<meta name="twitter:description" content="1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server.
-HTTP requests, and responses, share similar structure and are composed of:
-A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP headers specifying the request, or describing the body included in the message."/>
+<meta name="twitter:description" content="1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server. HTTP requests, and responses, share similar structure and are composed of: A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -181,12 +173,18 @@ A start-line describing the requests to be implemented, or its status of whether
 <h3 id="21-start-line">2.1. Start line</h3>
 <p>A start line contains three parts:</p>
 <ul>
-<li>
-<p>Their <em>start-line</em> contain three elements:</p>
+<li>Their <em>start-line</em> contain three elements:
 <ul>
 <li>An HTTP method, a verb (like <code>GET</code>, <code>PUT</code> or <code>POST</code>) or a noun (like HEAD or OPTIONS), that describes the action to be performed.</li>
 </ul>
 </li>
+</ul>
+<blockquote>
+<p>GET 请求的结果可被浏览器和其他中间件(代理服务器)缓存，并且可能会被重复执行（例如，用户刷新页面时）。
+如果你是在用户点击某个按钮后通过 GET 请求来处理点赞功能，那么理论上，仅当用户再次点击这个按钮时，该 GET 请求才会被重新发送。如果你的前端逻辑确保了每次点击都对应一个点赞操作，那么不会因为浏览器页面刷新而导致重复提交。然而，即使是这种情况，使用 GET 请求来处理点赞动作仍然不是最佳实践，原因包括：
+非幂等性：点赞操作是非幂等的，因为每次操作都改变了服务器上的状态（即增加了点赞计数）。而 GET 请求应当是幂等的，即多次执行相同的请求应该具有相同的副作用。在这种情况下，多次点击按钮会导致多次点赞，违反了 GET 请求的幂等性原则。</p>
+</blockquote>
+<ul>
 <li>
 <p>The <em>request target</em></p>
 <ul>
