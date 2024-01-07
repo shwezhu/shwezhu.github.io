@@ -8,6 +8,10 @@ tags:
   - javascript
 ---
 
+## 0. Minor tricks
+
+> It is useful to remember which operations on arrays mutate them, and which don’t. For example, `push`, `pop`, `reverse`, and sort will mutate the original array, but `slice`, `filter`, and `map` will create a new one.
+
 ## 1. Falsy values
 
 In JavaScript, we have 6 falsy values:

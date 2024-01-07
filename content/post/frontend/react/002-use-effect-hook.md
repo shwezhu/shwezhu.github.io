@@ -35,17 +35,15 @@ useEffect(() => {
 
 > **函数组件在其主体内不应该执行有副作用的操作**，比如直接进行网络请求、订阅事件、直接操作DOM等。这些操作应该放在特定的生命周期方法或钩子（如`useEffect`）
 
-## 1. When `useEffect` is called
+## 2. When `useEffect` is called
 
 **What does useEffect do?** By using this Hook, you tell React that your component needs to do something **after render**. React will remember the function `setup` you passed, and call it later after performing the DOM updates.
+
+ `useEffect` 是在渲染逻辑之后执行的, 是可以有副作用的. 可以看出, `useEffect` 天生就是为了解决这个问题. 
 
 ```jsx
 useEffect(setup, dependencies?)
 ```
-
-- **No Dependency (No Array)**: If you don’t provide the second argument, the effect runs after every rendering.
-- **Empty Array (`[]`)**: If you pass an empty array, the effect runs **once after the initial rendering**. This is similar to `componentDidMount` in class components.
-- **With Dependencies**: If you include values in the array, the effect will rerun when any of those values change. This is used for effects that should react to specific state changes or prop updates.
 
 ```jsx
 function MyComponent() {
@@ -74,7 +72,7 @@ When you reload the page, you will see the following in the console (Don't use `
 
 ```bash
 1. Component function is running (render phase)
-3. useEffect is called (after DOM updates) # 2 seconds later will print
+2. useEffect is called (after DOM updates) # 2 seconds later will print
 ```
 
 When you click the button, you will see the following in the console:
@@ -94,7 +92,7 @@ Here's a simplified sequence of what happens:
 3. After Render: Once the rendering is complete and the DOM has been updated, useEffect is called. This is done **asynchronously**; it doesn't block the browser from updating the screen. (2 seconds later, in example above)
 
 
-## 2. Fetching data with Effects
+## 3. 副作用操作实例 fetch data
 
 ```jsx
 import { useState, useEffect } from 'react';
@@ -127,7 +125,7 @@ export default function Page() {
 
 There is a trick, `<p><i>{bio ?? 'Loading...'}</i></p>`, 'Loading...' will be used if `bio` is null or undefined. We write it in this way because useEffect is called after the initial rendering, so `bio` will be null or undefined at the first render.
 
-## 3. Race conditions in useEffect
+## 4. Race conditions in useEffect
 
 > You would typically notice a race condition (in React) when two slightly different requests for data have been made, and the application displays a different result **depending on which request completes first.** 
 

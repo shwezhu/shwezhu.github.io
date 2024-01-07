@@ -114,4 +114,6 @@ These three tips can help you to decide whether to use a `Map` or an `Object`:
 - Use maps if there is a need to store primitive values as keys because object treats each key as a string whether it's a number value, boolean value or any other primitive value.
 - Use objects when there is logic that operates on individual elements.
 
+> It is useful to remember which operations on arrays mutate them, and which don’t. For example, `push`, `pop`, `reverse`, and sort will mutate the original array, but `slice`, `filter`, and `map` will create a new one.
+
 References: [Keyed collections - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Keyed_collections)
