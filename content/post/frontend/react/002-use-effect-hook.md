@@ -7,6 +7,34 @@ tags:
  - front-end
 ---
 
+## 为什么 useEffect 不能是异步函数
+
+异步函数隐式地返回一个`Promise`，而`useEffect`的设计是期望返回一个清理函数或者什么都不返回（`undefined`）。这个设计原则确保了React能够正确地处理副作用和它们的清理逻辑。
+
+如果你需要在`useEffect`中执行异步操作，正确的做法是在`useEffect`的函数体内定义一个异步函数，并在该函数内执行异步操作，然后立即调用这个异步函数。例如：
+
+```javascript
+useEffect(() => {
+  async function fetchData() {
+    // 异步操作
+    const data = await fetchSomeData();
+    // 使用数据更新状态
+    setState(data);
+  }
+
+  fetchData();
+
+  // 清理函数（如果需要）
+  return () => {
+    // 清理逻辑
+  };
+}, [/* 依赖列表 */]);
+```
+
+这种模式允许在`useEffect`内部使用异步操作，同时遵循React的副作用处理规则。
+
+> **函数组件在其主体内不应该执行有副作用的操作**，比如直接进行网络请求、订阅事件、直接操作DOM等。这些操作应该放在特定的生命周期方法或钩子（如`useEffect`）
+
 ## 1. When `useEffect` is called
 
 **What does useEffect do?** By using this Hook, you tell React that your component needs to do something **after render**. React will remember the function `setup` you passed, and call it later after performing the DOM updates.
