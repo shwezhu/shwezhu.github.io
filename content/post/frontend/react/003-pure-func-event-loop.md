@@ -35,6 +35,25 @@ Learn more:
 - [State as a Snapshot – React](https://react.dev/learn/state-as-a-snapshot)
 - [Queueing a Series of State Updates – React](https://react.dev/learn/queueing-a-series-of-state-updates)
 
+
+## 什么是副作用
+
+> Anything that results in changes that can be observed when the calculation is completed, beside the return value of the calculation itself, is a side effect. Calculation should return just result of the calculation. Anything else is side-effect. [source](https://www.reddit.com/r/reactjs/comments/8avfej/comment/dx218q1/?utm_source=share&utm_medium=web2x&context=3)
+
+**Components should only return their JSX**, and not change any objects or variables that existed before rendering—that would make them impure! 
+
+While functional programming relies heavily on purity, at some point, somewhere, something has to change. That’s kind of the point of programming! These **changes—updating the screen, starting an animation, changing the data (call setState)**—are called side effects. They’re things that happen “on the side”, not during rendering.
+
+> 所以严格来说 console.log 也是副作用. 
+
+In React, side effects usually belong inside event handlers. Event handlers are functions that React runs when you perform some action—for example, when you click a button. Even though event handlers are defined inside your component, they don’t run during rendering! So event handlers don’t need to be pure.
+
+If you’ve exhausted all other options and can’t find the right event handler for your side effect, you can still attach it to your returned JSX with a useEffect call in your component. This tells React to execute it later, after rendering, when side effects are allowed. However, this approach should be your last resort.
+
+> 修改或读取外部变量, 修改 props 是不被允许的, 在哪都不行, 你可以把 外部变量通过 props 传进来, 然后在组件内部读取. 
+
+Learn more: [Keeping Components Pure – React](https://react.dev/learn/keeping-components-pure#side-effects-unintended-consequences)
+
 ## 函数组件无副作用
 
 ### Render logic must not
