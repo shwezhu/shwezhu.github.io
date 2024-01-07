@@ -13,7 +13,7 @@ tags:
 
 ## Flex container and flex items
 
-当一个元素设置为 flex container 时, 该元素的子元素就是 flex items,无论其子元素原本是 block 还是 inline 元素, flex items 的渲染显示是根据其自己的 flex 属性和 flex container 的属性来决定的, 而不是根据其原本的 display 属性来决定的.
+当一个元素设置为 flex container 时, 该元素的子元素就是 flex items,无论其子元素原本是 block 还是 inline 元素, flex items 的渲染显示是根据其自己的 flex 属性和 flex container 的属性来决定的, 而不是根据其原本的 display 属性来决定的. 因此 flex container 中的 `<div>` 和 `<a>` 显示效果是一样的. 
 
 Flex items 有他们自己的属性, 如 flex-grow, flex-basis, align-self, order 等, 当然 flex container 也有他们自己的属性, 如 flex-direction, justify-content, align-items, align-content 等. Flex items 的属性需要在 flex container 内使用, 单独使用是无效的, 毕竟 flex items 是 flex container 的子元素. 否则, flex items 也就不是 flex items 了.
 
@@ -57,11 +57,11 @@ Flex items 有他们自己的属性, 如 flex-grow, flex-basis, align-self, orde
   - Tailwind CSS:
     - `flex-auto` (flex: 1 1 auto; 项目基于内容尺寸增长和缩小)
     - `flex-initial` (flex: 0 1 auto; 项目基于内容尺寸缩小但不增长)
-    - `flex-none` (flex: none; 项目不会增长或缩小)
+    - `flex-none` (flex: none; 项目不会增长或缩小) 
 
 > 默认值: `0 1 auto` 基于内容尺寸缩小但不增长
 
-- **align-self:** 允许单个项目有不同于 Flex 容器的 `align-items` 值。
+- **align-self:** 允许单个项目有不同于 Flex 容器的 `align-items` 值, 因此也是沿交叉轴方向。
   - Tailwind CSS:
     - `self-auto` (align-self: auto; 默认值)
     - `self-start` (align-self: flex-start; 顶部对齐)
@@ -116,12 +116,5 @@ Flex items 有他们自己的属性, 如 flex-grow, flex-basis, align-self, orde
   - 作用：定义 Flex 项目是否换行。
 
 - **align-content: flex-start | flex-end | center | space-between | space-around | space-evenly;**
-  - Tailwind CSS:
-    - `content-start` (交叉轴起点对齐)
-    - `content-end` (交叉轴终点对齐)
-    - `content-center` (交叉轴中心对齐)
-    - `content-between` (项目之间平均分布)
-    - `content-around` (项目周围平均分布)
-    - `content-evenly` (项目间和周围平均分布)
-  - 作用：当 Flex 容器有多行项目时，定义这些行在交叉轴上的对齐方式。
+  - https://tailwindcss.com/docs/align-content
 
