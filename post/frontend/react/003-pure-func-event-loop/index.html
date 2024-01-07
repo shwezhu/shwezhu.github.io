@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Pure Function &amp; State &amp; Event Loop - React">
 <meta itemprop="description" content="State When you call useState, you are telling React that you want this component to remember something: 1 const [index, setIndex] = useState(0); In this case, you want React to remember index. State is tied to a position in the render tree: When you give a component state, you might think the state “lives” inside the component. But the state is actually held inside"><meta itemprop="datePublished" content="2024-01-07T10:27:22+00:00" />
 <meta itemprop="dateModified" content="2024-01-07T10:27:22+00:00" />
-<meta itemprop="wordCount" content="956">
+<meta itemprop="wordCount" content="1328">
 <meta itemprop="keywords" content="front-end," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Pure Function &amp; State &amp; Event Loop - React"/>
 <meta name="twitter:description" content="State When you call useState, you are telling React that you want this component to remember something: 1 const [index, setIndex] = useState(0); In this case, you want React to remember index. State is tied to a position in the render tree: When you give a component state, you might think the state “lives” inside the component. But the state is actually held inside"/>
 
@@ -143,6 +143,7 @@
     <li>
       <ul>
         <li><a href="#state">State</a></li>
+        <li><a href="#什么是副作用">什么是副作用</a></li>
         <li><a href="#函数组件无副作用">函数组件无副作用</a>
           <ul>
             <li><a href="#render-logic-must-not">Render logic must not</a></li>
@@ -192,6 +193,21 @@
 <li><a href="https://react.dev/learn/state-as-a-snapshot">State as a Snapshot – React</a></li>
 <li><a href="https://react.dev/learn/queueing-a-series-of-state-updates">Queueing a Series of State Updates – React</a></li>
 </ul>
+<h2 id="什么是副作用">什么是副作用</h2>
+<blockquote>
+<p>Anything that results in changes that can be observed when the calculation is completed, beside the return value of the calculation itself, is a side effect. Calculation should return just result of the calculation. Anything else is side-effect. <a href="https://www.reddit.com/r/reactjs/comments/8avfej/comment/dx218q1/?utm_source=share&amp;utm_medium=web2x&amp;context=3">source</a></p>
+</blockquote>
+<p><strong>Components should only return their JSX</strong>, and not change any objects or variables that existed before rendering—that would make them impure!</p>
+<p>While functional programming relies heavily on purity, at some point, somewhere, something has to change. That’s kind of the point of programming! These <strong>changes—updating the screen, starting an animation, changing the data (call setState)</strong>—are called side effects. They’re things that happen “on the side”, not during rendering.</p>
+<blockquote>
+<p>所以严格来说 console.log 也是副作用.</p>
+</blockquote>
+<p>In React, side effects usually belong inside event handlers. Event handlers are functions that React runs when you perform some action—for example, when you click a button. Even though event handlers are defined inside your component, they don’t run during rendering! So event handlers don’t need to be pure.</p>
+<p>If you’ve exhausted all other options and can’t find the right event handler for your side effect, you can still attach it to your returned JSX with a useEffect call in your component. This tells React to execute it later, after rendering, when side effects are allowed. However, this approach should be your last resort.</p>
+<blockquote>
+<p>修改或读取外部变量, 修改 props 是不被允许的, 在哪都不行, 你可以把 外部变量通过 props 传进来, 然后在组件内部读取.</p>
+</blockquote>
+<p>Learn more: <a href="https://react.dev/learn/keeping-components-pure#side-effects-unintended-consequences">Keeping Components Pure – React</a></p>
 <h2 id="函数组件无副作用">函数组件无副作用</h2>
 <h3 id="render-logic-must-not">Render logic must not</h3>
 <ol>
