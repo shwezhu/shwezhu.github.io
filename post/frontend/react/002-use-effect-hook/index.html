@@ -16,8 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. When useEffect is called What does useEffect do? By using this Hook, you tell React that your component needs to do something after render. React will remember the function setup you passed, and call it later after performing the DOM updates.
-1 useEffect(setup, dependencies?) No Dependency (No Array): If you don’t provide the second argument, the effect runs after every rendering. Empty Array ([]): If you pass an empty array, the effect runs once after the initial rendering." />
+<meta name="author" content="David" /><meta name="description" content="为什么 useEffect 不能是异步函数 异步函数隐式地返回一个Promise，而useEffect的设计是期望返回一个清理函数或者什么都不返回（undefin" />
 
 
 
@@ -41,21 +40,18 @@
 
 
 <meta property="og:title" content="useEffect Hook in React" />
-<meta property="og:description" content="1. When useEffect is called What does useEffect do? By using this Hook, you tell React that your component needs to do something after render. React will remember the function setup you passed, and call it later after performing the DOM updates.
-1 useEffect(setup, dependencies?) No Dependency (No Array): If you don’t provide the second argument, the effect runs after every rendering. Empty Array ([]): If you pass an empty array, the effect runs once after the initial rendering." />
+<meta property="og:description" content="为什么 useEffect 不能是异步函数 异步函数隐式地返回一个Promise，而useEffect的设计是期望返回一个清理函数或者什么都不返回（undefin" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/frontend/react/002-use-effect-hook/" /><meta property="article:section" content="post" />
 
 
 
 <meta itemprop="name" content="useEffect Hook in React">
-<meta itemprop="description" content="1. When useEffect is called What does useEffect do? By using this Hook, you tell React that your component needs to do something after render. React will remember the function setup you passed, and call it later after performing the DOM updates.
-1 useEffect(setup, dependencies?) No Dependency (No Array): If you don’t provide the second argument, the effect runs after every rendering. Empty Array ([]): If you pass an empty array, the effect runs once after the initial rendering.">
+<meta itemprop="description" content="为什么 useEffect 不能是异步函数 异步函数隐式地返回一个Promise，而useEffect的设计是期望返回一个清理函数或者什么都不返回（undefin">
 
-<meta itemprop="wordCount" content="733">
+<meta itemprop="wordCount" content="1086">
 <meta itemprop="keywords" content="front-end," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="useEffect Hook in React"/>
-<meta name="twitter:description" content="1. When useEffect is called What does useEffect do? By using this Hook, you tell React that your component needs to do something after render. React will remember the function setup you passed, and call it later after performing the DOM updates.
-1 useEffect(setup, dependencies?) No Dependency (No Array): If you don’t provide the second argument, the effect runs after every rendering. Empty Array ([]): If you pass an empty array, the effect runs once after the initial rendering."/>
+<meta name="twitter:description" content="为什么 useEffect 不能是异步函数 异步函数隐式地返回一个Promise，而useEffect的设计是期望返回一个清理函数或者什么都不返回（undefin"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -146,9 +142,10 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#1-when-useeffect-is-called">1. When <code>useEffect</code> is called</a></li>
-        <li><a href="#2-fetching-data-with-effects">2. Fetching data with Effects</a></li>
-        <li><a href="#3-race-conditions-in-useeffect">3. Race conditions in useEffect</a></li>
+        <li><a href="#为什么-useeffect-不能是异步函数">为什么 useEffect 不能是异步函数</a></li>
+        <li><a href="#2-when-useeffect-is-called">2. When <code>useEffect</code> is called</a></li>
+        <li><a href="#3-副作用操作实例-fetch-data">3. 副作用操作实例 fetch data</a></li>
+        <li><a href="#4-race-conditions-in-useeffect">4. Race conditions in useEffect</a></li>
       </ul>
     </li>
   </ul>
@@ -156,8 +153,52 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-when-useeffect-is-called">1. When <code>useEffect</code> is called</h2>
+      <h2 id="为什么-useeffect-不能是异步函数">为什么 useEffect 不能是异步函数</h2>
+<p>异步函数隐式地返回一个<code>Promise</code>，而<code>useEffect</code>的设计是期望返回一个清理函数或者什么都不返回（<code>undefined</code>）。这个设计原则确保了React能够正确地处理副作用和它们的清理逻辑。</p>
+<p>如果你需要在<code>useEffect</code>中执行异步操作，正确的做法是在<code>useEffect</code>的函数体内定义一个异步函数，并在该函数内执行异步操作，然后立即调用这个异步函数。例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">useEffect</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="kd">function</span> <span class="nx">fetchData</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 异步操作
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetchSomeData</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 使用数据更新状态
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">setState</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">fetchData</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 清理函数（如果需要）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="k">return</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 清理逻辑
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="p">[</span><span class="cm">/* 依赖列表 */</span><span class="p">]);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这种模式允许在<code>useEffect</code>内部使用异步操作，同时遵循React的副作用处理规则。</p>
+<blockquote>
+<p><strong>函数组件在其主体内不应该执行有副作用的操作</strong>，比如直接进行网络请求、订阅事件、直接操作DOM等。这些操作应该放在特定的生命周期方法或钩子（如<code>useEffect</code>）</p>
+</blockquote>
+<h2 id="2-when-useeffect-is-called">2. When <code>useEffect</code> is called</h2>
 <p><strong>What does useEffect do?</strong> By using this Hook, you tell React that your component needs to do something <strong>after render</strong>. React will remember the function <code>setup</code> you passed, and call it later after performing the DOM updates.</p>
+<p><code>useEffect</code> 是在渲染逻辑之后执行的, 是可以有副作用的. 可以看出, <code>useEffect</code> 天生就是为了解决这个问题.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -166,12 +207,7 @@
 <pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="cl"><span class="nx">useEffect</span><span class="p">(</span><span class="nx">setup</span><span class="p">,</span> <span class="nx">dependencies</span><span class="o">?</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
-<li><strong>No Dependency (No Array)</strong>: If you don’t provide the second argument, the effect runs after every rendering.</li>
-<li><strong>Empty Array (<code>[]</code>)</strong>: If you pass an empty array, the effect runs <strong>once after the initial rendering</strong>. This is similar to <code>componentDidMount</code> in class components.</li>
-<li><strong>With Dependencies</strong>: If you include values in the array, the effect will rerun when any of those values change. This is used for effects that should react to specific state changes or prop updates.</li>
-</ul>
-<div class="highlight"><div class="chroma">
+</div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -225,7 +261,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">1. Component <span class="k">function</span> is running <span class="o">(</span>render phase<span class="o">)</span>
-</span></span><span class="line"><span class="cl">3. useEffect is called <span class="o">(</span>after DOM updates<span class="o">)</span> <span class="c1"># 2 seconds later will print</span>
+</span></span><span class="line"><span class="cl">2. useEffect is called <span class="o">(</span>after DOM updates<span class="o">)</span> <span class="c1"># 2 seconds later will print</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>When you click the button, you will see the following in the console:</p>
@@ -253,7 +289,7 @@
 <p>After Render: Once the rendering is complete and the DOM has been updated, useEffect is called. This is done <strong>asynchronously</strong>; it doesn&rsquo;t block the browser from updating the screen. (2 seconds later, in example above)</p>
 </li>
 </ol>
-<h2 id="2-fetching-data-with-effects">2. Fetching data with Effects</h2>
+<h2 id="3-副作用操作实例-fetch-data">3. 副作用操作实例 fetch data</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -313,7 +349,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>There is a trick, <code>&lt;p&gt;&lt;i&gt;{bio ?? 'Loading...'}&lt;/i&gt;&lt;/p&gt;</code>, &lsquo;Loading&hellip;&rsquo; will be used if <code>bio</code> is null or undefined. We write it in this way because useEffect is called after the initial rendering, so <code>bio</code> will be null or undefined at the first render.</p>
-<h2 id="3-race-conditions-in-useeffect">3. Race conditions in useEffect</h2>
+<h2 id="4-race-conditions-in-useeffect">4. Race conditions in useEffect</h2>
 <blockquote>
 <p>You would typically notice a race condition (in React) when two slightly different requests for data have been made, and the application displays a different result <strong>depending on which request completes first.</strong></p>
 </blockquote>

@@ -121,6 +121,54 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/advance/012-statically-linking/">Static Linking Go Programs</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-10 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/advance/"> advance </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Previous post: Statically Linking in C - David&rsquo;s Blog
+1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
+standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/advance/012-statically-linking/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/advance/011-cross-compilation/">Cross Compilation - Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-10 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/advance/"> advance </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. What is cross compilation? Cross-compilation is the process of compiling code for one computer system (often known as the target) on a different system, called the host. It&rsquo;s a very useful technique, for instance when the target system is too small to host the compiler and all relevant files. Common examples include many embedded systems, but also typical game consoles.
+Source: https://stackoverflow.com/a/897303/16317008
+2. An example There is a question on Stackoverflow:
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/advance/011-cross-compilation/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/docker/001-docker-basics/">Docker Basics</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-10-09 </span>
@@ -294,54 +342,6 @@ Session data is stored on the server, usually in memory or in a session store. E
     </div>
     <div class="read-more">
       <a href="/post/database/redis/004-session-vs-cache/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/database/redis/003-caching/">Caching Strategies and What should be Cached</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-10-01 </span>
-      <div class="post-category">
-          <a href="/categories/database/"> database </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Previous post: https://davidzhu.xyz/post/database/redis/004-session-vs-cache/
-A paragraph I like, and share it here with you:
-“The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places and at the wrong times; premature optimization is the root of all evil (or at least most of it) in programming.” - Donald Knuth
-Premature optimization is always a disaster. It&rsquo;s not too late to add caching when actual bottlenecks are discovered after deployment or users&rsquo; feedback.
-    </div>
-    <div class="read-more">
-      <a href="/post/database/redis/003-caching/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/006-gorilla-redis-store-code/">Gorilla Sessions RedisStore Source Code Analysis</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-10-01 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/practice/"> practice </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      To prevent data race, store.Get() always creates a new session (or make a copy) and returns the session to user.
-1 2 3 4 5 6 7 // Get a session. // A copied one or new session. session, _ = store.Get(req, &#34;session-key&#34;) // Add a value. session.Values[&#34;foo&#34;] = &#34;bar&#34; // Save. _ = sessions.Save(req, rsp) Let&rsquo;s check the source code, the Get() method of Redistore:
-1 2 3 func (s *RediStore) Get(r *http.
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/practice/006-gorilla-redis-store-code/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>

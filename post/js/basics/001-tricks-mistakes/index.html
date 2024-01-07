@@ -16,9 +16,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Falsy values In JavaScript, we have 6 falsy values:
+<meta name="author" content="David" /><meta name="description" content="0. Minor tricks It is useful to remember which operations on arrays mutate them, and which don’t. For example, push, pop, reverse, and sort will mutate the original array, but slice, filter, and map will create a new one.
+1. Falsy values In JavaScript, we have 6 falsy values:
 false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these return false when they are evaluated.
-1 2 3 4 // this just for simplicity, no this syntax if(false/0/&amp;#39;&amp;#39;/null/undefined/NaN) { console.log(&amp;#34;never executed&amp;#34;) } 2. Catching errors 2.1. Catching errors in async functions In JavaScript, try...catch blocks are designed to handle errors in synchronous code. However, they do not work as expected with asynchronous code, unless used in conjunction with async/await." />
+1 2 3 4 // this just for simplicity, no this syntax if(false/0/&amp;#39;&amp;#39;/null/undefined/NaN) { console." />
 
 
 
@@ -42,24 +43,27 @@ false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these retu
 
 
 <meta property="og:title" content="Tricks &amp; Mistakes in Javascript" />
-<meta property="og:description" content="1. Falsy values In JavaScript, we have 6 falsy values:
+<meta property="og:description" content="0. Minor tricks It is useful to remember which operations on arrays mutate them, and which don’t. For example, push, pop, reverse, and sort will mutate the original array, but slice, filter, and map will create a new one.
+1. Falsy values In JavaScript, we have 6 falsy values:
 false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these return false when they are evaluated.
-1 2 3 4 // this just for simplicity, no this syntax if(false/0/&#39;&#39;/null/undefined/NaN) { console.log(&#34;never executed&#34;) } 2. Catching errors 2.1. Catching errors in async functions In JavaScript, try...catch blocks are designed to handle errors in synchronous code. However, they do not work as expected with asynchronous code, unless used in conjunction with async/await." />
+1 2 3 4 // this just for simplicity, no this syntax if(false/0/&#39;&#39;/null/undefined/NaN) { console." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/js/basics/001-tricks-mistakes/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2024-01-02T10:55:20+00:00" />
 <meta property="article:modified_time" content="2024-01-02T10:55:20+00:00" />
 
 <meta itemprop="name" content="Tricks &amp; Mistakes in Javascript">
-<meta itemprop="description" content="1. Falsy values In JavaScript, we have 6 falsy values:
+<meta itemprop="description" content="0. Minor tricks It is useful to remember which operations on arrays mutate them, and which don’t. For example, push, pop, reverse, and sort will mutate the original array, but slice, filter, and map will create a new one.
+1. Falsy values In JavaScript, we have 6 falsy values:
 false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these return false when they are evaluated.
-1 2 3 4 // this just for simplicity, no this syntax if(false/0/&#39;&#39;/null/undefined/NaN) { console.log(&#34;never executed&#34;) } 2. Catching errors 2.1. Catching errors in async functions In JavaScript, try...catch blocks are designed to handle errors in synchronous code. However, they do not work as expected with asynchronous code, unless used in conjunction with async/await."><meta itemprop="datePublished" content="2024-01-02T10:55:20+00:00" />
+1 2 3 4 // this just for simplicity, no this syntax if(false/0/&#39;&#39;/null/undefined/NaN) { console."><meta itemprop="datePublished" content="2024-01-02T10:55:20+00:00" />
 <meta itemprop="dateModified" content="2024-01-02T10:55:20+00:00" />
-<meta itemprop="wordCount" content="553">
+<meta itemprop="wordCount" content="592">
 <meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Tricks &amp; Mistakes in Javascript"/>
-<meta name="twitter:description" content="1. Falsy values In JavaScript, we have 6 falsy values:
+<meta name="twitter:description" content="0. Minor tricks It is useful to remember which operations on arrays mutate them, and which don’t. For example, push, pop, reverse, and sort will mutate the original array, but slice, filter, and map will create a new one.
+1. Falsy values In JavaScript, we have 6 falsy values:
 false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these return false when they are evaluated.
-1 2 3 4 // this just for simplicity, no this syntax if(false/0/&#39;&#39;/null/undefined/NaN) { console.log(&#34;never executed&#34;) } 2. Catching errors 2.1. Catching errors in async functions In JavaScript, try...catch blocks are designed to handle errors in synchronous code. However, they do not work as expected with asynchronous code, unless used in conjunction with async/await."/>
+1 2 3 4 // this just for simplicity, no this syntax if(false/0/&#39;&#39;/null/undefined/NaN) { console."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -151,6 +155,7 @@ false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these retu
   <ul>
     <li>
       <ul>
+        <li><a href="#0-minor-tricks">0. Minor tricks</a></li>
         <li><a href="#1-falsy-values">1. Falsy values</a></li>
         <li><a href="#2-catching-errors">2. Catching errors</a>
           <ul>
@@ -166,7 +171,11 @@ false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these retu
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-falsy-values">1. Falsy values</h2>
+      <h2 id="0-minor-tricks">0. Minor tricks</h2>
+<blockquote>
+<p>It is useful to remember which operations on arrays mutate them, and which don’t. For example, <code>push</code>, <code>pop</code>, <code>reverse</code>, and sort will mutate the original array, but <code>slice</code>, <code>filter</code>, and <code>map</code> will create a new one.</p>
+</blockquote>
+<h2 id="1-falsy-values">1. Falsy values</h2>
 <p>In JavaScript, we have 6 falsy values:</p>
 <ul>
 <li>false</li>
