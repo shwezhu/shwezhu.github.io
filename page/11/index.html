@@ -121,6 +121,76 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/basics/009-gob-json-encoding/">encoding/gob &amp; encoding/json in Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-08-31 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/basics/"> basics </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary.
+There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’s gob package.
+2. encoding/gob 2.1. Why gob Why define a new encoding? It’s a lot of work and redundant at that.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/basics/009-gob-json-encoding/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/004-tricks-and-common-mistakes/">Tricks and Common Mistakes - Go</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-08-27 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/practice/"> practice </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Tricks 1. handle close() 1 2 3 4 5 6 7 8 9 10 11 12 13 // credit to: https://gist.github.com/benbjohnson/9eebd201ec096ab6430e1f33411e6427 func doSomething() error { f, err := os.Create(&#34;foo&#34;) if err != nil { return err } // ensure that it&#39;s definitely closed by the end defer f.Close() if _, err := f.Write([]byte(&#34;bar&#34;); err != nil { return err } return f.Close() } Why we bother to care about getting error from f.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/practice/004-tricks-and-common-mistakes/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/cs-basics/006-multithread-singlethread-server/">Is Multithreaded Server Better than a Single Thread Server?</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-08-26 </span>
+      <div class="post-category">
+          <a href="/categories/cs-basics/"> cs basics </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Original: https://qr.ae/pyztor
+Why is a multithreaded web server better than a single thread server? It isn’t.
+There are four basic ways how a web server can handle concurrency:
+forking an OS process per request (like old versions of Apache) spawning an OS thread per request (like a new versions of Apache) using a single-threaded event loop (like nginx) using green threads or lightweight processes scheduled by a VM runtime instead of the OS (like in Erlang) Currently the most common approaches are number 2 and 3.
+    </div>
+    <div class="read-more">
+      <a href="/post/cs-basics/006-multithread-singlethread-server/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/linux/003-shell-expansion/">Shell Expansion</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-08-26 </span>
@@ -269,73 +339,6 @@ Brace Expansion - expanding values between braces, such as file{1.
     </div>
     <div class="read-more">
       <a href="/post/cs-basics/005-session-cookie/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/git/003-origin-master-vs-master/">master vs origin/master vs remotes/origin/master</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-16 </span>
-      <div class="post-category">
-          <a href="/categories/git/"> git </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Take a clone of a remote repository and run git branch -a (to show all the branches git knows about). It will probably look something like this:
-1 2 3 * master remotes/origin/HEAD -&gt; origin/master remotes/origin/master Here, master is a branch in the local repository. remotes/origin/master is a branch named master on the remote named origin. You can refer to this as either origin/master, as in:
-1 git diff origin/master..master You can also refer to it as remotes/origin/master:
-    </div>
-    <div class="read-more">
-      <a href="/post/git/003-origin-master-vs-master/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/git/practice/001-rejected-push-fix-conflicts/">Push on Github get Rejected - Solved</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-15 </span>
-      <div class="post-category">
-          <a href="/categories/git/"> git </a>
-          <a href="/categories/practice/"> practice </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Problem GitHub 新建一个 repository, 并选择了自动创建 README.md, 在本地初始化项目后进行push, 报错: 1 2 3 4 5 6 7 8 9 $ git push -u origin master To github.com:shwezhu/gptbot.git ! [rejected] master -&gt; master (fetch first) error: failed to push some refs to &#39;github.com:shwezhu/gptbot.git&#39; hint: Updates were
-    </div>
-    <div class="read-more">
-      <a href="/post/git/practice/001-rejected-push-fix-conflicts/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/java/backend/007-spring-security/">CSRF Filter &amp; ProviderManager &amp; AuthenticationProviders, Spring学习(七)</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-08-08 </span>
-      <div class="post-category">
-          <a href="/categories/java/"> Java </a>
-          <a href="/categories/backend/"> Backend </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      {% youtube iJ2muJniikY %} 视频内容位置: Cross Site Request Forgery: 1:16:00 CSRF Spring CSRF Filter 源码分析: 1:22:00 Trace level log 分析: 1:26:00 1 2 3 logging: level: org.springframework.security: TRACE 1:30:35 理论: AuthenticationManager, ProviderManager, AuthenticationProvider Authentication Object stands for either the request to login or the result of a successful login request , 上图中, 如
-    </div>
-    <div class="read-more">
-      <a href="/post/java/backend/007-spring-security/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>

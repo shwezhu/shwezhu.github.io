@@ -121,6 +121,72 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/http/002-http-status-codes-1/">HTTP Status Codes</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-26 </span>
+      <div class="post-category">
+          <a href="/categories/http/"> http </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;
+303: temporary redirect, changing the method to GET. Example usage: if the browser sent POST to /register.
+    </div>
+    <div class="read-more">
+      <a href="/post/http/002-http-status-codes-1/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/http/001-http-headers-1/">HTTP Headers (1)</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-26 </span>
+      <div class="post-category">
+          <a href="/categories/http/"> http </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      0. Header types Headers can be grouped according to their contexts:
+Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport.
+    </div>
+    <div class="read-more">
+      <a href="/post/http/001-http-headers-1/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/bugs/006-cgo-docker-image-build-error/">CGO Compile Error Building Docker Image</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-21 </span>
+      <div class="post-category">
+          <a href="/categories/bugs/"> bugs </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      I choose a sqilte3 library which uses cgo, the Dockerfile:
+1 2 3 4 5 6 7 8 FROM golang:alpine WORKDIR /app COPY ./ ./ RUN go mod download RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /server . CMD [&#34;./server&#34;] The CGO_ENABLED=0 is to disable cgo. GOOS=linux and GOARCH=arm64 is used for cross compilation in Go. Because I build this on my macOS arm64 machine, and I want build for Ubuntu amd64 machine, so I choose GOOS=linux GOARCH=arm64.
+    </div>
+    <div class="read-more">
+      <a href="/post/bugs/006-cgo-docker-image-build-error/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/c&#43;&#43;/basics/001-standard-library/">Intros of C Standard Library</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-10-17 </span>
@@ -273,75 +339,6 @@ Source: https://stackoverflow.com/a/897303/16317008
     </div>
     <div class="read-more">
       <a href="/post/docker/001-docker-basics/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/build-website/006-ufw-aws-sg/">ufw vs  AWS Security Group</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-10-09 </span>
-      <div class="post-category">
-          <a href="/categories/build-website/"> build website </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. ufw command 1.1. Commonly used ufw commands 1 2 3 4 5 6 7 # ubuntu @ ip-172-31-12-228 $ sudo ufw status Status: inactive # ubuntu @ ip-172-31-12-228 $ sudo ufw enable Command may disrupt existing ssh connections. Proceed with operation (y|n)? n Aborted Note: use sudo ufw enable carefully, because it may disrupt your ssh connection.
-1 2 3 4 5 6 7 8 9 10 ufw enable: Enables the firewall, which starts enforcing the configured rules.
-    </div>
-    <div class="read-more">
-      <a href="/post/build-website/006-ufw-aws-sg/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/python/practice/003-openssl-issue/">urllib3 not compatible with openssl issue - python</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-10-07 </span>
-      <div class="post-category">
-          <a href="/categories/python/"> python </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      OpenSSL is an all-around cryptography library that offers an open-source application of the TLS protocol. It allows users to perform various SSL-related tasks, including CSR (Certificate Signing Request) and private keys generation, and SSL certificate installation. You can use OpenSSL&rsquo;s commands to generate, install and manage SSL certificates on various servers. What Is OpenSSL and How Does It Work?
-OpenSSL is a library, so there should be API interfaces. However, the more common use of OpenSSL is as a command-line tool, which can be entered on a computer
-    </div>
-    <div class="read-more">
-      <a href="/post/python/practice/003-openssl-issue/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/http/006-https-ssl/">HTTPS SSL TLS</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-10-07 </span>
-      <div class="post-category">
-          <a href="/categories/cs-basics/"> cs basics </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      1. HTTP vs HTTPS Strictly speaking, HTTPS is not a separate protocol, but refers to use of ordinary HTTP over an encrypted SSL/TLS connection.
-Port 80 is typically used for unencrypted HTTP traffic while port 443 is the common port used for encrypted HTTP traffic which is called HTTPS.
-Note that TLS is the successor of SSL, you can simply think they are same thing.
-Source: https://en.wikipedia.org/wiki/HTTPS#Network_layers
-2. What is TLS/SSL SSL (Secure Sockets Layer) and its successor, TLS (Transport Layer Security), are protocols for establishing authenticated and encrypted links between networked computers.
-    </div>
-    <div class="read-more">
-      <a href="/post/http/006-https-ssl/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
