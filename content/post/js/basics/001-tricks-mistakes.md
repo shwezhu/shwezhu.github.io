@@ -12,7 +12,41 @@ tags:
 
 > It is useful to remember which operations on arrays mutate them, and which don’t. For example, `push`, `pop`, `reverse`, and sort will mutate the original array, but `slice`, `filter`, and `map` will create a new one.
 
-## 1. Falsy values
+```js
+if (isEmpty) {
+    postList = <h1>No posts found.</h1>
+} else {
+    // return a new array
+    postList = posts.map(post => (
+        <SimplePostCard post={post} key={post._id} onDelete={() => handleDeletePost(post._id)}/>
+    ));
+}
+```
+
+## 1. Spread operator
+
+[Spread operator `...`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#description):
+
+- Function arguments list (myFunction(a, ...iterableObj, b))
+- Array literals ([1, ...iterableObj, '4', 'five', 6])
+- Object literals ({ ...obj, key: 'value' })
+
+```js
+// We pass a function as argument to setPost(), like a callback, which will return a new state object.
+// React will call this callback with the previous state `post` as argument.
+setPost(prevPost => ({
+        ...prevPost, // object spread syntax
+        comments: [data, ...prevPost.comments], // array spread syntax
+        engagement: {
+            ...prevPost.engagement, // object spread syntax
+            numComments: prevPost.engagement.numComments + 1,
+        }
+    }));
+```
+
+> Arrow function will return the value of the expression by default, so we don't need to use `return` keyword.
+
+## 2. Falsy values
 
 In JavaScript, we have 6 falsy values:
 
@@ -32,9 +66,9 @@ if(false/0/''/null/undefined/NaN) {
 }
 ```
 
-## 2. Catching errors
+## 3. Catching errors
 
-### 2.1. Catching errors in async functions
+### 3.1. Catching errors in async functions
 
 In JavaScript, `try...catch` blocks are designed to handle errors in synchronous code. However, they do not work as expected with asynchronous code, unless used in conjunction with async/await.
 
@@ -77,7 +111,7 @@ async function loadData() {
 }
 ```
 
-### 2.2. Forget catching errors in neasted promises
+### 3.2. Forget catching errors in neasted promises
 
 ```js
 function fetchPosts() {
@@ -127,7 +161,7 @@ async function fetchPosts() {
 }
 ```
 
-## 3. `await xxxx` won't return a promise but the actual result of the promise
+## 4. `await xxxx` won't return a promise but the actual result of the promise
 
 ```js
 async function handleGetPosts(req, res) {

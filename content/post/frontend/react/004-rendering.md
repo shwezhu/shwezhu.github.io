@@ -41,6 +41,8 @@ This process of requesting and serving UI has three steps:
 - **Triggering** a render
   - A render is triggered when a component’s `props` or `state` changes. 
   - A render can also be triggered by its parent component re-rendering.
+
+> 这里注意, 使用自定义 hook 时, 其返回的 state 变化时, 也会触发组件的重新渲染. 并不是自定义 hook 的状态改变而导致的重新渲染, 而是自定义 hook 返回的 state 改变而导致的重新渲染. 自定义 Hooks 的主要优势在于它们允许你重用状态逻辑，而不是创建全新的状态机制。每次在组件中使用自定义 Hook 时 (若该 hook 中定义了 state `const [xxx, setXXX] = useState(xx)`) ，都相当于在该组件内部创建了一个新的独立状态 xxx, 因此当 hook 中调用 setXXX 时, 会触发该组件的重新渲染. 
   
 - **Rendering** the component
   - The process of rendering is recursive. 
