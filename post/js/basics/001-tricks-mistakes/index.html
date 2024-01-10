@@ -17,9 +17,7 @@
 
 
 <meta name="author" content="David" /><meta name="description" content="0. Minor tricks It is useful to remember which operations on arrays mutate them, and which don’t. For example, push, pop, reverse, and sort will mutate the original array, but slice, filter, and map will create a new one.
-1. Falsy values In JavaScript, we have 6 falsy values:
-false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these return false when they are evaluated.
-1 2 3 4 // this just for simplicity, no this syntax if(false/0/&amp;#39;&amp;#39;/null/undefined/NaN) { console." />
+1 2 3 4 5 6 7 8 if (isEmpty) { postList = &amp;lt;h1&amp;gt;No posts found.&amp;lt;/h1&amp;gt; } else { // return a new array postList = posts.map(post =&amp;gt; ( &amp;lt;SimplePostCard post={post} key={post." />
 
 
 
@@ -44,9 +42,7 @@ false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these retu
 
 <meta property="og:title" content="Tricks &amp; Mistakes in Javascript" />
 <meta property="og:description" content="0. Minor tricks It is useful to remember which operations on arrays mutate them, and which don’t. For example, push, pop, reverse, and sort will mutate the original array, but slice, filter, and map will create a new one.
-1. Falsy values In JavaScript, we have 6 falsy values:
-false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these return false when they are evaluated.
-1 2 3 4 // this just for simplicity, no this syntax if(false/0/&#39;&#39;/null/undefined/NaN) { console." />
+1 2 3 4 5 6 7 8 if (isEmpty) { postList = &lt;h1&gt;No posts found.&lt;/h1&gt; } else { // return a new array postList = posts.map(post =&gt; ( &lt;SimplePostCard post={post} key={post." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/js/basics/001-tricks-mistakes/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2024-01-02T10:55:20+00:00" />
@@ -54,16 +50,12 @@ false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these retu
 
 <meta itemprop="name" content="Tricks &amp; Mistakes in Javascript">
 <meta itemprop="description" content="0. Minor tricks It is useful to remember which operations on arrays mutate them, and which don’t. For example, push, pop, reverse, and sort will mutate the original array, but slice, filter, and map will create a new one.
-1. Falsy values In JavaScript, we have 6 falsy values:
-false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these return false when they are evaluated.
-1 2 3 4 // this just for simplicity, no this syntax if(false/0/&#39;&#39;/null/undefined/NaN) { console."><meta itemprop="datePublished" content="2024-01-02T10:55:20+00:00" />
+1 2 3 4 5 6 7 8 if (isEmpty) { postList = &lt;h1&gt;No posts found.&lt;/h1&gt; } else { // return a new array postList = posts.map(post =&gt; ( &lt;SimplePostCard post={post} key={post."><meta itemprop="datePublished" content="2024-01-02T10:55:20+00:00" />
 <meta itemprop="dateModified" content="2024-01-02T10:55:20+00:00" />
-<meta itemprop="wordCount" content="592">
+<meta itemprop="wordCount" content="744">
 <meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Tricks &amp; Mistakes in Javascript"/>
 <meta name="twitter:description" content="0. Minor tricks It is useful to remember which operations on arrays mutate them, and which don’t. For example, push, pop, reverse, and sort will mutate the original array, but slice, filter, and map will create a new one.
-1. Falsy values In JavaScript, we have 6 falsy values:
-false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these return false when they are evaluated.
-1 2 3 4 // this just for simplicity, no this syntax if(false/0/&#39;&#39;/null/undefined/NaN) { console."/>
+1 2 3 4 5 6 7 8 if (isEmpty) { postList = &lt;h1&gt;No posts found.&lt;/h1&gt; } else { // return a new array postList = posts.map(post =&gt; ( &lt;SimplePostCard post={post} key={post."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -156,14 +148,15 @@ false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these retu
     <li>
       <ul>
         <li><a href="#0-minor-tricks">0. Minor tricks</a></li>
-        <li><a href="#1-falsy-values">1. Falsy values</a></li>
-        <li><a href="#2-catching-errors">2. Catching errors</a>
+        <li><a href="#1-spread-operator">1. Spread operator</a></li>
+        <li><a href="#2-falsy-values">2. Falsy values</a></li>
+        <li><a href="#3-catching-errors">3. Catching errors</a>
           <ul>
-            <li><a href="#21-catching-errors-in-async-functions">2.1. Catching errors in async functions</a></li>
-            <li><a href="#22-forget-catching-errors-in-neasted-promises">2.2. Forget catching errors in neasted promises</a></li>
+            <li><a href="#31-catching-errors-in-async-functions">3.1. Catching errors in async functions</a></li>
+            <li><a href="#32-forget-catching-errors-in-neasted-promises">3.2. Forget catching errors in neasted promises</a></li>
           </ul>
         </li>
-        <li><a href="#3-await-xxxx-wont-return-a-promise-but-the-actual-result-of-the-promise">3. <code>await xxxx</code> won&rsquo;t return a promise but the actual result of the promise</a></li>
+        <li><a href="#4-await-xxxx-wont-return-a-promise-but-the-actual-result-of-the-promise">4. <code>await xxxx</code> won&rsquo;t return a promise but the actual result of the promise</a></li>
       </ul>
     </li>
   </ul>
@@ -175,7 +168,65 @@ false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these retu
 <blockquote>
 <p>It is useful to remember which operations on arrays mutate them, and which don’t. For example, <code>push</code>, <code>pop</code>, <code>reverse</code>, and sort will mutate the original array, but <code>slice</code>, <code>filter</code>, and <code>map</code> will create a new one.</p>
 </blockquote>
-<h2 id="1-falsy-values">1. Falsy values</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="nx">isEmpty</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">postList</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">No</span> <span class="nx">posts</span> <span class="nx">found</span><span class="p">.</span><span class="o">&lt;</span><span class="err">/h1&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// return a new array
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">postList</span> <span class="o">=</span> <span class="nx">posts</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">post</span> <span class="p">=&gt;</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;</span><span class="nx">SimplePostCard</span> <span class="nx">post</span><span class="o">=</span><span class="p">{</span><span class="nx">post</span><span class="p">}</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">post</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span> <span class="nx">onDelete</span><span class="o">=</span><span class="p">{()</span> <span class="p">=&gt;</span> <span class="nx">handleDeletePost</span><span class="p">(</span><span class="nx">post</span><span class="p">.</span><span class="nx">_id</span><span class="p">)}</span><span class="o">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="1-spread-operator">1. Spread operator</h2>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#description">Spread operator <code>...</code></a>:</p>
+<ul>
+<li>Function arguments list (myFunction(a, &hellip;iterableObj, b))</li>
+<li>Array literals ([1, &hellip;iterableObj, &lsquo;4&rsquo;, &lsquo;five&rsquo;, 6])</li>
+<li>Object literals ({ &hellip;obj, key: &lsquo;value&rsquo; })</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// We pass a function as argument to setPost(), like a callback, which will return a new state object.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// React will call this callback with the previous state `post` as argument.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">setPost</span><span class="p">(</span><span class="nx">prevPost</span> <span class="p">=&gt;</span> <span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="p">...</span><span class="nx">prevPost</span><span class="p">,</span> <span class="c1">// object spread syntax
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">comments</span><span class="o">:</span> <span class="p">[</span><span class="nx">data</span><span class="p">,</span> <span class="p">...</span><span class="nx">prevPost</span><span class="p">.</span><span class="nx">comments</span><span class="p">],</span> <span class="c1">// array spread syntax
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">engagement</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="p">...</span><span class="nx">prevPost</span><span class="p">.</span><span class="nx">engagement</span><span class="p">,</span> <span class="c1">// object spread syntax
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">numComments</span><span class="o">:</span> <span class="nx">prevPost</span><span class="p">.</span><span class="nx">engagement</span><span class="p">.</span><span class="nx">numComments</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}));</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Arrow function will return the value of the expression by default, so we don&rsquo;t need to use <code>return</code> keyword.</p>
+</blockquote>
+<h2 id="2-falsy-values">2. Falsy values</h2>
 <p>In JavaScript, we have 6 falsy values:</p>
 <ul>
 <li>false</li>
@@ -200,8 +251,8 @@ false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these retu
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="2-catching-errors">2. Catching errors</h2>
-<h3 id="21-catching-errors-in-async-functions">2.1. Catching errors in async functions</h3>
+</div><h2 id="3-catching-errors">3. Catching errors</h2>
+<h3 id="31-catching-errors-in-async-functions">3.1. Catching errors in async functions</h3>
 <p>In JavaScript, <code>try...catch</code> blocks are designed to handle errors in synchronous code. However, they do not work as expected with asynchronous code, unless used in conjunction with async/await.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -278,7 +329,7 @@ false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these retu
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="22-forget-catching-errors-in-neasted-promises">2.2. Forget catching errors in neasted promises</h3>
+</div><h3 id="32-forget-catching-errors-in-neasted-promises">3.2. Forget catching errors in neasted promises</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -369,7 +420,7 @@ false 0 (zero) ‘’ or “” (empty string) null undefined NaN All these retu
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="3-await-xxxx-wont-return-a-promise-but-the-actual-result-of-the-promise">3. <code>await xxxx</code> won&rsquo;t return a promise but the actual result of the promise</h2>
+</div><h2 id="4-await-xxxx-wont-return-a-promise-but-the-actual-result-of-the-promise">4. <code>await xxxx</code> won&rsquo;t return a promise but the actual result of the promise</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1

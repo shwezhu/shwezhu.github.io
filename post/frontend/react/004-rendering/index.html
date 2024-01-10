@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Rendering - React">
 <meta itemprop="description" content="JavaScript Event Loop 浏览器 下面介绍的是浏览器的事件循环模型, 并不是 nodes.js 的事件循环模型. 调用栈（Call Stack）： 调用栈是一个LIFO（后进先出）结构，用"><meta itemprop="datePublished" content="2024-01-07T19:27:22+00:00" />
 <meta itemprop="dateModified" content="2024-01-07T19:27:22+00:00" />
-<meta itemprop="wordCount" content="1149">
+<meta itemprop="wordCount" content="1333">
 <meta itemprop="keywords" content="front-end," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Rendering - React"/>
 <meta name="twitter:description" content="JavaScript Event Loop 浏览器 下面介绍的是浏览器的事件循环模型, 并不是 nodes.js 的事件循环模型. 调用栈（Call Stack）： 调用栈是一个LIFO（后进先出）结构，用"/>
 
@@ -195,13 +195,17 @@
 <h2 id="组件渲染过程">组件渲染过程</h2>
 <p>This process of requesting and serving UI has three steps:</p>
 <ul>
-<li>
-<p><strong>Triggering</strong> a render</p>
+<li><strong>Triggering</strong> a render
 <ul>
 <li>A render is triggered when a component’s <code>props</code> or <code>state</code> changes.</li>
 <li>A render can also be triggered by its parent component re-rendering.</li>
 </ul>
 </li>
+</ul>
+<blockquote>
+<p>这里注意, 使用自定义 hook 时, 其返回的 state 变化时, 也会触发组件的重新渲染. 并不是自定义 hook 的状态改变而导致的重新渲染, 而是自定义 hook 返回的 state 改变而导致的重新渲染. 自定义 Hooks 的主要优势在于它们允许你重用状态逻辑，而不是创建全新的状态机制。每次在组件中使用自定义 Hook 时 (若该 hook 中定义了 state <code>const [xxx, setXXX] = useState(xx)</code>) ，都相当于在该组件内部创建了一个新的独立状态 xxx, 因此当 hook 中调用 setXXX 时, 会触发该组件的重新渲染.</p>
+</blockquote>
+<ul>
 <li>
 <p><strong>Rendering</strong> the component</p>
 <ul>
@@ -288,7 +292,11 @@
           <a href="/tags/front-end/">front-end</a>
           </div>
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/database/mongodb/000-docs-mongodb/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">MongoDB Docs</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
         <a class="next" href="/post/frontend/react/003-pure-func-event-loop/">
             <span class="next-text nav-default">Pure Function &amp; State &amp; Event Loop - React</span>
             <span class="next-text nav-mobile">Next</span>
