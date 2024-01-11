@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Nginx">
 <meta itemprop="description" content="1. Common used commands 1 2 3 4 5 6 $apt install nginx # ubuntu $apk add nginx # Alpine Linux # start $sudo systemctl start/stop/restart/status nginx $sudo service nginx start/stop/restart/status 2. Basic configurations 2.1. Configuration file 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 $vi /etc/nginx/http.d/default.conf # Alpine Linux server { listen 2087 ssl; server_name shaowenzhu.top www.shaowenzhu.top; ssl_certificate /root/tls/cert.pem; ssl_certificate_key /root/tls/cert.key; location / { root /var/www/html; try_files $uri $uri/ /index."><meta itemprop="datePublished" content="2023-12-30T14:01:50+00:00" />
 <meta itemprop="dateModified" content="2023-12-30T14:01:50+00:00" />
-<meta itemprop="wordCount" content="214">
+<meta itemprop="wordCount" content="244">
 <meta itemprop="keywords" content="build website,cs basics," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Nginx"/>
 <meta name="twitter:description" content="1. Common used commands 1 2 3 4 5 6 $apt install nginx # ubuntu $apk add nginx # Alpine Linux # start $sudo systemctl start/stop/restart/status nginx $sudo service nginx start/stop/restart/status 2. Basic configurations 2.1. Configuration file 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 $vi /etc/nginx/http.d/default.conf # Alpine Linux server { listen 2087 ssl; server_name shaowenzhu.top www.shaowenzhu.top; ssl_certificate /root/tls/cert.pem; ssl_certificate_key /root/tls/cert.key; location / { root /var/www/html; try_files $uri $uri/ /index."/>
 
@@ -215,7 +215,10 @@
 </span></span><span class="line"><span class="cl"><span class="o">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Because the 443 port is used by my first server, so I use 2087 port for my second server. I use Cloudflare for reverse proxy, Cloudflare only allows the following ports: 443, 2053, 2083, 2087, 2096, 8443. So I choose 2087 port for this app.</p>
+</div><blockquote>
+<p>You can get free TLS certificate from Cloudflare but you need get a domain first. Learn more: <a href="https://davidzhu.xyz/post/build-website/008-enable-cloudflare-reverse-proxy/">Coudflare TLS encryption 520 Error Code &amp; too Many Redirections - David&rsquo;s Blog</a></p>
+</blockquote>
+<p>Because the 443 port is used by my file server, so I use 2087 port for my gbtbot server. I <a href="https://davidzhu.xyz/post/build-website/008-enable-cloudflare-reverse-proxy/">use Cloudflare for reverse proxy</a>, Cloudflare only allows the following ports: 443, 2053, 2083, 2087, 2096, 8443. So I choose 2087 port for this app.</p>
 <blockquote>
 <p>Don&rsquo;t forget allow 2087 port on your server firewall with command <code>sudo ufw allow 2087</code>.</p>
 </blockquote>
