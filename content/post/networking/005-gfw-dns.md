@@ -9,6 +9,8 @@ tags:
 typora-root-url: ../../../static
 ---
 
+声明: 本文只用于学习目的, 请勿用于非法用途.
+
 ## 1. DNS spoofing
 
 [DNS](https://www.cloudflare.com/learning/dns/what-is-dns/) cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as 'DNS spoofing'.
@@ -61,7 +63,7 @@ A访问一个网站，比如 `google.com` ，然后，A向B通过UDP方式发送
 
 然而在这个传输过程中，C针对这个数据包进行特征分析，（DNS端口为53，进行特定端口监视扫描，对UDP明文传输的DNS查询请求进行特征和关键词匹配分析，比如“google.com”是关键词，也或者是“A记录”），从而立刻返回一个错误的解析结果（比如返回了 `A 233.233.233.233` ）。
 
-众所周知，作为链路上的一个节点，网络设备C 必定比真正的 DNS服务器B 更快的返回结果到 用户电脑A，而目前的DNS解析机制策略有一个重要的原则，就是只认第一。因此 节点网络设备C所返回的查询结果就被 用户电脑A当作了最终结果，于是用户电脑A因为获得了错误的IP，导致无法正常访问 `google.com `。
+众所周知，作为链路上的一个节点，网络设备 C 必定比真正的 DNS 服务器 B 更快的返回结果到 用户电脑A，而目前的DNS解析机制策略有一个重要的原则，就是只认第一。因此 节点网络设备C所返回的查询结果就被 用户电脑A当作了最终结果，于是用户电脑A因为获得了错误的IP，导致无法正常访问 `google.com `。
 
 验证污染 我的 doub.ssrshare.usm 主域名虽然在大部分地区解除了DNS污染，但是我的两个SS站域名并没有，所以我尝试对我的SS 子域名进行nslookup测试。
 
@@ -96,3 +98,16 @@ Addresses: 200:2:9f6a:794b::
 
 那么就直接把所有的谷歌IP拉黑不就好了？就算你获得了正确的谷歌IP，但是当你去访问这个IP的时候，墙会发现这个IP存在于黑名单中，于是直接阻断，于是浏览器就会提示：www.google.com 的响应时间过长等等
 
+## 3. 常见代理方式
+
+- VPN
+  - 常见协议: IPSec, OpenVPN, L2TP, WireGuard
+- Shadowsocks
+  - 常见协议: SOCKS5
+- V2Ray
+  - 常见协议: VMess
+- HTTP 代理
+  - 已被封锁, 原因是HTTP代理并不对数据进行加密, 即使流量能够绕过初步的审查，传输的内容仍然是透明的，容易被监控。
+  - 即使使用 HTTPS 也不会实现全局加密, 在建立 TLS 握手验证时还是需要一个HTTP明文连接
+
+了解更多: [上网限制和翻墙基本原理 | superxlcr's notebook](https://superxlcr.github.io/2018/07/01/%E4%B8%8A%E7%BD%91%E9%99%90%E5%88%B6%E5%92%8C%E7%BF%BB%E5%A2%99%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/)
