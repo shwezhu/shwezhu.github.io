@@ -27,3 +27,10 @@ db.bios.find().limit( 5 ).sort( { name: 1 } )
 ```
 
 Learn more: [db.collection.find() — MongoDB Manual](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/#available-mongosh-cursor-methods)
+
+## 2. Update documents
+
+```js
+// return the old document, with {new: true} return the updated document.
+Model.findByIdAndUpdate()
+```

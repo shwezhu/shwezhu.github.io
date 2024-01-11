@@ -42,7 +42,9 @@ server {
 }
 ```
 
-Because the 443 port is used by my first server, so I use 2087 port for my second server. I use Cloudflare for reverse proxy, Cloudflare only allows the following ports: 443, 2053, 2083, 2087, 2096, 8443. So I choose 2087 port for this app. 
+> You can get free TLS certificate from Cloudflare but you need get a domain first. Learn more: [Coudflare TLS encryption 520 Error Code & too Many Redirections - David's Blog](https://davidzhu.xyz/post/build-website/008-enable-cloudflare-reverse-proxy/)
+
+Because the 443 port is used by my file server, so I use 2087 port for my gbtbot server. I [use Cloudflare for reverse proxy](https://davidzhu.xyz/post/build-website/008-enable-cloudflare-reverse-proxy/), Cloudflare only allows the following ports: 443, 2053, 2083, 2087, 2096, 8443. So I choose 2087 port for this app. 
 
 > Don't forget allow 2087 port on your server firewall with command `sudo ufw allow 2087`.
 
@@ -60,4 +62,3 @@ With Vite, you can use `vite build` to build your project, then copy the `dist` 
 ├── index.html
 └── vite.svg
 ```
-

@@ -24,7 +24,7 @@ The production mode means you run `npm run build` which will generate a `dist` f
 ## 2. Deploy to server
 
 ```js
-scp -rp dist/ root@149.28.30.20:/var/www/html/
+scp -rp dist/* root@129.18.30.20:/var/www/html/
 ```
 
 Then follow this: [Nginx - David's Blog](https://davidzhu.xyz/post/build-website/007-nginx/)
