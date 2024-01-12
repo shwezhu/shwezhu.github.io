@@ -10,6 +10,8 @@ tags:
 
 ## 0. Minor tricks
 
+### 0.1. array
+
 > It is useful to remember which operations on arrays mutate them, and which don’t. For example, `push`, `pop`, `reverse`, and sort will mutate the original array, but `slice`, `filter`, and `map` will create a new one.
 
 ```js
@@ -22,6 +24,22 @@ if (isEmpty) {
     ));
 }
 ```
+
+### 0.2. string length
+
+The `length` of a String value is the length of the string in **UTF-16 code units** not the number of characters. learn more: [String: length - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length)
+
+```js
+console.log('a'.length); // 1
+console.log('汉'.length); // 1
+console.log('😀'.length); // 2
+```
+
+> 1 UTF-16 code unit = 16 bits = 2 bytes
+
+### 0.3. encding string to utf-8 in JS
+
+TextEncoder: [TextEncoder - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder)
 
 ## 1. Spread operator
 

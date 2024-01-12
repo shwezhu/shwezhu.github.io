@@ -8,48 +8,68 @@ tags:
   - cs basics
 ---
 
-编码问题很常见, 比如要读文件有时候打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 
+编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 
 
-## 1. ASCII vs Unicode
+## 1. 编码和乱码 (unicode vs ascii)
 
-先来看看ASCII, 说到编码最开始肯定就是ASCII了, 电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的, 即用电脑磁盘存储数据, 刚开始电脑没有普及, 也就限制在少部分人用, 而他们说英语, 所以他们就做了个表, 规定数字`65`代表字符`A`, `66`代表字符`B`依次类推, 然后一些标点符号比如`#`由数字`35`代表, 具体细节可以查看ASCII表内容, 然后十进制数字转为二进制就可以存储在电脑了, 这些字符刚好128个, 其实也不是刚好他们应该是故意凑成128个的, 也就是刚好可以用1字节的数据来表示, 1字节8位二进制, 即1^8 = 128, 所以ASCII表其实就是一个map, 把字符匹配到一个二进制数(编码 encoding), 或者把一个8位二进制数解释为一个字符(decoding, 解码), 
+电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的. ASCII 规定数字`65`代表字符`A`, `66`代表字符`B`依次类推, 所以ASCII表就是一个map, 每个字符对应一个数, **把字符按照预定规则对应到数字的过程就叫编码**. 
 
-到后来计算机普及, 全世界又都使用不同语言, 此时就需要电脑表示不同的语言字符, 那ASCII只能表示128个字符, 肯定不够, 所以需要新的用数字代表字符的标准, 不然我们说用`36`代表汉字`牛`, 韩国说用`36`代表字符`&`, 当我输入`牛`, 软件就把`0010 0100`存入磁盘, 然后我把文件传给韩国的朋友, 他们的程序认为`36`即`0010 0100`代表`&`, 那这岂不是无法沟通, 这也是乱码产生的原因: 软件尝试使用与文件编码不同的编码方式来解码文件, 
+到后来计算机普及, 全世界都使用不同语言, 出现了问题, 比如我们用`36`代表汉字`牛`, 韩国说用`36`代表字符`&`, 当我输入`牛`, 软件就把`0010 0100`存入磁盘, 然后我把文件传给韩国的朋友, 他们的程序认为`36`即`0010 0100`代表`&`, 这就产生了乱码: **软件尝试使用与文件编码不同的编码方式来解码文件**, 
 
-接着说, 到后来计算机普及, .. 所以我们需要一个标准, 全世界都遵守的那种, 这样我们才能无差错沟通, 我发送一串二进制在我这代表字符`A`, 你的软件收到这串二进制后翻译出的也是字符`A`, 而不是`B`或者`C`, 
+所以我们需要一个新的标准, 可以涵盖全世界字符的那种, 然后所有软件都遵守这个标准, 这样才能无差错沟通, 我发送一串二进制在我这代表字符`A`, 你的软件收到这串二进制后翻译出的也是字符`A`, 而不是`B`或`C`, 
 
-这时候Unicode就出来了, 它就是使用`0~0x10FFFF`的数字来表示世界上所有的字符, 如汉字 `在` 的Unicode值是 `0x5728`, 注意`0x`代表值`5728`是十六进制, 又如字符 `A` 的Unicode值是`0x41`, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的, 
+这时候 Unicode 就出来了, 它就是使用`0~0x10FFFF`的数字来表示世界上所有的字符, 如汉字 `在` 的Unicode值是 `0x5728`, 注意`0x`代表值`5728`是十六进制, 又如字符 `A` 的Unicode值是`0x41`, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的, 
 
-> 注意`0~0x10FFFF`我写成了十六进制的形式, 你也可以转为十进制写上, 或者二进制八进制, 无所谓数字而已
+> Unicode 和 ASCII 都是字符集, 但是 ASCII 只包含 128 个字符, 而 Unicode 包含很多很多个字符.
 
-来看看[文档](https://docs.python.org/3/howto/unicode.html)怎么表述的:
+## 2. Unicode vs UTF-8 vs UTF-16
 
-The Unicode standard describes how characters are represented by **code points**. A code point value is an integer in the range 0 to 0x10FFFF. In the standard and in this document, a code point is written using the notation `U+265E` to mean the character with value `0x265e` (9,822 in decimal). 
+### Unicode
+1. **定义和目的**：
+   - Unicode 是一个国际标准，用于不同系统和程序间统一表示文本数据。
+   - 它为世界上几乎所有的字符和文本符号分配了唯一的 code point。
 
-A Unicode string is a sequence of code points, which are numbers from 0 through `0x10FFFF` (1,114,111 decimal). The rules for translating a Unicode string into a sequence of bytes are called a **character encoding**, or just an **encoding**. 
+> Unicode standard describes how characters are represented by **code points**. A code point value is an integer in the range 0 to 0x10FFFF. In the standard and in this document, a code point is written using the notation `U+265E` to mean the character with value `0x265e` (9,822 in decimal). 
 
-再看Python文档下面这段话, 是不是知道他们在说什么了: 
+2. **Code point 范围**：
+   - 从 `U+0000` 到 `U+10FFFF`，包括了超过 100,000 个字符。
 
-> Python’s string type uses the Unicode Standard for representing characters, which lets Python programs work with all the characters from the world. [Source](https://docs.python.org/3/howto/unicode.html)
+3. **重点**：
+   - Unicode 是字符集（character set），定义了字符和 code point 之间的映射，但不规定具体如何在计算机中存储这些code point。
 
-## 2. Unicode vs UTF-8
+### UTF-8
+1. **定义和特点**：
+   - UTF-8（8-bit Unicode Transformation Format）是一种对 Unicode code point 进行编码的方式。
+   - 它是一种可变长度的字符编码方法，使用 1 到 4 个字节来表示一个 Unicode code point。
 
-Unicode 是个表就, 像ASCII表一样, 提供给不同的 encoding scheme 参考, 而 utf-8 encoding 就是把一个字符的Unicode的code points编码成其它二进制数, 
+2. **优势**：
+   - 兼容性好，ASCII 编码的字符在 UTF-8 中保持单字节形式，与传统 ASCII 编码兼容。
+   - 在存储英文文本时空间效率高。因为英文字符在 UTF-8 中只占用 1 个字节。
 
-> UTF-8 is an encoding system for Unicode. It can translate any Unicode character to a matching unique binary string, and can also translate the binary string back to a Unicode character. This is the meaning of “UTF”, or “Unicode Transformation Format.”
+### UTF-16
+1. **定义和特点**：
+   - UTF-16（16-bit Unicode Transformation Format）是另一种对 Unicode code point进行编码的格式。
+   - 使用 2 个或 4 个字节来表示一个 Unicode code point。
+   - 在UTF-16中，字符可以用一个或两个16位的 **code units** 来表示.
 
-举个例子, 这是utf-8的编码规则, 
+2. **特性**：
+   - 在处理某些语言（如中文、日文、韩文）时可能比 UTF-8 更加空间高效。
+   - 因为多数汉字在 UTF-16 中只占用 2 个字节。
 
-```
-Binary format of bytes in sequence
-1st Byte    2nd Byte    3rd Byte    4th Byte    Number of Free Bits   Maximum Expressible Unicode Value
-0xxxxxxx                                                7             007F hex (127)
-110xxxxx    10xxxxxx                                (5+6)=11          07FF hex (2047)
-1110xxxx    10xxxxxx    10xxxxxx                  (4+6+6)=16          FFFF hex (65535)
-11110xxx    10xxxxxx    10xxxxxx    10xxxxxx    (3+6+6+6)=21          10FFFF hex (1,114,111)
-```
+### 主要区别
+- **编码长度**：
+  - UTF-8 是可变长度的，从 1 到 4 个字节不等。
+  - UTF-16 通常使用 2 个或 4 个字节。
+- **兼容性**：
+  - UTF-8 与传统 ASCII 编码完全兼容。
+  - UTF-16 与 ASCII 不兼容。
+- **空间效率**：
+  - 对于主要包含 ASCII 字符的文本，UTF-8 更加高效。
+  - 对于包含大量非西方字符的文本，UTF-16 可能更加高效。
 
-汉字`汉`的Unicode值是两字节即 `6C49`, 二进制为: `0110 1100 0100 1001`, 因为 utf-8 规定汉字占 3 字节, 因此选择第三行进行编码, 根据上标经过utf-8编码变成 `11100110 10110001 10001001`,  因此最终写入文件的是其三字节的 utf-8 encoding `11100110 10110001 10001001`, 而不是其Unicode `0110 1100 0100 1001` , 可以使用 `xxd` 查看文件的16进制内容,
+总的来说，Unicode 是一个广泛的字符集，定义了全球各种字符的 code point。而 UTF-8 和 UTF-16 是这些code point在计算机存储和传输中的具体编码实现方式。选择哪种编码方式取决于特定的应用场景和空间效率需求。
+
+关于 utf-8 这里举个例子, 汉字`汉`的Unicode值是两字节即 `6C49`, 二进制为: `0110 1100 0100 1001`, 因为 utf-8 规定汉字占 3 字节, 因此选择第三行进行编码, 根据上标经过utf-8编码变成 `11100110 10110001 10001001`,  因此最终写入文件的是其三字节的 utf-8 encoding `11100110 10110001 10001001`, 而不是其Unicode `0110 1100 0100 1001` , 可以使用 `xxd` 查看文件的16进制内容,
 
 ```shell
 $ xxd text.md
@@ -60,11 +80,14 @@ text.md: Unicode text, UTF-8 text
 
 `e6b1 89`  = `11100110 10110001 10001001`
 
-> 注意: 有时候也说ASCII编码, 其实意思就是告诉你你看到字符`A`, 那他的数值就是`0x41`, 不要太纠结到底ASCII是编码方式, 还是其他, 弄清楚本质就好了, 
-
-> 注意: encoding=编码, scheme 不知道咋翻译比较准确, 所以以后都说 encoding scheme
-
-> 注意: “编码就是把字符对应的数值以一定的规则编码成二进制” 是我自己对utf-8的理解, 普遍的理解是map, 即把字符`A`对应到数字`0x41`的过程就是编码, encoding, 我在这这么说是为了区分Unicode在编码中的作用角色, 
+```js
+Binary format of bytes in sequence
+1st Byte    2nd Byte    3rd Byte    4th Byte    Number of Free Bits   Maximum Expressible Unicode Value
+0xxxxxxx                                                7             007F hex (127)
+110xxxxx    10xxxxxx                                (5+6)=11          07FF hex (2047)
+1110xxxx    10xxxxxx    10xxxxxx                  (4+6+6)=16          FFFF hex (65535)
+11110xxx    10xxxxxx    10xxxxxx    10xxxxxx    (3+6+6+6)=21          10FFFF hex (1,114,111)
+```
 
 读到[一篇文章](http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html)总结的很好 分享片段:
 
@@ -80,24 +103,11 @@ text.md: Unicode text, UTF-8 text
 
 也就是说，**虽然每个字符在Unicode字符集中都能找到唯一确定的编号（字符码，又称Unicode码），但是决定最终字节流的却是具体的字符编码**。例如同样是对Unicode字符“A”进行编码，UTF-8字符编码得到的字节流是0x41，而UTF-16（大端模式）得到的是0x00 0x41。
 
-> 这段总结的很好, 可以看出和上面我们分析的是一样的, 所谓英雄所见略同(真不要脸, hhh
+### 3. 修改文件编码方式
 
-### 3. 常见 Unicode 编码方式
+如果你直接把utf-8编码的文件转为其它编码比如gbk, 那转换之后你的文件肯定是乱码, 因为在你写入一些内容比如`汉`到你的文本文件, 此时这个文件的编码方式为`utf-8`, 那你保存此文件后, 此文件的内容已经是经过utf-8编码二进制数, 即:`11100110 10110001 10001001`也就是`e6b1 89`就是上面的汉字`汉`, 此时你硬要把文件的编码方式改为gbk, 而gbk采用完全与utf-8不同的编码方式(2字节1个字符),  此时当其他软件是图打开你这个文本文件时, 就会查看你文件的编码信息, 他们看到是gbk编码, 那就会把`11100110 10110001 10001001`即`e6b1 89`中的前两个字节解释为一个字符, 然后他们查找`11100110 10110001`即`e6b1`, 那肯定匹配不到`汉`, 就会把`11100110 10110001`解释为不可打印字符或者英文或者其它语言,,,
 
-任何能够将Unicode字符映射为字节流的编码都属于Unicode编码。中国的GB18030编码，覆盖了Unicode所有的字符，因此也算是一种Unicode编码。只不过他的编码方式并不像UTF-8或者UTF-16一样，将Unicode字符的编号通过一定的规则进行转换，而只能通过查表的手段进行编码。
-
-至于utf-8, utf-16就不同说了, 看名字都知道属于Unicode编码, 
-
-**Unicode编码和以前的字符集编码区别:**
-
-早期字符编码、字符集和代码页等概念都是表达同一个意思。例如GB2312字符集、GB2312编码，936代码页，实际上说的是同个东西。但是对于Unicode则不同，Unicode字符集只是定义了字符的集合和唯一编号，Unicode编码，则是对UTF-8、UCS-2/UTF-16等具体编码方案的统称而已，并不是具体的编码方案。所以当需要用到字符编码的时候，你可以写gb2312，codepage936，utf-8，utf-16，但请不要写unicode（看过别人在网页的meta标签里头写charset=unicode，有感而发）。
-
-### 4. 修改文件编码方式
-
-
-最后需要注意, 如果你直接把utf-8编码的文件转为其它编码比如gbk, 那转换之后你的文件肯定是乱码, 因为在你写入一些内容比如`汉`到你的文本文件, 此时这个文件的编码方式为`utf-8`, 那你保存此文件后, 此文件的内容已经是经过utf-8编码的unicode code, 即:`11100110 10110001 10001001`也就是`e6b1 89`就是上面的汉字`汉`, 此时你硬要把文件的编码方式改为gbk, 而gbk采用完全与utf-8不同的编码方式(2字节1个字符),  此时当其他软件是图打开你这个文本文件时, 就会查看你文件的编码信息, 他们看到是gbk编码, 那就会把`11100110 10110001 10001001`即`e6b1 89`中的前两个字节解释为一个字符, 然后他们查找`11100110 10110001`即`e6b1`, 那肯定匹配不到`汉`, 就会把`11100110 10110001`解释为不可打印字符或者英文或者其它语言,,,
-
-但也可以实现不同编码的安全转换, 一个思路是, 我们知道这个文件是用的utf-8编码, 所以我们先把该文件的字符转换为unicode code, 然后再利用gbk进行编码这些unicode code, 具体做法如下:
+但也可以实现不同编码的安全转换, 一个思路是, 假如知道文件是用的utf-8编码, 所以我们先把该文件的字符转换为unicode code point, 然后再利用gbk进行编码这些unicode code, 具体做法如下:
 
 ```python
 import sys
@@ -118,7 +128,7 @@ with open("article_2.md", "wb") as f:
 
 注意, 上面代码`utf_8_str = f.read()`, 此时`utf_8_str`已经是unicode code, 第二我们写如文件时, 要以二进制写入, 不然你写入的就是长得像16进制数的字符串, 而不是真正的写入二进制数据, 
 
-### 5. Bytes in Python
+### 4. Python 中的编码
 
 电脑只能存储二进制数, 而python也有个bytes类用来代表二进制字符串, 
 
@@ -181,7 +191,7 @@ with open("text.md", "wb") as f:
 
 ```shell
 $ xxd text.md
-00000000: 4142                                     AB
+00000000: 4142              AB
 ```
 
 如果我们不指定以二进制写入, 则会报错:
@@ -196,9 +206,3 @@ with open("text.md", "w") as f:
 ```
 
 注意, python挺好有报错, 但是有的语言比如C的接口, 就不会提醒, 你写入什么就是什么, 如果你打开方式不是二进制, 然后写入了二进制的字符串, 那结果就是, 这些二进制的字符串被当作普通字符串写入文件...
-
-参考:
-
-- [Unicode HOWTO — Python 3.11.3 documentation](https://docs.python.org/3/howto/unicode.html)
-- [python - What is the difference between a string and a byte string? - Stack Overflow](https://stackoverflow.com/questions/6224052/what-is-the-difference-between-a-string-and-a-byte-string)
-- [关于字符编码，你所需要知道的（ASCII,Unicode,Utf-8,GB2312…)](http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html)
