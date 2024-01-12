@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &amp;lsquo;DNS spoofing&amp;rsquo;. 1.1. DNS Caching Learn more about DNS caching: DNS Concepts (NameServer(NS), DNS Records and Caching) - David&amp;rsquo;s Blog 1.2. How do attackers poison DNS caches? Attackers can poison" />
+<meta name="author" content="David" /><meta name="description" content="声明: 本文只用于学习目的, 请勿用于非法用途. 1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &amp;lsquo;DNS spoofing&amp;rsquo;. 1.1. DNS Caching Learn more about" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="DNS Spoofing - GFW" />
-<meta property="og:description" content="1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;. 1.1. DNS Caching Learn more about DNS caching: DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog 1.2. How do attackers poison DNS caches? Attackers can poison" />
+<meta property="og:description" content="声明: 本文只用于学习目的, 请勿用于非法用途. 1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;. 1.1. DNS Caching Learn more about" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/networking/005-gfw-dns/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-31T15:29:25+00:00" />
 <meta property="article:modified_time" content="2023-10-31T15:29:25+00:00" />
 
 <meta itemprop="name" content="DNS Spoofing - GFW">
-<meta itemprop="description" content="1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;. 1.1. DNS Caching Learn more about DNS caching: DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog 1.2. How do attackers poison DNS caches? Attackers can poison"><meta itemprop="datePublished" content="2023-10-31T15:29:25+00:00" />
+<meta itemprop="description" content="声明: 本文只用于学习目的, 请勿用于非法用途. 1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;. 1.1. DNS Caching Learn more about"><meta itemprop="datePublished" content="2023-10-31T15:29:25+00:00" />
 <meta itemprop="dateModified" content="2023-10-31T15:29:25+00:00" />
-<meta itemprop="wordCount" content="1990">
+<meta itemprop="wordCount" content="2157">
 <meta itemprop="keywords" content="cybersecurity,networking," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="DNS Spoofing - GFW"/>
-<meta name="twitter:description" content="1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;. 1.1. DNS Caching Learn more about DNS caching: DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog 1.2. How do attackers poison DNS caches? Attackers can poison"/>
+<meta name="twitter:description" content="声明: 本文只用于学习目的, 请勿用于非法用途. 1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;. 1.1. DNS Caching Learn more about"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -155,6 +155,7 @@
             <li><a href="#23-ip黑名单">2.3. ip黑名单</a></li>
           </ul>
         </li>
+        <li><a href="#3-常见代理方式">3. 常见代理方式</a></li>
       </ul>
     </li>
   </ul>
@@ -162,7 +163,8 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="1-dns-spoofing">1. DNS spoofing</h2>
+      <p>声明: 本文只用于学习目的, 请勿用于非法用途.</p>
+<h2 id="1-dns-spoofing">1. DNS spoofing</h2>
 <p><a href="https://www.cloudflare.com/learning/dns/what-is-dns/">DNS</a> cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;.</p>
 <h3 id="11-dns-caching">1.1. DNS Caching</h3>
 <p>Learn more about DNS caching: <a href="https://davidzhu.xyz/post/networking/002-dns-basics/">DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog</a></p>
@@ -190,7 +192,7 @@
 <p>然后我们模拟一次被污染的DNS请求过程。</p>
 <p>A访问一个网站，比如 <code>google.com</code> ，然后，A向B通过UDP方式发送查询请求，比如查询内容 <code>A google.com</code> ，这个数据库在前往B的时候要经过数个节点网络设备比如C，然后继续前往DNS服务器B。</p>
 <p>然而在这个传输过程中，C针对这个数据包进行特征分析，（DNS端口为53，进行特定端口监视扫描，对UDP明文传输的DNS查询请求进行特征和关键词匹配分析，比如“google.com”是关键词，也或者是“A记录”），从而立刻返回一个错误的解析结果（比如返回了 <code>A 233.233.233.233</code> ）。</p>
-<p>众所周知，作为链路上的一个节点，网络设备C 必定比真正的 DNS服务器B 更快的返回结果到 用户电脑A，而目前的DNS解析机制策略有一个重要的原则，就是只认第一。因此 节点网络设备C所返回的查询结果就被 用户电脑A当作了最终结果，于是用户电脑A因为获得了错误的IP，导致无法正常访问 <code>google.com </code>。</p>
+<p>众所周知，作为链路上的一个节点，网络设备 C 必定比真正的 DNS 服务器 B 更快的返回结果到 用户电脑A，而目前的DNS解析机制策略有一个重要的原则，就是只认第一。因此 节点网络设备C所返回的查询结果就被 用户电脑A当作了最终结果，于是用户电脑A因为获得了错误的IP，导致无法正常访问 <code>google.com </code>。</p>
 <p>验证污染 我的 doub.ssrshare.usm 主域名虽然在大部分地区解除了DNS污染，但是我的两个SS站域名并没有，所以我尝试对我的SS 子域名进行nslookup测试。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -234,6 +236,31 @@
 <p>即使没有DNS污染 或者 你获得了正确的IP，你就能正常访问这些被屏蔽的网站了吗？</p>
 <p>不，墙目前已经有了IP黑名单，针对谷歌这种网站已经不再是普通的DNS污染了，因为总会有办法访问被DNS污染的网站（比如指定Hosts）。</p>
 <p>那么就直接把所有的谷歌IP拉黑不就好了？就算你获得了正确的谷歌IP，但是当你去访问这个IP的时候，墙会发现这个IP存在于黑名单中，于是直接阻断，于是浏览器就会提示：www.google.com 的响应时间过长等等</p>
+<h2 id="3-常见代理方式">3. 常见代理方式</h2>
+<ul>
+<li>VPN
+<ul>
+<li>常见协议: IPSec, OpenVPN, L2TP, WireGuard</li>
+</ul>
+</li>
+<li>Shadowsocks
+<ul>
+<li>常见协议: SOCKS5</li>
+</ul>
+</li>
+<li>V2Ray
+<ul>
+<li>常见协议: VMess</li>
+</ul>
+</li>
+<li>HTTP 代理
+<ul>
+<li>已被封锁, 原因是HTTP代理并不对数据进行加密, 即使流量能够绕过初步的审查，传输的内容仍然是透明的，容易被监控。</li>
+<li>即使使用 HTTPS 也不会实现全局加密, 在建立 TLS 握手验证时还是需要一个HTTP明文连接</li>
+</ul>
+</li>
+</ul>
+<p>了解更多: <a href="https://superxlcr.github.io/2018/07/01/%E4%B8%8A%E7%BD%91%E9%99%90%E5%88%B6%E5%92%8C%E7%BF%BB%E5%A2%99%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/">上网限制和翻墙基本原理 | superxlcr&rsquo;s notebook</a></p>
 
     </div>
 

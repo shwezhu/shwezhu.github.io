@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="编码问题很常见, 比如要读文件有时候打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 1. ASCII vs Unicode 先来" />
+<meta name="author" content="David" /><meta name="description" content="编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 1. 编码和乱码 (unicode vs ascii)" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="说说编码 - encoding" />
-<meta property="og:description" content="编码问题很常见, 比如要读文件有时候打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 1. ASCII vs Unicode 先来" />
+<meta property="og:description" content="编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 1. 编码和乱码 (unicode vs ascii)" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/cs-basics/001-encoding/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-06-01T22:13:25+00:00" />
 <meta property="article:modified_time" content="2023-06-01T22:13:25+00:00" />
 
 <meta itemprop="name" content="说说编码 - encoding">
-<meta itemprop="description" content="编码问题很常见, 比如要读文件有时候打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 1. ASCII vs Unicode 先来"><meta itemprop="datePublished" content="2023-06-01T22:13:25+00:00" />
+<meta itemprop="description" content="编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 1. 编码和乱码 (unicode vs ascii)"><meta itemprop="datePublished" content="2023-06-01T22:13:25+00:00" />
 <meta itemprop="dateModified" content="2023-06-01T22:13:25+00:00" />
-<meta itemprop="wordCount" content="3870">
+<meta itemprop="wordCount" content="3182">
 <meta itemprop="keywords" content="python,cs basics," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="说说编码 - encoding"/>
-<meta name="twitter:description" content="编码问题很常见, 比如要读文件有时候打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 1. ASCII vs Unicode 先来"/>
+<meta name="twitter:description" content="编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? 1. 编码和乱码 (unicode vs ascii)"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -142,12 +142,15 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#1-ascii-vs-unicode">1. ASCII vs Unicode</a></li>
-        <li><a href="#2-unicode-vs-utf-8">2. Unicode vs UTF-8</a>
+        <li><a href="#1-编码和乱码-unicode-vs-ascii">1. 编码和乱码 (unicode vs ascii)</a></li>
+        <li><a href="#2-unicode-vs-utf-8-vs-utf-16">2. Unicode vs UTF-8 vs UTF-16</a>
           <ul>
-            <li><a href="#3-常见-unicode-编码方式">3. 常见 Unicode 编码方式</a></li>
-            <li><a href="#4-修改文件编码方式">4. 修改文件编码方式</a></li>
-            <li><a href="#5-bytes-in-python">5. Bytes in Python</a></li>
+            <li><a href="#unicode">Unicode</a></li>
+            <li><a href="#utf-8">UTF-8</a></li>
+            <li><a href="#utf-16">UTF-16</a></li>
+            <li><a href="#主要区别">主要区别</a></li>
+            <li><a href="#3-修改文件编码方式">3. 修改文件编码方式</a></li>
+            <li><a href="#4-python-中的编码">4. Python 中的编码</a></li>
           </ul>
         </li>
       </ul>
@@ -157,47 +160,100 @@
   </div>
 </div>
     <div class="post-content">
-      <p>编码问题很常见, 比如要读文件有时候打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么?</p>
-<h2 id="1-ascii-vs-unicode">1. ASCII vs Unicode</h2>
-<p>先来看看ASCII, 说到编码最开始肯定就是ASCII了, 电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的, 即用电脑磁盘存储数据, 刚开始电脑没有普及, 也就限制在少部分人用, 而他们说英语, 所以他们就做了个表, 规定数字<code>65</code>代表字符<code>A</code>, <code>66</code>代表字符<code>B</code>依次类推, 然后一些标点符号比如<code>#</code>由数字<code>35</code>代表, 具体细节可以查看ASCII表内容, 然后十进制数字转为二进制就可以存储在电脑了, 这些字符刚好128个, 其实也不是刚好他们应该是故意凑成128个的, 也就是刚好可以用1字节的数据来表示, 1字节8位二进制, 即1^8 = 128, 所以ASCII表其实就是一个map, 把字符匹配到一个二进制数(编码 encoding), 或者把一个8位二进制数解释为一个字符(decoding, 解码),</p>
-<p>到后来计算机普及, 全世界又都使用不同语言, 此时就需要电脑表示不同的语言字符, 那ASCII只能表示128个字符, 肯定不够, 所以需要新的用数字代表字符的标准, 不然我们说用<code>36</code>代表汉字<code>牛</code>, 韩国说用<code>36</code>代表字符<code>&amp;</code>, 当我输入<code>牛</code>, 软件就把<code>0010 0100</code>存入磁盘, 然后我把文件传给韩国的朋友, 他们的程序认为<code>36</code>即<code>0010 0100</code>代表<code>&amp;</code>, 那这岂不是无法沟通, 这也是乱码产生的原因: 软件尝试使用与文件编码不同的编码方式来解码文件,</p>
-<p>接着说, 到后来计算机普及, .. 所以我们需要一个标准, 全世界都遵守的那种, 这样我们才能无差错沟通, 我发送一串二进制在我这代表字符<code>A</code>, 你的软件收到这串二进制后翻译出的也是字符<code>A</code>, 而不是<code>B</code>或者<code>C</code>,</p>
-<p>这时候Unicode就出来了, 它就是使用<code>0~0x10FFFF</code>的数字来表示世界上所有的字符, 如汉字 <code>在</code> 的Unicode值是 <code>0x5728</code>, 注意<code>0x</code>代表值<code>5728</code>是十六进制, 又如字符 <code>A</code> 的Unicode值是<code>0x41</code>, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的,</p>
+      <p>编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么?</p>
+<h2 id="1-编码和乱码-unicode-vs-ascii">1. 编码和乱码 (unicode vs ascii)</h2>
+<p>电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的. ASCII 规定数字<code>65</code>代表字符<code>A</code>, <code>66</code>代表字符<code>B</code>依次类推, 所以ASCII表就是一个map, 每个字符对应一个数, <strong>把字符按照预定规则对应到数字的过程就叫编码</strong>.</p>
+<p>到后来计算机普及, 全世界都使用不同语言, 出现了问题, 比如我们用<code>36</code>代表汉字<code>牛</code>, 韩国说用<code>36</code>代表字符<code>&amp;</code>, 当我输入<code>牛</code>, 软件就把<code>0010 0100</code>存入磁盘, 然后我把文件传给韩国的朋友, 他们的程序认为<code>36</code>即<code>0010 0100</code>代表<code>&amp;</code>, 这就产生了乱码: <strong>软件尝试使用与文件编码不同的编码方式来解码文件</strong>,</p>
+<p>所以我们需要一个新的标准, 可以涵盖全世界字符的那种, 然后所有软件都遵守这个标准, 这样才能无差错沟通, 我发送一串二进制在我这代表字符<code>A</code>, 你的软件收到这串二进制后翻译出的也是字符<code>A</code>, 而不是<code>B</code>或<code>C</code>,</p>
+<p>这时候 Unicode 就出来了, 它就是使用<code>0~0x10FFFF</code>的数字来表示世界上所有的字符, 如汉字 <code>在</code> 的Unicode值是 <code>0x5728</code>, 注意<code>0x</code>代表值<code>5728</code>是十六进制, 又如字符 <code>A</code> 的Unicode值是<code>0x41</code>, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的,</p>
 <blockquote>
-<p>注意<code>0~0x10FFFF</code>我写成了十六进制的形式, 你也可以转为十进制写上, 或者二进制八进制, 无所谓数字而已</p>
+<p>Unicode 和 ASCII 都是字符集, 但是 ASCII 只包含 128 个字符, 而 Unicode 包含很多很多个字符.</p>
 </blockquote>
-<p>来看看<a href="https://docs.python.org/3/howto/unicode.html">文档</a>怎么表述的:</p>
-<p>The Unicode standard describes how characters are represented by <strong>code points</strong>. A code point value is an integer in the range 0 to 0x10FFFF. In the standard and in this document, a code point is written using the notation <code>U+265E</code> to mean the character with value <code>0x265e</code> (9,822 in decimal).</p>
-<p>A Unicode string is a sequence of code points, which are numbers from 0 through <code>0x10FFFF</code> (1,114,111 decimal). The rules for translating a Unicode string into a sequence of bytes are called a <strong>character encoding</strong>, or just an <strong>encoding</strong>.</p>
-<p>再看Python文档下面这段话, 是不是知道他们在说什么了:</p>
+<h2 id="2-unicode-vs-utf-8-vs-utf-16">2. Unicode vs UTF-8 vs UTF-16</h2>
+<h3 id="unicode">Unicode</h3>
+<ol>
+<li><strong>定义和目的</strong>：
+<ul>
+<li>Unicode 是一个国际标准，用于不同系统和程序间统一表示文本数据。</li>
+<li>它为世界上几乎所有的字符和文本符号分配了唯一的 code point。</li>
+</ul>
+</li>
+</ol>
 <blockquote>
-<p>Python’s string type uses the Unicode Standard for representing characters, which lets Python programs work with all the characters from the world. <a href="https://docs.python.org/3/howto/unicode.html">Source</a></p>
+<p>Unicode standard describes how characters are represented by <strong>code points</strong>. A code point value is an integer in the range 0 to 0x10FFFF. In the standard and in this document, a code point is written using the notation <code>U+265E</code> to mean the character with value <code>0x265e</code> (9,822 in decimal).</p>
 </blockquote>
-<h2 id="2-unicode-vs-utf-8">2. Unicode vs UTF-8</h2>
-<p>Unicode 是个表就, 像ASCII表一样, 提供给不同的 encoding scheme 参考, 而 utf-8 encoding 就是把一个字符的Unicode的code points编码成其它二进制数,</p>
-<blockquote>
-<p>UTF-8 is an encoding system for Unicode. It can translate any Unicode character to a matching unique binary string, and can also translate the binary string back to a Unicode character. This is the meaning of “UTF”, or “Unicode Transformation Format.”</p>
-</blockquote>
-<p>举个例子, 这是utf-8的编码规则,</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Binary format of bytes in sequence
-</span></span><span class="line"><span class="cl">1st Byte    2nd Byte    3rd Byte    4th Byte    Number of Free Bits   Maximum Expressible Unicode Value
-</span></span><span class="line"><span class="cl">0xxxxxxx                                                7             007F hex (127)
-</span></span><span class="line"><span class="cl">110xxxxx    10xxxxxx                                (5+6)=11          07FF hex (2047)
-</span></span><span class="line"><span class="cl">1110xxxx    10xxxxxx    10xxxxxx                  (4+6+6)=16          FFFF hex (65535)
-</span></span><span class="line"><span class="cl">11110xxx    10xxxxxx    10xxxxxx    10xxxxxx    (3+6+6+6)=21          10FFFF hex (1,114,111)
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>汉字<code>汉</code>的Unicode值是两字节即 <code>6C49</code>, 二进制为: <code>0110 1100 0100 1001</code>, 因为 utf-8 规定汉字占 3 字节, 因此选择第三行进行编码, 根据上标经过utf-8编码变成 <code>11100110 10110001 10001001</code>,  因此最终写入文件的是其三字节的 utf-8 encoding <code>11100110 10110001 10001001</code>, 而不是其Unicode <code>0110 1100 0100 1001</code> , 可以使用 <code>xxd</code> 查看文件的16进制内容,</p>
+<ol start="2">
+<li>
+<p><strong>Code point 范围</strong>：</p>
+<ul>
+<li>从 <code>U+0000</code> 到 <code>U+10FFFF</code>，包括了超过 100,000 个字符。</li>
+</ul>
+</li>
+<li>
+<p><strong>重点</strong>：</p>
+<ul>
+<li>Unicode 是字符集（character set），定义了字符和 code point 之间的映射，但不规定具体如何在计算机中存储这些code point。</li>
+</ul>
+</li>
+</ol>
+<h3 id="utf-8">UTF-8</h3>
+<ol>
+<li>
+<p><strong>定义和特点</strong>：</p>
+<ul>
+<li>UTF-8（8-bit Unicode Transformation Format）是一种对 Unicode code point 进行编码的方式。</li>
+<li>它是一种可变长度的字符编码方法，使用 1 到 4 个字节来表示一个 Unicode code point。</li>
+</ul>
+</li>
+<li>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>兼容性好，ASCII 编码的字符在 UTF-8 中保持单字节形式，与传统 ASCII 编码兼容。</li>
+<li>在存储英文文本时空间效率高。因为英文字符在 UTF-8 中只占用 1 个字节。</li>
+</ul>
+</li>
+</ol>
+<h3 id="utf-16">UTF-16</h3>
+<ol>
+<li>
+<p><strong>定义和特点</strong>：</p>
+<ul>
+<li>UTF-16（16-bit Unicode Transformation Format）是另一种对 Unicode code point进行编码的格式。</li>
+<li>使用 2 个或 4 个字节来表示一个 Unicode code point。</li>
+<li>在UTF-16中，字符可以用一个或两个16位的 <strong>code units</strong> 来表示.</li>
+</ul>
+</li>
+<li>
+<p><strong>特性</strong>：</p>
+<ul>
+<li>在处理某些语言（如中文、日文、韩文）时可能比 UTF-8 更加空间高效。</li>
+<li>因为多数汉字在 UTF-16 中只占用 2 个字节。</li>
+</ul>
+</li>
+</ol>
+<h3 id="主要区别">主要区别</h3>
+<ul>
+<li><strong>编码长度</strong>：
+<ul>
+<li>UTF-8 是可变长度的，从 1 到 4 个字节不等。</li>
+<li>UTF-16 通常使用 2 个或 4 个字节。</li>
+</ul>
+</li>
+<li><strong>兼容性</strong>：
+<ul>
+<li>UTF-8 与传统 ASCII 编码完全兼容。</li>
+<li>UTF-16 与 ASCII 不兼容。</li>
+</ul>
+</li>
+<li><strong>空间效率</strong>：
+<ul>
+<li>对于主要包含 ASCII 字符的文本，UTF-8 更加高效。</li>
+<li>对于包含大量非西方字符的文本，UTF-16 可能更加高效。</li>
+</ul>
+</li>
+</ul>
+<p>总的来说，Unicode 是一个广泛的字符集，定义了全球各种字符的 code point。而 UTF-8 和 UTF-16 是这些code point在计算机存储和传输中的具体编码实现方式。选择哪种编码方式取决于特定的应用场景和空间效率需求。</p>
+<p>关于 utf-8 这里举个例子, 汉字<code>汉</code>的Unicode值是两字节即 <code>6C49</code>, 二进制为: <code>0110 1100 0100 1001</code>, 因为 utf-8 规定汉字占 3 字节, 因此选择第三行进行编码, 根据上标经过utf-8编码变成 <code>11100110 10110001 10001001</code>,  因此最终写入文件的是其三字节的 utf-8 encoding <code>11100110 10110001 10001001</code>, 而不是其Unicode <code>0110 1100 0100 1001</code> , 可以使用 <code>xxd</code> 查看文件的16进制内容,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -213,33 +269,34 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>e6b1 89</code>  = <code>11100110 10110001 10001001</code></p>
-<blockquote>
-<p>注意: 有时候也说ASCII编码, 其实意思就是告诉你你看到字符<code>A</code>, 那他的数值就是<code>0x41</code>, 不要太纠结到底ASCII是编码方式, 还是其他, 弄清楚本质就好了,</p>
-</blockquote>
-<blockquote>
-<p>注意: encoding=编码, scheme 不知道咋翻译比较准确, 所以以后都说 encoding scheme</p>
-</blockquote>
-<blockquote>
-<p>注意: “编码就是把字符对应的数值以一定的规则编码成二进制” 是我自己对utf-8的理解, 普遍的理解是map, 即把字符<code>A</code>对应到数字<code>0x41</code>的过程就是编码, encoding, 我在这这么说是为了区分Unicode在编码中的作用角色,</p>
-</blockquote>
-<p>读到<a href="http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html">一篇文章</a>总结的很好 分享片段:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">Binary</span> <span class="nx">format</span> <span class="k">of</span> <span class="nx">bytes</span> <span class="k">in</span> <span class="nx">sequence</span>
+</span></span><span class="line"><span class="cl"><span class="mi">1</span><span class="nx">st</span> <span class="nx">Byte</span>    <span class="mi">2</span><span class="nx">nd</span> <span class="nx">Byte</span>    <span class="mi">3</span><span class="nx">rd</span> <span class="nx">Byte</span>    <span class="mi">4</span><span class="nx">th</span> <span class="nx">Byte</span>    <span class="nb">Number</span> <span class="k">of</span> <span class="nx">Free</span> <span class="nx">Bits</span>   <span class="nx">Maximum</span> <span class="nx">Expressible</span> <span class="nx">Unicode</span> <span class="nx">Value</span>
+</span></span><span class="line"><span class="cl"><span class="mi">0</span><span class="nx">xxxxxxx</span>                                                <span class="mi">7</span>             <span class="mi">007</span><span class="nx">F</span> <span class="nx">hex</span> <span class="p">(</span><span class="mi">127</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">110</span><span class="nx">xxxxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>                                <span class="p">(</span><span class="mi">5</span><span class="o">+</span><span class="mi">6</span><span class="p">)</span><span class="o">=</span><span class="mi">11</span>          <span class="mi">07</span><span class="nx">FF</span> <span class="nx">hex</span> <span class="p">(</span><span class="mi">2047</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">1110</span><span class="nx">xxxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>                  <span class="p">(</span><span class="mi">4</span><span class="o">+</span><span class="mi">6</span><span class="o">+</span><span class="mi">6</span><span class="p">)</span><span class="o">=</span><span class="mi">16</span>          <span class="nx">FFFF</span> <span class="nx">hex</span> <span class="p">(</span><span class="mi">65535</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">11110</span><span class="nx">xxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>    <span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="mi">6</span><span class="o">+</span><span class="mi">6</span><span class="o">+</span><span class="mi">6</span><span class="p">)</span><span class="o">=</span><span class="mi">21</span>          <span class="mi">10</span><span class="nx">FFFF</span> <span class="nx">hex</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">114</span><span class="p">,</span><span class="mi">111</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>读到<a href="http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html">一篇文章</a>总结的很好 分享片段:</p>
 <p>在Unicode出现之前，所有的字符集都是和具体编码方案绑定在一起的，都是直接将字符和最终字节流绑定死了，例如ASCII编码系统规定使用7比特来编码ASCII字符集；GB2312以及GBK字符集，限定了使用最多2个字节来编码所有字符，并且规定了字节序。这样的编码系统通常用简单的查表，也就是通过代码页就可以直接将字符映射为存储设备上的字节流了。例如下面这个例子：</p>
 <p><img src="/001-encoding/a.png" alt="a"></p>
 <p>这种方式的缺点在于，字符和字节流之间耦合得太紧密了，从而限定了字符集的扩展能力。假设以后火星人入住地球了，要往现有字符集中加入火星文就变得很难甚至不可能了，而且很容易破坏现有的编码规则。</p>
 <p>因此Unicode在设计上考虑到了这一点，<strong>将字符集和字符编码方案分离开</strong>:</p>
 <p><img src="/001-encoding/b.png" alt="b"></p>
 <p>也就是说，<strong>虽然每个字符在Unicode字符集中都能找到唯一确定的编号（字符码，又称Unicode码），但是决定最终字节流的却是具体的字符编码</strong>。例如同样是对Unicode字符“A”进行编码，UTF-8字符编码得到的字节流是0x41，而UTF-16（大端模式）得到的是0x00 0x41。</p>
-<blockquote>
-<p>这段总结的很好, 可以看出和上面我们分析的是一样的, 所谓英雄所见略同(真不要脸, hhh</p>
-</blockquote>
-<h3 id="3-常见-unicode-编码方式">3. 常见 Unicode 编码方式</h3>
-<p>任何能够将Unicode字符映射为字节流的编码都属于Unicode编码。中国的GB18030编码，覆盖了Unicode所有的字符，因此也算是一种Unicode编码。只不过他的编码方式并不像UTF-8或者UTF-16一样，将Unicode字符的编号通过一定的规则进行转换，而只能通过查表的手段进行编码。</p>
-<p>至于utf-8, utf-16就不同说了, 看名字都知道属于Unicode编码,</p>
-<p><strong>Unicode编码和以前的字符集编码区别:</strong></p>
-<p>早期字符编码、字符集和代码页等概念都是表达同一个意思。例如GB2312字符集、GB2312编码，936代码页，实际上说的是同个东西。但是对于Unicode则不同，Unicode字符集只是定义了字符的集合和唯一编号，Unicode编码，则是对UTF-8、UCS-2/UTF-16等具体编码方案的统称而已，并不是具体的编码方案。所以当需要用到字符编码的时候，你可以写gb2312，codepage936，utf-8，utf-16，但请不要写unicode（看过别人在网页的meta标签里头写charset=unicode，有感而发）。</p>
-<h3 id="4-修改文件编码方式">4. 修改文件编码方式</h3>
-<p>最后需要注意, 如果你直接把utf-8编码的文件转为其它编码比如gbk, 那转换之后你的文件肯定是乱码, 因为在你写入一些内容比如<code>汉</code>到你的文本文件, 此时这个文件的编码方式为<code>utf-8</code>, 那你保存此文件后, 此文件的内容已经是经过utf-8编码的unicode code, 即:<code>11100110 10110001 10001001</code>也就是<code>e6b1 89</code>就是上面的汉字<code>汉</code>, 此时你硬要把文件的编码方式改为gbk, 而gbk采用完全与utf-8不同的编码方式(2字节1个字符),  此时当其他软件是图打开你这个文本文件时, 就会查看你文件的编码信息, 他们看到是gbk编码, 那就会把<code>11100110 10110001 10001001</code>即<code>e6b1 89</code>中的前两个字节解释为一个字符, 然后他们查找<code>11100110 10110001</code>即<code>e6b1</code>, 那肯定匹配不到<code>汉</code>, 就会把<code>11100110 10110001</code>解释为不可打印字符或者英文或者其它语言,,,</p>
-<p>但也可以实现不同编码的安全转换, 一个思路是, 我们知道这个文件是用的utf-8编码, 所以我们先把该文件的字符转换为unicode code, 然后再利用gbk进行编码这些unicode code, 具体做法如下:</p>
+<h3 id="3-修改文件编码方式">3. 修改文件编码方式</h3>
+<p>如果你直接把utf-8编码的文件转为其它编码比如gbk, 那转换之后你的文件肯定是乱码, 因为在你写入一些内容比如<code>汉</code>到你的文本文件, 此时这个文件的编码方式为<code>utf-8</code>, 那你保存此文件后, 此文件的内容已经是经过utf-8编码二进制数, 即:<code>11100110 10110001 10001001</code>也就是<code>e6b1 89</code>就是上面的汉字<code>汉</code>, 此时你硬要把文件的编码方式改为gbk, 而gbk采用完全与utf-8不同的编码方式(2字节1个字符),  此时当其他软件是图打开你这个文本文件时, 就会查看你文件的编码信息, 他们看到是gbk编码, 那就会把<code>11100110 10110001 10001001</code>即<code>e6b1 89</code>中的前两个字节解释为一个字符, 然后他们查找<code>11100110 10110001</code>即<code>e6b1</code>, 那肯定匹配不到<code>汉</code>, 就会把<code>11100110 10110001</code>解释为不可打印字符或者英文或者其它语言,,,</p>
+<p>但也可以实现不同编码的安全转换, 一个思路是, 假如知道文件是用的utf-8编码, 所以我们先把该文件的字符转换为unicode code point, 然后再利用gbk进行编码这些unicode code, 具体做法如下:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -275,7 +332,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>注意, 上面代码<code>utf_8_str = f.read()</code>, 此时<code>utf_8_str</code>已经是unicode code, 第二我们写如文件时, 要以二进制写入, 不然你写入的就是长得像16进制数的字符串, 而不是真正的写入二进制数据,</p>
-<h3 id="5-bytes-in-python">5. Bytes in Python</h3>
+<h3 id="4-python-中的编码">4. Python 中的编码</h3>
 <p>电脑只能存储二进制数, 而python也有个bytes类用来代表二进制字符串,</p>
 <p>所以这里有两个概念, string和bytes string, 他们是不同的类, 拥有的函数不同, 对于一个普通的string, 它有个函数叫<code>encode()</code>, 该函数的返回类型是<code>bytes</code>, 如下:</p>
 <div class="highlight"><div class="chroma">
@@ -380,7 +437,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ xxd text.md
-</span></span><span class="line"><span class="cl">00000000: <span class="m">4142</span>                                     AB
+</span></span><span class="line"><span class="cl">00000000: <span class="m">4142</span>              AB
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>如果我们不指定以二进制写入, 则会报错:</p>
@@ -403,12 +460,6 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>注意, python挺好有报错, 但是有的语言比如C的接口, 就不会提醒, 你写入什么就是什么, 如果你打开方式不是二进制, 然后写入了二进制的字符串, 那结果就是, 这些二进制的字符串被当作普通字符串写入文件&hellip;</p>
-<p>参考:</p>
-<ul>
-<li><a href="https://docs.python.org/3/howto/unicode.html">Unicode HOWTO — Python 3.11.3 documentation</a></li>
-<li><a href="https://stackoverflow.com/questions/6224052/what-is-the-difference-between-a-string-and-a-byte-string">python - What is the difference between a string and a byte string? - Stack Overflow</a></li>
-<li><a href="http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html">关于字符编码，你所需要知道的（ASCII,Unicode,Utf-8,GB2312…)</a></li>
-</ul>
 
     </div>
 
