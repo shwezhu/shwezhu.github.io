@@ -49,7 +49,7 @@
 <meta itemprop="name" content="启动Cloudflare代理导致无法通过域名解析出A记录中的IP">
 <meta itemprop="description" content="问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with"><meta itemprop="datePublished" content="2023-04-26T17:30:22+00:00" />
 <meta itemprop="dateModified" content="2023-04-26T17:30:22+00:00" />
-<meta itemprop="wordCount" content="824">
+<meta itemprop="wordCount" content="742">
 <meta itemprop="keywords" content="bugs,build website," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="启动Cloudflare代理导致无法通过域名解析出A记录中的IP"/>
 <meta name="twitter:description" content="问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with"/>
 
@@ -157,18 +157,7 @@
     <div class="post-content">
       <h3 id="问题描述">问题描述:</h3>
 <p>这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路,</p>
-<p>I&rsquo;m trying to use <code>ssh</code> to connect my server with my domain name <code>ssh root@www.davidzhu.xyz</code>, but I always get timeout. However I can connect my server when use my server ip directly <code>ssh root@144.202.12.32</code>, so I was trying to use <code>tcpdump</code> to check what has happened, and I found when I use <code>ssh root@www.davidzhu.xyz</code>, there are two different target ip addresses like this:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">16:31:01.116901 IP 192.168.2.15.51247 &gt; 172.67.210.8.22: Flags <span class="o">[</span>S<span class="o">]</span>, seq 712140576, win 65535, options <span class="o">[</span>mss 1460,nop,wscale 6,nop,nop,TS val <span class="m">2121803756</span> ecr 0,sackOK,eol<span class="o">]</span>, length <span class="m">0</span>
-</span></span><span class="line"><span class="cl">16:31:01.860841 IP 192.168.2.15.51244 &gt; 104.21.50.195.22: Flags <span class="o">[</span>S<span class="o">]</span>, seq 3164612131, win 65535, options <span class="o">[</span>mss 1460,nop,wscale 6,nop,nop,TS val <span class="m">1521852758</span> ecr 0,sackOK,eol<span class="o">]</span>, length <span class="m">0</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>So I use <code>dig</code> to check the ip address of my domain on DNS, the output is:</p>
+<p>I&rsquo;m trying to use <code>ssh</code> to connect my server with my domain name <code>ssh root@www.davidzhu.xyz</code>, but I always get timeout. However I can connect my server when use my server ip directly <code>ssh root@144.202.12.32</code>, so I use <code>dig</code> to check the ip address of my domain on DNS, the output is:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -198,7 +187,6 @@
 <blockquote>
 <p>When you add your application to Cloudflare, we use this network to sit in between requests and your origin server.</p>
 <p>Cloudflare does this by serving as a <strong>reverse proxy</strong> for your web traffic. All requests to and from your origin <strong>flow through Cloudflare</strong> and — as these requests pass through our network — we can apply various rules and optimizations to improve security, performance, and reliability.</p>
-<p>Learn more: <a href="https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/">How Cloudflare works · Cloudflare Fundamentals docs</a></p>
 </blockquote>
 <p>关闭 Cloudflare 反向代理就可以通过域名获取到服务器真实IP了:</p>
 <p><img src="/002-bug-domain-with-two-ip/cc.png" alt="cc"></p>

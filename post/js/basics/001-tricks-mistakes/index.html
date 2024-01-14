@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Tricks &amp; Mistakes in Javascript">
 <meta itemprop="description" content="0. Minor tricks 0.1. array It is useful to remember which operations on arrays mutate them, and which don’t. For example, push, pop, reverse, and sort will mutate the original array, but slice, filter, and map will create a new one. 1 2 3 4 5 6 7 8 if (isEmpty) { postList = &lt;h1&gt;No posts found.&lt;/h1&gt; } else { // return a new array"><meta itemprop="datePublished" content="2024-01-02T10:55:20+00:00" />
 <meta itemprop="dateModified" content="2024-01-02T10:55:20+00:00" />
-<meta itemprop="wordCount" content="883">
+<meta itemprop="wordCount" content="1125">
 <meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Tricks &amp; Mistakes in Javascript"/>
 <meta name="twitter:description" content="0. Minor tricks 0.1. array It is useful to remember which operations on arrays mutate them, and which don’t. For example, push, pop, reverse, and sort will mutate the original array, but slice, filter, and map will create a new one. 1 2 3 4 5 6 7 8 if (isEmpty) { postList = &lt;h1&gt;No posts found.&lt;/h1&gt; } else { // return a new array"/>
 
@@ -148,6 +148,7 @@
             <li><a href="#01-array">0.1. array</a></li>
             <li><a href="#02-string-length">0.2. string length</a></li>
             <li><a href="#03-encding-string-to-utf-8-in-js">0.3. encding string to utf-8 in JS</a></li>
+            <li><a href="#04-localstorage">0.4. localStorage</a></li>
           </ul>
         </li>
         <li><a href="#1-spread-operator">1. Spread operator</a></li>
@@ -212,6 +213,72 @@
 </blockquote>
 <h3 id="03-encding-string-to-utf-8-in-js">0.3. encding string to utf-8 in JS</h3>
 <p>TextEncoder: <a href="https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder">TextEncoder - Web APIs | MDN</a></p>
+<h3 id="04-localstorage">0.4. localStorage</h3>
+<p><code>localStorage</code> calculates its size limit based on the number of UTF-16 code units, not bytes. You can use the <code>length</code> property to get the number of code units in a string.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">setLocalStorageSize</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">localStorage</span><span class="p">.</span><span class="nx">clear</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">localStorage</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// Roughly 10240000 UTF-16 code units.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">250</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">10000</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">250</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">// A character is 1B, (i * 1024) = i * 1KB
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">((</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">localStorage</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// size in utf-16 code units, not bytes.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="nb">String</span><span class="p">(</span><span class="nx">i</span> <span class="o">-</span> <span class="mi">250</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;localStorage size: &#39;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">i</span> <span class="o">-</span> <span class="mi">250</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;*1024 code units&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// will print: 5000*1024 code units
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>If you change the code above to:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">((</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;汉&#39;</span><span class="p">));</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Stil will print: 5000*1024 code units, because <code>汉</code> is 1 UTF-16 code unit same as <code>a</code>.</p>
+<p>But if you change the code above to:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">((</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;😀&#39;</span><span class="p">));</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Will print: 2500*1024 code units, because <code>😀</code> is 2 UTF-16 code units.</p>
 <h2 id="1-spread-operator">1. Spread operator</h2>
 <p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#description">Spread operator <code>...</code></a>:</p>
 <ul>
