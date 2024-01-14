@@ -8,7 +8,11 @@ tags:
  - mongodb
 ---
 
-## 1. Common aggregation stages
+## Aggregate framework
+
+The aggregation framework is MongoDB’s advanced query language, and it allows you to transform and combine data from multiple documents to generate new information not available in any single document.
+
+## Common aggregation stages
 
 Below is a list of common MongoDB aggregation pipeline stages and their typical order:
 
@@ -80,5 +84,4 @@ The code below will result in an error "$size cannot be used for not array type"
 ```
 
 So in this case, you should put the `$addFields` stage before the `$project` stage.
-
 

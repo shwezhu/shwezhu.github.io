@@ -13,14 +13,7 @@ typora-root-url: ../../../static
 
 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, 
 
-I'm trying to use `ssh` to connect my server with my domain name `ssh root@www.davidzhu.xyz`, but I always get timeout. However I can connect my server when use my server ip directly `ssh root@144.202.12.32`, so I was trying to use `tcpdump` to check what has happened, and I found when I use `ssh root@www.davidzhu.xyz`, there are two different target ip addresses like this:
-
-```shell
-16:31:01.116901 IP 192.168.2.15.51247 > 172.67.210.8.22: Flags [S], seq 712140576, win 65535, options [mss 1460,nop,wscale 6,nop,nop,TS val 2121803756 ecr 0,sackOK,eol], length 0
-16:31:01.860841 IP 192.168.2.15.51244 > 104.21.50.195.22: Flags [S], seq 3164612131, win 65535, options [mss 1460,nop,wscale 6,nop,nop,TS val 1521852758 ecr 0,sackOK,eol], length 0
-```
-
-So I use `dig` to check the ip address of my domain on DNS, the output is:
+I'm trying to use `ssh` to connect my server with my domain name `ssh root@www.davidzhu.xyz`, but I always get timeout. However I can connect my server when use my server ip directly `ssh root@144.202.12.32`, so I use `dig` to check the ip address of my domain on DNS, the output is:
 
 ```shell
 dig davidzhu.xyz  +short       
@@ -47,8 +40,6 @@ But I only have one A record on my domain, this is the DNS Record of my domain n
 > When you add your application to Cloudflare, we use this network to sit in between requests and your origin server. 
 >
 > Cloudflare does this by serving as a **reverse proxy** for your web traffic. All requests to and from your origin **flow through Cloudflare** and — as these requests pass through our network — we can apply various rules and optimizations to improve security, performance, and reliability.
->
-> Learn more: [How Cloudflare works · Cloudflare Fundamentals docs](https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/)
 
 关闭 Cloudflare 反向代理就可以通过域名获取到服务器真实IP了:
 

@@ -33,11 +33,11 @@ $ grep -nr 'ul$' themes/source/css  # n: line number, r: recursive
 
 ### 1.1. `netstat`
 
-The basic `netstat`` command without any options will list all **active TCP connections** and listening ports. Alternatively, you can use `lsof -i` on Mac.
+The basic `netstat` command without any options will list all **active TCP connections** and listening ports. Alternatively, you can use `lsof -i` on Mac.
 
-With the `-a`` option, netstat can show all listening and non-listening sockets.
+With the `-a` option, `netstat` can show all listening and non-listening sockets.
 
-With `-p` option, `netstat`` can display the process ID (PID) and the program name associated with each network connection, on Linux & Windows. 
+With `-p` option, `netstat` can display the process ID (PID) and the program name associated with each network connection, on Linux & Windows. 
 
 ```shell
 # lsof -i on Mac

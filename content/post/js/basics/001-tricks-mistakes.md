@@ -41,6 +41,48 @@ console.log('😀'.length); // 2
 
 TextEncoder: [TextEncoder - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder)
 
+### 0.4. localStorage
+
+`localStorage` calculates its size limit based on the number of UTF-16 code units, not bytes. You can use the `length` property to get the number of code units in a string.
+
+```js
+function setLocalStorageSize() {
+    localStorage.clear();
+    if (localStorage && !localStorage.getItem('size')) {
+        let i = 0;
+        try {
+            // Roughly 10240000 UTF-16 code units.
+            for (i = 250; i <= 10000; i += 250) {
+                // A character is 1B, (i * 1024) = i * 1KB
+                localStorage.setItem('test', new Array((i * 1024) + 1).join('a'));
+            }
+        } catch (e) {
+            localStorage.removeItem('test');
+            // size in utf-16 code units, not bytes.
+            localStorage.setItem('size', String(i - 250));
+            console.log('localStorage size: ' + (i - 250) + '*1024 code units');
+        }
+    }
+}
+// will print: 5000*1024 code units
+```
+
+If you change the code above to:
+
+```js
+localStorage.setItem('test', new Array((i * 1024) + 1).join('汉'));
+```
+
+Stil will print: 5000*1024 code units, because `汉` is 1 UTF-16 code unit same as `a`.
+
+But if you change the code above to:
+
+```js
+localStorage.setItem('test', new Array((i * 1024) + 1).join('😀'));
+```
+
+Will print: 2500*1024 code units, because `😀` is 2 UTF-16 code units.
+
 ## 1. Spread operator
 
 [Spread operator `...`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#description):
