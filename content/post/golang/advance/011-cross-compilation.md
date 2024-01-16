@@ -10,9 +10,7 @@ tags:
 
 ## 1. What is cross compilation?
 
-[Cross-compilation](http://en.wikipedia.org/wiki/Cross_compilation) is the process of compiling code for one computer system (often known as the target) on a different system, called the host. It's a very useful technique, for instance when the target system is too small to host the compiler and all relevant files. Common examples include many embedded systems, but also typical game consoles.
-
-Source: https://stackoverflow.com/a/897303/16317008
+[Cross-compilation](http://en.wikipedia.org/wiki/Cross_compilation) is the process of compiling code for runing on a different OS. 
 
 ## 2. An example
 
@@ -61,29 +59,6 @@ $ ./server
 zsh: exec format error: ./serve
 ```
 
-Then I rebuild this on my Mac:
-
-```shell
-# David @ MacBook-Plus in ~/Codes/GoLand/go-learning on git:master x [10:43:40] 
-$ GOARCH=amd64 go build -o server main.go            
-
-# David @ MacBook-Plus in ~/Codes/GoLand/go-learning on git:master x [10:51:49] 
-$ file server 
-server: Mach-O 64-bit executable x86_64
-```
-
-Then execute it on my Ubtuntu server and got same error:
-
-```shell
-# ubuntu @ ip-172-31-12-228 in ~ [13:52:33] 
-$ file server 
-server: Mach-O 64-bit x86_64 executable
-
-# ubuntu @ ip-172-31-12-228 in ~ [13:52:36] 
-$ ./server 
-zsh: exec format error: ./server
-```
-
 Then I tried add `GOOS=linux` when compile it on my Mac,  and it works:
 
 ```shell
@@ -101,7 +76,7 @@ $ ./server
 running...
 ```
 
-So the statement is true but not accurate, it should be: once you compile a binary you *can* distribute it onto machines **with the same architecture**. You don't need go real time envorionment to run it. This is the power of compiled language. 
+So once you compile a binary you *can* distribute it onto machines **with the same architecture**. You don't need go real time envorionment to run it. This is the power of compiled language. 
 
 ## 3. Cross-compilation
 

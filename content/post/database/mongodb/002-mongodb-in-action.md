@@ -131,5 +131,148 @@ db.products.find({
 
 [Query an Array — MongoDB Manual](https://www.mongodb.com/docs/manual/tutorial/query-arrays/)
 
+## Update, atomic operations, and delete - Action in MongoDB chapter 7
 
+### Update
 
+You can either replace the document altogether, or you can use update operators to modify specific fields within the document. 
+
+**modify by replacement:**
+
+```js
+user_id = ObjectId("4c4b1476238d3b4dd5003981") 
+doc = db.users.findOne({_id: user_id}) 
+doc['email'] = 'mongodb-user@mongodb.com' 
+print('updating ' + user_id)
+db.users.update({_id: user_id}, doc)
+```
+
+The final line says, “Find the document in the users collection with the given _id, and replace that document with the one we’ve provided.”
+
+**modify by operator:**
+
+```js
+user_id = ObjectId("4c4b1476238d3b4dd5000001") 
+db.users.update({_id: user_id},  {$set: {email: 'mongodb-user2@mongodb.com'}})
+```
+
+> Performance-conscious users may balk at the idea of re-aggregating all product reviews for each update. **Much of this depends on the ratio of reads to writes**; it’s likely that more users will see product reviews than write their own, so it makes sense to re-aggregate on a write.
+
+### Standard update operators
+
+Certainly! Let's go through each MongoDB update operator with an explanation followed by a real-world example:
+
+1. **`$set`**: Used to set the value of a field in a document. If the field does not exist, `$set` will add a new field with the specified value.
+   
+   Example: Updating a user's email address.
+   ```javascript
+   db.users.update({ username: 'johndoe' }, { $set: { email: 'johndoe@example.com' } });
+   ```
+
+2. **`$unset`**: Removes the specified field from a document.
+   
+   Example: Removing a phone number field from a user's profile.
+   ```javascript
+   db.users.update({ username: 'johndoe' }, { $unset: { phoneNumber: "" } });
+   ```
+
+3. **`$inc`**: Increments the value of a field by the specified amount. If the field does not exist, it is set to the increment amount.
+   
+   Example: Incrementing a user's reward points.
+   ```javascript
+   db.users.update({ username: 'johndoe' }, { $inc: { rewardPoints: 100 } });
+   ```
+
+4. **`$push`**: Adds an element to an array. If the field is not an array, this operator will create an array with one element.
+   
+   Example: Adding a new product to a user's wishlist.
+   ```javascript
+   db.users.update({ username: 'johndoe' }, { $push: { wishlist: 'productId1234' } });
+   ```
+
+5. **`$pull`**: Removes all instances of a value from an existing array.
+   
+   Example: Removing an item from a user's shopping cart.
+   ```javascript
+   db.users.update({ username: 'johndoe' }, { $pull: { shoppingCart: 'itemId5678' } });
+   ```
+
+6. **`$addToSet`**: Adds a value to an array unless the value is already present, in which case `$addToSet` does nothing to ensure uniqueness.
+   
+   Example: Adding a tag to a blog post without creating duplicates.
+   ```javascript
+   db.blogPosts.update({ title: 'MongoDB Tips' }, { $addToSet: { tags: 'NoSQL' } });
+   ```
+
+7. **`$rename`**: Renames a field.
+   
+   Example: Changing a field name in a contact document.
+   ```javascript
+   db.contacts.update({ name: 'Jane Doe' }, { $rename: { 'cellphone': 'mobileNumber' } });
+   ```
+
+8. **`$mul`**: Multiplies the value of the field by the specified amount. If the field does not exist, the operation sets the field to zero.
+   
+   Example: Updating the price of a product in inventory.
+   ```javascript
+   db.products.update({ productId: 'A123' }, { $mul: { price: 2 } });
+   ```
+
+## Slow queries - Chapter 8 值得反复阅读
+
+Finding slow queries is easy with MongoDB’s profiler. Discovering why these queries are slow is trickier and may require some detective work. As mentioned, the causes of slow queries are manifold. If you’re lucky, resolving a slow query may be as easy as adding an index. In more difficult cases, you might have to rearrange indexes, restructure the data model, or upgrade hardware.
+
+MongoDB’s explain command provides detailed information about a given query’s path. 
+
+```json
+db.values.find({}).sort({close: -1}).limit(1).explain() 
+{
+    "cursor" : "BasicCursor",              
+    "isMultiKey" : false,             
+    “  "n" : 1,                    #A   Number returned
+    "nscannedObjects" : 4308303,           
+    "nscanned" : 4308303,          #B   Number scanned
+    "nscannedObjectsAllPlans" : 4308303,    
+    "scanAndOrder" : true,                
+    "millis" : 10927,              #C   Time in milliseconds, 11 seconds this query took
+    ...                 
+} 
+```
+
+The `cursor` field tells you that you’ve been using a `BasicCursor`, which only confirms that you’re scanning the collection itself and not an index. If you had used an index, the value would’ve been `BTreeCursor`.
+
+A second datum here further explains the slowness of the query: the `scanAndOrder` field. This indicator appears when the query optimizer can’t use an index to return a sorted result set. Therefore, in this case, not only does the query engine have to scan the collection, it also has to sort the result set manually.
+
+1. Avoid scanAndOrder. If the query includes a sort, attempt to sort using an index.
+2. Satisfy all fields with useful indexing constraints—attempt to use indexes for the fields in the query selector.
+3. If the query implies a range or includes a sort, choose an index where that last key used can help satisfy the range or sort.
+
+当提到“last key used”这个术语，特别是在上下文中关于选择索引以优化范围查询或排序操作的讨论中，它指的是在复合索引中的最后一个字段。在复合索引中，字段的顺序是至关重要的，因为它决定了数据库如何组织和访问索引数据。让我们通过一个例子来解释这个概念。
+
+假设你有一个MongoDB集合，其中包含以下字段：`a`, `b`, 和 `c`。现在，假设你创建了一个复合索引 `{ a: 1, b: 1, c: 1 }`。在这个索引中：
+
+- `a` 是第一个键，
+- `b` 是第二个键，
+- `c` 是“last key”或最后一个键。
+
+在处理查询时，如果查询涉及到这三个字段中的任意一个的范围条件或排序要求，索引的效率将取决于这些条件是如何与索引中的键匹配的。在理想情况下，你希望查询中的范围或排序操作直接对应于复合索引中的最后一个键，因为这样可以最大化索引的效用。
+
+例如，考虑以下查询：
+
+```javascript
+db.collection.find({ a: 10, b: { $gt: 5 } }).sort({ c: 1 })
+```
+
+在这个查询中：
+
+- `a` 是一个精确匹配条件，
+- `b` 是一个范围查询条件，
+- `c` 是一个排序条件。
+
+索引 `{ a: 1, b: 1, c: 1 }` 在这种情况下是高效的，因为：
+
+- 它首先使用 `a` 来快速定位数据（第一个键），
+- 接着，利用 `b` 来进一步过滤范围内的记录（第二个键），
+- 最后，使用 `c` 进行排序（“last key”或最后一个键）。
+
+在这里，“last key” (`c`) 使得查询可以在使用索引的同时完成排序，从而避免了额外的排序步骤，提高了查询效率。所以，“last key”在复合索引中指的是最后一个被用来支持查询中的范围或排序条件的字段。

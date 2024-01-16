@@ -102,11 +102,11 @@ Addresses: 200:2:9f6a:794b::
 
 - VPN
   - 常见协议: IPSec, OpenVPN, L2TP, WireGuard
-- Shadowsocks
+- Shadowsocks (代理服务器)
   - 常见协议: SOCKS5
-- V2Ray
+- V2Ray (代理服务器)
   - 常见协议: VMess
-- HTTP 代理
+- HTTP 代理 (代理服务器)
   - 已被封锁, 原因是HTTP代理并不对数据进行加密, 即使流量能够绕过初步的审查，传输的内容仍然是透明的，容易被监控。
   - 即使使用 HTTPS 也不会实现全局加密, 在建立 TLS 握手验证时还是需要一个HTTP明文连接
 

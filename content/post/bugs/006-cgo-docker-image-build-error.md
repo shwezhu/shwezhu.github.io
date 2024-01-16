@@ -21,7 +21,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /server .
 CMD ["./server"]
 ```
 
-> The `CGO_ENABLED=0` is to disable cgo. `GOOS=linux` and `GOARCH=arm64` is used for cross compilation in Go. Because I build this on my macOS arm64 machine, and I want build for Ubuntu amd64 machine, so I choose `GOOS=linux` `GOARCH=arm64`. 
+> The `CGO_ENABLED=0` is to disable cgo. `GOOS=linux` and `GOARCH=amd64` is used for cross compilation in Go. Because I build this on my macOS arm64 machine, and I want build for Ubuntu amd64 machine, so I choose `GOOS=linux` `GOARCH=amd64`. 
 >
 > Learn more: 
 >
@@ -67,7 +67,5 @@ Because my local machine is arm64, which means the image will be built to arm64 
 $ docker build --platform linux/amd64 -t shwezhu/file-station:v2 .
 ```
 
-*Go* is a statically *compiled* language. To execute a *Go* binary on a machine, it must be *compiled* for the matching operating system and processor architecture. So there is cross-compilation in Go. 
-
-`--platform` is used to build [multi-platform docker images](https://docs.docker.com/build/building/multi-platform/), not build Go binary for another platform. You should know the difference between these concepts. 
+*Go* is a statically *compiled* language. To execute a *Go* binary on a machine, it must be *compiled* for the matching operating system and processor architecture. So there is cross-compilation in Go. `--platform` is used to build [multi-platform docker images](https://docs.docker.com/build/building/multi-platform/), not build Go for another platform. You should know the difference between these concepts. 
 
