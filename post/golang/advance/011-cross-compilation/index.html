@@ -16,9 +16,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. What is cross compilation? Cross-compilation is the process of compiling code for one computer system (often known as the target) on a different system, called the host. It&amp;rsquo;s a very useful technique, for instance when the target system is too small to host the compiler and all relevant files. Common examples include many embedded systems, but also typical game consoles.
-Source: https://stackoverflow.com/a/897303/16317008
-2. An example There is a question on Stackoverflow:" />
+<meta name="author" content="David" /><meta name="description" content="1. What is cross compilation? Cross-compilation is the process of compiling code for runing on a different OS.
+2. An example There is a question on Stackoverflow:
+It&amp;rsquo;s said that Golang is the compiled language, but what does it mean by compiled? If golang application is compiled to machine code, why can&amp;rsquo;t I just distribute the binary (of course on corresponding arch and platform) instead of go install stuff?
+Once you compile a binary you can distribute it onto machines with the same architecture." />
 
 
 
@@ -42,24 +43,27 @@ Source: https://stackoverflow.com/a/897303/16317008
 
 
 <meta property="og:title" content="Cross Compilation - Go" />
-<meta property="og:description" content="1. What is cross compilation? Cross-compilation is the process of compiling code for one computer system (often known as the target) on a different system, called the host. It&rsquo;s a very useful technique, for instance when the target system is too small to host the compiler and all relevant files. Common examples include many embedded systems, but also typical game consoles.
-Source: https://stackoverflow.com/a/897303/16317008
-2. An example There is a question on Stackoverflow:" />
+<meta property="og:description" content="1. What is cross compilation? Cross-compilation is the process of compiling code for runing on a different OS.
+2. An example There is a question on Stackoverflow:
+It&rsquo;s said that Golang is the compiled language, but what does it mean by compiled? If golang application is compiled to machine code, why can&rsquo;t I just distribute the binary (of course on corresponding arch and platform) instead of go install stuff?
+Once you compile a binary you can distribute it onto machines with the same architecture." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/golang/advance/011-cross-compilation/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-10T11:09:35+00:00" />
 <meta property="article:modified_time" content="2023-10-10T11:09:35+00:00" />
 
 <meta itemprop="name" content="Cross Compilation - Go">
-<meta itemprop="description" content="1. What is cross compilation? Cross-compilation is the process of compiling code for one computer system (often known as the target) on a different system, called the host. It&rsquo;s a very useful technique, for instance when the target system is too small to host the compiler and all relevant files. Common examples include many embedded systems, but also typical game consoles.
-Source: https://stackoverflow.com/a/897303/16317008
-2. An example There is a question on Stackoverflow:"><meta itemprop="datePublished" content="2023-10-10T11:09:35+00:00" />
+<meta itemprop="description" content="1. What is cross compilation? Cross-compilation is the process of compiling code for runing on a different OS.
+2. An example There is a question on Stackoverflow:
+It&rsquo;s said that Golang is the compiled language, but what does it mean by compiled? If golang application is compiled to machine code, why can&rsquo;t I just distribute the binary (of course on corresponding arch and platform) instead of go install stuff?
+Once you compile a binary you can distribute it onto machines with the same architecture."><meta itemprop="datePublished" content="2023-10-10T11:09:35+00:00" />
 <meta itemprop="dateModified" content="2023-10-10T11:09:35+00:00" />
-<meta itemprop="wordCount" content="768">
+<meta itemprop="wordCount" content="618">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Cross Compilation - Go"/>
-<meta name="twitter:description" content="1. What is cross compilation? Cross-compilation is the process of compiling code for one computer system (often known as the target) on a different system, called the host. It&rsquo;s a very useful technique, for instance when the target system is too small to host the compiler and all relevant files. Common examples include many embedded systems, but also typical game consoles.
-Source: https://stackoverflow.com/a/897303/16317008
-2. An example There is a question on Stackoverflow:"/>
+<meta name="twitter:description" content="1. What is cross compilation? Cross-compilation is the process of compiling code for runing on a different OS.
+2. An example There is a question on Stackoverflow:
+It&rsquo;s said that Golang is the compiled language, but what does it mean by compiled? If golang application is compiled to machine code, why can&rsquo;t I just distribute the binary (of course on corresponding arch and platform) instead of go install stuff?
+Once you compile a binary you can distribute it onto machines with the same architecture."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -166,8 +170,7 @@ Source: https://stackoverflow.com/a/897303/16317008
 </div>
     <div class="post-content">
       <h2 id="1-what-is-cross-compilation">1. What is cross compilation?</h2>
-<p><a href="http://en.wikipedia.org/wiki/Cross_compilation">Cross-compilation</a> is the process of compiling code for one computer system (often known as the target) on a different system, called the host. It&rsquo;s a very useful technique, for instance when the target system is too small to host the compiler and all relevant files. Common examples include many embedded systems, but also typical game consoles.</p>
-<p>Source: <a href="https://stackoverflow.com/a/897303/16317008">https://stackoverflow.com/a/897303/16317008</a></p>
+<p><a href="http://en.wikipedia.org/wiki/Cross_compilation">Cross-compilation</a> is the process of compiling code for runing on a different OS.</p>
 <h2 id="2-an-example">2. An example</h2>
 <p>There is <a href="https://stackoverflow.com/questions/23072889/why-go-programs-need-runtime-support/23072968#23072968">a question</a> on Stackoverflow:</p>
 <p>It&rsquo;s said that Golang is the <em>compiled</em> language, but what does it mean by <em>compiled</em>? If golang application is compiled to machine code, why can&rsquo;t I just distribute the binary (of course on corresponding arch and platform) instead of <code>go install</code> stuff?</p>
@@ -243,46 +246,6 @@ Source: https://stackoverflow.com/a/897303/16317008
 </span></span><span class="line"><span class="cl">zsh: <span class="nb">exec</span> format error: ./serve
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Then I rebuild this on my Mac:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># David @ MacBook-Plus in ~/Codes/GoLand/go-learning on git:master x [10:43:40] </span>
-</span></span><span class="line"><span class="cl">$ <span class="nv">GOARCH</span><span class="o">=</span>amd64 go build -o server main.go            
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># David @ MacBook-Plus in ~/Codes/GoLand/go-learning on git:master x [10:51:49] </span>
-</span></span><span class="line"><span class="cl">$ file server 
-</span></span><span class="line"><span class="cl">server: Mach-O 64-bit executable x86_64
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Then execute it on my Ubtuntu server and got same error:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~ [13:52:33] </span>
-</span></span><span class="line"><span class="cl">$ file server 
-</span></span><span class="line"><span class="cl">server: Mach-O 64-bit x86_64 executable
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~ [13:52:36] </span>
-</span></span><span class="line"><span class="cl">$ ./server 
-</span></span><span class="line"><span class="cl">zsh: <span class="nb">exec</span> format error: ./server
-</span></span></code></pre></td></tr></table>
-</div>
 </div><p>Then I tried add <code>GOOS=linux</code> when compile it on my Mac,  and it works:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -311,7 +274,7 @@ Source: https://stackoverflow.com/a/897303/16317008
 </span></span><span class="line"><span class="cl">running...
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>So the statement is true but not accurate, it should be: once you compile a binary you <em>can</em> distribute it onto machines <strong>with the same architecture</strong>. You don&rsquo;t need go real time envorionment to run it. This is the power of compiled language.</p>
+</div><p>So once you compile a binary you <em>can</em> distribute it onto machines <strong>with the same architecture</strong>. You don&rsquo;t need go real time envorionment to run it. This is the power of compiled language.</p>
 <h2 id="3-cross-compilation">3. Cross-compilation</h2>
 <p>I found <a href="https://opensource.com/article/21/1/go-cross-compiling">a post</a>, share it here:</p>
 <p>The Bash shell and the Python interpreter are available on most Linux servers of any architecture. Hence, everything had worked well before.</p>
