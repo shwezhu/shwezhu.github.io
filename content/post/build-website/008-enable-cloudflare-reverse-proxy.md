@@ -15,6 +15,8 @@ Getting a official TLS certificate is too expensive, so I decide to use Cloudfla
 - Add your domain to Cloudflare
 - Create and install TLS certificate to your server
 
+> Cloudflare does this by serving as a [reverse proxy](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/) for your web traffic. 
+
 ### 1.1. Add your domain to Cloudflare
 
 Go to this website: https://dash.cloudflare.com/

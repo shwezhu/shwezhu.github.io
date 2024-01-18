@@ -72,6 +72,8 @@ During the build, those files (build context) are sent to the Docker **daemon** 
 $ docker build -t go-learning:1 . 
 ```
 
+> Learn more: [Multi-stage builds | Docker Docs](https://docs.docker.com/build/building/multi-stage/)
+
 ## 4. `.dockerignore` File
 
 During the build, those files (build context) are sent to the Docker **daemon** so that the **image** can use them as files. 
