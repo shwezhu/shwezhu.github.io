@@ -16,8 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &amp;ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&amp;rdquo;
-303: temporary redirect, changing the method to GET. Example usage: if the browser sent POST to /register." />
+<meta name="author" content="David" /><meta name="description" content="2xx 200 OK: Request is okay, entity body contains requested resource. 201 Created: For requests that create server objects (e.g., PUT). The entity body of the response should contain the various URLs for referencing the created resource, with the Location header containing the most specific reference. The server must have created the object prior to sending this status code. Redirect 301: permanent redirect: 可能会修改请求" />
 
 
 
@@ -41,21 +40,18 @@
 
 
 <meta property="og:title" content="HTTP Status Codes" />
-<meta property="og:description" content="1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;
-303: temporary redirect, changing the method to GET. Example usage: if the browser sent POST to /register." />
+<meta property="og:description" content="2xx 200 OK: Request is okay, entity body contains requested resource. 201 Created: For requests that create server objects (e.g., PUT). The entity body of the response should contain the various URLs for referencing the created resource, with the Location header containing the most specific reference. The server must have created the object prior to sending this status code. Redirect 301: permanent redirect: 可能会修改请求" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/http/002-http-status-codes-1/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-10-26T15:30:05+00:00" />
 <meta property="article:modified_time" content="2023-10-26T15:30:05+00:00" />
 
 <meta itemprop="name" content="HTTP Status Codes">
-<meta itemprop="description" content="1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;
-303: temporary redirect, changing the method to GET. Example usage: if the browser sent POST to /register."><meta itemprop="datePublished" content="2023-10-26T15:30:05+00:00" />
+<meta itemprop="description" content="2xx 200 OK: Request is okay, entity body contains requested resource. 201 Created: For requests that create server objects (e.g., PUT). The entity body of the response should contain the various URLs for referencing the created resource, with the Location header containing the most specific reference. The server must have created the object prior to sending this status code. Redirect 301: permanent redirect: 可能会修改请求"><meta itemprop="datePublished" content="2023-10-26T15:30:05+00:00" />
 <meta itemprop="dateModified" content="2023-10-26T15:30:05+00:00" />
-<meta itemprop="wordCount" content="478">
+<meta itemprop="wordCount" content="1083">
 <meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="HTTP Status Codes"/>
-<meta name="twitter:description" content="1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;
-303: temporary redirect, changing the method to GET. Example usage: if the browser sent POST to /register."/>
+<meta name="twitter:description" content="2xx 200 OK: Request is okay, entity body contains requested resource. 201 Created: For requests that create server objects (e.g., PUT). The entity body of the response should contain the various URLs for referencing the created resource, with the Location header containing the most specific reference. The server must have created the object prior to sending this status code. Redirect 301: permanent redirect: 可能会修改请求"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -146,10 +142,14 @@
   <ul>
     <li>
       <ul>
-        <li>
+        <li><a href="#2xx">2xx</a></li>
+        <li><a href="#redirect">Redirect</a>
           <ul>
-            <li><a href="#1-redirect">1. Redirect</a></li>
-            <li><a href="#2-redirect-in-practice">2. Redirect in practice</a></li>
+            <li><a href="#301-permanent-redirect-可能会修改请求方法">301: permanent redirect: 可能会修改请求方法</a></li>
+            <li><a href="#303-temporary-redirect-修改请求方法为-get">303: temporary redirect: 修改请求方法为 GET</a></li>
+            <li><a href="#307-temporary-redirect-不会修改请求方法和请求体">307: temporary redirect: 不会修改请求方法和请求体</a></li>
+            <li><a href="#308-permanent-redirect-不修改请求方法和请求体">308: permanent redirect, 不修改请求方法和请求体</a></li>
+            <li><a href="#redirect-code-mistakes">Redirect Code mistakes</a></li>
           </ul>
         </li>
       </ul>
@@ -159,63 +159,39 @@
   </div>
 </div>
     <div class="post-content">
-      <h3 id="1-redirect">1. Redirect</h3>
+      <h2 id="2xx">2xx</h2>
 <ul>
-<li>
-<p><strong>301: permanent redirect: the URL is old and should be replaced.</strong> Browsers will cache this.
-<em>Example usage:</em> URL moved from <code>/register-form.html</code> to <code>signup-form.html</code>.
-The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;</p>
-</li>
-<li>
-<p><strong>303: temporary redirect, changing the method to GET.</strong>
-<em>Example usage:</em> if the browser sent POST to <code>/register.php</code>, then now load (GET) <code>/success.html</code>.</p>
-</li>
-<li>
-<p><strong>307: temporary redirect, repeating the request identically.</strong>
-<em>Example usage:</em> if the browser sent a POST to <code>/register.php</code>, then this tells it to redo the POST at <code>/signup.php</code>.</p>
-</li>
-<li>
-<p><strong>308: permanent redirect, repeating the request identically.</strong> Where 307 is the &ldquo;no method change&rdquo; counterpart of 303, this 308 status is the &ldquo;no method change&rdquo; counterpart of 301.</p>
-</li>
-<li>
-<p><strong>302: temporary redirect. Only use for HTTP/1.0 clients.</strong> This status code should not change the method, but browsers did it anyway. The RFC says: &ldquo;Many pre-HTTP/1.1 user agents do not understand [303]. When interoperability with such clients is a concern, the 302 status code may be used instead, since most user agents react to a 302 response as described here for 303.&rdquo; Of course, some clients may implement it according to the spec, so if interoperability with such ancient clients is not a real concern, 303 is better for consistent results.</p>
-</li>
+<li><strong>200 OK</strong>: Request is okay, entity body contains requested resource.</li>
+<li><strong>201 Created</strong>: For requests that create server objects (e.g., PUT). The entity body of the response should contain the various URLs for referencing the created resource, with the <em>Location header</em> containing the most specific reference. The server must have created the object prior to sending this status code.</li>
 </ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">╔═══════════╦════════════════════════════════════════════════╗
-</span></span><span class="line"><span class="cl">║           ║                Switch to GET?                  ║
-</span></span><span class="line"><span class="cl">║           ╟────────────────────────┬───────────────────────╢
-</span></span><span class="line"><span class="cl">║ Temporary ║          No            │         Yes           ║
-</span></span><span class="line"><span class="cl">╠═══════════╬════════════════════════╪═══════════════════════╣
-</span></span><span class="line"><span class="cl">║ No        ║ 308 Permanent Redirect │ 301 Moved Permanently ║
-</span></span><span class="line"><span class="cl">╟───────────╟────────────────────────┼───────────────────────╢
-</span></span><span class="line"><span class="cl">║ Yes       ║ 307 Temporary Redirect │ 303 See Other         ║
-</span></span><span class="line"><span class="cl">║           ║ 302 Found (intended)   │ 302 Found (actual)    ║
-</span></span><span class="line"><span class="cl">╚═══════════╩════════════════════════╧═══════════════════════╝
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The <code>307 Temporary Redirect</code> code indicates that the requested resource has been temporarily moved to a new URL. When a browser encounters a <code>307</code> response, it will redirect to the new URL specified in the response headers. The method and body of the original request are reused for the redirected request. This means that if the original request was a <code>POST</code> request, the redirected request will also be a <code>POST</code> request. However, if you want to change the method to <code>GET</code> for the redirected request, you can use the <code>303 See Other</code> status code instead.</p>
-<p>learn more:</p>
+<h2 id="redirect">Redirect</h2>
+<h3 id="301-permanent-redirect-可能会修改请求方法">301: permanent redirect: 可能会修改请求方法</h3>
+<p>The HyperText Transfer Protocol (HTTP) 301 Moved Permanently redirect status response code indicates that the requested resource has been definitively moved to the URL given by the Location headers. A browser redirects to the new URL and search engines update their links to the resource. 根据描述可以看出, 301 是用来回复 GET 请求的, 与下面 303 刚好相反</p>
+<blockquote>
+<p>Although the specification requires the method and the body to remain unchanged when the redirection is performed, not all user-agents meet this requirement. Use the 301 code only as a response for GET or HEAD methods and use the 308 Permanent Redirect for POST methods instead, as the method change is explicitly prohibited with this status. <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">301 Moved Permanently - HTTP | MDN</a></p>
+</blockquote>
+<p>这段话指的是在处理 HTTP 重定向时，不同的状态码会对浏览器或用户代理（如 Web 浏览器）的行为有不同的指示，尤其是在处理 HTTP 方法（如 GET, POST, HEAD 等）和请求体的保留方面。</p>
+<p>场景: 假设你有一个表单提交到 URL <code>http://example.com/form</code>，使用 POST 方法。由于某些原因，这个表单处理的 URL 永久变更到了 <code>http://example.com/new-form</code>。</p>
+<p>常规做法: 使用 301 状态码来重定向到新的 URL。但是，根据 HTTP/1.0 标准，这可能会导致某些用户代理（特别是旧的浏览器或不完全遵循标准的客户端）在重定向时将 POST 请求改变为 GET 请求，这可能不是预期的行为。</p>
+<p>场景: 同样的情况，表单从 <code>http://example.com/form</code> 移动到 <code>http://example.com/new-form</code>。</p>
+<p>更安全的做法: 使用 308 Permanent Redirect。这个状态码明确禁止在重定向过程中改变请求方法。因此，如果原始请求是 POST，重定向后的请求也必须是 POST。这样可以确保重定向行为的一致性和预期性，不管用户代理是什么。</p>
+<h3 id="303-temporary-redirect-修改请求方法为-get">303: temporary redirect: 修改请求方法为 GET</h3>
 <ul>
-<li><a href="https://stackoverflow.com/a/55008140/16317008">https://stackoverflow.com/a/55008140/16317008</a></li>
-<li><a href="https://stackoverflow.com/a/58492986/16317008">https://stackoverflow.com/a/58492986/16317008</a></li>
+<li>303: Seee Other, 看名字就可以知道是 303 是告诉浏览器去另一个页面, 注意是一个页面, 所以浏览器收到 303 请求后, 会用 GET 请求来访问重定向的 URL, 即使之前的请求是 POST 请求. 这个状态码经常是用来做表单提交后的重定向, 即用来回复 POST 和 PUT 请求.</li>
+<li>The HyperText Transfer Protocol (HTTP) 303 See Other redirect status response code indicates that the redirects don&rsquo;t link to the requested resource itself, <strong>but to another page</strong> (such as a confirmation page, a representation of a real-world object). This response code is often sent back as a result of PUT or POST. The method used to display this redirected page is always GET.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/303">303 See Other - HTTP | MDN</a></li>
 </ul>
-<h3 id="2-redirect-in-practice">2. Redirect in practice</h3>
+<h3 id="307-temporary-redirect-不会修改请求方法和请求体">307: temporary redirect: 不会修改请求方法和请求体</h3>
+<p>The method and the body of the original request are <strong>reused</strong> to perform the redirected request.</p>
+<p>In the cases where you want the method used to <strong>be changed to GET</strong>, use 303 See Other instead. This is useful when you want to give an answer to a PUT method that is not the uploaded resources, but a confirmation message (like &ldquo;You successfully uploaded XYZ&rdquo;).</p>
+<p>The only difference between 307 and 302 is that 307 guarantees that <strong>the method and the body</strong> will not be changed when the redirected request is made. With 302, some old clients were incorrectly changing the method to GET: the behavior with non-GET methods and 302 is then unpredictable on the Web, whereas the behavior with 307 is predictable. For GET requests, their behavior is identical.</p>
+<p>Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/307">307 Temporary Redirect - HTTP | MDN</a></p>
+<h3 id="308-permanent-redirect-不修改请求方法和请求体">308: permanent redirect, 不修改请求方法和请求体</h3>
+<p>The r<strong>equest method and the body</strong> will not be altered, whereas 301 may incorrectly sometimes be changed to a GET method.</p>
+<p>Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308">308 Permanent Redirect - HTTP | MDN</a></p>
+<h3 id="redirect-code-mistakes">Redirect Code mistakes</h3>
 <p>Different redirect status code can <strong>cause browser behave differently</strong>.</p>
-<p>An unauthorized user make a request to <code>/home </code> which needs authorized state to access, because he has not authorized, so he will be redirect to <code>/login</code>, if you respond a 308 code from server, then the unauthorized user will be redirect to <code>/login</code>, this woks fine. But 308 tell the brower all following http requests for <code>/home</code> need be redirected to <code>/login</code> even the user login successfully, you can clear the browser cache to reset, make sure don&rsquo;t repond a wrong status code.</p>
+<p>An unauthorized user make a request to <code>/home </code> which needs authorized state to access, he will be redirect to <code>/login</code>, if server respond 308, then the unauthorized user will be redirect to <code>/login</code>, this woks fine. But 308 tell the brower all following http requests for <code>/home</code> need be redirected to <code>/login</code> even the user login successfully, you can clear the browser cache to reset, make sure don&rsquo;t repond a wrong status code.</p>
 
     </div>
 
