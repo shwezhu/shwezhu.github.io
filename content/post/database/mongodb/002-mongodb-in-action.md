@@ -14,7 +14,7 @@ MongoDB stores its information in **documents** rather than **rows**. Where rela
 
 Every MongoDB document requires an _id, and if one isn’t present when the document is created, a special MongoDB ObjectID will be generated and added to the document at that time. You can set your own _id by setting it in the document you insert, the ObjectID is just MongoDB’s default.
 
-“Indexes don’t come for free; they take up some space and can make your inserts slightly more expensive, but they are an essential tool for query optimization.”
+Indexes don’t come for free; they take up some space and can make your inserts slightly more expensive, but they are an essential tool for query optimization.
 
 > MongoDB 没有传统数据库中 join 和 foreign key 的的概念, 但是可以通过嵌套文档或 Reference 来表示一对多或多对多的关系, 也可使用聚合来实现类似 Join 的功能. Join 为了同时获得多个表的内容, foreign key 为了数据一致性(data consistency and integrity), [了解更多](https://chat.openai.com/share/419afe95-279b-477f-8afa-8f75ab76edad)
 > 了解更多: [Basic MySQL - David's Blog](https://davidzhu.xyz/post/database/mysql/002-basic-sql/)
@@ -44,9 +44,9 @@ Each *product* can have many *reviews*, and you create this relationship by stor
 }
 ```
 
-> “But it may come as a surprise that you store the username as well. If this were an RDBMS, you’d be able to pull in the username with a join on the users table. Because you don’t have the join option with MongoDB, you can proceed in one of two ways: either query against the user collection for each review or accept some **denormalization**. Issuing a query for every review might be unnecessarily costly when username is extremely unlikely to change, so here we’ve chosen to optimize for query speed rather than **normalization**.”
->
-> “Also noteworthy is the decision to store votes in the review document itself. It’s common for users to be able to vote on reviews. Here, you store the object ID of each voting user in an array of voter IDs. This allows you to prevent users from voting on a review more than once, and it also gives you the ability to query for all the reviews a user has voted on. You **cache** the total number of helpful votes, which among other things allows you to sort reviews based on helpfulness. Caching is useful because **MongoDB doesn’t allow you to query the size of an array within a document**. A query to sort reviews by helpful votes, for example, is much easier if the size of the voting array is cached in the helpful_votes field.”
+But it may come as a surprise that you store the username as well. If this were an RDBMS, you’d be able to pull in the username with a join on the users table. Because you don’t have the join option with MongoDB, you can proceed in one of two ways: either query against the user collection for each review or accept some **denormalization**. Issuing a query for every review might be unnecessarily costly when username is extremely unlikely to change, so here we’ve chosen to optimize for query speed rather than **normalization**.
+
+Also noteworthy is the decision to store votes in the review document itself. It’s common for users to be able to vote on reviews. Here, you store the object ID of each voting user in an array of voter IDs. This allows you to prevent users from voting on a review more than once, and it also gives you the ability to query for all the reviews a user has voted on. You **cache** the total number of helpful votes, which among other things allows you to sort reviews based on helpfulness. Caching is useful because **MongoDB doesn’t allow you to query the size of an array within a document**. A query to sort reviews by helpful votes, for example, is much easier if the size of the voting array is cached in the helpful_votes field.
 
 这段提到了一个关键概念：缓存（Caching）, 这里的 “缓存” 是指在文档中直接存储一个额外的数据项（在这个例子中是“有帮助的投票数”），而不是每次查询时计算这个数值。
 
@@ -243,7 +243,7 @@ The `cursor` field tells you that you’ve been using a `BasicCursor`, which onl
 
 A second datum here further explains the slowness of the query: the `scanAndOrder` field. This indicator appears when the query optimizer can’t use an index to return a sorted result set. Therefore, in this case, not only does the query engine have to scan the collection, it also has to sort the result set manually.
 
-1. Avoid scanAndOrder. If the query includes a sort, attempt to sort using an index.
+1. Avoid `scanAndOrder`. If the query includes a sort, attempt to sort using an index.
 2. Satisfy all fields with useful indexing constraints—attempt to use indexes for the fields in the query selector.
 3. If the query implies a range or includes a sort, choose an index where that last key used can help satisfy the range or sort.
 
