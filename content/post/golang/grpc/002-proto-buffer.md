@@ -7,6 +7,20 @@ tags:
  - grpc
 ---
 
+## Quick start
+
+Execute the following commands at your terminal, you don't need to execute them under your project folder, just execute them anywhere, it will install the `protoc` compiler and the `protoc-gen-go` and `protoc-gen-go-grpc` plugins into your `$GOPATH/bin` folder.
+
+```shell
+# install protoc compiler
+$ brew install protobuf
+$ protoc --version  # Ensure compiler version is 3+
+
+# install plugins to $GOPATH/bin
+$ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+$ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+```
+
 ## protoc command
 
 ### Install
