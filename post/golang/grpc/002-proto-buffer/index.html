@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="protoc command Install 1 2 $ brew install protobuf $ protoc --version Usage 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 ❯ protoc --help Usage: protoc [OPTION] PROTO_FILES -IPATH, --proto_path=PATH 指定搜索路径 --plugin=EXECUTABLE: .... --cpp_out=OUT_DIR Generate C&#43;&#43; header and source. --csharp_out=OUT_DIR Generate C# source file. --java_out=OUT_DIR Generate Java source file. --js_out=OUT_DIR Generate JavaScript source. --objc_out=OUT_DIR Generate Objective C" />
+<meta name="author" content="David" /><meta name="description" content="Quick start Execute the following commands at your terminal, you don&amp;rsquo;t need to execute them under your project folder, just execute them anywhere, it will install the protoc compiler and the protoc-gen-go and protoc-gen-go-grpc plugins into your $GOPATH/bin folder. 1 2 3 4 5 6 7 # install protoc compiler $ brew install protobuf $ protoc --version # Ensure compiler version is 3&#43; # install plugins to $GOPATH/bin $ go" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="Ptotocol Buffers" />
-<meta property="og:description" content="protoc command Install 1 2 $ brew install protobuf $ protoc --version Usage 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 ❯ protoc --help Usage: protoc [OPTION] PROTO_FILES -IPATH, --proto_path=PATH 指定搜索路径 --plugin=EXECUTABLE: .... --cpp_out=OUT_DIR Generate C&#43;&#43; header and source. --csharp_out=OUT_DIR Generate C# source file. --java_out=OUT_DIR Generate Java source file. --js_out=OUT_DIR Generate JavaScript source. --objc_out=OUT_DIR Generate Objective C" />
+<meta property="og:description" content="Quick start Execute the following commands at your terminal, you don&rsquo;t need to execute them under your project folder, just execute them anywhere, it will install the protoc compiler and the protoc-gen-go and protoc-gen-go-grpc plugins into your $GOPATH/bin folder. 1 2 3 4 5 6 7 # install protoc compiler $ brew install protobuf $ protoc --version # Ensure compiler version is 3&#43; # install plugins to $GOPATH/bin $ go" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/golang/grpc/002-proto-buffer/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2024-01-19T00:01:08+00:00" />
 <meta property="article:modified_time" content="2024-01-19T00:01:08+00:00" />
 
 <meta itemprop="name" content="Ptotocol Buffers">
-<meta itemprop="description" content="protoc command Install 1 2 $ brew install protobuf $ protoc --version Usage 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 ❯ protoc --help Usage: protoc [OPTION] PROTO_FILES -IPATH, --proto_path=PATH 指定搜索路径 --plugin=EXECUTABLE: .... --cpp_out=OUT_DIR Generate C&#43;&#43; header and source. --csharp_out=OUT_DIR Generate C# source file. --java_out=OUT_DIR Generate Java source file. --js_out=OUT_DIR Generate JavaScript source. --objc_out=OUT_DIR Generate Objective C"><meta itemprop="datePublished" content="2024-01-19T00:01:08+00:00" />
+<meta itemprop="description" content="Quick start Execute the following commands at your terminal, you don&rsquo;t need to execute them under your project folder, just execute them anywhere, it will install the protoc compiler and the protoc-gen-go and protoc-gen-go-grpc plugins into your $GOPATH/bin folder. 1 2 3 4 5 6 7 # install protoc compiler $ brew install protobuf $ protoc --version # Ensure compiler version is 3&#43; # install plugins to $GOPATH/bin $ go"><meta itemprop="datePublished" content="2024-01-19T00:01:08+00:00" />
 <meta itemprop="dateModified" content="2024-01-19T00:01:08+00:00" />
-<meta itemprop="wordCount" content="1207">
+<meta itemprop="wordCount" content="1283">
 <meta itemprop="keywords" content="grpc," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Ptotocol Buffers"/>
-<meta name="twitter:description" content="protoc command Install 1 2 $ brew install protobuf $ protoc --version Usage 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 ❯ protoc --help Usage: protoc [OPTION] PROTO_FILES -IPATH, --proto_path=PATH 指定搜索路径 --plugin=EXECUTABLE: .... --cpp_out=OUT_DIR Generate C&#43;&#43; header and source. --csharp_out=OUT_DIR Generate C# source file. --java_out=OUT_DIR Generate Java source file. --js_out=OUT_DIR Generate JavaScript source. --objc_out=OUT_DIR Generate Objective C"/>
+<meta name="twitter:description" content="Quick start Execute the following commands at your terminal, you don&rsquo;t need to execute them under your project folder, just execute them anywhere, it will install the protoc compiler and the protoc-gen-go and protoc-gen-go-grpc plugins into your $GOPATH/bin folder. 1 2 3 4 5 6 7 # install protoc compiler $ brew install protobuf $ protoc --version # Ensure compiler version is 3&#43; # install plugins to $GOPATH/bin $ go"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -142,6 +142,7 @@
   <ul>
     <li>
       <ul>
+        <li><a href="#quick-start">Quick start</a></li>
         <li><a href="#protoc-command">protoc command</a>
           <ul>
             <li><a href="#install">Install</a></li>
@@ -158,7 +159,29 @@
   </div>
 </div>
     <div class="post-content">
-      <h2 id="protoc-command">protoc command</h2>
+      <h2 id="quick-start">Quick start</h2>
+<p>Execute the following commands at your terminal, you don&rsquo;t need to execute them under your project folder, just execute them anywhere, it will install the <code>protoc</code> compiler and the <code>protoc-gen-go</code> and <code>protoc-gen-go-grpc</code> plugins into your <code>$GOPATH/bin</code> folder.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># install protoc compiler</span>
+</span></span><span class="line"><span class="cl">$ brew install protobuf
+</span></span><span class="line"><span class="cl">$ protoc --version  <span class="c1"># Ensure compiler version is 3+</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># install plugins to $GOPATH/bin</span>
+</span></span><span class="line"><span class="cl">$ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+</span></span><span class="line"><span class="cl">$ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="protoc-command">protoc command</h2>
 <h3 id="install">Install</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
