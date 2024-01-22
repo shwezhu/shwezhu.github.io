@@ -52,7 +52,7 @@
 <meta itemprop="description" content="1. Basics concepts Try to understand the exception information (Traceback (most recent call last)) :
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 def foo(): print(10 * (1 / 0)) def main(): foo() if __name__ == &#34;__main__&#34;: main() Traceback (most recent call last): File &#34;main.py&#34;, line 10, in &lt;module&gt; main() File &#34;main.py&#34;, line 6, in main foo() File &#34;main.py&#34;, line 2, in foo print(10 * (1 / 0)) ZeroDivisionError: division by zero As you can see The last line of the error message indicates what happened: print(10 * (1 / 0))."><meta itemprop="datePublished" content="2023-11-24T09:37:26+00:00" />
 <meta itemprop="dateModified" content="2023-11-24T09:37:26+00:00" />
-<meta itemprop="wordCount" content="1249">
+<meta itemprop="wordCount" content="1211">
 <meta itemprop="keywords" content="python," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Exception Handling &amp; Expensive or Not Python"/>
 <meta name="twitter:description" content="1. Basics concepts Try to understand the exception information (Traceback (most recent call last)) :
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 def foo(): print(10 * (1 / 0)) def main(): foo() if __name__ == &#34;__main__&#34;: main() Traceback (most recent call last): File &#34;main.py&#34;, line 10, in &lt;module&gt; main() File &#34;main.py&#34;, line 6, in main foo() File &#34;main.py&#34;, line 2, in foo print(10 * (1 / 0)) ZeroDivisionError: division by zero As you can see The last line of the error message indicates what happened: print(10 * (1 / 0))."/>
@@ -150,8 +150,7 @@
         <li><a href="#2-types-of-exceptions">2. Types of Exceptions</a></li>
         <li><a href="#3-handle-exceptions">3. Handle Exceptions</a>
           <ul>
-            <li><a href="#31-defining-clean-up-actions">3.1. Defining clean-up actions</a></li>
-            <li><a href="#32-predefined-clean-up-actions">3.2. Predefined clean-up actions</a></li>
+            <li><a href="#predefined-clean-up-actions">Predefined clean-up actions</a></li>
           </ul>
         </li>
         <li><a href="#4-performance">4. Performance</a></li>
@@ -250,23 +249,7 @@
 </span></span><span class="line"><span class="cl">    <span class="k">raise</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="31-defining-clean-up-actions">3.1. Defining clean-up actions</h3>
-<p>The <a href="https://docs.python.org/3/reference/compound_stmts.html#try"><code>try</code></a> statement has another optional clause which is intended to define clean-up actions that must be executed under all circumstances. For example:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">    <span class="k">raise</span> <span class="ne">KeyboardInterrupt</span>
-</span></span><span class="line"><span class="cl"><span class="k">finally</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Goodbye, world!&#39;</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h3 id="32-predefined-clean-up-actions">3.2. Predefined clean-up actions</h3>
+</div><h3 id="predefined-clean-up-actions">Predefined clean-up actions</h3>
 <p>Some objects define standard clean-up actions to be undertaken when the object is no longer needed, regardless of whether or not the operation using the object succeeded or failed. Look at the following example, which tries to open a file and print its contents to the screen.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

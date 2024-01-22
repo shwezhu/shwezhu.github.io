@@ -16,9 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&amp;rsquo;s the difference between a Future and a Promise? - Stack Overflow
-2. Promise object You can create a promise using the Promise constructor, which takes a function as its argument. This function, often referred to as the &amp;ldquo;executor,&amp;rdquo; takes two parameters: resolve and reject.
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 let myPromise = new Promise((resolve, reject) =&amp;gt; { setTimeout(() =&amp;gt; { resolve(&amp;#34;hello world&amp;#34;) }, 250) }) myPromise." />
+<meta name="author" content="David" /><meta name="description" content="1. Concurrency models Processes Threads (system or green) Futures Asynchronous operations, non-blocking, single-threaded Coroutines CSP Actor Learn more: java - What&amp;rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise object A wrapper for a resolved value or a reason that it&amp;rsquo;s not resolved yet. But with some powerful methods, allow you handle different situations. Like the then chain, the catch Non-blocking: enable you to write" />
 
 
 
@@ -42,24 +40,18 @@
 
 
 <meta property="og:title" content="Promise Object in Javascript" />
-<meta property="og:description" content="1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow
-2. Promise object You can create a promise using the Promise constructor, which takes a function as its argument. This function, often referred to as the &ldquo;executor,&rdquo; takes two parameters: resolve and reject.
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 let myPromise = new Promise((resolve, reject) =&gt; { setTimeout(() =&gt; { resolve(&#34;hello world&#34;) }, 250) }) myPromise." />
+<meta property="og:description" content="1. Concurrency models Processes Threads (system or green) Futures Asynchronous operations, non-blocking, single-threaded Coroutines CSP Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise object A wrapper for a resolved value or a reason that it&rsquo;s not resolved yet. But with some powerful methods, allow you handle different situations. Like the then chain, the catch Non-blocking: enable you to write" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/js/basics/002-promise-async-await/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-11-28T12:34:29+00:00" />
 <meta property="article:modified_time" content="2023-11-28T12:34:29+00:00" />
 
 <meta itemprop="name" content="Promise Object in Javascript">
-<meta itemprop="description" content="1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow
-2. Promise object You can create a promise using the Promise constructor, which takes a function as its argument. This function, often referred to as the &ldquo;executor,&rdquo; takes two parameters: resolve and reject.
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 let myPromise = new Promise((resolve, reject) =&gt; { setTimeout(() =&gt; { resolve(&#34;hello world&#34;) }, 250) }) myPromise."><meta itemprop="datePublished" content="2023-11-28T12:34:29+00:00" />
+<meta itemprop="description" content="1. Concurrency models Processes Threads (system or green) Futures Asynchronous operations, non-blocking, single-threaded Coroutines CSP Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise object A wrapper for a resolved value or a reason that it&rsquo;s not resolved yet. But with some powerful methods, allow you handle different situations. Like the then chain, the catch Non-blocking: enable you to write"><meta itemprop="datePublished" content="2023-11-28T12:34:29+00:00" />
 <meta itemprop="dateModified" content="2023-11-28T12:34:29+00:00" />
-<meta itemprop="wordCount" content="491">
+<meta itemprop="wordCount" content="559">
 <meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Promise Object in Javascript"/>
-<meta name="twitter:description" content="1. Concurrency models Processes ﻿﻿Threads (system or green) ﻿﻿Futures ﻿﻿Coroutines ﻿﻿CSP ﻿﻿Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow
-2. Promise object You can create a promise using the Promise constructor, which takes a function as its argument. This function, often referred to as the &ldquo;executor,&rdquo; takes two parameters: resolve and reject.
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 let myPromise = new Promise((resolve, reject) =&gt; { setTimeout(() =&gt; { resolve(&#34;hello world&#34;) }, 250) }) myPromise."/>
+<meta name="twitter:description" content="1. Concurrency models Processes Threads (system or green) Futures Asynchronous operations, non-blocking, single-threaded Coroutines CSP Actor Learn more: java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow 2. Promise object A wrapper for a resolved value or a reason that it&rsquo;s not resolved yet. But with some powerful methods, allow you handle different situations. Like the then chain, the catch Non-blocking: enable you to write"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -153,12 +145,8 @@
       <ul>
         <li><a href="#1-concurrency-models">1. Concurrency models</a></li>
         <li><a href="#2-promise-object">2. Promise object</a></li>
-        <li><a href="#3-a-real-world-example">3. A real world example</a>
-          <ul>
-            <li><a href="#31-use-awaitasync">3.1. Use <code>await/async</code></a></li>
-            <li><a href="#32-with-promise-chain">3.2. With Promise chain</a></li>
-          </ul>
-        </li>
+        <li><a href="#3-use-awaitasync-with-promise-object">3 Use <code>await/async</code> with Promise object</a></li>
+        <li><a href="#use-then-with-promise-object">Use <code>then()</code> with Promise object</a></li>
       </ul>
     </li>
   </ul>
@@ -169,74 +157,36 @@
       <h2 id="1-concurrency-models">1. Concurrency models</h2>
 <ul>
 <li>Processes</li>
-<li>﻿﻿Threads (system or green)</li>
-<li>﻿﻿<strong>Futures</strong></li>
-<li>﻿﻿Coroutines</li>
-<li>﻿﻿CSP</li>
-<li>﻿﻿Actor</li>
+<li>Threads (system or green)</li>
+<li><strong>Futures</strong>
+<ul>
+<li>Asynchronous operations, non-blocking, single-threaded</li>
+</ul>
+</li>
+<li>Coroutines</li>
+<li>CSP</li>
+<li>Actor</li>
 </ul>
 <p>Learn more: <a href="https://stackoverflow.com/questions/14541975/whats-the-difference-between-a-future-and-a-promise">java - What&rsquo;s the difference between a Future and a Promise? - Stack Overflow</a></p>
 <h2 id="2-promise-object">2. Promise object</h2>
-<p>You can create a promise using the Promise constructor, which takes a function as its argument. This function, often referred to as the &ldquo;executor,&rdquo; takes two parameters: <code>resolve</code> and <code>reject</code>.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">myPromise</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nx">resolve</span><span class="p">(</span><span class="s2">&#34;hello world&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="p">},</span> <span class="mi">250</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">})</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">myPromise</span><span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myPromise</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">})</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myPromise</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Promise { &lt;pending&gt; }
-</span></span></span><span class="line"><span class="cl"><span class="c1">// Promise { &#39;hello world&#39; }
-</span></span></span><span class="line"><span class="cl"><span class="c1">// hello world
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><p>As you can see above, <code>myPromise.then(...)</code> is executed after <code>console.log(myPromise)</code>. This is because a Promise object has three state: <code>pending</code>, <code>fulfilled</code> or <code>rejected</code>, and <code>then()</code> won&rsquo;t get executed by the JS engine when the state of the Promise object is <code>pending</code>.</p>
-<blockquote>
+<ul>
+<li>A wrapper for a resolved value or a reason that it&rsquo;s not resolved yet.</li>
+<li>But with some powerful methods, allow you handle different situations.</li>
+<li>Like the <code>then</code> chain, the <code>catch</code></li>
+<li>Non-blocking: enable you to write asynchronous code in a synchronous manner.
+<ul>
+<li>Most important feature.</li>
+</ul>
+</li>
+<li>There are more complicated methods,</li>
+</ul>
 <p>The <code>Promise</code> object has several fields and methods, including:</p>
 <ol>
 <li><strong><code>state</code></strong>: A <strong>private</strong> field that represents the current state of the promise (<code>pending</code>, <code>fulfilled</code> or <code>rejected</code>).</li>
 <li><strong><code>result</code></strong>: A <strong>private</strong> field that holds the result value if the promise is fulfilled or the reason if it is rejected.</li>
 <li><strong><code>then()</code></strong>, <strong><code>catch()</code></strong>, <strong><code>finally()</code></strong> methods, only get executed when the state of Promise object is <code>fulfilled</code> or <code>rejected</code>.</li>
 </ol>
-</blockquote>
-<p>Besides, you can see the output above (<code>Promise { 'hello world' }</code>) that a Promise object is just a wrapper, which contains a resolved value (a string, number, json, object&hellip;) and has three methods.</p>
-<h2 id="3-a-real-world-example">3. A real world example</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">input</span><span class="o">:</span> <span class="nx">RequestInfo</span> <span class="o">|</span> <span class="nx">URL</span><span class="p">,</span> <span class="nx">init</span><span class="o">?:</span> <span class="nx">RequestInit</span><span class="p">)</span><span class="o">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Response</span><span class="o">&gt;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>As you can see, <code>fetch()</code> returns a <code>Promise</code> object whose value supposed to be an object of <code>Response</code>. There are two way to use <code>fetch()</code>.</p>
-<h3 id="31-use-awaitasync">3.1. Use <code>await/async</code></h3>
+<h2 id="3-use-awaitasync-with-promise-object">3 Use <code>await/async</code> with Promise object</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -271,9 +221,9 @@
 </span></span><span class="line"><span class="cl"><span class="nx">main</span><span class="p">().</span><span class="nx">then</span><span class="p">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>You may wonder why we need call <code>then()</code> after <code>main()</code>, the reason is that <code>async functions</code> always return a promise.</p>
+</div><p>You may wonder why we need call <code>then()</code> after <code>main()</code>, the reason is that <code>async functions</code> always return a promise implicitly.</p>
 <blockquote>
-<p>If the return value of an async function is not explicitly a promise, <strong>it will be implicitly wrapped in a promise</strong>. An async function is really just a fancy Promise wrapper.</p>
+<p>If the return value of an <code>async</code> function is not explicitly a promise, <strong>it will be implicitly wrapped in a promise</strong>. An <code>async</code> function is really just a fancy Promise wrapper.</p>
 </blockquote>
 <p>If you call main like this:</p>
 <div class="highlight"><div class="chroma">
@@ -316,7 +266,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">})()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="32-with-promise-chain">3.2. With Promise chain</h3>
+</div><h2 id="use-then-with-promise-object">Use <code>then()</code> with Promise object</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -330,7 +280,92 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Because <code>fetch()</code> retuens a Promise object, we can call <code>then()</code> directly, this looks more concise than ealier example.</p>
-
+<p>But we usually use <code>await/async</code> instead of <code>then()</code> for readability in real world projects, because we need handle errors and consider different situations.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">fetchMessage</span><span class="p">(</span><span class="nx">messages</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">setLoading</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">controller</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AbortController</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">fetchPath</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;Authorization&#39;</span><span class="o">:</span> <span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">body</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span><span class="nx">messages</span><span class="p">}),</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">signal</span><span class="o">:</span> <span class="nx">controller</span><span class="o">?</span><span class="p">.</span><span class="nx">current</span><span class="o">?</span><span class="p">.</span><span class="nx">signal</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="p">});</span>
+</span></span><span class="line"><span class="cl">            <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">setLoading</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">// remove the last message
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="nx">setMessages</span><span class="p">((</span><span class="nx">messages</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">messages</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">message</span><span class="p">.</span><span class="nx">error</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">content</span><span class="o">:</span> <span class="s2">&#34;获取信息失败, 请联系截图主人喵~: &#34;</span> <span class="o">+</span> <span class="nx">data</span><span class="p">.</span><span class="nx">error</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">duration</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="p">});</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">setLoading</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// remove the last message
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">setMessages</span><span class="p">((</span><span class="nx">messages</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">messages</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">name</span> <span class="o">===</span> <span class="s1">&#39;AbortError&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="nx">message</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&#34;获取信息失败, 请联系截图主人喵~: &#34;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
     </div>
 
     <div class="post-copyright">
