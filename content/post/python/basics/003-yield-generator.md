@@ -19,7 +19,7 @@ def create_generator():
         yield i
 
 ite = create_generator()
-print(ite) # ite is an object!
+print(ite) # ite is a generator object
 for i in ite:
     print(i)
 
@@ -30,7 +30,7 @@ for i in ite:
 # 2
 ```
 
-Here it's a useless example, but it's handy when you know your function will return a huge set of values and you will **only need to read once**. When you call a function that contains a `yield` statement, you get a generator object, but **no code runs**. Then each time you extract from the generator, Python resumes the function from where it left off (from the `yield`), runs until the next `yield`, and then pauses again. 
+When you call a function that contains a `yield` statement, you get a generator object, but **no code runs**. Then each time you extract from the generator, Python resumes the function from where it left off (from the `yield`), runs until the next `yield`, and then pauses again. 
 
 ## 2. Why `yield`
 

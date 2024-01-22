@@ -61,18 +61,7 @@ except Exception as err:
     raise
 ```
 
-### 3.1. Defining clean-up actions
-
-The [`try`](https://docs.python.org/3/reference/compound_stmts.html#try) statement has another optional clause which is intended to define clean-up actions that must be executed under all circumstances. For example:
-
-```python
-try:
-    raise KeyboardInterrupt
-finally:
-    print('Goodbye, world!')
-```
-
-### 3.2. Predefined clean-up actions
+### Predefined clean-up actions
 
 Some objects define standard clean-up actions to be undertaken when the object is no longer needed, regardless of whether or not the operation using the object succeeded or failed. Look at the following example, which tries to open a file and print its contents to the screen.
 

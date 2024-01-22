@@ -11,56 +11,32 @@ tags:
 ## 1. Concurrency models
 
 - Processes
-- ﻿﻿Threads (system or green)
-- ﻿﻿**Futures**
-- ﻿﻿Coroutines
-- ﻿﻿CSP
-- ﻿﻿Actor
+- Threads (system or green)
+- **Futures**
+  - Asynchronous operations, non-blocking, single-threaded
+- Coroutines
+- CSP
+- Actor
 
 Learn more: [java - What's the difference between a Future and a Promise? - Stack Overflow](https://stackoverflow.com/questions/14541975/whats-the-difference-between-a-future-and-a-promise)
 
 ## 2. Promise object
 
-You can create a promise using the Promise constructor, which takes a function as its argument. This function, often referred to as the "executor," takes two parameters: `resolve` and `reject`. 
+- A wrapper for a resolved value or a reason that it's not resolved yet.
+- But with some powerful methods, allow you handle different situations.
+- Like the `then` chain, the `catch`
+- Non-blocking: enable you to write asynchronous code in a synchronous manner.
+  - Most important feature.
+- There are more complicated methods, 
 
-```js
-let myPromise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        resolve("hello world")
-    }, 250)
-})
 
-myPromise.then((value) => {
-    console.log(myPromise)
-    console.log(value)
-})
+The `Promise` object has several fields and methods, including:
 
-console.log(myPromise)
+1. **`state`**: A **private** field that represents the current state of the promise (`pending`, `fulfilled` or `rejected`).
+2. **`result`**: A **private** field that holds the result value if the promise is fulfilled or the reason if it is rejected.
+3. **`then()`**, **`catch()`**, **`finally()`** methods, only get executed when the state of Promise object is `fulfilled` or `rejected`. 
 
-// Promise { <pending> }
-// Promise { 'hello world' }
-// hello world
-```
-
-As you can see above, `myPromise.then(...)` is executed after `console.log(myPromise)`. This is because a Promise object has three state: `pending`, `fulfilled` or `rejected`, and `then()` won't get executed by the JS engine when the state of the Promise object is `pending`. 
-
-> The `Promise` object has several fields and methods, including:
->
-> 1. **`state`**: A **private** field that represents the current state of the promise (`pending`, `fulfilled` or `rejected`).
-> 2. **`result`**: A **private** field that holds the result value if the promise is fulfilled or the reason if it is rejected.
-> 3. **`then()`**, **`catch()`**, **`finally()`** methods, only get executed when the state of Promise object is `fulfilled` or `rejected`. 
-
-Besides, you can see the output above (`Promise { 'hello world' }`) that a Promise object is just a wrapper, which contains a resolved value (a string, number, json, object...) and has three methods. 
-
-## 3. A real world example
-
-```js
-function fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>
-```
-
-As you can see, `fetch()` returns a `Promise` object whose value supposed to be an object of `Response`. There are two way to use `fetch()`. 
-
-### 3.1. Use `await/async`
+## 3 Use `await/async` with Promise object
 
 ```js
 async function main() {
@@ -79,9 +55,9 @@ async function main() {
 main().then()
 ```
 
-You may wonder why we need call `then()` after `main()`, the reason is that `async functions` always return a promise. 
+You may wonder why we need call `then()` after `main()`, the reason is that `async functions` always return a promise implicitly.
 
-> If the return value of an async function is not explicitly a promise, **it will be implicitly wrapped in a promise**. An async function is really just a fancy Promise wrapper.
+> If the return value of an `async` function is not explicitly a promise, **it will be implicitly wrapped in a promise**. An `async` function is really just a fancy Promise wrapper.
 
 If you call main like this:
 
@@ -108,7 +84,7 @@ This is another syntax to call async function:
 })()
 ```
 
-### 3.2. With Promise chain 
+## Use `then()` with Promise object
 
 ```js
 fetch('https://www.google.com')
@@ -116,5 +92,48 @@ fetch('https://www.google.com')
     .catch(err => console.error("An err occurred."))
 ```
 
-Because `fetch()` retuens a Promise object, we can call `then()` directly, this looks more concise than ealier example.
+Because `fetch()` retuens a Promise object, we can call `then()` directly, this looks more concise than ealier example. 
 
+But we usually use `await/async` instead of `then()` for readability in real world projects, because we need handle errors and consider different situations.
+
+```js
+async function fetchMessage(messages) {
+        setLoading(true)
+        controller.current = new AbortController()
+        try {
+            const response = await fetch(fetchPath, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token'),
+                },
+                body: JSON.stringify({messages}),
+                signal: controller?.current?.signal,
+            });
+            const data = await response.json();
+            setLoading(false)
+
+            if (!response.ok) {
+                // remove the last message
+                setMessages((messages) => messages.slice(0, -1));
+                message.error({
+                    content: "获取信息失败, 请联系截图主人喵~: " + data.error,
+                    duration: 5,
+                });
+                return;
+            }
+
+            return data;
+        } catch (e) {
+            setLoading(false)
+            // remove the last message
+            setMessages((messages) => messages.slice(0, -1));
+
+            if (e.name === 'AbortError') {
+                return
+            }
+
+            message.error("获取信息失败, 请联系截图主人喵~: " + e);
+        }
+    }
+```
