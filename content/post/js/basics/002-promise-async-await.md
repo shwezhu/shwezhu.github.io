@@ -29,7 +29,6 @@ Learn more: [java - What's the difference between a Future and a Promise? - Stac
   - Most important feature.
 - There are more complicated methods, 
 
-
 The `Promise` object has several fields and methods, including:
 
 1. **`state`**: A **private** field that represents the current state of the promise (`pending`, `fulfilled` or `rejected`).

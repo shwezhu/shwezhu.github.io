@@ -36,7 +36,7 @@ In modern computer systems, threads can be scheduled dynamically on different co
 
 Additionally, some systems may also use techniques such as **hyper-threading**, where a single physical core is treated as multiple virtual cores, potentially allowing for even more threads to be executed simultaneously. 
 
-Note that simultaneous not equals to parallel. 
+Note that **simultaneous not equals to parallel. **
 
 From this can also see the importance of those basic undergraduate courses, the principles of computer composition of a lot of content, including the CPU architecture, registers, buses, memory structure, how the CPU reads commands from the registers, which provides the basis for future operating system courses. For example, now we are learning about threads, processes, which are all part of the operating system curriculum, and hyper-threading, if you don't know how the CPU handles instructions and how it waits for the bus to send data, how can you understand the interrupt system very well? Golang is very popular now, it is very good at concurrency, Goroutine is very lightweight, but why is goroutine lightweight? You're probably going to get asked that in an interview, right? These are context switches, and you can't understand why goroutines are so powerful without learning the above, but that's just one example. This is just one example. Just one concurrency problem, and that's a lot of knowledge and lessons. The rest of the course such as the network, compilation principles, are very important, may not have an immediate effect, but they will be the future to support you the most solid foundation of the building.
 
