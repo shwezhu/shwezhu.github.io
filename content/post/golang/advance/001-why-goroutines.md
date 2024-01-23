@@ -21,6 +21,17 @@ Go enables two styles of concurrent programming.
 
 ## 2. Goroutines vs OS Threads
 
+- Creation and Destruction
+  - Creating and destroying OS threads requires interacting with the operating system, involving system calls.
+  - Go routines managed by Go scheduler, in user space, no system calls. 
+- Context Switching
+  - needs a full context switch in os thread
+- Level of Operation
+  - User Space Level vs Kernel Space Level
+  - Goroutines are multiplexed onto a smaller number of OS threads.
+- Stack Size
+  - growable stack vs fixed-size stack
+
 ### 2.1. Growable Stacks
 
 Each **OS thread** has a fixed-size block of memory (often as large as 2MB) for its *stack*. This fixed-size stack is simultaneously too much and too little. Yet despite their size, fixed-size stacks are not always big enough for the most complex and deeply recursive of functions. Changing the fixed size can improve space efficiency and allow more threads to be created, or it can enable more deeply recursive functions, but it cannot do both.
@@ -83,6 +94,7 @@ For those cases where a particular goroutine is truly special, the language prov
 - OS threads are scheduled by the OS kernel, Go runtime contains its own scheduler that uses a technique known as ***m:n scheduling***, goroutine is much cheaper than rescheduling a thread. 
 
 A great bolg: [Share memory by communicating · The Ethically-Trained Programmer](https://blog.carlmjohnson.net/post/share-memory-by-communicating/)
+
 
 参考:
 
