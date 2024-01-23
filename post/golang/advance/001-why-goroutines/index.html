@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads 2. Goroutines and Threads 2.1. Growable Stacks Each OS thread has a fixed-size block of memory (often as large as 2MB) for its stack, the work area where it saves the local variables of function calls that are in progress or temporarily" />
+<meta name="author" content="David" /><meta name="description" content="1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads 2. Goroutines vs OS Threads 2.1. Growable Stacks Each OS thread has a fixed-size block of memory (often as large as 2MB) for its stack. This fixed-size stack is simultaneously too much and too little. Yet despite their size, fixed-size stacks are" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="Goroutines Model" />
-<meta property="og:description" content="1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads 2. Goroutines and Threads 2.1. Growable Stacks Each OS thread has a fixed-size block of memory (often as large as 2MB) for its stack, the work area where it saves the local variables of function calls that are in progress or temporarily" />
+<meta property="og:description" content="1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads 2. Goroutines vs OS Threads 2.1. Growable Stacks Each OS thread has a fixed-size block of memory (often as large as 2MB) for its stack. This fixed-size stack is simultaneously too much and too little. Yet despite their size, fixed-size stacks are" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/golang/advance/001-why-goroutines/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2023-08-24T14:58:18+00:00" />
 <meta property="article:modified_time" content="2023-08-24T14:58:18+00:00" />
 
 <meta itemprop="name" content="Goroutines Model">
-<meta itemprop="description" content="1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads 2. Goroutines and Threads 2.1. Growable Stacks Each OS thread has a fixed-size block of memory (often as large as 2MB) for its stack, the work area where it saves the local variables of function calls that are in progress or temporarily"><meta itemprop="datePublished" content="2023-08-24T14:58:18+00:00" />
+<meta itemprop="description" content="1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads 2. Goroutines vs OS Threads 2.1. Growable Stacks Each OS thread has a fixed-size block of memory (often as large as 2MB) for its stack. This fixed-size stack is simultaneously too much and too little. Yet despite their size, fixed-size stacks are"><meta itemprop="datePublished" content="2023-08-24T14:58:18+00:00" />
 <meta itemprop="dateModified" content="2023-08-24T14:58:18+00:00" />
-<meta itemprop="wordCount" content="2150">
+<meta itemprop="wordCount" content="1760">
 <meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Goroutines Model"/>
-<meta name="twitter:description" content="1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads 2. Goroutines and Threads 2.1. Growable Stacks Each OS thread has a fixed-size block of memory (often as large as 2MB) for its stack, the work area where it saves the local variables of function calls that are in progress or temporarily"/>
+<meta name="twitter:description" content="1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads 2. Goroutines vs OS Threads 2.1. Growable Stacks Each OS thread has a fixed-size block of memory (often as large as 2MB) for its stack. This fixed-size stack is simultaneously too much and too little. Yet despite their size, fixed-size stacks are"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -144,11 +144,10 @@
     <li>
       <ul>
         <li><a href="#1--two-styles-of-concurrent-programming">1.  Two Styles of Concurrent Programming</a></li>
-        <li><a href="#2-goroutines-and-threads">2. Goroutines and Threads</a>
+        <li><a href="#2-goroutines-vs-os-threads">2. Goroutines vs OS Threads</a>
           <ul>
             <li><a href="#21-growable-stacks">2.1. Growable Stacks</a></li>
             <li><a href="#22-goroutine-scheduling">2.2. Goroutine Scheduling</a></li>
-            <li><a href="#23-goroutines-have-no-identity">2.3. Goroutines Have No Identity</a></li>
           </ul>
         </li>
         <li><a href="#3-goroutine-model">3. Goroutine Model</a>
@@ -185,18 +184,14 @@
 </ul>
 </li>
 </ul>
-<h2 id="2-goroutines-and-threads">2. Goroutines and Threads</h2>
+<h2 id="2-goroutines-vs-os-threads">2. Goroutines vs OS Threads</h2>
 <h3 id="21-growable-stacks">2.1. Growable Stacks</h3>
-<p>Each OS thread has a fixed-size block of memory (often as large as 2MB) for its <em>stack</em>, the work area where it saves the local variables of function calls that are in progress or temporarily suspended while another function is called. This fixed-size stack is simultaneously too much and too little. A 2MB stack would be a huge waste of memory for a little goroutine, such as one that merely waits for a <code>WaitGroup</code> then closes a channel. It’s not uncommon for a Go program to create hundreds of thousands of goroutines at one time, which would be impossible with stacks this large. Yet despite their size, fixed-size stacks are not always big enough for the most complex and deeply recursive of functions. Changing the fixed size can improve space efficiency and allow more threads to be created, or it can enable more deeply recursive functions, but it cannot do both.</p>
-<p>In contrast, a goroutine starts life with a small stack, typically 2KB. A goroutine’s stack, like the stack of an OS thread, holds the local variables of active and suspended function calls, but unlike an OS thread, a goroutine’s stack is not fixed; it grows and shrinks as needed. The size limit for a goroutine stack may be as much as 1GB, orders of magnitude larger than a typical fixed-size thread stack, though of course few goroutines use that much.</p>
+<p>Each <strong>OS thread</strong> has a fixed-size block of memory (often as large as 2MB) for its <em>stack</em>. This fixed-size stack is simultaneously too much and too little. Yet despite their size, fixed-size stacks are not always big enough for the most complex and deeply recursive of functions. Changing the fixed size can improve space efficiency and allow more threads to be created, or it can enable more deeply recursive functions, but it cannot do both.</p>
+<p>In contrast, a goroutine starts life with a small stack, typically 2KB. A goroutine’s stack, like the stack of an OS thread, holds the local variables of active and suspended function calls, but unlike an OS thread, <strong>a goroutine’s stack is not fixed; it grows and shrinks as needed</strong>. The size limit for a goroutine stack may be as much as 1GB.</p>
 <h3 id="22-goroutine-scheduling">2.2. Goroutine Scheduling</h3>
-<p>OS threads are scheduled by the OS kernel. Every few milliseconds, a hardware timer interrupts the processor, which causes a kernel function called the <em>scheduler</em> to be invoked. This function suspends the currently executing thread and saves its registers in memory, looks over the list of threads and decides which one should run next, restores that thread’s registers from memory, then resumes the execution of that thread. Because OS threads are scheduled by the kernel, passing control from one thread to another requires <strong>a full <em>context switch</em>, that is, saving the state of one user thread to memory, restoring the state of another, and updating the scheduler’s data structures</strong>. This operation is slow, due to its poor locality and the number of memory accesses required, and has historically only gotten worse as the number of CPU cycles required to access memory has increased.</p>
+<p><strong>OS threads are scheduled by the OS kernel</strong>. Every few milliseconds, a hardware timer interrupts the processor, which causes a kernel function called the <em>scheduler</em> to be invoked. This function suspends the currently executing thread and saves its registers in memory, looks over the list of threads and decides which one should run next, restores that thread’s registers from memory, then resumes the execution of that thread. Because OS threads are scheduled by the kernel, passing control from one thread to another requires <strong>a full <em>context switch</em>, that is, saving the state of one user thread to memory, restoring the state of another, and updating the scheduler’s data structures</strong>. This operation is slow, due to its poor locality and the number of memory accesses required</p>
 <p>The Go runtime contains its own scheduler that uses a technique known as <em><strong>m:n scheduling</strong></em>, because it multiplexes (or schedules) <em>m</em> goroutines on <em>n</em> OS threads. The job of the Go scheduler is analogous to that of the kernel scheduler, but it is concerned only with the goroutines of a single Go program.</p>
 <p>Unlike the operating system’s thread scheduler, the Go scheduler is not invoked periodically by a hardware timer, but implicitly by certain Go language constructs. For example, when a goroutine calls <code>time.Sleep</code> or blocks in a channel or mutex operation, the scheduler puts it to sleep and runs another goroutine until it is time to wake the first one up. Because it doesn’t need a switch to kernel context, rescheduling a goroutine is much cheaper than rescheduling a thread.</p>
-<h3 id="23-goroutines-have-no-identity">2.3. Goroutines Have No Identity</h3>
-<p>In most operating systems and programming languages that support multithreading, the current thread has a distinct identity that can be easily obtained as an ordinary value, typically an integer or pointer. This makes it easy to build an abstraction called <em>thread-local storage</em>, which is essentially a global map keyed by thread identity, so that each thread can store and retrieve values independent of other threads.</p>
-<p>Goroutines have no notion of identity that is accessible to the programmer. This is by design, since thread-local storage tends to be abused. For example, in a web server implemented in a language with thread-local storage, it’s common for many functions to find information about the HTTP request on whose behalf they are currently working by looking in that storage. However, just as with programs that rely excessively on global variables, this can lead to an unhealthy “action at a distance” in which the behavior of a function is not determined by its arguments alone, but by the identity of the thread in which it runs. Consequently, if the identity of the thread should change—some worker threads are enlisted to help, say—the function misbehaves mysteriously.</p>
-<p>Go encourages a simpler style of programming in which parameters that affect the behavior of a function are explicit. Not only does this make programs easier to read, but it lets us freely assign subtasks of a given function to many different goroutines without worrying about their identity.</p>
 <h2 id="3-goroutine-model">3. Goroutine Model</h2>
 <p>go-routines are <strong>user-space threads</strong> not <strong>kernel threads</strong>, kernel threads created and managed by OS (sleep, wait, running), OS doesn&rsquo;t know user-space threads exist, Go shcduler multiplexes (or schedules) <em>m</em> goroutines on <em>n</em> OS threads, which is known as <em><strong>m:n scheduling</strong></em>.</p>
 <p>Learn how goroutine works:</p>
