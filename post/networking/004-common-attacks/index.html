@@ -67,7 +67,7 @@ HTTPS SSL TLS - David&rsquo;s Blog
 4. SSL stripping SSL stripping attacks, also known as SSL strip, SSL downgrade, or HTTP downgrade attacks, strip the encryption offered by HTTPS, reducing the connection to the less-secure HTTP.
 In order to “strip” the SSL, an attacker intervenes in the redirection of the HTTP to the secure HTTPS protocol and intercepts a request from the user to the server."><meta itemprop="datePublished" content="2023-10-30T22:44:57+00:00" />
 <meta itemprop="dateModified" content="2023-10-30T22:44:57+00:00" />
-<meta itemprop="wordCount" content="1169">
+<meta itemprop="wordCount" content="1339">
 <meta itemprop="keywords" content="cybersecurity,http,networking," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Common Network Attacks"/>
 <meta name="twitter:description" content="1. Man-in-the-middle attack Learn more:
 https://davidzhu.xyz/post/cs-basics/002-ssh/
@@ -173,9 +173,10 @@ In order to “strip” the SSL, an attacker intervenes in the redirection of th
             <li><a href="#3-csrf-attack">3. CSRF attack</a></li>
             <li><a href="#4-ssl-stripping">4. SSL stripping</a></li>
             <li><a href="#5-dns-hijacking">5. DNS hijacking</a></li>
-            <li><a href="#6-dns-spoofing-dns-cache-poisoning">6. DNS spoofing (DNS cache poisoning)</a></li>
+            <li><a href="#6-dns-spoofing-vs-dns-cache-poisoning">6. DNS spoofing vs DNS (cache) poisoning</a></li>
           </ul>
         </li>
+        <li><a href="#others">Others</a></li>
       </ul>
     </li>
   </ul>
@@ -226,12 +227,47 @@ In order to “strip” the SSL, an attacker intervenes in the redirection of th
 <p>References:</p>
 <p><a href="https://en.wikipedia.org/wiki/DNS_hijacking">DNS hijacking</a></p>
 <p><a href="https://www.fortinet.com/resources/cyberglossary/dns-hijacking">What Is DNS Hijacking? How to Detect &amp; Prevent It | Fortinet</a></p>
-<h3 id="6-dns-spoofing-dns-cache-poisoning">6. DNS spoofing (DNS cache poisoning)</h3>
-<blockquote>
-<p><strong>DNS hijacking</strong> refers to the act of a hacker <strong>manipulating DNS settings</strong> on a user&rsquo;s device or network, redirecting DNS requests to a malicious DNS server to control DNS resolution outcomes.</p>
-<p><strong>DNS cache poisoning</strong>, on the other hand, involves the hacker <strong>deceiving DNS resolvers</strong> by injecting malicious DNS responses into their cache, which are later served to other users making requests for the same domain, leading them to access incorrect IP addresses.</p>
-</blockquote>
+<h3 id="6-dns-spoofing-vs-dns-cache-poisoning">6. DNS spoofing vs DNS (cache) poisoning</h3>
+<ul>
+<li>
+<p><strong>DNS Poisoning</strong>:</p>
+<ul>
+<li><strong>Definition</strong>: This is a technique where the attacker targets the DNS server itself. The attacker inserts false address records into the DNS server&rsquo;s cache, causing the server to return incorrect IP addresses for domain names. This means anyone using the poisoned DNS server will be redirected to the wrong IP address.</li>
+<li><strong>Target</strong>: The attack is on the DNS server.</li>
+<li><strong>Example</strong>: If <code>www.example.com</code> is supposed to resolve to IP <code>1.2.3.4</code>, in a DNS poisoning attack, the DNS server might be tricked into resolving it to <code>5.6.7.8</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>DNS Spoofing</strong>:</p>
+<ul>
+<li><strong>Definition</strong>: This involves tricking a client into believing that a response is coming from a legitimate DNS server, when it is actually coming from an attacker. The attacker intercepts and responds to DNS requests with false information, usually before the legitimate response is received.</li>
+<li><strong>Example</strong>: When a user tries to access <code>www.example.com</code>, an attacker might intercept this request and send a fake response directing the user to IP <code>5.6.7.8</code> instead of the real IP <code>1.2.3.4</code>.</li>
+</ul>
+</li>
+</ul>
 <p>Learn more: <a href="https://davidzhu.xyz/post/networking/005-gfw-dns/">GFW and DNS Poisoning - David&rsquo;s Blog</a></p>
+<h2 id="others">Others</h2>
+<ol>
+<li>
+<p><strong>DNS Poisoning vs DNS Spoofing</strong>:</p>
+<ul>
+<li>DNS Poisoning: Inject false DNS info to the real server</li>
+<li>DNS Spoofing: Send false response back with a malicious DNS server</li>
+</ul>
+</li>
+<li>
+<p><strong>Purpose of MAC Address Spoofing</strong>:</p>
+<ul>
+<li>To make a switch forward packets to an attacker&rsquo;s device by mimicking a legitimate MAC address.</li>
+</ul>
+</li>
+<li>
+<p><strong>Use of ICMP Redirects in Man-in-the-Middle Attacks</strong>:</p>
+<ul>
+<li>An attacker sends forged &ldquo;ICMP redirect messages&rdquo; to mislead a host into changing its routing table, diverting traffic through the attacker&rsquo;s machine.</li>
+</ul>
+</li>
+</ol>
 
     </div>
 
