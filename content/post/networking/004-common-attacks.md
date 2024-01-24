@@ -77,11 +77,28 @@ References:
 
 [What Is DNS Hijacking? How to Detect & Prevent It | Fortinet](https://www.fortinet.com/resources/cyberglossary/dns-hijacking)
 
-### 6. DNS spoofing (DNS cache poisoning)
+### 6. DNS spoofing vs DNS (cache) poisoning
 
-> **DNS hijacking** refers to the act of a hacker **manipulating DNS settings** on a user's device or network, redirecting DNS requests to a malicious DNS server to control DNS resolution outcomes.
->
-> **DNS cache poisoning**, on the other hand, involves the hacker **deceiving DNS resolvers** by injecting malicious DNS responses into their cache, which are later served to other users making requests for the same domain, leading them to access incorrect IP addresses.
+- **DNS Poisoning**: 
+   - **Definition**: This is a technique where the attacker targets the DNS server itself. The attacker inserts false address records into the DNS server's cache, causing the server to return incorrect IP addresses for domain names. This means anyone using the poisoned DNS server will be redirected to the wrong IP address.
+   - **Target**: The attack is on the DNS server.
+   - **Example**: If `www.example.com` is supposed to resolve to IP `1.2.3.4`, in a DNS poisoning attack, the DNS server might be tricked into resolving it to `5.6.7.8`.
+
+- **DNS Spoofing**:
+   - **Definition**: This involves tricking a client into believing that a response is coming from a legitimate DNS server, when it is actually coming from an attacker. The attacker intercepts and responds to DNS requests with false information, usually before the legitimate response is received.
+   - **Example**: When a user tries to access `www.example.com`, an attacker might intercept this request and send a fake response directing the user to IP `5.6.7.8` instead of the real IP `1.2.3.4`.
 
 Learn more: [GFW and DNS Poisoning - David's Blog](https://davidzhu.xyz/post/networking/005-gfw-dns/)
+
+## Others
+
+1. **DNS Poisoning vs DNS Spoofing**:
+   - DNS Poisoning: Inject false DNS info to the real server
+   - DNS Spoofing: Send false response back with a malicious DNS server
+
+2. **Purpose of MAC Address Spoofing**:
+   - To make a switch forward packets to an attacker's device by mimicking a legitimate MAC address.
+
+3. **Use of ICMP Redirects in Man-in-the-Middle Attacks**:
+   - An attacker sends forged "ICMP redirect messages" to mislead a host into changing its routing table, diverting traffic through the attacker's machine.
 

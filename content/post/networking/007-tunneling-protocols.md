@@ -7,6 +7,22 @@ tags:
  - networking
 ---
 
+## VPN
+
+VPN（Virtual Private Network）的核心特性之一就是使用隧道协议（Tunneling Protocol）。通过这些隧道协议，VPN 能够保证数据在不安全的网络中的安全传输，使得VPN在保护在线隐私和绕过网络限制方面非常有效。
+
+常见的隧道协议包括：
+- **IPsec (Internet Protocol Security)**：用于在IP通信过程中确保数据的完整性、认证和机密性。
+- **OpenVPN**：一个基于SSL/TLS的开源VPN协议，提供高度的安全性和灵活性。
+- **WireGuard**：一个较新的协议，旨在提供更高的速度和更先进的加密技术。
+- **SSL/TLS (Secure Sockets Layer/Transport Layer Security)**：SSL VPN usually connects using a Web browser, whereas an IPSec VPN generally requires client software on the remote system.
+  - SSL VPN is a component of virtually every Web browser. Any OS that runs a browser is supported.
+
+> OpenVPN 是一个独立的 VPN 协议，它不使用像 PPTP、L2TP 或 IPsec 这样的标准隧道协议。相反，OpenVPN 使用自己的协议，基于 SSL/TLS 来提供加密和安全连接。它是一个开源的软件应用程序，允许创建安全的点对点或站点对站点连接 OpenVPN 的关键特性包括：
+> 1. **自定义加密协议**：虽然基于 SSL/TLS，但 OpenVPN 有其独特的实现方式，允许高度的定制和灵活性。
+> 2. **身份验证**：支持各种认证机制，包括证书、预共享密钥和用户认证。
+> 3. **跨平台兼容性**：OpenVPN 可以在多种操作系统上运行，包括 Windows、macOS、Linux 和移动平台。
+
 ## 1. Tunneling
 
 In [previous post](https://davidzhu.xyz/post/networking/007-tun-tap-device/), we know that ***TUN*** and ***TAP*** are two different kernel virtual network devices, which are used for **tunneling** purposes. In this post, we'll discuss what is tunneling and coomon tunneling protocols. 
@@ -27,7 +43,7 @@ Because tunneling involves repackaging the traffic data into a different form, p
 
 ## 2. Types of Tunneling protocol
 
-In addition to GRE, IPsec, IP-in-IP, and SSH, other tunneling protocols include:
+In addition to **GRE, IPsec, IP-in-IP, and SSH**, other tunneling protocols include:
 
 - Point-to-Point Tunneling Protocol (PPTP)
 - Secure Socket Tunneling Protocol (SSTP)
@@ -42,23 +58,27 @@ The Internet Protocol is the main routing protocol used on the Internet; it desi
 
 ### 3.1. Why IPSec is important?
 
-Security protocols like IPsec are necessary because networking methods are not encrypted by default. When sending mail through a postal service, a person typically would not write their message on the outside of the envelope. Instead, they enclose their message inside the envelope so that no one who handles the mail between sender and recipient can read their message. However, networking protocol suites like **TCP/IP are only concerned with connection and delivery**, and messages sent are not concealed. Anyone in the middle can read them. IPsec, and other protocols that encrypt data, essentially put an envelope around data as it traverses networks, keeping it secure. 
+Networking protocol suites like **TCP/IP are only concerned with connection and delivery**, and messages sent are not concealed. Anyone in the middle can read them. IPsec, and other protocols that encrypt data, essentially put an envelope around data as it traverses networks, keeping it secure. 
 
 ### 3.2. How does IPsec work?
 
 IPsec connections include the following steps:
 
-**Key exchange:** [Keys](https://www.cloudflare.com/learning/ssl/what-is-a-cryptographic-key/) are necessary for encryption; a key is a string of random characters that can be used to "lock" (encrypt) and "unlock" (decrypt) messages.
+**Key exchange:** [Keys](https://www.cloudflare.com/learning/ssl/what-is-a-cryptographic-key/) are necessary for encryption;
 
-**Packet headers and trailers:** All data that is sent over a network is broken down into smaller pieces called packets. Packets contain both a payload and a header. IPsec adds several headers to data packets containing authentication and encryption information. IPsec also adds trailers, which go after each packet's payload instead of before.
+**Packet headers and trailers:** IP packets contain both a payload and a header. IPsec adds several headers to data packets containing authentication and encryption information. IPsec also adds trailers, which go after each packet's payload instead of before.
 
 Learn more: [What is IPsec? | How IPsec VPNs work | Cloudflare](https://www.cloudflare.com/learning/network-layer/what-is-ipsec/)
 
 ### 3.3. IPsec tunnel and IPsec transport mode
 
-**IPsec tunnel mode** is used between two dedicated routers, with each router acting as one end of a virtual "tunnel" through a public network. In IPsec tunnel mode, **both** the original IP header (containing the final destination of the packet) **and** the packet payload is encrypted. To tell intermediary routers where to forward the packets, IPsec adds a new IP header. At each end of the tunnel, the routers decrypt the IP headers to deliver the packets to their destinations.
+1. **Tunnel Mode**：
+   - 在隧道模式下，IPsec对整个IP数据包（包括头部信息）进行加密。
+   - 这意味着原始的IP数据包被封装在一个新的IP数据包中。新的数据包有一个新的IP头部。
+   - 隧道模式常用于VPN（Virtual Private Network，虚拟私人网络），允许不同网络之间安全地传输数据。
 
-**In transport mode**, the payload of each packet is encrypted, but the original IP header is not. Intermediary routers are thus able to view the final destination of each packet — unless a separate tunneling protocol (such as [GRE](https://www.cloudflare.com/learning/network-layer/what-is-gre-tunneling/)) is used.
+2. **Transport Mode**：
+   - 在传输模式下，IPsec只加密IP数据包的有效载荷（Payload），而不加密头部信息。
 
 ### 3.4. What protocols are used in IPsec?
 
@@ -74,9 +94,7 @@ Finally, while the **Internet Protocol (IP)** is not part of the IPsec suite, IP
 
 ### 3.5. How does IPsec impact MSS and MTU?
 
-[MSS](https://www.cloudflare.com/learning/network-layer/what-is-mss/) and [MTU](https://www.cloudflare.com/learning/network-layer/what-is-mtu/) are two measurements of packet size. Packets can only reach a certain size (measured in bytes) before computers, routers, and [switches](https://www.cloudflare.com/learning/network-layer/what-is-a-network-switch/) cannot handle them. MSS measures the size of each packet's payload, while MTU measures the entire packet, including headers. Packets that exceed a network's MTU may be fragmented, meaning broken up into smaller packets and then reassembled. Packets that exceed the MSS are simply dropped.
-
-IPsec protocols add several headers and trailers to packets, all of which take up several bytes. For networks that use IPsec, either the MSS and MTU have to be adjusted accordingly, or packets will be fragmented and slightly delayed. Usually, the MTU for a network is 1,500 bytes. A normal IP header is 20 bytes long, and a TCP header is also 20 bytes long, meaning each packet can contain 1,460 bytes of payload. However, IPsec adds an Authentication Header, an ESP header, and associated trailers. These add 50-60 bytes to a packet, or more.
+IPsec protocols add several headers and trailers to packets, all of which take up several bytes. For networks that use IPsec, either the MSS and MTU have to be adjusted accordingly, or packets will be fragmented and slightly delayed. Usually, the MTU for a network is 1,500 bytes. A normal IP header is 20 bytes long, and a TCP header is also 20 bytes long, meaning each packet can contain 1,460 bytes of payload. However, **IPsec adds an Authentication Header, an ESP header, and associated trailers**. These add 50-60 bytes to a packet, or more.
 
 ## 4. GRE - Network Layer
 
