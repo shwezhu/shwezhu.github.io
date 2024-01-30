@@ -46,11 +46,9 @@ Each *product* can have many *reviews*, and you create this relationship by stor
 
 But it may come as a surprise that you store the username as well. If this were an RDBMS, you’d be able to pull in the username with a join on the users table. Because you don’t have the join option with MongoDB, you can proceed in one of two ways: either query against the user collection for each review or accept some **denormalization**. Issuing a query for every review might be unnecessarily costly when username is extremely unlikely to change, so here we’ve chosen to optimize for query speed rather than **normalization**.
 
-Also noteworthy is the decision to store votes in the review document itself. It’s common for users to be able to vote on reviews. Here, you store the object ID of each voting user in an array of voter IDs. This allows you to prevent users from voting on a review more than once, and it also gives you the ability to query for all the reviews a user has voted on. You **cache** the total number of helpful votes, which among other things allows you to sort reviews based on helpfulness. Caching is useful because **MongoDB doesn’t allow you to query the size of an array within a document**. A query to sort reviews by helpful votes, for example, is much easier if the size of the voting array is cached in the helpful_votes field.
+Also noteworthy is the decision to store votes in the review document itself. It’s common for users to be able to vote on reviews. Here, you store the object ID of each voting user in an array of voter IDs. This allows you to prevent users from voting on a review more than once, and it also gives you the ability to query for all the reviews a user has voted on. You **cache** the total number of helpful votes, which among other things allows you to sort reviews based on helpfulness. Caching is useful, a query to sort reviews by helpful votes, for example, is much easier if the size of the voting array is cached in the helpful_votes field.
 
 这段提到了一个关键概念：缓存（Caching）, 这里的 “缓存” 是指在文档中直接存储一个额外的数据项（在这个例子中是“有帮助的投票数”），而不是每次查询时计算这个数值。
-
-在MongoDB中，直接通过简单查询来计算文档内数组的大小（即数组中元素的数量）并不直接支持, (你可以通过聚合框架计算数组大小, 但聚合查询通常比简单的文档查询更复杂且性能开销更大, 尤其是在处理大量数据时)
 
 ## Constructing queries - Action in MongoDB chapter 5
 
