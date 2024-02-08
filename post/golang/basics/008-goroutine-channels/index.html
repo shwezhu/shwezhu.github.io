@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.121.1 with theme even" />
+<meta name="generator" content="Hugo 0.122.0 with theme even" />
 
 
 <link rel="canonical" href="https://davidzhu.xyz/post/golang/basics/008-goroutine-channels/" />
@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Goroutine &amp; Channel - Go Basics">
 <meta itemprop="description" content="1. Goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly"><meta itemprop="datePublished" content="2023-08-24T10:06:10+00:00" />
 <meta itemprop="dateModified" content="2023-08-24T10:06:10+00:00" />
-<meta itemprop="wordCount" content="1785">
+<meta itemprop="wordCount" content="1819">
 <meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Goroutine &amp; Channel - Go Basics"/>
 <meta name="twitter:description" content="1. Goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly"/>
 
@@ -210,8 +210,8 @@
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">data</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">a</span> <span class="c1">// read from channel a  
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">a</span> <span class="o">&lt;-</span> <span class="nx">data</span> <span class="c1">// write to channel a  
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">data</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">ch</span> <span class="c1">// read from a channel ch  
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">data</span> <span class="c1">// write to a channel ch
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="21-unbuffered-channel">2.1. Unbuffered channel</h3>
@@ -335,7 +335,7 @@
 </span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="o">&lt;-</span><span class="nx">c</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">	<span class="nb">close</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="o">&lt;-</span><span class="nx">c</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="o">&lt;-</span><span class="nx">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="o">&lt;-</span><span class="nx">c</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="o">------------------------------</span>
 </span></span><span class="line"><span class="cl"><span class="kc">true</span>
@@ -353,8 +353,8 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>If the value of <code>ok</code> is true, this indicates that the channel is open and read operations can be done.</p>
-<h4 id="242-send-on-a-closed-channel">2.4.2 Send on a closed channel</h4>
-<p>An attempt to <strong>send</strong> value to a <em><strong>closed channel</strong></em> will panic.</p>
+<h4 id="242-send-and-close-a-closed-channel">2.4.2 Send and close a closed channel</h4>
+<p>Send or close a <em><strong>closed channel</strong></em> will cause panic.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -371,7 +371,11 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="kc">true</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="25-read--send-on-a-nil-channel">2.5. Read &amp; send on a nil channel</h3>
+</div><blockquote>
+<p>Don&rsquo;t close a channel from the receiver side and don&rsquo;t close a channel if the channel has multiple concurrent senders. -&gt; Don&rsquo;t close (or send values to) closed channels.
+Close channel elegently: <a href="https://qcrao91.gitbook.io/go/channel/ru-he-you-ya-di-guan-bi-channel">https://qcrao91.gitbook.io/go/channel/ru-he-you-ya-di-guan-bi-channel</a></p>
+</blockquote>
+<h3 id="25-read--send-on-a-nil-channel">2.5. Read &amp; send on a nil channel</h3>
 <p>An attempt to <strong>send/read</strong> value on a <em><strong>nil channel</strong></em> will block that goroutine forerver.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -419,7 +423,7 @@
 <p>How to know if a channel is closed only by sending value to it? Answer: You can&rsquo;t.</p>
 <p>learn more: <a href="https://stackoverflow.com/a/61101887/16317008">https://stackoverflow.com/a/61101887/16317008</a></p>
 <h3 id="3-should-a-channel-has-to-be-closed">3. Should a channel has to be closed</h3>
-<p>It&rsquo;s OK to leave a Go channel open forever and never close it. When the channel is no longer used, it will be garbage collected.</p>
+<p>It&rsquo;s OK to leave a Go channel open forever and never close it. When the channel is no longer used, <strong>it will be garbage collected</strong>.</p>
 <blockquote>
 <p>Note that it is only necessary to close a channel if the receiver is looking for a close. Closing the channel is a control signal on the channel indicating that no more data follows.</p>
 <p><a href="https://groups.google.com/d/msg/golang-nuts/pZwdYRGxCIk/qpbHxRRPJdUJ">Design Question: Channel Closing</a></p>

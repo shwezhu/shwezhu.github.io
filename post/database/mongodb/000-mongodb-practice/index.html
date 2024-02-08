@@ -16,14 +16,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content=" 1 2 // return the old document, with {new: true} return the updated document. Model.findByIdAndUpdate() " />
+<meta name="author" content="David" /><meta name="description" content="1 2 // return the old document, with {new: true} return the updated document. Model.findByIdAndUpdate() Query 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 { &amp;#34;address&amp;#34;: { &amp;#34;building&amp;#34;: &amp;#34;1007&amp;#34;, &amp;#34;coord&amp;#34;: [ -73.856077, 40.848447 ], &amp;#34;street&amp;#34;: &amp;#34;Morris Park Ave&amp;#34;, &amp;#34;zipcode&amp;#34;: &amp;#34;10462&amp;#34; }, &amp;#34;borough&amp;#34;: &amp;#34;Bronx&amp;#34;, &amp;#34;cuisine&amp;#34;: &amp;#34;Bakery&amp;#34;, &amp;#34;grades&amp;#34;: [ { &amp;#34;date&amp;#34;: { &amp;#34;$date&amp;#34;: 1393804800000 }, &amp;#34;grade&amp;#34;: &amp;#34;A&amp;#34;, &amp;#34;score&amp;#34;: 2 }, {" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.121.1 with theme even" />
+<meta name="generator" content="Hugo 0.122.0 with theme even" />
 
 
 <link rel="canonical" href="https://davidzhu.xyz/post/database/mongodb/000-mongodb-practice/" />
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="MongoDB Docs" />
-<meta property="og:description" content=" 1 2 // return the old document, with {new: true} return the updated document. Model.findByIdAndUpdate() " />
+<meta property="og:description" content="1 2 // return the old document, with {new: true} return the updated document. Model.findByIdAndUpdate() Query 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 { &#34;address&#34;: { &#34;building&#34;: &#34;1007&#34;, &#34;coord&#34;: [ -73.856077, 40.848447 ], &#34;street&#34;: &#34;Morris Park Ave&#34;, &#34;zipcode&#34;: &#34;10462&#34; }, &#34;borough&#34;: &#34;Bronx&#34;, &#34;cuisine&#34;: &#34;Bakery&#34;, &#34;grades&#34;: [ { &#34;date&#34;: { &#34;$date&#34;: 1393804800000 }, &#34;grade&#34;: &#34;A&#34;, &#34;score&#34;: 2 }, {" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/database/mongodb/000-mongodb-practice/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2024-01-08T08:38:35+00:00" />
 <meta property="article:modified_time" content="2024-01-08T08:38:35+00:00" />
 
 <meta itemprop="name" content="MongoDB Docs">
-<meta itemprop="description" content=" 1 2 // return the old document, with {new: true} return the updated document. Model.findByIdAndUpdate() "><meta itemprop="datePublished" content="2024-01-08T08:38:35+00:00" />
+<meta itemprop="description" content="1 2 // return the old document, with {new: true} return the updated document. Model.findByIdAndUpdate() Query 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 { &#34;address&#34;: { &#34;building&#34;: &#34;1007&#34;, &#34;coord&#34;: [ -73.856077, 40.848447 ], &#34;street&#34;: &#34;Morris Park Ave&#34;, &#34;zipcode&#34;: &#34;10462&#34; }, &#34;borough&#34;: &#34;Bronx&#34;, &#34;cuisine&#34;: &#34;Bakery&#34;, &#34;grades&#34;: [ { &#34;date&#34;: { &#34;$date&#34;: 1393804800000 }, &#34;grade&#34;: &#34;A&#34;, &#34;score&#34;: 2 }, {"><meta itemprop="datePublished" content="2024-01-08T08:38:35+00:00" />
 <meta itemprop="dateModified" content="2024-01-08T08:38:35+00:00" />
-<meta itemprop="wordCount" content="15">
+<meta itemprop="wordCount" content="203">
 <meta itemprop="keywords" content="database,mongodb," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="MongoDB Docs"/>
-<meta name="twitter:description" content=" 1 2 // return the old document, with {new: true} return the updated document. Model.findByIdAndUpdate() "/>
+<meta name="twitter:description" content="1 2 // return the old document, with {new: true} return the updated document. Model.findByIdAndUpdate() Query 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 { &#34;address&#34;: { &#34;building&#34;: &#34;1007&#34;, &#34;coord&#34;: [ -73.856077, 40.848447 ], &#34;street&#34;: &#34;Morris Park Ave&#34;, &#34;zipcode&#34;: &#34;10462&#34; }, &#34;borough&#34;: &#34;Bronx&#34;, &#34;cuisine&#34;: &#34;Bakery&#34;, &#34;grades&#34;: [ { &#34;date&#34;: { &#34;$date&#34;: 1393804800000 }, &#34;grade&#34;: &#34;A&#34;, &#34;score&#34;: 2 }, {"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -138,7 +138,19 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#query">Query</a>
+          <ul>
+            <li><a href="#dbcollectionfindquery-projection-options">db.collection.find(query, projection, options)</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
@@ -150,6 +162,75 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// return the old document, with {new: true} return the updated document.
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Model</span><span class="p">.</span><span class="nx">findByIdAndUpdate</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="query">Query</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;address&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">     <span class="nt">&#34;building&#34;</span><span class="p">:</span> <span class="s2">&#34;1007&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">     <span class="nt">&#34;coord&#34;</span><span class="p">:</span> <span class="p">[</span> <span class="mf">-73.856077</span><span class="p">,</span> <span class="mf">40.848447</span> <span class="p">],</span>
+</span></span><span class="line"><span class="cl">     <span class="nt">&#34;street&#34;</span><span class="p">:</span> <span class="s2">&#34;Morris Park Ave&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">     <span class="nt">&#34;zipcode&#34;</span><span class="p">:</span> <span class="s2">&#34;10462&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;borough&#34;</span><span class="p">:</span> <span class="s2">&#34;Bronx&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;cuisine&#34;</span><span class="p">:</span> <span class="s2">&#34;Bakery&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;grades&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">     <span class="p">{</span> <span class="nt">&#34;date&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;$date&#34;</span><span class="p">:</span> <span class="mi">1393804800000</span> <span class="p">},</span> <span class="nt">&#34;grade&#34;</span><span class="p">:</span> <span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="nt">&#34;score&#34;</span><span class="p">:</span> <span class="mi">2</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">     <span class="p">{</span> <span class="nt">&#34;date&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;$date&#34;</span><span class="p">:</span> <span class="mi">1378857600000</span> <span class="p">},</span> <span class="nt">&#34;grade&#34;</span><span class="p">:</span> <span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="nt">&#34;score&#34;</span><span class="p">:</span> <span class="mi">6</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">     <span class="p">{</span> <span class="nt">&#34;date&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;$date&#34;</span><span class="p">:</span> <span class="mi">1358985600000</span> <span class="p">},</span> <span class="nt">&#34;grade&#34;</span><span class="p">:</span> <span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="nt">&#34;score&#34;</span><span class="p">:</span> <span class="mi">10</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">     <span class="p">{</span> <span class="nt">&#34;date&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;$date&#34;</span><span class="p">:</span> <span class="mi">1322006400000</span> <span class="p">},</span> <span class="nt">&#34;grade&#34;</span><span class="p">:</span> <span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="nt">&#34;score&#34;</span><span class="p">:</span> <span class="mi">9</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">     <span class="p">{</span> <span class="nt">&#34;date&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;$date&#34;</span><span class="p">:</span> <span class="mi">1299715200000</span> <span class="p">},</span> <span class="nt">&#34;grade&#34;</span><span class="p">:</span> <span class="s2">&#34;B&#34;</span><span class="p">,</span> <span class="nt">&#34;score&#34;</span><span class="p">:</span> <span class="mi">14</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Morris Park Bake Shop&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;restaurant_id&#34;</span><span class="p">:</span> <span class="s2">&#34;30075445&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="dbcollectionfindquery-projection-options">db.collection.find(query, projection, options)</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">db</span><span class="p">.</span><span class="nx">restaurants</span><span class="p">.</span><span class="nx">find</span><span class="p">({},</span> <span class="p">{</span><span class="nx">_id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">name</span><span class="o">:</span><span class="mi">1</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="nx">db</span><span class="p">.</span><span class="nx">restaurants</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&#34;borough&#34;</span><span class="o">:</span> <span class="s2">&#34;Bronx&#34;</span><span class="p">}).</span><span class="nx">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">db</span><span class="p">.</span><span class="nx">restaurants</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&#34;borough&#34;</span><span class="o">:</span> <span class="s2">&#34;Bronx&#34;</span><span class="p">}).</span><span class="nx">skip</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="nx">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>$elemMatch</code> 用于在<strong>数组类型的字段</strong>中选择元素, 需要<strong>数组至少有一个元素符合多个查询条件时</strong>, <code>$elemMatch</code> 尤其有用:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// the restaurants that achieved a score, more than 80 but less than 90
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nx">restaurants</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">grades</span><span class="o">:</span> <span class="p">{</span><span class="nx">$elemMatch</span><span class="o">:</span> <span class="p">{</span><span class="nx">score</span><span class="o">:</span> <span class="p">{</span><span class="nx">$gt</span><span class="o">:</span> <span class="mi">80</span><span class="p">,</span> <span class="nx">$lt</span><span class="o">:</span><span class="mi">90</span><span class="p">}}</span> <span class="p">}})</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
