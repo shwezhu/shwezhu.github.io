@@ -10,7 +10,15 @@ tags:
 
 ## Tricks
 
-### 1. handle `close()`
+### remove an element from a slice
+
+```go
+// remove the element at index i from a
+
+a = append(a[:i], a[i+1:]...)
+```
+
+### handle `close()`
 
 ```go
 // credit to: https://gist.github.com/benbjohnson/9eebd201ec096ab6430e1f33411e6427
@@ -105,8 +113,3 @@ Learn more:
 
 - https://go.dev/doc/effective_go#channels
 - https://github.com/golang/go/wiki/CommonMistakes
-
-
-
-
-

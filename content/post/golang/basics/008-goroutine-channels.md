@@ -37,8 +37,8 @@ Other than (除了) by returning from `main` or exiting the program, there is no
 A Go channel is a means of communication that enables data sharing between goroutines. Each channel has a type associated with it. 
 
 ```go
-data := <- a // read from channel a  
-a <- data // write to channel a  
+data := <- ch // read from a channel ch  
+ch <- data // write to a channel ch
 ```
 
 ### 2.1. Unbuffered channel 
@@ -114,7 +114,7 @@ func main() {
 	fmt.Println(<-c)
 	close(c)
 	fmt.Println(<-c)
-  fmt.Println(<-c)
+    fmt.Println(<-c)
 }
 ------------------------------
 true
@@ -130,9 +130,9 @@ ele, ok:= <- channel_name
 
 If the value of `ok` is true, this indicates that the channel is open and read operations can be done. 
 
-#### 2.4.2 Send on a closed channel
+#### 2.4.2 Send and close a closed channel
 
-An attempt to **send** value to a ***closed channel*** will panic.
+Send or close a ***closed channel*** will cause panic. 
 
 ```go
 ch = make(chan bool)
@@ -141,6 +141,9 @@ close(ch)
 // this will get a panic
 ch <- true
 ```
+
+> Don't close a channel from the receiver side and don't close a channel if the channel has multiple concurrent senders. -> Don't close (or send values to) closed channels.
+> Close channel elegently: https://qcrao91.gitbook.io/go/channel/ru-he-you-ya-di-guan-bi-channel
 
 ### 2.5. Read & send on a nil channel
 
@@ -174,7 +177,7 @@ learn more: https://stackoverflow.com/a/61101887/16317008
 
 ### 3. Should a channel has to be closed
 
-It's OK to leave a Go channel open forever and never close it. When the channel is no longer used, it will be garbage collected.
+It's OK to leave a Go channel open forever and never close it. When the channel is no longer used, **it will be garbage collected**.
 
 > Note that it is only necessary to close a channel if the receiver is looking for a close. Closing the channel is a control signal on the channel indicating that no more data follows.
 >

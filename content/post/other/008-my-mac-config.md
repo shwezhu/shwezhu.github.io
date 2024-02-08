@@ -73,6 +73,4 @@ Reference: [Beautify your iTerm2 and prompt 💋 | by Steven Chim | airfrance-kl
 
 [PrettyClean](https://www.prettyclean.cc/zh)
 
-
-
 [mac-cleanup-sh](https://github.com/mac-cleanup/mac-cleanup-sh) 
