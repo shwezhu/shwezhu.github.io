@@ -121,6 +121,30 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/006-gorilla-redis-store-code/">Gorilla Sessions RedisStore Source Code Analysis</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-10-01 </span>
+      <div class="post-category">
+          <a href="/categories/golang/"> golang </a>
+          <a href="/categories/practice/"> practice </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      To prevent data race, store.Get() always creates a new session (or make a copy) and returns the session to user.
+1 2 3 4 5 6 7 // Get a session. // A copied one or new session. session, _ = store.Get(req, &#34;session-key&#34;) // Add a value. session.Values[&#34;foo&#34;] = &#34;bar&#34; // Save. _ = sessions.Save(req, rsp) Let&rsquo;s check the source code, the Get() method of Redistore:
+1 2 3 func (s *RediStore) Get(r *http.
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/practice/006-gorilla-redis-store-code/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/database/redis/001-intro-redis/">Introduce Redis - In-memory Database</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-10-01 </span>
@@ -330,30 +354,6 @@ POST x-www-form-urlencoded format form data to server:
     </div>
     <div class="read-more">
       <a href="/post/http/005-curl/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/practice/005-go-web-1/">The Router of Go Web App - ServeMux</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2023-09-19 </span>
-      <div class="post-category">
-          <a href="/categories/golang/"> golang </a>
-          <a href="/categories/practice/"> practice </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      This article enlightened by:
-Understanding Mux and Handler concept GopherCon 2019: Mat Ryer - How I Write HTTP Web Services after Eight Years 1. Hello world - 2 ways 1.1. Implementing a Handler Interface - way 1 To run a server, we need to implement http.Handler interface:
-1 2 3 type Handler interface{ ServeHTTP(ResponseWriter, *Request) } To achieve that we need to create an empty struct and provide a method for it:
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/practice/005-go-web-1/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
