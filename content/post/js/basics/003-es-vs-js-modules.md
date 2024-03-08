@@ -77,7 +77,7 @@ sayHello()
 
 As of right now ES6 import, export is [always compiled to CommonJS](https://babeljs.io/en/repl#?browsers=&build=&builtIns=false&spec=false&loose=false&code_lz=JYWwDg9gTgLgBAbzgCwKYBt0QIxwL5wBmUEIcA5AHQD0amE5AUIwMYQB2AzhOqpVgHMAFHSzYhASglwgA&debug=false&forceAllTransforms=false&shippedProposals=false&circleciRepo=&evaluate=false&fileSize=false&timeTravel=false&sourceType=module&lineWrap=true&presets=es2015%2Creact%2Cstage-2&prettier=false&targets=&version=7.8.4&externalPlugins=), so there is **no benefit** using one or other. Although usage of ES6 is recommended since it should be advantageous when native support from browsers released. The reason being, you can import partials from one file while with CommonJS you have to require all of the file. [Source](https://stackoverflow.com/a/60331886/16317008)
 
-> Note that you need to add `"type": "module"` in package.json file if you want use ES modules syntax. 
+> Note that you need to add `"type": "module"` in `package.json` file if you want use ES modules syntax. 
 
 ## 3. ES2015 New Features
 

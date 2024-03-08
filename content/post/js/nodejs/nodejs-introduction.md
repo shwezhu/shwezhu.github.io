@@ -15,6 +15,7 @@ node -v
 mkdir ws-chat && cd ws-chat
 npm init
 # execute js file
+touch index.js
 node xxx.js # or use 'npm start' predefined in package.json
 ```
 
