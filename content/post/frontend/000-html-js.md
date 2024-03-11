@@ -41,7 +41,26 @@ document.querySelector('form').addEventListener('submit', sendMessage)
 >
 > **Note:** The `defer` attribute can only be used when JavaScript is externally linked to the HTML file using the `src` attribute of the `<script>` tag. 
 
+## `innerHTML` property
 
+**innerHTML** is a property of every element. It tells you what is between the starting and ending tags of the element, and it also let you sets the content of the element.
+
+```html
+<p class="myp"><a>hello hi ni</a></p>
+
+<script>
+  const myp = document.querySelector('.myp')
+  console.log(myp.innerHTML)
+</script>
+```
+
+This will print a stirng: 
+
+```
+<a>hello hi ni</a>
+```
+
+The `innerHTML` property is part of the Document Object Model (DOM) that allows Javascript code to manipulate a website being displayed. Specifically, it allows reading and replacing everything within a given DOM element (HTML tag).
 
 
 
