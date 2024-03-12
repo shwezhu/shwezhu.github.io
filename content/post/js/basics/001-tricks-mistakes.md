@@ -8,11 +8,13 @@ tags:
   - javascript
 ---
 
-## 0. Minor tricks
+## 1. Minor tricks
 
-### 0.1. array
+### 1.1. array
 
 > It is useful to remember which operations on arrays mutate them, and which don’t. For example, `push`, `pop`, `reverse`, and sort will mutate the original array, but `slice`, `filter`, and `map` will create a new one.
+>
+> `filter()` creates a **shallow copy** of a portion of a given array. 
 
 ```js
 if (isEmpty) {
@@ -25,7 +27,36 @@ if (isEmpty) {
 }
 ```
 
-### 0.2. string length
+```js
+// state 后期可以用数据库代替
+const UsersState = {
+    users: [],
+    setUsers: function (newUsersArray) {
+        this.users = newUsersArray
+    }
+}
+
+// 从UsersState中删除指定的用户
+function userLeavesApp(id) {
+    UsersState.setUsers(
+        // filter 返回一个新数组 浅拷贝 shallow copy
+        // filter() creates a shallow copy of a portion of a given array
+        UsersState.users.filter(user => user.id !== id)
+    )
+}
+
+// 在用户加入聊天室时激活用户，并确保 UsersState 中没有重复的用户
+function activateUser(id, name, room) {
+    const user = { id, name, room }
+    UsersState.setUsers([
+        ...UsersState.users.filter(user => user.id !== id),
+        user
+    ])
+    return user
+}
+```
+
+### 1.2. string length
 
 The `length` of a String value is the length of the string in **UTF-16 code units** not the number of characters. learn more: [String: length - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length)
 
@@ -37,11 +68,11 @@ console.log('😀'.length); // 2
 
 > 1 UTF-16 code unit = 16 bits = 2 bytes
 
-### 0.3. encding string to utf-8 in JS
+### 1.3. encding string to utf-8 in JS
 
 TextEncoder: [TextEncoder - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder)
 
-### 0.4. localStorage
+### 1.4. localStorage
 
 `localStorage` calculates its size limit based on the number of UTF-16 code units, not bytes. You can use the `length` property to get the number of code units in a string.
 
@@ -83,7 +114,7 @@ localStorage.setItem('test', new Array((i * 1024) + 1).join('😀'));
 
 Will print: 2500*1024 code units, because `😀` is 2 UTF-16 code units.
 
-## 1. Spread operator
+## 2. Spread operator
 
 [Spread operator `...`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#description):
 
@@ -106,7 +137,7 @@ setPost(prevPost => ({
 
 > Arrow function will return the value of the expression by default, so we don't need to use `return` keyword.
 
-## 2. Falsy values
+## 3. Falsy values
 
 In JavaScript, we have 6 falsy values:
 
@@ -126,9 +157,9 @@ if(false/0/''/null/undefined/NaN) {
 }
 ```
 
-## 3. Catching errors
+## 4. Catching errors
 
-### 3.1. Catching errors in async functions
+### 4.1. Catching errors in async functions
 
 In JavaScript, `try...catch` blocks are designed to handle errors in synchronous code. However, they do not work as expected with asynchronous code, unless used in conjunction with async/await.
 
@@ -171,7 +202,7 @@ async function loadData() {
 }
 ```
 
-### 3.2. Forget catching errors in neasted promises
+### 4.2. Forget catching errors in neasted promises
 
 ```js
 function fetchPosts() {
@@ -221,7 +252,7 @@ async function fetchPosts() {
 }
 ```
 
-## 4. `await xxxx` won't return a promise but the actual result of the promise
+## 5. `await xxxx` won't return a promise but the actual result of the promise
 
 ```js
 async function handleGetPosts(req, res) {
