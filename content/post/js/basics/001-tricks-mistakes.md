@@ -1,6 +1,6 @@
 ---
 title: Tricks & Mistakes in Javascript
-date: 2024-01-02 10:55:20
+date: 2024-03-12 10:55:20
 categories:
   - javascript
   - basics
