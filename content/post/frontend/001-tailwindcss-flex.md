@@ -77,7 +77,7 @@ Flex items 有他们自己的属性, 如 flex-grow, flex-basis, align-self, orde
     - `order-last` (order: 9999; 使项目排在最后)
     - `order-none` (order: 0; 默认排序)
 
-## Flex box 常用属性
+## Flex container 常用属性
 
 - **display: flex;**
   - Tailwind CSS: `flex`
@@ -95,7 +95,7 @@ Flex items 有他们自己的属性, 如 flex-grow, flex-basis, align-self, orde
     - `justify-start` (主轴起点对齐)
     - `justify-end` (主轴终点对齐)
     - `justify-center` (主轴中心对齐)
-    - `justify-between` (项目之间平均分布)
+    - `justify-between` (项目之间平均分布): 
     - `justify-around` (项目周围平均分布)
     - `justify-evenly` (项目间和周围平均分布)
 

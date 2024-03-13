@@ -16,7 +16,7 @@ npm install react-router-dom localforage match-sorter sort-by
 npm run dev/npm run build
 ```
 
-The Proxy in vite.config.js just works for development mode. In production mode it doesn't work.
+> The Proxy in vite.config.js just works for development mode. In production mode it doesn't work.
 
 The production mode means you run `npm run build` which will generate a `dist` folder. Then you can deploy that folder into your server. 
 
