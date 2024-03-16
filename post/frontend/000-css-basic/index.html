@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Tailwind CSS Flex">
 <meta itemprop="description" content="Block and Inline 块级元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定, 不能与其他元素并列. 特殊情况: button 默认是 inline-block, 即支持设置宽高, 即使你把 button 的 display 设置为 block, 其"><meta itemprop="datePublished" content="2024-01-06T20:46:20+00:00" />
 <meta itemprop="dateModified" content="2024-01-06T20:46:20+00:00" />
-<meta itemprop="wordCount" content="393">
+<meta itemprop="wordCount" content="1140">
 <meta itemprop="keywords" content="front-end," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Tailwind CSS Flex"/>
 <meta name="twitter:description" content="Block and Inline 块级元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定, 不能与其他元素并列. 特殊情况: button 默认是 inline-block, 即支持设置宽高, 即使你把 button 的 display 设置为 block, 其"/>
 
@@ -143,6 +143,12 @@
     <li>
       <ul>
         <li><a href="#block-and-inline">Block and Inline</a></li>
+        <li><a href="#flex">Flex</a>
+          <ul>
+            <li><a href="#flex-box">flex box</a></li>
+            <li><a href="#flex-items">flex items</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -169,6 +175,95 @@
 <p>flex 子元素既不是块级元素, 也不是内联元素, 而是 flex 元素, 有自己的特性. 若同在 flex box内, 则 <code>&lt;a&gt;</code> 与 <code>&lt;div&gt;</code> 在显示上是完全一样的, 因为他们都是 flex items.
 注意 flex 子元素的默认值是 <code>flex: 0 1 auto</code>, 即 <code>flex-grow: 0</code>, <code>flex-shrink: 1</code>, <code>flex-basis: auto</code>, 即默认情况下, flex 子元素是允许在必要情况下缩小的, 而不会增长, 从而导致 flex 子元素的宽度不是父元素的 100%, 而是由内容决定的.</p>
 </blockquote>
+<h2 id="flex">Flex</h2>
+<p>Flex 有很多性质, 要区分哪些性质是用到 Flex Box 上的, 哪些是用到 Flex Items 上的. 可直接观看: <a href="https://youtu.be/fYq5PXgSsbE?si=yeeW9PDx-Als9CWX">https://youtu.be/fYq5PXgSsbE?si=yeeW9PDx-Als9CWX</a></p>
+<h3 id="flex-box">flex box</h3>
+<ul>
+<li>
+<p><code>flex-direction</code>: row | row-reverse | column | column-reverse;</p>
+<ul>
+<li>Tailwind CSS: <code>flex-row</code>, <code>flex-col</code></li>
+</ul>
+</li>
+<li>
+<p><code>justify-content</code>: flex-start | flex-end | center | space-between | space-around | space-evenly;</p>
+<ul>
+<li>Tailwind CSS: <code>justify-start</code>, <code>justify-end</code>, <code>justify-center</code>, <code>justify-between</code>,</li>
+</ul>
+</li>
+<li>
+<p><code>align-items</code>: flex-start | flex-end | center</p>
+<ul>
+<li>Tailwind CSS: <code>items-start</code>, <code>items-end</code>, <code>items-center</code></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>常用技巧:</strong></p>
+<ol>
+<li>justify-between 主要是用来设置 flex items 之间的间距, 一般是让两个元素分布在容器左右或上下两端,</li>
+<li>聊天软件, 自己信息靠右, 对方信息靠左, 不可以使用 <code>justify-self</code> 或 <code>align-self</code>, 前者是用于 Grid 布局的, 后者是用于 Flex 布局的交叉轴上的对齐方式. 更不可以单独对一个元素设置 <code>justify-start</code> 或 <code>justify-end</code>, 因为这是 flex box 的属性, 会影响所有的 flex items, 而不是单个元素. 你可以使用 <code>margin-left: auto</code> 或 <code>margin-right: auto</code> 来实现这个效果.</li>
+<li><code>mx-auto</code> 用于水平居中, <code>my-auto</code> 用于垂直居中,</li>
+</ol>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">Message</span><span class="p">({</span><span class="nx">role</span><span class="p">,</span> <span class="nx">text</span><span class="p">,</span> <span class="nx">time</span><span class="p">})</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">messageClass</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">===</span> <span class="s1">&#39;bot&#39;</span> <span class="o">?</span> <span class="s1">&#39;mr-auto bg-gray-300 text-black&#39;</span> <span class="o">:</span> <span class="s1">&#39;ml-auto bg-blue-300 text-white&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">timePos</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">===</span> <span class="s1">&#39;bot&#39;</span> <span class="o">?</span> <span class="s1">&#39;order-2&#39;</span> <span class="o">:</span> <span class="s1">&#39;order-1&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">rolePos</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">===</span> <span class="s1">&#39;bot&#39;</span> <span class="o">?</span> <span class="s1">&#39;order-1&#39;</span> <span class="o">:</span> <span class="s1">&#39;order-2&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">sentTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">time</span><span class="p">).</span><span class="nx">toLocaleString</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">messageClass</span><span class="p">}</span> <span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;flex flex-row justify-between&#39;</span><span class="p">}</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">rolePos</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">role</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">timePos</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">sentTime</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">text</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="flex-items">flex items</h3>
+<ul>
+<li><strong>flex-grow:</strong> 用来指定一个 flex 子项（flex item）相对于其他子项在可用空间中的扩展比例, 沿主轴方向。
+<ul>
+<li>Tailwind CSS 类名:<code>flex-grow</code>, <code>flex-grow-0</code></li>
+</ul>
+</li>
+<li><strong>align-self:</strong> 用来指定flex子项在<strong>交叉轴</strong>上的对齐方式, 会覆盖父容器的 align-items 属性。
+<ul>
+<li>很好理解, align-self 是用来指定单个 flex item 在交叉轴上的对齐方式, 而 align-items 是用来指定所有 flex items 在交叉轴上的对齐方式. 前者用在 item上, 后者用在 flex box 上, 前者会覆盖后者.</li>
+<li>Tailwind CSS 类名: <code>self-auto</code>, <code>self-start</code>, <code>self-center</code>, <code>self-end</code>, <code>self-stretch</code></li>
+<li>了解更多: <a href="https://tailwindcss.com/docs/align-self">Align Self - Tailwind CSS</a></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>常用技巧:</strong> 把 navigator 和 footer 设置为 <code>flex-grow: 0</code>, 然后中间的内容设置为 <code>flex-grow: 1</code>, 这样中间的内容会占据剩余的空间, 从而实现中间内容自动填充剩余空间的效果. (前提是他们都是 flex items, 即他们都在 flex box 内)</p>
+</blockquote>
+<p><strong>易错点-1:</strong> flex-grow 是 flex items 的属性, 用来控制 flex tiems 如何在<strong>主轴方向</strong>上增长, 不要简单的以为是用来控制在水平方向上增长的. 比如在 flex-col 的情况下，flex-grow 影响的是items的高度，而不是宽度，因为主轴是垂直的.</p>
+<p><strong>易错点-2:</strong> <code>justify-items</code> 和 <code>justify-self</code> 专门用于Grid布局, 不用于Flex布局, 了解更多: <a href="https://tailwindcss.com/docs/justify-items">Justify Items - Tailwind CSS</a></p>
 
     </div>
 
@@ -197,8 +292,8 @@
             <span class="prev-text nav-default">Tailwind CSS Tricks</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
-        <a class="next" href="/post/frontend/001-tailwindcss-flex/">
-            <span class="next-text nav-default">Tailwind CSS Flex</span>
+        <a class="next" href="/post/frontend/001-tailwindcsss-class/">
+            <span class="next-text nav-default">Tailwind CSS Commonly Used Class</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

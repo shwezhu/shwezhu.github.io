@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Tailwind CSS Commonly Used Class">
 <meta itemprop="description" content="1. Main axis and cross axis - Flex 1 2 3 4 5 6 7 &lt;div className=&#34;flex flex-col&#34;&gt; ... &lt;/div&gt; &lt;div className=&#34;flex flex-row&#34;&gt; ... &lt;/div&gt; 为什么使用 class=&ldquo;flex flex-row&rdquo; 只是用 class=&ldquo;flex-row&rdquo; 不行吗? flex 确保元素变成一个 Flex 容器。flex-row 确保该容器内的项目"><meta itemprop="datePublished" content="2024-01-06T12:46:22+00:00" />
 <meta itemprop="dateModified" content="2024-01-06T12:46:22+00:00" />
-<meta itemprop="wordCount" content="1340">
+<meta itemprop="wordCount" content="1027">
 <meta itemprop="keywords" content="front-end," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Tailwind CSS Commonly Used Class"/>
 <meta name="twitter:description" content="1. Main axis and cross axis - Flex 1 2 3 4 5 6 7 &lt;div className=&#34;flex flex-col&#34;&gt; ... &lt;/div&gt; &lt;div className=&#34;flex flex-row&#34;&gt; ... &lt;/div&gt; 为什么使用 class=&ldquo;flex flex-row&rdquo; 只是用 class=&ldquo;flex-row&rdquo; 不行吗? flex 确保元素变成一个 Flex 容器。flex-row 确保该容器内的项目"/>
 
@@ -290,51 +290,13 @@
 <h2 id="4-breakpoints">4. Breakpoints</h2>
 <p>在 Tailwind CSS 中，断点（breakpoints）用于创建响应式设计，允许在不同屏幕尺寸下应用不同的样式规则。以下是 Tailwind CSS 中一些常见断点的用法及其解释：</p>
 <ol>
-<li>
-<p><strong>sm（Small）</strong>:</p>
+<li><strong>sm（Small）</strong>:
 <ul>
-<li><code>sm:</code> 前缀用于小屏幕设备。例如，<code>sm:w-1/2</code> 会在小屏幕尺寸下将元素宽度设置为容器宽度的 50%。</li>
-</ul>
-</li>
-<li>
-<p><strong>md（Medium）</strong>:</p>
-<ul>
-<li><code>md:</code> 前缀适用于中等屏幕设备。例如，<code>md:w-1/3</code> 在中等屏幕尺寸下将元素宽度设置为容器宽度的 33.33%。</li>
+<li><code>sm:</code> 前缀用于小屏幕设备。例如，<code>w-full md:w-1/2</code> : 小屏幕都会自动应用 w-full, 宽度大于 md 的, 宽度自动变为 w-1/2</li>
 </ul>
 </li>
 </ol>
-<p>假设你有一个包含标题、文本和一个侧边栏的页面布局。在小屏幕上，你希望这些元素堆叠显示；在中等屏幕上，希望侧边栏和内容并排显示；而在大屏幕上，你还希望调整它们的大小和间距:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;container mx-auto px-4&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;text-2xl font-bold mb-4&#34;</span><span class="p">&gt;</span><span class="nx">标题</span><span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;flex flex-col md:flex-row lg:space-x-4&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;main-content md:w-2/3 lg:w-3/4&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;mb-4&#34;</span><span class="p">&gt;</span><span class="nx">这里是一些文本</span><span class="p">...&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="nx">更多文本内容</span><span class="p">...&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;sidebar md:w-1/3 lg:w-1/4 mt-4 md:mt-0&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="nx">侧边栏内容</span><span class="p">...&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div>
+
     </div>
 
     <div class="post-copyright">
@@ -357,7 +319,7 @@
           <a href="/tags/front-end/">front-end</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/frontend/001-tailwindcss-flex/">
+        <a class="prev" href="/post/frontend/000-css-basic/">
             <i class="iconfont icon-left"></i>
             <span class="prev-text nav-default">Tailwind CSS Flex</span>
             <span class="prev-text nav-mobile">Prev</span>
