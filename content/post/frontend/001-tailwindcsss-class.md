@@ -95,25 +95,4 @@ typora-root-url: ../../../static
 在 Tailwind CSS 中，断点（breakpoints）用于创建响应式设计，允许在不同屏幕尺寸下应用不同的样式规则。以下是 Tailwind CSS 中一些常见断点的用法及其解释：
 
 1. **sm（Small）**:
-   - `sm:` 前缀用于小屏幕设备。例如，`sm:w-1/2` 会在小屏幕尺寸下将元素宽度设置为容器宽度的 50%。
-
-2. **md（Medium）**:
-   - `md:` 前缀适用于中等屏幕设备。例如，`md:w-1/3` 在中等屏幕尺寸下将元素宽度设置为容器宽度的 33.33%。
-
-
-假设你有一个包含标题、文本和一个侧边栏的页面布局。在小屏幕上，你希望这些元素堆叠显示；在中等屏幕上，希望侧边栏和内容并排显示；而在大屏幕上，你还希望调整它们的大小和间距: 
-
-```jsx
-<div class="container mx-auto px-4">
-    <h1 class="text-2xl font-bold mb-4">标题</h1>
-    <div class="flex flex-col md:flex-row lg:space-x-4">
-        <div class="main-content md:w-2/3 lg:w-3/4">
-            <p class="mb-4">这里是一些文本...</p>
-            <p>更多文本内容...</p>
-        </div>
-        <div class="sidebar md:w-1/3 lg:w-1/4 mt-4 md:mt-0">
-            <p>侧边栏内容...</p>
-        </div>
-    </div>
-</div>
-```
+   - `sm:` 前缀用于小屏幕设备。例如，`w-full md:w-1/2` : 小屏幕都会自动应用 w-full, 宽度大于 md 的, 宽度自动变为 w-1/2
