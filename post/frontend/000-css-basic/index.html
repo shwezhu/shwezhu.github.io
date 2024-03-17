@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="David" /><meta name="description" content="Block and Inline 块级元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定, 不能与其他元素并列. 特殊情况: button 默认是 inline-block, 即支持设置宽高, 即使你把 button 的 display 设置为 block, 其" />
+<meta name="author" content="David" /><meta name="description" content="Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是" />
 
 
 
@@ -40,18 +40,18 @@
 
 
 <meta property="og:title" content="Tailwind CSS Flex" />
-<meta property="og:description" content="Block and Inline 块级元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定, 不能与其他元素并列. 特殊情况: button 默认是 inline-block, 即支持设置宽高, 即使你把 button 的 display 设置为 block, 其" />
+<meta property="og:description" content="Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://davidzhu.xyz/post/frontend/000-css-basic/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2024-01-06T20:46:20+00:00" />
 <meta property="article:modified_time" content="2024-01-06T20:46:20+00:00" />
 
 <meta itemprop="name" content="Tailwind CSS Flex">
-<meta itemprop="description" content="Block and Inline 块级元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定, 不能与其他元素并列. 特殊情况: button 默认是 inline-block, 即支持设置宽高, 即使你把 button 的 display 设置为 block, 其"><meta itemprop="datePublished" content="2024-01-06T20:46:20+00:00" />
+<meta itemprop="description" content="Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是"><meta itemprop="datePublished" content="2024-01-06T20:46:20+00:00" />
 <meta itemprop="dateModified" content="2024-01-06T20:46:20+00:00" />
-<meta itemprop="wordCount" content="1192">
+<meta itemprop="wordCount" content="1341">
 <meta itemprop="keywords" content="front-end," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Tailwind CSS Flex"/>
-<meta name="twitter:description" content="Block and Inline 块级元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定, 不能与其他元素并列. 特殊情况: button 默认是 inline-block, 即支持设置宽高, 即使你把 button 的 display 设置为 block, 其"/>
+<meta name="twitter:description" content="Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -158,17 +158,23 @@
     <div class="post-content">
       <h2 id="block-and-inline">Block and Inline</h2>
 <ul>
-<li>块级元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定, 不能与其他元素并列.
+<li>
+<p>block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定</p>
 <ul>
-<li>特殊情况: button 默认是 inline-block, 即支持设置宽高, 即使你把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是由内容决定的.</li>
-<li>其他的 inline 元素, 如 span, a, 如果设置为 block, 则其宽度会自动变为父元素的 100%.</li>
+<li>特殊情况: button 默认是 inline-block, 支持设置宽高, <strong>即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是由内容决定的.</strong></li>
+<li>其他的 inline 元素, 如 <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;strong&gt;</code>, 如果设置为 block, 则其宽度会自动变为父元素的 100%.</li>
 </ul>
 </li>
-<li>内联元素不会独占一行, 宽度由内容决定, 可以与其他元素并列, 但是<strong>不能设置宽高</strong>, 若要设置宽和高, 需要将其转换为块级元素. 如 <code>display: block</code> 或 <code>display: inline-block</code>.
+<li>
+<p>inline 元素不会独占一行, 宽高度由内容决定</p>
 <ul>
-<li>特殊情况1: 内联元素不可以设置上下 padding 和 margin,</li>
-<li>特殊情况2: <code>margin-left: auto</code>, <code>margin-right: auto</code> 无法用于居中内联元素. 这也是为什么 tailwind css 中 <code>mx-auto</code> 使内联元素水平居中的原因.</li>
+<li>不能设置宽高, 若要设置宽和高, 需要将其转换为块级元素. 如 <code>display: block</code> 或 <code>display: inline-block</code>.</li>
+<li>不可以设置上下 padding 和 margin, 可以设置左右 padding 和 margin.</li>
+<li>特殊情况: <code>margin-left: auto</code>, <code>margin-right: auto</code> 无法适用 inline 元素. 这也是为什么 tailwind css 中 <code>mx-auto</code> 使 inline 元素水平居中的原因.</li>
 </ul>
+</li>
+<li>
+<p>inline-block, 既可以设置宽高, 也可以设置所有 padding 和 margin, 其他与 inline 元素一样.</p>
 </li>
 </ul>
 <blockquote>
@@ -261,7 +267,11 @@
 </li>
 </ul>
 <blockquote>
-<p><strong>常用技巧:</strong> 把 navigator 和 footer 设置为 <code>flex-grow: 0</code>, 然后中间的内容设置为 <code>flex-grow: 1</code>, 这样中间的内容会占据剩余的空间, 从而实现中间内容自动填充剩余空间的效果. (前提是他们都是 flex items, 即他们都在 flex box 内)</p>
+<p><strong>常用技巧-1:</strong> 把 navigator 和 footer 设置为 <code>flex-grow: 0</code>, 然后中间的内容设置为 <code>flex-grow: 1</code>, 这样中间的内容会占据剩余的空间, 从而实现中间内容自动填充剩余空间的效果. (前提是他们都是 flex items, 即他们都在 flex box 内)</p>
+</blockquote>
+<blockquote>
+<p><strong>常用技巧-2:</strong> 通常把元素设置为 flex-grow 后, 会自动填充剩余空间, 但如果该元素的内容很多, 就会导致溢出, 比如对话框, 此时应该会想到加个 overflow 属性, 但是这样并不会起作用, 原因是你没设置该元素的高度, 此时可以给个高度0, 这样即使内容为空因为 flex-grow 会自动填充剩余空间, 若内容溢出因为定义了高度, overflow 属性就会起作用了.
+了解更多: <a href="https://stackoverflow.com/a/14964944/16317008">https://stackoverflow.com/a/14964944/16317008</a></p>
 </blockquote>
 <p><strong>易错点-1:</strong> flex-grow 是 flex items 的属性, 用来控制 flex tiems 如何在<strong>主轴方向</strong>上增长, 不要简单的以为是用来控制在水平方向上增长的. 比如在 flex-col 的情况下，flex-grow 影响的是items的高度，而不是宽度，因为主轴是垂直的.</p>
 <p><strong>易错点-2:</strong> <code>justify-items</code> 和 <code>justify-self</code> 专门用于Grid布局, 不用于Flex布局, 了解更多: <a href="https://tailwindcss.com/docs/justify-items">Justify Items - Tailwind CSS</a></p>
