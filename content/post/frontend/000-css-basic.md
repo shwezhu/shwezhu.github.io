@@ -5,6 +5,7 @@ categories:
  - front-end
 tags:
  - front-end
+typora-root-url: ../../../static
 ---
 
 ## Block and Inline
@@ -81,3 +82,20 @@ export default function Message({role, text, time}) {
 
 **易错点-2:** `justify-items` 和 `justify-self` 专门用于Grid布局, 不用于Flex布局, 了解更多: [Justify Items - Tailwind CSS](https://tailwindcss.com/docs/justify-items)
 
+## Position
+
+### absolute
+
+最近写菜单栏的时候, 菜单栏展开后会将下面的内容挤下去, 像下面这样:
+
+![00](/000-css-basic/00.jpg)
+
+![02](/000-css-basic/02.jpg)
+
+基本上菜单栏都很窄, 所以当菜单栏展开时, 我希望的是不影响下面的内容, 但是正常情况下两个元素要么是 inline 那种可以在同一行, 要么是 block 那种独占一行, 无法实现我想要的效果. 此时就可以使用 absolute 来实现, 如下:
+
+![01](/000-css-basic/01.jpg)
+
+> Absolute positioned elements are removed from the normal flow, and **can overlap elements**.
+
+此时也应该注意覆盖的问题, 若对话框宽度为 100vw, 可能会覆盖掉对话框, 因此要将 z-index 设置大一些.  
