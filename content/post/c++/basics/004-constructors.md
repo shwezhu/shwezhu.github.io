@@ -73,7 +73,7 @@ public:
     }
 
     ~Cat() {
-        std::cout << "Cat: Destructor with parameter is called" << std::endl;
+        std::cout << "Cat: Destructor is called" << std::endl;
     }
 };
 ```
@@ -103,9 +103,9 @@ int main() {
 Cat: Default constructor is called
 Cat: Constructor with two parameter is called
 Cat: Assignment Operator called
-Cat: Destructor with parameter is called
+Cat: Destructor is called
 B: Default constructor is called
-Cat: Destructor with parameter is called
+Cat: Destructor is called
 ```
 
 如果改成下面这样, 其它不变:
@@ -130,19 +130,6 @@ For best results, the following recommendations should be observed:
 
 1. Don’t initialize member variables in such a way that they are dependent upon other member variables being initialized first (in other words, ensure your member variables will properly initialize even if the initialization ordering is different).
 2. Initialize variables in the initializer list in the same order in which they are declared in your class. This isn’t strictly required so long as the prior recommendation has been followed, but your compiler may give you a warning if you don’t do so and you have all warnings turned on.
-
-## 3. Constructor notes
-
-Many new programmers are confused about whether constructors create the objects or not. They do not -- the compiler sets up the memory allocation for the object prior to the constructor call.
-
-Constructors actually serve two purposes.
-
-1. Constructors determine who is allowed to create an object of the class type. That is, an object of a class can only be created if a matching constructor can be found.
-2. Constructors can be used to initialize objects. Whether the constructor actually does an initialization is up to the programmer. It’s syntactically valid to have a constructor that does no initialization at all (the constructor still serves the purpose of allowing the object to be created, as per the above).
-
-However, much like it is a best practice to initialize all local variables, it’s also a best practice to initialize all member variables on creation of the object. This can be done via a constructor or via non-static member initialization.
-
----
 
 **Use the `default` keyword to tell the compiler to create a default constructor:**
 
@@ -172,29 +159,7 @@ int main() {
 
 Using `= default` is longer than writing a constructor with an empty body, but expresses better what your intentions are (To create a default constructor), and it’s safer, because **it can zero-initialize members even if they have not been initialized at their declaration**. 
 
-这句话是什么意思呢?  就是上面你把`int m_year{ 1900 };`写成`int m_year`, 若你使用value initialization`Date date{};`,  `m_year`会被初始化为0. 
-
-> If you have constructors in your `class` and need a default constructor that does nothing (e.g. because all your members are initialized using non-static member initialization), use `= default`.
-
----
-
-**You have already been using classes without knowing it**
-
-It turns out that the C++ standard library is full of classes that have been created for your benefit. std::string, std::vector, and std::array are all class types! So when you create an object of any of these types, you’re instantiating a class object. And when you call a function using these objects, you’re calling a member function.
-
-```c++
-#include <string>
-#include <array>
-...
-int main() {
-    std::string s { "Hello, world!" }; // instantiate a string class object
-    std::array<int, 3> a { 1, 2, 3 }; // instantiate an array class object
-    std::vector<double> v { 1.1, 2.2, 3.3 }; // instantiate a vector class object
-    std::cout << "length: " << s.length() << '\n'; // call a member function
-}
-```
-
-> Use the struct keyword for data-only structures. Use the class keyword for objects that have both data and functions.
+这句话是什么意思呢?  就是上面你把 `int m_year{ 1900 };`写成 `int m_year`, 若你使用value initialization `Date date{};`,  `m_year` 会被初始化为0. 
 
 参考:
 

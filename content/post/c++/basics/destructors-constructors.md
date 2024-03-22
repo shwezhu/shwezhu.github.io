@@ -8,8 +8,6 @@ tags:
  - c++
 ---
 
-在上一节[C++类学习之构造函数](https://davidzhu.xyz/2023/05/15/C++/Basics/constructors/)里介绍了构造函数和member initialization list, 这里介绍一些实际开发中会用的改善代码的方法, 
-
 If you have multiple constructors that have the same functionality, use **delegating constructors** to avoid duplicate code.
 
 ```c++
