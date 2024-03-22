@@ -32,7 +32,7 @@ What would you expect to happen in this case? The intuitive expected result is �
 
 ## 2. Overloading the arithmetic operators using friend functions
 
-使用friend function的好处是我们可以直接访问类的私有成员, 另外注意 friend function并不是类的成员函数, 
+使用 friend function 的好处是我们可以直接访问类的私有成员, 另外注意 friend function 并不是类的成员函数, 
 
 ```cpp
 #include <iostream>
@@ -69,34 +69,7 @@ int main() {
 }
 ```
 
-### 2.1. Implementing operators using other operators
-
-有时候我们想实现操作符重载的参数为两个不同类型, 这如下:
-
-```cpp
-friend MinMax operator+(const MinMax& m1, const MinMax& m2);
-friend MinMax operator+(const MinMax& m, int value);
-friend MinMax operator+(int value, const MinMax& m);
-```
-
-这时候如果重新实现一遍, 就会导致代码重复的情况(只是参数换了个顺序), 这个时候我们可以只实现一个然后用第二个调用第一个如下:
-
-```cpp
-MinMax operator+(const MinMax& m, int value) {
-	// Get the minimum value seen in m and value
-	int min{ m.m_min < value ? m.m_min : value };
-	// Get the maximum value seen in m and value
-	int max{ m.m_max > value ? m.m_max : value };
-	return { min, max };
-}
-
-MinMax operator+(int value, const MinMax& m) {
-	// call operator+(MinMax, int)
-	return m + value;
-}
-```
-
-### 2.2. Not everything can be overloaded as a friend function
+### Not everything can be overloaded as a friend function
 
 The assignment (=), subscript ([]), function call (()), and member selection (->) operators must be overloaded as member functions, because the language requires them to be.
 

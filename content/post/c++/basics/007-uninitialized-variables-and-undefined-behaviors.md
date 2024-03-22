@@ -71,7 +71,7 @@ In this case, the computer will assign some unused memory to *x*. It will then s
 
 ## 2. Undefined behavior
 
-Using the value from an uninitialized variable is our first example of undefined behavior. **Undefined behavior** (often abbreviated **UB**) is the result of executing code whose behavior is not well-defined by the C++ language. In this case, the C++ language doesn’t have any rules determining what happens if you use the value of a variable that has not been given a known value. Consequently, if you actually do this, undefined behavior will result.
+Using the value from an uninitialized variable is our first example of undefined behavior. **Undefined behavior** is the result of executing code whose behavior is not well-defined by the C++ language. In this case, the C++ language doesn’t have any rules determining what happens if you use the value of a variable that has not been given a known value. Consequently, if you actually do this, undefined behavior will result.
 
 Code implementing undefined behavior may exhibit *any* of the following symptoms:
 
@@ -83,14 +83,6 @@ Code implementing undefined behavior may exhibit *any* of the following symptoms
 - Your program works on some compilers but not others.
 - Your program works until you change some other seemingly unrelated code.
 
-Or, your code may actually produce the correct behavior anyway.
-
-> One of the most common types of comment we get from readers says, “You said I couldn’t do X, but I did it anyway and my program works! Why?”.
->
-> There are two common answers. The most common answer is that your program is actually exhibiting undefined behavior, but that undefined behavior just happens to be producing the result you wanted anyway… for now. Tomorrow (or on another compiler or machine) it might not.
->
-> Alternatively, sometimes compiler authors take liberties with the language requirements when those requirements may be more restrictive than needed. For example, the standard may say, “you must do X before Y”, but a compiler author may feel that’s unnecessary, and make Y work even if you don’t do X first. This shouldn’t affect the operation of correctly written programs, but may cause incorrectly written programs to work anyway. So an alternate answer to the above question is that your compiler may simply be not following the standard! It happens. You can avoid much of this by making sure you’ve turned compiler extensions off, as described in lesson [0.10 -- Configuring your compiler: Compiler extensions](https://www.learncpp.com/cpp-tutorial/configuring-your-compiler-compiler-extensions/). 
-
-参考:
+References:
 
 - [1.6 — Uninitialized variables and undefined behavior – Learn C++](https://www.learncpp.com/cpp-tutorial/uninitialized-variables-and-undefined-behavior/)

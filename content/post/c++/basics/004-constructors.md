@@ -1,5 +1,5 @@
 ---
-title: C++类学习之构造函数
+title: C++ Constructors
 date: 2023-05-15 18:56:01
 categories:
  - c++
@@ -128,40 +128,10 @@ Perhaps surprisingly, variables in the initializer list are not initialized in t
 
 For best results, the following recommendations should be observed:
 
-1. Don’t initialize member variables in such a way that they are dependent upon other member variables being initialized first (in other words, ensure your member variables will properly initialize even if the initialization ordering is different).
+1. Don’t initialize member variables in such a way that they are dependent upon other member variables being initialized first (in other words, **ensure your member variables will properly initialize even if the initialization ordering is different**).
 2. Initialize variables in the initializer list in the same order in which they are declared in your class. This isn’t strictly required so long as the prior recommendation has been followed, but your compiler may give you a warning if you don’t do so and you have all warnings turned on.
 
-**Use the `default` keyword to tell the compiler to create a default constructor:**
-
-```c++
-class Date {
-private:
-    int m_year{ 1900 };
-    int m_month{ 1 };
-    int m_day{ 1 };
-public:
-    // Tell the compiler to create a default constructor, even if
-    // there are other user-provided constructors.
-    Date() = default;
-
-    Date(int year, int month, int day) { // normal non-default constructor
-        m_year = year;
-        m_month = month;
-        m_day = day;
-    }
-};
-
-int main() {
-    Date date{}; // date is initialized to Jan 1st, 1900
-    Date today{ 2020, 10, 14 }; // today is initialized to Oct 14th, 2020
-}
-```
-
-Using `= default` is longer than writing a constructor with an empty body, but expresses better what your intentions are (To create a default constructor), and it’s safer, because **it can zero-initialize members even if they have not been initialized at their declaration**. 
-
-这句话是什么意思呢?  就是上面你把 `int m_year{ 1900 };`写成 `int m_year`, 若你使用value initialization `Date date{};`,  `m_year` 会被初始化为0. 
-
-参考:
+References:
 
 - [13.5 — Constructors – Learn C++](https://www.learncpp.com/cpp-tutorial/constructors/)
 - [13.2 — Classes and class members – Learn C++](https://www.learncpp.com/cpp-tutorial/classes-and-class-members/)
