@@ -198,11 +198,11 @@
       <description>经常看到左值右值, 刚好有讲到, 摘取一些记录在这, 原文: 9.2 — Value categories (lvalues and rvalues) – Learn C++ 1. Rvalue expression vs Lvalue expression 1.1. The properties of an expression To help determine how expressions should evaluate and where they can be used, all expressions in C++ have two properties: a</description>
     </item>
     <item>
-      <title>C&#43;&#43;定义类规则</title>
-      <link>https://davidzhu.xyz/post/c&#43;&#43;/basics/class-definition/</link>
+      <title>C&#43;&#43; Class Definition Rules</title>
+      <link>https://davidzhu.xyz/post/c&#43;&#43;/basics/003-class-definition/</link>
       <pubDate>Tue, 16 May 2023 22:36:06 +0000</pubDate>
-      <guid>https://davidzhu.xyz/post/c&#43;&#43;/basics/class-definition/</guid>
-      <description>关于头文件相关的规则可以到: C++头文件内容相关规则 Member functions defined inside the class definition are considered implicitly inline. Member functions defined outside the class definition are treated like normal functions, and are subject to the one definition per program part of the one-definition rule. Therefore, those functions should be defined in</description>
+      <guid>https://davidzhu.xyz/post/c&#43;&#43;/basics/003-class-definition/</guid>
+      <description>Make any member function that does not modify the state of the class object const, so that it can be called by const objects. Default parameters for member functions should be declared in the class definition (in the header file), where they can be seen by whomever #includes the header. For classes used in only one file that aren’t generally reusable, define them directly in the single .cpp file they’re used in.</description>
     </item>
     <item>
       <title>C&#43;&#43;编写头文件内容推荐做法</title>
@@ -216,7 +216,7 @@
       <link>https://davidzhu.xyz/post/c&#43;&#43;/basics/destructors-constructors/</link>
       <pubDate>Tue, 16 May 2023 20:32:04 +0000</pubDate>
       <guid>https://davidzhu.xyz/post/c&#43;&#43;/basics/destructors-constructors/</guid>
-      <description>在上一节C++类学习之构造函数里介绍了构造函数和member initialization list, 这里介绍一些实际开发中会用的改善代码的方法, If you have multiple constructors that have the same functionality, use delegating constructors to avoid duplicate</description>
+      <description>If you have multiple constructors that have the same functionality, use delegating constructors to avoid duplicate code. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 #include &amp;lt;iostream&amp;gt; #include &amp;lt;string&amp;gt; #include &amp;lt;string_view&amp;gt; class Employee { private: int m_id{}; std::string m_name{}; public: Employee(int id=0, std::string_view name=&amp;#34;&amp;#34;): m_id{ id }, m_name{ name } { std::cout &amp;lt;&amp;lt; &amp;#34;Employee &amp;#34; &amp;lt;&amp;lt; m_name &amp;lt;&amp;lt; &amp;#34;</description>
     </item>
     <item>
       <title>Lifetime of a Local Variable - Go</title>
@@ -227,9 +227,9 @@
     </item>
     <item>
       <title>C&#43;&#43;类学习之构造函数</title>
-      <link>https://davidzhu.xyz/post/c&#43;&#43;/basics/constructors/</link>
+      <link>https://davidzhu.xyz/post/c&#43;&#43;/basics/004-constructors/</link>
       <pubDate>Mon, 15 May 2023 18:56:01 +0000</pubDate>
-      <guid>https://davidzhu.xyz/post/c&#43;&#43;/basics/constructors/</guid>
+      <guid>https://davidzhu.xyz/post/c&#43;&#43;/basics/004-constructors/</guid>
       <description>1. Member initialization list A member initialization list can also be used to initialize members that are classes: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 #include &amp;lt;iostream&amp;gt; class A { public: explicit A(int x = 0) { std::cout &amp;lt;&amp;lt; &amp;#34;A &amp;#34; &amp;lt;&amp;lt; x &amp;lt;&amp;lt; &amp;#39;\n&amp;#39;; } }; class B { private: A m_a{};</description>
     </item>
     <item>

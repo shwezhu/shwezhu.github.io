@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Tailwind CSS Flex">
 <meta itemprop="description" content="Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是"><meta itemprop="datePublished" content="2024-01-06T20:46:20+00:00" />
 <meta itemprop="dateModified" content="2024-01-06T20:46:20+00:00" />
-<meta itemprop="wordCount" content="1341">
+<meta itemprop="wordCount" content="1526">
 <meta itemprop="keywords" content="front-end," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Tailwind CSS Flex"/>
 <meta name="twitter:description" content="Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是"/>
 
@@ -147,6 +147,11 @@
           <ul>
             <li><a href="#flex-box">flex box</a></li>
             <li><a href="#flex-items">flex items</a></li>
+          </ul>
+        </li>
+        <li><a href="#position">Position</a>
+          <ul>
+            <li><a href="#absolute">absolute</a></li>
           </ul>
         </li>
       </ul>
@@ -275,6 +280,17 @@
 </blockquote>
 <p><strong>易错点-1:</strong> flex-grow 是 flex items 的属性, 用来控制 flex tiems 如何在<strong>主轴方向</strong>上增长, 不要简单的以为是用来控制在水平方向上增长的. 比如在 flex-col 的情况下，flex-grow 影响的是items的高度，而不是宽度，因为主轴是垂直的.</p>
 <p><strong>易错点-2:</strong> <code>justify-items</code> 和 <code>justify-self</code> 专门用于Grid布局, 不用于Flex布局, 了解更多: <a href="https://tailwindcss.com/docs/justify-items">Justify Items - Tailwind CSS</a></p>
+<h2 id="position">Position</h2>
+<h3 id="absolute">absolute</h3>
+<p>最近写菜单栏的时候, 菜单栏展开后会将下面的内容挤下去, 像下面这样:</p>
+<p><img src="/000-css-basic/00.jpg" alt="00"></p>
+<p><img src="/000-css-basic/02.jpg" alt="02"></p>
+<p>基本上菜单栏都很窄, 所以当菜单栏展开时, 我希望的是不影响下面的内容, 但是正常情况下两个元素要么是 inline 那种可以在同一行, 要么是 block 那种独占一行, 无法实现我想要的效果. 此时就可以使用 absolute 来实现, 如下:</p>
+<p><img src="/000-css-basic/01.jpg" alt="01"></p>
+<blockquote>
+<p>Absolute positioned elements are removed from the normal flow, and <strong>can overlap elements</strong>.</p>
+</blockquote>
+<p>此时也应该注意覆盖的问题, 若对话框宽度为 100vw, 可能会覆盖掉对话框, 因此要将 z-index 设置大一些.</p>
 
     </div>
 
