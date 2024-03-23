@@ -27,23 +27,6 @@ int main() {
 }
 ```
 
-For `v1`, the compiler will determine (at compile time) that a division with two `int` operands will produce an `int` result, **so `int` is the type of this expression**. Via type inference, `int` will then be used as the type of `v1`.
-
-The compiler can use the type of an expression to determine whether an expression is valid in a given context. For example:
-
-```cpp
-void print(int x) {
-    std::cout << x << '\n';
-}
-
-int main() {
-    // error: print() was expecting an int argument, we tried to pass in a string literal
-    print("foo");
-}
-```
-
-In the above program, the `print(int)` function is expecting an `int` parameter. However, **the type of the expression we’re passing in (the string literal `"foo"`) does not match**, **and no conversion can be found.** So a compile error results.
-
 > Note that the type of an expression must be determinable at compile time (otherwise type checking and type deduction wouldn’t work) -- however, the value of an expression may be determined at either compile time (if the expression is constexpr) or runtime (if the expression is not constexpr).
 
 ### 1.3. The value category of an expression
@@ -68,11 +51,11 @@ In C++11, three additional value categories (`glvalue`, `prvalue`, and `xvalue`)
 
 ### 1.4. **Lvalue and rvalue expressions**
 
-An **lvalue** (pronounced “ell-value”, short for “left value” or “locator value”, and sometimes written as “l-value”) is an expression that evaluates to an identifiable object or function (or bit-field).
+An **lvalue** (pronounced “ell-value”) is an expression that evaluates to an identifiable object or function (or bit-field).
 
-Entities (such as an object or function) with identities can be accessed via an identifier, reference, or pointer, and typically have a lifetime longer than a single expression or statement. entity就是object, function, 这里的identifier就是变量名, 然后和reference, pointer三个并列. 比如`int x = 3; `, `x`就是identifier, `3`就是object. 这么理解不知道会不会有点欠妥, 可以自己去查相关资料. 
+Entities (such as an object or function) with identities can be accessed via an identifier, reference, or pointer, and typically have a lifetime longer than a single expression or statement. 这里的identifier就是变量名和reference, pointer并列. 比如`int x = 3; `, `x`就是identifier, `3`就是object. 
 
-An **rvalue** (pronounced “arr-value”, short for “right value”, and sometimes written as `r-value`) is an expression that is not an l-value. Commonly seen rvalues include literals (except C-style string literals, which are lvalues) and the return value of functions and operators. Rvalues aren’t identifiable (meaning they have to be used immediately), and only exist within the scope of the expression in which they are used.
+An **rvalue** (pronounced “arr-value”) is an expression that is not an l-value. Commonly seen rvalues include literals (except C-style string literals, which are lvalues) and the return value of functions and operators. Rvalues aren’t identifiable (meaning they have to be used immediately), and only exist within the scope of the expression in which they are used.
 
 ```cpp
 #include <iostream>
@@ -96,7 +79,7 @@ int main() {
 }
 ```
 
-You may be wondering why `return5()`, `x + 1`, and `static_cast<int>(d)` are rvalues: the answer is because these expressions produce temporary values that are not identifiable objects.
+You may be wondering why `return5()`, `x + 1`, and `static_cast<int>(d)` are rvalues: the answer is these expressions produce temporary values that are not identifiable objects.
 
 Now we can answer the question about why `x = 5` is valid but `5 = x` is not: an assignment operation requires the **left operand** of the assignment to be a modifiable lvalue expression, and the **right operand** to be an rvalue expression. The latter assignment (`5 = x`) fails because the left operand expression `5` isn’t an lvalue. 这里说一下, 原文中提到lvalue expression又分为modifiable和non-modifiable, 后者就是加上`const`修饰的, 感兴趣可以去原文查看, 
 
