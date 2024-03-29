@@ -25,7 +25,7 @@ Copy the content into your EC2 instance:
 $ sudo vi .ssh/authorized_keys
 ```
 
-Then you can login directly:
+Then you can login directly. 
 
 ## 2. oh-my-zsh shell
 
@@ -33,6 +33,8 @@ Then you can login directly:
 sudo apt install zsh -y
 chsh -s /bin/zsh
 sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+# wget 有时候会出现 timeout, 可以用 curl 代替:
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
 ## 3. Set up ufw 

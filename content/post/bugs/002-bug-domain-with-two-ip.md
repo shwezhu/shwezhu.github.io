@@ -45,9 +45,13 @@ But I only have one A record on my domain, this is the DNS Record of my domain n
 
 ![cc](/002-bug-domain-with-two-ip/cc.png)
 
-另外通过这个机制, 若更换域名的 DNS Record, 就不用在购买域名的服务商那修改了, 只需要在服务商那把你域名的 NS 服务器修改为 Clouflare 的 NS 服务器, 之后修改域名的 DNS Record, 比如你服务器IP换了, 直接到 Cloudflare 这修改一下域名的 A Record 就可以了, 如上图, 
+![11](/002-bug-domain-with-two-ip/11.jpg)
 
-了解更多: [Enable Coudflare Reverse Proxy - David's Blog](https://davidzhu.xyz/post/build-website/008-enable-cloudflare-reverse-proxy/)
+此时可以看到现实 DNS Only, 使用 `dig xxx.com +short` 即可查到真实绑定 ip, 或者 `ping` 也可以. 
+
+> 另外通过Cloudflare 域名托管机制(就是现在我们操作的, 中文里都叫托管更合适, 因为他会接管通往我们域名的所有流量), 就是域名被 Cloudflare 托管(Domain Hosting)后, **若想更换域名的 DNS Record, 只需要在上图中的 edit 上修改 A record 就行了**, 就是改成你的新的 VPS(服务器) 的 ipv4 地址, 不用去域名服务商那里修改 DNS Record 了, 因为在把域名托管给 Cloudflare 的时候已经在域名提供商那里把域名的 DNS 服务器设置成了 Cloudflare.  
+
+如何让 Cloudfalre 托管我们的域名:: [Enable Coudflare Reverse Proxy - David's Blog](https://davidzhu.xyz/post/build-website/008-enable-cloudflare-reverse-proxy/)
 
 ---
 
