@@ -1,10 +1,12 @@
 ---
 title: DNS 基础概念
-date: 2023-04-23 00:15:30
+date: 2024-04-07 00:15:30
 categories:
  - build website
+ - networking
 tags:
  - build website
+ - networking
 typora-root-url: ../../../static
 ---
 
@@ -18,11 +20,7 @@ DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, �
 
 > 域名的层级结构: **hostname.SLD.TLD.root**, 其中 hostname 也叫 subdomain. 
 
-## 2. www 就是个 HOSTNAME
-
-在上面截图中可以看出, 域名和ip就是一个映射关系, 添加 A Record 时若 HOSTNAME 空着则就是 `exapmle.com` -> ip address, 若填则为 `www.example.com`/`blog.example.com` -> ip address. 也就是说 `www` 就是个 HOSTNAME, 是用户随意分配的, 只是大部分网站使用 `www` 你也可以填成 `blog`, 
-
-## 3. HOSTNAME vs SLD
+## 2. HOSTNAME vs SLD
 
 HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指`example.com`里面的`example`, 而HOSTNAME是指`www.example.com`里面的`www`. 
 
@@ -30,9 +28,9 @@ HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如`www.e
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/001-domain-name-dns-records%2F01.jpg)
 
-## 4. DNS Records
+## 3. DNS Records
 
-### 4.1. A Record
+### 3.1. A Record
 
 常见的 DNS Records 有 `A`, `CNAME`, `TXT`, 其中 `A` 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, `CNAME` 记录用于将域名指向另一个域名. 
 
@@ -42,20 +40,37 @@ HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如`www.e
 
 > Yes you can. It is called round-robin DNS, and **the browser just chooses one of them randomly**. It is a well used method of getting cheap load balancing, but if one host goes down, users will still try to access it. https://serverfault.com/q/528742/761923
 
-### 4.2. CNAME Record
+### 3.2. CNAME Record
 
-A CNAME record is used in lieu of an A record, when a domain or subdomain is an alias of another domain. All CNAME records must point to a domain, never to an IP address. Imagine a scavenger hunt where each clue points to another clue, and the final clue points to the treasure. A domain with a CNAME record is like a clue that can point you to another clue (another domain with a CNAME record) or to the treasure (a domain with an A record).
+Use a CNAME record instead of an A record when one domain or subdomain is just another name for a different domain. **All CNAME records must point to a domain, never to an IP address**. 
 
-CNAME 记录从一个别名域指向一个"冠名" 域。 当一个 域 或子域是另一个域的别名时，CNAME记录被用来代替 A记录 。 所有CNAME记录都必须指向一个域名，而不是指向一个 IP地址。 想象一下，在一个寻宝游戏中，每条线索都指向另一条线索，而最后的线索则指向宝藏。 一个有CNAME记录的域名就像一条线索，可以把你指向另一条线索（另一个有CNAME记录的域名）或宝藏（一个有A记录的域名）。
+> domain: example.com, subdomain: blog.example.com
+
+假设你有个主网站 example.com，它有一个A记录指向IP地址 123.45.67.89。若你还想通过 www.example.com 访问这个网站，你可以为 www 设置一个CNAME记录，指向 example.com，而不是再次创建一个A记录指向 123.45.67.89。
+
+这样的设置如下：
+
+- example.com A记录 -> 123.45.67.89
+- www.example.com CNAME记录 -> example.com
+
+当用户尝试访问 www.example.com 时，DNS解析流程如下：
+
+- DNS查找 www.example.com 的记录。
+- 找到CNAME记录，了解到 www.example.com 是 example.com 的别名。
+- 接着，DNS会解析 example.com 的A记录，获取其IP地址 123.45.67.89。
+- 用户的请求最终被定向到IP地址 123.45.67.89，也就是 example.com 所在的服务器。
+
+你可能会好奇, 为什么不直接给 www.example.com 添加一个 A 记录, 指向 123.45.67.89 呢? 
+
+再次创建一个A记录指向 123.45.67.89 以通过 www.example.com 访问网站是完全可行的。 然而，选择为 www 使用CNAME记录而不是另一个A记录主要是为了维护简便性：比如如果你的服务器IP地址发生变化，此时只需要更新 example.com 的A记录。所有指向 example.com 的CNAME记录（如 www.example.com）将自动指向新的IP地址。如果使用A记录，你需要手动更新 example.com 和 www.example.com 的A记录。
 
 > Github Pages 的 custom domain 就可以使用 CNAME 记录, 即只需简单给你的域名添加一个 CNAME 记录, 指向 `username.github.io` 即可. 注意添加 CNAME 记录时, 我的 HOSTNAME 填的是 `blog`, 即 `blog.example.com` 指向 `username.github.io`, 你也可以把 HOSTNAME 设置为空, 若为空则代表你的主域名 `example.com` 指向 `username.github.io`, 根据个人喜好来设置. 
 
-### 4.3. TTL Field
+### 3.3. TTL Field
 
 另外 DNS Records 有一个字段叫 TTL, 这里介绍一下: Time to Live (TTL) is a field on DNS records that controls how long each record is valid and — as a result — how long it takes for record updates to reach your end users. Longer TTLs speed up DNS lookups by increasing the chance of cached results, but a longer TTL also means that updates to your records take longer to go into effect.
 
-
-## 5. 总结
+## 4. 总结
 
 买过来域名, 根据不同情况可能做的修改如下:
 
@@ -67,3 +82,4 @@ References:
 
 - [Time to Live (TTL) · Cloudflare DNS docs](https://developers.cloudflare.com/dns/manage-dns-records/reference/ttl/)
 - [什么是 DNS CNAME 记录？ | Cloudflare](https://www.cloudflare.com/zh-cn/learning/dns/dns-records/dns-cname-record/)
+- [What is DNS Hierarchy?](https://www.educative.io/answers/what-is-dns-hierarchy)
