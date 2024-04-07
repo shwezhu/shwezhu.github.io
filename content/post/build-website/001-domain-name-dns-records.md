@@ -18,7 +18,7 @@ DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, �
 
 多出的那个`.`是Root Level Domain, 比如`www.example.com`真正的名字是`www.example.com.root`然后上图就简写为`www.example.com.` 因为根域名`.root`对于所有域名都是一样的，所以平时是省略的。
 
-> 域名的层级结构: **hostname.SLD.TLD.root**, 其中 hostname 也叫 subdomain. 
+> 域名的层级结构: `hostname.SLD.TLD.root`, **hostname 也叫 subdomain**. 
 
 ## 2. HOSTNAME vs SLD
 
@@ -65,6 +65,8 @@ Use a CNAME record instead of an A record when one domain or subdomain is just a
 再次创建一个A记录指向 123.45.67.89 以通过 www.example.com 访问网站是完全可行的。 然而，选择为 www 使用CNAME记录而不是另一个A记录主要是为了维护简便性：比如如果你的服务器IP地址发生变化，此时只需要更新 example.com 的A记录。所有指向 example.com 的CNAME记录（如 www.example.com）将自动指向新的IP地址。如果使用A记录，你需要手动更新 example.com 和 www.example.com 的A记录。
 
 > Github Pages 的 custom domain 就可以使用 CNAME 记录, 即只需简单给你的域名添加一个 CNAME 记录, 指向 `username.github.io` 即可. 注意添加 CNAME 记录时, 我的 HOSTNAME 填的是 `blog`, 即 `blog.example.com` 指向 `username.github.io`, 你也可以把 HOSTNAME 设置为空, 若为空则代表你的主域名 `example.com` 指向 `username.github.io`, 根据个人喜好来设置. 
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/f356b3dd152035f92b0ae20335413ab0.jpg)
 
 ### 3.3. TTL Field
 
