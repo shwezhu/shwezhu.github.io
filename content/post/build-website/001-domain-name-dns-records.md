@@ -10,11 +10,11 @@ typora-root-url: ../../../static
 
 ## 1. DNS Records: A & CNAME
 
-购买域名后给域名指定的ip地址, 则要为其添加 `A` 类型的 DNS Record,  把域名和服务器IP关联就需要为域名添加 `A` 记录, 需要指定 HOSTNAME 和 IP, 其中 `HOSTNAME` 可以填`@`或者`www`, 或者不填, `@`代表空即不填或者填`@`都是一个意思 (还有个概念叫wildcard, 即`*.example.com`) 
+购买域名后给域名指定的ip地址则要为其添加 `A` 类型的 DNS Record, 需要指定 HOSTNAME 和 IP, 其中 `HOSTNAME` 可以填`@`或者`www`或`blog`等自定义, `@`代表空即不填或者填`@`都是一个意思 (还有个概念叫wildcard, 即`*.example.com`) 
 
 ![a](/001-domain-name-dns-records/a-8733304.png)
 
-添加 `CNAME记录` 需要指定 **HOSTNAME**和 **target hostname**, 前者可以不填或者其他`blog`, ` www`  与上面相同, 后者填另一个域名, 比如github 自定义域名, target hostname 则填 ` your-username.github.io` 
+添加 `CNAME记录` 需要指定 **HOSTNAME** 和 **target hostname**, 前者与上面相同, 后者填另一个域名, 比如 `your-username.github.io` 
 
 ![b](/001-domain-name-dns-records/b-8733375.png)
 
@@ -50,11 +50,11 @@ shwezhu.github.io.	1937	IN	A	185.199.111.153
 
 ![](/001-domain-name-dns-records/domain_to_server.png)
 
-## 2. www是干什么的
+## 2. www 就是个 HOSTNAME
 
 在上面截图中可以看出, 域名和ip就是一个映射关系, 添加 A Record 时若 HOSTNAME 空着则就是 `exapmle.com` -> ip address, 若填则为 `www.example.com`/`blog.example.com` -> ip address. 也就是说 `www` 就是个 HOSTNAME, 是用户随意分配的, 只是大部分网站使用 `www` 你也可以填成 `blog`, 
 
-### 2.1. DNS Hierarchy
+## 3. DNS Hierarchy
 
 DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点`.`
 
@@ -75,3 +75,11 @@ HOSTNAME.SLD.TLD.root
 ```
 
 <img src="/001-domain-name-dns-records/d.png" style="zoom:33%;" />
+
+## HOSTNAME vs SLD
+
+HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指`example.com`里面的`example`, 而HOSTNAME是指`www.example.com`里面的`www`. 
+
+HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如`www.example.com`和`blog.example.com`是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问`www.example.com`和`blog.example.com`时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP:
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/001-domain-name-dns-records%2F01.jpg)
