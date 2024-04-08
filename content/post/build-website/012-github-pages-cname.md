@@ -37,3 +37,7 @@ tags:
 
 此时, 当我访问 yorblogger.top 时, 会自动重定向到 blog.yorforger.cc, 一切工作正常.
 
+后来我想让 blog.yorblogger.top 重定向到 blog.yorforger.cc, 然后简单设置了一下:
+
+- 在 DNS Record 把 www 记录改为 blog
+- 去 Rules -> Redirect Rules 添加一个规则, 与上图相同只是把 hostname=yorblogger.top 改为 hostname=blog.yorblogger.top
