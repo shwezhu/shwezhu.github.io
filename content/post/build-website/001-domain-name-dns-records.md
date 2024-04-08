@@ -79,7 +79,6 @@ Use a CNAME record instead of an A record when one domain or subdomain is just a
 - 无托管域名, 则直接去你的域名注册商那里添加 DNS Records, 一般是添加 A 记录, 指向你的服务器 IP 地址 即可. 
 - 若要将域名托管到其他地方 (如 Cloudflare), 则只需要修改域名的 Nameserver 为 Cloudflare 指定的的 Nameserver 即可. 之后在 Cloudflare 上即添加管理不同类似的 DNS Records. 
 
-
 References:
 
 - [Time to Live (TTL) · Cloudflare DNS docs](https://developers.cloudflare.com/dns/manage-dns-records/reference/ttl/)
