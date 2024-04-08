@@ -20,6 +20,20 @@ tags:
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/7f104bcc413e691178004d8951742056.jpg)
 
-这是为什么呢? 原因很简单: 
+可以看到我确实通过 blog.yorblogger.top 访问到了 shwezhu.github.io, 但是 GitHub Pages 服务器返回了 404 错误, 这是为什么呢?
 
-GitHub Pages 允许您将站点关联到一个自定义域名。然而，GitHub Pages 的后端服务是基于 HTTP Host 头来路由请求到正确的站点的。当您尝试通过一个不是直接在 GitHub Pages 配置中设置的域名访问时（在这种情况下是 blog.yorblogger.top），GitHub 服务器无法找到匹配的站点，因为它期望 Host 头是 blog.yorforger.cc。
+我看到了类似的问题 [Can github pages CNAME file contain more than one domain? - Stack Overflow](https://stackoverflow.com/questions/16454088/can-github-pages-cname-file-contain-more-than-one-domain)
+
+> No, this is not possible. See the GitHub Help [docs](https://arc.net/l/quote/gmhptdpc) that explain this:
+> Ensure you only have one domain listed in your CNAME file. If you wish to have multiple domains pointing to the same Pages, you will need to set up redirects for the other domains. Most domain registrars and DNS hosts offer this service to their customers.
+
+根据文档, 我们需要设置重定向, 刚好 Cloudflare 也提供了这个服务, 具体可参考: [Redirect one domain to another](https://developers.cloudflare.com/fundamentals/setup/manage-domains/redirect-domain/)
+
+根据文档, 随便为我的域名添加了个 A 记录, 然后设置重定向规则, 具体如下:
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/7d0a797bd3f1e98c7de8d7d7388fac0d.jpg)
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/176b23e1da3ae0cd1a52f0b8c1796558.jpg)
+
+此时, 当我访问 yorblogger.top 时, 会自动重定向到 blog.yorforger.cc, 一切工作正常.
+
