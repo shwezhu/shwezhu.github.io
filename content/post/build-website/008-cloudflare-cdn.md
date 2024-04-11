@@ -1,5 +1,5 @@
 ---
-title: Coudflare TLS encryption 520 Error Code & too Many Redirections
+title: Get Free TLS certificate with Cloudflare
 date: 2023-11-15 20:09:22
 categories:
  - build website
@@ -8,14 +8,21 @@ tags:
 typora-root-url: ../../../static
 ---
 
-## 1. Enable end-to-end encryption with Cloudflare
+## 1. Hosting your domain on Cloudflare (Enable CDN)
 
-Getting a official TLS certificate is too expensive, so I decide to use Cloudflare [proxied DNS records](https://developers.cloudflare.com/dns/manage-dns-records/reference/proxied-dns-records/) enable TLS connection. There is an article talks [how it works](https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/). There are two steps to add your domain to Cloudflare:
+```
+client <----tls-1----> cloudflare <----tls-2----> your server
+```
+
+> **Note:** You cannot login your server with `ssh user@your_domain` any more after enabling Cloudflare. You need to login with `ssh user@your_ip`. Cause the Cloudflare acts as a reverse proxy, it only forwards the http/https traffic to your server, and [only on some specific ports](https://developers.cloudflare.com/fundamentals/reference/network-ports/). 
+
+There are two steps to add your domain to Cloudflare:
 
 - Add your domain to Cloudflare
 - Create and install TLS certificate to your server
 
-> Cloudflare does this by serving as a [reverse proxy](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/) for your web traffic. 
+> Cloudflare does this by serving as a [reverse proxy](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/) for your web traffic. Actually, Clooudflare achieves this by using its CDN service, which caches your website's static content and serves it to your visitors from the nearest Cloudflare data center.
+> Refer to our Load Balancing reference architecture to learn more about advanced ways to forward traffic to your origins, as well as our [CDN reference architecture](https://developers.cloudflare.com/reference-architecture/architectures/cdn/) to learn more about how Cloudflare processes and optimizes your web traffic.
 
 ### 1.1. Add your domain to Cloudflare
 
@@ -32,14 +39,6 @@ And you will get instructions for updating your nameserver of your domain. After
 ### 1.2. Install TLS certificate
 
 ![c](/008-enable-cloudflare-reverse-proxy/c.png)
-
-Create `cert.pem` and `cert.key` on your server and copy the corresponding file into these two files. Then you can use them. 
-
-```
-client <----tls-1----> cloudflare <----tls-2----> your server
-```
-
-> So you cannot login your server with `ssh user@your_domain` any more.
 
 The generated two files `cert.pem` and `cert.key` is used for encryption between your server and Cloudflare. 
 
@@ -83,7 +82,7 @@ Address: 104.21.47.185 # not my domain's real ip, it's Cloudfalre
 
 Learn more: [Add a site · Cloudflare Fundamentals docs](https://developers.cloudflare.com/fundamentals/setup/account-setup/add-site/)
 
-## 2. Change VPS
+## 2. Change A record
 
 If you changed a vps, all you need to do is to change the A record of your domain on Cloudflare, you don't need to change the A record on your domain register website.
 
@@ -95,7 +94,7 @@ If you changed a vps, all you need to do is to change the A record of your domai
 
 The default port of https is 443. If you want to use other ports, you need to allow them with firewall first on your server.
 
-Cloudflare only allows the following ports:
+Cloudflare only allows the following **HTTPS** ports:
 
 443
 2053
@@ -111,3 +110,9 @@ Learn more:
 [How to allow custom port - Website, Application, Performance / Security - Cloudflare Community](https://community.cloudflare.com/t/how-to-allow-custom-port/175855)
 
 [Network ports · Cloudflare Fundamentals docs](https://developers.cloudflare.com/fundamentals/reference/network-ports/)
+
+Learn more about CDN: 
+
+[What is a content delivery network (CDN)? | How do CDNs work? | Cloudflare](https://www.cloudflare.com/learning/cdn/what-is-a-cdn/)
+
+[Reference Architecture: Cloudflare Content Delivery Network (CDN) · Cloudflare Reference Architecture docs](https://developers.cloudflare.com/reference-architecture/architectures/cdn/)
