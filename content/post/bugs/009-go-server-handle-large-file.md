@@ -6,18 +6,17 @@ categories:
 tags:
  - bugs
  - golang
-typora-root-url: ../../../static
 ---
 
 ## 1. Problem description
 
-I've discussed how to use Cloudflare as a [reverse proxy](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/) for my web traffic in [previous post](https://davidzhu.xyz/post/bugs/007-cloudflare-tls-proxy/). 
+I've discussed how to use Cloudflare as a [reverse proxy](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/) for my web traffic in [previous post](https://blog.yorforger.cc/post/build-website/008-cloudflare-cdn/). 
 
 I write a [file server](https://github.com/shwezhu/file-server) in Go, when attempting to upload a file of approximately 200 MB, it becomes very slow (always uploading) and never succeed. Upon monitoring the server using tools like `htop`, it seems that the server might be unaware of the incoming large file upload. I come across a error by chance:  **413 Request Entity Too Large**. 
 
 ## 2. Cloudflare
 
-Then I Googled this and found this is the Couldflare proxy:
+Then I found this is because the limitation of Couldflare proxy:
 
 > There’s a **body size** limit of 100 MB on Free and Pro, 200 MB on Business and [50074](https://community.cloudflare.com/t/community-tip-fixing-error-500-internal-server-error/44453) MB on Enterprise. Only Enterprise customers can request to have the body size limit increased. 
 >
@@ -46,5 +45,3 @@ But after handling this request, the RAM usage is still around 100MB, if I uploa
 > RSS indicates the actual physical memory consumed by a process, while VSZ includes not only the physical memory but also the virtual memory. 
 >
 > Learn more: https://stackoverflow.com/a/21049737/16317008
-
-## 5. Solution
