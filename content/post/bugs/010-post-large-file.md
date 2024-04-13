@@ -155,3 +155,12 @@ dsat -n # check the network speed at real time
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/c305f2b3b5b586774920af715c01f23f.jpg)
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/90fe48cb6cbd4b0871421a58af25dfad.jpg)
+
+But why the speedtest-cli shows the network speed is fast but the real speed is slow?
+
+```shell
+Download: 298.52 Mbit/s
+Testing upload speed......................................................................................................
+Upload: 192.82 Mbit/s
+```
+
