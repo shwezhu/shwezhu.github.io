@@ -143,3 +143,15 @@ Actually, with `multipart/form-data`, the file content is read by block, not the
 
 So use `PUT` with `application/octet-stream` instead of `multipart/form-data` to upload large files. 
 
+But after I change the code to use `POST` with `application/octet-stream`, the uploading speed is still slow. 
+
+Then I monitor the disk I/O speed and network speed and found the reason, the network speed is around 7MB/s, which is the bottleneck.
+
+```shell
+dstat -d # check the disk speed at real time
+dsat -n # check the network speed at real time
+```
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/c305f2b3b5b586774920af715c01f23f.jpg)
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/90fe48cb6cbd4b0871421a58af25dfad.jpg)
