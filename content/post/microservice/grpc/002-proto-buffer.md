@@ -28,7 +28,7 @@ $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 `protoc` 命令的基本用法是 `protoc [OPTION] PROTO_FILES`, 其中 `OPTION` 包括搜索路径参数, 语言插件参数等, `PROTO_FILES` 是要编译的 `.proto` 文件. 可以通过 `protoc --help` 查看所有参数. 下面主要介绍 `[OPTION]` 参数.
 
 ### 2.1. 搜索路径参数
-- `-IPATH`, `--proto_path=PATH`: 指定搜索 `.proto` 文件的目录
+- `-IPATH` 或 `--proto_path=PATH`: 指定搜索 `.proto` 文件的目录
   - 如: `-I.` 表示在当前目录下搜索
   - 如果不指定该参数，则默认在当前路径下进行搜索
 
@@ -83,82 +83,137 @@ $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 插件 `protoc-gen-go-grpc` 也有两个参数, 类似 `protoc-gen-go` 插件的 `--go_out`, `--go_opt` 参数, 分别是 `--go-grpc_out`, `--go-grpc_opt`, 用法也是一样的,
 
-## 3. 综合示例
+## 3. Example
 
-**项目结构:**
+文件结构如下:
 
 ```shell
-~/Codes/GoLand/shippy main*
 ❯ tree -L 4
 .
-├── README.md
-└── consignment-service
-    ├── Makefile
-    └── proto
-        └── consignment
-            ├── consignment.proto
+├── Makefile
+├── go.mod
+├── proto
+│   └── calculator.proto
 ```
 
-**`consignment.proto`**
-
+`calculator.proto`:
 ```protobuf
 syntax = "proto3";
 
-// When compile for Go code, need this, the path under the project, no project folder name
-option go_package = "github.com/shwezhu/consignment-service/proto/consignment";
+// "./pb" 指定了生成的 Go 文件将被放置在相对路径 ./pb 的目录下
+// 这里的相对路径是相对于 protoc 命令执行的目录, 而不是相对于 .proto 文件的目录
+// protoc-gen-go 要求 `.proto` 文件必须指定 go 包的路径
+option go_package = "./pb";
 
-// same as Go, it's the parent folder of this file.
-package consignment;
-
-service ShippingService {
-  rpc CreateConsignment(Consignment) returns (Response) {}
+service Calculator {
+  rpc Add(CalculationRequest) returns (CalculationResponse);
+  rpc Subtract(CalculationRequest) returns (CalculationResponse);
+  rpc Multiply(CalculationRequest) returns (CalculationResponse);
+  rpc Divide(CalculationRequest) returns (CalculationResponse);
+  rpc Sum(NumbersRequest) returns (CalculationResponse);
 }
 
-...
+message CalculationRequest {
+  int64 a = 1;
+  int64 b = 2;
+}
 
+message CalculationResponse { int64 result = 1; }
+
+message NumbersRequest { repeated int64 numbers = 1; }
 ```
 
-**Makefile**
+`Makefile`:
+```shell
+# run: make generate
+generate:
+	protoc --proto_path=proto proto/*.proto --go_out=. --go-grpc_out=.
 
-```makefile
-build:
-	protoc --go_out=. --go_opt=paths=source_relative \
-	  	   --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-	  	   proto/consignment/consignment.proto
+# 1. 上面使用的所有路径都是相对 protoc 命令执行时所在的目录
+
+# 2. --proto_path=proto: 指定 .proto 文件的搜索路径, 在这，编译器会在名为 proto 的目录下查找 .proto 文件,
+# 你也可以使用 -IPATH 命令行参数来指定搜索路径 如 protoc -I. --go_out=. --go-grpc_out=. proto/*.proto
+# proto/*.proto : 指定要编译的 .proto 文件，这里我们指定了 proto 目录下的所有 .proto 文件,
+# 不指定会报错, 因为 protoc 需要知道要编译哪个文件, 你可以使用如 proto/xxx.proto
+
+# 3. --go_out=.: 还记得我们在 .proto 文件中指定了 go_package="./pb" 吗,
+# --go_out=. 为 go_package 指定了所在的工作目录, 举例:
+# 若你使用 --go_out=abc, go_package="./pb", 则生成的文件会放在 abc/pb 目录下, 前提是你得先创建 abc 目录
+# 我们在这指定的是 --go_out=., 所以最终生成的文件会放到 ./pb 目录下
 ```
 
-**执行命令**
+执行 `make generate` 命令, 文件结构如下:
 
 ```shell
-~/Codes/GoLand/shippy/consignment-service main*
-❯ make build
-protoc --go_out=. --go_opt=paths=source_relative \
-	  	   --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-	  	   proto/consignment/consignment.proto
-```
-
-**项目结构:**
-
-执行上面的命令后, 文件结构如下:
-
-```shell
-~/Codes/GoLand/shippy main*
 ❯ tree -L 4
 .
-├── README.md
-└── consignment-service
-    ├── Makefile
-    └── proto
-        └── consignment
-            ├── consignment.pb.go
-            ├── consignment.proto
-            └── consignment_grpc.pb.go
+├── Makefile
+├── go.mod
+├── pb
+│   ├── calculator.pb.go
+│   └── calculator_grpc.pb.go
+├── proto
+│   └── calculator.proto
 ```
 
+安装 grpc 包, 编写程序:
 
-- `consignment.pb.go`: protoc-gen-go 插件的产出物, 包含所有类型的序列化和反序列化代码
-- `consignment_grpc.pb.go`, protoc-gen-go-grpc 插件的产出物, 包含:
-  - 定义在 `ShippingService` 中用来给client调用的接口定义
-  - 定义在 `ShippingService` 中用来给服务端实现的接口定义
+```shell
+❯ go get google.golang.org/grpc
+```
 
-参考: [写给go开发者的gRPC教程-protobuf基础 - 掘金](https://juejin.cn/post/7191008929986379836)
+创建文件 `server/main.go` (我省略了一些代码):
+
+```go
+package main
+
+type server struct {
+	pb.UnimplementedCalculatorServer
+}
+
+func (s *server) Add(
+	ctx context.Context,
+	in *pb.CalculationRequest,
+) (*pb.CalculationResponse, error) {
+	return &pb.CalculationResponse{
+		Result: in.GetA() + in.GetB(),
+	}, nil
+}
+
+func main() {
+	listener, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		log.Fatalln("failed to create listener:", err)
+	}
+
+	s := grpc.NewServer()
+	// binds the Calculator service implementation to the gRPC server s.
+	pb.RegisterCalculatorServer(s, &server{})
+	if err := s.Serve(listener); err != nil {
+		log.Fatalln("failed to serve:", err)
+	}
+}
+```
+
+最后文件结构如下:
+
+```shell
+❯ tree -L 4
+.
+├── Makefile
+├── go.mod
+├── go.sum
+├── pb
+│   ├── calculator.pb.go
+│   └── calculator_grpc.pb.go
+├── proto
+│   └── calculator.proto
+└── server
+    └── main.go
+```
+
+运行服务器:
+
+```shell
+❯ go run server/main.go
+```
