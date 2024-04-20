@@ -21,7 +21,7 @@ $ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 ```
 
-> Update your PATH so that the protoc compiler can find the plugins: `export PATH="$PATH:$(go env GOPATH)/bin"`
+> Update your `$PATH` so that the protoc compiler can find the plugins: `export PATH="$PATH:$(go env GOPATH)/bin"`
 
 ## protoc command
 
@@ -72,7 +72,7 @@ Usage: protoc [OPTION] PROTO_FILES
 $ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 ```
 
-之前[介绍了 `go install`](https://davidzhu.xyz/post/golang/basics/000-modules-env/), 将会把 `protoc-gen-go` 安装到 `$GOPATH/bin` 目录下, 之后就可以在 `protoc` 命令中使用 `--go_out` 等参数了. 
+之前[介绍了 `go install`](https://davidzhu.xyz/post/golang/basics/000-modules-env/)会把 `protoc-gen-go` 安装到 `$GOPATH/bin` 目录下, 之后就可以在 `protoc` 命令中使用 `--go_out` 等参数了. 
 
 > 注意: protoc-gen-go 要求 pb (`.proto`) 文件中必须指定 go 包的路径, 例如，`option go_package = "github.com/shwezhu/consignment-service/proto/consignment"`. 
 > 文件结构: `consignment-service/proto/consignment/consignment.proto` 
