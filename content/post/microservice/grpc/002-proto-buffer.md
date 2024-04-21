@@ -217,3 +217,8 @@ func main() {
 ```shell
 ❯ go run server/main.go
 ```
+
+## 4. References
+
+[(1) When RESTful architecture isn't enough...](https://www.youtube.com/watch?v=_4TPM6clQjM&t=5s)
+

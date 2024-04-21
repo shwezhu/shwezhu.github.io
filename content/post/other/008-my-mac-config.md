@@ -74,3 +74,78 @@ Reference: [Beautify your iTerm2 and prompt 💋 | by Steven Chim | airfrance-kl
 [PrettyClean](https://www.prettyclean.cc/zh)
 
 [mac-cleanup-sh](https://github.com/mac-cleanup/mac-cleanup-sh) 
+
+## 3. Nvim
+
+### install
+
+```shell
+brew install neovim
+echo "alias vim='nvim'" >> ~/.zshrc
+git clone -b v2.0 https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
+```
+
+### font
+
+Change font of iTerm2 otherwise you will see some weird characters in nvim.
+
+```shell
+❯ brew tap homebrew/cask-fonts
+❯ brew install --cask font-jetbrains-mono-nerd-font
+```
+
+Then set the font in iTerm2 Preferences: `Profiles > Text > Font: jetbrains-mono-nerd`
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/91da077a280e806eb70e5fdc26b4a8ed.jpg)
+
+Learn more: [How to Install Nerd Fonts on mac](https://www.geekbits.io/how-to-install-nerd-fonts-on-mac/)
+
+### theme
+
+Chnage the theme of nvim, enter nvim and type `space` + `t` + `h`, choose *onenord* theme.
+
+### Highlight
+
+```shell
+:TSInstall elixir
+```
+
+[(1) Turn VIM into a full featured IDE with only one command](https://www.youtube.com/watch?v=Mtgo-nP_r8Y&list=PL05iK6gnYad1sb4iQyqsim_Jc_peZdNXf)
+
+
+## Plugins
+
+Edit `~/.config/nvim/lua/custom/chadrc.lua`:
+
+```lua
+local M = {}
+
+M.ui = { theme = 'onenord' }
+
+M.plugins = 'custom.plugins'
+
+return M
+```
+
+Add new file `~/.config/nvim/lua/custom/plugins.lua`:
+
+```lua
+local plugins = {
+  {
+    "Pocco81/auto-save.nvim",
+   lazy = false,
+	  config = function()
+		      require("auto-save").setup {
+			    -- your config goes here
+			    -- or just leave it empty :)
+		      }
+	  end,
+  }
+}
+
+return plugins
+```
+
+## Shortcuts
+
+https://docs.rockylinux.org/books/nvchad/nvchad_ui/nvchad_ui/
