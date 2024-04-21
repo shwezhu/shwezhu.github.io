@@ -83,7 +83,7 @@ $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 插件 `protoc-gen-go-grpc` 也有两个参数, 类似 `protoc-gen-go` 插件的 `--go_out`, `--go_opt` 参数, 分别是 `--go-grpc_out`, `--go-grpc_opt`, 用法也是一样的,
 
-## 3. Example
+## 3. Example 
 
 文件结构如下:
 
