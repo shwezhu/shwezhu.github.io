@@ -83,6 +83,8 @@ Reference: [Beautify your iTerm2 and prompt 💋 | by Steven Chim | airfrance-kl
 brew install neovim
 echo "alias vim='nvim'" >> ~/.zshrc
 git clone -b v2.0 https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
+# for live grep search
+brew install ripgrep
 ```
 
 ### font
@@ -107,10 +109,11 @@ Chnage the theme of nvim, enter nvim and type `space` + `t` + `h`, choose *oneno
 ### Highlight
 
 ```shell
-:TSInstall elixir
+:TSInstall markdown
+:TSInstall markdown_inline
 ```
 
-[(1) Turn VIM into a full featured IDE with only one command](https://www.youtube.com/watch?v=Mtgo-nP_r8Y&list=PL05iK6gnYad1sb4iQyqsim_Jc_peZdNXf)
+[Turn VIM into a full featured IDE with only one command](https://www.youtube.com/watch?v=Mtgo-nP_r8Y&list=PL05iK6gnYad1sb4iQyqsim_Jc_peZdNXf)
 
 
 ## Plugins
@@ -133,7 +136,7 @@ Add new file `~/.config/nvim/lua/custom/plugins.lua`:
 local plugins = {
   {
     "Pocco81/auto-save.nvim",
-   lazy = false,
+    lazy = false,
 	  config = function()
 		      require("auto-save").setup {
 			    -- your config goes here
