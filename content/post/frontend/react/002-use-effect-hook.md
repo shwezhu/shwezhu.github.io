@@ -1,6 +1,6 @@
 ---
 title: useEffect Hook in React
-date: 2023-20-26 19:49:22
+date: 2023-12-26 19:49:22
 categories:
  - front-end
 tags:
