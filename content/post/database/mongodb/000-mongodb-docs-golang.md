@@ -38,7 +38,7 @@ Learn more:
 
 ## Read Operation
 
-To match a subset of documents, specify a **query filter**. In a query filter, you can match fields with [literal values](https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#std-label-golang-literal-values) or with [query operators](https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#std-label-golang-query-operators).
+To match a subset of documents, specify a **query filter**. In a query filter, you can match fields with [literal values](https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#std-label-golang-literal-values) or with [query operators](https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#std-label-golang-query-operators). When you don't know which method you should use, you can go to the [mongo driver go API](https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo@v1.15.0#Collection) to check how to use them. 
 
 ### `*mongo.Cursor`
 
@@ -69,69 +69,61 @@ If the number and size of documents returned by your query exceeds available app
 
 > When your application no longer requires a cursor, close the cursor with the `Close()` method. This method frees the resources your cursor consumes in both the client application and the MongoDB server.  Close the cursor when you [retrieve documents individually](https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/cursor/#std-label-golang-individual-documents) because those methods make a cursor [tailable.](https://www.mongodb.com/docs/manual/core/tailable-cursors/)
 
+## Others
 
+- If the necessary database and collection don't exist when you perform a write operation, the server implicitly creates them. So you don't need to create database explicitly when use MongoDB. 
 
+- collection: you can use it concurrentlly
 
+  ```go
+  type Repository struct {
+  	db *mongo.Client
+  	//Collection is safe for concurrent use by multiple goroutines.
+  	PokemonColl *mongo.Collection
+  }
+  
+  func NewRepository(db *mongo.Client) *Repository {
+  	return &Repository{
+  		db:          db,
+  		PokemonColl: db.Database("pokemon").Collection("pokemons"),
+  	}
+  }
+  ```
 
+- modify behvavior when query: opts third parameter
 
+  ```go
+  // Note that there is three parameters, last is optional. 
+  func (coll *Collection) Find(ctx context.Context, filter interface{},
+  	opts ...*options.FindOptions) (cur *Cursor, err error)
+  ```
+  
+- `findByIdAndUpdate()`: `FindOneAndUpdate` returns the original document **before updating**.
 
+  ```go
+  opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
+  result := coll.FindOneAndUpdate(context.TODO(), filter, update, opts)
+  ...
+  ```
 
+You may wonder how do I know `opts := options.FindOneAndUpdate().SetReturnDocument(options.After)` this to create an operation? And how can I know the behavior of a method? The answer is the [mongo-api](https://pkg.go.dev/go.mongodb.org/mongo-driver@v1.15.0/mongo#Collection.FindOneAndUpdate), you can see there is the behavor and example and all the thing you need to know before you use it. 
 
-If the necessary database and collection don't exist when you perform a write operation, the server implicitly creates them.
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/d835acb545649837f06bbc2ce323cb3f.jpg)
 
-`bson:"sizes,truncate"`
-bson: binary json
-modify behvavior when query: opts third parameter
-cursor: when to close the cursor
-collection: use concurrentlly
+And you can check the `FindOneAndUpdateOptions` just click, to check what is it:
 
-```js
-// return the old document, with {new: true} return the updated document.
-Model.findByIdAndUpdate()
+![2222](/Users/David/Downloads/2222.jpg)
+
+You can see this option is in the `options` package, and you can create it with `FindOneAndUpdate()`, so it's not difficult to write the codes like this:
+
+```go
+opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
+result := coll.FindOneAndUpdate(context.TODO(), filter, update, opts)
+...
 ```
 
+## References
 
-## Query
+[mongo package - go.mongodb.org/mongo-driver/mongo - Go Packages](https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo@v1.15.0#pkg-overview)
 
-```json
-{
-  "address": {
-     "building": "1007",
-     "coord": [ -73.856077, 40.848447 ],
-     "street": "Morris Park Ave",
-     "zipcode": "10462"
-  },
-  "borough": "Bronx",
-  "cuisine": "Bakery",
-  "grades": [
-     { "date": { "$date": 1393804800000 }, "grade": "A", "score": 2 },
-     { "date": { "$date": 1378857600000 }, "grade": "A", "score": 6 },
-     { "date": { "$date": 1358985600000 }, "grade": "A", "score": 10 },
-     { "date": { "$date": 1322006400000 }, "grade": "A", "score": 9 },
-     { "date": { "$date": 1299715200000 }, "grade": "B", "score": 14 }
-  ],
-  "name": "Morris Park Bake Shop",
-  "restaurant_id": "30075445"
-}
-```
-
-### db.collection.find(query, projection, options)
-
-```js
-db.restaurants.find({}, {_id: 1, name:1})
-db.restaurants.find({"borough": "Bronx"}).limit(5);
-db.restaurants.find({"borough": "Bronx"}).skip(5).limit(5);
-```
-
-`$elemMatch` 用于在**数组类型的字段**中选择元素, 需要**数组至少有一个元素符合多个查询条件时**, `$elemMatch` 尤其有用:
-
-```js
-// the restaurants that achieved a score, more than 80 but less than 90
-db.restaurants.find({grades: {$elemMatch: {score: {$gt: 80, $lt:90}} }})
-```
-
-
-
-## Reference
-
-[Work with BSON - Go Driver v1.15](https://www.mongodb.com/docs/drivers/go/current/fundamentals/bson/)
+[CRUD Operations - Go Driver v1.15](https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/)
