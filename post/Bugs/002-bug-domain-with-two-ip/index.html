@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>启动Cloudflare代理导致无法通过域名解析出A记录中的IP - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&amp;rsquo;m trying to use ssh to connect my server with" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/bugs/002-bug-domain-with-two-ip/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="启动Cloudflare代理导致无法通过域名解析出A记录中的IP" />
+<meta property="og:description" content="问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/bugs/002-bug-domain-with-two-ip/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-04-26T17:30:22+00:00" />
+<meta property="article:modified_time" content="2023-04-26T17:30:22+00:00" />
+
+<meta itemprop="name" content="启动Cloudflare代理导致无法通过域名解析出A记录中的IP">
+<meta itemprop="description" content="问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with"><meta itemprop="datePublished" content="2023-04-26T17:30:22+00:00" />
+<meta itemprop="dateModified" content="2023-04-26T17:30:22+00:00" />
+<meta itemprop="wordCount" content="875">
+<meta itemprop="keywords" content="bugs,build website," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="启动Cloudflare代理导致无法通过域名解析出A记录中的IP"/>
+<meta name="twitter:description" content="问题描述: 这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路, I&rsquo;m trying to use ssh to connect my server with"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">启动Cloudflare代理导致无法通过域名解析出A记录中的IP</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-04-26 </span>
+        <div class="post-category">
+            <a href="/categories/bugs/"> bugs </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#问题描述">问题描述:</a></li>
+            <li><a href="#更新"><strong>更新:</strong></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h3 id="问题描述">问题描述:</h3>
+<p>这几天弄服务器, 用ssh通过域名连接的时候总是出现超时(域名只有一个A记录即服务器IP), 问题下面是分析思路,</p>
+<p>I&rsquo;m trying to use <code>ssh</code> to connect my server with my domain name <code>ssh root@www.davidzhu.xyz</code>, but I always get timeout. However I can connect my server when use my server ip directly <code>ssh root@144.202.12.32</code>, so I use <code>dig</code> to check the ip address of my domain on DNS, the output is:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">dig davidzhu.xyz  +short       
+</span></span><span class="line"><span class="cl">172.67.210.8
+</span></span><span class="line"><span class="cl">104.21.50.195
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">dig www.davidzhu.xyz  +short
+</span></span><span class="line"><span class="cl">172.67.210.8
+</span></span><span class="line"><span class="cl">104.21.50.195
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But I only have one A record on my domain, this is the DNS Record of my domain name (the third one is about the google search console):</p>
+<p><img src="/002-bug-domain-with-two-ip/a.png" alt=""></p>
+<p>惊不惊讶, <strong><code>dig</code>返回的两个IP地址竟然都与我域名的A记录不同</strong>!</p>
+<hr>
+<h3 id="更新"><strong>更新:</strong></h3>
+<p>原因是我的域名开启了 Cloudfalre 的 <a href="https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/">reverse proxy</a>, 通过域名获取到的是 Clouflare 的IP, 无法访问到我服务器真实IP:</p>
+<blockquote>
+<p>When you add your application to Cloudflare, we use this network to sit in between requests and your origin server.</p>
+<p>Cloudflare does this by serving as a <strong>reverse proxy</strong> for your web traffic. All requests to and from your origin <strong>flow through Cloudflare</strong> and — as these requests pass through our network — we can apply various rules and optimizations to improve security, performance, and reliability.</p>
+</blockquote>
+<p>关闭 Cloudflare 反向代理就可以通过域名获取到服务器真实IP了:</p>
+<p><img src="/002-bug-domain-with-two-ip/cc.png" alt="cc"></p>
+<p><img src="/002-bug-domain-with-two-ip/11.jpg" alt="11"></p>
+<p>此时可以看到现实 DNS Only, 使用 <code>dig xxx.com +short</code> 即可查到真实绑定 ip, 或者 <code>ping</code> 也可以.</p>
+<blockquote>
+<p>另外通过Cloudflare 域名托管机制(就是现在我们操作的, 中文里都叫托管更合适, 因为他会接管通往我们域名的所有流量), 就是域名被 Cloudflare 托管(Domain Hosting)后, <strong>若想更换域名的 DNS Record, 只需要在上图中的 edit 上修改 A record 就行了</strong>, 就是改成你的新的 VPS(服务器) 的 ipv4 地址, 不用去域名服务商那里修改 DNS Record 了, 因为在把域名托管给 Cloudflare 的时候已经在域名提供商那里把域名的 DNS 服务器设置成了 Cloudflare.</p>
+</blockquote>
+<p>如何让 Cloudfalre 托管我们的域名:: <a href="https://davidzhu.xyz/post/build-website/008-enable-cloudflare-reverse-proxy/">Enable Coudflare Reverse Proxy - David&rsquo;s Blog</a></p>
+<hr>
+<p>另外如果使用了 cloudflare https 代理, 一般都是先修改域名的 NS 为 cloudfalre 指定的 NS, 但是有些电脑可能因为 DNS cache 问题, 通过 https 访问你的域名可能会失败, 此时应该尝试修改本地 DNS cache, 可以查一下 flush dns cache 的命令,</p>
+<p>注意, DNS cache 一般 chrome 保存了一份, 操作系统也会保存一份, 因此两个地方都要考虑进去,</p>
+<p>关于DNS: <a href="https://davidzhu.xyz/post/networking/002-dns-basics/">DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog</a></p>
+<p>了解更多: <a href="https://community.cloudflare.com/t/https-works-on-some-computers-but-not-others/15922">HTTPS Works on some computers but not others? - Website, Application, Performance / Security - Cloudflare Community</a></p>
+<hr>
+<p>其实这样有个好处, 就是别人无法通过你的域名接触到你的服务器, 因为每次请求你的域名, 都要经过 Cloudfalre 中转才能到你的服务器, 另外通过nslookup, dig也无法查到你服务器的真实IP, 返回的都是 Cloudflare 的IP.</p>
+<blockquote>
+<p>Because of <a href="https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/">how Cloudflare works</a>, all traffic to <a href="https://developers.cloudflare.com/dns/manage-dns-records/reference/proxied-dns-records/">proxied DNS records</a> pass through Cloudflare before reaching your origin server. This means that your origin server will stop receiving traffic from individual visitor IP addresses and instead receive traffic from <a href="https://www.cloudflare.com/ips">Cloudflare IP addresses</a>, which are shared by all proxied hostnames.</p>
+<p><a href="https://developers.cloudflare.com/learning-paths/get-started/concepts/cloudflare-ips/">Cloudflare IPs · Getting started · Learning paths</a></p>
+</blockquote>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-04-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/bugs/">bugs</a>
+          <a href="/tags/build-website/">build website</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/java/backend/war/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">手动部署War包到Tomcat之何为War</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/java/backend/what-is-jar-package-in-java/">
+            <span class="next-text nav-default">What is Jar Package in Java</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

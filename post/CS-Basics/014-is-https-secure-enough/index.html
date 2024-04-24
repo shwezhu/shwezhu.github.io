@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Is HTTPS Secure Enough? - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Is HTTPS Secure Enough? Does an established HTTPS connection mean the line is really secure?
+It&amp;rsquo;s important to understand what SSL does and does not do, especially since this is a very common source of misunderstanding.
+It encrypts the channel It applies integrity checking It provides authentication So, the quick answer should be: &amp;ldquo;yes, it is secure enough to transmit sensitive data&amp;rdquo;. However, things are not that simple. There are a few issues here, the major one being authentication." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/cs-basics/014-is-https-secure-enough/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Is HTTPS Secure Enough?" />
+<meta property="og:description" content="1. Is HTTPS Secure Enough? Does an established HTTPS connection mean the line is really secure?
+It&rsquo;s important to understand what SSL does and does not do, especially since this is a very common source of misunderstanding.
+It encrypts the channel It applies integrity checking It provides authentication So, the quick answer should be: &ldquo;yes, it is secure enough to transmit sensitive data&rdquo;. However, things are not that simple. There are a few issues here, the major one being authentication." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/cs-basics/014-is-https-secure-enough/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-09-10T09:27:59+00:00" />
+<meta property="article:modified_time" content="2023-09-10T09:27:59+00:00" />
+<meta itemprop="name" content="Is HTTPS Secure Enough?">
+<meta itemprop="description" content="1. Is HTTPS Secure Enough? Does an established HTTPS connection mean the line is really secure?
+It&rsquo;s important to understand what SSL does and does not do, especially since this is a very common source of misunderstanding.
+It encrypts the channel It applies integrity checking It provides authentication So, the quick answer should be: &ldquo;yes, it is secure enough to transmit sensitive data&rdquo;. However, things are not that simple. There are a few issues here, the major one being authentication."><meta itemprop="datePublished" content="2023-09-10T09:27:59+00:00" />
+<meta itemprop="dateModified" content="2023-09-10T09:27:59+00:00" />
+<meta itemprop="wordCount" content="715">
+<meta itemprop="keywords" content="cs basics,cryptography,http,cybersecurity," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Is HTTPS Secure Enough?"/>
+<meta name="twitter:description" content="1. Is HTTPS Secure Enough? Does an established HTTPS connection mean the line is really secure?
+It&rsquo;s important to understand what SSL does and does not do, especially since this is a very common source of misunderstanding.
+It encrypts the channel It applies integrity checking It provides authentication So, the quick answer should be: &ldquo;yes, it is secure enough to transmit sensitive data&rdquo;. However, things are not that simple. There are a few issues here, the major one being authentication."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Is HTTPS Secure Enough?</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-09-10 </span>
+        <div class="post-category">
+            <a href="/categories/cs-basics/"> cs basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-is-https-secure-enough">1. Is HTTPS Secure Enough?</a></li>
+        <li><a href="#2-whats-the-process-of-establishing-a-https-connection">2. What&rsquo;s the process of establishing a HTTPS connection?</a></li>
+        <li><a href="#3-issues-in-https">3. Issues in HTTPS</a></li>
+        <li><a href="#4-conclusion">4. Conclusion</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-is-https-secure-enough">1. Is HTTPS Secure Enough?</h2>
+<p>Does an established HTTPS connection mean the line is really secure?</p>
+<p>It&rsquo;s important to understand what SSL does and does not do, especially since this is a very common source of misunderstanding.</p>
+<ul>
+<li>It encrypts the channel</li>
+<li>It applies integrity checking</li>
+<li>It provides authentication</li>
+</ul>
+<p>So, the quick answer should be: &ldquo;yes, it is secure enough to transmit sensitive data&rdquo;. However, things are not that simple. There are a few issues here, <strong>the major one being authentication</strong>. Both ends need to be sure they are talking to the right person or institution and no man-in-the-middle attacks.</p>
+<h2 id="2-whats-the-process-of-establishing-a-https-connection">2. What&rsquo;s the process of establishing a HTTPS connection?</h2>
+<p>I have talked man-in-middle attack in other <a href="https://davidzhu.xyz/post/cs-basics/002-ssh/">post</a>, when a ssh connection is being established at the first time, it will notify us the fingerprint of the server which enables us can go to the our server to check it&rsquo;s fingerprint so that we can make sure to we are connecting the right server. But it&rsquo;s a little diffenent in HTTPS:</p>
+<p>When we click a link on our browser which will send a http requet, but before making a http request there are other things have been done under the hood (I have talked this in other <a href="https://davidzhu.xyz/post/cs-basics/003-ssl-secure-communication/">post</a>):</p>
+<ul>
+<li>A tcp connection established (envolves three way handshake).</li>
+<li>Make a <a href="https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/">TLS handshake</a>.</li>
+<li>After TLS handshake,  the secure communication begins (client makes http request, server makes response).</li>
+</ul>
+<p>During the TLS handshake process, there is authenciation:</p>
+<p>The client verifies the server&rsquo;s SSL certificate with the certificate authority that issued it. This confirms that the server is who it says it is, and that the client is interacting with the actual owner of the domain.</p>
+<h2 id="3-issues-in-https">3. Issues in HTTPS</h2>
+<p>SSL is only as secure as the DNS infrastructure that directed clitens to that server, and any corporate proxies in the communication path. If the DNS infrastructure is hacked (cache poisoning, etc) then the attacker could subject clients to many attacks.</p>
+<p>As a last note it should be mentioned that during the <a href="https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/">SSL handshake</a> client and server agree on a <a href="http://en.wikipedia.org/wiki/Cipher_suite">Cipher suite</a> and the client could pretend to only do &ldquo;null encryption&rdquo;, i.e., not encrypt any of the data. If your server agrees to that option, the connection uses SSL, but data is still not encrypted. This is not an issue in practice since server implementations usually do not offer the null cipher as an option.</p>
+<h2 id="4-conclusion">4. Conclusion</h2>
+<p>HTTPS is secure in encryption. HTTPS is secure itself but if we can totally trust HTTPS connection when exhcange privacy data is another thing. Although no one can decrept the data without the session key, there probably have man-in-the-middle attck. If you can make sure the client is really that people you want talk as a server or you can make sure the server is the correct server you want to get, then https is safe.</p>
+<p>And can you make sure the server itself is a bad company? Which will sell your personal data to other perople. But this is another topic, haha,</p>
+<p>In the last I&rsquo;ll share a <a href="https://stackoverflow.com/a/5310027/16317008">answer</a> here which is very comprehensive:</p>
+<p><strong>Question:</strong> Consider a scenario, where user authentication (username and password) is entered by the user in the page&rsquo;s form element, which is then submitted. The POST data is sent via HTTPS to a new page (where the php code will check for the credentials). If a hacker sits in the network, and say has access to all the traffic, is the Application layer security (HTTPS) enough in this case ?</p>
+<p><strong><a href="https://stackoverflow.com/a/5310032/16317008">Answer 1</a>:</strong> Yes. In an HTTPS only the handshake is done unencrypted, but even the HTTP GET/POST query&rsquo;s are done encrypted.</p>
+<p>It is however impossible to hide to what server you are connecting, since he can see your packets he can see the IP address to where your packets go. If you want to hide this too you can use a proxy (though the hacker would know that you are sending to a proxy, but not where your packets go afterwards).</p>
+<p><strong><a href="https://stackoverflow.com/a/5310288/16317008">Answer 2</a>:</strong> HTTPS is sufficient &ldquo;if&rdquo; the client is secure. Otherwise someone can install a custom certificate and play man-in-the-middle.</p>
+<p>References:</p>
+<ul>
+<li><a href="https://security.stackexchange.com/questions/5/does-an-established-https-connection-mean-a-line-is-really-secure">Does an established HTTPS connection mean a line is really secure? - Information Security Stack Exchange</a></li>
+<li><a href="https://stackoverflow.com/questions/5309997/post-data-encryption-is-https-enough">php - POST data encryption - Is HTTPS enough? - Stack Overflow</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-09-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/cs-basics/">cs basics</a>
+          <a href="/tags/cryptography/">cryptography</a>
+          <a href="/tags/http/">http</a>
+          <a href="/tags/cybersecurity/">cybersecurity</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/cs-basics/015-https-vpn/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">HTTPS vs VPN vs Proxy</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/cs-basics/013-tunneling-protocols/">
+            <span class="next-text nav-default">Tunneling Protocols</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

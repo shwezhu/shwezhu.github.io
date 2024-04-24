@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>HTTP Status Codes - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &amp;ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&amp;rdquo;
+303: temporary redirect, changing the method to GET. Example usage: if the browser sent POST to /register." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/http/002-http-status-codes/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="HTTP Status Codes" />
+<meta property="og:description" content="1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;
+303: temporary redirect, changing the method to GET. Example usage: if the browser sent POST to /register." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/http/002-http-status-codes/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-26T15:30:05+00:00" />
+<meta property="article:modified_time" content="2023-10-26T15:30:05+00:00" />
+<meta itemprop="name" content="HTTP Status Codes">
+<meta itemprop="description" content="1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;
+303: temporary redirect, changing the method to GET. Example usage: if the browser sent POST to /register."><meta itemprop="datePublished" content="2023-10-26T15:30:05+00:00" />
+<meta itemprop="dateModified" content="2023-10-26T15:30:05+00:00" />
+<meta itemprop="wordCount" content="478">
+<meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="HTTP Status Codes"/>
+<meta name="twitter:description" content="1. Redirect 301: permanent redirect: the URL is old and should be replaced. Browsers will cache this. Example usage: URL moved from /register-form.html to signup-form.html. The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;
+303: temporary redirect, changing the method to GET. Example usage: if the browser sent POST to /register."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">HTTP Status Codes</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-10-26 </span>
+        <div class="post-category">
+            <a href="/categories/http/"> http </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#1-redirect">1. Redirect</a></li>
+            <li><a href="#2-redirect-in-practice">2. Redirect in practice</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h3 id="1-redirect">1. Redirect</h3>
+<ul>
+<li>
+<p><strong>301: permanent redirect: the URL is old and should be replaced.</strong> Browsers will cache this.
+<em>Example usage:</em> URL moved from <code>/register-form.html</code> to <code>signup-form.html</code>.
+The method will change to GET, as per RFC 7231: &ldquo;For historical reasons, a user agent MAY change the request method from POST to GET for the subsequent request.&rdquo;</p>
+</li>
+<li>
+<p><strong>303: temporary redirect, changing the method to GET.</strong>
+<em>Example usage:</em> if the browser sent POST to <code>/register.php</code>, then now load (GET) <code>/success.html</code>.</p>
+</li>
+<li>
+<p><strong>307: temporary redirect, repeating the request identically.</strong>
+<em>Example usage:</em> if the browser sent a POST to <code>/register.php</code>, then this tells it to redo the POST at <code>/signup.php</code>.</p>
+</li>
+<li>
+<p><strong>308: permanent redirect, repeating the request identically.</strong> Where 307 is the &ldquo;no method change&rdquo; counterpart of 303, this 308 status is the &ldquo;no method change&rdquo; counterpart of 301.</p>
+</li>
+<li>
+<p><strong>302: temporary redirect. Only use for HTTP/1.0 clients.</strong> This status code should not change the method, but browsers did it anyway. The RFC says: &ldquo;Many pre-HTTP/1.1 user agents do not understand [303]. When interoperability with such clients is a concern, the 302 status code may be used instead, since most user agents react to a 302 response as described here for 303.&rdquo; Of course, some clients may implement it according to the spec, so if interoperability with such ancient clients is not a real concern, 303 is better for consistent results.</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">╔═══════════╦════════════════════════════════════════════════╗
+</span></span><span class="line"><span class="cl">║           ║                Switch to GET?                  ║
+</span></span><span class="line"><span class="cl">║           ╟────────────────────────┬───────────────────────╢
+</span></span><span class="line"><span class="cl">║ Temporary ║          No            │         Yes           ║
+</span></span><span class="line"><span class="cl">╠═══════════╬════════════════════════╪═══════════════════════╣
+</span></span><span class="line"><span class="cl">║ No        ║ 308 Permanent Redirect │ 301 Moved Permanently ║
+</span></span><span class="line"><span class="cl">╟───────────╟────────────────────────┼───────────────────────╢
+</span></span><span class="line"><span class="cl">║ Yes       ║ 307 Temporary Redirect │ 303 See Other         ║
+</span></span><span class="line"><span class="cl">║           ║ 302 Found (intended)   │ 302 Found (actual)    ║
+</span></span><span class="line"><span class="cl">╚═══════════╩════════════════════════╧═══════════════════════╝
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <code>307 Temporary Redirect</code> code indicates that the requested resource has been temporarily moved to a new URL. When a browser encounters a <code>307</code> response, it will redirect to the new URL specified in the response headers. The method and body of the original request are reused for the redirected request. This means that if the original request was a <code>POST</code> request, the redirected request will also be a <code>POST</code> request. However, if you want to change the method to <code>GET</code> for the redirected request, you can use the <code>303 See Other</code> status code instead.</p>
+<p>learn more:</p>
+<ul>
+<li><a href="https://stackoverflow.com/a/55008140/16317008">https://stackoverflow.com/a/55008140/16317008</a></li>
+<li><a href="https://stackoverflow.com/a/58492986/16317008">https://stackoverflow.com/a/58492986/16317008</a></li>
+</ul>
+<h3 id="2-redirect-in-practice">2. Redirect in practice</h3>
+<p>Different redirect status code can <strong>cause browser behave differently</strong>.</p>
+<p>An unauthorized user make a request to <code>/home </code> which needs authorized state to access, because he has not authorized, so he will be redirect to <code>/login</code>, if you respond a 308 code from server, then the unauthorized user will be redirect to <code>/login</code>, this woks fine. But 308 tell the brower all following http requests for <code>/home</code> need be redirected to <code>/login</code> even the user login successfully, you can clear the browser cache to reset, make sure don&rsquo;t repond a wrong status code.</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-10-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/http/">http</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/js/practice/001-tricks/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Tricks in Javascript</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/http/001-http-headers/">
+            <span class="next-text nav-default">HTTP Headers</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

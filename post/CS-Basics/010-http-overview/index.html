@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>An overview of HTTP - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="Process of HTTP Connection Establishment How a browser uses HTTP to display a simple HTML resource that resides on a distant server:
+The browser extracts the server’s hostname from the URL. The browser converts the server’s hostname into the server’s IP address. The browser extracts the port number (if any) from the URL. The browser establishes a TCP connection with the web server. The browser sends an HTTP request message to the server." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/cs-basics/010-http-overview/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="An overview of HTTP" />
+<meta property="og:description" content="Process of HTTP Connection Establishment How a browser uses HTTP to display a simple HTML resource that resides on a distant server:
+The browser extracts the server’s hostname from the URL. The browser converts the server’s hostname into the server’s IP address. The browser extracts the port number (if any) from the URL. The browser establishes a TCP connection with the web server. The browser sends an HTTP request message to the server." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/cs-basics/010-http-overview/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-08-28T16:03:59+00:00" />
+<meta property="article:modified_time" content="2023-08-28T16:03:59+00:00" />
+<meta itemprop="name" content="An overview of HTTP">
+<meta itemprop="description" content="Process of HTTP Connection Establishment How a browser uses HTTP to display a simple HTML resource that resides on a distant server:
+The browser extracts the server’s hostname from the URL. The browser converts the server’s hostname into the server’s IP address. The browser extracts the port number (if any) from the URL. The browser establishes a TCP connection with the web server. The browser sends an HTTP request message to the server."><meta itemprop="datePublished" content="2023-08-28T16:03:59+00:00" />
+<meta itemprop="dateModified" content="2023-08-28T16:03:59+00:00" />
+<meta itemprop="wordCount" content="580">
+<meta itemprop="keywords" content="cs basics," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="An overview of HTTP"/>
+<meta name="twitter:description" content="Process of HTTP Connection Establishment How a browser uses HTTP to display a simple HTML resource that resides on a distant server:
+The browser extracts the server’s hostname from the URL. The browser converts the server’s hostname into the server’s IP address. The browser extracts the port number (if any) from the URL. The browser establishes a TCP connection with the web server. The browser sends an HTTP request message to the server."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">An overview of HTTP</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-08-28 </span>
+        <div class="post-category">
+            <a href="/categories/cs-basics/"> cs basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#process-of-http-connection-establishment">Process of HTTP Connection Establishment</a></li>
+        <li><a href="#http-is-stateless-but-not-sessionless">HTTP is stateless, but not sessionless</a></li>
+        <li><a href="#http-and-connections">HTTP and Connections</a></li>
+        <li><a href="#http2">HTTP/2</a></li>
+        <li><a href="#http3">HTTP/3</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="process-of-http-connection-establishment">Process of HTTP Connection Establishment</h2>
+<p>How a browser uses HTTP to display a simple HTML resource that resides on a distant server:</p>
+<ul>
+<li>The browser extracts the server’s hostname from the URL.</li>
+<li>The browser converts the server’s hostname into the server’s IP address.</li>
+<li>The browser extracts the port number (if any) from the URL.</li>
+<li>The browser establishes a TCP connection with the web server.</li>
+<li>The browser sends an HTTP request message to the server.</li>
+<li>The server sends an HTTP response back to the browser.</li>
+<li>The connection is closed, and the browser displays the document.</li>
+</ul>
+<h2 id="http-is-stateless-but-not-sessionless">HTTP is stateless, but not sessionless</h2>
+<p>HTTP is stateless: there is no link between two requests being successively carried out on the same connection. This immediately has the prospect of being problematic for users attempting to interact with certain pages coherently, for example, using e-commerce shopping baskets. But while the core of HTTP itself is stateless, HTTP cookies allow the use of stateful sessions. Using header extensibility, <strong>HTTP Cookies allows session creation on each HTTP request to share the same state</strong>.</p>
+<h2 id="http-and-connections">HTTP and Connections</h2>
+<p>A connection is controlled at the transport layer, and therefore fundamentally out of scope for HTTP. HTTP doesn&rsquo;t require the underlying transport protocol to be connection-based; it only requires it to be <em>reliable</em>, or not lose messages (at minimum, presenting an error in such cases). Among the two most common transport protocols on the Internet, TCP is reliable and UDP isn&rsquo;t. HTTP therefore relies on the TCP standard, which is <em><strong>connection-based</strong></em>.</p>
+<p>Before a client and server can exchange an HTTP request/response pair, they must establish a TCP connection, a process which requires several round-trips. The default behavior of <em><strong>HTTP/1.0</strong></em> is to open a separate TCP connection for each HTTP request/response pair. This is less efficient than sharing a single TCP connection when multiple requests are sent in close succession.</p>
+<p>In order to mitigate this flaw, <em><strong>HTTP/1.1</strong></em> introduced <em>pipelining</em> (which proved difficult to implement) and <em>persistent connections</em>: the underlying TCP connection can be partially controlled using the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Connection"><code>Connection</code></a> header. <em><strong>HTTP/2</strong></em> went a step further by multiplexing messages over a single connection, helping keep the connection warm and more efficient.</p>
+<h2 id="http2">HTTP/2</h2>
+<p><strong>Multiplexing:</strong> HTTP/1.1 loads resources one after the other, so if one resource cannot be loaded, it blocks all the other resources behind it. In contrast, HTTP/2 is able to use a single <a href="https://www.cloudflare.com/learning/ddos/glossary/tcp-ip/">TCP</a> connection to send multiple streams of data at once so that no one resource blocks any other resource. HTTP/2 does this by splitting data into binary-code messages and numbering these messages so that the client knows which stream each binary message belongs to.</p>
+<p><strong>Server push:</strong> Typically, a server only serves content to a client device if the client asks for it. However, this approach is not always practical for modern webpages, which often involve several dozen separate resources that the client must request. HTTP/2 solves this problem by allowing a server to &ldquo;push&rdquo; content to a client before the client asks for it.</p>
+<h2 id="http3">HTTP/3</h2>
+<p>HTTP/3 is the next proposed version of the HTTP protocol. <a href="https://www.cloudflare.com/learning/performance/what-is-http3/">HTTP/3</a> does not have wide adoption on the web yet, but it is growing in usage. The key difference between HTTP/3 and previous versions of the protocol is that HTTP/3 runs over <a href="https://www.cloudflare.com/learning/ddos/what-is-a-quic-flood/">QUIC</a> instead of TCP. QUIC is a faster and more secure transport layer protocol that is designed for the needs of the modern Internet.</p>
+<p>References:</p>
+<ul>
+<li><a href="https://learning.oreilly.com/library/view/http-the-definitive/1565925092/ch01s06.html">1.6. Connections | HTTP: The Definitive Guide</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview">An overview of HTTP - HTTP | MDN</a></li>
+<li><a href="https://www.cloudflare.com/learning/performance/http2-vs-http1.1/">HTTP/2 vs. HTTP/1.1 | Cloudflare</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-08-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/cs-basics/">cs basics</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/basics/014-gob-json-encoding/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">encoding/gob &amp; encoding/json in Go</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/practice/005-tricks-and-common-mistakes/">
+            <span class="next-text nav-default">Trivial Tricks and Common Mistakes in Practice - Go</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

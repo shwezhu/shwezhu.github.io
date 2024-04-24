@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>slice &amp; array - Go - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Array An array&amp;rsquo;s length is part of its type, so arrays cannot be resized. Its length is part of its type ([4]int and [5]int are distinct, incompatible types).
+Go’s arrays are values. An array variable denotes the entire array; it is not a pointer to the first array element (as would be the case in C). This means that when you assign or pass around an array value you will make a copy of its contents." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/golang/basics/003-array-slice/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="slice &amp; array - Go" />
+<meta property="og:description" content="1. Array An array&rsquo;s length is part of its type, so arrays cannot be resized. Its length is part of its type ([4]int and [5]int are distinct, incompatible types).
+Go’s arrays are values. An array variable denotes the entire array; it is not a pointer to the first array element (as would be the case in C). This means that when you assign or pass around an array value you will make a copy of its contents." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/golang/basics/003-array-slice/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-12-06T23:40:59+00:00" />
+<meta property="article:modified_time" content="2023-12-06T23:40:59+00:00" />
+
+<meta itemprop="name" content="slice &amp; array - Go">
+<meta itemprop="description" content="1. Array An array&rsquo;s length is part of its type, so arrays cannot be resized. Its length is part of its type ([4]int and [5]int are distinct, incompatible types).
+Go’s arrays are values. An array variable denotes the entire array; it is not a pointer to the first array element (as would be the case in C). This means that when you assign or pass around an array value you will make a copy of its contents."><meta itemprop="datePublished" content="2023-12-06T23:40:59+00:00" />
+<meta itemprop="dateModified" content="2023-12-06T23:40:59+00:00" />
+<meta itemprop="wordCount" content="705">
+<meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="slice &amp; array - Go"/>
+<meta name="twitter:description" content="1. Array An array&rsquo;s length is part of its type, so arrays cannot be resized. Its length is part of its type ([4]int and [5]int are distinct, incompatible types).
+Go’s arrays are values. An array variable denotes the entire array; it is not a pointer to the first array element (as would be the case in C). This means that when you assign or pass around an array value you will make a copy of its contents."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">slice &amp; array - Go</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-12-06 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/basics/"> basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-array">1. Array</a></li>
+        <li><a href="#2-slice">2. Slice</a>
+          <ul>
+            <li><a href="#21-slice-is-just-a-struct">2.1. Slice is just a Struct</a></li>
+            <li><a href="#22-slicing">2.2. Slicing</a></li>
+            <li><a href="#23-var-vs-make">2.3. <code>var</code> vs <code>make()</code></a></li>
+          </ul>
+        </li>
+        <li><a href="#3-commone-usage-of-slice">3. Commone usage of slice</a>
+          <ul>
+            <li><a href="#31-remove-elements-by-reslicing">3.1. Remove elements by reslicing</a></li>
+            <li><a href="#32-passing-a-slice-to-channel">3.2. Passing a slice to channel</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-array">1. Array</h2>
+<p>An array&rsquo;s length is part of its type, so arrays cannot be resized. Its length is part of its type (<code>[4]int</code> and <code>[5]int</code> are distinct, incompatible types).</p>
+<p>Go’s arrays are values. An array variable denotes the entire array; it is not a pointer to the first array element (as would be the case in C). This means that <strong>when you assign or pass around an array value you will make a copy of its contents</strong>. (To avoid the copy you could pass a <em>pointer</em> to the array, but then that’s a pointer to an array, not an array.)</p>
+<h2 id="2-slice">2. Slice</h2>
+<h3 id="21-slice-is-just-a-struct">2.1. Slice is just a Struct</h3>
+<p>A slice is just a struct. It consists of a <strong>pointer</strong> to the array, the <strong>length</strong> of the underlying array, its <strong>capacity</strong> (the maximum length of the underlying array).</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">slice</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">data</span> <span class="kt">uintptr</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">len</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">cap</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>So the overhead of assigning or passing a slice value, is just 3 words (12 bytes on 32bit, 24 bytes on 64bit), which is very cheap. This is different from assigning or passing an array value, which will copy the entire array.</p>
+</blockquote>
+<h3 id="22-slicing">2.2. Slicing</h3>
+<p>When you create a new slice from an existing array or slice (e.g., <code>newSlice := oldSlice[start:end]</code>), the new slice does not copy the elements. Instead, <strong>it refers to the same underlying array as the original slice</strong>. Slice is just a struct, as we have talked above.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">originalSlice</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">newSlice</span> <span class="o">:=</span> <span class="nx">originalSlice</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">originalSlice</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">99</span> <span class="c1">// This also changes newSlice[0]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">newSlice</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="mi">101</span>  <span class="c1">// This also changes originalSlice[1]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Original slice:&#34;</span><span class="p">,</span> <span class="nx">originalSlice</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;New slice:&#34;</span><span class="p">,</span> <span class="nx">newSlice</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ouput
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Original</span> <span class="nx">slice</span><span class="p">:</span> <span class="p">[</span><span class="mi">99</span> <span class="mi">101</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">New</span> <span class="nx">slice</span><span class="p">:</span> <span class="p">[</span><span class="mi">99</span> <span class="mi">101</span> <span class="mi">3</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Note: if you append to the slice and the capacity of the underlying array is exceeded, Go will allocate a new array and copy the elements over, <strong>causing the slices to diverge</strong>.</p>
+</blockquote>
+<blockquote>
+<p>There is a trick, we usually use <code>d = d[:0]</code> to generate a new slice <code>d</code> whose length is 0 but capacity not change, which can make program more efficient.</p>
+</blockquote>
+<h3 id="23-var-vs-make">2.3. <code>var</code> vs <code>make()</code></h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">cats</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// or
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">dogs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We have know that any varibles declared with <code>var</code> without an explicit initial value are given their zero value, <code>nil</code> is zero for <code>map</code>, <code>slice</code> and <code>pointer</code>.</p>
+<p>Therefore, the value of <code>cats</code> is <code>nil</code> for sure, then for <code>make([]string, 0)</code>it allocates a memory with 0 elements, which means <code>dog != nil</code>. But there probably no difference when you use, because <strong>you can append a <code>nil</code> slice directly</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">expired</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// it&#39;s totally fine to do this:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">expired</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">expired</span><span class="p">,</span> <span class="s">&#34;hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">expired</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-commone-usage-of-slice">3. Commone usage of slice</h2>
+<h3 id="31-remove-elements-by-reslicing">3.1. Remove elements by reslicing</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">MemoryStore</span><span class="p">)</span> <span class="nf">gc</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">expired</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// A new cycle begins, &#34;remove&#34; all elements from &#39;expired&#39;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">expired</span> <span class="p">=</span> <span class="nx">expired</span><span class="p">[:</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// add elements to &#39;expired&#39;, and use them
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Stimulate stack
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">stack</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">rune</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">pairs</span><span class="p">[</span><span class="nx">r</span><span class="p">];</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">stack</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">stack</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// reslice, &#34;delete&#34; the last one element
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">stack</span> <span class="p">=</span> <span class="nx">stack</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="nx">stack</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="32-passing-a-slice-to-channel">3.2. Passing a slice to channel</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ready</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kd">var</span> <span class="nx">expired</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">expired</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">expired</span><span class="p">,</span> <span class="s">&#34;Coco&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">expired</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">expired</span><span class="p">,</span> <span class="s">&#34;Bella&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">ready</span><span class="o">&lt;-</span> <span class="nx">expired</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// this will block until there is a data sent to the channel &#34;ready&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">for</span> <span class="nx">s</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ready</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">name</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">	<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Bacsuse a slice likes a pointer, the two goroutines above share a same underlying array. You have to consider if there is a data race, if yes, consider make a deep copy of the slice: <a href="https://davidzhu.xyz/post/golang/basics/009-everything-passed-by-value/">Everything Passed by Value - Go - David&rsquo;s Blog</a></p>
+<blockquote>
+<p>Note that <a href="https://github.com/golang/go/wiki/CommonMistakes">iteration variable is re-used in each iteration</a>.</p>
+</blockquote>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-12-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/basics/003-map/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">map - Go</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/basics/006-io/">
+            <span class="next-text nav-default">IO in Golang</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

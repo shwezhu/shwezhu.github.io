@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>os.Getenv() function - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="什么是环境变量 开发程序的时候会用到一些密钥, 如 session key 用来加密解密一个会话 session message, 再比如拿到 openai 的密钥用来与 gpt 对话, 把这些 key 提交到 GitHub 是很危险的, 所以一" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/golang/practice/003-get-env/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="os.Getenv() function" />
+<meta property="og:description" content="什么是环境变量 开发程序的时候会用到一些密钥, 如 session key 用来加密解密一个会话 session message, 再比如拿到 openai 的密钥用来与 gpt 对话, 把这些 key 提交到 GitHub 是很危险的, 所以一" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/golang/practice/003-get-env/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-08-16T21:28:55+00:00" />
+<meta property="article:modified_time" content="2023-08-16T21:28:55+00:00" />
+<meta itemprop="name" content="os.Getenv() function">
+<meta itemprop="description" content="什么是环境变量 开发程序的时候会用到一些密钥, 如 session key 用来加密解密一个会话 session message, 再比如拿到 openai 的密钥用来与 gpt 对话, 把这些 key 提交到 GitHub 是很危险的, 所以一"><meta itemprop="datePublished" content="2023-08-16T21:28:55+00:00" />
+<meta itemprop="dateModified" content="2023-08-16T21:28:55+00:00" />
+<meta itemprop="wordCount" content="308">
+<meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="os.Getenv() function"/>
+<meta name="twitter:description" content="什么是环境变量 开发程序的时候会用到一些密钥, 如 session key 用来加密解密一个会话 session message, 再比如拿到 openai 的密钥用来与 gpt 对话, 把这些 key 提交到 GitHub 是很危险的, 所以一"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">os.Getenv() function</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-08-16 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/practice/"> practice </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#什么是环境变量">什么是环境变量</a></li>
+        <li><a href="#设置和获取方法">设置和获取方法</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="什么是环境变量">什么是环境变量</h2>
+<p>开发程序的时候会用到一些密钥, 如 <a href="https://en.wikipedia.org/wiki/Session_key">session key</a> 用来加密解密一个会话 session message, 再比如拿到 openai 的密钥用来与 gpt 对话, 把这些 key 提交到 GitHub 是很危险的, 所以一般不存储在源码, 而是保存在一个配置文件里或者环境变量中, 常用的方法就是设置一个环境变量, 程序运行的时候获取对应的值,</p>
+<p>可以用 <code>printenv</code> 查看电脑的环境变量:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ printenv
+</span></span><span class="line"><span class="cl"><span class="nv">SHELL</span><span class="o">=</span>/bin/zsh
+</span></span><span class="line"><span class="cl"><span class="nv">HOME</span><span class="o">=</span>/Users/David
+</span></span><span class="line"><span class="cl"><span class="nv">LOGNAME</span><span class="o">=</span>David
+</span></span><span class="line"><span class="cl"><span class="nv">USER</span><span class="o">=</span>David
+</span></span><span class="line"><span class="cl"><span class="nv">PATH</span><span class="o">=</span>/Users/David/Downloads/Programs/apache-maven-3.9.1/bin:/opt/homebrew/opt/grep/libexec/gnubin:/Users/David/sdk/go1.20.4/bin/:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:
+</span></span><span class="line"><span class="cl"><span class="nv">M2_HOME</span><span class="o">=</span>/Users/David/Downloads/Programs/apache-maven-3.9.1
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从输出可以看到熟悉的 PATH, 最常用的一个环境变量了, 之前错误的认为环境变量只有 PATH,</p>
+<h2 id="设置和获取方法">设置和获取方法</h2>
+<p>可以在 <code>.zshrc</code> 中设置环境变量, 比如新加一个环境变量 <code>SESSION_KEY</code>,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">SESSION_KEY</span><span class="o">=</span><span class="s2">&#34;schskac#iuhc.nsicauh-nurwtqyup&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>保存: 输入 <code>source .zshrc</code> 使其生效,</p>
+<p>验证: 输入 <code>printenv</code>, 查看是否有一项为 <code>SESSION_KEY=schskac#iuhc.nsicauh-nurwtqyup</code></p>
+<p>在 go 代码中可使用 <code> os.Getenv()</code> 来获取 env,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nf">Getenv</span><span class="p">(</span><span class="s">&#34;SESSION_KEY&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 打印: schskac#iuhc.nsicauh-nurwtqyup
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>⚠️注意: 若总是打印空值, 则需要重启 IDE, 才能正确打印</p>
+</blockquote>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-08-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/cs-basics/005-session-cookie/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Cookie &amp; Session</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/git/003-origin-master-vs-master/">
+            <span class="next-text nav-default">master vs origin/master vs remotes/origin/master</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

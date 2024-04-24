@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Some HTTP Issues with Go - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &amp;#34;asset=&amp;#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or &#43; automatically,
+js code:
+1 2 3 4 5 6 async function getUrl(filepath) { const filename = &amp;#34;back ground." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/golang/practice/014-http-related/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Some HTTP Issues with Go" />
+<meta property="og:description" content="1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or &#43; automatically,
+js code:
+1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/golang/practice/014-http-related/" /><meta property="article:section" content="post" />
+
+
+<meta itemprop="name" content="Some HTTP Issues with Go">
+<meta itemprop="description" content="1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or &#43; automatically,
+js code:
+1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground.">
+
+<meta itemprop="wordCount" content="450">
+<meta itemprop="keywords" content="golang,http," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Some HTTP Issues with Go"/>
+<meta name="twitter:description" content="1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or &#43; automatically,
+js code:
+1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Some HTTP Issues with Go</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 0001-01-01 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/practice/"> practice </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-parse-raw-query-string">1. Parse raw query string</a>
+          <ul>
+            <li><a href="#2-relative-path">2. Relative path</a></li>
+            <li><a href="#3-redirection">3. Redirection</a></li>
+            <li><a href="#4-parse-form-and-query-string">4. Parse form and query string</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-parse-raw-query-string">1. Parse raw query string</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// handle asset.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kd">const</span> <span class="nx">assetPrefix</span> <span class="p">=</span> <span class="s">&#34;asset=&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">HasPrefix</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span><span class="p">,</span> <span class="nx">assetPrefix</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nx">assetPrefix</span><span class="p">):]</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">s</span><span class="p">.</span><span class="nf">asset</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">assetName</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If there are whitespaces in query string, the <a href="https://stackoverflow.com/a/1211256/16317008">whitespace will be encoded</a> to <code>%20</code> or <code>+</code> automatically,</p>
+<p>js code:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">getUrl</span><span class="p">(</span><span class="nx">filepath</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">filename</span> <span class="o">=</span> <span class="s2">&#34;back ground.png&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&#34;?asset=&#34;</span> <span class="o">+</span> <span class="nx">filename</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The request URL will be: <code>http://localhost:8080?filepath=back%20ground.png</code>.</p>
+<p>Therefore, if you use <code>r.URL.RawQuery</code> in Go:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nf">Query</span><span class="p">())</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This will print:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">2023/10/29 12:19:36 filepath=back%20ground.png
+</span></span><span class="line"><span class="cl">2023/10/29 12:19:36 map[filepath:[back ground.png]]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, <code>r.URL.RawQuer</code> isn&rsquo;t friendly to string with whitespace, you should try to use <code>r.URL.Query()</code> to emliminate the <code>%20</code> characters.</p>
+<p>So the recommended way is as below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// handle asset.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kd">const</span> <span class="nx">assetPrefix</span> <span class="p">=</span> <span class="s">&#34;asset=&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">HasPrefix</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span><span class="p">,</span> <span class="nx">assetPrefix</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// r.URL.Query() returns a map[string][]string
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">assetName</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nf">Query</span><span class="p">()[</span><span class="nx">strings</span><span class="p">.</span><span class="nf">TrimSuffix</span><span class="p">(</span><span class="nx">assetPrefix</span><span class="p">,</span> <span class="s">&#34;=&#34;</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">s</span><span class="p">.</span><span class="nf">asset</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">assetName</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-relative-path">2. Relative path</h3>
+<p>You can write relative path directly for the endpoint, because the browser know the <strong>Origin</strong>, when you make HTTP request, it knows where should go.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">&#34;post&#34;</span> <span class="na">action</span><span class="o">=</span><span class="s">&#34;/login&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  ...
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>And it&rsquo;s ok to write relative path when redirect in Go code:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">// Redirect to login page.
+</span></span><span class="line"><span class="cl">http.Redirect(w, r, &#34;/login&#34;, http.StatusFound)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="3-redirection">3. Redirection</h3>
+<h4 id="31-redirect-at-front-end">3.1. Redirect at front end</h4>
+<p>For redirection, you can use js code to redirect based on the status code passed from server:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;/login&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">body</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="p">...</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// If login successfully, redirect to /home
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="s2">&#34;/home&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="32-redirect-at-server-with-location-header">3.2. Redirect at server with <code>Location</code> header</h4>
+<p>Learn more: <a href="https://davidzhu.xyz/post/http/001-http-headers/">HTTP Headers - David&rsquo;s Blog</a></p>
+<h4 id="33-redirect-at-server-with-httpredirect-method">3.3. Redirect at server with <code>http.Redirect()</code> method</h4>
+<p>See above <strong>Relative path</strong> section.</p>
+<h3 id="4-parse-form-and-query-string">4. Parse form and query string</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Request</span><span class="p">)</span> <span class="nf">ParseForm</span><span class="p">()</span> <span class="kt">error</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>For all requests, <code>ParseForm()</code> parses the <strong>raw query</strong> from the URL and updates r.Form. For POST, PUT, and PATCH requests, <strong>it also reads the request body</strong>, parses it as a form and puts the results into both r.PostForm and r.Form. Request body parameters take precedence over URL query string values in r.Form. For other HTTP methods, <strong>or when the Content-Type is not application/x-www-form-urlencoded, the request Body is not read</strong>.</p>
+<p>Therefore, you can pass data in the query string or in the request body at front end, when you want</p>
+<p>Learn more: <a href="https://pkg.go.dev/net/http#Request.ParseForm">http package - net/http - Go Packages</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        0001-01-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          <a href="/tags/http/">http</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/git/004-git-fetch-origin/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">git fetch - the Essence of &#34;origin&#34;</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Primary Key - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="Primary Key Index Indexes are used to find rows with specific column values quickly. Without an index, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs. If the table has an index for the columns in question, MySQL can quickly determine the position to seek to in the middle of the data" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/database/primary-key/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Primary Key" />
+<meta property="og:description" content="Primary Key Index Indexes are used to find rows with specific column values quickly. Without an index, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs. If the table has an index for the columns in question, MySQL can quickly determine the position to seek to in the middle of the data" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/database/primary-key/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-07-12T08:58:36+00:00" />
+<meta property="article:modified_time" content="2023-07-12T08:58:36+00:00" />
+<meta itemprop="name" content="Primary Key">
+<meta itemprop="description" content="Primary Key Index Indexes are used to find rows with specific column values quickly. Without an index, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs. If the table has an index for the columns in question, MySQL can quickly determine the position to seek to in the middle of the data"><meta itemprop="datePublished" content="2023-07-12T08:58:36+00:00" />
+<meta itemprop="dateModified" content="2023-07-12T08:58:36+00:00" />
+<meta itemprop="wordCount" content="608">
+<meta itemprop="keywords" content="database," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Primary Key"/>
+<meta name="twitter:description" content="Primary Key Index Indexes are used to find rows with specific column values quickly. Without an index, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs. If the table has an index for the columns in question, MySQL can quickly determine the position to seek to in the middle of the data"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Primary Key</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-07-12 </span>
+        <div class="post-category">
+            <a href="/categories/database/"> database </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#primary-key">Primary Key</a>
+          <ul>
+            <li><a href="#index">Index</a></li>
+            <li><a href="#clustered-and-secondary-indexes">Clustered and Secondary Indexes</a></li>
+            <li><a href="#should-each-table-have-a-primary-key">Should Each Table Have a Primary Key?</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="primary-key">Primary Key</h2>
+<h3 id="index">Index</h3>
+<p>Indexes are used to find rows with specific column values quickly. Without an index, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs. If the table has an index for the columns in question, MySQL can quickly determine the position to seek to in the middle of the data file without having to look at all the data. This is much faster than reading every row sequentially.</p>
+<p>Any column in creating table statement declared as <code>PRIMARY KEY</code>, <code>KEY</code>, <code>UNIQUE</code>or <code>INDEX</code> will be indexed automatically by MySQL. Most MySQL indexes (PRIMARY KEY, UNIQUE, INDEX, and FULLTEXT) are stored in <a href="https://dev.mysql.com/doc/refman/8.0/en/glossary.html#glos_b_tree">B-trees</a>.</p>
+<h3 id="clustered-and-secondary-indexes">Clustered and Secondary Indexes</h3>
+<p>Each InnoDB table has a special index called the clustered index that stores row data. Typically, the clustered index is synonymous with the primary key. To get the best performance from queries, inserts, and other database operations, it is important to understand how InnoDB uses the clustered index to optimize the common lookup and DML operations.</p>
+<ol>
+<li>
+<p>When you define a <code>PRIMARY KEY</code> on a table, <strong>InnoDB</strong> uses it as the <strong>clustered index</strong>. <strong>A primary key should be defined for each table</strong>. If there is no logical unique and non-null column or set of columns to use a the primary key, add an auto-increment column. Auto-increment column values are unique and are added automatically as new rows are inserted.</p>
+</li>
+<li>
+<p>If you do not define a <code>PRIMARY KEY</code> for a table, <strong>InnoDB</strong> uses the first <code>UNIQUE index</code> with all key columns defined as NOT NULL as the clustered index.</p>
+<ol>
+<li>If a table has no <code>PRIMARY KEY</code> or suitable <code>UNIQUE index</code>, InnoDB generates a hidden clustered index named <code>GEN_CLUST_INDEX</code> on a synthetic column that contains row ID values. The rows are ordered by the row ID that InnoDB assigns. The row ID is a 6-byte field that increases monotonically as new rows are inserted. Thus, the rows ordered by the row ID are physically in order of insertion.</li>
+</ol>
+</li>
+</ol>
+<p>从以上可以看出, Clustered Indexe就是你用pk修饰的那一列, 比如ID, 然后创建表的时候就应该设置PK在使用MySQL的时候, 然后这些PK(唯一标识行)以B-Tree的结构被InnoDB Engine组织用于快速查找而不是笨笨的一行一行的遍历. 如果你不声明PK或者Unique的列, 那InnoDB只好自动帮你创建一个PK(implicitly, hidden form you).</p>
+<h3 id="should-each-table-have-a-primary-key">Should Each Table Have a Primary Key?</h3>
+<p>Short answer: yes, each table should have a PRIMARY KEY so that you could distinguish two records.</p>
+<p>In MySQL, the <strong>InnoDB storage engine</strong> always creates a primary key if you didn&rsquo;t specify it explicitly, thus making an extra column you don&rsquo;t have access to.</p>
+<p>参考:</p>
+<ul>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/mysql-indexes.html">MySQL 8.0 Reference Manual :: 8.3.1 How MySQL Uses Indexes</a></p>
+</li>
+<li>
+<p><a href="https://www.drupal.org/docs/7/guidelines-for-sql/the-benefits-of-indexing-large-mysql-tables">The Benefits of Indexing Large MySQL Tables</a> 需要取消ad blocker才能访问</p>
+</li>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html">MySQL 8.0 Reference Manual :: 15.6.2.1 Clustered and Secondary Indexes</a></p>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-07-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/database/">database</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/other/006-english-reading-1/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">英语阅读(一)</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/database/mysql/001-mysql-basics/">
+            <span class="next-text nav-default">MySQL 命名规则 时间字符串类型 基础创表语句</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

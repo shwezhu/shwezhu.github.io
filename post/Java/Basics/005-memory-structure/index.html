@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Java内存结构 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="请先阅读(若链接无效可以搜索站内文章): Java中变量(Variables)和引用(References)的区别 - David&amp;rsquo;s Blog 1. JVM Run-Time Data Areas JVN内存结" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/java/basics/005-memory-structure/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Java内存结构" />
+<meta property="og:description" content="请先阅读(若链接无效可以搜索站内文章): Java中变量(Variables)和引用(References)的区别 - David&rsquo;s Blog 1. JVM Run-Time Data Areas JVN内存结" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/java/basics/005-memory-structure/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-14T21:50:26+00:00" />
+<meta property="article:modified_time" content="2023-05-14T21:50:26+00:00" />
+
+<meta itemprop="name" content="Java内存结构">
+<meta itemprop="description" content="请先阅读(若链接无效可以搜索站内文章): Java中变量(Variables)和引用(References)的区别 - David&rsquo;s Blog 1. JVM Run-Time Data Areas JVN内存结"><meta itemprop="datePublished" content="2023-05-14T21:50:26+00:00" />
+<meta itemprop="dateModified" content="2023-05-14T21:50:26+00:00" />
+<meta itemprop="wordCount" content="1821">
+<meta itemprop="keywords" content="Java," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Java内存结构"/>
+<meta name="twitter:description" content="请先阅读(若链接无效可以搜索站内文章): Java中变量(Variables)和引用(References)的区别 - David&rsquo;s Blog 1. JVM Run-Time Data Areas JVN内存结"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Java内存结构</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-14 </span>
+        <div class="post-category">
+            <a href="/categories/java/"> Java </a>
+            <a href="/categories/basics/"> Basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-jvm-run-time-data-areas">1. JVM Run-Time Data Areas</a>
+          <ul>
+            <li><a href="#11-heap">1.1. Heap</a></li>
+            <li><a href="#12-method-area">1.2. Method Area</a></li>
+            <li><a href="#13-run-time-constant-pool">1.3. Run-Time Constant Pool</a></li>
+            <li><a href="#14-java-virtual-machine-stacks">1.4. Java Virtual Machine Stacks</a></li>
+            <li><a href="#15-the-pc-register">1.5. The pc Register</a></li>
+            <li><a href="#16-补充">1.6. 补充</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-string-pool-在哪-到底存不存在string-pool">2. String Pool 在哪? 到底存不存在String Pool?</a></li>
+        <li><a href="#3-gc-and-string">3. GC and String</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>请先阅读(若链接无效可以搜索站内文章): <a href="https://davidzhu.xyz/post/java/basics/006-variables-vs-references/">Java中变量(Variables)和引用(References)的区别 - David&rsquo;s Blog</a></p>
+<h2 id="1-jvm-run-time-data-areas">1. JVM Run-Time Data Areas</h2>
+<blockquote>
+<p>JVN内存结构说的就是Run-Time Data Areas. The Run-Time Data Areas of JVM is vary from different JVM specifications. 不同版本的JVM介绍: <a href="https://docs.oracle.com/javase/specs/index.html">https://docs.oracle.com/javase/specs/index.html</a></p>
+</blockquote>
+<p>说这个之前缕清JVM的内存结构: JVM memory is divided into multiple parts: Heap Memory, Non-Heap Memory.</p>
+<h3 id="11-heap">1.1. Heap</h3>
+<p>The Java Virtual Machine has a heap that is shared among <strong>all Java Virtual Machine threads</strong>. The heap is the run-time data area from which memory for <strong>all class instances and arrays</strong> is allocated.</p>
+<h3 id="12-method-area">1.2. Method Area</h3>
+<p>The Java Virtual Machine has a method area that is shared among all Java Virtual Machine threads. The method area is analogous to the storage area for compiled code of a conventional language or analogous to the &ldquo;text&rdquo; segment in an operating system process. It stores per-class structures such as the <strong>run-time constant pool</strong>, field and method data, and the code for methods and constructors.</p>
+<p>Although the <strong>method area is logically part of the heap</strong>, simple implementations may choose not to either garbage collect or compact it. Method Area属于heap, 但有的JVM实现可能并不会用gc清理这块区域.</p>
+<p>三点:</p>
+<ul>
+<li>Methos Area 属于heap, 当然是线程共享</li>
+<li>run-time constant pool属于Method Area</li>
+<li>run-time constant pool -&gt; Method Area -&gt; Heap</li>
+</ul>
+<h3 id="13-run-time-constant-pool">1.3. Run-Time Constant Pool</h3>
+<p>A run-time constant pool is a <strong>per-class</strong> or per-interface run-time representation of the constant_pool table in a class file. Run-time constant pool就是class file里的constant_pool table.</p>
+<blockquote>
+<p>总结: run-time constant pool -&gt; Method Area -&gt; Heap, Each instance of the Java virtual machine has one method area and one heap. These areas are shared by all threads running inside the virtual machine. When the virtual machine loads a class file, it parses information about a type from the binary data contained in the class file. It places this type information into the method area. As the program runs, the virtual machine places all objects the program instantiates onto the heap. 下图描述了一个class file有一个constant pool, 然后被存放在Method Area, 但该图并不准确, 因为Method Area其实是属于Heap的.</p>
+</blockquote>
+<h3 id="14-java-virtual-machine-stacks">1.4. Java Virtual Machine Stacks</h3>
+<p>以上三个都是heap里面的东西, 现在是stack</p>
+<p><strong>Each Java Virtual Machine thread</strong> has a private Java Virtual Machine stack, created at the same time as the thread. A Java Virtual Machine stack stores <strong>frames</strong>. A Java Virtual Machine stack is analogous to the stack of a conventional language such as C: it holds local variables and partial results, and plays a part in method invocation and return.</p>
+<h3 id="15-the-pc-register">1.5. The pc Register</h3>
+<p>Each Java Virtual Machine thread has its own pc (program counter) register. At any point, each Java Virtual Machine thread is executing the code of a single method, namely the current method for that thread.</p>
+<p>以上内容参考自: <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-2.html#jvms-2.5">The Java Virtual Machine Specification, Java SE 19 Edition</a></p>
+<p><strong>Keep in mind that the Java virtual machine contains a separate runtime constant pool for each class and interface it loads</strong>:</p>
+<p><img src="/005-memory-structure/a.png" alt="a"></p>
+<h3 id="16-补充">1.6. 补充</h3>
+<p>上面提到了frame和dynamic linking, 下面做个补充:</p>
+<p><strong>Frame</strong>: A frame is used to store data and partial results, as well as to <strong>perform dynamic linking</strong>, return values for methods, and dispatch exceptions. A new frame is created each time a method is invoked. A frame is destroyed when its method invocation completes, whether that completion is normal or abrupt (it throws an uncaught exception). Frames are allocated from the Java Virtual Machine stack of the thread creating the frame. Each frame has its own <strong>array of local variables</strong>, its own <strong>operand stack</strong>, and <strong>a reference to the run-time constant pool</strong> of the class of the current method.</p>
+<p><strong>Dynamic Linking</strong>: When you compile a Java program, you get a separate class file for each class or interface in your program. Although the individual class files may appear to be independent, they actually harbor symbolic connections to one another and to the class files of the Java API. When you run your program, the Java virtual machine loads your program&rsquo;s classes and interfaces and hooks them together in a <strong>process of dynamic linking</strong>. As your program runs, the Java virtual machine builds an internal web of interconnected classes and interfaces.</p>
+<p>A <code>class</code> file keeps all its symbolic references in one place, the constant pool. Each <code>class</code> file has a constant pool, and each class or interface loaded by the Java virtual machine has an internal version of its constant pool called the runtime constant pool(可以看出runtime constant pool和class file里的constant pool table是对应的). The runtime constant pool is an implementation-specific data structure that maps to the constant pool in the class file. Thus, after a type is initially loaded, all the symbolic references from the type reside in the type&rsquo;s runtime constant pool.</p>
+<p>以上内容参考自: <a href="https://www.artima.com/insidejvm/ed2/linkmod.html">https://www.artima.com/insidejvm/ed2/linkmod.html</a></p>
+<h2 id="2-string-pool-在哪-到底存不存在string-pool">2. String Pool 在哪? 到底存不存在String Pool?</h2>
+<p>看了一下Java SE 18的JVM实现标准里的Runtime Data Area, 里面并没有提到String Pool这个名词, 但是提到了Method Area中的Runtime Constant Pool, 感觉String应该在这里. 至于String在哪, 毫无因为在heap上, 我们要探究的是string的对象具体在heap的哪个部分(貌似探究这个没什么意义 ummmm) 况且, 所有对象都在heap上,这句话是不变的真理.</p>
+<blockquote>
+<p>Whenever we declare a variable or create an object, it is stored in the memory. At a high level, Java divides the memory into two blocks: <strong>stack and heap</strong>. <a href="https://www.baeldung.com/java-string-constant-pool-heap-stack">https://www.baeldung.com/java-string-constant-pool-heap-stack</a></p>
+</blockquote>
+<p>Runtime Constant Pool(runtime constant pool)在Method Area, 然后Method Area在heap上, 那么Runtime Constant Pool的内容是什么呢? 上面我们提到Runtime Constant Pool就是class file里的constant pool table, 想知道runtime constant pool里有什么, 就要知道class file里constant pool table的格式内容, 去<a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4">Java SE 18</a>标准看看:</p>
+<p>找到了, 这句话不知道说的啥意思, 但感觉constant pool挺重要,
+Java Virtual Machine instructions do not rely on the run-time layout of classes, interfaces, class instances, or arrays. Instead, instructions refer to symbolic information in the <code>constant_pool</code> table:</p>
+<p>Each entry in the constant_pool table must begin with a 1-byte tag indicating the kind of constant denoted by the entry, 如下图, 我们去4.4.3看看哪个CONSTANT_String是什么:</p>
+<p>The <code>CONSTANT_String_info</code> structure is used to represent <strong>constant objects of the type String</strong>:</p>
+<p>所以, String对象就在这——runtime constant pool.</p>
+<p><img src="/005-memory-structure/b.png" alt="b"></p>
+<h2 id="3-gc-and-string">3. GC and String</h2>
+<p>Before Java 7, the JVM placed the Java String Pool in the PermGen space, which has a fixed size — it can&rsquo;t be expanded at runtime and is not eligible for garbage collection.</p>
+<p>The risk of interning Strings in the PermGen (instead of the Heap) is that we can get an OutOfMemory error from the JVM if we intern too many Strings.</p>
+<p>From Java 7 onwards, the <strong>Java String Pool is stored in the Heap space</strong>, which is garbage collected by the JVM. The advantage of this approach is the reduced risk of OutOfMemory error because unreferenced Strings will be removed from the pool, thereby releasing memory.</p>
+<p>所以String对象会被GC清理, 却String存储在heap上, 可能说的有点区别, 比如string存储在string pool, 不会直接说存储在heap上.</p>
+<p><img src="/005-memory-structure/c.png" alt="c"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/java/">Java</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/c&#43;&#43;/basics/007-uninitialized-variables-and-undefined-behaviors/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">未初始化的变量和未定义行为</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/c&#43;&#43;/basics/006-initialization/">
+            <span class="next-text nav-default">C&#43;&#43; Variable Assignment and Initialization</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Thymeleaf, Spring学习(四) - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="实现功能 访问 http://localhost:8080/ 的时候主页列出所有的猫猫信息(name&#43;age), 可通过参数查找某个猫猫信息如 http://localhost:8080/?name=Max, 如果猫猫Max存在将会列出其信息, 不存在则进行" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/java/backend/004-thymeleaf/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Thymeleaf, Spring学习(四)" />
+<meta property="og:description" content="实现功能 访问 http://localhost:8080/ 的时候主页列出所有的猫猫信息(name&#43;age), 可通过参数查找某个猫猫信息如 http://localhost:8080/?name=Max, 如果猫猫Max存在将会列出其信息, 不存在则进行" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/java/backend/004-thymeleaf/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-08-01T13:55:48+00:00" />
+<meta property="article:modified_time" content="2023-08-01T13:55:48+00:00" />
+
+<meta itemprop="name" content="Thymeleaf, Spring学习(四)">
+<meta itemprop="description" content="实现功能 访问 http://localhost:8080/ 的时候主页列出所有的猫猫信息(name&#43;age), 可通过参数查找某个猫猫信息如 http://localhost:8080/?name=Max, 如果猫猫Max存在将会列出其信息, 不存在则进行"><meta itemprop="datePublished" content="2023-08-01T13:55:48+00:00" />
+<meta itemprop="dateModified" content="2023-08-01T13:55:48+00:00" />
+<meta itemprop="wordCount" content="1955">
+<meta itemprop="keywords" content="Java,Spring Boot," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Thymeleaf, Spring学习(四)"/>
+<meta name="twitter:description" content="实现功能 访问 http://localhost:8080/ 的时候主页列出所有的猫猫信息(name&#43;age), 可通过参数查找某个猫猫信息如 http://localhost:8080/?name=Max, 如果猫猫Max存在将会列出其信息, 不存在则进行"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Thymeleaf, Spring学习(四)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-08-01 </span>
+        <div class="post-category">
+            <a href="/categories/java/"> Java </a>
+            <a href="/categories/backend/"> Backend </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#实现功能">实现功能</a></li>
+        <li><a href="#项目结构">项目结构</a></li>
+        <li><a href="#添加依赖">添加依赖</a></li>
+        <li><a href="#代码解释">代码解释</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="实现功能">实现功能</h2>
+<ul>
+<li>访问 http://localhost:8080/ 的时候主页列出所有的猫猫信息(name+age),</li>
+</ul>
+<p><img src="/004-thymeleaf/1.png" alt="1"></p>
+<ul>
+<li>可通过参数查找某个猫猫信息如 http://localhost:8080/?name=Max, 如果猫猫Max存在将会列出其信息, 不存在则进行提示,</li>
+</ul>
+<p><img src="/004-thymeleaf/2.png" alt="2"></p>
+<p><img src="/004-thymeleaf/3.png" alt="3"></p>
+<p>通过实现以上功能展示如何通过controller往html模板插入数据, 形成动态html页面,</p>
+<blockquote>
+<p>注意此例子中 html 模板就是 <code>index.html</code>, 更准确的说法是, 通过在html的一些标签里添加一些Thymeleaf属性, 然后html就成了html模板,</p>
+</blockquote>
+<p>源码: <a href="https://github.com/shwezhu/springboot-learning/tree/master/thymeleaf-example">https://github.com/shwezhu/springboot-learning/tree/master/thymeleaf-example</a></p>
+<h2 id="项目结构">项目结构</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">src
+</span></span><span class="line"><span class="cl">├── java
+</span></span><span class="line"><span class="cl">│   └── com
+</span></span><span class="line"><span class="cl">│       └── david
+</span></span><span class="line"><span class="cl">│           ├── ThymeleafExampleApplication.java
+</span></span><span class="line"><span class="cl">│           ├── bean
+</span></span><span class="line"><span class="cl">│           │   └── Cat.java
+</span></span><span class="line"><span class="cl">│           └── controller
+</span></span><span class="line"><span class="cl">│               └── MainController.java
+</span></span><span class="line"><span class="cl">└── resources
+</span></span><span class="line"><span class="cl">    ├── application.properties
+</span></span><span class="line"><span class="cl">    ├── static
+</span></span><span class="line"><span class="cl">    │   └── css
+</span></span><span class="line"><span class="cl">    │       └── main.css
+</span></span><span class="line"><span class="cl">    └── templates
+</span></span><span class="line"><span class="cl">        └── index.html
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="添加依赖">添加依赖</h2>
+<p>在<code>pom.xml</code>中加入并reload</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-thymeleaf<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意, 从上面代码可以看出本例子用的是spring boot, 用spring配置起来会很麻烦,</p>
+<h2 id="代码解释">代码解释</h2>
+<p>理解了Thymeleaf的逻辑, 之后看着文档自己就能写了, 这里只讲一个, 对于下面代码, 当访问 http://localhost:8080/ 的时候, 得到页面如下:</p>
+<p><img src="/004-thymeleaf/4.png" alt="4"></p>
+<p>首先若不在html文件中使用Thymeleaf的时候, controller代码如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@RestController</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GreetingController</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&#34;/greeting&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Greeting</span><span class="w"> </span><span class="nf">greeting</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;name&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">defaultValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;World&#34;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Greeting</span><span class="p">();</span><span class="w"> </span><span class="c1">// 返回的Greeting会被spring自动转为json对象</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>该controller是个简单的 restful api, 用来返回简单的json数据, 若不理解此段代码可以到<a href="https://davidzhu.xyz/2023/07/29/Java/Backend/001-first-spring-boot-program/">第一个Spring Boot项目及踩坑总结 Spring学习(一) </a>查看相关注解的解释,</p>
+</blockquote>
+<p>通过thymeleaf向html插入数据, 此时的controller如下,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Controller</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MainController</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&#34;/&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">home</span><span class="p">(</span><span class="n">Model</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">model</span><span class="p">.</span><span class="na">addAttribute</span><span class="p">(</span><span class="s">&#34;title&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;hello little kittens&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&#34;index&#34;</span><span class="p">;</span><span class="w">  </span><span class="c1">// return index.html</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>对应的<code>index.html</code>代码如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE HTML&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span> <span class="na">xmlns:th</span><span class="o">=</span><span class="s">&#34;http://www.thymeleaf.org&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;utf-8&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Spring Boot Thymeleaf Example<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">&lt;</span><span class="nt">span</span> <span class="na">th:text</span><span class="o">=</span><span class="s">&#34;&#39;Hello, &#39; + ${title}&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以注意到controller的方法只是多了一个参数即类 <code>org.springframework.ui.Model</code> 的对象, 然后通过调用其对象的<code>addAttribute()</code>方法向将要返回的html中动态地插入数据, 此例中插入的数据为字符串<code>&quot;hello little kittens&quot;</code>, 往哪插入? 当然是<code>&quot;title&quot;</code> 属性, 然后就可以在<code>index.html</code>预访问<code>&quot;title&quot;</code> 的值, 注意, 这里说是<strong>预防问</strong>是因为变量<code>title</code>的数据还没到, 需要controller的方法执行到<code>return &quot;index&quot;;</code> 的时候, 数据才算是真的到了 <code>index.html</code>, 数据处理的大致过程如下:</p>
+<ul>
+<li>客户端发送http请求, Spring框架调用controller对应的函数</li>
+<li>controller对应方法的语句执行完毕(如查询数据库, 向Model对象添加属性), 函数返回字符串<code>&quot;index&quot;</code>,</li>
+<li>Spring框架拿到该函数返回的字符串 <code>&quot;index&quot;</code>, Spring将会在项目template文件夹下查找文件 <code>index.html</code>  , 并配合thymeleaf之类的东西将 Model 对象的内容插入到<code>index.html</code>里对应的tag里, 如上面的例子就是把<code>&quot;hello little kittens&quot;</code>, 插入到标签 <code>&lt;span th:text=&quot;'Hello, ' + ${title}&quot;&gt;&lt;/span&gt;</code>里,</li>
+<li>然后Spring返回最终形成的 <code>index.html</code> 给客户端</li>
+</ul>
+<p>大概就是这个过程, 但细节应该不是, 比如插入数据的时候是spring做的还是thymeleaf, 这个感兴趣可以去谷歌, 这里只是叙述大致的处理过程, 以便编写thymeleaf代码有思路,</p>
+<p>所以你懂了吗? controller方法通过返回字符串来指定要返回的html文件, 而我们想要插入到html中的数据则通过调用<code>model.addAttribute()</code>来指定, 这个过程就相当于制造零件, 而零件的组装, 也就是汽车的样子, 就是我们编写的“特殊的”<code>index.html</code>文件,  也就是所谓的模板, 大概就是这么个过程, 希望可以帮助到你,</p>
+<p>其他内容可参考: <a href="https://www.baeldung.com/thymeleaf-in-spring-mvc#evaluation">Introduction to Using Thymeleaf in Spring | Baeldung</a></p>
+<h2 id="总结">总结</h2>
+<p>总结下, Spring MVC, 到现在学了V和C, C即我们常写的Controller, V即是View, 就是每次 Controller 的method返回的那个view, 在Spring Boot目录结构一般如下,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">├── src
+</span></span><span class="line"><span class="cl">│   ├── main
+</span></span><span class="line"><span class="cl">│   │   ├── java
+</span></span><span class="line"><span class="cl">│   │   │   └── com
+</span></span><span class="line"><span class="cl">│   │   │       └── david
+</span></span><span class="line"><span class="cl">│   │   │           ├── ThymeleafExampleApplication.java
+</span></span><span class="line"><span class="cl">│   │   │           ├── bean
+</span></span><span class="line"><span class="cl">│   │   │           └── controller
+</span></span><span class="line"><span class="cl">│   │   └── resources
+</span></span><span class="line"><span class="cl">│   │       ├── application.properties
+</span></span><span class="line"><span class="cl">│   │       ├── static
+</span></span><span class="line"><span class="cl">│   │       │   └── css
+</span></span><span class="line"><span class="cl">│   │       │       └── main.css
+</span></span><span class="line"><span class="cl">│   │       └── templates
+</span></span><span class="line"><span class="cl">│   │           └── index.html
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在HTML标签插入一些属性就成了Thymeleaf模板也就是项目中的 <code>index.html</code>, 如<code>&lt;span th:text=&quot;${cat.name}&quot; /&gt;</code>, 而controller通过设置<code>Model</code> 对象属性向<code>index.html</code>插入数据, 进而形成内容不同的 <code>index.html</code> 返回给客户端, 像是在搭积木,</p>
+<p>注意上面我们提到的 controller 只是个泛指, 实际上 controller 就是个普通的类, 被注解<code>@Controller</code>, <code>@RestController</code>, 修饰的就是 controller class, 然后该类的method一般被 <code>@GetMapping(&quot;/cat&quot;)</code>, <code>@PostMapping(&quot;/cat/add&quot;)</code> 等注解修饰, 来处理不同的http请求, 即真正处理http请求并返回html文件的是 controller class的method,</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-08-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/java/">Java</a>
+          <a href="/tags/spring-boot/">Spring Boot</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/java/backend/005-spring-security/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Spring Security Authentication, Spring学习(五)</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/java/backend/003-jpa-hibernate-jdbc/">
+            <span class="next-text nav-default">ORM vs JPA vs Hibernate &amp; JDBC vs MySQL Driver, Spring学习(三)</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

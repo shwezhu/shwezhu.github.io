@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Tricks in Javascript - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Delay function 1 2 3 4 5 function delay(minutes) { return new Promise(resolve =&amp;gt; setTimeout(resolve, minutes * 1000 * 60)); } // await delay(2) 2. Click copy 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 &amp;lt;p id=&amp;#34;url-text&amp;#34; style=&amp;#34;display: none&amp;#34;&amp;gt;{{.SharedUrl}}&amp;lt;/p&amp;gt; &amp;lt;button onclick=&amp;#34;copyText()&amp;#34;&amp;gt;share&amp;lt;/button&amp;gt; &amp;lt;script&amp;gt; function copyText() { const copyText = document.getElementById(&amp;#34;url-text&amp;#34;); navigator.clipboard.writeText(copyText.textContent) .then(() =&amp;gt; { alert(&amp;#34;successfully copied&amp;#34;); }) .catch(() =&amp;gt; { alert(&amp;#34;something went wrong&amp;#34;); }); } &amp;lt;/script&amp;gt; 3." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/js/practice/001-web-dev/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Tricks in Javascript" />
+<meta property="og:description" content="1. Delay function 1 2 3 4 5 function delay(minutes) { return new Promise(resolve =&gt; setTimeout(resolve, minutes * 1000 * 60)); } // await delay(2) 2. Click copy 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 &lt;p id=&#34;url-text&#34; style=&#34;display: none&#34;&gt;{{.SharedUrl}}&lt;/p&gt; &lt;button onclick=&#34;copyText()&#34;&gt;share&lt;/button&gt; &lt;script&gt; function copyText() { const copyText = document.getElementById(&#34;url-text&#34;); navigator.clipboard.writeText(copyText.textContent) .then(() =&gt; { alert(&#34;successfully copied&#34;); }) .catch(() =&gt; { alert(&#34;something went wrong&#34;); }); } &lt;/script&gt; 3." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/js/practice/001-web-dev/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-28T22:54:02+00:00" />
+<meta property="article:modified_time" content="2023-10-28T22:54:02+00:00" />
+
+<meta itemprop="name" content="Tricks in Javascript">
+<meta itemprop="description" content="1. Delay function 1 2 3 4 5 function delay(minutes) { return new Promise(resolve =&gt; setTimeout(resolve, minutes * 1000 * 60)); } // await delay(2) 2. Click copy 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 &lt;p id=&#34;url-text&#34; style=&#34;display: none&#34;&gt;{{.SharedUrl}}&lt;/p&gt; &lt;button onclick=&#34;copyText()&#34;&gt;share&lt;/button&gt; &lt;script&gt; function copyText() { const copyText = document.getElementById(&#34;url-text&#34;); navigator.clipboard.writeText(copyText.textContent) .then(() =&gt; { alert(&#34;successfully copied&#34;); }) .catch(() =&gt; { alert(&#34;something went wrong&#34;); }); } &lt;/script&gt; 3."><meta itemprop="datePublished" content="2023-10-28T22:54:02+00:00" />
+<meta itemprop="dateModified" content="2023-10-28T22:54:02+00:00" />
+<meta itemprop="wordCount" content="611">
+<meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Tricks in Javascript"/>
+<meta name="twitter:description" content="1. Delay function 1 2 3 4 5 function delay(minutes) { return new Promise(resolve =&gt; setTimeout(resolve, minutes * 1000 * 60)); } // await delay(2) 2. Click copy 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 &lt;p id=&#34;url-text&#34; style=&#34;display: none&#34;&gt;{{.SharedUrl}}&lt;/p&gt; &lt;button onclick=&#34;copyText()&#34;&gt;share&lt;/button&gt; &lt;script&gt; function copyText() { const copyText = document.getElementById(&#34;url-text&#34;); navigator.clipboard.writeText(copyText.textContent) .then(() =&gt; { alert(&#34;successfully copied&#34;); }) .catch(() =&gt; { alert(&#34;something went wrong&#34;); }); } &lt;/script&gt; 3."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Tricks in Javascript</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-10-28 </span>
+        <div class="post-category">
+            <a href="/categories/javascript/"> javascript </a>
+            <a href="/categories/practice/"> practice </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-delay-function">1. Delay function</a></li>
+        <li><a href="#2-click-copy">2. Click copy</a></li>
+        <li><a href="#3-relative-path">3. Relative path</a></li>
+        <li><a href="#4-send-username-and-password-form">4. Send username and password form</a>
+          <ul>
+            <li><a href="#41-special-situation-in-go">4.1. Special situation in Go</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-delay-function">1. Delay function</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">delay</span><span class="p">(</span><span class="nx">minutes</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="nx">resolve</span> <span class="p">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">minutes</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// await delay(2)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="2-click-copy">2. Click copy</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;url-text&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;display: none&#34;</span><span class="p">&gt;</span>{{.SharedUrl}}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">button</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&#34;copyText()&#34;</span><span class="p">&gt;</span>share<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">function</span> <span class="nx">copyText</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">copyText</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;url-text&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">navigator</span><span class="p">.</span><span class="nx">clipboard</span><span class="p">.</span><span class="nx">writeText</span><span class="p">(</span><span class="nx">copyText</span><span class="p">.</span><span class="nx">textContent</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">alert</span><span class="p">(</span><span class="s2">&#34;successfully copied&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">})</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="k">catch</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">alert</span><span class="p">(</span><span class="s2">&#34;something went wrong&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-relative-path">3. Relative path</h2>
+<p>You can write relative path directly for the endpoint, because the browser know the <strong>Origin</strong>, when you make HTTP request, it knows where should go.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">&#34;post&#34;</span> <span class="na">action</span><span class="o">=</span><span class="s">&#34;/login&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  ...
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>And it&rsquo;s ok to write relative path when redirect in Go code:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">// Redirect to login page.
+</span></span><span class="line"><span class="cl">http.Redirect(w, r, &#34;/login&#34;, http.StatusFound)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-send-username-and-password-form">4. Send username and password form</h2>
+<blockquote>
+<p>If you have a login page with user name and password, do not tell users that they entered a wrong password. Tell them that they entered wrong credentials. You don’t want to give hackers a way to know if a user name is right or wrong. <a href="https://www.reddit.com/r/PHPhelp/comments/14pwb53/comment/jqk830i/?utm_source=share&amp;utm_medium=web2x&amp;context=3">source</a></p>
+</blockquote>
+<p>Traditional way to submit a form:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&#34;/login&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;name&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;password&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;psaaword&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;submit&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;Submit&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The form data will be sent to <code>/login</code> endpoint of the server automatically. After check the input, you may make ajax with <code>fetch()</code> to send form data:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;login-form&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;/login&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">headers</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;Content-Type&#34;</span><span class="o">:</span><span class="s2">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">body</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then the actual request body sent by browser will be:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;username&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">david
+</span></span><span class="line"><span class="cl">------WebKitFormBoundaryGx7UioRfdfhdT5U5
+</span></span><span class="line"><span class="cl">Content-Disposition: form-data; name=&#34;password&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">778899sS
+</span></span><span class="line"><span class="cl">------WebKitFormBoundaryGx7UioRfdfhdT5U5--
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This is not correct and you will get error at the server, the suggestion to get a correct request body is to not set header explictly:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;/login&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//headers:{&#34;Content-Type&#34;:&#34;application/x-www-form-urlencoded&#34;},
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">body</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then the correct form data will be sent:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">username: david
+</span></span><span class="line"><span class="cl">password: 778899s
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><strong>Note:</strong> if you don&rsquo;t set <code>Content-Type</code> header explicitly, the browser will set Content-Type header to <code>multipart/form-data</code> automatically.</p>
+</blockquote>
+<h3 id="41-special-situation-in-go">4.1. Special situation in Go</h3>
+<p>If your server written in Go, you may parse the form like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">e</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">ParseForm</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">err</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to parse username and password: %v&#34;</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">username</span> <span class="p">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Form</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;username&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">password</span> <span class="p">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Form</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;password&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>According to <a href="https://pkg.go.dev/net/http#Request.ParseForm">Golang docs</a> for <code>ParseForm() </code>:</p>
+<blockquote>
+<p>For other HTTP methods, or when the Content-Type <strong>is not</strong> application/x-www-form-urlencoded, the request Body is not read.</p>
+</blockquote>
+<p>Therefore, <code>ParseForm()</code> method will ignore the request body, which means you cannot get the username and password. The <code>URLSearchParams()</code> in JS can help:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URLSearchParams</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">pair</span> <span class="k">of</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;login-form&#34;</span><span class="p">)))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">data</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">String</span><span class="p">(</span><span class="nx">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;/login&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//headers:{&#34;Content-Type&#34;:&#34;application/x-www-form-urlencoded&#34;},
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">body</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>I find this solution on <a href="https://stackoverflow.com/a/46642899/16317008">an answer at Stackoverflow</a>, the problem caused by <code>new FormData()</code>:</p>
+<blockquote>
+<p>The <strong><code>FormData</code></strong> interface provides a way to easily construct a set of key/value pairs representing form fields and their values, which can then be easily sent using the <code>XMLHttpRequest.send()</code> method. <strong>It uses the same format a form would use if the encoding type were set to <code>&quot;multipart/form-data&quot;</code></strong>.</p>
+</blockquote>
+<p>So when using <code>FormData</code> you are locking yourself into <code>multipart/form-data</code>. There is no way to send a <code>FormData</code> object as the body and <em>not</em> sending data in the <code>multipart/form-data</code> format.</p>
+<p>If you want to send the data as <code>application/x-www-form-urlencoded</code> you will either have to specify the body as an URL-encoded string, or pass a <a href="https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams"><code>URLSearchParams</code></a> object.</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-10-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/javascript/">javascript</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/practice/007-http-related/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Some HTTP Issues with Go</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/http/002-http-status-codes-1/">
+            <span class="next-text nav-default">HTTP Status Codes</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

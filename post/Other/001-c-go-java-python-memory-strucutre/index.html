@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>C Go Java Python内存结构及对比 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="0. In short 1. C C has three different pools of memory: static: global variable storage, permanent for the entire run of the program. stack: local variable storage (automatic, continuous memory). heap: dynamic storage (large pool of memory, not allocated in contiguous order). 1.1. Static memory Static memory persists throughout the entire life of the program, and is usually used to store things like global variables, or variables created with" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/other/001-c-go-java-python-memory-strucutre/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="C Go Java Python内存结构及对比" />
+<meta property="og:description" content="0. In short 1. C C has three different pools of memory: static: global variable storage, permanent for the entire run of the program. stack: local variable storage (automatic, continuous memory). heap: dynamic storage (large pool of memory, not allocated in contiguous order). 1.1. Static memory Static memory persists throughout the entire life of the program, and is usually used to store things like global variables, or variables created with" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/other/001-c-go-java-python-memory-strucutre/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-27T19:59:17+00:00" />
+<meta property="article:modified_time" content="2023-05-27T19:59:17+00:00" />
+<meta itemprop="name" content="C Go Java Python内存结构及对比">
+<meta itemprop="description" content="0. In short 1. C C has three different pools of memory: static: global variable storage, permanent for the entire run of the program. stack: local variable storage (automatic, continuous memory). heap: dynamic storage (large pool of memory, not allocated in contiguous order). 1.1. Static memory Static memory persists throughout the entire life of the program, and is usually used to store things like global variables, or variables created with"><meta itemprop="datePublished" content="2023-05-27T19:59:17+00:00" />
+<meta itemprop="dateModified" content="2023-05-27T19:59:17+00:00" />
+<meta itemprop="wordCount" content="4711">
+<meta itemprop="keywords" content="golang,java,c,python,other," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="C Go Java Python内存结构及对比"/>
+<meta name="twitter:description" content="0. In short 1. C C has three different pools of memory: static: global variable storage, permanent for the entire run of the program. stack: local variable storage (automatic, continuous memory). heap: dynamic storage (large pool of memory, not allocated in contiguous order). 1.1. Static memory Static memory persists throughout the entire life of the program, and is usually used to store things like global variables, or variables created with"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">C Go Java Python内存结构及对比</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-27 </span>
+        <div class="post-category">
+            <a href="/categories/other/"> other </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#0-in-short">0. In short</a></li>
+        <li><a href="#1-c">1. C</a>
+          <ul>
+            <li><a href="#11-static-memory">1.1. Static memory</a></li>
+            <li><a href="#12-stack-memory">1.2. Stack memory</a></li>
+            <li><a href="#13-heap-memory">1.3. Heap Memory</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-golang">2. Golang</a></li>
+        <li><a href="#3-java">3. Java</a></li>
+        <li><a href="#4-python">4. Python</a>
+          <ul>
+            <li><a href="#41-objects-in-python">4.1. Objects in Python</a></li>
+            <li><a href="#42-variables-in-python">4.2. Variables in Python</a></li>
+          </ul>
+        </li>
+        <li><a href="#5-pass-by-value-or-reference">5. Pass by Value or Reference</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="0-in-short">0. In short</h2>
+<h2 id="1-c">1. C</h2>
+<p>C has three different pools of memory:</p>
+<ul>
+<li><strong>static</strong>: global variable storage, permanent for the entire run of the program.</li>
+<li><strong>stack</strong>: local variable storage (automatic, continuous memory).</li>
+<li><strong>heap</strong>: dynamic storage (large pool of memory, not allocated in contiguous order).</li>
+</ul>
+<h3 id="11-static-memory">1.1. Static memory</h3>
+<p>Static memory persists throughout the entire life of the program, and is usually used to store things like <em>global</em> variables, or variables created with the static clause. If a variable is declared <em>outside</em> of a function, it is considered global, meaning it is accessible anywhere in the program. Global variables are static, and there is only one copy for the entire program. Inside a function the variable is allocated on the stack. It is also possible to force a variable to be static using the <strong>static</strong> clause. For example, the same variable created inside a function using the static clause would allow it to be stored in static memory.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">int</span> <span class="n">theforce</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="12-stack-memory">1.2. Stack memory</h3>
+<p>The <em>stack</em> is used to store variables used on the inside of a function (including the <code>main()</code> function). It’s a LIFO, “<strong>L</strong>ast-<strong>I</strong>n,-<strong>F</strong>irst-<strong>O</strong>ut”, structure. Every time a function declares a new variable it is “pushed” onto the stack. Then when a function finishes running, all the variables associated with that function on the stack are deleted, and the memory they use is freed up. This leads to the “local” scope of function variables. The stack is a special region of memory, and automatically managed by the CPU – so you don’t have to allocate or deallocate memory. Stack memory is divided into successive frames where each time a function is called, it allocates itself a fresh stack frame.</p>
+<p>Note that there is generally a limit on the size of the stack – which can vary with the operating system (for example OSX currently has a default stack size of 8MB). If a program tries to put too much information on the stack, <strong>stack overflow</strong> will occur. Stack overflow happens when all the memory in the stack has been allocated, and further allocations begin overflowing into other sections of memory. Stack overflow also occurs in situations where recursion is incorrectly used.</p>
+<ul>
+<li>the stack grows and shrinks as variables are created and destroyed</li>
+<li>stack variables only exist whilst the function that created them exists</li>
+</ul>
+<h3 id="13-heap-memory">1.3. Heap Memory</h3>
+<p>The <em>heap</em> is the diametrical opposite of the stack. The <em>heap</em> is a large pool of memory that can be used dynamically – it is also known as the “free store”. This is memory that is not automatically managed – you have to explicitly allocate (using functions such as malloc), and deallocate (e.g. free) the memory. Failure to free the memory when you are finished with it will result in what is known as a <em>memory leak</em> – memory that is still “being used”, and not available to other processes. Unlike the stack, there are generally no restrictions on the size of the heap (or the variables it creates), other than the physical size of memory in the machine. Variables created on the heap are accessible anywhere in the program.</p>
+<p>Oh, and heap memory requires you to use pointers.</p>
+<ul>
+<li>the heap is managed by the programmer, the ability to modify it is somewhat boundless</li>
+<li>in C, variables are allocated and freed using functions like malloc() and free()</li>
+<li>the heap is large, and is usually limited by the physical memory available</li>
+<li>the heap requires pointers to access it</li>
+</ul>
+<p>在这先讨论一下C和Java的heap和stack, 首先是heap:</p>
+<p>C 与 Java对待heap上内容的处理方式可以说是完全不同, 前者必须手动管理而后者完全是GC自动清理, 主要原因还是 Java引入了GC可以自动管理heap上存储的内容, C 的内存结构很简单, 堆栈和静态, 而Java里则在heap里衍生出了constant pool, method area等东西, 具体可以参考我的另一篇文章: <a href="https://davidzhu.xyz/post/java/basics/005-memory-structure/">Java内存结构</a>, 弄明白了Java里的概念, 自然可以区分对比C,</p>
+<p>相对C, Java不仅有 GC 而且引入了 reference 的概念, 有人可能会说 C 里不也有引用吗那个<code>&amp;</code>, 不好意思那是C++的,</p>
+<p>Java里可谓是万物皆对象, 且对象与变量分离, 即变量只是指向对象的一个引用reference, 变量存储在stack上, 所有对象存在heap上, 比如<code>String str = &quot;hello world&quot;</code>中<code>&quot;hello worl&quot;:</code>就是个对象, 而变量<code>str</code>只是个引用, 引用在stack上, 这就与C类似了即创建该引用的函数返回时stack上的该函数的stack frame被pop出去, 即变量<code>str</code>被自动清理, 但对象<code>&quot;hello world&quot;</code>呢? 对象在heap上, 函数返回, 函数的stack frame被清理但heap上的对象还没有被清理, 这个时候就是GC出马了, 常见GC一种方法是看对象的引用计数是否为零, 但是这种又容易引起cyclic references的问题, 所以像JVM, C#, Ruby, JavaScript, Golang采用的是另一种GC即Mark &amp; Sweep GC, 但CPython的GC采用的主要是reference counting方法, 由于内容太多, 具体CPython采用此方法的原因以及如何解决circular reference的方法请参考官方文档: <a href="https://devguide.python.org/internals/garbage-collector/">Garbage Collector Design</a></p>
+<blockquote>
+<p>Java里的变量分为两种: primitive 和 reference, 具体参考 <a href="https://davidzhu.xyz/2023/05/14/Java/Basics/Memory-Structure/">Java内存结构</a></p>
+<p>两种GC: Mark &amp; Sweep GC 和 Reference counting GC</p>
+<p>JVM对于对象的处理, 以String对象为例: In fact the rules for garbage collecting objects in the string pool are the same as for other String objects: indeed all objects. They will be garbage collected if the GC finds them to be unreachable.</p>
+</blockquote>
+<p>对于 stack, Java 和 C 其实是几乎一样的, 他们都有stack frame的概念, 即每个函数单独一个frame, 只在头部进行push或者pop, 这也是stack比heap快的原因, 不需要任何的look up, 除此之外因为stack的内存是连续的, 我们每次都是push到其头部, 就像摞箱子, 所以在编译期就需要知道其size, 不然怎么知道下一块放到内存的哪个地址呢? 至于 thread stack 这里不讨论, 也暂时没研究JVM的线程管理, 另外还有相关话题即pass by value还是pass by reference的问题, 这里我们留在后面与Python和Golang一起讨论, 接下来看看 Golang,</p>
+<h2 id="2-golang">2. Golang</h2>
+<p>Go的内存结构就复杂了, 这里注意内存模型Memory Model和内存结构Memory Structure (Memory Management)不是一个东西, 这是一个很长的任务啊, 明天再写吧, 还有作业&hellip;</p>
+<p>需要强调的是Golang里是没对象概念的, 也不存在Java和python里的那种引用[1], golang里只存在variable和value, 所以说Golang跟C很像, 下面<a href="https://go.dev/doc/faq">Go官方的FAQs</a>也间接说出来Golang的内存结构:</p>
+<p><strong>How do I know whether a variable is allocated on the heap or the stack?</strong></p>
+<p>From a correctness standpoint, you don&rsquo;t need to know. <strong>Each variable in Go exists as long as there are references to it</strong>. The storage location chosen by the implementation is irrelevant to the semantics of the language.</p>
+<p>The storage location does have an effect on writing efficient programs. When possible, the Go compilers will allocate variables that are local to a function in that function&rsquo;s <strong>stack frame</strong>. However, if the compiler cannot prove that the variable is not referenced after the function returns, then the compiler must allocate the variable on the garbage-collected heap to avoid dangling pointer errors. Also, if a local variable is very large, it might make more sense to store it on the heap rather than the stack.</p>
+<p>In the current compilers, if a variable has its address taken, that variable is a candidate for allocation on the heap. However, a basic <em>escape analysis</em> recognizes some cases when such variables will not live past the return from the function and can reside on the stack.</p>
+<p>当然go里也有new关键字, 就像C里的malloc, new在heap上创建struct, 然后返回其地址, 这里也要说一下, heap都是由GC管理, stack即都是线程或者函数stack frame所在的地方, 当函数返回时自动被清理, 具体细节关于Golang内存结构, 因为太多了, 打算专门记录几篇文章, 不在这讨论了,</p>
+<p>[1]:  Java, Python都是对象在heap, 指向对象的变量又叫引用reference, 存储在stack上</p>
+<h2 id="3-java">3. Java</h2>
+<p>这个好写, 之前研究过, 上面也与C进行对比了, 比较懒: <a href="https://davidzhu.xyz/post/java/basics/006-variables-vs-references/">Java中变量(Variables)和引用(References)的区别 - David&rsquo;s Blog</a></p>
+<h2 id="4-python">4. Python</h2>
+<h3 id="41-objects-in-python">4.1. Objects in Python</h3>
+<p>Everything in Python is an object. <em>Classes</em>, <em>functions</em>, and even simple data types, such as <em>integers</em>, <em>floats</em>, and <em>strings</em>, are objects in Python. When we define an integer in Python, CPython internally creates an object of type <em>integer</em>. These objects are stored in heap memory.</p>
+<p>Each Python object consists of three fields:</p>
+<ul>
+<li>Value</li>
+<li>Type</li>
+<li>Reference count</li>
+</ul>
+<p>Let&rsquo;s consider a simple example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="mi">100</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When the above code is executed, CPython creates an object of type <code>integer</code> and allocates memory for this object on the heap memory.</p>
+<p>The <code>type</code> indicates the type of the object in CPython, and the <code>value</code> field, as the name suggests, stores the value of the object (<code>100</code> in this case). We will discuss the <code>ref_count</code> field later in the article.</p>
+<p><img src="/001-c-go-java-python-memory-strucutre/a.png" alt="a"></p>
+<blockquote>
+<p>Memory management in Python involves a <strong>private heap</strong> containing all Python objects and data structures. The management of this private heap is ensured internally by the <em><strong>Python memory manager</strong></em>. &ndash;<a href="https://docs.python.org/3/c-api/memory.html">Memory Management — Python 3.11.3 documentation</a></p>
+</blockquote>
+<p>可能你注意到了, 上面说的CPython是个啥?</p>
+<blockquote>
+<p><strong>CPython</strong> is the default and most widely used implementation of the Python language. When we say Python, it essentially means we&rsquo;re referring to CPython. When you download Python from <a href="https://www.python.org/">python.org</a>, you basically download the CPython code. Thus, CPython is a program written in C language that implements all the rules and specifications defined by the Python language. CPython can be defined as both an interpreter and a compiler as it compiles Python code into bytecode before interpreting it.</p>
+</blockquote>
+<p>Since CPython is the reference implementation, all new rules and specifications of the Python language are first implemented by CPython.</p>
+<p>In this article, we will discuss the internals of memory management of CPython. Please note: Other implementations, such as <em>Jython</em> and <em>IronPython</em>, may implement memory management in a different way.</p>
+<p>As CPython is implemented in the C programming language, let’s first understand two important functions related to memory management in C: <code>malloc</code> and <code>free</code>!</p>
+<h3 id="42-variables-in-python">4.2. Variables in Python</h3>
+<p>Variables in Python are just references to the actual object in memory. They are like names or labels that point to the actual object in memory. They do not store any value.</p>
+<p>Consider the following example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">a = 100
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As discussed earlier, when the above code is executed, CPython internally creates an object of type <em>integer</em>. The variable <code>a</code> points to this integer object as shown below:</p>
+<p><img src="/001-c-go-java-python-memory-strucutre/b.png" alt="b"></p>
+<p>We can access the integer object in the Python program using the variable <code>a</code>.</p>
+<blockquote>
+<p>读到这可以看出Java还不是真正的万物皆对象 (如果想在heap上创建primitive对象 需要Integer声明创建), 但Python就是所有的东西都是对象, 即使是一个int类型, 甚至一个函数也是个对象, 另外Java与python的GC (Python中不叫GC叫Python memory manager)对对象的管理方式基本上是一样的, 即分为引用和对象两部分, 引用在stack, 对象在heap, 不像c++那种在函数里声明的就是局部对象(除malloc和new), 对于Java与python来说无论你在哪创建一个对象, 他们都会被创建到heap上, 且根据引用计数来判断对象是否reachable, 然后判断是否回收对象, 所以你完全可以返回一个“局部对象”的引用, 但C++中, 肯定就不行了, 这会造成野指针问题,</p>
+</blockquote>
+<p>Let&rsquo;s assign this integer object to another variable <code>b</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When the above code is executed, the variables <code>a</code> and <code>b</code> both point to the same integer object, as shown below:</p>
+<p><img src="/001-c-go-java-python-memory-strucutre/c.png" alt="c"></p>
+<p>Let&rsquo;s now increment the value of the integer object by 1:</p>
+<p>Let&rsquo;s now increment the value of the integer object by 1:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Increment a by 1
+</span></span><span class="line"><span class="cl">a = a + 1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When the above code is executed, CPython creates a new integer object with the value <code>101</code> and makes variable <code>a</code> point to this new integer object. Variable <code>b</code> will continue to point to the integer object with the value <code>100</code>, as shown below:</p>
+<p><img src="/001-c-go-java-python-memory-strucutre/d.png" alt="d"></p>
+<p>Here, we can see that instead of overwriting the value of <code>100</code> with <code>101</code>, CPython creates a new object with the value <code>101</code> <strong>because integers in Python are immutable</strong>. Once created, they cannot be modified. Please note that <strong>floats and string data types are also immutable in Python</strong>.</p>
+<p>Let&rsquo;s consider a simple Python program to further explain this concept:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The above code defines a simple <code>while</code> loop that increments the value of the variable <code>i</code> until it is less than <code>100</code>. When this code is executed, for every increment of the variable <code>i</code>, CPython will create a new integer object with the incremented value, and the old integer object will be deleted (to be more precise, this object would become eligible for deletion) from memory.</p>
+<p>CPython calls the <code>malloc</code> method for each new object to allocate memory for that object. It calls the <code>free</code> method to delete the old object from memory.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># malloc(i)</span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># malloc(i + 1)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># free(i)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We can see that CPython creates and deletes a large number of objects, even for this simple program. If we call the <code>malloc</code> and <code>free</code> methods for each object creation and deletion, it will degrade the program’s execution performance and make the program slow.</p>
+<p>Hence, CPython introduces various techniques to reduce the number of times we have to call <code>malloc</code> and <code>free</code> for each small object creation and deletion. Let’s now understand how CPython manages memory!</p>
+<p>阅读更多: <a href="https://www.honeybadger.io/blog/memory-management-in-python/">Memory Management in Python - Honeybadger Developer Blog</a></p>
+<h2 id="5-pass-by-value-or-reference">5. Pass by Value or Reference</h2>
+<p>关于Golang的讨论请参考:<a href="https://davidzhu.xyz/2023/05/16/Golang/Basics/methods-pass-by-value/?highlight=%E5%80%BC%E4%BC%A0%E9%80%92">Golang值传递分析之传递指针的规则介绍(Methods, Functions &amp; interface value) | 橘猫小八的鱼</a></p>
+<p>Python, Java, Golang, C, JS 都是 pass by value, 只是 Java 有 reference 的的概念, 当 reference 作为参数时, 被拷贝的仍是 reference 的value, 即地址, 给我们一个错觉即java是 &ldquo;pass by reference not value&rdquo;:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">foo</span><span class="o">(</span><span class="n">Person</span> <span class="n">p</span><span class="o">)</span> <span class="o">{...}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// main()
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Person</span> <span class="n">jack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="mi">18</span><span class="o">,</span> <span class="err">“</span><span class="n">jack</span><span class="err">”</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">foo</span><span class="o">(</span><span class="n">jack</span><span class="o">);</span> <span class="c1">// 创建另一个 reference p, 与 reference jack 指向同一个对象, 即 passed by value
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>变量 <code>jack</code> 是个reference, 它指向的对象 <code>Person(18, “jack”)</code> 在heap上的地址是 <code>0x7D</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">foo</span><span class="o">(</span><span class="n">Person</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">p</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="s">&#34;John&#34;</span> <span class="c1">// 修改了 reference p 所指对象的 name 属性
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="mi">17</span><span class="o">,</span> <span class="s">&#34;AK&#34;</span><span class="o">)</span>	<span class="c1">// reference p 指向了另一个对象, 并不会影响reference jack
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>所以在这个函数调用中, 最初的那个对象, 即 <code>Person jack = new Person(18, “jack”)</code>  的 name 属性改变了, 以及 reference <code>p</code> 的值改变了, 这都与 reference <code>jack</code> 无关, <code>jack</code> 指向的依然是之前的那个对象,</p>
+<p>虽然Golang也是值传递, 但和Java还很不一样, Golang的表现更像C, <strong>因为Golang里没有对象和引用的概念</strong>, 只有 variable 和 value:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">name</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">age</span>  <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">foo1</span><span class="p">(</span><span class="nx">person</span> <span class="nx">Person</span><span class="p">)</span> <span class="o">*</span><span class="nx">Person</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">person</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">foo2</span><span class="p">(</span><span class="nx">person</span> <span class="o">*</span><span class="nx">Person</span><span class="p">)</span> <span class="o">*</span><span class="nx">Person</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">person</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">person</span> <span class="o">:=</span> <span class="nx">Person</span><span class="p">{</span><span class="s">&#34;John&#34;</span><span class="p">,</span> <span class="mi">18</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;main: %p\n&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">person</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;foo1: %p\n&#34;</span><span class="p">,</span> <span class="nf">foo1</span><span class="p">(</span><span class="nx">person</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;foo2: %p\n&#34;</span><span class="p">,</span> <span class="nf">foo2</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">person</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">main</span><span class="p">:</span> <span class="mh">0x14000114018</span>
+</span></span><span class="line"><span class="cl"><span class="nx">foo1</span><span class="p">:</span> <span class="mh">0x14000114030</span>
+</span></span><span class="line"><span class="cl"><span class="nx">foo2</span><span class="p">:</span> <span class="mh">0x14000114018</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后看一下 python, 关于 python 也可以认为是 pass by value, 行为和Java完全一样, 即传递的都是引用的值(对象的地址), 再强调一遍在python所有的值都是对象, 变量就是引用即存储对象的地址,</p>
+<ul>
+<li>
+<p>If you pass a <em>mutable</em> object into a method, the method gets a reference to that same object and you can mutate it to your heart&rsquo;s delight, but if you rebind the reference in the method, the outer scope will know nothing about it, and after you&rsquo;re done, the outer reference will still point at the original object.</p>
+<ul>
+<li>integer, str are immutable objects</li>
+</ul>
+</li>
+<li>
+<p>If you pass an <em>immutable</em> object to a method, you still can&rsquo;t rebind the outer reference, and you can&rsquo;t even mutate the object.</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">&gt;&gt;&gt; def main<span class="o">()</span>:
+</span></span><span class="line"><span class="cl">...     <span class="nv">n</span> <span class="o">=</span> <span class="m">9001</span>
+</span></span><span class="line"><span class="cl">...     print<span class="o">(</span>f<span class="s2">&#34;Initial address of n: {id(n)}&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">...     increment<span class="o">(</span>n<span class="o">)</span>
+</span></span><span class="line"><span class="cl">...     print<span class="o">(</span>f<span class="s2">&#34;  Final address of n: {id(n)}&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; def increment<span class="o">(</span>x<span class="o">)</span>:
+</span></span><span class="line"><span class="cl">...     print<span class="o">(</span>f<span class="s2">&#34;Initial address of x: {id(x)}&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">...     <span class="nv">x</span> <span class="o">+=</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">...     print<span class="o">(</span>f<span class="s2">&#34;  Final address of x: {id(x)}&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; main<span class="o">()</span>
+</span></span><span class="line"><span class="cl">Initial address of n: <span class="m">140562586057840</span>
+</span></span><span class="line"><span class="cl">Initial address of x: <span class="m">140562586057840</span>
+</span></span><span class="line"><span class="cl">Final address of x: <span class="m">140562586057968</span>
+</span></span><span class="line"><span class="cl">Final address of n: <span class="m">140562586057840</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后: 对于C, C++,这种没有GC的语言的内存结构我们要清楚每一个细节, 什么时候对象被删除, 怎么删除, 分配在了哪, 对于有GC的, Golang, Java, Python这种GC的实现, 不用求于一下搞明白(也搞不明白), 因为这种语言主要的地方就在GC的设计, GC本身很复杂加上本多不同的算法, 可以留着慢慢的摸索探索, 之所以有GC的语言可以慢慢了解GC的机制是因为内存都是GC帮我们管理, 简单了解内存结构, pass by value or reference, 了解对象的清除机制即不会那么容易写出内存相关的错误, 这也是有GC的原因, 帮我们减少工作量, 等你以后有需求了, 自然就会了解, 当然这只是对新入门的来说, 如果本来很厉害..</p>
+<p>参考:</p>
+<ul>
+<li><a href="https://craftofcoding.wordpress.com/2015/12/07/memory-in-c-the-stack-the-heap-and-static/">Memory in C – the stack, the heap, and static – The Craft of Coding</a></li>
+<li><a href="https://stackoverflow.com/questions/18406703/when-will-a-string-be-garbage-collected-in-java">When will a string be garbage collected in java - Stack Overflow</a></li>
+<li><a href="https://www.baeldung.com/java-choosing-gc-algorithm">Choosing a GC Algorithm in Java | Baeldung</a></li>
+<li><a href="https://segment.com/blog/allocation-efficiency-in-high-performance-go-services/">Golang Memory Management: Allocation Efficiency in Go Services</a></li>
+<li><a href="https://docs.python.org/3/c-api/memory.html">Memory Management — Python 3.11.3 documentation</a></li>
+<li><a href="https://www.honeybadger.io/blog/memory-management-in-python/">Memory Management in Python - Honeybadger Developer Blog</a></li>
+<li><a href="https://en.wikipedia.org/wiki/CPython">CPython</a></li>
+<li><a href="https://deepu.tech/memory-management-in-golang/">🚀 Visualizing memory management in Golang | Technorage</a></li>
+<li><a href="https://stackoverflow.com/a/73021/16317008">methods - Is Java &ldquo;pass-by-reference&rdquo; or &ldquo;pass-by-value&rdquo;? - Stack Overflow</a></li>
+<li><a href="https://stackoverflow.com/questions/10866195/stack-vs-heap-allocation-of-structs-in-go-and-how-they-relate-to-garbage-collec">Stack vs heap allocation of structs in Go, and how they relate to garbage collection - Stack Overflow</a></li>
+<li><a href="https://stackoverflow.com/questions/986006/how-do-i-pass-a-variable-by-reference">python - How do I pass a variable by reference? - Stack Overflow</a></li>
+<li><a href="https://devguide.python.org/internals/garbage-collector/">Garbage Collector Design</a></li>
+<li><a href="https://deepu.tech/memory-management-in-programming/">🚀 Demystifying memory management in modern programming languages | Technorage</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          <a href="/tags/java/">java</a>
+          <a href="/tags/c/">c</a>
+          <a href="/tags/python/">python</a>
+          <a href="/tags/other/">other</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/cs-basics/006-cpu-architecture/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Hyper-Threading &amp; Physical Threads</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/cs-basics/006-thread-process/">
+            <span class="next-text nav-default">Thread Stack and CPU Cores</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>TCP 4 Way Handshake - 课堂笔记 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="原文: 4.1 TCP 三次握手与四次挥手面试题 | 小林coding 1. TCP 四次挥手过程是怎样的？ 客户端打算关闭连接，此时会发送一个 TCP 首部 FIN 标志位被置为 1 的报文" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/inwk/proto/tcp/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="TCP 4 Way Handshake - 课堂笔记" />
+<meta property="og:description" content="原文: 4.1 TCP 三次握手与四次挥手面试题 | 小林coding 1. TCP 四次挥手过程是怎样的？ 客户端打算关闭连接，此时会发送一个 TCP 首部 FIN 标志位被置为 1 的报文" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/inwk/proto/tcp/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-07-22T10:45:39+00:00" />
+<meta property="article:modified_time" content="2023-07-22T10:45:39+00:00" />
+<meta itemprop="name" content="TCP 4 Way Handshake - 课堂笔记">
+<meta itemprop="description" content="原文: 4.1 TCP 三次握手与四次挥手面试题 | 小林coding 1. TCP 四次挥手过程是怎样的？ 客户端打算关闭连接，此时会发送一个 TCP 首部 FIN 标志位被置为 1 的报文"><meta itemprop="datePublished" content="2023-07-22T10:45:39+00:00" />
+<meta itemprop="dateModified" content="2023-07-22T10:45:39+00:00" />
+<meta itemprop="wordCount" content="1799">
+<meta itemprop="keywords" content="inwk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="TCP 4 Way Handshake - 课堂笔记"/>
+<meta name="twitter:description" content="原文: 4.1 TCP 三次握手与四次挥手面试题 | 小林coding 1. TCP 四次挥手过程是怎样的？ 客户端打算关闭连接，此时会发送一个 TCP 首部 FIN 标志位被置为 1 的报文"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">TCP 4 Way Handshake - 课堂笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-07-22 </span>
+        <div class="post-category">
+            <a href="/categories/inwk/"> inwk </a>
+            <a href="/categories/proto/"> proto </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-tcp-四次挥手过程是怎样的">1. TCP 四次挥手过程是怎样的？</a>
+          <ul>
+            <li><a href="#11-为什么挥手需要四次">1.1. 为什么挥手需要四次？</a></li>
+            <li><a href="#12-为什么需要-time_wait-状态">1.2. 为什么需要 TIME_WAIT 状态？</a></li>
+            <li><a href="#13-为什么-time_wait-等待的时间是-2msl">1.3. 为什么 TIME_WAIT 等待的时间是 2MSL？</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>原文: <a href="https://xiaolincoding.com/network/3_tcp/tcp_interview.html">4.1 TCP 三次握手与四次挥手面试题 | 小林coding</a></p>
+<h2 id="1-tcp-四次挥手过程是怎样的">1. TCP 四次挥手过程是怎样的？</h2>
+<p><img src="1.webp" alt="1"></p>
+<ul>
+<li>客户端打算关闭连接，此时会发送一个 TCP 首部 <code>FIN</code> 标志位被置为 <code>1</code> 的报文，也即 <code>FIN</code> 报文，之后客户端进入 <code>FIN_WAIT_1</code> 状态。</li>
+<li>服务端收到该报文后，就向客户端发送 <code>ACK</code> 应答报文，接着服务端进入 <code>CLOSE_WAIT</code> 状态。</li>
+<li>客户端收到服务端的 <code>ACK</code> 应答报文后，之后进入 <code>FIN_WAIT_2</code> 状态。</li>
+<li>等待服务端处理完数据后，也向客户端发送 <code>FIN</code> 报文，之后服务端进入 <code>LAST_ACK</code> 状态。</li>
+<li>客户端收到服务端的 <code>FIN</code> 报文后，回一个 <code>ACK</code> 应答报文，之后进入 <code>TIME_WAIT</code> 状态</li>
+<li>服务端收到了 <code>ACK</code> 应答报文后，就进入了 <code>CLOSE</code> 状态，至此服务端已经完成连接的关闭。</li>
+<li>客户端在经过 <code>2MSL</code> 一段时间后，自动进入 <code>CLOSE</code> 状态，至此客户端也完成连接的关闭。</li>
+</ul>
+<p>你可以看到，每个方向都需要<strong>一个 FIN 和一个 ACK</strong>，因此通常被称为<strong>四次挥手</strong>。</p>
+<p>这里一点需要注意是：<strong>主动关闭连接的，才有 TIME_WAIT 状态。</strong></p>
+<h3 id="11-为什么挥手需要四次">1.1. 为什么挥手需要四次？</h3>
+<p>再来回顾下四次挥手双方发 <code>FIN</code> 包的过程，就能理解为什么需要四次了。</p>
+<ul>
+<li>关闭连接时，客户端向服务端发送 <code>FIN</code> 时，仅仅表示客户端不再发送数据了但是还能接收数据。</li>
+<li>服务端收到客户端的 <code>FIN</code> 报文时，先回一个 <code>ACK</code> 应答报文，而服务端可能还有数据需要处理和发送，等服务端不再发送数据时，才发送 <code>FIN</code> 报文给客户端来表示同意现在关闭连接。</li>
+</ul>
+<p>即:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">第一个消息：A发FIN, 
+</span></span><span class="line"><span class="cl">第二个消息：B回复ACK,  
+</span></span><span class="line"><span class="cl">第三个消息：B发出FIN,  
+</span></span><span class="line"><span class="cl">第四个消息：A发出ACK，用于确认收到B的FIN
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从上面过程可知，服务端通常需要等待完成数据的发送和处理，所以服务端的 <code>ACK</code> 和 <code>FIN</code> 一般都会分开发送，因此是需要四次挥手。</p>
+<h3 id="12-为什么需要-time_wait-状态">1.2. 为什么需要 TIME_WAIT 状态？</h3>
+<p>主动发起关闭连接的一方，才会有 <code>TIME-WAIT</code> 状态。</p>
+<p>需要 TIME-WAIT 状态，主要是两个原因：</p>
+<ul>
+<li>
+<p>保证「被动关闭连接」的一方，能被正确的关闭；</p>
+</li>
+<li>
+<p>防止历史连接中的数据，被后面相同四元组的连接错误的接收；</p>
+</li>
+</ul>
+<p><em>原因一：保证「被动关闭连接」的一方，能被正确的关闭</em></p>
+<p>在 RFC 793 指出 TIME-WAIT 的一个重要的作用是：</p>
+<blockquote>
+<p><em>TIME-WAIT - represents waiting for enough time to pass to be sure the remote TCP received the acknowledgment of its connection termination request.</em></p>
+</blockquote>
+<p>也就是说，TIME-WAIT 作用是<strong>等待足够的时间以确保最后的 ACK 能让被动关闭方接收，从而帮助其正常关闭。</strong></p>
+<p>如果客户端（主动关闭方）最后一次 ACK 报文（第四次挥手）在网络中丢失了，那么按照 TCP 可靠性原则，服务端（被动关闭方）会重发 FIN 报文。</p>
+<p>假设客户端没有 TIME_WAIT 状态，而是在发完最后一次回 ACK 报文就直接进入 CLOSE 状态，如果该 ACK 报文丢失了，服务端则重传的 FIN 报文，而这时客户端已经进入到关闭状态了，在收到服务端重传的 FIN 报文后，就会回 RST 报文。</p>
+<p><img src="2.webp" alt="2"></p>
+<p>服务端收到这个 RST 并将其解释为一个错误（Connection reset by peer），这对于一个可靠的协议来说不是一个优雅的终止方式。</p>
+<p>为了防止这种情况出现，客户端必须等待足够长的时间，确保服务端能够收到 ACK，如果服务端没有收到 ACK，那么就会触发 TCP 重传机制，服务端会重新发送一个 FIN，这样一去一来刚好两个 MSL 的时间。</p>
+<p><img src="3.webp" alt="3"></p>
+<h3 id="13-为什么-time_wait-等待的时间是-2msl">1.3. 为什么 TIME_WAIT 等待的时间是 2MSL？</h3>
+<p><code>MSL</code> 是 Maximum Segment Lifetime，<strong>报文最大生存时间</strong>，它是任何报文在网络上存在的最长时间，超过这个时间报文将被丢弃。因为 TCP 报文基于是 IP 协议的，而 IP 头中有一个 <code>TTL</code> 字段，是 IP 数据报可以经过的最大路由数，每经过一个处理他的路由器此值就减 1，当此值为 0 则数据报将被丢弃，同时发送 ICMP 报文通知源主机。</p>
+<p>MSL 与 TTL 的区别： MSL 的单位是时间，而 TTL 是经过路由跳数。所以 <strong>MSL 应该要大于等于 TTL 消耗为 0 的时间</strong>，以确保报文已被自然消亡。</p>
+<p><strong>TTL 的值一般是 64，Linux 将 MSL 设置为 30 秒，意味着 Linux 认为数据报文经过 64 个路由器的时间不会超过 30 秒，如果超过了，就认为报文已经消失在网络中了</strong>。</p>
+<p>TIME_WAIT 等待 2 倍的 MSL，比较合理的解释是： 网络中可能存在来自发送方的数据包，当这些发送方的数据包被接收方处理后又会向对方发送响应，所以<strong>一来一回需要等待 2 倍的时间</strong>。</p>
+<p>比如，如果被动关闭方没有收到断开连接的最后的 ACK 报文，就会触发超时重发 <code>FIN</code> 报文，另一方接收到 FIN 后，会重发 ACK 给被动关闭方， 一来一去正好 2 个 MSL。</p>
+<p>可以看到 <strong>2MSL时长</strong> 这其实是相当于<strong>至少允许报文丢失一次</strong>。比如，若 ACK 在一个 MSL 内丢失，这样被动方重发的 FIN 会在第 2 个 MSL 内到达，TIME_WAIT 状态的连接可以应对。</p>
+<p>为什么不是 4 或者 8 MSL 的时长呢？你可以想象一个丢包率达到百分之一的糟糕网络，连续两次丢包的概率只有万分之一，这个概率实在是太小了，忽略它比解决它更具性价比。</p>
+<p><code>2MSL</code> 的时间是从<strong>客户端接收到 FIN 后发送 ACK 开始计时的</strong>。如果在 TIME-WAIT 时间内，因为客户端的 ACK 没有传输到服务端，客户端又接收到了服务端重发的 FIN 报文，那么 <strong>2MSL 时间将重新计时</strong>。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-07-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/inwk/">inwk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/inwk/proto/nagle-delay-ack/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Nagle算法和延迟ack - 课堂笔记</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/inwk/proto/tcpdump/">
+            <span class="next-text nav-default">tcpdump - 课堂笔记</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

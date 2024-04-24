@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>手动部署War包到Tomcat之何为War - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="Web application resources or web application archives are commonly called WAR files. A WAR file is used to deploy a Java EE web application in an application server. Inside a WAR file, all the web components are packed into one single unit. These include JAR files, JavaServer Pages, Java servlets, Java class files, XML files, HTML files, and other resource files that we need for web applications. We can use" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/java/backend/war/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="手动部署War包到Tomcat之何为War" />
+<meta property="og:description" content="Web application resources or web application archives are commonly called WAR files. A WAR file is used to deploy a Java EE web application in an application server. Inside a WAR file, all the web components are packed into one single unit. These include JAR files, JavaServer Pages, Java servlets, Java class files, XML files, HTML files, and other resource files that we need for web applications. We can use" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/java/backend/war/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-04-27T21:30:48+00:00" />
+<meta property="article:modified_time" content="2023-04-27T21:30:48+00:00" />
+
+<meta itemprop="name" content="手动部署War包到Tomcat之何为War">
+<meta itemprop="description" content="Web application resources or web application archives are commonly called WAR files. A WAR file is used to deploy a Java EE web application in an application server. Inside a WAR file, all the web components are packed into one single unit. These include JAR files, JavaServer Pages, Java servlets, Java class files, XML files, HTML files, and other resource files that we need for web applications. We can use"><meta itemprop="datePublished" content="2023-04-27T21:30:48+00:00" />
+<meta itemprop="dateModified" content="2023-04-27T21:30:48+00:00" />
+<meta itemprop="wordCount" content="3491">
+<meta itemprop="keywords" content="Java," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="手动部署War包到Tomcat之何为War"/>
+<meta name="twitter:description" content="Web application resources or web application archives are commonly called WAR files. A WAR file is used to deploy a Java EE web application in an application server. Inside a WAR file, all the web components are packed into one single unit. These include JAR files, JavaServer Pages, Java servlets, Java class files, XML files, HTML files, and other resource files that we need for web applications. We can use"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">手动部署War包到Tomcat之何为War</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-04-27 </span>
+        <div class="post-category">
+            <a href="/categories/java/"> Java </a>
+            <a href="/categories/backend/"> Backend </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#step-1-add-a-new-user-with-deployment-rights-to-tomcat">Step 1: Add a new user with deployment rights to Tomcat</a>
+          <ul>
+            <li><a href="#无法访问-tomcat-主页问题">无法访问 tomcat 主页问题</a></li>
+          </ul>
+        </li>
+        <li><a href="#step-2-tell-maven-about-the-tomcat-deploy-user">Step 2: Tell Maven about the Tomcat deploy user</a></li>
+        <li><a href="#step-3-register-the-tomcat7-maven-plugin-in-the-pom">Step 3: Register the tomcat7-maven-plugin in the POM</a></li>
+        <li><a href="#final-step-verify">FInal Step: Verify</a></li>
+        <li><a href="#思考总结">思考总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>Web application resources or web application archives are commonly called WAR files. A WAR file is used to deploy a Java EE web application in an application server. Inside a WAR file, all the web components are packed into one single unit. These include JAR files, JavaServer Pages, Java servlets, Java class files, XML files, HTML files, and other resource files that we need for web applications. We can use the Maven WAR plugin to build our project as a <a href="https://www.baeldung.com/java-jar-war-packaging#war">WAR</a> file.</p>
+<h2 id="step-1-add-a-new-user-with-deployment-rights-to-tomcat">Step 1: Add a new user with deployment rights to Tomcat</h2>
+<p>To perform a Maven Tomcat deploy of a <code>WAR</code> file you must first set up a <strong>user</strong> in Tomcat with the appropriate rights. You can do this with an edit of the <code>tomcat-users.xml</code> file, which can be found in Tomcat&rsquo;s <code>conf</code> sub-directory. Add the following entry <strong>inside</strong> the <code>tomcat-users</code> tag:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;user</span> <span class="na">username=</span><span class="s">&#34;war-deployer&#34;</span> <span class="na">password=</span><span class="s">&#34;maven-tomcat-plugin&#34;</span> <span class="na">roles=</span><span class="s">&#34;manager-gui, manager-script, manager-jmx&#34;</span> <span class="nt">/&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Save the tomcat-users.xml file and restart the server to have the changes take effect.</p>
+<p>重启Tomcat就是进到Tomcat的<code>bin</code>目录下, 执行<code>startup.sh</code>, <code>./shutdown.sh</code>, 其实你直接使用<code>startup.sh</code>命令开启Tomcat服务就会加载配置文件了, 上面说的重启是默认你的Tomcat一直处于运行状态. 现在你也应该启动Tomcat服务了, 启动后尝试访问<code>http://localhost:8080/</code>,</p>
+<p><img src="/war/d.png" alt=""></p>
+<p>点击后输入上面的<code>username</code>和对应的<code>password</code>, 即可进入管理页面如下:</p>
+<p><img src="/war/e.png" alt=""></p>
+<h3 id="无法访问-tomcat-主页问题">无法访问 tomcat 主页问题</h3>
+<p>我在访问Tomcat主页出现了问题, 访问的总是我以前的JSP应用, 我用IDEA开发的, 但我都没打开IDEA, 仍然可以访问到, 真是奇了怪了, 如下:</p>
+<p><img src="/war/a.png" alt=""></p>
+<p>然后我就<a href="https://www.cnblogs.com/yayazi/p/7920257.html">查到了一个博客</a>说需要将Tomcat的首页的工程部署到Tomcat服务器上，我们通过IDEA来操作, 部署步骤如下：</p>
+<p>选择菜单栏“Run&ndash;&gt;Edit Configuration&hellip;&ndash;&gt;Deployment”, 选择右上角绿色“+”，选择“External Source&hellip;”，将Apache-tomcat的<code>webapps</code>目录下的ROOT文件夹添加进来, 下面的Application Context 空着, 删除 <code>ROOT</code> 下面的那个<code>ServletDemo:war exploded</code>, 如下图:</p>
+<p><img src="/war/b.png" alt=""></p>
+<p>然后我IDEA上选择的Tomcat服务器不是我现在用的, 我有个旧的Tomcat服务器, 我不知道, 然后IDEA用的一直是那个旧的(但我在上面部署位置的<code>ROOT</code>文件夹选择的是新的Tomcat下的文件), 所以就导致就算部署项目后, 我依然无法访问Tomcat的主页. 所以检查一下你是否选择了正确的Tomcat服务器,</p>
+<p><img src="/war/c.png" alt=""></p>
+<p>这样配置好后再在IDEA点击运行, 就可以通过<code>http://localhost:8080/</code>访问 Tomcat 主页了, 之后你关闭IDEA, 直接进入Tomcat根目录的<code>bin</code>下通过执行<code>startup.sh</code>来启动Tomcat.</p>
+<p>有时候你会遇到其他情况, 比如8080端口被占用, 这时候解决办法也很简单</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 查看PID</span>
+</span></span><span class="line"><span class="cl">lsof -n -i4TCP:8080 
+</span></span><span class="line"><span class="cl"><span class="c1"># 删除8080端口对应的PID</span>
+</span></span><span class="line"><span class="cl"><span class="nb">kill</span> -9 PID
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>说了那么多终于要进行下一步了,</p>
+<h2 id="step-2-tell-maven-about-the-tomcat-deploy-user">Step 2: Tell Maven about the Tomcat deploy user</h2>
+<p>After you add the <code>war-deployer</code> user to Tomcat, register that <code>username</code> and <code>password</code> in Maven, along with a named reference to the server. The Maven-Tomcat plugin will use this information when it tries to <a href="https://www.theserverside.com/feature/Is-Apache-Tomcat-the-right-Java-application-server-for-you">connect to the application server</a>. Edit the <code>settings.xml</code> file and add the following entry <strong>within</strong> the <code>&lt;server&gt;</code> tag to create the named reference to the server:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="c">&lt;!-- Configure the Tomcat Maven plugin user --&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;server&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;id&gt;</span>maven-tomcat-war-deployment-server&gt;<span class="nt">&lt;/id&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;username&gt;</span>war-deployer<span class="nt">&lt;/username&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;password&gt;</span>maven-tomcat-plugin<span class="nt">&lt;/password&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/server&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>注意, 上面提到的<code>settings.xml</code>文件在<code>Downloads/apache-maven-3.9.1/conf</code>下, 根据你的maven安装目录查找,</p>
+<p>另外这里加的账号密码就是上面在Tomcat添加用户时候的账号密码, 这是因为你进入Tomcat管理页面的时候需要,如果你不提供(下面配置<code>pom.xml</code>也会说到), 那生成war文件的时候maven就会报错,</p>
+</blockquote>
+<h2 id="step-3-register-the-tomcat7-maven-plugin-in-the-pom">Step 3: Register the tomcat7-maven-plugin in the POM</h2>
+<p>把打包格式改成<code>war</code>, 即在<code>pom.xml</code>中找到<code>&lt;packaging&gt;</code>标签, 没有的话添加一个, 与<code>&lt;dependencies&gt;</code>标签并列:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;groupId&gt;</span>com.example<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;artifactId&gt;</span>ServletDemo<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;name&gt;</span>ServletDemo<span class="nt">&lt;/name&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;packaging&gt;</span>war<span class="nt">&lt;/packaging&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Now that Maven and Tomcat are configured, the next step is to edit the Java web application&rsquo;s POM file to reference the Tomcat Maven plugin.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;plugin&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;groupId&gt;</span>org.apache.tomcat.maven<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;artifactId&gt;</span>tomcat7-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;version&gt;</span>2.0<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;configuration&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;url&gt;</span>http://localhost:8080/manager/text<span class="nt">&lt;/url&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;path&gt;</span>/rps<span class="nt">&lt;/path&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;/configuration&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/plugin&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行<code>mvn install tomcat7:deploy</code>生成war的时候总是报错(如果你之前已经生成了War文件, 请记得去Tomcat根目录下的<code>webapp</code>目录下删除一生成的war文件, 否则也会报错, 和下面一样):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="o">[</span>ERROR<span class="o">]</span> Failed to execute goal org.apache.tomcat.maven:tomcat7-maven-plugin:2.0:deploy <span class="o">(</span>default-cli<span class="o">)</span> on project ServletDemo: Cannot invoke Tomcat manager: Broken pipe -&gt; <span class="o">[</span>Help 1<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>ERROR<span class="o">]</span> 
+</span></span><span class="line"><span class="cl"><span class="o">[</span>ERROR<span class="o">]</span> To see the full stack trace of the errors, re-run Maven with the -e switch.
+</span></span><span class="line"><span class="cl"><span class="o">[</span>ERROR<span class="o">]</span> Re-run Maven using the -X switch to <span class="nb">enable</span> full debug logging.
+</span></span><span class="line"><span class="cl"><span class="o">[</span>ERROR<span class="o">]</span> 
+</span></span><span class="line"><span class="cl"><span class="o">[</span>ERROR<span class="o">]</span> For more information about the errors and possible solutions, please <span class="nb">read</span> the following articles:
+</span></span><span class="line"><span class="cl"><span class="o">[</span>ERROR<span class="o">]</span> <span class="o">[</span>Help 1<span class="o">]</span> http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>加入我们在Tomcat Users里配置的账号密码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;plugin&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;groupId&gt;</span>org.apache.tomcat.maven<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;artifactId&gt;</span>tomcat7-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;version&gt;</span>2.0<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;configuration&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;url&gt;</span>http://localhost:8080/manager/text<span class="nt">&lt;/url&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;path&gt;</span>/rps<span class="nt">&lt;/path&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;username&gt;</span>war-deployer<span class="nt">&lt;/username&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;password&gt;</span>maven-tomcat-plugin<span class="nt">&lt;/password&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;/configuration&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/plugin&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>注意: 修改<code>pom.xml</code>后需要更新<code>pom.xml</code></p>
+<p>提示: 点击IDEA软件的右上角有个浮动的更新小按钮即更新, 或者你可以查查命令行maven怎么更新<code>pom.xml</code>文件.</p>
+</blockquote>
+<p>然后重新运行<code>mvn install tomcat7:deploy</code>, 成功:</p>
+<p><img src="/war/f.png" alt=""></p>
+<p>然后去Tomcat根目录的<code>webapps</code>下查看生成的War, 可以看到生成了名为<code>rps</code>的web应用, 即这个名字取决于上面<code>pom.xml</code>填的内容,</p>
+<p><img src="/war/g.png" alt=""></p>
+<p>然后我们对比一下生成的war与我们的源代码文件结构:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1">#源代码</span>
+</span></span><span class="line"><span class="cl">.
+</span></span><span class="line"><span class="cl">├── pom.xml
+</span></span><span class="line"><span class="cl">├── src
+</span></span><span class="line"><span class="cl">│   └── main
+</span></span><span class="line"><span class="cl">│       ├── java
+</span></span><span class="line"><span class="cl">│       │   ├── database
+</span></span><span class="line"><span class="cl">│       │   └── servlet
+</span></span><span class="line"><span class="cl">│       ├── resources
+</span></span><span class="line"><span class="cl">│       │   └── log4j.properties
+</span></span><span class="line"><span class="cl">│       └── webapp
+</span></span><span class="line"><span class="cl">│           ├── WEB-INF
+</span></span><span class="line"><span class="cl">│           ├── hello.jsp
+</span></span><span class="line"><span class="cl">│           └── index.jsp
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># War</span>
+</span></span><span class="line"><span class="cl">.
+</span></span><span class="line"><span class="cl">├── META-INF
+</span></span><span class="line"><span class="cl">│   ├── MANIFEST.MF
+</span></span><span class="line"><span class="cl">│   ├── maven
+</span></span><span class="line"><span class="cl">│   │   └── com.example
+</span></span><span class="line"><span class="cl">│   │       └── ServletDemo
+</span></span><span class="line"><span class="cl">│   └── war-tracker
+</span></span><span class="line"><span class="cl">├── WEB-INF
+</span></span><span class="line"><span class="cl">│   ├── classes
+</span></span><span class="line"><span class="cl">│   │   ├── database
+</span></span><span class="line"><span class="cl">│   │   │   ├── Controller.class
+</span></span><span class="line"><span class="cl">│   │   │   ├── DataEntity.class
+</span></span><span class="line"><span class="cl">│   │   │   ├── Database.class
+</span></span><span class="line"><span class="cl">│   │   │   └── MysqlDatabase.class
+</span></span><span class="line"><span class="cl">│   │   ├── log4j.properties
+</span></span><span class="line"><span class="cl">│   │   ├── servlet
+</span></span><span class="line"><span class="cl">│   │   │   ├── GetDataServlet<span class="nv">$1</span>.class
+</span></span><span class="line"><span class="cl">│   │   │   └── GetDataServlet.class
+</span></span><span class="line"><span class="cl">│   │   └── <span class="nb">test</span>
+</span></span><span class="line"><span class="cl">│   ├── lib
+</span></span><span class="line"><span class="cl">│   │   ├── gson-2.9.0.jar
+</span></span><span class="line"><span class="cl">│   │   ├── log4j-1.2.17.jar
+</span></span><span class="line"><span class="cl">│   │   ├── mysql-connector-j-8.0.32.jar
+</span></span><span class="line"><span class="cl">│   │   └── protobuf-java-3.21.9.jar
+</span></span><span class="line"><span class="cl">│   └── web.xml
+</span></span><span class="line"><span class="cl">├── hello.jsp
+</span></span><span class="line"><span class="cl">└── index.jsp
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>对于生成的War文件可以发现所有Java相关的文件都在<code>WEB-INF</code>下, 比如我们编写的Servlet字节码文件和和我们用到的依赖(gson, mysql connector, log4j). 然后仔细看源代码文件结构, 在<code>webapp</code>下也有个<code>WEB-INF</code>, 这下面放的就是我们项目的<code>web.xml</code>, 内容如下(所以这有什么联系呢),</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;web-app</span> <span class="na">xmlns=</span><span class="s">&#34;http://xmlns.jcp.org/xml/ns/javaee&#34;</span>
+</span></span><span class="line"><span class="cl">         <span class="na">xmlns:xsi=</span><span class="s">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
+</span></span><span class="line"><span class="cl">         <span class="na">xsi:schemaLocation=</span><span class="s">&#34;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&#34;</span>
+</span></span><span class="line"><span class="cl">         <span class="na">version=</span><span class="s">&#34;4.0&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;welcome-file-list&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;welcome-file&gt;</span>/index.jsp<span class="nt">&lt;/welcome-file&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/welcome-file-list&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;servlet&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;servlet-name&gt;</span>get-data<span class="nt">&lt;/servlet-name&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;servlet-class&gt;</span>servlet.GetDataServlet<span class="nt">&lt;/servlet-class&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/servlet&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;servlet-mapping&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;servlet-name&gt;</span>get-data<span class="nt">&lt;/servlet-name&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;url-pattern&gt;</span>/temperature/*<span class="nt">&lt;/url-pattern&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;url-pattern&gt;</span>/humidity/*<span class="nt">&lt;/url-pattern&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/servlet-mapping&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/web-app&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="final-step-verify">FInal Step: Verify</h2>
+<p>确保你已经开启Tomcat服务(即使你关闭了IDEA, IDEA和Tomcat是两个东西, IDEA是个IDE会用到Tomcat作为web服务器来部署web app), 然后访问通过<code>http://localhost:8080/</code>访问到Tomcat主页, 这时候你可以在链接🔗后加上<code>/rps</code>即<code>http://localhost:8080/rps/</code>就可以进入到你的那个web网页, 如下:</p>
+<p><img src="/war/h.png" alt=""></p>
+<h2 id="思考总结">思考总结</h2>
+<p>这时候其实我们也就知道了什么是根目录和url中神秘的路径问题, 你看我们若想访问<code>manager</code>页面, 这个页面的url是<code>http://localhost:8080/manager/</code>, 我们访问我们刚部署的页面是<code>http://localhost:8080/rps/</code>, 你看最后的这个路径及<code>/manager</code>, <code>/rps</code>都是tomcat的<code>webapps</code>目录下的文件, 如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># David @ tc0db in ~/Downloads/Programs/apache-tomcat-9.0.73/webapps</span>
+</span></span><span class="line"><span class="cl">$ ls
+</span></span><span class="line"><span class="cl">ROOT         examples     manager      rps.war
+</span></span><span class="line"><span class="cl">docs         host-manager rps
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>所以<code>webapp</code>就是所谓的根目录, 我们访问什么都是根据它来的, 可以看到, <code>webapps</code>目录下还有<code>examples</code>等文件夹, 所以我们可以直接通过<code>http://localhost:8080/example/</code>访问. 但是又有个问题, Tomcat的主页也就是是<code>http://localhost:8080/</code>具体在哪呢? 按理说<code>webapps</code>下应该有个<code>index.html</code>文件呀, 可是却空空, 这是怎么回事, 怎么没有按我们上面推导的路径来呢?</p>
+<p>还记不记得当时学习servlet的时候有个<code>web.xml</code>文件, 我们在这个文件里可以配置个welcome标签, 通过这个标签我们就可以直接指定一个html文件作为我们的主页而不是根目录下的<code>index.tml</code>文件, 同样, Tomcat当然也有这个文件 <code>TOMCAT_HOME/conf/web.xml</code>, 搜索<code>welcome</code>找到啦(在<code>tomcat/webapps/ROOT/index.jsp</code>):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl">  <span class="c">&lt;!-- ==================== Default Welcome File List ===================== --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- When a request URI refers to a directory, the default servlet looks  --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- for a &#34;welcome file&#34; within that directory and, if present, to the   --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- corresponding resource URI for display.                              --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- If no welcome files are present, the default servlet either serves a --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- directory listing (see default servlet configuration on how to       --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- customize) or returns a 404 status, depending on the value of the    --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- listings setting.                                                    --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!--                                                                      --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- If you define welcome files in your own application&#39;s web.xml        --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- deployment descriptor, that list *replaces* the list configured      --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- here, so be sure to include any of the default values that you wish  --&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- to use within your application.                                       --&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;welcome-file-list&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;welcome-file&gt;</span>index.html<span class="nt">&lt;/welcome-file&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;welcome-file&gt;</span>index.htm<span class="nt">&lt;/welcome-file&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;welcome-file&gt;</span>index.jsp<span class="nt">&lt;/welcome-file&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/welcome-file-list&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后怎么覆盖这个home page呢? 刚好看到了下面这个回答, 看来和我们猜想的一样, 如下:</p>
+<p>In any web application, there will be a <code>web.xml</code> in the <code>WEB-INF/</code> folder. (别忘了我们之前学习JSP的时候可没少在这个文件夹花时间去配置servlet name和对应的jsp, 每创建一个新的servlet就要在这创建个新的servlet pattern)</p>
+<p>If you dont have one in your web app, as it seems to be the case in your folder structure, the default <strong>Tomcat</strong> <code>web.xml</code> is under <code>TOMCAT_HOME/conf/web.xml</code></p>
+<p>Either way, the relevant lines of the web.xml are</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;welcome-file-list&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;welcome-file&gt;</span>index.html<span class="nt">&lt;/welcome-file&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;welcome-file&gt;</span>index.htm<span class="nt">&lt;/welcome-file&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;welcome-file&gt;</span>index.jsp<span class="nt">&lt;/welcome-file&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/welcome-file-list&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>so any file matching this pattern when found will be shown as the home page.</p>
+<p>In Tomcat, a web.xml setting within your web app will override the default, if present.</p>
+<p>Further Reading: <a href="http://wiki.apache.org/tomcat/HowTo#How_do_I_override_the_default_home_page_loaded_by_Tomcat.3F">How do I override the default home page loaded by Tomcat?</a></p>
+<p>参考:</p>
+<ul>
+<li><a href="https://www.theserverside.com/video/Step-by-step-Maven-Tomcat-WAR-file-deploy-example">Step-by-step Maven Tomcat WAR file deploy example | TheServerSide</a></li>
+<li><a href="https://juejin.cn/post/7133755807253921829">tomcat启动成功浏览器却无法访问 - 掘金</a></li>
+<li><a href="https://stackoverflow.com/a/3976385/16317008">web applications - How does Tomcat find the HOME PAGE of my Web App? - Stack Overflow</a></li>
+<li><a href="https://www.baeldung.com/maven-generate-war-file">Generate a WAR File in Maven | Baeldung</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-04-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/java/">Java</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/java/backend/spring-boot-embedded-tomcat/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Spring Boot之何为内嵌Tomcat</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/bugs/002-bug-domain-with-two-ip/">
+            <span class="next-text nav-default">启动Cloudflare代理导致无法通过域名解析出A记录中的IP</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

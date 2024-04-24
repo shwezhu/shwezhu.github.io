@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Three Trees &amp; HEAD in Git - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="HEAD 下面这几个命令, 看的一愣一愣的, 想弄明白这个HEAD到底是个啥, 1 2 3 4 5 6 # 回退到上个版本 git reset --hard HEAD^ # 退到/进到 指定commit_id git reset" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/git/006-git-three-trees/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Three Trees &amp; HEAD in Git" />
+<meta property="og:description" content="HEAD 下面这几个命令, 看的一愣一愣的, 想弄明白这个HEAD到底是个啥, 1 2 3 4 5 6 # 回退到上个版本 git reset --hard HEAD^ # 退到/进到 指定commit_id git reset" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/git/006-git-three-trees/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-04T19:40:30+00:00" />
+<meta property="article:modified_time" content="2023-05-04T19:40:30+00:00" />
+<meta itemprop="name" content="Three Trees &amp; HEAD in Git">
+<meta itemprop="description" content="HEAD 下面这几个命令, 看的一愣一愣的, 想弄明白这个HEAD到底是个啥, 1 2 3 4 5 6 # 回退到上个版本 git reset --hard HEAD^ # 退到/进到 指定commit_id git reset"><meta itemprop="datePublished" content="2023-05-04T19:40:30+00:00" />
+<meta itemprop="dateModified" content="2023-05-04T19:40:30+00:00" />
+<meta itemprop="wordCount" content="675">
+<meta itemprop="keywords" content="git," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Three Trees &amp; HEAD in Git"/>
+<meta name="twitter:description" content="HEAD 下面这几个命令, 看的一愣一愣的, 想弄明白这个HEAD到底是个啥, 1 2 3 4 5 6 # 回退到上个版本 git reset --hard HEAD^ # 退到/进到 指定commit_id git reset"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Three Trees &amp; HEAD in Git</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-04 </span>
+        <div class="post-category">
+            <a href="/categories/git/"> git </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#head">HEAD</a></li>
+        <li><a href="#three-trees">Three Trees</a></li>
+        <li><a href="#the-workflow">The Workflow</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="head">HEAD</h2>
+<p>下面这几个命令, 看的一愣一愣的, 想弄明白这个HEAD到底是个啥,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 回退到上个版本</span>
+</span></span><span class="line"><span class="cl">git reset --hard HEAD^
+</span></span><span class="line"><span class="cl"><span class="c1"># 退到/进到 指定commit_id</span>
+</span></span><span class="line"><span class="cl">git reset --hard commit_id
+</span></span><span class="line"><span class="cl"><span class="c1"># 将本地的修改提交到远程</span>
+</span></span><span class="line"><span class="cl">git push origin HEAD --force
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>看下<a href="https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified">文档</a>怎么说,</p>
+<blockquote>
+<p>HEAD is the pointer to the current branch reference, which is in turn a pointer to the last commit made on that branch. That means HEAD will be the parent of the next commit that is created. It’s generally simplest to think of HEAD as the snapshot of <strong>your last commit on that branch</strong>. 即你可以把HEAD看成你所在分支的最后一个commit的snapshot.</p>
+</blockquote>
+<p>所以对于上面的<code>git reset --hard HEAD^</code>, HEAD代表最新的一次提交, 也就是我提交错的那次, 然后<code>HEAD^</code>代表的是最新的一次提交之前的那次提交, 所以这个命令就知道是啥意思了, 也就是所谓的“撤销”commit, 其实说版本回退更合适. 至于<code>git reset --hard commit_id</code>很好理解, 就是回退到指定版本呗, 至于commit id可以通过<code>git log</code>查看.</p>
+<h2 id="three-trees">Three Trees</h2>
+<p>Git<a href="https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified">文档</a>里的这个概念很好, 很多时候都会涉及到这三个常用的Tree,</p>
+<p>Git as a system manages and manipulates three trees in its normal operation:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Tree</th>
+<th style="text-align:left">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">HEAD</td>
+<td style="text-align:left">Last commit snapshot, next parent</td>
+</tr>
+<tr>
+<td style="text-align:left">Index</td>
+<td style="text-align:left">Proposed next commit snapshot</td>
+</tr>
+<tr>
+<td style="text-align:left">Working Directory</td>
+<td style="text-align:left">Sandbox</td>
+</tr>
+</tbody>
+</table>
+<p>The Git index is a critical data structure in Git. It serves as the “staging area” between the files you have on your filesystem and your commit history. When you run <code>git add</code>, the files from your working directory are hashed and stored as objects in the index, leading them to be “staged changes”. When you run <code>git commit</code>, the staged changes as stored in the index are used to create that new commit.</p>
+<h2 id="the-workflow">The Workflow</h2>
+<p>Git’s typical workflow is to record snapshots of your project in successively better states, by manipulating these three trees.</p>
+<p><img src="/006-git-three-trees/a.png" alt=""></p>
+<p>还记得上一篇文章我们说的 git restore, git rm, git reset 的区别吗, 再看看上面这个图, 是不是觉得前后呼应了:</p>
+<p>The two are entirely different commands:</p>
+<ul>
+<li><code>git restore</code> is about <em>copying</em> some file(s) from somewhere to somewhere.</li>
+<li><code>git rm</code> is about <em>removing</em> some file(s) from somewhere.</li>
+</ul>
+<p>Because <code>git restore</code> is about <em>copying</em> a file or files, it needs to know <em>where to get the files</em>. There are three possible sources:</p>
+<ul>
+<li>the current, or <code>HEAD</code>, commit (which must exist); or</li>
+<li>any arbitrary commit that you specify (which must exist); or</li>
+<li>Git&rsquo;s <em>index</em> aka <em>staging area</em>.</li>
+</ul>
+<p>关于 gir reset <code>--hard</code>, <code>--soft</code> 区别, 可参考 <a href="https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified#_git_reset">Git - Reset Demystified</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-04
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/git/">git</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/git/001-git-basics/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">git rm &amp; git restore</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/other/004-how-to-learn-a-programming-language/">
+            <span class="next-text nav-default">如何开始学习一门程式语言</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Methods Receivers &amp; Concurrency - Go - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
+The first is so that the method can modify the value that its receiver points to.
+The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
+&amp;ldquo;the value&amp;rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/golang/basics/013-methods-receivers/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Methods Receivers &amp; Concurrency - Go" />
+<meta property="og:description" content="1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
+The first is so that the method can modify the value that its receiver points to.
+The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
+&ldquo;the value&rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/golang/basics/013-methods-receivers/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-09-02T22:18:20+00:00" />
+<meta property="article:modified_time" content="2023-09-02T22:18:20+00:00" />
+<meta itemprop="name" content="Methods Receivers &amp; Concurrency - Go">
+<meta itemprop="description" content="1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
+The first is so that the method can modify the value that its receiver points to.
+The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
+&ldquo;the value&rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value."><meta itemprop="datePublished" content="2023-09-02T22:18:20+00:00" />
+<meta itemprop="dateModified" content="2023-09-02T22:18:20+00:00" />
+<meta itemprop="wordCount" content="1130">
+<meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Methods Receivers &amp; Concurrency - Go"/>
+<meta name="twitter:description" content="1. Different behaviors - pointer and value receiver There are two reasons to use a pointer receiver:
+The first is so that the method can modify the value that its receiver points to.
+The second is to avoid copying the value on each method call. This can be more efficient if the receiver is a large struct, for example.
+&ldquo;the value&rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them value."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Methods Receivers &amp; Concurrency - Go</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-09-02 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/basics/"> basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-different-behaviors---pointer-and-value-receiver">1. Different behaviors - pointer and value receiver</a></li>
+        <li><a href="#2-method-receivers-in-concurrency">2. Method receivers in concurrency</a></li>
+        <li><a href="#3-pointer-receiver---a-practical-example">3. Pointer receiver - a practical example</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-different-behaviors---pointer-and-value-receiver">1. Different behaviors - pointer and value receiver</h2>
+<p>There are two reasons to use a pointer receiver:</p>
+<ul>
+<li>
+<p>The first is so that the method can modify <strong>the value</strong> that its receiver points to.</p>
+</li>
+<li>
+<p>The second is to avoid copying <strong>the value</strong> on each method call. This can be more efficient if the receiver is a large struct, for example.</p>
+</li>
+</ul>
+<blockquote>
+<p>&ldquo;the value&rdquo; above refers to an object of the struct, but there is no object in golang, we call all of them <strong>value</strong>.</p>
+</blockquote>
+<p>I&rsquo;ll explain it to you the different behaviors between pointer receiver and value receiver first, see the code below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">name</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="nx">Person</span><span class="p">)</span> <span class="nf">foo</span><span class="p">()</span> <span class="o">*</span><span class="nx">Person</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// As in all languages in the C family, everything in Go is passed by value.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// &#39;p&#39; here, is a copy of &#39;coco&#39;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">p</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="nx">Person</span><span class="p">)</span> <span class="nf">setName</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// &#39;p&#39; here, is a copy of &#39;coco&#39;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">p</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span> <span class="nx">name</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="nx">Person</span><span class="p">)</span> <span class="nf">getName</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">p</span><span class="p">.</span><span class="nx">name</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">coco</span> <span class="o">:=</span> <span class="nx">Person</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span> <span class="s">&#34;Coco&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">coco</span><span class="p">.</span><span class="nf">setName</span><span class="p">(</span><span class="s">&#34;Bella&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">coco</span><span class="p">.</span><span class="nf">getName</span><span class="p">())</span> <span class="c1">// print: Coco
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see here, value receiver method will make a copy of that &ldquo;object&rdquo;. There is no object in golang, using term &ldquo;object&rdquo; here is for easy understanding. This is that if you want to avoid copying the value of the struct <strong>on each method call</strong>, try to use a pointer receiver. And if you want modify the value&rsquo;s fields, try to use a pointer receiver.</p>
+<p>I find a snippet in go source code, e.g.,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Handler</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="o">*</span><span class="nx">Request</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">HandlerFunc</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="o">*</span><span class="nx">Request</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 1. We don&#39;t need to modify any fileds of the value of HandlerFunc, just a function
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 2. There is no a lot copies, when we call this method, just a copy of function type, 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// small as a pointer so choosing a value receiver probably more appropriate here
+</span></span></span><span class="line"><span class="cl"><span class="c1">// or thinking in this way probably better
+</span></span></span><span class="line"><span class="cl"><span class="c1">// I know what I do, this is a function type, it has no filed
+</span></span></span><span class="line"><span class="cl"><span class="c1">// no concurrency issues we mentioned above
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <span class="nx">HandlerFunc</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">f</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><strong>NOTE:</strong> Generally, in practice, we seldom use pointer types whose base types are slice types, map types, channel types, function types, string types and interface types. The costs of copying values of these assumed base types are very small.</p>
+<p>Source: <a href="https://go101.org/article/value-copy-cost.html">https://go101.org/article/value-copy-cost.html</a></p>
+</blockquote>
+<h2 id="2-method-receivers-in-concurrency">2. Method receivers in concurrency</h2>
+<p>I came across a satement about when to use value receiver but forget where I found:</p>
+<blockquote>
+<p>You should notice that <strong><em>value receivers</em> are concurrency safe, while <em>pointer receivers</em> are not concurrency safe.</strong> So if there is no a lot copy, and you don&rsquo;t need modify any field of the value, try to use value receiver.</p>
+</blockquote>
+<p>Is this correct, yes it&rsquo;s correct to some extend, but things probably are more complicated when come across concurrent programming.</p>
+<p>I find a good <a href="https://dave.cheney.net/2016/03/19/should-methods-be-declared-on-t-or-t">blog</a> talks about this written by <a href="https://dave.cheney.net/">Dave Cheney</a>, and I&rsquo;ll share some parts of the blog here:</p>
+<p>Obviously if your method mutates its receiver, it should be declared on <code>*T</code>. However, if the method does not mutate its receiver, is it safe to declare it on <code>T</code> instead <code>*T</code>?</p>
+<p>It turns out that the cases where it is safe to do so are very limited. For example, it is well known that you should not copy a <code>sync.Mutex</code> value as that breaks the invariants of the mutex. As mutexes control access to other things, they are frequently wrapped up in a <code>struct</code> with the value they control:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">counter</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Val</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">mu</span>  <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">val</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <span class="o">*</span><span class="nx">Val</span><span class="p">)</span> <span class="nf">Get</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">v</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">defer</span> <span class="nx">v</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">v</span><span class="p">.</span><span class="nx">val</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <span class="o">*</span><span class="nx">Val</span><span class="p">)</span> <span class="nf">Add</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">v</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">defer</span> <span class="nx">v</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">v</span><span class="p">.</span><span class="nx">val</span> <span class="o">+=</span> <span class="nx">n</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Most Go programmers know that it is a mistake to forget to declare the <code>Get</code> or <code>Add</code> methods on the pointer receiver <code>*Val</code>. However any type that embeds a <code>Val</code> to utilise its zero value, must also only declare methods on its pointer receiver otherwise it may inadvertently copy the contents of its embedded type’s values.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Stats</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span> <span class="nx">counter</span><span class="p">.</span><span class="nx">Val</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">Stats</span><span class="p">)</span> <span class="nf">Sum</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">s</span><span class="p">.</span><span class="nx">a</span><span class="p">.</span><span class="nf">Get</span><span class="p">()</span> <span class="o">+</span> <span class="nx">s</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nf">Get</span><span class="p">()</span> <span class="o">+</span> <span class="nx">s</span><span class="p">.</span><span class="nx">c</span><span class="p">.</span><span class="nf">Get</span><span class="p">()</span> <span class="c1">// whoops
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>A similar pitfall can occur with types that maintain slices of values, and of course there is the possibility for an <a href="http://dave.cheney.net/2015/11/18/wednesday-pop-quiz-spot-the-race">unintended data race</a>.</p>
+<p>In short, I think that you should prefer declaring methods on <code>*T</code> unless you have a strong reason to do otherwise.</p>
+<h2 id="3-pointer-receiver---a-practical-example">3. Pointer receiver - a practical example</h2>
+<p><code>error</code> interface:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="kt">error</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>errorString</code>  implements  <code>error</code> interface in package <code>errors</code> :</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// errorString is a trivial implementation of error.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">errorString</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">s</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">errorString</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">s</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// New returns an error that formats as the given text.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">text</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">errorString</span><span class="p">{</span><span class="nx">text</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If you can notice that, the return type of <code>New()</code> function is <code>error</code>, but it actually returns a pointer type <code>&amp;errorString{text}</code>, why? I find a <a href="https://www.reddit.com/r/golang/comments/15rz3fe/question_about_errors_package/">good explaination</a>:</p>
+<p>The <code>Error()</code> method is implemented on <code>*errorString</code> (the pointer type), not <code>errorString</code> (the value type), so it&rsquo;s <code>*errorString</code> that implements the <code>error</code> interface, and so <code>New</code> must return <code>&amp;errorString{..}</code> instead of <code>errorString{..}</code>.</p>
+<p>That distinction is also important to make <code>errors.New</code> act correctly on <code>==</code>. Docs for <code>errors.New</code> say:</p>
+<blockquote>
+<p>Each call to New returns a distinct error value even if the text is identical.</p>
+</blockquote>
+<p>Translation:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">e1 := errors.New(&#34;foo&#34;)
+</span></span><span class="line"><span class="cl">e2 := errors.New(&#34;foo&#34;)
+</span></span><span class="line"><span class="cl">fmt.Println(e1 == e2) // false
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This works because it returns <code>&amp;errorString{..}</code>, so the <code>==</code> compares the pointers (which are unique for each call to New) instead of the error messages.</p>
+<p>We can do a experiment:</p>
+<p>A custom struct <code>MyError</code> implements <code>error</code> interface:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">MyError</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">message</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">receiver</span> <span class="o">*</span><span class="nx">MyError</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">receiver</span><span class="p">.</span><span class="nx">message</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">text</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// return &amp;MyError{message: text} // correct way
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="nx">MyError</span><span class="p">{</span><span class="nx">message</span><span class="p">:</span> <span class="nx">text</span><span class="p">}</span> <span class="c1">// The complier will complain
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Cannot use &#39;MyError{message: text}&#39; (type MyError) as the type error Type does not implement &#39;error&#39; as the &#39;Error&#39; method has a pointer receiver
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Lear more about why it&rsquo;s doesn&rsquo;t work: <a href="https://davidzhu.xyz/post/golang/basics/006-interfaces/#2-first-try---type-admin-isnt-adimin">Interfaces in Go (and Methods Receivers) - David&rsquo;s Blog</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-09-02
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          <a href="/tags/concurrency/">concurrency</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/practice/006-concurrency-programming/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Concurrency Programming - Go</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/git/practice/003-blog-backup/">
+            <span class="next-text nav-default">Backup Blogs with Git - Sovled</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

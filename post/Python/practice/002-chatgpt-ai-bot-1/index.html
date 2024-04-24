@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>ChatGPT Bot - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Official Docs Make request for the RESTful API of OpenAI: API Reference - OpenAI API Error status code for HTTP response: Error codes - OpenAI API Stream cookbook.openai.com/examples/how_to_stream_completions How to Print ChatGPT API Response as a Stream – PuppyCoding Cookbook: https://cookbook.openai.com/ 2. Stream message If you write code like this:
+1 2 3 4 respense = openai.create(...) for chunk in response: if chunk.choices[0].delta.content is not None: print(chunk.choices[0].delta.content, end=&amp;#34;&amp;#34;, flush=True) You probably won&amp;rsquo;t get the result you want, your program will print line by line, not word by word." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/python/practice/002-chatgpt-ai-bot-1/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="ChatGPT Bot" />
+<meta property="og:description" content="1. Official Docs Make request for the RESTful API of OpenAI: API Reference - OpenAI API Error status code for HTTP response: Error codes - OpenAI API Stream cookbook.openai.com/examples/how_to_stream_completions How to Print ChatGPT API Response as a Stream – PuppyCoding Cookbook: https://cookbook.openai.com/ 2. Stream message If you write code like this:
+1 2 3 4 respense = openai.create(...) for chunk in response: if chunk.choices[0].delta.content is not None: print(chunk.choices[0].delta.content, end=&#34;&#34;, flush=True) You probably won&rsquo;t get the result you want, your program will print line by line, not word by word." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/python/practice/002-chatgpt-ai-bot-1/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-11-14T00:07:25+00:00" />
+<meta property="article:modified_time" content="2023-11-14T00:07:25+00:00" />
+
+<meta itemprop="name" content="ChatGPT Bot">
+<meta itemprop="description" content="1. Official Docs Make request for the RESTful API of OpenAI: API Reference - OpenAI API Error status code for HTTP response: Error codes - OpenAI API Stream cookbook.openai.com/examples/how_to_stream_completions How to Print ChatGPT API Response as a Stream – PuppyCoding Cookbook: https://cookbook.openai.com/ 2. Stream message If you write code like this:
+1 2 3 4 respense = openai.create(...) for chunk in response: if chunk.choices[0].delta.content is not None: print(chunk.choices[0].delta.content, end=&#34;&#34;, flush=True) You probably won&rsquo;t get the result you want, your program will print line by line, not word by word."><meta itemprop="datePublished" content="2023-11-14T00:07:25+00:00" />
+<meta itemprop="dateModified" content="2023-11-14T00:07:25+00:00" />
+<meta itemprop="wordCount" content="395">
+<meta itemprop="keywords" content="python," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="ChatGPT Bot"/>
+<meta name="twitter:description" content="1. Official Docs Make request for the RESTful API of OpenAI: API Reference - OpenAI API Error status code for HTTP response: Error codes - OpenAI API Stream cookbook.openai.com/examples/how_to_stream_completions How to Print ChatGPT API Response as a Stream – PuppyCoding Cookbook: https://cookbook.openai.com/ 2. Stream message If you write code like this:
+1 2 3 4 respense = openai.create(...) for chunk in response: if chunk.choices[0].delta.content is not None: print(chunk.choices[0].delta.content, end=&#34;&#34;, flush=True) You probably won&rsquo;t get the result you want, your program will print line by line, not word by word."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">ChatGPT Bot</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-11-14 </span>
+        <div class="post-category">
+            <a href="/categories/python/"> python </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-official-docs">1. Official Docs</a></li>
+        <li><a href="#2-stream-message">2. Stream message</a>
+          <ul>
+            <li><a href="#3-task-types">3. Task types</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-openai-package-error-urllib3-only-supports-openssl">4. Openai package error: urllib3 only supports OpenSSL</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-official-docs">1. Official Docs</h2>
+<ul>
+<li>Make request for the RESTful API of OpenAI: <a href="https://platform.openai.com/docs/api-reference/chat/create">API Reference - OpenAI API</a></li>
+<li>Error status code for HTTP response: <a href="https://platform.openai.com/docs/guides/error-codes">Error codes - OpenAI API</a></li>
+<li>Stream <a href="https://cookbook.openai.com/examples/how_to_stream_completions">cookbook.openai.com/examples/how_to_stream_completions</a>
+<ul>
+<li><a href="https://puppycoding.com/2023/07/08/stream-chatgpt-response/">How to Print ChatGPT API Response as a Stream – PuppyCoding</a></li>
+</ul>
+</li>
+<li>Cookbook: <a href="https://cookbook.openai.com/">https://cookbook.openai.com/</a></li>
+</ul>
+<p><img src="/002-chatgpt-ai-bot-1/aa.png" alt="aa"></p>
+<h2 id="2-stream-message">2. Stream message</h2>
+<p>If you write code like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">respense</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">          <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You probably won&rsquo;t get the result you want, your program will print line by line, not word by word.</p>
+<p>The actual reason is that Python buffers the chunks before printing them, whereas we want them printed as soon as they’re ready. To do this, we add a <code>flush = True</code> parameter to tell Python to flush the buffer with each chunk.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">handle_stream</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">          <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">print</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Normally output to a file or the console is buffered, with text output at least <strong>until you print a newline</strong>. The flush makes sure that any output that is buffered goes to the destination. <a href="https://stackoverflow.com/a/15608262/16317008">https://stackoverflow.com/a/15608262/16317008</a></p>
+</blockquote>
+<h3 id="3-task-types">3. Task types</h3>
+<ul>
+<li><a href="https://platform.openai.com/docs/api-reference/completions">Completions</a>: Given a prompt, the model will return one or more predicted completions.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">POST https://api.openai.com/v1/completions
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><a href="https://platform.openai.com/docs/api-reference/chat">Chat</a>: Given a list of messages describing a conversation, the model will return a response.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">POST https://api.openai.com/v1/chat/completions
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><a href="https://platform.openai.com/docs/api-reference/images">Images</a>: Given a prompt and/or an input image, the model will generate a new image.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">POST https://api.openai.com/v1/images/generations
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-openai-package-error-urllib3-only-supports-openssl">4. Openai package error: urllib3 only supports OpenSSL</h2>
+<p>After import openai package, an error occurred:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the &#39;ssl&#39; module is compiled with LibreSSL 2.8.3. See: https://github.com/urllib3/urllib3/issues/2168
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a href="https://urllib3.readthedocs.io/en/stable/">urllib3</a> is a Python package for making HTTP requests, which is an HTTP client (like a browser):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">urllib3</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">resp</span> <span class="o">=</span> <span class="n">urllib3</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;GET&#34;</span><span class="p">,</span> <span class="s2">&#34;https://httpbin.org/robots.txt&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span>
+</span></span><span class="line"><span class="cl"><span class="mi">200</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">resp</span><span class="o">.</span><span class="n">data</span>
+</span></span><span class="line"><span class="cl"><span class="sa">b</span><span class="s2">&#34;User-agent: *</span><span class="se">\n</span><span class="s2">Disallow: /deny</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Solution: <a href="https://davidzhu.xyz/post/python/practice/003-openssl-issue/">https://davidzhu.xyz/post/python/practice/003-openssl-issue/</a></p>
+<p>References:</p>
+<ul>
+<li><a href="https://www.makeuseof.com/chatgpt-api-complete-guide/?newsletter_popup=1">A Complete Guide to the ChatGPT API</a></li>
+<li><a href="https://levelup.gitconnected.com/fixing-importerror-urllib3-v2-0-5fbfe8576957">Fixing ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+ | Level Up Coding</a></li>
+<li><a href="https://stackoverflow.com/questions/76187256/importerror-urllib3-v2-0-only-supports-openssl-1-1-1-currently-the-ssl-modu">python - ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the &lsquo;ssl&rsquo; module is compiled with LibreSSL 2.8.3 - Stack Overflow</a></li>
+<li><a href="https://stackoverflow.com/questions/75971578/openai-chatgpt-gpt-3-5-api-error-messages-is-a-required-property-when-tes">OpenAI ChatGPT (GPT-3.5) API error: &ldquo;&lsquo;messages&rsquo; is a required property&rdquo; when testing the API with Postman - Stack Overflow</a></li>
+<li><a href="https://platform.openai.com/docs/guides/gpt/chat-completions-vs-completions">GPT - OpenAI API</a></li>
+<li><a href="https://community.openai.com/t/gpt-3-5-turbo-how-to-remember-previous-messages-like-chat-gpt-website/170370/6">GPT-3.5-turbo how to remember previous messages like Chat-GPT website - API - OpenAI Developer Forum</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-11-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/">python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/build-website/008-enable-cloudflare-reverse-proxy/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Coudflare TLS encryption 520 Error Code &amp; too Many Redirections</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/python/basics/000-virtual-environment/">
+            <span class="next-text nav-default">Virtual Environment Python</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Java Packages介绍及使用 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="Java Packages &amp;amp; API A package is a namespace that organizes a set of related classes and interfaces. Think of it as a folder in a file directory. We use packages to avoid name conflicts, and to write a better maintainable code. Packages are divided into two categories: Built-in Packages (packages from the Java API) User-defined Packages (create your own packages) Built-in Packages The Java API is a library of" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/java/basics/packages/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Java Packages介绍及使用" />
+<meta property="og:description" content="Java Packages &amp; API A package is a namespace that organizes a set of related classes and interfaces. Think of it as a folder in a file directory. We use packages to avoid name conflicts, and to write a better maintainable code. Packages are divided into two categories: Built-in Packages (packages from the Java API) User-defined Packages (create your own packages) Built-in Packages The Java API is a library of" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/java/basics/packages/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-07-27T20:11:43+00:00" />
+<meta property="article:modified_time" content="2023-07-27T20:11:43+00:00" />
+<meta itemprop="name" content="Java Packages介绍及使用">
+<meta itemprop="description" content="Java Packages &amp; API A package is a namespace that organizes a set of related classes and interfaces. Think of it as a folder in a file directory. We use packages to avoid name conflicts, and to write a better maintainable code. Packages are divided into two categories: Built-in Packages (packages from the Java API) User-defined Packages (create your own packages) Built-in Packages The Java API is a library of"><meta itemprop="datePublished" content="2023-07-27T20:11:43+00:00" />
+<meta itemprop="dateModified" content="2023-07-27T20:11:43+00:00" />
+<meta itemprop="wordCount" content="521">
+<meta itemprop="keywords" content="Java," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Java Packages介绍及使用"/>
+<meta name="twitter:description" content="Java Packages &amp; API A package is a namespace that organizes a set of related classes and interfaces. Think of it as a folder in a file directory. We use packages to avoid name conflicts, and to write a better maintainable code. Packages are divided into two categories: Built-in Packages (packages from the Java API) User-defined Packages (create your own packages) Built-in Packages The Java API is a library of"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Java Packages介绍及使用</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-07-27 </span>
+        <div class="post-category">
+            <a href="/categories/java/"> Java </a>
+            <a href="/categories/basics/"> Basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#java-packages--api">Java Packages &amp; API</a></li>
+        <li><a href="#built-in-packages">Built-in Packages</a></li>
+        <li><a href="#user-defined-packages">User-defined Packages</a>
+          <ul>
+            <li><a href="#eg">e.g.,</a></li>
+          </ul>
+        </li>
+        <li><a href="#import-a-package">Import a Package</a></li>
+        <li><a href="#import-a-class">Import a Class</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="java-packages--api">Java Packages &amp; API</h2>
+<p>A package is a namespace that organizes a set of related classes and interfaces. Think of it as <strong>a folder in a file directory</strong>. We use packages to avoid name conflicts, and to write a better maintainable code. Packages are divided into two categories:</p>
+<ul>
+<li>Built-in Packages (packages from the Java API)</li>
+<li>User-defined Packages (create your own packages)</li>
+</ul>
+<h2 id="built-in-packages">Built-in Packages</h2>
+<p>The <strong>Java API is a library</strong> of prewritten classes, that are free to use, included in the Java Development Environment. The library contains components for managing input, database programming, and much much more. The complete list can be found at Oracles website: <a href="https://docs.oracle.com/javase/8/docs/api/">https://docs.oracle.com/javase/8/docs/api/</a>.</p>
+<p>The library (Java API) is divided into <strong>packages</strong> and <strong>classes</strong>. Meaning you can either import a single class (along with its methods and attributes), or a whole package that contain all the classes that belong to the specified package.</p>
+<p>Java API 就是所谓的 Built-in Packages咯, 直观感受下</p>
+<p><img src="1.png" alt="1"></p>
+<p><img src="2.png" alt="2"></p>
+<h2 id="user-defined-packages">User-defined Packages</h2>
+<p>To create your own package, you need to understand that Java uses a file system directory to store them. Just like folders on your computer:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">└──</span> <span class="n">src</span>
+</span></span><span class="line"><span class="cl">  <span class="err">└──</span> <span class="n">mypack</span>
+</span></span><span class="line"><span class="cl">    <span class="err">└──</span> <span class="n">Cat</span><span class="o">.</span><span class="na">java</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>To create a package, use the <code>package</code> keyword:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">mypack</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Cat</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>注意哦, package 应该在 src 目录下, 然后含有 main 函数的主类也应该在 src 下, 不然在导入package时是没办法找到 package的,</p>
+</blockquote>
+<h3 id="eg">e.g.,</h3>
+<p>注意看目录结构,</p>
+<p><img src="1-0506006.png" alt="1"></p>
+<p>注意看第一行, 声明所在的package</p>
+<p><img src="2-0506029.png" alt="2"></p>
+<p>若无声明</p>
+<p><img src="3.png" alt="3"></p>
+<blockquote>
+<p>最后注意, 真正的完整类名是<code>包名.类名</code>, JVM 只看完整类名, JVM 认为只要包名不同, 类就不同,</p>
+<p>另外package没有父子关系, <code>java.util</code>和<code>java.util.zip</code>是不同的包, 两者没有任何继承关系,</p>
+</blockquote>
+<h2 id="import-a-package">Import a Package</h2>
+<p>To import a whole package, end the sentence with an asterisk sign (<code>*</code>). The following example will import ALL the classes in the <code>java.util</code> package:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="import-a-class">Import a Class</h2>
+<p>If you find a class you want to use, for example, the <code>Scanner</code> class, <strong>which is used to get user input</strong>, write the following code:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In the example above, <code>java.util</code> is a package, while <code>Scanner</code> is a class of the <code>java.util</code> package.</p>
+<p>参考:</p>
+<ul>
+<li><a href="https://docs.oracle.com/javase/tutorial/java/concepts/package.html">What Is a Package? (The Java™ Tutorials &gt; Learning the Java Language &gt; Object-Oriented Programming Concepts)</a></li>
+<li><a href="https://www.w3schools.com/java/java_packages.asp">Java Packages</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-07-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/java/">Java</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/java/backend/001-first-spring-boot-program/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">创建Spring Boot项目及踩坑总结 Spring学习(一)</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/java/basics/jdk-jre/">
+            <span class="next-text nav-default">JDK &amp; JRE</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

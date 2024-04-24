@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Maven的相关概念与常用指令 Spring学习(二) - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Install Maven 1.Go to Maven Download site 2.Set Environment Variables 1 2 3 4 5 6 7 8 tar -xvf apache-maven-3.6.3-bin.tar.gz export M2_HOME=&amp;#34;/Users/shaowen/Downloads/Programs/apache-maven-3.9.1&amp;#34; PATH=&amp;#34;${M2_HOME}/bin:${PATH}&amp;#34; export PATH source .bash_profile mvn -version 2. Maven Artifact In Maven terminology, the artifact is the resulting output of the maven build, generally a jar or war or other executable file. Artifacts in maven are identified by a coordinate system of groupId, artifactId, and version." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/java/backend/002-maven/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Maven的相关概念与常用指令 Spring学习(二)" />
+<meta property="og:description" content="1. Install Maven 1.Go to Maven Download site 2.Set Environment Variables 1 2 3 4 5 6 7 8 tar -xvf apache-maven-3.6.3-bin.tar.gz export M2_HOME=&#34;/Users/shaowen/Downloads/Programs/apache-maven-3.9.1&#34; PATH=&#34;${M2_HOME}/bin:${PATH}&#34; export PATH source .bash_profile mvn -version 2. Maven Artifact In Maven terminology, the artifact is the resulting output of the maven build, generally a jar or war or other executable file. Artifacts in maven are identified by a coordinate system of groupId, artifactId, and version." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/java/backend/002-maven/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-07-30T14:11:30+00:00" />
+<meta property="article:modified_time" content="2023-07-30T14:11:30+00:00" />
+
+<meta itemprop="name" content="Maven的相关概念与常用指令 Spring学习(二)">
+<meta itemprop="description" content="1. Install Maven 1.Go to Maven Download site 2.Set Environment Variables 1 2 3 4 5 6 7 8 tar -xvf apache-maven-3.6.3-bin.tar.gz export M2_HOME=&#34;/Users/shaowen/Downloads/Programs/apache-maven-3.9.1&#34; PATH=&#34;${M2_HOME}/bin:${PATH}&#34; export PATH source .bash_profile mvn -version 2. Maven Artifact In Maven terminology, the artifact is the resulting output of the maven build, generally a jar or war or other executable file. Artifacts in maven are identified by a coordinate system of groupId, artifactId, and version."><meta itemprop="datePublished" content="2023-07-30T14:11:30+00:00" />
+<meta itemprop="dateModified" content="2023-07-30T14:11:30+00:00" />
+<meta itemprop="wordCount" content="2449">
+<meta itemprop="keywords" content="Java,Spring Boot," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Maven的相关概念与常用指令 Spring学习(二)"/>
+<meta name="twitter:description" content="1. Install Maven 1.Go to Maven Download site 2.Set Environment Variables 1 2 3 4 5 6 7 8 tar -xvf apache-maven-3.6.3-bin.tar.gz export M2_HOME=&#34;/Users/shaowen/Downloads/Programs/apache-maven-3.9.1&#34; PATH=&#34;${M2_HOME}/bin:${PATH}&#34; export PATH source .bash_profile mvn -version 2. Maven Artifact In Maven terminology, the artifact is the resulting output of the maven build, generally a jar or war or other executable file. Artifacts in maven are identified by a coordinate system of groupId, artifactId, and version."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Maven的相关概念与常用指令 Spring学习(二)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-07-30 </span>
+        <div class="post-category">
+            <a href="/categories/java/"> Java </a>
+            <a href="/categories/backend/"> Backend </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-install-maven">1. Install Maven</a></li>
+        <li><a href="#2-maven-artifact">2. Maven Artifact</a></li>
+        <li><a href="#3-maven-repository">3. Maven Repository</a></li>
+        <li><a href="#4-artifact--group">4. Artifact &amp; Group</a></li>
+        <li><a href="#5-查看classpath">5. 查看classpath</a></li>
+        <li><a href="#6-common-maven-commands">6. Common Maven Commands</a></li>
+        <li><a href="#7-executing-build-life-cycles-phases-and-goals">7. Executing Build Life Cycles, Phases and Goals</a>
+          <ul>
+            <li><a href="#71-executing-the-default-life-cycle">7.1. Executing the Default Life Cycle</a></li>
+            <li><a href="#72-executing-build-phases">7.2. Executing Build Phases</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-install-maven">1. Install Maven</h2>
+<p><strong>1.Go to Maven <a href="https://maven.apache.org/download.cgi">Download site</a></strong></p>
+<p><img src="/002-maven/a.png" alt=""></p>
+<p><strong>2.Set Environment Variables</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">tar -xvf apache-maven-3.6.3-bin.tar.gz
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">M2_HOME</span><span class="o">=</span><span class="s2">&#34;/Users/shaowen/Downloads/Programs/apache-maven-3.9.1&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">PATH</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">M2_HOME</span><span class="si">}</span><span class="s2">/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> PATH
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> .bash_profile
+</span></span><span class="line"><span class="cl">mvn -version
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="2-maven-artifact">2. Maven Artifact</h2>
+<blockquote>
+<p>In Maven terminology, the artifact is the resulting output of the maven build, generally a <code>jar</code> or <code>war</code> or other executable file. Artifacts in maven are identified by a coordinate system of groupId, artifactId, and version. Maven uses the <code>groupId</code>, <code>artifactId</code>, and <code>version</code> to identify dependencies (usually other jar files) needed to build and run your code. - <a href="https://stackoverflow.com/a/2487510/16317008">https://stackoverflow.com/a/2487510/16317008</a></p>
+</blockquote>
+<blockquote>
+<p>An artifact is a file, usually a JAR, that gets deployed to a Maven repository.</p>
+<p>A Maven build produces one or more artifacts, such as a compiled JAR and a &ldquo;sources&rdquo; JAR.</p>
+<p>Each artifact has a group ID (usually a reversed domain name, like com.example.foo), an artifact ID (just a name), and a version string. The three together uniquely identify the artifact.</p>
+<p>A project&rsquo;s dependencies are specified as artifacts. - <a href="https://stackoverflow.com/a/2487511/16317008">https://stackoverflow.com/a/2487511/16317008</a></p>
+</blockquote>
+<p>之前写的关于如何发布 war 到 tomcat 服务器的文章, 用的就是 maven build war, 当然 maven 也可以把我们的项目 build 成 jar 文件, 所以 artifact 在 maven 中的意思就是 maven 的输出, maven 所build的文件, 我们的 spring boot 项目也是一个 artifact, 与其说 spring boot 项目不如说是 maven 项目, 因为如过我们不用 gradle 的话, 那每个spring boot 项目的根目录下都会有一个 <code>pom.xml</code> 文件, 在其开头你可以看到 groupid, artifactid等标签,这不就是标注一个 artifact 的标签吗, 然后<code>pom.xml</code> 中的dependency标签里的依赖就是一个个的 maven artifacts, 这其实就是第三方把她们的maven项目打包成jar供我们使用, 我们只用添加依赖就好, 至于这些依赖(artifacts)下载安装后都保存在了 Maven repository,  具体把maven 项目build 成 war/jar package可参考:</p>
+<ul>
+<li><a href="https://davidzhu.xyz/2023/04/27/Java/Backend/War/">手动部署War包到Tomcat上之何为War</a></li>
+<li><a href="https://davidzhu.xyz/2023/07/29/Java/Backend/1-first-spring-boot-program/">创建第一个Spring Boot项目及注意事项</a></li>
+</ul>
+<h2 id="3-maven-repository">3. Maven Repository</h2>
+<p>Maven Repository有3种类型:</p>
+<ol>
+<li>Local Repository</li>
+<li>Central Repository</li>
+<li>Remote Repository</li>
+</ol>
+<p>Maven Local Repository 是本机中的一个目录, 如果目录不存在, 执行maven时就会先创建它, 默认情况下, maven本地存储库是<code>%USER_HOME%/.m2</code> , 我们可以在maven配置文件查看local repository, 位置在 maven 安装路径下, <code>MAVEN_HOME/conf/settings</code>:</p>
+<p><img src="/002-maven/1.png" alt="1"></p>
+<p>查看 <code>.m2</code> 的内容,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ls ~/.m2/repository/
+</span></span><span class="line"><span class="cl">antlr                    commons-codec            junit
+</span></span><span class="line"><span class="cl">aopalliance              commons-collections      log4j
+</span></span><span class="line"><span class="cl">logkit									 mysql ....
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ ls .m2/repository/log4j/log4j/1.2.12 
+</span></span><span class="line"><span class="cl">_remote.repositories  log4j-1.2.12.jar.sha1 log4j-1.2.12.pom.sha1
+</span></span><span class="line"><span class="cl">log4j-1.2.12.jar      log4j-1.2.12.pom
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>阅读更多: <a href="https://www.cnblogs.com/jhno1/p/15134027.html"> Maven-Repository存储库 </a></p>
+<h2 id="4-artifact--group">4. Artifact &amp; Group</h2>
+<p>创建好maven项目后, 在项目根目录下有个<code>pom.xml</code>文件, 这个就是maven的配置文件, 你可以在里面添加各种依赖, 比如想用mysql driver, gson, log4j等第三方库的时候, 直接在dependencies标签下添加:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>mysql<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>mysql-connector-java<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;version&gt;</span>8.0.32<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>那么问题来了, 上面dependence标签下的artifactId和groupId是什么呢? 仔细观察<code>pom.xml</code>内容你会发现, 在其开头也是这些奇怪的标签:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;groupId&gt;</span>com.example<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;artifactId&gt;</span>ServletDemo<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;name&gt;</span>ServletDemo<span class="nt">&lt;/name&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;packaging&gt;</span>war<span class="nt">&lt;/packaging&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中，<code>groupId</code>类似于Java的包名，通常是公司或组织名称，<code>artifactId</code>类似于Java的类名，通常是项目名称，再加上<code>version</code>，一个Maven工程就是由<code>groupId</code>，<code>artifactId</code>和<code>version</code>作为唯一标识,</p>
+<p>在Maven项目中，类的<code>classpath</code>路径是由Maven依赖管理机制决定的。Maven通过<code>pom.xml</code>管理项目依赖，当我们使用<code>&lt;dependency&gt;</code>声明一个依赖后，Maven会根据<code>pom.xml</code>文件中的配置将依赖下载到本地仓库，然后将其添加到项目的<code>classpath</code>中。</p>
+<h2 id="5-查看classpath">5. 查看classpath</h2>
+<p>Mac, Linux查看当前maven项目的classpath, 注意要在项目的根目录下输入此命令, 不然会提示错误找不到<code>pom.xml</code>文件,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mvn -q exec:exec -Dexec.executable<span class="o">=</span><span class="nb">echo</span> -Dexec.args<span class="o">=</span><span class="s2">&#34;%classpath&#34;</span>
+</span></span><span class="line"><span class="cl">/Users/shaowen/Codes/IDEA/ServletDemo/target/classes:/Users/shaowen/.m2/repository/com/mysql/mysql-connector-j/8.0.32/mysql-connector-j-8.0.32.jar:/Users/shaowen/.m2/repository/log4j/log4j/1.2.17/log4j-1.2.17.jar
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到, classpath路径的第一个是<code>/Users/shaowen/Codes/IDEA/ServletDemo/target/classes/</code>, 这个文件夹下面就是我们project/src/main/java/下的类, 编译成的class文件 都放这下面了. 所以项目就是这么找到我们编写的类的,</p>
+<p>了解更多关于输出classpath: <a href="https://stackoverflow.com/a/45043803/16317008">https://stackoverflow.com/a/45043803/16317008</a></p>
+<h2 id="6-common-maven-commands">6. Common Maven Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Maven Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mvn &ndash;version</td>
+<td>Prints out the version of Maven you are running.</td>
+</tr>
+<tr>
+<td>mvn clean</td>
+<td>Clears the <code>target</code> directory into which Maven normally builds your project.</td>
+</tr>
+<tr>
+<td>mvn package</td>
+<td>Builds the project and packages the resulting JAR file into the <code>target</code> directory.</td>
+</tr>
+<tr>
+<td>mvn package -Dmaven.test.skip=true</td>
+<td>Builds the project and packages the resulting JAR file into the <code>target</code> directory - without running the unit tests during the build.</td>
+</tr>
+<tr>
+<td>mvn clean package</td>
+<td>Clears the <code>target</code> directory and Builds the project and packages the resulting JAR file into the <code>target</code> directory.</td>
+</tr>
+<tr>
+<td>mvn clean package -Dmaven.test.skip=true</td>
+<td>Clears the <code>target</code> directory and builds the project and packages the resulting JAR file into the <code>target</code> directory - without running the unit tests during the build.</td>
+</tr>
+<tr>
+<td>mvn verify</td>
+<td>Runs all integration tests found in the project.</td>
+</tr>
+<tr>
+<td>mvn clean verify</td>
+<td>Cleans the target directory, and runs all integration tests found in the project.</td>
+</tr>
+<tr>
+<td>mvn install</td>
+<td>Builds the project described by your Maven POM file and installs the resulting artifact (JAR) into your local Maven repository</td>
+</tr>
+<tr>
+<td>mvn install -Dmaven.test.skip=true</td>
+<td>Builds the project described by your Maven POM file without running unit tests, and installs the resulting artifact (JAR) into your local Maven repository</td>
+</tr>
+<tr>
+<td>mvn clean install</td>
+<td>Clears the <code>target</code> directory and builds the project described by your Maven POM file and installs the resulting artifact (JAR) into your local Maven repository</td>
+</tr>
+<tr>
+<td>mvn clean install -Dmaven.test.skip=true</td>
+<td>Clears the <code>target</code> directory and builds the project described by your Maven POM file without running unit tests, and installs the resulting artifact (JAR) into your local Maven repository</td>
+</tr>
+<tr>
+<td>mvn dependency:copy-dependencies</td>
+<td>Copies dependencies from remote Maven repositories to your local Maven repository.</td>
+</tr>
+<tr>
+<td>mvn clean dependency:copy-dependencies</td>
+<td>Cleans project and copies dependencies from remote Maven repositories to your local Maven repository.</td>
+</tr>
+<tr>
+<td>mvn clean dependency:copy-dependencies package</td>
+<td>Cleans project, copies dependencies from remote Maven repositories to your local Maven repository and packages your project.</td>
+</tr>
+<tr>
+<td>mvn dependency:tree</td>
+<td>Prints out the dependency tree for your project - based on the dependencies configured in the pom.xml file.</td>
+</tr>
+<tr>
+<td>mvn dependency:tree -Dverbose</td>
+<td>Prints out the dependency tree for your project - based on the dependencies configured in the pom.xml file. Includes repeated, transitive dependencies.</td>
+</tr>
+<tr>
+<td>mvn dependency:tree -Dincludes=com.fasterxml.jackson.core</td>
+<td>Prints out the dependencies from your project which depend on the com.fasterxml.jackson.core artifact.</td>
+</tr>
+<tr>
+<td>mvn dependency:tree -Dverbose -Dincludes=com.fasterxml.jackson.core</td>
+<td>Prints out the dependencies from your project which depend on the com.fasterxml.jackson.core artifact. Includes repeated, transitive dependencies.</td>
+</tr>
+<tr>
+<td>mvn dependency:build-classpath</td>
+<td>Prints out the classpath needed to run your project (application) based on the dependencies configured in the pom.xml file.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意(1):</strong> <code>mvn install</code> 说的是把你的 maven 项目构建成 jar或者war, 然后放到 <code>.m2/respository/</code> 下, 而不是下载安装 <code>pom.xml</code> 中的依赖到本地仓库, 具体输出:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> Building jar: /Users/David/Codes/IDEA/my-app/target/my-app-0.0.1-SNAPSHOT.jar
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> 
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> --- spring-boot:3.1.2:repackage <span class="o">(</span>repackage<span class="o">)</span> @ my-app ---
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> Replacing main artifact /Users/David/Codes/IDEA/my-app/target/my-app-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> 
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> --- install:3.1.1:install <span class="o">(</span>default-install<span class="o">)</span> @ my-app ---
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> Installing /Users/David/Codes/IDEA/my-app/target/my-app-0.0.1-SNAPSHOT.jar to /Users/David/.m2/repository/com/example/my-app/0.0.1-SNAPSHOT/my-app-0.0.1-SNAPSHOT.jar
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> ------------------------------------------------------------------------
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> BUILD SUCCESS
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> ------------------------------------------------------------------------
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> Total time:  2.483 s
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> Finished at: 2023-07-30T13:56:58-03:00
+</span></span><span class="line"><span class="cl"><span class="o">[</span>INFO<span class="o">]</span> ------------------------------------------------------------------------
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>注意(2):</strong></p>
+<blockquote>
+<p>Keep in mind, that when you execute the <code>clean</code> goal of Maven, the <code>target</code> directory is removed, meaning you lose all compiled classes from previous builds. That means, that Maven will have to build all of your project again from scratch, rather than being able to just compile the classes that were changed since last build. This slows your build time down. However, sometimes it can be nice to have a clean, fresh build, e.g. before releasing your product to the world - mostly for your own &ldquo;feeling&rdquo; of knowing everything was built from scratch and working. - <a href="https://jenkov.com/tutorials/maven/maven-commands.html">Maven Commands</a></p>
+</blockquote>
+<h2 id="7-executing-build-life-cycles-phases-and-goals">7. Executing Build Life Cycles, Phases and Goals</h2>
+<p>When you run the <code>mvn</code> command you pass one or more arguments to it. These arguments specify either a build life cycle, build phase or build goal. For instance to execute the <code>clean</code> build life cycle you execute this command:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mvn clean
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>To execute the <code>site</code> build life cycle you execute this command:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mvn site
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="71-executing-the-default-life-cycle">7.1. Executing the Default Life Cycle</h3>
+<p>The <code>default</code> life cycle is the build life cycle which generates, compiles, packages etc. your source code.</p>
+<p>You cannot execute the <code>default</code> build life cycle directly, as is possible with the <code>clean</code> and <code>site</code>. Instead you have to execute a specific build phase within the <code>default</code> build life cycle.</p>
+<p>The most commonly used build phases in the <code>default</code> build life cycle are:</p>
+<table>
+<thead>
+<tr>
+<th>Build Phase</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>validate</code></td>
+<td>Validates that the project is correct and all necessary information is available. This also makes sure the dependencies are downloaded.</td>
+</tr>
+<tr>
+<td><code>compile</code></td>
+<td>Compiles the source code of the project.</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>Runs the tests against the compiled source code using a suitable unit testing framework. These tests should not require the code be packaged or deployed.</td>
+</tr>
+<tr>
+<td><code>package</code></td>
+<td>Packs the compiled code in its distributable format, such as a JAR.</td>
+</tr>
+<tr>
+<td><code>install</code></td>
+<td>Install the package into the local repository, for use as a dependency in other projects locally.</td>
+</tr>
+<tr>
+<td><code>deploy</code></td>
+<td>Copies the final package to the remote repository for sharing with other developers and projects.</td>
+</tr>
+</tbody>
+</table>
+<p>Executing one of these build phases is done by simply adding the build phase after the <code>mvn</code> command, like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mvn compile
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This example Maven command executes the <code>compile</code> build phase of the <code>default</code> build life cycle. This Maven command also executes all earlier build phases in the <code>default</code> build life cycle, meaning the <code>validate</code> build phase.</p>
+<h3 id="72-executing-build-phases">7.2. Executing Build Phases</h3>
+<p>You can execute a build phase located inside a build life cycle by passing the name of the build phase to the Maven command. Here are a few build phase command examples:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mvn pre-clean
+</span></span><span class="line"><span class="cl">mvn compile
+</span></span><span class="line"><span class="cl">mvn package
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Maven will find out what build life cycle the specified build phase belongs to, so you don&rsquo;t need to explicitly specify which build life cyle the build phase belongs to.</p>
+<p>本节来自: <a href="https://jenkov.com/tutorials/maven/maven-commands.html">Maven Commands</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-07-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/java/">Java</a>
+          <a href="/tags/spring-boot/">Spring Boot</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/java/backend/003-jpa-hibernate-jdbc/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">ORM vs JPA vs Hibernate &amp; JDBC vs MySQL Driver, Spring学习(三)</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/java/backend/001-first-spring-boot-program/">
+            <span class="next-text nav-default">创建Spring Boot项目及踩坑总结 Spring学习(一)</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

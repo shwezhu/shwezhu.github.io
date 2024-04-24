@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>C&#43;&#43; Operator Overloading - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Operators as functions Consider the following example: 1 2 3 int x { 2 }; int y { 3 }; std::cout &amp;lt;&amp;lt; x &#43; y &amp;lt;&amp;lt; &amp;#39;\n&amp;#39;; When you see the expression x &#43; y, you can translate this in your head to the function call operator&#43;(x, y) (where operator&#43; is the name of the function). Now consider what happens if we try to add two objects of a" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/c&#43;&#43;/basics/operator-overloading/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="C&#43;&#43; Operator Overloading" />
+<meta property="og:description" content="1. Operators as functions Consider the following example: 1 2 3 int x { 2 }; int y { 3 }; std::cout &lt;&lt; x &#43; y &lt;&lt; &#39;\n&#39;; When you see the expression x &#43; y, you can translate this in your head to the function call operator&#43;(x, y) (where operator&#43; is the name of the function). Now consider what happens if we try to add two objects of a" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/c&#43;&#43;/basics/operator-overloading/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-22T23:03:12+00:00" />
+<meta property="article:modified_time" content="2023-05-22T23:03:12+00:00" />
+
+<meta itemprop="name" content="C&#43;&#43; Operator Overloading">
+<meta itemprop="description" content="1. Operators as functions Consider the following example: 1 2 3 int x { 2 }; int y { 3 }; std::cout &lt;&lt; x &#43; y &lt;&lt; &#39;\n&#39;; When you see the expression x &#43; y, you can translate this in your head to the function call operator&#43;(x, y) (where operator&#43; is the name of the function). Now consider what happens if we try to add two objects of a"><meta itemprop="datePublished" content="2023-05-22T23:03:12+00:00" />
+<meta itemprop="dateModified" content="2023-05-22T23:03:12+00:00" />
+<meta itemprop="wordCount" content="1559">
+<meta itemprop="keywords" content="c&#43;&#43;," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="C&#43;&#43; Operator Overloading"/>
+<meta name="twitter:description" content="1. Operators as functions Consider the following example: 1 2 3 int x { 2 }; int y { 3 }; std::cout &lt;&lt; x &#43; y &lt;&lt; &#39;\n&#39;; When you see the expression x &#43; y, you can translate this in your head to the function call operator&#43;(x, y) (where operator&#43; is the name of the function). Now consider what happens if we try to add two objects of a"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">C&#43;&#43; Operator Overloading</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-22 </span>
+        <div class="post-category">
+            <a href="/categories/c&#43;&#43;/"> c&#43;&#43; </a>
+            <a href="/categories/basics/"> basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-operators-as-functions">1. Operators as functions</a></li>
+        <li><a href="#2-overloading-the-arithmetic-operators-using-friend-functions">2. Overloading the arithmetic operators using friend functions</a>
+          <ul>
+            <li><a href="#21-implementing-operators-using-other-operators">2.1. Implementing operators using other operators</a></li>
+            <li><a href="#22-not-everything-can-be-overloaded-as-a-friend-function">2.2. Not everything can be overloaded as a friend function</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-overloading-operators-using-normal-functions">3. Overloading operators using normal functions</a></li>
+        <li><a href="#4-overloading-operators-using-member-functions">4. Overloading operators using member functions</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-operators-as-functions">1. Operators as functions</h2>
+<p>Consider the following example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">x</span> <span class="p">{</span> <span class="mi">2</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">y</span> <span class="p">{</span> <span class="mi">3</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When you see the expression <code>x + y</code>, you can translate this in your head to the function call <code>operator+(x, y)</code> (where <code>operator+</code> is the name of the function).</p>
+<p>Now consider what happens if we try to add two objects of a program-defined class:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Mystring</span> <span class="n">string1</span> <span class="p">{</span> <span class="s">&#34;Hello, &#34;</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">Mystring</span> <span class="n">string2</span> <span class="p">{</span> <span class="s">&#34;World!&#34;</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">string1</span> <span class="o">+</span> <span class="n">string2</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>What would you expect to happen in this case? The intuitive expected result is “Hello, World!” . However, because <code>Mystring</code> is a program-defined type, the compiler does not have a built-in version of the <strong>plus operator</strong> that it can use for <code>Mystring</code> operands. So in this case, it will give us an error. In order to make it work like we want, we’d need to write an <strong>overloaded function</strong> to tell the compiler how the <code>+</code> operator should work with two operands of type <code>Mystring</code>.</p>
+<h2 id="2-overloading-the-arithmetic-operators-using-friend-functions">2. Overloading the arithmetic operators using friend functions</h2>
+<p>使用friend function的好处是我们可以直接访问类的私有成员, 另外注意 friend function并不是类的成员函数,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Cents</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">m_cents</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Cents</span><span class="p">(</span><span class="kt">int</span> <span class="n">cents</span><span class="p">)</span> <span class="o">:</span> <span class="n">m_cents</span><span class="p">{</span> <span class="n">cents</span> <span class="p">}</span> <span class="p">{</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// add Cents + Cents using a friend function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// 另外friend function并不是类的成员函数, 但你仍可以在类里面实现它 而不是像我们这样在外面实现
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// 如果是成员函数重载, 这里只用一个参数就行了, 因为*this会默认为左操作数, 具体文章下面部分会讲
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">friend</span> <span class="n">Cents</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">Cents</span><span class="o">&amp;</span> <span class="n">c1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Cents</span><span class="o">&amp;</span> <span class="n">c2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="nf">getCents</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_cents</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// note: this function is not a member function!
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 可以看到, 在类里已经声明的性质(friend, static, virtual) 不用再在外面声明了
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Cents</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">Cents</span><span class="o">&amp;</span> <span class="n">c1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Cents</span><span class="o">&amp;</span> <span class="n">c2</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// use the Cents constructor and operator+(int, int)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// we can access m_cents directly because this is a friend function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="n">c1</span><span class="p">.</span><span class="n">m_cents</span> <span class="o">+</span> <span class="n">c2</span><span class="p">.</span><span class="n">m_cents</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Cents</span> <span class="n">cents1</span><span class="p">{</span> <span class="mi">6</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Cents</span> <span class="n">cents2</span><span class="p">{</span> <span class="mi">2</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Cents</span> <span class="n">centsSum</span><span class="p">{</span> <span class="n">cents1</span> <span class="o">+</span> <span class="n">cents2</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;I have &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">centsSum</span><span class="p">.</span><span class="n">getCents</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; cents.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="21-implementing-operators-using-other-operators">2.1. Implementing operators using other operators</h3>
+<p>有时候我们想实现操作符重载的参数为两个不同类型, 这如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">friend</span> <span class="n">MinMax</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">MinMax</span><span class="o">&amp;</span> <span class="n">m1</span><span class="p">,</span> <span class="k">const</span> <span class="n">MinMax</span><span class="o">&amp;</span> <span class="n">m2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">friend</span> <span class="n">MinMax</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">MinMax</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="kt">int</span> <span class="n">value</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">friend</span> <span class="n">MinMax</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">,</span> <span class="k">const</span> <span class="n">MinMax</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这时候如果重新实现一遍, 就会导致代码重复的情况(只是参数换了个顺序), 这个时候我们可以只实现一个然后用第二个调用第一个如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">MinMax</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">MinMax</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Get the minimum value seen in m and value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">int</span> <span class="n">min</span><span class="p">{</span> <span class="n">m</span><span class="p">.</span><span class="n">m_min</span> <span class="o">&lt;</span> <span class="n">value</span> <span class="o">?</span> <span class="n">m</span><span class="p">.</span><span class="nl">m_min</span> <span class="p">:</span> <span class="n">value</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Get the maximum value seen in m and value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">int</span> <span class="n">max</span><span class="p">{</span> <span class="n">m</span><span class="p">.</span><span class="n">m_max</span> <span class="o">&gt;</span> <span class="n">value</span> <span class="o">?</span> <span class="n">m</span><span class="p">.</span><span class="nl">m_max</span> <span class="p">:</span> <span class="n">value</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="p">{</span> <span class="n">min</span><span class="p">,</span> <span class="n">max</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">MinMax</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">,</span> <span class="k">const</span> <span class="n">MinMax</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// call operator+(MinMax, int)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="n">m</span> <span class="o">+</span> <span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="22-not-everything-can-be-overloaded-as-a-friend-function">2.2. Not everything can be overloaded as a friend function</h3>
+<p>The assignment (=), subscript ([]), function call (()), and member selection (-&gt;) operators must be overloaded as member functions, because the language requires them to be.</p>
+<h2 id="3-overloading-operators-using-normal-functions">3. Overloading operators using normal functions</h2>
+<p>Using a friend function to overload an operator is convenient because it gives you direct access to the internal members of the classes you’re operating on. However, if you don’t need that access, you can write your overloaded operators as normal functions. 这个normal function既不是friend function, 也不是member function.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Cents</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="n">m_cents</span><span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Cents</span><span class="p">(</span><span class="kt">int</span> <span class="n">cents</span><span class="p">)</span> <span class="o">:</span> <span class="n">m_cents</span><span class="p">{</span> <span class="n">cents</span> <span class="p">}</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="nf">getCents</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_cents</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// note: this function is not a member function nor a friend function!
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 注意哦, 这个函数既不是friend function, 也不是成员函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Cents</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">Cents</span><span class="o">&amp;</span> <span class="n">c1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Cents</span><span class="o">&amp;</span> <span class="n">c2</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// use the Cents constructor and operator+(int, int)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// we don&#39;t need direct access to private members here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="k">return</span> <span class="n">Cents</span><span class="p">{</span> <span class="n">c1</span><span class="p">.</span><span class="n">getCents</span><span class="p">()</span> <span class="o">+</span> <span class="n">c2</span><span class="p">.</span><span class="n">getCents</span><span class="p">()</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Cents</span> <span class="n">cents1</span><span class="p">{</span> <span class="mi">6</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Cents</span> <span class="n">cents2</span><span class="p">{</span> <span class="mi">8</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Cents</span> <span class="n">centsSum</span><span class="p">{</span> <span class="n">cents1</span> <span class="o">+</span> <span class="n">cents2</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;I have &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">centsSum</span><span class="p">.</span><span class="n">getCents</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; cents.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Because the <strong>normal and friend functions</strong> work almost identically (they just have different levels of access to private members), we generally won’t differentiate them. The one difference is that the friend function declaration inside the class serves as a prototype as well. With the normal function version, you’ll have to provide your own function prototype:</p>
+<p>Cents.h:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#ifndef CENTS_H
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define CENTS_H
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Cents</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="n">m_cents</span><span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Cents</span><span class="p">(</span><span class="kt">int</span> <span class="n">cents</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="n">m_cents</span><span class="p">{</span> <span class="n">cents</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="nf">getCents</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_cents</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Need to explicitly provide prototype for operator+ so uses of operator+ in other files know this overload exists
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Cents</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">Cents</span><span class="o">&amp;</span> <span class="n">c1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Cents</span><span class="o">&amp;</span> <span class="n">c2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#endif
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-overloading-operators-using-member-functions">4. Overloading operators using member functions</h2>
+<p>You learned how to overload the arithmetic operators using <strong>friend functions</strong>. You also learned you can overload operators as <strong>normal functions</strong>. Many operators can be overloaded in a different way: as a <strong>member function</strong>.</p>
+<p>Overloading operators using a member function is very similar to overloading operators using a friend function. When overloading an operator using a member function:</p>
+<ul>
+<li>The overloaded operator must be added as a member function of the left operand.</li>
+<li>The left operand becomes the implicit *this object. (比如<code>+</code>需要左右两个操作数, 如果你用成员函数来重载它, 那重载函数<code>operator+</code>只需要一个参数即<code>+</code>右边的操作数, 左边的默认为<code>*this</code>, 可以看下面的实现, 注意与上面friend function对比)</li>
+<li>All other operands become function parameters.</li>
+</ul>
+<p>注意与上面friend function的实现做对比:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Cents</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">m_cents</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Cents</span><span class="p">(</span><span class="kt">int</span> <span class="n">cents</span><span class="p">)</span> <span class="o">:</span> <span class="n">m_cents</span> <span class="p">{</span> <span class="n">cents</span> <span class="p">}</span> <span class="p">{</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">    <span class="c1">// Overload Cents + int
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Cents</span> <span class="k">operator</span><span class="o">+</span> <span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">getCents</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_cents</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// note: this function is a member function!
+</span></span></span><span class="line"><span class="cl"><span class="c1">// the cents parameter in the friend version is now the implicit *this parameter
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 只有一个参数~, 和friend function一样, 可以访问私有成员, 因为人家是成员函数啊, 肯定可以访问
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Cents</span> <span class="n">Cents</span><span class="o">::</span><span class="k">operator</span><span class="o">+</span> <span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">Cents</span> <span class="p">{</span> <span class="n">m_cents</span> <span class="o">+</span> <span class="n">value</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Cents</span> <span class="n">cents1</span> <span class="p">{</span> <span class="mi">6</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Cents</span> <span class="n">cents2</span> <span class="p">{</span> <span class="n">cents1</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;I have &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">cents2</span><span class="p">.</span><span class="n">getCents</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; cents.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/c&#43;&#43;/">c&#43;&#43;</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/practice/002-golang-worker-pools/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go并发学习之实现一个Worker Pool</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/practice/001-snake-game/">
+            <span class="next-text nav-default">用Go实现一个简单的贪吃蛇</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

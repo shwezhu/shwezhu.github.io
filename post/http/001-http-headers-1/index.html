@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>HTTP Headers (1) - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="0. Header types Headers can be grouped according to their contexts:
+Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/http/001-http-headers-1/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="HTTP Headers (1)" />
+<meta property="og:description" content="0. Header types Headers can be grouped according to their contexts:
+Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/http/001-http-headers-1/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-26T09:58:10+00:00" />
+<meta property="article:modified_time" content="2023-10-26T09:58:10+00:00" />
+
+<meta itemprop="name" content="HTTP Headers (1)">
+<meta itemprop="description" content="0. Header types Headers can be grouped according to their contexts:
+Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport."><meta itemprop="datePublished" content="2023-10-26T09:58:10+00:00" />
+<meta itemprop="dateModified" content="2023-10-26T09:58:10+00:00" />
+<meta itemprop="wordCount" content="1653">
+<meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="HTTP Headers (1)"/>
+<meta name="twitter:description" content="0. Header types Headers can be grouped according to their contexts:
+Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">HTTP Headers (1)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-10-26 </span>
+        <div class="post-category">
+            <a href="/categories/http/"> http </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#0-header-types">0. Header types</a></li>
+            <li><a href="#1-content-type">1. <code>Content-Type</code></a></li>
+            <li><a href="#2-access-control-allow-origin">2. <code>Access-Control-Allow-Origin</code></a></li>
+            <li><a href="#3-location">3. <code>Location</code></a></li>
+            <li><a href="#4-cache-control">4. <code>Cache-Control</code></a></li>
+            <li><a href="#5-authorization---www-authenticate">5. <code>Authorization </code> &amp; <code>WWW-Authenticate</code></a></li>
+            <li><a href="#6-cookie">6. cookie</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h3 id="0-header-types">0. Header types</h3>
+<p>Headers can be grouped according to their contexts:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/Request_header">Request headers</a> contain more information about the resource to be fetched, or about the client requesting the resource.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/Response_header">Response headers</a> hold additional information about the response, like its location or about the server providing it.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/Representation_header">Representation headers</a> contain information about the body of the resource, like its <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types">MIME type</a>, or encoding/compression applied.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/Payload_header">Payload headers</a> contain representation-independent information about payload data, including content length and the encoding used for transport.</li>
+</ul>
+<p>Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">HTTP headers - HTTP | MDN</a></p>
+<h3 id="1-content-type">1. <code>Content-Type</code></h3>
+<p>Common values of <code>Content-Type</code> header can be <code>application/json</code>, <code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, the first two is usually used with posting form data to server, the third is used to upload file to the server.</p>
+<ul>
+<li><code>application/x-www-form-urlencoded</code>: the keys and values are encoded in key-value tuples separated by <code>'&amp;'</code>, with a <code>'='</code> between the key and the value.
+<ul>
+<li>The format of <code>application/x-www-form-urlencoded</code> is <code>&quot;username=davidzhu&amp;password=778899a&quot; </code>.</li>
+</ul>
+</li>
+<li>The format of <code>application/json</code> is <code>'{&quot;username&quot;:&quot;davidzhu&quot;, &quot;password&quot;:&quot;778899a&quot;}'</code>.</li>
+<li><code>multipart/form-data</code>: each value is sent as a block of data (&ldquo;body part&rdquo;), with a user agent-defined delimiter (&ldquo;boundary&rdquo;) separating each part. The keys are given in the <code>Content-Disposition</code> header of each part.</li>
+<li><code>text/plain</code></li>
+</ul>
+<p>HTML provides no way to generate JSON from form data, learn more: <a href="https://davidzhu.xyz/post/http/008-form-post-query-string/#4-form-data-restriction">Form Data &amp; Query String - David&rsquo;s Blog</a></p>
+<h3 id="2-access-control-allow-origin">2. <code>Access-Control-Allow-Origin</code></h3>
+<blockquote>
+<p><code>Access-Control-Allow-Origin</code> header allows servers to specify which origins <strong>are allowed to access their resources</strong>, even if they are from different origins.</p>
+</blockquote>
+<p>Learn more: <a href="https://davidzhu.xyz/post/http/003-cors-sop/">Cross-origin Request HTTP - David&rsquo;s Blog</a></p>
+<h3 id="3-location">3. <code>Location</code></h3>
+<p>The <strong><code>Location</code></strong> response header indicates the URL to redirect a page to. It only provides a meaning when served with a <code>3xx</code> (redirection) or <code>201</code> (created) status response.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">handleMkdir</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">currentPath</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Parse form.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">ParseForm</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">err</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to parse folder name: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// clean url and redirect
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span> <span class="p">=</span> <span class="s">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Location&#34;</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nf">String</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">w</span><span class="p">.</span><span class="nf">WriteHeader</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">StatusSeeOther</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Note that <code>Location</code> is a response header.</p>
+<p>Ajax call in js doesn&rsquo;t need redirection to go back to the current page.</p>
+</blockquote>
+<p>Status code 303: <a href="https://davidzhu.xyz/post/http/002-http-status-codes/">HTTP Status Codes - David&rsquo;s Blog</a></p>
+<h3 id="4-cache-control">4. <code>Cache-Control</code></h3>
+<p><code>cache-control: no-cache</code>: This directive means that cached versions of <strong>the requested resource</strong> cannot be used without first checking to see if there is an updated version. <code>max-age=0</code> is <em>a workaround for no-cache</em> , because many old (HTTP/1.0) cache implementations don&rsquo;t support no-cache.</p>
+<p><code>cache-control: private</code>: A response with a <code>private</code> directive can only be cached by the client and never by an intermediary agent, such as a <a href="https://www.cloudflare.com/learning/cdn/what-is-a-cdn/">CDN</a> or a proxy. These are often resources containing private data, such as a website displaying a user’s personal information.</p>
+<p><code>cache-control: public</code>: Conversely, the <code>public</code> directive means the requested resource can be stored by any cache.</p>
+<p>When we access a web page, there may have multiple http requests being made, such as <code>favicon.ico</code>, <code>xxx.js</code>, <code>xxx.json</code>, <code>xxx.png</code>, for each of these resources there is a http request needed to be sent, and indeed there is a corresponding http response. These resourses are called <strong>the requested resources</strong> above we mentioned. So each of the repsonse have their own http headers:</p>
+<p><img src="/001-http-headers/a.png" alt="a"></p>
+<p><img src="/001-http-headers/b.png" alt="b"></p>
+<p>Browser caching is a great way to both preserve resources and improve user experience on the Internet, but without cache-control, it would be very brittle. Every resource on every site would be bound by the same caching rules, meaning that sensitive information would be cached the same way as public information, and <strong>frequently-updated resources would be cached for the same amount of time as ones that rarely change</strong>.</p>
+<p>The code below is written in Go which responsible for handle assets request from client, <code>favicon.ico</code> for example.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">RenderAsset</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">assetPath</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">header</span> <span class="o">:=</span> <span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Cache-Control&#34;</span><span class="p">,</span> <span class="s">&#34;public, max-age=0&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">http</span><span class="p">.</span><span class="nf">ServeFile</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">filename</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><strong>Browser caching</strong> is when a web browser saves website resources so it doesn’t have to fetch them again from a server. For example, a background image on a website might be saved locally in cache so that when a user visits that page for the second time, the image will load from the user’s local files and the page will load much faster.</p>
+</blockquote>
+<blockquote>
+<p><strong>Cookies are HTTP Headers</strong>. The header is called <code>Cookie:</code>, and it contains your cookie.</p>
+</blockquote>
+<p>Learn more: <a href="https://www.cloudflare.com/learning/cdn/glossary/what-is-cache-control/">What is cache-control? | Cache explained | Cloudflare</a></p>
+<h3 id="5-authorization---www-authenticate">5. <code>Authorization </code> &amp; <code>WWW-Authenticate</code></h3>
+<p>HTTP supports the use of several authentication mechanisms to control access to pages and other resources. These mechanisms are all based around the use of the <code>401</code> status code and the <code>WWW-Authenticate</code> response header.</p>
+<p>The most widely used <strong>HTTP authentication mechanisms</strong> are:</p>
+<ul>
+<li>
+<p><strong>Basic:</strong> the client sends the user name and password as unencrypted base64 encoded text. It should only be used with HTTPS, as the password can be easily captured and reused over HTTP.</p>
+</li>
+<li>
+<p><strong>Digest:</strong> the client sends a hashed form of the password to the server. Although, the password cannot be captured over HTTP, it may be possible to replay requests using the hashed password.</p>
+</li>
+<li>
+<p><strong>NTLM:</strong> this uses a secure challenge/response mechanism that prevents password capture or replay attacks over HTTP. However, the authentication is per connection and will only work with HTTP/1.1 persistent connections. For this reason, it may not work through all HTTP proxies and can introduce large numbers of network roundtrips if connections are regularly closed by the web server.</p>
+</li>
+</ul>
+<p>In this section, we will just discuss the <strong>Basic authentication mechanism</strong>:</p>
+<p>If an HTTP receives an anonymous request for a protected resource it can force the use of Basic authentication by rejecting the request with a <code>401</code> (Access Denied) status code and setting the <code>WWW-Authenticate</code> response header as shown below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">401</span> <span class="ne">Access Denied</span>
+</span></span><span class="line"><span class="cl"><span class="n">WWW-Authenticate</span><span class="o">:</span> <span class="l">Basic realm=&#34;My Server&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Length</span><span class="o">:</span> <span class="l">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The word <strong>Basic</strong> in the <strong>WWW-Authenticate</strong> selects the authentication mechanism that the HTTP client must use to access the resource. The <strong>realm</strong> string can be set to any value to identify the secure area and may used by HTTP clients to manage passwords. Most web browsers will display a login dialog when this response is received, allowing the user to enter a username and password. This information is then used to retry the request with an <code>Authorization</code> request header:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">GET</span> <span class="nn">/securefiles/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">www.httpwatch.com</span>
+</span></span><span class="line"><span class="cl"><span class="n">Authorization</span><span class="o">:</span> <span class="l">Basic aHR0cHdhdGNoOmY=</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <strong>Authorization</strong> specifies the authentication mechanism (in this case <strong>Basic</strong>) followed by the username and password. Although, the string <strong>aHR0cHdhdGNoOmY=</strong> may look encrypted it is simply a base64 encoded version of <username>:<password>. In this example, the un-encoded string <strong>&ldquo;httpwatch:foo&rdquo;</strong> was used and would be readily available to anyone who could intercept the HTTP request.</p>
+<ul>
+<li>
+<p>The HTTP <strong><code>Authorization</code></strong> <strong>request header</strong> can be used to provide credentials that authenticate a user agent with a server, allowing access to a protected resource.</p>
+</li>
+<li>
+<p>The HTTP <strong><code>WWW-Authenticate</code></strong> <strong>response header</strong> defines the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP authentication</a> methods (&ldquo;challenges&rdquo;) that might be used to gain access to a specific resource.</p>
+</li>
+</ul>
+<p>Learn more: <a href="http://www.httpwatch.com/httpgallery/authentication/">http://www.httpwatch.com/httpgallery/authentication/</a></p>
+<blockquote>
+<p>The <strong><code>Authorization</code></strong> header is usually, but not always, sent after the user agent first attempts to request a protected resource without credentials. The server responds with a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"><code>401</code></a> <code>Unauthorized</code> message that includes at least one <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/WWW-Authenticate"><code>WWW-Authenticate</code></a> header. This header indicates what authentication schemes can be used to access the resource (and any additional information needed by the client to use them).</p>
+</blockquote>
+<blockquote>
+<p><strong>Warning:</strong> The &ldquo;Basic&rdquo; authentication scheme used in the diagram above sends the credentials <strong>encoded but not encrypted</strong>. This would be completely insecure unless the exchange was over a secure connection (HTTPS/TLS).</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="nx">username</span><span class="p">,</span> <span class="nx">password</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">BasicAuth</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">usernameMatch</span> <span class="o">:=</span> <span class="nx">subtle</span><span class="p">.</span><span class="nf">ConstantTimeCompare</span><span class="p">(</span><span class="nx">usernameHash</span><span class="p">[:],</span> <span class="nx">expectedUsernameHash</span><span class="p">[:])</span> <span class="o">==</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">passwordMatch</span> <span class="o">:=</span> <span class="nx">subtle</span><span class="p">.</span><span class="nf">ConstantTimeCompare</span><span class="p">(</span><span class="nx">passwordHash</span><span class="p">[:],</span> <span class="nx">expectedPasswordHash</span><span class="p">[:])</span> <span class="o">==</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">usernameMatch</span> <span class="o">&amp;&amp;</span> <span class="nx">passwordMatch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="o">...</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;WWW-Authenticate&#34;</span><span class="p">,</span> <span class="s">`Basic realm=&#34;restricted&#34;, charset=&#34;UTF-8&#34;`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">http</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="s">&#34;Unauthorized&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusUnauthorized</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>Basic realm=&quot;restricted&quot;</code>, what does this mean?</p>
+<p>In short, endpoints in the same realm should share credentials. If your credentials work for a endpoint with the realm <code>&quot;restricted&quot;</code>, it should be assumed that the same username and password combination should work for another endpoint with the same realm.</p>
+<p>How to group pages (endpoints) with realm?</p>
+<p><code>realm</code> value doesn&rsquo;t have magic, you still need apply the auth middleware for each endpoint at server side. But different value of realm will instruct browser use different credentials (username, password) for the different request url automatically. The concept of realms in the context of authentication is primarily used to instruct the client (typically a web browser) to send different credentials for different request URLs automatically. The server-side implementation still requires applying the authentication middleware to each endpoint.</p>
+<p>Code credit to: <a href="https://www.alexedwards.net/blog/basic-authentication-in-go">Go BasicAuth</a></p>
+<p>HTTP authentication framework: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP authentication - HTTP | MDN</a></p>
+<p>Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization">Authorization - HTTP | MDN</a></p>
+<h3 id="6-cookie">6. cookie</h3>
+<p>There are two headers related to cookie, one is <code>Set-Cookie</code> header another is <code>Cookie</code> header.</p>
+<p>After receiving an HTTP request, a server can send one or more <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie"><code>Set-Cookie</code></a> headers with the response. The browser usually stores the cookie and sends it with requests made to the same server inside a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie"><code>Cookie</code></a> HTTP header.</p>
+<p>For example, a response from server contains cookie headers may looks like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">HTTP/2.0 200 OK
+</span></span><span class="line"><span class="cl">Content-Type: text/html
+</span></span><span class="line"><span class="cl">Set-Cookie: yummy_cookie=choco
+</span></span><span class="line"><span class="cl">Set-Cookie: tasty_cookie=strawberry
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[page content]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>A HTTP request may looks like this below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">GET /sample_page.html HTTP/2.0
+</span></span><span class="line"><span class="cl">Host: www.example.org
+</span></span><span class="line"><span class="cl">Cookie: yummy_cookie=choco; tasty_cookie=strawberry
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Therefore, when I want set cookie manually for my http request, I&rsquo;ll probably do something like this (I do this in Go):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">req</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">NewRequest</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">MethodPost</span><span class="p">,</span> <span class="s">&#34;/chat&#34;</span><span class="p">,</span> <span class="nx">your_encoded_message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// set content-type header
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">req</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// set cookie header (cookie is a key value data)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">req</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Cookie&#34;</span><span class="p">,</span> <span class="s">&#34;session_id=xxxxxxxxxxx&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If I want get cookie from repsonse, I&rsquo;ll probably retrieve the cookie like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">response</span> <span class="o">:=</span> <span class="nf">makeRequest</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">my_cooke</span> <span class="o">:=</span> <span class="nx">response</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;Set-Cookie&#34;</span><span class="p">)</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Cookie is just a header which having no doubt resides in the header of HTTP mesages, don&rsquo;t overthinking.</p>
+<p>Reference: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies">https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-10-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/http/">http</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/http/002-http-status-codes-1/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">HTTP Status Codes</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/bugs/006-cgo-docker-image-build-error/">
+            <span class="next-text nav-default">CGO Compile Error Building Docker Image</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

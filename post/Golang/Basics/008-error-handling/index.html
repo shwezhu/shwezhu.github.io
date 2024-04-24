@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Error handling - Go - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1.error interface The error type is an interface type. An error variable represents any value that can describe itself as a string.
+1 2 3 type error interface { Error() string } Interface error is a built-in type, as with all other built in types, is predeclared in the universe block. The most commonly-used error implementation is the errors package’s unexported errorString type.
+1 2 3 4 5 6 7 8 // errorString is a trivial implementation of error." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/golang/basics/008-error-handling/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Error handling - Go" />
+<meta property="og:description" content="1.error interface The error type is an interface type. An error variable represents any value that can describe itself as a string.
+1 2 3 type error interface { Error() string } Interface error is a built-in type, as with all other built in types, is predeclared in the universe block. The most commonly-used error implementation is the errors package’s unexported errorString type.
+1 2 3 4 5 6 7 8 // errorString is a trivial implementation of error." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/golang/basics/008-error-handling/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-09-08T09:13:06+00:00" />
+<meta property="article:modified_time" content="2023-09-08T09:13:06+00:00" />
+<meta itemprop="name" content="Error handling - Go">
+<meta itemprop="description" content="1.error interface The error type is an interface type. An error variable represents any value that can describe itself as a string.
+1 2 3 type error interface { Error() string } Interface error is a built-in type, as with all other built in types, is predeclared in the universe block. The most commonly-used error implementation is the errors package’s unexported errorString type.
+1 2 3 4 5 6 7 8 // errorString is a trivial implementation of error."><meta itemprop="datePublished" content="2023-09-08T09:13:06+00:00" />
+<meta itemprop="dateModified" content="2023-09-08T09:13:06+00:00" />
+<meta itemprop="wordCount" content="1582">
+<meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Error handling - Go"/>
+<meta name="twitter:description" content="1.error interface The error type is an interface type. An error variable represents any value that can describe itself as a string.
+1 2 3 type error interface { Error() string } Interface error is a built-in type, as with all other built in types, is predeclared in the universe block. The most commonly-used error implementation is the errors package’s unexported errorString type.
+1 2 3 4 5 6 7 8 // errorString is a trivial implementation of error."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Error handling - Go</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-09-08 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/basics/"> basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1error-interface">1.<code>error</code> interface</a></li>
+        <li><a href="#2-create-an-error-value">2. Create an error value</a>
+          <ul>
+            <li><a href="#21-ways-to-create-an-error-value">2.1. Ways to create an error value</a></li>
+            <li><a href="#22-summarize-the-context-when-create-an-error-value">2.2. Summarize the context when create an error value</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-some-common-ways-for-error-handling">3. Some common ways for error handling</a>
+          <ul>
+            <li><a href="#31-create-error-value-with-a-custom-error-type---provide-details">3.1. Create error value with a custom error type - provide details</a></li>
+            <li><a href="#32-dont-return-error-dirctly---avoid-repetitive-error-handling">3.2. Don&rsquo;t return error dirctly - avoid repetitive error handling</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1error-interface">1.<code>error</code> interface</h2>
+<p>The <code>error</code> type is an interface type. An <code>error</code> variable represents any value that <strong>can</strong> describe itself as a string.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="kt">error</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Interface <code>error</code> is a built-in type, as with all other built in types, is <a href="https://go.dev/doc/go_spec.html#Predeclared_identifiers">predeclared</a> in the <a href="https://go.dev/doc/go_spec.html#Blocks">universe block</a>. The most commonly-used <code>error</code> implementation is the <a href="https://go.dev/pkg/errors/">errors</a> package’s <strong>unexported</strong> <code>errorString</code> type.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// errorString is a trivial implementation of error.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">errorString</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">s</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">errorString</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">s</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>errorString</code> is an unexported type which means we cannot use it directly outside of <a href="https://go.dev/pkg/errors/">errors</a> package, but we can use <code>New</code> function declared in the same package to create a value of <code>errorString</code>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// New returns an error that formats as the given text.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">text</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">errorString</span><span class="p">{</span><span class="nx">text</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The type of function returns is an <code>error</code> but it actually returns a pointer, a little weird probably for newb from c++. In Go everything can implement a interface an <code>int</code>, <code>string</code> even a <code>pointer</code>. It&rsquo;s all about if the method set of that type contians all the methods declared in a interface, learn more: <a href="https://davidzhu.xyz/post/golang/basics/013-methods-receivers/#3-pointer-receiver---a-practical-example">Methods Receivers &amp; Concurrency - Go - David&rsquo;s Blog</a></p>
+<h2 id="2-create-an-error-value">2. Create an error value</h2>
+<h3 id="21-ways-to-create-an-error-value">2.1. Ways to create an error value</h3>
+<p>You can create an <code>error</code> with these functions:</p>
+<ul>
+<li><code>errors.New()</code>,</li>
+<li><code>fmt.Errorf()</code>, often used to provide conetxt.</li>
+<li>Use a custom error type, typically used for provide error details.</li>
+</ul>
+<p>Note that <code>errors.New()</code> and <code>fmt.Errorf()</code> just return an error value that with the string you passed, not something magic. An error value likes an <code>int</code> value, struct value or pointer value. Learn more: <a href="https://go.dev/blog/errors-are-values">Errors are values</a></p>
+<p>e.g.,</p>
+<p>Functions usually need to return an error to indicate an abnormal state in Go. For example, the <code>os.Open</code> function returns a non-nil <code>error</code> value when it fails to open a file:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Open</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">file</span> <span class="o">*</span><span class="nx">File</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If you want return an error you might want use <code>errors.New</code> which defined in <a href="https://go.dev/pkg/errors/">errors</a> package we have talked above:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Sqrt</span><span class="p">(</span><span class="nx">f</span> <span class="kt">float64</span><span class="p">)</span> <span class="p">(</span><span class="kt">float64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">f</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;math: square root of negative number&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// implementation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="22-summarize-the-context-when-create-an-error-value">2.2. Summarize the context when create an error value</h3>
+<p><strong>It is the error implementation’s responsibility to summarize the context.</strong> The error returned by <code>os.Open</code> formats as “open /etc/passwd: permission denied,” not just “permission denied.” The error returned by our <code>Sqrt</code> is missing information about the invalid argument.</p>
+<p>To add that information, a useful function is the <code>fmt</code> package’s <code>Errorf</code>. It formats a string according to <code>Printf</code>’s rules and returns it as an <code>error</code> created by <code>errors.New</code>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Sqrt</span><span class="p">(</span><span class="nx">f</span> <span class="kt">float64</span><span class="p">)</span> <span class="p">(</span><span class="kt">float64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">f</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    	<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;math: square root of negative number %g&#34;</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// implementation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Sometimes we usually return a new error value which contains the context:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;math: failed to calculate sqrt: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-some-common-ways-for-error-handling">3. Some common ways for error handling</h2>
+<p>We have talked that there are three ways to create an error, now let&rsquo;s discuss how to use them in practice.</p>
+<h3 id="31-create-error-value-with-a-custom-error-type---provide-details">3.1. Create error value with a custom error type - provide details</h3>
+<p>In many cases <code>fmt.Errorf</code> is good enough, but since <code>error</code> is an interface, you can use arbitrary data structures as error values, to allow callers to inspect the details of the error.</p>
+<p>The <a href="https://go.dev/pkg/encoding/json/">json</a> package specifies a <code>SyntaxError</code> type that the <code>json.Decode</code> function returns when it encounters a syntax error parsing a JSON blob.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">SyntaxError</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">msg</span>    <span class="kt">string</span> <span class="c1">// description of error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">Offset</span> <span class="kt">int64</span>  <span class="c1">// error occurred after reading Offset bytes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">SyntaxError</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">msg</span> <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <code>Offset</code> field isn’t even shown in the default formatting of the error, but callers can use it to add file and line information to their error messages:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">dec</span><span class="p">.</span><span class="nf">Decode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">val</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">serr</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">err</span><span class="p">.(</span><span class="o">*</span><span class="nx">json</span><span class="p">.</span><span class="nx">SyntaxError</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// serr.Offset provide detials about error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">line</span><span class="p">,</span> <span class="nx">col</span> <span class="o">:=</span> <span class="nf">findLine</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="nx">serr</span><span class="p">.</span><span class="nx">Offset</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;%s:%d:%d: %v&#34;</span><span class="p">,</span> <span class="nx">f</span><span class="p">.</span><span class="nf">Name</span><span class="p">(),</span> <span class="nx">line</span><span class="p">,</span> <span class="nx">col</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="32-dont-return-error-dirctly---avoid-repetitive-error-handling">3.2. Don&rsquo;t return error dirctly - avoid repetitive error handling</h3>
+<h4 id="321-return-a-bool-value-instead-to-indicate-an-abnormal-state">3.2.1. Return a <code>bool</code> value instead to indicate an abnormal state</h4>
+<p>Here’s a simple example from the <code>bufio</code> package’s <a href="https://go.dev/pkg/bufio/#Scanner"><code>Scanner</code></a> type. Its <a href="https://go.dev/pkg/bufio/#Scanner.Scan"><code>Scan</code></a> method performs the underlying I/O, which can of course lead to an error. Yet the <code>Scan</code> method does not expose an error at all. Instead, it returns a boolean, and a separate method, to be run at the end of the scan, reports whether an error occurred. Client code looks like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">scanner</span> <span class="o">:=</span> <span class="nx">bufio</span><span class="p">.</span><span class="nf">NewScanner</span><span class="p">(</span><span class="nx">input</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">scanner</span><span class="p">.</span><span class="nf">Scan</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">token</span> <span class="o">:=</span> <span class="nx">scanner</span><span class="p">.</span><span class="nf">Text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// process token
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">scanner</span><span class="p">.</span><span class="nf">Err</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// process the error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Sure, there is a nil check for an error, but it appears and executes only once. The <code>Scan</code> method could instead have been defined as</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Scanner</span><span class="p">)</span> <span class="nf">Scan</span><span class="p">()</span> <span class="p">(</span><span class="nx">token</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>and then the example user code might be (depending on how the token is retrieved),</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">scanner := bufio.NewScanner(input)
+</span></span><span class="line"><span class="cl">for {
+</span></span><span class="line"><span class="cl">    token, err := scanner.Scan()
+</span></span><span class="line"><span class="cl">    if err != nil {
+</span></span><span class="line"><span class="cl">        return err // or maybe break
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    // process token
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This isn’t very different, but there is one important distinction. In this code, the client must check for an error on every iteration, but in the real <code>Scanner</code> API, the error handling is abstracted away from the key API element, which is iterating over tokens. With the real API, the client’s code therefore feels more natural: loop until done, then worry about errors. Error handling does not obscure the flow of control.</p>
+<h4 id="321-return-nothing">3.2.1. Return nothing</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">fd</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">p0</span><span class="p">[</span><span class="nx">a</span><span class="p">:</span><span class="nx">b</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">fd</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">p1</span><span class="p">[</span><span class="nx">c</span><span class="p">:</span><span class="nx">d</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">fd</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">p2</span><span class="p">[</span><span class="nx">e</span><span class="p">:</span><span class="nx">f</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// and so on
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>The code above is very repetitive. A function literal closing over the error variable would help:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">err</span> <span class="kt">error</span>
+</span></span><span class="line"><span class="cl"><span class="nx">write</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">buf</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">w</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nf">write</span><span class="p">(</span><span class="nx">p0</span><span class="p">[</span><span class="nx">a</span><span class="p">:</span><span class="nx">b</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="nf">write</span><span class="p">(</span><span class="nx">p1</span><span class="p">[</span><span class="nx">c</span><span class="p">:</span><span class="nx">d</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="nf">write</span><span class="p">(</span><span class="nx">p2</span><span class="p">[</span><span class="nx">e</span><span class="p">:</span><span class="nx">f</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// and so on
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This pattern works well, but requires a closure in each function doing the writes; a separate helper function is clumsier to use because the <code>err</code> variable needs to be maintained across calls (try it).</p>
+<p>We can make this cleaner, more general, and reusable by borrowing the idea from the <code>Scan</code> method above.</p>
+<p>I defined an object called an <code>errWriter</code>, something like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">errWriter</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">w</span>   <span class="nx">io</span><span class="p">.</span><span class="nx">Writer</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">err</span> <span class="kt">error</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>and gave it one method, <code>write.</code> It doesn’t need to have the standard <code>Write</code> signature, and it’s lower-cased in part to highlight the distinction. The <code>write</code> method calls the <code>Write</code> method of the underlying <code>Writer</code> and records the first error for future reference:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">ew</span> <span class="o">*</span><span class="nx">errWriter</span><span class="p">)</span> <span class="nf">write</span><span class="p">(</span><span class="nx">buf</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">ew</span><span class="p">.</span><span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">_</span><span class="p">,</span> <span class="nx">ew</span><span class="p">.</span><span class="nx">err</span> <span class="p">=</span> <span class="nx">ew</span><span class="p">.</span><span class="nx">w</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As soon as an error occurs, the <code>write</code> method becomes a no-op but the error value is saved.</p>
+<p>Given the <code>errWriter</code> type and its <code>write</code> method, the code above can be refactored:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">ew</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">errWriter</span><span class="p">{</span><span class="nx">w</span><span class="p">:</span> <span class="nx">fd</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ew</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="nx">p0</span><span class="p">[</span><span class="nx">a</span><span class="p">:</span><span class="nx">b</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ew</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="nx">p1</span><span class="p">[</span><span class="nx">c</span><span class="p">:</span><span class="nx">d</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ew</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="nx">p2</span><span class="p">[</span><span class="nx">e</span><span class="p">:</span><span class="nx">f</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// and so on
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="nx">ew</span><span class="p">.</span><span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">ew</span><span class="p">.</span><span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This is cleaner, even compared to the use of a closure, and also makes the actual sequence of writes being done easier to see on the page. There is no clutter anymore. Programming with error values (and interfaces) has made the code nicer.</p>
+<p>In fact, this pattern appears often in the standard library. The <a href="https://go.dev/pkg/archive/zip/"><code>archive/zip</code></a> and <a href="https://go.dev/pkg/net/http/"><code>net/http</code></a> packages use it. More salient to this discussion, the <a href="https://go.dev/pkg/bufio/"><code>bufio</code> package’s <code>Writer</code></a> is actually an implementation of the <code>errWriter</code> idea. Although <code>bufio.Writer.Write</code> returns an error, that is mostly about honoring the <a href="https://go.dev/pkg/io/#Writer"><code>io.Writer</code></a> interface. The <code>Write</code> method of <code>bufio.Writer</code> behaves just like our <code>errWriter.write</code> method above, with <code>Flush</code> reporting the error, so our example could be written like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">b</span> <span class="o">:=</span> <span class="nx">bufio</span><span class="p">.</span><span class="nf">NewWriter</span><span class="p">(</span><span class="nx">fd</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">b</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">p0</span><span class="p">[</span><span class="nx">a</span><span class="p">:</span><span class="nx">b</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="nx">b</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">p1</span><span class="p">[</span><span class="nx">c</span><span class="p">:</span><span class="nx">d</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="nx">b</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">p2</span><span class="p">[</span><span class="nx">e</span><span class="p">:</span><span class="nx">f</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// and so on
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="nx">b</span><span class="p">.</span><span class="nf">Flush</span><span class="p">()</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nf">Flush</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>There is one significant drawback to this approach, at least for some applications: there is no way to know how much of the processing completed before the error occurred. If that information is important, a more fine-grained approach is necessary. Often, though, an all-or-nothing check at the end is sufficient.</p>
+<p>We’ve looked at just one technique for avoiding repetitive error handling code. Keep in mind that the use of <code>errWriter</code> or <code>bufio.Writer</code> isn’t the only way to simplify error handling, and this approach is not suitable for all situations. The key lesson, however, is that errors are values and the full power of the Go programming language is available for processing them.</p>
+<p>References:</p>
+<ul>
+<li><a href="https://go.dev/blog/error-handling-and-go">Error handling and Go - The Go Programming Language</a></li>
+<li><a href="https://go.dev/blog/errors-are-values">Errors are values - The Go Programming Language</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-09-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/networking/007-tun-tap-device/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">TUN/TAP Devices</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/python/basics/002-variable-parameter/">
+            <span class="next-text nav-default">Variable Parameter Python</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

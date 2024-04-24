@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>域名分级和DNS记录之何为www - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. DNS Records: A &amp;amp; CNAME 购买域名后, 肯定要在域名设置页面为自己的域名添加A, CNAME或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/build-website/domain-name-dns-records/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="域名分级和DNS记录之何为www" />
+<meta property="og:description" content="1. DNS Records: A &amp; CNAME 购买域名后, 肯定要在域名设置页面为自己的域名添加A, CNAME或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/build-website/domain-name-dns-records/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-04-23T00:15:30+00:00" />
+<meta property="article:modified_time" content="2023-04-23T00:15:30+00:00" />
+<meta itemprop="name" content="域名分级和DNS记录之何为www">
+<meta itemprop="description" content="1. DNS Records: A &amp; CNAME 购买域名后, 肯定要在域名设置页面为自己的域名添加A, CNAME或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地"><meta itemprop="datePublished" content="2023-04-23T00:15:30+00:00" />
+<meta itemprop="dateModified" content="2023-04-23T00:15:30+00:00" />
+<meta itemprop="wordCount" content="2858">
+<meta itemprop="keywords" content="Build Website,DNS Records," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="域名分级和DNS记录之何为www"/>
+<meta name="twitter:description" content="1. DNS Records: A &amp; CNAME 购买域名后, 肯定要在域名设置页面为自己的域名添加A, CNAME或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">域名分级和DNS记录之何为www</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-04-23 </span>
+        <div class="post-category">
+            <a href="/categories/build-website/"> Build Website </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-dns-records-a--cname">1. DNS Records: A &amp; CNAME</a></li>
+        <li><a href="#2-www是干什么的">2. www是干什么的</a>
+          <ul>
+            <li><a href="#21-dns-hierarchy">2.1. DNS Hierarchy</a></li>
+            <li><a href="#22-subdomain-和-apex-domain">2.2. Subdomain 和 Apex Domain</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-dns-查询过程">3. DNS 查询过程</a></li>
+        <li><a href="#4-阅读实践">4. 阅读实践</a>
+          <ul>
+            <li><a href="#41-about-custom-domains-and-github-pages">4.1. About custom domains and GitHub Pages</a></li>
+            <li><a href="#42-using-a-subdomain-for-your-github-pages-site">4.2. Using a subdomain for your GitHub Pages site</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-dns-records-a--cname">1. DNS Records: A &amp; CNAME</h2>
+<p>购买域名后, 肯定要在域名设置页面为自己的域名添加<code>A</code>, <code>CNAME</code>或其他类型的DNS Records, 这一步就是为了把你购买的域名绑定到指定的ip地址,</p>
+<p>把域名和服务器IP关联就需要为域名添加 <code>A</code> 记录, 需要指定 HOSTNAME 和 IP, 其中 <code>HOSTNAME</code> 可以填<code>@</code>或者<code>www</code>, 或者不填, <code>@</code>代表空即不填或者填<code>@</code>都是一个意思 (还有个概念叫wildcard, 即<code>*.example.com</code>)</p>
+<p><img src="/domain-name-dns-records/a-8733304.png" alt="a"></p>
+<p>添加 <code>CNAME记录</code> 需要指定<strong>HOSTNAME</strong>和<strong>target hostname</strong>,</p>
+<p><img src="/domain-name-dns-records/b-8733375.png" alt="b"></p>
+<p>下图是添加 <code>CNAME</code> 记录的例子:</p>
+<p><img src="/domain-name-dns-records/a.png" alt=""></p>
+<p>添加之后, 等大概半小时就会生效, 可以使用 <code>dig</code> 命令查看:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ dig www.shaowenzhu.top +nostats +nocomments +nocmd
+</span></span><span class="line"><span class="cl"><span class="p">;</span> &lt;&lt;&gt;&gt; DiG 9.10.6 &lt;&lt;&gt;&gt; www.shaowenzhu.top +nostats +nocomments +nocmd
+</span></span><span class="line"><span class="cl"><span class="p">;;</span> global options: +cmd
+</span></span><span class="line"><span class="cl"><span class="p">;</span>www.shaowenzhu.top.		IN	A
+</span></span><span class="line"><span class="cl">www.shaowenzhu.top.	7207	IN	CNAME	shwezhu.github.io.
+</span></span><span class="line"><span class="cl">shwezhu.github.io.	1937	IN	A	185.199.108.153
+</span></span><span class="line"><span class="cl">shwezhu.github.io.	1937	IN	A	185.199.109.153
+</span></span><span class="line"><span class="cl">shwezhu.github.io.	1937	IN	A	185.199.110.153
+</span></span><span class="line"><span class="cl">shwezhu.github.io.	1937	IN	A	185.199.111.153
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>添加 <code>A</code> 记录时, 相同 IP 可以有不同的 <code>HOSTNAME</code>:</p>
+<p><img src="/domain-name-dns-records/c-8734697.png" alt="c"></p>
+<p>一个域名也可以拥有多个 ip 地址不同的 <code>A</code> 记录, 如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">HOSTNAME: @, IP: 1.2.3.4
+</span></span><span class="line"><span class="cl">HOSTNAME: www, IP: 6.7.8.5
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>一般我们的域名会自带默认的 DNS Records, 如下图,</p>
+<p><img src="/domain-name-dns-records/init_dns.png" alt=""></p>
+<p>所以我们买了域名之后做的第一件事就应该删除这些默认记录(你可以不删用于测试), 不然等你又添加了一个A记录, 这时候你的域名就会被解析到多个IP(默认的和你刚添加的), 那浏览器访问你域名的时候, 选择哪个呢? 我查了一下论坛, 有人说是choose randomly, 所以如果你不删除域名所有的默认DNS Records, 那浏览器访问你域名的时候就有可能选择“错误”的ip,</p>
+<p>下面是回答个链接, 这个其实自己为域名添加俩不同的A记录用<code>dig</code>测试一下就行了, 但是我懒, 还得等半小时生效, 所以就不去验证了~</p>
+<blockquote>
+<p>Yes you can. It is called round-robin DNS, and the browser just chooses one of them randomly. It is a well used method of getting cheap load balancing, but if one host goes down, users will still try to access it. <a href="https://serverfault.com/q/528742/761923">https://serverfault.com/q/528742/761923</a></p>
+</blockquote>
+<p>一般我们想把域名绑定到服务器的时候, 为我们的域名添加两个A类DNS Records就行了, 不用改什么Name Server, 类似下面这个样子(注意TTL一般设置为3600s就可以啦):</p>
+<p><img src="/domain-name-dns-records/domain_to_server.png" alt=""></p>
+<h2 id="2-www是干什么的">2. www是干什么的</h2>
+<p>上面我们添加DNS记录的时候有时候(根据自己的需求)需要把hostname的值填为www, 那这个是干嘛的呢, 填与不填? 是不是说, hostname空着不填,我们只能通过<code>exapmle.com</code>来访问服务器, 填了之后, 我们就可以通过<code>www.example.com</code>来访问服务器.</p>
+<p>然后之前我的域名绑定的是我服务器的ip, url是<code>http://shaowenzhu.top/</code>, 看着好奇怪, 不是好多网站都是<code>www.</code>开头的吗, 为啥我的是<code>http://shaowenzhu.top/</code>,</p>
+<h3 id="21-dns-hierarchy">2.1. DNS Hierarchy</h3>
+<p>先了解一下DNS hierarchy, 你就懂上面的<code>www</code>是什么了,</p>
+<p>DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点<code>.</code></p>
+<p><img src="/domain-name-dns-records/c.png" alt=""></p>
+<p>多出的那个<code>.</code>是Root Level Domain, 比如<code>www.example.com</code>真正的名字是<code>www.example.com.root</code>然后上图就简写为<code>www.example.com.</code> 因为根域名<code>.root</code>对于所有域名都是一样的，所以平时是省略的。</p>
+<p><strong>Root Level Domain</strong>(<code>.root</code>)的下一级叫<strong>top-level domain</strong>(TLD)，比如<code>.com</code>, <code>.net</code></p>
+<p>再下一级叫<strong>second-level domain</strong>SLD，比如<code>www.example.com</code>里面的<code>.example</code>, 有人直接把<code>example.com</code>这种叫做SLD</p>
+<p>再下一级是<strong>HOSTNAME</strong>，比如<code>www.example.com</code>里面的<code>www</code>，这是我们可以任意分配的。那具体怎么分配呢? 就是在域名管理页面, 有添加DNS Records选项, 比如你打算添加个A类记录, 这时候要求你填HOSTNAME和IP地址, 这时候HOSTNAME你可以填<code>www</code>, <code>@</code>, <code>blog</code>等等, 然后IP就是你的服务器的IP地址, 可以参考上面的添加A记录和CNAME的图.</p>
+<p>总结一下，域名的层级结构如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">HOSTNAME.SLD.TLD.root
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/domain-name-dns-records/d.png" alt=""></p>
+<h3 id="22-subdomain-和-apex-domain">2.2. Subdomain 和 Apex Domain</h3>
+<p>然后还有个subdomain 和 apex domain, 其实subdomain就是HOSTNAME, 看一下Github上的解释:</p>
+<blockquote>
+<p>An <strong>apex domain</strong> is a custom domain that does not contain a <strong>subdomain</strong>, such as <code>example.com</code>. Apex domains are also known as base, bare, naked, root apex, or zone apex domains.</p>
+</blockquote>
+<h2 id="3-dns-查询过程">3. DNS 查询过程</h2>
+<blockquote>
+<p>DNS 中的域名都是用<strong>句点</strong>来分隔的，比如 <code>www.server.com</code>，这里的句点代表了不同层次之间的<strong>界限</strong>。在域名中，<strong>越靠右</strong>的位置表示其层级<strong>越高</strong>。毕竟域名是外国人发明，所以思维和中国人相反，比如说一个城市地点的时候，外国喜欢从小到大的方式顺序说起（如 XX 街道 XX 区 XX 市 XX 省），而中国则喜欢从大到小的顺序（如 XX 省 XX 市 XX 区 XX 街道）。根域是在最顶层，它的下一层就是 com 顶级域，再下面是 server.com。</p>
+</blockquote>
+<p>浏览器首先看一下自己的缓存里有没有，如果没有就向操作系统的缓存要，还没有就检查本机域名解析文件 <code>hosts</code>，如果还是没有，就会 DNS 服务器进行查询，查询的过程如下：</p>
+<ol>
+<li>客户端首先会发出一个 DNS 请求，问 <a href="https://www.server.com">www.server.com</a> 的 IP 是啥，并发给本地 DNS 服务器（也就是客户端的 TCP/IP 设置中填写的 DNS 服务器地址）。</li>
+<li>本地域名服务器收到客户端的请求后，如果缓存里的表格能找到 <a href="https://www.server.com">www.server.com</a>，则它直接返回 IP 地址。如果没有，本地 DNS 会去问它的根域名服务器：“老大， 能告诉我 <a href="https://www.server.com">www.server.com</a> 的 IP 地址吗？” 根域名服务器是最高层次的，它不直接用于域名解析，但能指明一条道路。</li>
+<li>根 DNS 收到来自本地 DNS 的请求后，发现后置是 .com，说：“www.server.com 这个域名归 .com 区域管理”，我给你 .com 顶级域名服务器地址给你，你去问问它吧。”</li>
+<li>本地 DNS 收到顶级域名服务器的地址后，发起请求问“老二， 你能告诉我 <a href="https://www.server.com">www.server.com</a> 的 IP 地址吗？”</li>
+<li>顶级域名服务器说：“我给你负责 <a href="https://www.server.com">www.server.com</a> 区域的权威 DNS 服务器的地址，你去问它应该能问到”。</li>
+<li>本地 DNS 于是转向问权威 DNS 服务器：“老三，www.server.com对应的IP是啥呀？” server.com 的权威 DNS 服务器，它是域名解析结果的原出处。为啥叫权威呢？就是我的域名我做主。</li>
+<li>权威 DNS 服务器查询后将对应的 IP 地址 X.X.X.X 告诉本地 DNS。</li>
+<li>本地 DNS 再将 IP 地址返回客户端，客户端和目标建立连接。</li>
+</ol>
+<p>至此，我们完成了 DNS 的解析过程。现在总结一下，整个过程我画成了一个图。</p>
+<p><img src="/domain-name-dns-records/33.webp" alt="33"></p>
+<h2 id="4-阅读实践">4. 阅读实践</h2>
+<p>其实我们完整度以下<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages">Github这篇文档</a>即如何为GitHub pages设置自定义域名, 你就懂了, 学了知识要实践的嘛, 我复制一部分到下面了,</p>
+<h3 id="41-about-custom-domains-and-github-pages">4.1. About custom domains and GitHub Pages</h3>
+<p>GitHub Pages supports using custom domains, or changing the root of your site&rsquo;s URL from the default, like octocat.github.io, to any domain you own.</p>
+<p>GitHub Pages works with two types of domains: <strong>subdomains</strong> and <strong>apex domains</strong>. For a list of unsupported custom domains, see &ldquo;<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages#custom-domain-names-that-are-unsupported">Troubleshooting custom domains and GitHub Pages</a>.&rdquo;</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Supported custom domain type</th>
+<th style="text-align:left">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>www</code> subdomain</td>
+<td style="text-align:left"><code>www.example.com</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Custom subdomain</td>
+<td style="text-align:left"><code>blog.example.com</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Apex domain</td>
+<td style="text-align:left"><code>example.com</code></td>
+</tr>
+</tbody>
+</table>
+<p>You can set up either or both of apex and <code>www</code> subdomain configurations for your site. For more information on apex domains, see &ldquo;<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages#using-an-apex-domain-for-your-github-pages-site">Using an apex domain for your GitHub Pages site</a>.&rdquo;</p>
+<p>We recommend always using a <code>www</code> subdomain, even if you also use an apex domain. When you create a new site with an apex domain, we automatically attempt to secure the <code>www</code> subdomain for use when serving your site&rsquo;s content, but you need to make the DNS changes to use the <code>www</code> subdomain. If you configure a <code>www</code> subdomain, we automatically attempt to secure the associated apex domain. For more information, see &ldquo;<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site">Managing a custom domain for your GitHub Pages site</a>.&rdquo;</p>
+<p>After you configure a custom domain for a user or organization site, the custom domain will replace the <code>&lt;user&gt;.github.io</code> or <code>&lt;organization&gt;.github.io</code> portion of the URL for any project sites owned by the account that do not have a custom domain configured. For example, if the custom domain for your user site is <code>www.octocat.com</code>, and you have a project site with no custom domain configured that is published from a repository called <code>octo-project</code>, the GitHub Pages site for that repository will be available at <code>www.octocat.com/octo-project</code>. For more information about each type of site and handling custom domains, see &ldquo;<a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#types-of-github-pages-sites">About GitHub Pages</a>.&rdquo;</p>
+<h3 id="42-using-a-subdomain-for-your-github-pages-site">4.2. Using a subdomain for your GitHub Pages site</h3>
+<p>A subdomain is the part of a URL before the root domain. You can configure your subdomain as <code>www</code> or as a distinct section of your site, like <code>blog.example.com</code>.</p>
+<p>Subdomains are configured with a <code>CNAME</code> record through your DNS provider. For more information, see &ldquo;<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-a-subdomain">Managing a custom domain for your GitHub Pages site</a>.&rdquo;</p>
+<h4 id="421-www-subdomains">4.2.1. <code>www</code> subdomains</h4>
+<p>A <code>www</code> subdomain is the most commonly used type of subdomain. For example, <code>www.example.com</code> includes a <code>www</code> subdomain.</p>
+<p><code>www</code> subdomains are the most stable type of custom domain because <code>www</code> subdomains are not affected by changes to the IP addresses of GitHub&rsquo;s servers.</p>
+<h4 id="422-custom-subdomains">4.2.2. Custom subdomains</h4>
+<p>A custom subdomain is a type of subdomain that doesn&rsquo;t use the standard <code>www</code> variant. Custom subdomains are mostly used when you want two distinct sections of your site. For example, you can create a site called <code>blog.example.com</code> and customize that section independently from <code>www.example.com</code>.</p>
+<p><a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages">https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages</a></p>
+<p><a href="https://docs.github.com/zh/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages">https://docs.github.com/zh/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-04-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/build-website/">Build Website</a>
+          <a href="/tags/dns-records/">DNS Records</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/build-website/hexo-to-remote-server/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">部署博客到服务器 - Hexo</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/git/002-git-branch/">
+            <span class="next-text nav-default">Git分支指令及切换分支注意事项</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

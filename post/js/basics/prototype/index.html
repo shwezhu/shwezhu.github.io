@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>说说 JS 中的 Prototype - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="{} 就是个空对象, {} 然鹅在 Python 里是个 dictionary, 1. Prototype Every object in JavaScript has a built-in property, which is called its prototype. The prototype is itself an object, so the prototype will have its own prototype, making what&amp;rsquo;s called a prototype chain. The chain ends when we reach a prototype that has null for its own prototype. Note: The property" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/js/basics/prototype/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="说说 JS 中的 Prototype" />
+<meta property="og:description" content="{} 就是个空对象, {} 然鹅在 Python 里是个 dictionary, 1. Prototype Every object in JavaScript has a built-in property, which is called its prototype. The prototype is itself an object, so the prototype will have its own prototype, making what&rsquo;s called a prototype chain. The chain ends when we reach a prototype that has null for its own prototype. Note: The property" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/js/basics/prototype/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-06-20T21:41:32+00:00" />
+<meta property="article:modified_time" content="2023-06-20T21:41:32+00:00" />
+<meta itemprop="name" content="说说 JS 中的 Prototype">
+<meta itemprop="description" content="{} 就是个空对象, {} 然鹅在 Python 里是个 dictionary, 1. Prototype Every object in JavaScript has a built-in property, which is called its prototype. The prototype is itself an object, so the prototype will have its own prototype, making what&rsquo;s called a prototype chain. The chain ends when we reach a prototype that has null for its own prototype. Note: The property"><meta itemprop="datePublished" content="2023-06-20T21:41:32+00:00" />
+<meta itemprop="dateModified" content="2023-06-20T21:41:32+00:00" />
+<meta itemprop="wordCount" content="1756">
+<meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="说说 JS 中的 Prototype"/>
+<meta name="twitter:description" content="{} 就是个空对象, {} 然鹅在 Python 里是个 dictionary, 1. Prototype Every object in JavaScript has a built-in property, which is called its prototype. The prototype is itself an object, so the prototype will have its own prototype, making what&rsquo;s called a prototype chain. The chain ends when we reach a prototype that has null for its own prototype. Note: The property"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">说说 JS 中的 Prototype</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-06-20 </span>
+        <div class="post-category">
+            <a href="/categories/javascript/"> javascript </a>
+            <a href="/categories/basics/"> basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-prototype">1. Prototype</a>
+          <ul>
+            <li><a href="#11-prototype-的获取与赋值">1.1. prototype 的获取与赋值</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-function-is-also-an-object">2. Function is also an Object.</a></li>
+        <li><a href="#3-为什么要有-prototype-chain">3. 为什么要有 Prototype Chain</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><code>{}</code> 就是个空对象, <code>{}</code> 然鹅在 Python 里是个 dictionary,</p>
+<h2 id="1-prototype">1. Prototype</h2>
+<p><strong>Every object</strong> in JavaScript has a built-in property, which is called its <code>prototype</code>. The <code>prototype</code> is itself an object, so the <code>prototype</code> will have its own <code>prototype</code>, making what&rsquo;s called a <strong>prototype chain</strong>. The chain ends when we reach a prototype that has <code>null</code> for its own prototype.</p>
+<blockquote>
+<p>Note: The property of an object that points to its <code>prototype</code> is <strong>not</strong> called <code>prototype</code>. Its name is not standard, but in practice all browsers use <code>__proto__</code>. The <strong>standard way</strong> to access an object&rsquo;s prototype is the <code>Object.getPrototypeOf()</code> method.</p>
+</blockquote>
+<p>关于prototype有一个迷惑的地方, 通过<code>obj.prototype</code>访问到的并不是上面我们讨论的prototype, 只能通过<code>obj.__proto__</code>和全局函数<code>Object.getPrototypeOf()</code>来获取一个对象的<code>prototype</code>属性:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Jack&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">greet</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s1">&#39;Hi, I am&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">person</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// undefined
+</span></span></span><span class="line"><span class="cl"><span class="c1">// [Object: null prototype] {}
+</span></span></span><span class="line"><span class="cl"><span class="c1">// [Object: null prototype] {}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>根据打印可以看出 <code>person.prototype</code>跟<code>person.__proto__</code>压根就不是一个东西,</p>
+<h3 id="11-prototype-的获取与赋值">1.1. prototype 的获取与赋值</h3>
+<p><code>obj.__proto__</code> 不是访问对象 prototype 属性的标准方法, 因为有的browser可能没实现, 所以访问(只读)一般用<code>Object.getPrototypeOf(student)</code>, 通过创建该对象的时候为其 <code>__proto__</code> 属性赋值的方法给一个对象的 prototype 赋值, 如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Jack&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">sayHello</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;hello from &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">student</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">age</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// Check the assignment here:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">person</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">student</span><span class="p">))</span>  <span class="c1">// { name: &#39;Jack&#39;, sayHello: [Function: sayHello] }
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 或者创建对象后赋值, 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">student</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">person</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 注意若student没有__proto__属性则这里自动为student创建__proto__并赋值, 赋值后我们就可以访问了
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 所以这和上面我们说的不要通过 `obj.__proto__`  访问一个对象的 prototype 并不矛盾
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="2-function-is-also-an-object">2. Function is also an Object.</h2>
+<p>当你打印函数<code>A.prototype</code>的时候, 终端打印的是<code>{}</code>, 这对花括号代表的是个<strong>空对象(empty object)</strong>. 所以<code>A.prototype</code>只是一个空对象, 在定义函数A的时候被创建的.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="p">[];</span>
+</span></span><span class="line"><span class="cl"><span class="nx">A</span><span class="p">.</span><span class="nx">prototype</span> <span class="c1">// undefined
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">A</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">A</span><span class="p">.</span><span class="nx">prototype</span> <span class="c1">// {} // got created when function() {} was defined
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><code>A.prototype</code> is TOTALLY DIFFERENT from the <code>__proto__</code> property. In our example, <code>A</code> now has TWO properties called <code>prototype</code> and <code>__proto__</code> . This is a big confusion for people. <code>prototype</code> and <code>__proto__</code> properties are in no way related, they&rsquo;re separate things pointing to separate values.</p>
+</blockquote>
+<p>You may wonder: Why does JavaScript has <code>__proto__</code>property created on every single object? Well, one word: <strong>delegation</strong>. When you call a property on an object and the object doesn&rsquo;t have it, then JavaScript looks for the object referenced by <strong>proto</strong> to see if it maybe has it. If it doesn&rsquo;t have it, then it looks at that object&rsquo;s <code>__proto__</code> property and so on&hellip;until the chain ends. Thus the name <strong>prototype chain</strong>.</p>
+<p>You may also wonder, why does JavaScript creates a property called <code>prototype</code> for a function when you define the function? Because it tries to fool you, yes <strong>fool you</strong> that it works like class-based languages (actually javascript is an object-based language).</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">A</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">a1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">A</span><span class="p">();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We said that all objects in JavaScript have an internal <code>__proto__</code> property which points to something (<code>a1</code> also has it), whether it&rsquo;s null or another object. What the <code>new operator</code> does is that it sets that <code>__proto__</code> property to point to the function&rsquo;s <code>prototype</code> property. It&rsquo;s basically this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">a1</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">A</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面说了<code>A.prototype</code>指向的就是个空对象, 所以现在<code>a1.__proto__</code>和<code>A.prototype</code>相同, 也是空对象. They both point to the same object which was created when this line happened:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">A</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="c1">// JS: cool. let&#39;s also create A.prototype pointing to empty {}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>假如函数A像下面这样,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">hey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;from A&#39;</span><span class="p">)</span> <span class="p">}</span> <span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>那么执行<code>var a1 = new A()</code>的时候, 还会发生一件事, 就是A函数里面的语句都会被执行, 然后<code>this.hey</code>变成<code>a1.hey</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">a1</span><span class="p">.</span><span class="nx">hey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;from A&#39;</span><span class="p">)</span> <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>综上, <code>var a1 = new A()</code>一共做了下面三件事:</p>
+<ol>
+<li>a totally new empty object is created and assigned to <code>a1</code>.</li>
+<li><code>a1.__proto__ = A.prototype</code></li>
+<li>The <code>function A()</code> is being executed 但是<code>this.hey</code>变成<code>a1.hey</code></li>
+</ol>
+<p>Now, let&rsquo;s try to create another object:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">a2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">A</span><span class="p">();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>a1</code> and <code>a2</code> have two SEPARATE properties named <code>hey</code> which point to 2 SEPARATE functions! 所以我们现在有两个重复的函数在两个不同的对象中做了同样的事. 这岂不是浪费代码? 冗余, 如果有1000个对象呢?</p>
+<p>所以为了防止这种冗余产生, <code>prototype</code>来救场了, 使用它, 你可以让无数对象共用同一个函数, 有点像c++里面虚函数的意思(emm是吗? 不确定).</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">A</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">hey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;from prototype&#39;</span><span class="p">)</span> <span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Now, when you create <code>a1</code>, it again goes through all of the 3 steps above, and in step 3, it doesn&rsquo;t do anything, since <code>function A()</code> has nothing to execute. And if we do:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">a1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">A</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nx">a</span><span class="p">.</span><span class="nx">hey</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It will see that a1 does not contain <code>hey</code> and it will check its <code>__proto__</code> property object to see if it has it, which is the case.</p>
+<p>再想想上面的那句话:</p>
+<p>We said that all objects in JavaScript have an internal <code>__proto__</code> property which points to something (<code>a1</code> also has it), whether it&rsquo;s null or another object. What the <code>new operator</code> does is that it sets that <code>__proto__</code> property to point to the function&rsquo;s <code>prototype</code> property. It&rsquo;s basically this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">a1</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">A</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-为什么要有-prototype-chain">3. 为什么要有 Prototype Chain</h2>
+<p>假如你要访问一个对象的 name 属性,或者是调用一个对象的函数, 如果这个对象没有你要调用的函数或者要访问的属性, 那就会自动搜索这个对象的prototype(prototype本身也是个对象)的函数和属性, 一直找到prototype chain的末端. ummm,感觉有点熟悉? 是不是想到了java,cpp里的继承机制. 没错, prototype chain这种机制正式帮助javascript实现了对象之间的继承,而不是类之间的继承, 所以它是prototypal inheritance而不是classical inheritance, 具体会放到 <a href="https://davidzhu.xyz/2023/06/21/JS/Basics/prototypal-inheritance/">JS 继承之 Prototype Chain 的意义</a> 讨论</p>
+<p>参考:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes">https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes</a></li>
+<li><a href="https://stackoverflow.com/a/34948211/16317008">https://stackoverflow.com/a/34948211/16317008</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-06-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/javascript/">javascript</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/js/basics/prototypal-inheritance/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">JS 继承之 Prototype Chain 的意义</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/js/basics/object-in-javascript/">
+            <span class="next-text nav-default">JS对象, 数据类型, 容器介绍</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

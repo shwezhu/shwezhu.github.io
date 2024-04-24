@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Git Reset - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="前置: Git撤销提交之The Three Trees | 橘猫小八的鱼 原文: Git - Reset Demystified 1. The Workflow Git’s typical workflow is to record snapshots of your project by manipulating these three trees: Let’s visualize git’s typical workflow: say you have a new" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/git/007-git-reset/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Git Reset" />
+<meta property="og:description" content="前置: Git撤销提交之The Three Trees | 橘猫小八的鱼 原文: Git - Reset Demystified 1. The Workflow Git’s typical workflow is to record snapshots of your project by manipulating these three trees: Let’s visualize git’s typical workflow: say you have a new" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/git/007-git-reset/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-31T10:20:23+00:00" />
+<meta property="article:modified_time" content="2023-05-31T10:20:23+00:00" />
+<meta itemprop="name" content="Git Reset">
+<meta itemprop="description" content="前置: Git撤销提交之The Three Trees | 橘猫小八的鱼 原文: Git - Reset Demystified 1. The Workflow Git’s typical workflow is to record snapshots of your project by manipulating these three trees: Let’s visualize git’s typical workflow: say you have a new"><meta itemprop="datePublished" content="2023-05-31T10:20:23+00:00" />
+<meta itemprop="dateModified" content="2023-05-31T10:20:23+00:00" />
+<meta itemprop="wordCount" content="1616">
+<meta itemprop="keywords" content="git," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Git Reset"/>
+<meta name="twitter:description" content="前置: Git撤销提交之The Three Trees | 橘猫小八的鱼 原文: Git - Reset Demystified 1. The Workflow Git’s typical workflow is to record snapshots of your project by manipulating these three trees: Let’s visualize git’s typical workflow: say you have a new"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Git Reset</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-31 </span>
+        <div class="post-category">
+            <a href="/categories/git/"> git </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-the-workflow">1. The Workflow</a></li>
+        <li><a href="#2-the-role-of-reset">2. The Role of Reset</a>
+          <ul>
+            <li><a href="#21-step-1-move-head">2.1. Step 1: Move HEAD</a></li>
+            <li><a href="#22-step-2-updating-the-index">2.2. Step 2: Updating the Index</a></li>
+            <li><a href="#23-step-3-updating-the-working-directory-with---hard">2.3. Step 3: Updating the Working Directory (with <code>--hard</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-reset-with-a-path">3. Reset With a Path</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>前置: <a href="https://davidzhu.xyz/2023/05/04/Git/006-Git-Three-Trees/">Git撤销提交之The Three Trees | 橘猫小八的鱼</a></p>
+<p>原文: <a href="https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified#_git_reset">Git - Reset Demystified</a></p>
+<h2 id="1-the-workflow">1. The Workflow</h2>
+<p><strong>Git’s typical workflow</strong> is to record snapshots of your project by manipulating these three trees:</p>
+<img src="/007-git-reset/a.png" alt="a" style="zoom:50%;" />
+<p>Let’s visualize git’s typical workflow: say you have a new directory with a single file  <code>file.txt</code>  in it. Now we run <code>git init</code>, which will create a Git repository with a <strong>HEAD reference</strong> which points to the unborn <code>master</code> branch (newly-initialized Git repository with unstaged file  <code>file.txt: v1</code> in the working directory):</p>
+<img src="/007-git-reset/b.png" alt="b" style="zoom:50%;" />
+<p>Now we want to commit this file, so we first use <code>git add</code> to copy content in the <strong>working directory</strong> to the <strong>index</strong>:</p>
+<img src="/007-git-reset/c.png" alt="c" style="zoom:50%;" />
+<p>Then we run <code>git commit</code>, which saves the contents of the <strong>index</strong> as a permanent snapshot, creates a commit object which points to that snapshot, and updates <code>master</code> to point to that commit.</p>
+<img src="/007-git-reset/d.png" alt="d" style="zoom:50%;" />
+<p>If we run <code>git status</code>, we’ll see no changes, because all three trees are the same (three tree: HEAD, Index, Working Directory).</p>
+<p>Now we want to make a change to that file and commit it. first, we change the file in our <strong>working directory</strong>:</p>
+<img src="/007-git-reset/e.png" alt="e" style="zoom:50%;" />
+<p>If we run <code>git status</code> right now, we’ll see “Changes not staged for commit”, because that entry differs between the <strong>index</strong> and the <strong>working directory</strong>. Next we run <code>git add</code> to stage it into our <strong>index</strong>.</p>
+<img src="/007-git-reset/f.png" alt="f" style="zoom:50%;" />
+<p>At this point, if we run <code>git status</code>, we will see  “Changes to be committed” because the <strong>index</strong> and <strong>HEAD</strong> differ — that is, our proposed next commit is now different from our last commit. Finally, we run <code>git commit</code> to finalize the commit:</p>
+<img src="/007-git-reset/g.png" alt="g" style="zoom:50%;" />
+<p>注意看我们的图, 分成两个部分, 第一部分是宏观的, 即可以发现HEAD指向的一直是master branch, 然后master branch随着不断的commit一直向外延伸, 第二部分即为了方便我们理解展示的三棵树的变化细节, 即不停的拷贝对比不同,</p>
+<p>Now <code>git status</code> will give us no output, because all three trees are the same again.</p>
+<p>Switching branches or cloning goes through a similar process. When you checkout a branch, it changes <strong>HEAD</strong> to point to the new branch ref, populates your <strong>index</strong> with the snapshot of that commit, then copies the contents of the <strong>index</strong> into your <strong>working directory</strong>. 这里的 *&ldquo;populates your index with&hellip;&quot;*可以理解为把新的分支的最新的snapshot的内容拷贝到index即staging area, 也就是说每次你切换分支, 其实也是在三棵树间拷贝&hellip;只不过是在一个新的分支上操作,</p>
+<h2 id="2-the-role-of-reset">2. The Role of Reset</h2>
+<p>The <code>reset</code> command makes more sense when viewed in this context.</p>
+<p>For the purposes of these examples, let’s say that we’ve modified <code>file.txt</code> again and committed it a third time. So now our history looks like this:</p>
+<img src="/007-git-reset/h.png" alt="h" style="zoom:50%;" />
+<h3 id="21-step-1-move-head">2.1. Step 1: Move HEAD</h3>
+<p>The first thing <code>reset</code> will do is move what HEAD points to. This isn’t the same as changing HEAD itself (which is what <code>checkout</code> does); <code>reset</code> moves the branch that HEAD is pointing to. This means if HEAD is set to the <code>master</code> branch (i.e. you’re currently on the <code>master</code> branch), running <code>git reset 9e5e6a4</code> will start by making <code>master</code> point to <code>9e5e6a4</code>. 所以<code>reset</code>在这一步做的就是移动master分支的指向, 即在同一个分支上的版本穿梭, 注意看下图, 三个tree, 只有HEAD的内容变了,</p>
+<img src="/007-git-reset/i.png" alt="i" style="zoom:50%;" />
+<p>No matter what form of <code>reset</code> with a commit you invoke, this is the first thing it will always try to do. With <code>reset --soft</code>, it will simply stop there.</p>
+<p>Now take a second to look at that diagram and realize what happened: it essentially undid the last <code>git commit</code> command. When you run <code>git commit</code>, Git creates a new commit and moves the branch that HEAD points to up to it. When you <code>reset</code> back to <code>HEAD~</code> (the parent of HEAD), you are moving the branch back to where it was, without changing the index or working directory. You could now update the index and run <code>git commit</code> again to accomplish what <code>git commit --amend</code> would have done (see <a href="https://git-scm.com/book/en/v2/ch00/_git_amend">Changing the Last Commit</a>).</p>
+<h3 id="22-step-2-updating-the-index">2.2. Step 2: Updating the Index</h3>
+<p>Note that if you run <code>git status</code> now you’ll see in green the difference between the index and what the new HEAD is.</p>
+<p>The next thing <code>reset</code> will do is to update the index with the contents of whatever snapshot HEAD now points to.</p>
+<img src="/007-git-reset/j.png" alt="j" style="zoom:50%;" />
+<p>If you specify the <code>--mixed</code> option, <code>reset</code> will stop at this point. This is also the default, so if you specify no option at all (just <code>git reset HEAD~</code> in this case), this is where the command will stop.</p>
+<p>Now take another second to look at that diagram and realize what happened: it still undid your last <code>commit</code>, but also <em>unstaged</em> everything. You rolled back to before you ran all your <code>git add</code> and <code>git commit</code> commands.</p>
+<h3 id="23-step-3-updating-the-working-directory-with---hard">2.3. Step 3: Updating the Working Directory (with <code>--hard</code>)</h3>
+<p>The third thing that <code>reset</code> will do is to make the working directory look like the index. If you use the <code>--hard</code> option, it will continue to this stage.</p>
+<img src="/007-git-reset/k.png" alt="k" style="zoom:50%;" />
+<p>It’s important to note that this flag (<code>--hard</code>) is the only way to make the <code>reset</code> command dangerous, and one of the very few cases where Git will actually destroy data. Any other invocation of <code>reset</code> can be pretty easily undone, but the <code>--hard</code> option cannot, since it forcibly overwrites files in the working directory. In this particular case, we still have the <strong>v3</strong> version of our file in a commit in our Git DB, and we could get it back by looking at our <code>reflog</code>, but if we had not committed it, Git still would have overwritten the file and it would be unrecoverable.</p>
+<h2 id="3-reset-with-a-path">3. Reset With a Path</h2>
+<p>That covers the behavior of <code>reset</code> in its basic form, but you can also provide it with a path to act upon. If you specify a path, <code>reset</code> will skip step 1, and limit the remainder of its actions to a specific file or set of files. This actually sort of makes sense — HEAD is just a pointer, and you can’t point to part of one commit and part of another. But the index and working directory <em>can</em> be partially updated, so reset proceeds with steps 2 and 3.</p>
+<p>So, assume we run <code>git reset file.txt</code>. This form (since you did not specify a commit SHA-1 or branch, and you didn’t specify <code>--soft</code> or <code>--hard</code>) is shorthand for <code>git reset --mixed HEAD file.txt</code>, which will:</p>
+<ol>
+<li>Move the branch HEAD points to <em>(skipped)</em>.</li>
+<li>Make the index look like HEAD <em>(stop here)</em>.</li>
+</ol>
+<p>So it essentially just copies <code>file.txt</code> from HEAD to the index.</p>
+<img src="/007-git-reset/l.png" alt="l" style="zoom:50%;" />
+<p>This has the practical effect of <em>unstaging</em> the file. If we look at the diagram for that command and think about what <code>git add</code> does, they are exact opposites.</p>
+<img src="/007-git-reset/m.png" alt="m" style="zoom:50%;" />
+<p>This is why the output of the <code>git status</code> command suggests that you run this to unstage a file (see <a href="https://git-scm.com/book/en/v2/ch00/_unstaging">Unstaging a Staged File</a> for more on this).</p>
+<p>We could just as easily not let Git assume we meant “pull the data from HEAD” by specifying a specific commit to pull that file version from. We would just run something like <code>git reset eb43bf file.txt</code>.</p>
+<img src="/007-git-reset/n.png" alt="n" style="zoom:50%;" />
+<h2 id="conclusion">Conclusion</h2>
+<ul>
+<li>HEAD points to branch, branch point to the last commit,
+<ul>
+<li>so HEAD point the last commit,</li>
+<li>when you make HEAD point other commit by using <code>git reset</code>, it actually makes current branch point to that commit</li>
+</ul>
+</li>
+<li>The first thing <code>reset</code> will do is move what HEAD points to. This isn’t the same as changing HEAD itself (which is what <code>checkout</code> does); <code>reset</code> moves the branch that HEAD is pointing to. This means if HEAD is set to the <code>master</code> branch (i.e. you’re currently on the <code>master</code> branch), running <code>git reset 9e5e6a4</code> will start by making <code>master</code> point to <code>9e5e6a4</code></li>
+<li>Three Tree: HEAD, index, work tree</li>
+<li><code>git reset</code> will do three things, Move HEAD (update HEAD), Updating the Index, Updating the work tree with <code>--hard</code>,</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-31
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/git/">git</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/python/practice/add-space/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">用Python脚本给文章中英字符以及符号间加空格</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/advance/004-go-scheduler-2/">
+            <span class="next-text nav-default">Go Scheduler (1) - Go Advanced</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Goroutine &amp; Channel - Go Basics - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&amp;#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/golang/basics/008-goroutine-channels/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Goroutine &amp; Channel - Go Basics" />
+<meta property="og:description" content="1. Goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/golang/basics/008-goroutine-channels/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-08-24T10:06:10+00:00" />
+<meta property="article:modified_time" content="2023-08-24T10:06:10+00:00" />
+
+<meta itemprop="name" content="Goroutine &amp; Channel - Go Basics">
+<meta itemprop="description" content="1. Goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly"><meta itemprop="datePublished" content="2023-08-24T10:06:10+00:00" />
+<meta itemprop="dateModified" content="2023-08-24T10:06:10+00:00" />
+<meta itemprop="wordCount" content="1819">
+<meta itemprop="keywords" content="golang,concurrency," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Goroutine &amp; Channel - Go Basics"/>
+<meta name="twitter:description" content="1. Goroutines When a program starts, its only goroutine is the one that calls the main function, so we call it the main goroutine. The go statement itself completes immediately: 1 2 f() // call f(); wait for it to return go f() // create a new goroutine that calls f(); don&#39;t wait The code below will just print helllo, this because when main function returns, all goroutines are abruptly"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Goroutine &amp; Channel - Go Basics</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-08-24 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/basics/"> basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-goroutines">1. Goroutines</a></li>
+        <li><a href="#2-channels">2. Channels</a>
+          <ul>
+            <li><a href="#21-unbuffered-channel">2.1. Unbuffered channel</a></li>
+            <li><a href="#22-buffered-channel">2.2. Buffered channel</a></li>
+            <li><a href="#23-buffered-channel-vs-unbuffered-channel">2.3. Buffered channel vs unbuffered channel</a></li>
+            <li><a href="#24-read--send-on-closed-channel">2.4. Read &amp; send on closed channel</a></li>
+            <li><a href="#25-read--send-on-a-nil-channel">2.5. Read &amp; send on a nil channel</a></li>
+            <li><a href="#3-should-a-channel-has-to-be-closed">3. Should a channel has to be closed</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-use-cases-of-channels">4. Use cases of channels</a>
+          <ul>
+            <li><a href="#41-synchronization-between-goroutines">4.1. Synchronization between goroutines</a></li>
+            <li><a href="#42-use-channels-for-notifications">4.2. Use channels for notifications</a></li>
+            <li><a href="#43-use-channels-as-counting-semaphores">4.3. Use Channels as counting semaphores</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-goroutines">1. Goroutines</h2>
+<p>When a program starts, its only goroutine is the one that calls the <code>main</code> function, so we call it the <em>main goroutine</em>. The <code>go</code> statement itself completes immediately:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nf">f</span><span class="p">()</span>    <span class="c1">// call f(); wait for it to return
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">go</span> <span class="nf">f</span><span class="p">()</span> <span class="c1">// create a new goroutine that calls f(); don&#39;t wait
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>The code below will just print <code>helllo</code>, this because when <code>main</code> function returns, all goroutines are abruptly terminated and the program exits.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello form another goroutine&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Other than (除了) by returning from <code>main</code> or exiting the program, there is no programmatic way for one goroutine to stop another, but there are ways to communicate with a goroutine to request that it stop itself.</p>
+<h2 id="2-channels">2. Channels</h2>
+<p>A Go channel is a means of communication that enables data sharing between goroutines. Each channel has a type associated with it.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">data</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">ch</span> <span class="c1">// read from a channel ch  
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">data</span> <span class="c1">// write to a channel ch
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="21-unbuffered-channel">2.1. Unbuffered channel</h3>
+<p>This creates an unbuffered channel of type <code>int</code>. An unbuffered channel is one that can only hold one value at a time.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Sends and receives on an unbuffered channel will block until the corresponding operation is ready to proceed. Run this will cause a dealock error,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// This send operation will block until there is a receive operation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// ready to proceed.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">42</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// This receive operation will block until there is a send operation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// ready to proceed.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">val</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>With the nature of unbuffered channel, we can do something like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Do some work
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Wait for the goroutine to finish on another goroutine,
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// main() function for example
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="o">&lt;-</span><span class="nx">ch</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="22-buffered-channel">2.2. Buffered channel</h3>
+<p>You can also specify the buffer size of a channel when creating it. A buffered channel allows for multiple values to be stored in the channel at once before they shall be read.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="23-buffered-channel-vs-unbuffered-channel">2.3. Buffered channel vs unbuffered channel</h3>
+<p><code>ch := make(chan int, 1)</code> is totally different from <code>ch := make(chan int)</code>, the code below won&rsquo;t get deadlock error:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">42</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// if you put another &#34;ch &lt;- 42&#34; below, there will be a deadlock error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">val</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="24-read--send-on-closed-channel">2.4. Read &amp; send on closed channel</h3>
+<h4 id="241-read-on-a-closed-channel">2.4.1 Read on a closed channel</h4>
+<p>A closed channel returns the default value of that type:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">c</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="o">&lt;-</span><span class="nx">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nb">close</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="o">&lt;-</span><span class="nx">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="o">&lt;-</span><span class="nx">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="kc">true</span>
+</span></span><span class="line"><span class="cl"><span class="kc">false</span>
+</span></span><span class="line"><span class="cl"><span class="kc">false</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We can also check whether a channel is open or closed with the help of the given syntax:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">ele</span><span class="p">,</span> <span class="nx">ok</span><span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">channel_name</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If the value of <code>ok</code> is true, this indicates that the channel is open and read operations can be done.</p>
+<h4 id="242-send-and-close-a-closed-channel">2.4.2 Send and close a closed channel</h4>
+<p>Send or close a <em><strong>closed channel</strong></em> will cause panic.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">ch</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl"><span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// this will get a panic
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Don&rsquo;t close a channel from the receiver side and don&rsquo;t close a channel if the channel has multiple concurrent senders. -&gt; Don&rsquo;t close (or send values to) closed channels.
+Close channel elegently: <a href="https://qcrao91.gitbook.io/go/channel/ru-he-you-ya-di-guan-bi-channel">https://qcrao91.gitbook.io/go/channel/ru-he-you-ya-di-guan-bi-channel</a></p>
+</blockquote>
+<h3 id="25-read--send-on-a-nil-channel">2.5. Read &amp; send on a nil channel</h3>
+<p>An attempt to <strong>send/read</strong> value on a <em><strong>nil channel</strong></em> will block that goroutine forerver.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">s</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">s</span><span class="o">&lt;-</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;-</span><span class="nx">s</span>
+</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">s</span> <span class="p">=</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">s</span><span class="o">&lt;-</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello from goroutine 2&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello from goroutine 1&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hi from goroutine 1 after seconds&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">---------------------------------------</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">hello</span> <span class="nx">from</span> <span class="nx">goroutine</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="nx">hi</span> <span class="nx">from</span> <span class="nx">goroutine</span> <span class="mi">1</span> <span class="nx">after</span> <span class="nx">seconds</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>If you don&rsquo;t know whether a channel is closed or not and blindly write to it, then you have a badly designed program. Redesign it so that there is no way to write into it after it is closed. <a href="https://stackoverflow.com/questions/39213230/how-to-test-if-a-channel-is-close-and-only-send-to-it-when-its-not-closed">A comment from Stack Overflow</a></p>
+</blockquote>
+<p>How to know if a channel is closed only by sending value to it? Answer: You can&rsquo;t.</p>
+<p>learn more: <a href="https://stackoverflow.com/a/61101887/16317008">https://stackoverflow.com/a/61101887/16317008</a></p>
+<h3 id="3-should-a-channel-has-to-be-closed">3. Should a channel has to be closed</h3>
+<p>It&rsquo;s OK to leave a Go channel open forever and never close it. When the channel is no longer used, <strong>it will be garbage collected</strong>.</p>
+<blockquote>
+<p>Note that it is only necessary to close a channel if the receiver is looking for a close. Closing the channel is a control signal on the channel indicating that no more data follows.</p>
+<p><a href="https://groups.google.com/d/msg/golang-nuts/pZwdYRGxCIk/qpbHxRRPJdUJ">Design Question: Channel Closing</a></p>
+</blockquote>
+<p>Source: <a href="https://stackoverflow.com/a/8593986/16317008">https://stackoverflow.com/a/8593986/16317008</a></p>
+<h2 id="4-use-cases-of-channels">4. Use cases of channels</h2>
+<h3 id="41-synchronization-between-goroutines">4.1. Synchronization between goroutines</h3>
+<p>Traditional threading models require the programmer to communicate between threads using shared memory. Typically, shared data structures are protected by locks, and threads will contend over those locks to access the data. Instead of explicitly using locks to mediate access to shared data, Go encourages the use of channels to pass references to data between goroutines.</p>
+<p>Channels <strong>can be used to</strong> ensure that one goroutine doesn&rsquo;t proceed until another goroutine has completed its work. This is particularly useful in scenarios where data needs to be shared between two or more goroutines, and it&rsquo;s important to ensure that the data isn&rsquo;t modified by multiple goroutines at the same time.</p>
+<blockquote>
+<p><strong>NOTE:</strong> Channels <strong>can be used to</strong> ensure one goroutine doesn&rsquo;t proceed until another goroutine has completed its work. Doesn&rsquo;t mean channels ensure that itself. You need to implement this by utilizing channel. This is the channel use case for notification.</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// main goroutine won&#39;t exit until the worker goroutine has completed its work.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// this is channel&#39;s use case for notification
+</span></span></span><span class="line"><span class="cl"><span class="c1">// you can use this to ensue that data isn&#39;t modified by multiple goroutines at a same time.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;working...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;done&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">done</span><span class="o">&lt;-</span> <span class="kd">struct</span><span class="p">{}{}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;-</span><span class="nx">done</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Actually, in essence, synchronization between goroutines implemented by channel is just a channel&rsquo;s use case for notification.</p>
+<blockquote>
+<p>The code above only can limit one groutine access the data at a time, if you want to prevent concurrent modifications to a variable <strong>while retaining the ability to read</strong>, which means enables more than one groutine to access the data, you&rsquo;d typically embed a <a href="https://golang.org/pkg/sync/#RWMutex">sync.RWMutex</a>. This is no exemption.</p>
+</blockquote>
+<p>When you pass a data let&rsquo;s say <code>cat</code> to an unbuffered channel in a goroutine <code>g1</code>, this operation let&rsquo;s say <code>ch &lt;- cat</code> will block until another goroutine let&rsquo;s say<code>g2</code> takes <code>cat</code> out from the channel. After the <code>g2</code> got data, this is done,  <code>ch &lt;- cat</code>  won&rsquo;t block. Then <code>g2</code> can do anything to your <code>cat</code> and <code>g1</code> can also access <code>cat</code>, which means you have to consider data race even you send your data with channel. For example. when you pass a <code>cat</code> to a channel, what if <code>cat</code> has a slice or a pointer in its field? Whenver use channel pass value, you should remember that everything passed by value in go, and the direct value not the underlying value. You pass a pointer to a channel, there is a copy for an address, not the underlying value that pinter point to.</p>
+<p>But there is an exception, you pass a simple value to channel not struct value, not slice, not a map or pointer value, just a <code>int</code>, <code>string</code> value because these simple value has no underlying values, and everything passed by value, when a <code>int</code> passed to a channel, there is a copy for that <code>int</code> value, therefore you don&rsquo;t need to consider data race.</p>
+<p>For large objects like arrays or large structs, passing a pointer is usually the logical thing to do to avoid expensive copies. But you should consider and promise that when one gouroutine <strong>write the data</strong>, there is no other goroutine access that data. You can use <code>sync.RWMutex</code>, you can add another for notification after the writing operation is done by using the blocking nature of a channel.</p>
+<p>Learn more: <a href="https://stackoverflow.com/questions/70456785/golang-does-passing-pointer-through-channel-break-the-csp-design">go - does passing pointer through channel break the csp design?</a></p>
+<h3 id="42-use-channels-for-notifications">4.2. Use channels for notifications</h3>
+<p>Notifications can be viewed as special requests/responses in which the responded values are not important. Generally, we use the blank struct type <code>struct{}</code> as the element types of the notification channels, for the size of type <code>struct{}</code> is zero, hence values of <code>struct{}</code> doesn&rsquo;t consume memory.</p>
+<h3 id="43-use-channels-as-counting-semaphores">4.3. Use Channels as counting semaphores</h3>
+<p>This is the buffered channel&rsquo;s use case, this blog gives an excellent example:  <a href="https://blog.carlmjohnson.net/post/share-memory-by-communicating/">Share memory by communicating · The Ethically-Trained Programmer</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Share memory by communicating
+</span></span></span><span class="line"><span class="cl"><span class="c1">// https://blog.carlmjohnson.net/post/share-memory-by-communicating/
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">semaphores</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Semaphore</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">acquire</span> <span class="kd">chan</span> <span class="kt">bool</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">release</span> <span class="kd">chan</span> <span class="kd">struct</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">stop</span> <span class="kd">chan</span> <span class="kd">chan</span> <span class="kd">struct</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">)</span> <span class="o">*</span><span class="nx">Semaphore</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">s</span> <span class="o">:=</span> <span class="nx">Semaphore</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">acquire</span><span class="p">:</span>  <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">release</span><span class="p">:</span>  <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{}),</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">stop</span><span class="p">:</span>     <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">chan</span> <span class="kd">struct</span><span class="p">{}),</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">go</span> <span class="nx">s</span><span class="p">.</span><span class="nf">start</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">s</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Semaphore</span><span class="p">)</span> <span class="nf">start</span><span class="p">(</span><span class="nx">max</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">count</span> <span class="o">:=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kd">var</span> <span class="nx">acquire</span> <span class="p">=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">acquire</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">// nil always blocks sends and read operation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="nx">count</span> <span class="o">&gt;=</span> <span class="nx">max</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">acquire</span> <span class="p">=</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">select</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="nx">acquire</span> <span class="o">&lt;-</span> <span class="kc">true</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">count</span><span class="o">++</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="nx">s</span><span class="p">.</span><span class="nx">release</span> <span class="o">&lt;-</span> <span class="kd">struct</span><span class="p">{}{}:</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">count</span><span class="o">--</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="nx">wait</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">s</span><span class="p">.</span><span class="nx">stop</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">			<span class="nb">close</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">acquire</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">			<span class="c1">// Drain remaining calls to Release
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="k">for</span> <span class="nx">count</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">s</span><span class="p">.</span><span class="nx">release</span> <span class="o">&lt;-</span> <span class="kd">struct</span><span class="p">{}{}</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">count</span><span class="o">--</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="nb">close</span><span class="p">(</span><span class="nx">wait</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Acquire a closed channel returns its default value as many times as it is called.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// if s.acquire is closed, the Acquire() get called in other goroutine will return false immediately
+</span></span></span><span class="line"><span class="cl"><span class="c1">// if s.acquire is not closed, and no data written into it, Acquire() will block
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Semaphore</span><span class="p">)</span> <span class="nf">Acquire</span><span class="p">()</span> <span class="kt">bool</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&lt;-</span><span class="nx">s</span><span class="p">.</span><span class="nx">acquire</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Semaphore</span><span class="p">)</span> <span class="nf">Release</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;-</span><span class="nx">s</span><span class="p">.</span><span class="nx">release</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Semaphore</span><span class="p">)</span> <span class="nf">Stop</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">blocker</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{})</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">s</span><span class="p">.</span><span class="nx">stop</span> <span class="o">&lt;-</span> <span class="nx">blocker</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;-</span><span class="nx">blocker</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>References:</p>
+<ul>
+<li><a href="https://go.dev/blog/codelab-share">Share Memory By Communicating - The Go Programming Language</a></li>
+<li><a href="https://www.atatus.com/blog/go-channels-overview/">Understanding Go Channels: An Overview for Beginners</a></li>
+<li><a href="https://www.scaler.com/topics/golang/closing-the-channel-in-golang/">Closing the Channel in Golang - Scaler Topics</a></li>
+<li><a href="https://blog.carlmjohnson.net/post/share-memory-by-communicating/">Share memory by communicating · The Ethically-Trained Programmer</a></li>
+</ul>
+<p>Learn more: <a href="https://go101.org/article/channel-use-cases.html">Channel Use Cases -Go 101</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-08-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          <a href="/tags/concurrency/">concurrency</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/advance/001-why-goroutines/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Goroutines Model</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/git/practice/002-pushed-wrong-files/">
+            <span class="next-text nav-default">Pushed a Wrong File to Github - Solved</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

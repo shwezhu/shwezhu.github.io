@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>域名分级和DNS记录之何为www - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. DNS Records: A &amp;amp; CNAME 购买域名后给域名指定的ip地址则要为其添加 A 类型的 DNS Record, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等自定义, @代表空即不填或" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/build-website/001-domain-name-dns-records/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="域名分级和DNS记录之何为www" />
+<meta property="og:description" content="1. DNS Records: A &amp; CNAME 购买域名后给域名指定的ip地址则要为其添加 A 类型的 DNS Record, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等自定义, @代表空即不填或" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/build-website/001-domain-name-dns-records/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-04-23T00:15:30+00:00" />
+<meta property="article:modified_time" content="2023-04-23T00:15:30+00:00" />
+
+<meta itemprop="name" content="域名分级和DNS记录之何为www">
+<meta itemprop="description" content="1. DNS Records: A &amp; CNAME 购买域名后给域名指定的ip地址则要为其添加 A 类型的 DNS Record, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等自定义, @代表空即不填或"><meta itemprop="datePublished" content="2023-04-23T00:15:30+00:00" />
+<meta itemprop="dateModified" content="2023-04-23T00:15:30+00:00" />
+<meta itemprop="wordCount" content="1313">
+<meta itemprop="keywords" content="build website," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="域名分级和DNS记录之何为www"/>
+<meta name="twitter:description" content="1. DNS Records: A &amp; CNAME 购买域名后给域名指定的ip地址则要为其添加 A 类型的 DNS Record, 需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等自定义, @代表空即不填或"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">域名分级和DNS记录之何为www</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-04-23 </span>
+        <div class="post-category">
+            <a href="/categories/build-website/"> build website </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-dns-records-a--cname">1. DNS Records: A &amp; CNAME</a></li>
+        <li><a href="#2-www-就是个-hostname">2. www 就是个 HOSTNAME</a></li>
+        <li><a href="#3-dns-hierarchy">3. DNS Hierarchy</a></li>
+        <li><a href="#hostname-vs-sld">HOSTNAME vs SLD</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-dns-records-a--cname">1. DNS Records: A &amp; CNAME</h2>
+<p>购买域名后给域名指定的ip地址则要为其添加 <code>A</code> 类型的 DNS Record, 需要指定 HOSTNAME 和 IP, 其中 <code>HOSTNAME</code> 可以填<code>@</code>或者<code>www</code>或<code>blog</code>等自定义, <code>@</code>代表空即不填或者填<code>@</code>都是一个意思 (还有个概念叫wildcard, 即<code>*.example.com</code>)</p>
+<p><img src="/001-domain-name-dns-records/a-8733304.png" alt="a"></p>
+<p>添加 <code>CNAME记录</code> 需要指定 <strong>HOSTNAME</strong> 和 <strong>target hostname</strong>, 前者与上面相同, 后者填另一个域名, 比如 <code>your-username.github.io</code></p>
+<p><img src="/001-domain-name-dns-records/b-8733375.png" alt="b"></p>
+<p>大概半小时会生效, 可以使用 <code>dig</code> 命令查看:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ dig www.shaowenzhu.top +nostats +nocomments +nocmd
+</span></span><span class="line"><span class="cl"><span class="p">;</span> &lt;&lt;&gt;&gt; DiG 9.10.6 &lt;&lt;&gt;&gt; www.shaowenzhu.top +nostats +nocomments +nocmd
+</span></span><span class="line"><span class="cl"><span class="p">;;</span> global options: +cmd
+</span></span><span class="line"><span class="cl"><span class="p">;</span>www.shaowenzhu.top.		IN	A
+</span></span><span class="line"><span class="cl">www.shaowenzhu.top.	7207	IN	CNAME	shwezhu.github.io.
+</span></span><span class="line"><span class="cl">shwezhu.github.io.	1937	IN	A	185.199.108.153
+</span></span><span class="line"><span class="cl">shwezhu.github.io.	1937	IN	A	185.199.109.153
+</span></span><span class="line"><span class="cl">shwezhu.github.io.	1937	IN	A	185.199.110.153
+</span></span><span class="line"><span class="cl">shwezhu.github.io.	1937	IN	A	185.199.111.153
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>添加 <code>A</code> 记录时, 相同 IP 可以有不同的 <code>HOSTNAME</code>, 即一个为空一个为 <code>www</code>:</p>
+<p><img src="/001-domain-name-dns-records/c-8734697.png" alt="c"></p>
+<p>一般域名自带默认的 DNS Records:</p>
+<p><img src="/001-domain-name-dns-records/init_dns.png" alt=""></p>
+<p>所以买了域名之后做的第一件事就应该删除这些默认记录, 不然等你又添加了一个A记录, 这时候你的域名就会被解析到多个IP(默认的和你刚添加的), 那浏览器访问你域名的时候, 选择哪个呢? 我查了一下论坛, 有人说是choose randomly, 所以如果你不删除域名所有的默认DNS Records, 那浏览器访问你域名的时候就有可能选择“错误”的ip,</p>
+<p>下面是回答个链接, 这个其实自己为域名添加俩不同的A记录用<code>dig</code>测试一下就行了, 但是我懒, 还得等半小时生效, 所以就不去验证了~</p>
+<blockquote>
+<p>Yes you can. It is called round-robin DNS, and the browser just chooses one of them randomly. It is a well used method of getting cheap load balancing, but if one host goes down, users will still try to access it. <a href="https://serverfault.com/q/528742/761923">https://serverfault.com/q/528742/761923</a></p>
+</blockquote>
+<p>一般我们想把域名绑定到服务器的时候, 为我们的域名添加两个A类DNS Records就行了, 不用改什么Name Server, 类似下面这个样子(注意TTL一般设置为3600s就可以啦):</p>
+<p><img src="/001-domain-name-dns-records/domain_to_server.png" alt=""></p>
+<h2 id="2-www-就是个-hostname">2. www 就是个 HOSTNAME</h2>
+<p>在上面截图中可以看出, 域名和ip就是一个映射关系, 添加 A Record 时若 HOSTNAME 空着则就是 <code>exapmle.com</code> -&gt; ip address, 若填则为 <code>www.example.com</code>/<code>blog.example.com</code> -&gt; ip address. 也就是说 <code>www</code> 就是个 HOSTNAME, 是用户随意分配的, 只是大部分网站使用 <code>www</code> 你也可以填成 <code>blog</code>,</p>
+<h2 id="3-dns-hierarchy">3. DNS Hierarchy</h2>
+<p>DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点<code>.</code></p>
+<p><img src="/001-domain-name-dns-records/c.png" alt=""></p>
+<p>多出的那个<code>.</code>是Root Level Domain, 比如<code>www.example.com</code>真正的名字是<code>www.example.com.root</code>然后上图就简写为<code>www.example.com.</code> 因为根域名<code>.root</code>对于所有域名都是一样的，所以平时是省略的。</p>
+<ul>
+<li>
+<p><strong>Root Level Domain</strong>(<code>.root</code>)的下一级叫<strong>top-level domain</strong>(TLD)，比如<code>.com</code>, <code>.net</code></p>
+</li>
+<li>
+<p>再下一级叫<strong>second-level domain</strong>SLD，比如<code>www.example.com</code>里面的<code>.example</code>, 有人直接把<code>example.com</code>这种叫做SLD</p>
+</li>
+<li>
+<p>再下一级是<strong>HOSTNAME</strong>，比如<code>www.example.com</code>里面的<code>www</code>, 这是可以任意设置的, 你也可以让域名的 HOSTNAME 为 <code>blog</code>,</p>
+</li>
+</ul>
+<p>域名的层级结构:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">HOSTNAME.SLD.TLD.root
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/001-domain-name-dns-records/d.png" style="zoom:33%;" />
+<h2 id="hostname-vs-sld">HOSTNAME vs SLD</h2>
+<p>HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指<code>example.com</code>里面的<code>example</code>, 而HOSTNAME是指<code>www.example.com</code>里面的<code>www</code>.</p>
+<p>HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如<code>www.example.com</code>和<code>blog.example.com</code>是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问<code>www.example.com</code>和<code>blog.example.com</code>时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP:</p>
+<p><img src="https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/001-domain-name-dns-records%2F01.jpg" alt=""></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-04-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/build-website/">build website</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/build-website/002-hexo-to-remote-server/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">部署博客到服务器 - Hexo</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/git/002-git-branch/">
+            <span class="next-text nav-default">git branch</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

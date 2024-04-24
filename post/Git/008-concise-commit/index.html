@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Commit Message Guidelines - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="A properly formed git commit subject line should always be able to complete the following sentence:
+If applied, this commit will 1. Things to avoid when creating commits Sending large new features in a single giant commit. Mixing two unrelated functional changes. Again the reviewer will find it harder to identify flaws if two unrelated changes are mixed together. If it becomes necessary to later revert a broken commit, the two unrelated changes will need to be untangled, with further risk of bug creation." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/git/008-concise-commit/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Commit Message Guidelines" />
+<meta property="og:description" content="A properly formed git commit subject line should always be able to complete the following sentence:
+If applied, this commit will 1. Things to avoid when creating commits Sending large new features in a single giant commit. Mixing two unrelated functional changes. Again the reviewer will find it harder to identify flaws if two unrelated changes are mixed together. If it becomes necessary to later revert a broken commit, the two unrelated changes will need to be untangled, with further risk of bug creation." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/git/008-concise-commit/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-09-11T07:47:23+00:00" />
+<meta property="article:modified_time" content="2023-09-11T07:47:23+00:00" />
+
+<meta itemprop="name" content="Commit Message Guidelines">
+<meta itemprop="description" content="A properly formed git commit subject line should always be able to complete the following sentence:
+If applied, this commit will 1. Things to avoid when creating commits Sending large new features in a single giant commit. Mixing two unrelated functional changes. Again the reviewer will find it harder to identify flaws if two unrelated changes are mixed together. If it becomes necessary to later revert a broken commit, the two unrelated changes will need to be untangled, with further risk of bug creation."><meta itemprop="datePublished" content="2023-09-11T07:47:23+00:00" />
+<meta itemprop="dateModified" content="2023-09-11T07:47:23+00:00" />
+<meta itemprop="wordCount" content="753">
+<meta itemprop="keywords" content="git," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Commit Message Guidelines"/>
+<meta name="twitter:description" content="A properly formed git commit subject line should always be able to complete the following sentence:
+If applied, this commit will 1. Things to avoid when creating commits Sending large new features in a single giant commit. Mixing two unrelated functional changes. Again the reviewer will find it harder to identify flaws if two unrelated changes are mixed together. If it becomes necessary to later revert a broken commit, the two unrelated changes will need to be untangled, with further risk of bug creation."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Commit Message Guidelines</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-09-11 </span>
+        <div class="post-category">
+            <a href="/categories/git/"> git </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-things-to-avoid-when-creating-commits">1. Things to avoid when creating commits</a></li>
+        <li><a href="#2-commit-message-format">2. Commit message format</a>
+          <ul>
+            <li><a href="#21-commit-message-header">2.1. Commit message header</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-information-in-commit-messages">3. Information in commit messages</a></li>
+        <li><a href="#4-common-wrods">4. Common wrods</a></li>
+        <li><a href="#5-check-commit-history">5. Check commit history</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>A properly formed git commit subject line should always be able to complete the following sentence:</p>
+<p>If applied, this commit will <em><your subject line here></em></p>
+<h2 id="1-things-to-avoid-when-creating-commits">1. Things to avoid when creating commits</h2>
+<ul>
+<li><strong>Sending large new features in a single giant commit.</strong></li>
+<li><strong>Mixing two unrelated functional changes.</strong>
+<ul>
+<li>Again the reviewer will find it harder to identify flaws if two unrelated changes are mixed together. If it becomes necessary to later revert a broken commit, the two unrelated changes will need to be untangled, with further risk of bug creation.</li>
+</ul>
+</li>
+<li><strong>Mixing whitespace changes with functional code changes.</strong></li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">If a code change can be split into a sequence of patches/commits, 
+</span></span><span class="line"><span class="cl">then it should be split. Less is not more. More is more.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="2-commit-message-format">2. Commit message format</h2>
+<p>Each commit message consists of a header, a body, and a footer.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&lt;header&gt;
+</span></span><span class="line"><span class="cl">&lt;BLANK LINE&gt;
+</span></span><span class="line"><span class="cl">&lt;body&gt;
+</span></span><span class="line"><span class="cl">&lt;BLANK LINE&gt;
+</span></span><span class="line"><span class="cl">&lt;footer&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="21-commit-message-header">2.1. Commit message header</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">type</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&lt;</span><span class="n">scope</span><span class="o">&gt;</span><span class="p">):</span> <span class="o">&lt;</span><span class="n">short</span> <span class="n">summary</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="err">│</span>       <span class="err">│</span>             <span class="err">│</span>
+</span></span><span class="line"><span class="cl">  <span class="err">│</span>       <span class="err">│</span>             <span class="err">└─⫸</span> <span class="n">Summary</span> <span class="ow">in</span> <span class="n">present</span> <span class="n">tense</span><span class="o">.</span> <span class="n">Not</span> <span class="n">capitalized</span><span class="o">.</span> <span class="n">No</span> <span class="n">period</span> <span class="n">at</span> <span class="n">the</span> <span class="n">end</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">  <span class="err">│</span>       <span class="err">│</span>
+</span></span><span class="line"><span class="cl">  <span class="err">│</span>       <span class="err">└─⫸</span> <span class="n">Commit</span> <span class="n">Scope</span><span class="p">:</span> <span class="n">animations</span><span class="o">|</span><span class="n">bazel</span><span class="o">|</span><span class="n">benchpress</span><span class="o">|</span><span class="n">common</span><span class="o">|</span><span class="n">compiler</span><span class="o">|</span><span class="n">compiler</span><span class="o">-</span><span class="n">cli</span><span class="o">|</span><span class="n">core</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">  <span class="err">│</span>                          <span class="n">elements</span><span class="o">|</span><span class="n">forms</span><span class="o">|</span><span class="n">http</span><span class="o">|</span><span class="n">language</span><span class="o">-</span><span class="n">service</span><span class="o">|</span><span class="n">localize</span><span class="o">|</span><span class="n">platform</span><span class="o">-</span><span class="n">browser</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">  <span class="err">│</span>                          <span class="n">platform</span><span class="o">-</span><span class="n">browser</span><span class="o">-</span><span class="n">dynamic</span><span class="o">|</span><span class="n">platform</span><span class="o">-</span><span class="n">server</span><span class="o">|</span><span class="n">router</span><span class="o">|</span><span class="n">service</span><span class="o">-</span><span class="n">worker</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">  <span class="err">│</span>                          <span class="n">upgrade</span><span class="o">|</span><span class="n">zone</span><span class="o">.</span><span class="n">js</span><span class="o">|</span><span class="n">packaging</span><span class="o">|</span><span class="n">changelog</span><span class="o">|</span><span class="n">docs</span><span class="o">-</span><span class="n">infra</span><span class="o">|</span><span class="n">migrations</span><span class="o">|</span><span class="n">ngcc</span><span class="o">|</span><span class="n">ve</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">  <span class="err">│</span>                          <span class="n">devtools</span>
+</span></span><span class="line"><span class="cl">  <span class="err">│</span>
+</span></span><span class="line"><span class="cl">  <span class="err">└─⫸</span> <span class="n">Commit</span> <span class="n">Type</span><span class="p">:</span> <span class="n">build</span><span class="o">|</span><span class="n">ci</span><span class="o">|</span><span class="n">docs</span><span class="o">|</span><span class="n">feat</span><span class="o">|</span><span class="n">fix</span><span class="o">|</span><span class="n">perf</span><span class="o">|</span><span class="n">refactor</span><span class="o">|</span><span class="n">test</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <code>&lt;type&gt;</code> and <code>&lt;summary&gt;</code> fields are mandatory, the <code>(&lt;scope&gt;)</code> field is optional.</p>
+<h5 id="type">Type</h5>
+<p>Must be one of the following:</p>
+<ul>
+<li><strong>build</strong>: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)</li>
+<li><strong>ci</strong>: Changes to our CI configuration files and scripts (examples: CircleCi, SauceLabs)</li>
+<li><strong>docs</strong>: Documentation only changes</li>
+<li><strong>feat</strong>: A new feature</li>
+<li><strong>fix</strong>: A bug fix</li>
+<li><strong>perf</strong>: A code change that improves performance</li>
+<li><strong>refactor</strong>: A code change that neither fixes a bug nor adds a feature</li>
+<li><strong>test</strong>: Adding missing tests or correcting existing tests</li>
+</ul>
+<h5 id="summary">Summary</h5>
+<p>Use the summary field to provide a succinct description of the change:</p>
+<ul>
+<li>use the imperative, present tense: &ldquo;change&rdquo; not &ldquo;changed&rdquo; nor &ldquo;changes&rdquo;
+<ul>
+<li>This convention matches up with commit messages generated by commands like git merge and git revert.</li>
+</ul>
+</li>
+<li>don&rsquo;t capitalize the first letter</li>
+<li>no dot (.) at the end</li>
+</ul>
+<h2 id="3-information-in-commit-messages">3. Information in commit messages</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">      commit 468e64d019f51d364afb30b0eed2ad09483e0b98
+</span></span><span class="line"><span class="cl">      Author: [removed]
+</span></span><span class="line"><span class="cl">      Date:   Mon Jun 18 16:07:37 2012 -0400
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      Fix missing import in compute/utils.py
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      Fixes bug 1014829
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Problem: this does not mention what imports where missing and why they were needed. This info was actually in the bug tracker, and should have been copied into the commit message, so that it would provide a self-contained description. e.g.:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">      Add missing import of &#39;exception&#39; in compute/utils.py
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      nova/compute/utils.py makes a reference to exception.NotFound,
+</span></span><span class="line"><span class="cl">      however exception has not been imported.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-common-wrods">4. Common wrods</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">feat: add support for configuring libvirt VM clock and timers
+</span></span><span class="line"><span class="cl">feat: add libvirt version check, min 0.9.7
+</span></span><span class="line"><span class="cl">feat: update default policies for KVM guest PIT &amp; RTC timers
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">perf: refine serialize
+</span></span><span class="line"><span class="cl">refactor: reformat code
+</span></span><span class="line"><span class="cl">refactor: rename type and namespace
+</span></span><span class="line"><span class="cl">refactor: add a comment to rpc.queue_get_for()
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Add, Fix, Remove, Refactor, Reformat, Optimise and Update
+</span></span><span class="line"><span class="cl">Add = Create a capability e.g. feature, test, dependency.
+</span></span><span class="line"><span class="cl">Remove = Remove a capability e.g. feature, test, dependency.
+</span></span><span class="line"><span class="cl">Fix = Fix an issue e.g. bug, typo, accident, misstatement.
+</span></span><span class="line"><span class="cl">Refactor = A code change that MUST be just a refactoring.
+</span></span><span class="line"><span class="cl">Reformat = Refactor of formatting, e.g. omit whitespace.
+</span></span><span class="line"><span class="cl">Optimise = Refactor of performance, e.g. speed up code.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="5-check-commit-history">5. Check commit history</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ git config --global alias.lgg <span class="s2">&#34;log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit --date=relative&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ git lgg
+</span></span><span class="line"><span class="cl">* d7c4459 - <span class="o">(</span>HEAD, M, fromA<span class="o">)</span> M &lt;VonC&gt;
+</span></span><span class="line"><span class="cl">*   82b011d - <span class="o">(</span>L<span class="o">)</span> Merge commit <span class="s1">&#39;J&#39;</span> into fromA &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span><span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span><span class="p">|</span> * 190265b - <span class="o">(</span>J, master<span class="o">)</span> J &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> *   ef8e325 - <span class="o">(</span>I<span class="o">)</span> Merge commit <span class="s1">&#39;F&#39;</span> &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> <span class="p">|</span><span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span><span class="p">|</span> <span class="p">|</span> * 4b6d976 - <span class="o">(</span>F, fromB<span class="o">)</span> F &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> * <span class="p">|</span> 45a5d4d - <span class="o">(</span>H<span class="o">)</span> H &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> * <span class="p">|</span>   834b239 - <span class="o">(</span>G<span class="o">)</span> Merge commit <span class="s1">&#39;E&#39;</span> &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> <span class="p">|</span><span class="se">\ \
+</span></span></span><span class="line"><span class="cl"><span class="se"></span><span class="p">|</span> <span class="p">|</span> <span class="p">|</span>/
+</span></span><span class="line"><span class="cl"><span class="p">|</span> <span class="p">|</span> * f8e9272 - <span class="o">(</span>E<span class="o">)</span> E &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> <span class="p">|</span> * 96b5538 - <span class="o">(</span>D<span class="o">)</span> D &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> * <span class="p">|</span> 49eff7f - <span class="o">(</span>C<span class="o">)</span> C &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span> <span class="p">|</span>/
+</span></span><span class="line"><span class="cl"><span class="p">|</span> * 02c3ef4 - <span class="o">(</span>B<span class="o">)</span> B &lt;VonC&gt;
+</span></span><span class="line"><span class="cl">* <span class="p">|</span> c0d9e1e - <span class="o">(</span>K<span class="o">)</span> K &lt;VonC&gt;
+</span></span><span class="line"><span class="cl"><span class="p">|</span>/
+</span></span><span class="line"><span class="cl">* 6530d79 - <span class="o">(</span>A<span class="o">)</span> A &lt;VonC&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Source: <a href="https://stackoverflow.com/a/6744268/16317008">https://stackoverflow.com/a/6744268/16317008</a></p>
+<p>References:</p>
+<ul>
+<li><a href="https://gist.github.com/robertpainsi/b632364184e70900af4ab688decf6f53">Commit message guidelines</a></li>
+<li><a href="https://gist.github.com/brianclements/841ea7bffdb01346392c">Angular Commit Format Reference Sheet</a></li>
+<li><a href="https://github.com/knowbl/git-commit-message">knowbl/git-commit-message: Git commit message verbs used by Knowbl.</a></li>
+<li><a href="https://gist.github.com/scmx/411f6fea4ee3832806720d536a7d5d8f">Example list of verbs / first word to use in git commit title #git #commit #title</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-09-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/git/">git</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/basics/003-string-runes-bytes/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">string, bytes, runes and characters - Go</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/http/006-https-vpn/">
+            <span class="next-text nav-default">HTTPS vs VPN vs Proxy</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

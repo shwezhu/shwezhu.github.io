@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>正则表达式之关于&#39;(? … )&#39;的困惑 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="最初想筛选以sh结尾但前面没有.的文件, 对应的Regex为(?&amp;lt;!\.)sh$, 但是! 刚开始不知道(?!),(?=),(?&amp;lt;!)" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/linux/regex/regex-lookaround/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="正则表达式之关于&#39;(? … )&#39;的困惑" />
+<meta property="og:description" content="最初想筛选以sh结尾但前面没有.的文件, 对应的Regex为(?&lt;!\.)sh$, 但是! 刚开始不知道(?!),(?=),(?&lt;!)" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/linux/regex/regex-lookaround/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-02T23:30:28+00:00" />
+<meta property="article:modified_time" content="2023-05-02T23:30:28+00:00" />
+
+<meta itemprop="name" content="正则表达式之关于&#39;(? … )&#39;的困惑">
+<meta itemprop="description" content="最初想筛选以sh结尾但前面没有.的文件, 对应的Regex为(?&lt;!\.)sh$, 但是! 刚开始不知道(?!),(?=),(?&lt;!)"><meta itemprop="datePublished" content="2023-05-02T23:30:28+00:00" />
+<meta itemprop="dateModified" content="2023-05-02T23:30:28+00:00" />
+<meta itemprop="wordCount" content="524">
+<meta itemprop="keywords" content="regex," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="正则表达式之关于&#39;(? … )&#39;的困惑"/>
+<meta name="twitter:description" content="最初想筛选以sh结尾但前面没有.的文件, 对应的Regex为(?&lt;!\.)sh$, 但是! 刚开始不知道(?!),(?=),(?&lt;!)"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">正则表达式之关于&#39;(? … )&#39;的困惑</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-02 </span>
+        <div class="post-category">
+            <a href="/categories/regex/"> regex </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>最初想筛选以<code>sh</code>结尾但前面没有<code>.</code>的文件, 对应的Regex为<code>(?&lt;!\.)sh$</code>, 但是! 刚开始不知道<code>(?!)</code>,<code>(?=)</code>,<code>(?&lt;!)</code>这种写法规则, 就在想用逻辑与写出以<code>sh</code>结尾的字符但不以<code>.sh</code>结尾, 但这本身就矛盾啊, 以<code>.sh</code>结尾本身就是以<code>sh</code>结尾啊,,, 研究了俩小时, 太菜了,,,, 又快凌晨一点了,</p>
+<p>在<a href="https://stackoverflow.com/a/2973495/16317008">StackOverflow</a>看到一个好的回答,</p>
+<p>Given the string <code>foobarbarfoo</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">bar<span class="o">(</span>?<span class="o">=</span>bar<span class="o">)</span>     finds the 1st bar <span class="o">(</span><span class="s2">&#34;bar&#34;</span> which has <span class="s2">&#34;bar&#34;</span> after it<span class="o">)</span>
+</span></span><span class="line"><span class="cl">bar<span class="o">(</span>?!bar<span class="o">)</span>     finds the 2nd bar <span class="o">(</span><span class="s2">&#34;bar&#34;</span> which does not have <span class="s2">&#34;bar&#34;</span> after it<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">(</span>?&lt;<span class="o">=</span>foo<span class="o">)</span>bar    finds the 1st bar <span class="o">(</span><span class="s2">&#34;bar&#34;</span> which has <span class="s2">&#34;foo&#34;</span> before it<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">(</span>?&lt;!foo<span class="o">)</span>bar    finds the 2nd bar <span class="o">(</span><span class="s2">&#34;bar&#34;</span> which does not have <span class="s2">&#34;foo&#34;</span> before it<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You can also combine them:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="o">(</span>?&lt;<span class="o">=</span>foo<span class="o">)</span>bar<span class="o">(</span>?<span class="o">=</span>bar<span class="o">)</span>    finds the 1st bar <span class="o">(</span><span class="s2">&#34;bar&#34;</span> with <span class="s2">&#34;foo&#34;</span> before it and <span class="s2">&#34;bar&#34;</span> after it<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用这种 lookaround 句型的时候要注意上面的写法, 即 <code>(?!bar)</code> 就是用来指定某个单词后<strong>不含有</strong>什么的, 还有一个重要的点如下:</p>
+<blockquote>
+<p>In the meantime, if there is one thing you should remember, it is this: <strong>a lookahead or a lookbehind does not &ldquo;consume&rdquo; any characters on the string</strong>. This means that after the lookahead or lookbehind&rsquo;s closing parenthesis, the regex engine is left standing on the very same spot in the string from which it started looking: it hasn&rsquo;t moved. From that position, then engine can start matching characters again.</p>
+</blockquote>
+<p>即这些Lookaround只是用来检查check的, 是个附加条件:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">printf</span> <span class="s2">&#34;handle_test.go&#34;</span> <span class="p">|</span> grep -P <span class="s1">&#39;test(?=.)go&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>凭直觉 <code>'test(?=.)go'</code> 匹配的是含有 <code>test</code> 且其后紧跟着 <code>.go</code>, 可是 <code>&quot;handle_test.go&quot;</code> 并不满足 <code>'test(?=.)go'</code>,  因为<code>(?=.)</code> 匹配到了 <code>.</code> 并没有消耗掉它, 要这么写才行: <code>'test(?=.).go'</code> ,但这样看着很奇怪 并不是这么用的, 其实直接写 <code>'test(?=.go)'</code> 就好了,</p>
+<p>参考:</p>
+<ul>
+<li>
+<p><a href="https://www.rexegg.com/regex-disambiguation.html#lookarounds">Advanced Regex Tutorial—Regex Syntax</a></p>
+</li>
+<li>
+<p><a href="https://stackoverflow.com/questions/2973436/regex-lookahead-lookbehind-and-atomic-groups">lookaround - Regex lookahead, lookbehind and atomic groups - Stack Overflow</a></p>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-02
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/regex/">regex</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/linux/001-commands-linux/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Commands Commonly Used in Linux</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/bugs/003-bug-regex-grep-lookahead/">
+            <span class="next-text nav-default">grep不支持Negative Lookahead问题</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Objects &amp; Variables Python - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Objects in Python Everything in Python is an object. Classes, functions, and even simple data types, such as integers, floats, and strings, are objects in Python. When we define an integer in Python, CPython internally creates an object of type integer. These objects are stored in heap memory. Each Python object consists of three fields: Value Type Reference count Let&amp;rsquo;s consider a simple example: 1 a = 100 When" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/python/basics/001-objects-variables/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Objects &amp; Variables Python" />
+<meta property="og:description" content="1. Objects in Python Everything in Python is an object. Classes, functions, and even simple data types, such as integers, floats, and strings, are objects in Python. When we define an integer in Python, CPython internally creates an object of type integer. These objects are stored in heap memory. Each Python object consists of three fields: Value Type Reference count Let&rsquo;s consider a simple example: 1 a = 100 When" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/python/basics/001-objects-variables/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-11-29T14:51:31+00:00" />
+<meta property="article:modified_time" content="2023-11-29T14:51:31+00:00" />
+
+<meta itemprop="name" content="Objects &amp; Variables Python">
+<meta itemprop="description" content="1. Objects in Python Everything in Python is an object. Classes, functions, and even simple data types, such as integers, floats, and strings, are objects in Python. When we define an integer in Python, CPython internally creates an object of type integer. These objects are stored in heap memory. Each Python object consists of three fields: Value Type Reference count Let&rsquo;s consider a simple example: 1 a = 100 When"><meta itemprop="datePublished" content="2023-11-29T14:51:31+00:00" />
+<meta itemprop="dateModified" content="2023-11-29T14:51:31+00:00" />
+<meta itemprop="wordCount" content="1040">
+<meta itemprop="keywords" content="python," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Objects &amp; Variables Python"/>
+<meta name="twitter:description" content="1. Objects in Python Everything in Python is an object. Classes, functions, and even simple data types, such as integers, floats, and strings, are objects in Python. When we define an integer in Python, CPython internally creates an object of type integer. These objects are stored in heap memory. Each Python object consists of three fields: Value Type Reference count Let&rsquo;s consider a simple example: 1 a = 100 When"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Objects &amp; Variables Python</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-11-29 </span>
+        <div class="post-category">
+            <a href="/categories/python/"> python </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-objects-in-python">1. Objects in Python</a></li>
+        <li><a href="#2-variables-in-python">2. Variables in Python</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-objects-in-python">1. Objects in Python</h2>
+<p>Everything in Python is an object. <em>Classes</em>, <em>functions</em>, and even simple data types, such as <em>integers</em>, <em>floats</em>, and <em>strings</em>, are objects in Python. When we define an integer in Python, CPython internally creates an object of type <em>integer</em>. These objects are stored in heap memory.</p>
+<p>Each Python object consists of three fields:</p>
+<ul>
+<li>Value</li>
+<li>Type</li>
+<li>Reference count</li>
+</ul>
+<p>Let&rsquo;s consider a simple example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="mi">100</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When the above code is executed, CPython creates an object of type <code>integer</code> and allocates memory for this object on the heap memory.</p>
+<p>The <code>type</code> indicates the type of the object in CPython, and the <code>value</code> field, as the name suggests, stores the value of the object (<code>100</code> in this case). We will discuss the <code>ref_count</code> field later in the article.</p>
+<img src="/001-objects-variables/a.png" alt="a" style="zoom:33%;" />
+<blockquote>
+<p><strong>CPython</strong> is the default and most widely used implementation of the Python language. When we say Python, it essentially means we&rsquo;re referring to CPython. When you download Python from <a href="https://www.python.org/">python.org</a>, you basically download the CPython code. Thus, CPython is a program written in C language that implements all the rules and specifications defined by the Python language. CPython can be defined as both an interpreter and a compiler as it compiles Python code into bytecode before interpreting it.</p>
+</blockquote>
+<h2 id="2-variables-in-python">2. Variables in Python</h2>
+<p>Variables in Python are just references to the actual object in memory. They are like names or labels that point to the actual object in memory. They do not store any value.</p>
+<p>Consider the following example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">a = 100
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As discussed earlier, when the above code is executed, CPython internally creates an object of type <em>integer</em>. The variable <code>a</code> points to this integer object as shown below:</p>
+<img src="/001-objects-variables/b.png" alt="b" style="zoom:33%;" />
+<p>We can access the integer object in the Python program using the variable <code>a</code>.</p>
+<blockquote>
+<p>读到这可以看出Java还不是真正的万物皆对象 (如果想在heap上创建primitive对象 需要Integer声明创建), 但Python就是所有的东西都是对象, 即使是一个int类型, 甚至一个函数也是个对象, 另外Java与python的GC (Python中不叫GC叫Python memory manager)对对象的管理方式基本上是一样的, 即分为引用和对象两部分, 引用在stack, 对象在heap, 不像c++那种在函数里声明的就是局部对象(除malloc和new), 对于Java与python来说无论你在哪创建一个对象, 他们都会被创建到heap上, 且根据引用计数来判断对象是否reachable, 然后判断是否回收对象, 所以你完全可以返回一个“局部对象”的引用, 但C++中, 肯定就不行了, 这会造成野指针问题,</p>
+</blockquote>
+<p>Let&rsquo;s assign this integer object to another variable <code>b</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When the above code is executed, the variables <code>a</code> and <code>b</code> both point to the same integer object, as shown below:</p>
+<img src="/001-objects-variables/c.png" alt="c" style="zoom:33%;" />
+<p>Let&rsquo;s now increment the value of the integer object by 1:</p>
+<p>Let&rsquo;s now increment the value of the integer object by 1:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Increment a by 1
+</span></span><span class="line"><span class="cl">a = a + 1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When the above code is executed, CPython creates a new integer object with the value <code>101</code> and makes variable <code>a</code> point to this new integer object. Variable <code>b</code> will continue to point to the integer object with the value <code>100</code>, as shown below:</p>
+<img src="/001-objects-variables/d.png" alt="d" style="zoom:33%;" />
+<p>Here, we can see that instead of overwriting the value of <code>100</code> with <code>101</code>, CPython creates a new object with the value <code>101</code> <strong>because integers in Python are immutable</strong>. Once created, they cannot be modified. Please note that <strong>floats and string data types are also immutable in Python</strong>.</p>
+<p>Let&rsquo;s consider a simple Python program to further explain this concept:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The above code defines a simple <code>while</code> loop that increments the value of the variable <code>i</code> until it is less than <code>100</code>. When this code is executed, for every increment of the variable <code>i</code>, CPython will create a new integer object with the incremented value, and the old integer object will be deleted (to be more precise, this object would become eligible for deletion) from memory.</p>
+<p>CPython calls the <code>malloc</code> method for each new object to allocate memory for that object. It calls the <code>free</code> method to delete the old object from memory.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># malloc(i)</span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># malloc(i + 1)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># free(i)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We can see that CPython creates and deletes a large number of objects, even for this simple program. If we call the <code>malloc</code> and <code>free</code> methods for each object creation and deletion, it will degrade the program’s execution performance and make the program slow.</p>
+<p>Hence, CPython introduces various techniques to reduce the number of times we have to call <code>malloc</code> and <code>free</code> for each small object creation and deletion. Let’s now understand how CPython manages memory!</p>
+<p>Learn more: <a href="https://www.honeybadger.io/blog/memory-management-in-python/">Memory Management in Python - Honeybadger Developer Blog</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-11-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/">python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/bugs/009-go-server-handle-large-file/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go File Server Cannot Handle Large Files</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/other/001-pass-by-value-reference/">
+            <span class="next-text nav-default">Pass by Value or Reference</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

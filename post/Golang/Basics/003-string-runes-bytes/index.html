@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>string, bytes, runes and characters - Go - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="0. Make it eassy This is all this post is going to talk, if you know this, you don&amp;rsquo;t need to go through all this post. a string literal is a slice of bytes: 1 2 3 4 5 6 7 8 func main() { str := &amp;#34;汉&amp;#34; for i:=0; i&amp;lt;len(str); i&#43;&#43;{ fmt.Printf(&amp;#34;%x &amp;#34;, str[i]) } } --------------------------- e6 b1" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/golang/basics/003-string-runes-bytes/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="string, bytes, runes and characters - Go" />
+<meta property="og:description" content="0. Make it eassy This is all this post is going to talk, if you know this, you don&rsquo;t need to go through all this post. a string literal is a slice of bytes: 1 2 3 4 5 6 7 8 func main() { str := &#34;汉&#34; for i:=0; i&lt;len(str); i&#43;&#43;{ fmt.Printf(&#34;%x &#34;, str[i]) } } --------------------------- e6 b1" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/golang/basics/003-string-runes-bytes/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-09-11T13:50:59+00:00" />
+<meta property="article:modified_time" content="2023-09-11T13:50:59+00:00" />
+
+<meta itemprop="name" content="string, bytes, runes and characters - Go">
+<meta itemprop="description" content="0. Make it eassy This is all this post is going to talk, if you know this, you don&rsquo;t need to go through all this post. a string literal is a slice of bytes: 1 2 3 4 5 6 7 8 func main() { str := &#34;汉&#34; for i:=0; i&lt;len(str); i&#43;&#43;{ fmt.Printf(&#34;%x &#34;, str[i]) } } --------------------------- e6 b1"><meta itemprop="datePublished" content="2023-09-11T13:50:59+00:00" />
+<meta itemprop="dateModified" content="2023-09-11T13:50:59+00:00" />
+<meta itemprop="wordCount" content="1658">
+<meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="string, bytes, runes and characters - Go"/>
+<meta name="twitter:description" content="0. Make it eassy This is all this post is going to talk, if you know this, you don&rsquo;t need to go through all this post. a string literal is a slice of bytes: 1 2 3 4 5 6 7 8 func main() { str := &#34;汉&#34; for i:=0; i&lt;len(str); i&#43;&#43;{ fmt.Printf(&#34;%x &#34;, str[i]) } } --------------------------- e6 b1"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">string, bytes, runes and characters - Go</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-09-11 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/basics/"> basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#0-make-it-eassy">0. Make it eassy</a></li>
+        <li><a href="#1-string-literals-are-encoded-in-utf-8">1. string literals are encoded in UTF-8</a></li>
+        <li><a href="#2-string-is-read-only-slice-of-bytes">2. string is read-only slice of bytes</a></li>
+        <li><a href="#3-string-is-immutable">3. string is immutable</a></li>
+        <li><a href="#4-byte--rune">4. <code>byte</code> &amp; <code>rune</code></a></li>
+        <li><a href="#5-go-source-code-is-utf-8">5. Go source code is UTF-8</a></li>
+        <li><a href="#6-byte-vs-rune">6. <code>[]byte</code> vs <code>[]rune</code></a></li>
+        <li><a href="#7-byte-rune-and-string-conversion-will-makes-copy">7. <code>[]byte</code>, <code>[]rune</code> and string conversion will makes copy</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="0-make-it-eassy">0. Make it eassy</h2>
+<p>This is all this post is going to talk, if you know this, you don&rsquo;t need to go through all this post.</p>
+<p><strong>a string literal is a slice of bytes:</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">str</span> <span class="o">:=</span> <span class="s">&#34;汉&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">i</span><span class="o">:=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="p">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="nx">str</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%x &#34;</span><span class="p">,</span> <span class="nx">str</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">---------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="nx">e6</span> <span class="nx">b1</span> <span class="mi">89</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>a string literal consists of one or more <code>rune</code> values:</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">str</span> <span class="o">:=</span> <span class="s">&#34;abc汉&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">s</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">str</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%x &#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">s</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">str</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%c &#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">--------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="mi">61</span> <span class="mi">62</span> <span class="mi">63</span> <span class="mi">6</span><span class="nx">c49</span> 
+</span></span><span class="line"><span class="cl"><span class="nx">a</span> <span class="nx">b</span> <span class="nx">c</span> <span class="nx">汉</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that the ways of iterating the string literal in the codes above are different.</p>
+<h2 id="1-string-literals-are-encoded-in-utf-8">1. string literals are encoded in UTF-8</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">str</span> <span class="o">:=</span> <span class="s">&#34;汉&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;length of str: %d&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">str</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Output:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">length</span> <span class="nx">of</span> <span class="nx">str</span><span class="p">:</span> <span class="mi">3</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Why the output is 3? It&rsquo;s all about the encoding.</p>
+<p>Character <code>汉</code> is a chinese character which occupies 3 bytes in utf-8 encoding format, and its <strong><a href="https://en.wikipedia.org/wiki/Code_point">code point</a></strong> is <code>6C49</code>. Code point is a concept defined in Unicode. If you are not familiar with these you can check my another post: <a href="https://davidzhu.xyz/post/cs-basics/001-encoding/">https://davidzhu.xyz/post/cs-basics/001-encoding/</a></p>
+<p>In Go, string <em>literals</em> always contain UTF-8 text as long as they have no byte-level escapes. Therefore, the length of <code>str</code> is 3 bytes. This is the string in Go runtime sourcode which will help you understand string in go:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// src/runtime/string.go
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">stringStruct</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">str</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">len</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><strong>Note that</strong>: <code>'x'</code> represents a single character (called a rune), whereas <code>&quot;x&quot;</code> represents a string literal containing the character <code>x</code>. This is same as in c++ and c.</p>
+<p><strong>Size is not length</strong>, the size of a stirng value is always 2 words, learn more: <a href="https://davidzhu.xyz/post/golang/basics/001-value-variable-type/">Value Variable and Types - Go - David&rsquo;s Blog</a></p>
+</blockquote>
+<h2 id="2-string-is-read-only-slice-of-bytes">2. string is read-only slice of bytes</h2>
+<p>In Go, a string is in effect a <strong>read-only slice of bytes</strong>. We have disscussed slice in <a href="https://davidzhu.xyz/post/golang/basics/016-slice-relearn/">previous post</a>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">str</span> <span class="o">:=</span> <span class="s">&#34;汉&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">str</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">       <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%x &#34;</span><span class="p">,</span> <span class="nx">str</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Output:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">e6 b1 89 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As we saw, indexing a string yields its bytes, not its characters: a string is just a bunch of bytes.</p>
+<p>Here is another example that I want to talk:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">str</span> <span class="o">:=</span> <span class="s">&#34;汉&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%x &#34;</span><span class="p">,</span> <span class="nx">str</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">str</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%x &#34;</span><span class="p">,</span> <span class="nx">str</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Output:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">6c49 
+</span></span><span class="line"><span class="cl">e6 b1 89 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>That character <code>汉</code> has Unicode value <code>U+6C49</code> , this is just its Unicode code point, if we want wrtie this string into a file, we have to use a encoding scheme, gbk, utf-8 and other encoding scheme. After <code>汉</code> is encoded by utf-8, the value represents it is <code>e6 b1 89</code> Note that the value that written in the disk is <code>e6 b1 89 </code> which stands for <code>汉</code> in utf-8. Learn more: <a href="https://davidzhu.xyz/post/cs-basics/001-encoding/">https://davidzhu.xyz/post/cs-basics/001-encoding/</a></p>
+<h2 id="3-string-is-immutable">3. string is immutable</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">EchoCommandArgs</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">s</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// The variable os.Args is a slice of strings.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// range produces a pair of values: the index and the value of the element at that index.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// we ignore index with _ marker here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">arg</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// s += ... will make a new string everytime, because string is immutable
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// The += statement makes a new string by concatenating the old string,
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// a space character, and the next argument, then assigns the new string to s.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// The old contents of s are no longer in use, so they will be garbage-collected in due course.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// If the amount of data involved is large, this could be costly.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// A simpler and more efficient solution would be to use the Join function from the strings package
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">s</span> <span class="o">+=</span> <span class="nx">arg</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">s</span> <span class="o">+=</span> <span class="s">&#34; &#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">strings</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s">&#34; &#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">---------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="err">$</span> <span class="k">go</span> <span class="nx">run</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span> <span class="nx">hello</span> <span class="nx">hi</span> <span class="nx">hi</span>
+</span></span><span class="line"><span class="cl"><span class="nx">hello</span> <span class="nx">hi</span> <span class="nx">hi</span> 
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">hello</span> <span class="nx">hi</span> <span class="nx">hi</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">hello</span> <span class="nx">hi</span> <span class="nx">hi</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-byte--rune">4. <code>byte</code> &amp; <code>rune</code></h2>
+<p>A <code>byte</code> in Go is an unsigned 8-bit integer whose type is actually <code>uint8</code>, which can represent an ASCII character.</p>
+<p>Go uses <code>rune</code>, which has type <code>int32</code>, to deal with multibyte characters. <code>rune</code> occupies 32bit (4 bytes) and is meant to represent a <a href="http://en.wikipedia.org/wiki/Unicode">Unicode</a> <a href="http://en.wikipedia.org/wiki/Code_point">CodePoint</a> which is 4 bytes. Source: <a href="https://stackoverflow.com/a/19325804/16317008">https://stackoverflow.com/a/19325804/16317008</a></p>
+<p><code>汉</code> is a multibyte character. Here should note that we say &ldquo;<code>rune</code> is used to deal with multibyte characters&rdquo; doesn&rsquo;t mean it cannot represent singlebyte characters (ASCII), it&rsquo;s just a <code>int32</code> type, not something magic.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">str</span> <span class="o">:=</span> <span class="s">&#34;abc汉&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">c</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">str</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%T &#34;</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">c</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">str</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%x &#34;</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">str</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%x &#34;</span><span class="p">,</span> <span class="nx">str</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Output:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">int32 int32 int32 int32 
+</span></span><span class="line"><span class="cl">61 62 63 6c49 
+</span></span><span class="line"><span class="cl">61 62 63 e6 b1 89 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As we see here from the output line-3, a string literal is just a slice of bytes, but the first two line prove that we can think a string literal  is just a slice of <code>rune</code> which is <code>int32</code>.</p>
+<p>Here is another example may help you to understand the string literal and <code>rune</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">isValid</span><span class="p">(</span><span class="nx">s</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">c</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// error: Invalid operation: c == &#34;{&#34; (mismatched types int32 and string)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="nx">c</span> <span class="o">==</span> <span class="s">&#34;{&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">			<span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// no error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// `&#39;x&#39;` represents a single character (called a rune)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// c is a rune here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="nx">c</span> <span class="o">==</span> <span class="sc">&#39;{&#39;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="5-go-source-code-is-utf-8">5. Go source code is UTF-8</h2>
+<p>Source code in Go is <em>defined</em> to be UTF-8 text; no other representation is allowed. That implies that when, in the source code, we write the text</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">`⌘`
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>the text editor used to create the program places the UTF-8 encoding of the symbol ⌘ into the source text. <strong>When we print out the hexadecimal bytes, we’re just dumping the data the editor placed in the file</strong>.</p>
+<blockquote>
+<p>Recall the <code>汉</code> example we talked above, the real thing written in the disk is not its Unicode code point but the data encoded by uft-8 which is 3 bytes.</p>
+</blockquote>
+<p>In short, Go source code is UTF-8, so <em>the source code for the string literal is UTF-8 text</em>. If that string literal contains no escape sequences, which a raw string cannot, the constructed string will hold exactly the source text between the quotes. Thus by definition and by construction the raw string will always contain a valid UTF-8 representation of its contents. Similarly, unless it contains UTF-8-breaking escapes like those from the previous section, a regular string literal will also always contain valid UTF-8.</p>
+<p>Some people think Go strings are always UTF-8, but they are not: only string literals are UTF-8. As we showed in the previous section, string <em>values</em> can contain arbitrary bytes; as we showed in this one, string <em>literals</em> always contain UTF-8 text as long as they have no byte-level escapes.</p>
+<p>To summarize, strings can contain arbitrary bytes, but when constructed from string literals, those bytes are (almost always) UTF-8.</p>
+<h2 id="6-byte-vs-rune">6. <code>[]byte</code> vs <code>[]rune</code></h2>
+<p>A slice of byte just a slice of <code>uint8</code>, just a list of small numbers (0~127). We usually use a <code>[]byte</code> slice when we want store ASCII characters which are singlebye characters, if you want store multibyte characters, you should use <code>[]rune</code> or the string literals.</p>
+<h2 id="7-byte-rune-and-string-conversion-will-makes-copy">7. <code>[]byte</code>, <code>[]rune</code> and string conversion will makes copy</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// this is a slice not an array
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// you can replace []byte with []rune
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">data</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">{</span><span class="mi">102</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mi">110</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// convert byte slice to string
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// string to byte slice
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;falcon&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">----------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="mi">102</span> <span class="mi">97</span> <span class="mi">108</span> <span class="mi">99</span> <span class="mi">111</span> <span class="mi">110</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">falcon</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="mi">102</span> <span class="mi">97</span> <span class="mi">108</span> <span class="mi">99</span> <span class="mi">111</span> <span class="mi">110</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The compiler will allocate a new piece of memory and copy the data over when you convet string to bytes or bytes to string. The reason is that <code>[]byte</code> is not immutable.  You can change the bytes within a slice. You can grow the slice by appending bytes to the end. But a string is immutable. You cannot change it and you cannot grow it without creating a whole new string. If a string and a <code>[]byte</code> were backed by the same memory, then the string would change when the <code>[]byte</code> was changed, and that might not be what you expect.</p>
+<p>So, each time you do <code>[]byte(“fred”)</code> or <code>string([]byte{0x40, 0x040})</code>, there’s an allocation and a copy. This is done by <a href="https://golang.org/pkg/runtime/?m=all#stringtoslicebyte">https://golang.org/pkg/runtime/?m=all#stringtoslicebyte</a> and <a href="https://golang.org/pkg/runtime/?m=all#slicebytetostring">https://golang.org/pkg/runtime/?m=all#slicebytetostring</a>. And this is normally the right thing to do and normally has no significant consequences.</p>
+<p>References:</p>
+<ul>
+<li><a href="https://zetcode.com/golang/byte/">Go byte - working with bytes in Golang</a></li>
+<li><a href="https://syslog.ravelin.com/byte-vs-string-in-go-d645b67ca7ff">[]byte vs string in Go</a></li>
+<li><a href="https://go.dev/blog/strings">Strings, bytes, runes and characters in Go - The Go Programming Language</a></li>
+<li><a href="https://stackoverflow.com/questions/34691045/cannot-assign-string-with-single-quote-in-golang">go - Cannot assign string with single quote in golang - Stack Overflow</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-09-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/other/007-tun-tap-veth-reading/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">虚拟网卡 tun/tap - 阅读转载</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/git/008-concise-commit/">
+            <span class="next-text nav-default">Commit Message Guidelines</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MySQL 命名规则 时间字符串类型 基础创表语句 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="0. 常用语句 1 2 3 4 5 6 7 8 9 show tables; show columns from user; ALTER TABLE user ADD COLUMN email VARCHAR(50) UNIQUE NOT NULL AFTER password; ALTER TABLE user DROP COLUMN email; 1. Naming Conventions General Using lowercase will help speed typing, avoid mistakes as MYSQL is case sensitive. Space replaced with Underscore — Using space between words is not advised. Numbers are not" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/database/mysql/mysql-basics/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MySQL 命名规则 时间字符串类型 基础创表语句" />
+<meta property="og:description" content="0. 常用语句 1 2 3 4 5 6 7 8 9 show tables; show columns from user; ALTER TABLE user ADD COLUMN email VARCHAR(50) UNIQUE NOT NULL AFTER password; ALTER TABLE user DROP COLUMN email; 1. Naming Conventions General Using lowercase will help speed typing, avoid mistakes as MYSQL is case sensitive. Space replaced with Underscore — Using space between words is not advised. Numbers are not" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/database/mysql/mysql-basics/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-07-12T08:51:35+00:00" />
+<meta property="article:modified_time" content="2023-07-12T08:51:35+00:00" />
+<meta itemprop="name" content="MySQL 命名规则 时间字符串类型 基础创表语句">
+<meta itemprop="description" content="0. 常用语句 1 2 3 4 5 6 7 8 9 show tables; show columns from user; ALTER TABLE user ADD COLUMN email VARCHAR(50) UNIQUE NOT NULL AFTER password; ALTER TABLE user DROP COLUMN email; 1. Naming Conventions General Using lowercase will help speed typing, avoid mistakes as MYSQL is case sensitive. Space replaced with Underscore — Using space between words is not advised. Numbers are not"><meta itemprop="datePublished" content="2023-07-12T08:51:35+00:00" />
+<meta itemprop="dateModified" content="2023-07-12T08:51:35+00:00" />
+<meta itemprop="wordCount" content="1686">
+<meta itemprop="keywords" content="Database," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MySQL 命名规则 时间字符串类型 基础创表语句"/>
+<meta name="twitter:description" content="0. 常用语句 1 2 3 4 5 6 7 8 9 show tables; show columns from user; ALTER TABLE user ADD COLUMN email VARCHAR(50) UNIQUE NOT NULL AFTER password; ALTER TABLE user DROP COLUMN email; 1. Naming Conventions General Using lowercase will help speed typing, avoid mistakes as MYSQL is case sensitive. Space replaced with Underscore — Using space between words is not advised. Numbers are not"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MySQL 命名规则 时间字符串类型 基础创表语句</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-07-12 </span>
+        <div class="post-category">
+            <a href="/categories/database/"> Database </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#0-常用语句">0. 常用语句</a></li>
+        <li><a href="#1-naming-conventions">1. Naming Conventions</a></li>
+        <li><a href="#2-基础命令">2. 基础命令</a></li>
+        <li><a href="#3-数据类型">3. 数据类型</a>
+          <ul>
+            <li><a href="#31-数值类型">3.1. 数值类型</a></li>
+            <li><a href="#32-字符串类型">3.2. 字符串类型</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-数据库如何存储时间">4. 数据库如何存储时间</a>
+          <ul>
+            <li><a href="#41-不要用字符串存储日期">4.1. 不要用字符串存储日期</a></li>
+            <li><a href="#42-datetime-和-timestamp-的选择">4.2. Datetime 和 Timestamp 的选择</a></li>
+          </ul>
+        </li>
+        <li><a href="#5-查看-mysql-warning">5. 查看 MySQL Warning</a></li>
+        <li><a href="#6-default-vs-not-null">6. Default vs NOT NULL</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="0-常用语句">0. 常用语句</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">show</span><span class="w"> </span><span class="kp">tables</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">show</span><span class="w"> </span><span class="n">columns</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">user</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">user</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="n">AFTER</span><span class="w"> </span><span class="n">password</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">user</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">DROP</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">email</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="1-naming-conventions">1. Naming Conventions</h2>
+<p><strong>General</strong></p>
+<ol>
+<li>
+<p><strong>Using lowercase</strong> will help speed typing, avoid mistakes as MYSQL is case sensitive.</p>
+</li>
+<li>
+<p><strong>Space replaced with Underscore</strong> — Using space between words is not advised.</p>
+</li>
+<li>
+<p>Numbers are not for names — While naming, it is essential that it contains only Alpha English alphabets.</p>
+</li>
+</ol>
+<p><strong>Table</strong></p>
+<ol>
+<li>Table names are lower case, uses underscores to separate words, and are <strong>singular</strong> (e.g. <code>foo</code>, <code>foo_bar</code>, etc.</li>
+</ol>
+<p><strong>Columns</strong></p>
+<ol>
+<li>Always use the singular name.</li>
+<li>Always use lowercase except where it may make sense not to such as proper nouns.</li>
+<li>Where possible <strong>avoid simply using <code>id</code></strong> as the primary identifier for the table.</li>
+<li>Do not add a column with the same name as its table and vice versa.</li>
+<li>I generally (not always) have a auto increment PK. I use the following convention: <code>tablename_id</code> (e.g. <code>foo_id</code>, <code>foo_bar_id</code>, etc.).</li>
+</ol>
+<h2 id="2-基础命令">2. 基础命令</h2>
+<p>登录 MySQL 服务器:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ mysql -u root -p778899
+</span></span><span class="line"><span class="cl">mysql&gt; show databases<span class="p">;</span>
+</span></span><span class="line"><span class="cl">mysql&gt; create database gptbot<span class="p">;</span>
+</span></span><span class="line"><span class="cl">mysql&gt; use gptbot<span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>创建表:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">CREATE TABLE <span class="sb">`</span>user<span class="sb">`</span> <span class="o">(</span>
+</span></span><span class="line"><span class="cl">  <span class="sb">`</span>user_id<span class="sb">`</span> SMALLINT NOT NULL AUTO_INCREMENT,
+</span></span><span class="line"><span class="cl">  <span class="sb">`</span>username<span class="sb">`</span> VARCHAR<span class="o">(</span>20<span class="o">)</span> NOT NULL,
+</span></span><span class="line"><span class="cl">  <span class="sb">`</span>password<span class="sb">`</span> VARCHAR<span class="o">(</span>20<span class="o">)</span> NOT NULL,
+</span></span><span class="line"><span class="cl">  PRIMARY KEY <span class="o">(</span><span class="sb">`</span>user_id<span class="sb">`</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">)</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-数据类型">3. 数据类型</h2>
+<h3 id="31-数值类型">3.1. 数值类型</h3>
+<p>整数值的范围越大，那么占用的空间就越大，合理设置数据类型很关键, 浮点数小数一般都会用DESCIMAL数据类型。</p>
+<p><strong>人员年龄字段的数据类型选择</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="n">age</span><span class="w"> </span><span class="kt">TINYINT</span><span class="w"> </span><span class="k">UNSIGNED</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="32-字符串类型">3.2. 字符串类型</h3>
+<p>在字符串数据类型中使用最多的就是CHAR和VARCHAR两种, TEXT和LONGTESXT也是常用的字符串数据类型</p>
+<p><strong>CHAR 和 VARCHAR 的区别</strong></p>
+<blockquote>
+<p>无论使用 CHAR 还是 VARCHAR 都需要指定字符串的长度, 例如<code>char(10) varchar(10)</code>。</p>
+<p>CHAR 是定长字符串, 当我们指定存储字符串的长度为10, 如果写入的文本字符串的数量不够10个, 则会以空格进行填充, 性能比VARCHAR好。</p>
+<p>VARCHAR 是变长字符串, 当我们指定存储字符串的长度为10, 写入了几个文本字符串就算几个, <strong>不会用空格进行补充</strong>, 由于需要计算写入的字符串数量与总长度进行比较, 因此 VARCHAR 的性能略低与 CHAR。</p>
+</blockquote>
+<p>当明确指定该字段写入的字符串数量，并且一定会写入指定数量的字符串时，选择 CHAR 作为数据类型。当不固定用户会写入多少个字符串时，但是由文字数量限制，此时就使用 VARCHAR 作为数据类型。例如用户名是无法固定的，采用 VARCHAR 作为数据类型。</p>
+<h2 id="4-数据库如何存储时间">4. 数据库如何存储时间</h2>
+<h3 id="41-不要用字符串存储日期">4.1. 不要用字符串存储日期</h3>
+<ul>
+<li>字符串占用的空间更大</li>
+<li>字符串存储的日期比较效率比较低（逐个字符进行比对），无法用日期相关的 API 进行计算和比较</li>
+</ul>
+<h3 id="42-datetime-和-timestamp-的选择">4.2. Datetime 和 Timestamp 的选择</h3>
+<p><code>Datetime</code> 和 <code>Timestamp</code> 是 MySQL 提供的两种比较相似的保存时间的数据类型, 通常我们都会首选 <code>Timestamp</code>. 因为DateTime类型没有时区信息的, 而Timestamp可以存储time zone信息, 并且做转换.</p>
+<p>Timestamp 只需要使用 4 个字节的存储空间，但是 DateTime 需要耗费 8 个字节的存储空间。但是，这样同样造成了一个问题，Timestamp 表示的时间范围更小。</p>
+<ul>
+<li>DateTime ：1000-01-01 00:00:00 ~ 9999-12-31 23:59:59</li>
+<li>Timestamp： 1970-01-01 00:00:01 ~ 2037-12-31 23:59:59</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">time_zone_test</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">date_time</span><span class="o">`</span><span class="w"> </span><span class="n">datetime</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">time_stamp</span><span class="o">`</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">time_zone_test</span><span class="p">(</span><span class="n">date_time</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">NOW</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">time_zone_test</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="c1">----+---------------------+---------------------+
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">|</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">date_time</span><span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="n">time_stamp</span><span class="w">          </span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="c1">----+---------------------+---------------------+
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">|</span><span class="w">  </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span><span class="w"> </span><span class="mi">10</span><span class="p">:</span><span class="mi">45</span><span class="p">:</span><span class="mi">04</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span><span class="w"> </span><span class="mi">10</span><span class="p">:</span><span class="mi">45</span><span class="p">:</span><span class="mi">04</span><span class="w"> </span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="c1">----+---------------------+---------------------+
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这也说明了一个问题, 就是我们插入数据的时候, 没必要在逻辑上获取时间再加入, 我们只需要在创建表的时候设置一个time column并为其设置default值, 即可, 每次只用在Java代码中插入其他column, 然后时间会被mysql自动加上去.</p>
+<p>对于上面的数据, 我们修改会话的时区, 可以看到时间就变了:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">set</span><span class="w"> </span><span class="n">time_zone</span><span class="o">=</span><span class="s1">&#39;+8:00&#39;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="c1">----+---------------------+---------------------+
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">|</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">date_time</span><span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="n">time_stamp</span><span class="w">          </span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="c1">----+---------------------+---------------------+
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">|</span><span class="w">  </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span><span class="w"> </span><span class="mi">10</span><span class="p">:</span><span class="mi">45</span><span class="p">:</span><span class="mi">04</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">45</span><span class="p">:</span><span class="mi">04</span><span class="w"> </span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="c1">----+---------------------+---------------------+
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="5-查看-mysql-warning">5. 查看 MySQL Warning</h2>
+<p>有时候我们创建表的时候或者执行SQL语句, 虽然执行成功了但是会显示有警告,但是还不告诉你警告内容, 这时候你需要立刻执行<code>SHOW WARNINGS;</code>语句, 否则你执行了其他语句再执行这个show, 那现实的就不是上一个语句的warnings了, 如下图:</p>
+<p><img src="a.png" alt="a"></p>
+<h2 id="6-default-vs-not-null">6. Default vs NOT NULL</h2>
+<p>有没有想过, 建表的时候default 和 not null一起使用, 是不是有点redundant? 因为比如你不插入值的时候mysql会帮你插入默认值,</p>
+<p>其实这么想你就错了, 你想的是我不插入, mysql就会帮我插入个默认值, 所以似乎not null没起作用, 但是你有没有想过如果你只设置了default而没有设置not null限制, 那这时候我插入null个呢, 显然可以插入成功, 但有时候为null, 比如一个日期, 当我们在写Java或者其他代码的时候查询数据然后把date转为string, 如果数据为null可能就会发生异常~</p>
+<p>所以not null主要的作用是是你不能插入null,</p>
+<p>参考:</p>
+<ul>
+<li><a href="https://medium.com/@centizennationwide/mysql-naming-conventions-e3a6f6219efe">MYSQL Naming Conventions. What is MYSQL? | by Centizen Nationwide | Medium</a></li>
+<li><a href="https://stackoverflow.com/questions/7899200/is-there-a-naming-convention-for-mysql">Is there a naming convention for MySQL? - Stack Overflow</a></li>
+<li><a href="https://www.sqlstyle.guide/#columns">SQL style guide by Simon Holywell</a></li>
+<li><a href="https://juejin.cn/post/7165675545965887525">MySQL数据库中常见的几种表字段数据类型 - 掘金</a></li>
+<li><a href="https://juejin.cn/post/6844904047489581063">老生常谈！数据库如何存储时间？你真的知道吗？ - 掘金</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-07-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/database/">Database</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/database/primary-key/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Primary Key</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/other/ielts/">
+            <span class="next-text nav-default">备考雅思</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

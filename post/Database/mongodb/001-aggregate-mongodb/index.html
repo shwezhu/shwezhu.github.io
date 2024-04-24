@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MongoDB Aggregate - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="Aggregate framework The aggregation framework is MongoDB’s advanced query language, and it allows you to transform and combine data from multiple documents to generate new information not available in any single document.
+Common aggregation stages Below is a list of common MongoDB aggregation pipeline stages and their typical order:
+$match Stage
+Usually at the beginning of the pipeline. Filters the documents as early as possible, which reduces the amount of data processed by subsequent stages." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/database/mongodb/001-aggregate-mongodb/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MongoDB Aggregate" />
+<meta property="og:description" content="Aggregate framework The aggregation framework is MongoDB’s advanced query language, and it allows you to transform and combine data from multiple documents to generate new information not available in any single document.
+Common aggregation stages Below is a list of common MongoDB aggregation pipeline stages and their typical order:
+$match Stage
+Usually at the beginning of the pipeline. Filters the documents as early as possible, which reduces the amount of data processed by subsequent stages." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/database/mongodb/001-aggregate-mongodb/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-01-04T17:51:35+00:00" />
+<meta property="article:modified_time" content="2024-01-04T17:51:35+00:00" />
+
+<meta itemprop="name" content="MongoDB Aggregate">
+<meta itemprop="description" content="Aggregate framework The aggregation framework is MongoDB’s advanced query language, and it allows you to transform and combine data from multiple documents to generate new information not available in any single document.
+Common aggregation stages Below is a list of common MongoDB aggregation pipeline stages and their typical order:
+$match Stage
+Usually at the beginning of the pipeline. Filters the documents as early as possible, which reduces the amount of data processed by subsequent stages."><meta itemprop="datePublished" content="2024-01-04T17:51:35+00:00" />
+<meta itemprop="dateModified" content="2024-01-04T17:51:35+00:00" />
+<meta itemprop="wordCount" content="492">
+<meta itemprop="keywords" content="database,mongodb," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="MongoDB Aggregate"/>
+<meta name="twitter:description" content="Aggregate framework The aggregation framework is MongoDB’s advanced query language, and it allows you to transform and combine data from multiple documents to generate new information not available in any single document.
+Common aggregation stages Below is a list of common MongoDB aggregation pipeline stages and their typical order:
+$match Stage
+Usually at the beginning of the pipeline. Filters the documents as early as possible, which reduces the amount of data processed by subsequent stages."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MongoDB Aggregate</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-01-04 </span>
+        <div class="post-category">
+            <a href="/categories/database/"> database </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#aggregate-framework">Aggregate framework</a></li>
+        <li><a href="#common-aggregation-stages">Common aggregation stages</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="aggregate-framework">Aggregate framework</h2>
+<p>The aggregation framework is MongoDB’s advanced query language, and it allows you to transform and combine data from multiple documents to generate new information not available in any single document.</p>
+<h2 id="common-aggregation-stages">Common aggregation stages</h2>
+<p>Below is a list of common MongoDB aggregation pipeline stages and their typical order:</p>
+<ol>
+<li>
+<p><strong><code>$match</code> Stage</strong></p>
+<ul>
+<li>Usually at the beginning of the pipeline.</li>
+<li>Filters the documents as early as possible, which reduces the amount of data processed by subsequent stages.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>$sort</code> Stage</strong></p>
+<ul>
+<li>After <code>$match</code> and before <code>$limit</code> if sorting the entire dataset is necessary.</li>
+<li>Be aware that <code>$sort</code> can be memory-intensive. If used before <code>$limit</code>, it sorts the entire dataset filtered by <code>$match</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>$limit</code> Stage</strong></p>
+<ul>
+<li>Use <code>$limit</code> as early as possible, but after <code>$match</code> and <code>$sort</code> if sorting is needed.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>$project</code> Stage</strong></p>
+<ul>
+<li>Reduces the number of fields in the documents, decreasing the amount of data processed in later stages.</li>
+<li>Keep in mind that some fields might be needed in subsequent stages.</li>
+<li>You can use <code>$project</code> more than once in a pipeline, you have to speficify all the fields you want to keep in each <code>$project</code> stage, even you have already specified them in the previous <code>$project</code> stage.</li>
+<li>If you need to add new fields, consider using <code>$addFields</code> instead wich has more flexibility.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>$group</code> Stage</strong></p>
+<ul>
+<li>After <code>$match</code>, <code>$sort</code>, <code>$limit</code>, and <code>$project</code>.</li>
+<li>Groups documents by specified fields after they have been filtered and shaped.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>$unwind</code> Stage</strong></p>
+<ul>
+<li>Used to expand array fields into separate documents.</li>
+</ul>
+</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">db</span><span class="p">.</span><span class="nx">inventory</span><span class="p">.</span><span class="nx">insertOne</span><span class="p">({</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;item&#34;</span> <span class="o">:</span> <span class="s2">&#34;ABC1&#34;</span><span class="p">,</span> <span class="nx">sizes</span><span class="o">:</span> <span class="p">[</span> <span class="s2">&#34;S&#34;</span><span class="p">,</span> <span class="s2">&#34;M&#34;</span><span class="p">,</span> <span class="s2">&#34;L&#34;</span><span class="p">]</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="nx">db</span><span class="p">.</span><span class="nx">inventory</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span> <span class="p">[</span> <span class="p">{</span> <span class="nx">$unwind</span> <span class="o">:</span> <span class="s2">&#34;$sizes&#34;</span> <span class="p">}</span> <span class="p">]</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// The operation returns the following results:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;item&#34;</span> <span class="o">:</span> <span class="s2">&#34;ABC1&#34;</span><span class="p">,</span> <span class="s2">&#34;sizes&#34;</span> <span class="o">:</span> <span class="s2">&#34;S&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;item&#34;</span> <span class="o">:</span> <span class="s2">&#34;ABC1&#34;</span><span class="p">,</span> <span class="s2">&#34;sizes&#34;</span> <span class="o">:</span> <span class="s2">&#34;M&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;item&#34;</span> <span class="o">:</span> <span class="s2">&#34;ABC1&#34;</span><span class="p">,</span> <span class="s2">&#34;sizes&#34;</span> <span class="o">:</span> <span class="s2">&#34;L&#34;</span> <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="7">
+<li>
+<p><strong><code>$lookup</code> Stage</strong></p>
+<ul>
+<li><strong>Order</strong>: After filtering and limiting stages like <code>$match</code> and <code>$limit</code>.</li>
+<li><strong>Reason</strong>: Performs a join to another collection, which can be data-intensive.</li>
+<li><strong>Considerations</strong>: Can significantly increase data volume, so use after reducing the dataset size.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>$addFields</code> / <code>$set</code> Stage</strong></p>
+<ul>
+<li><strong>Order</strong>: After <code>$project</code>, <code>$unwind</code>, or <code>$group</code>.</li>
+<li><strong>Reason</strong>: Adds new fields or modifies existing ones, often based on existing fields.</li>
+<li><strong>Considerations</strong>: Useful for adding calculated fields. Similar to <code>$project</code>, but adds fields without removing existing ones.</li>
+</ul>
+</li>
+</ol>
+<p>The code below will result in an error &ldquo;$size cannot be used for not array type&rdquo;, because during the project stage filters out the <code>likes</code> and <code>comments</code> fields, which results the <code>likes</code> and <code>comments</code> fields to be <code>null</code> instead of an array.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">$project</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">text</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">images</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">comments</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">createdAt</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">$addFields</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">engagement</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">numLikes</span><span class="o">:</span> <span class="p">{</span> <span class="nx">$size</span><span class="o">:</span> <span class="s2">&#34;$likes&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">numComments</span><span class="o">:</span> <span class="p">{</span> <span class="nx">$size</span><span class="o">:</span> <span class="s2">&#34;$comments&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">isLiked</span><span class="o">:</span> <span class="p">{</span> <span class="nx">$in</span><span class="o">:</span> <span class="p">[</span><span class="k">new</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">(</span><span class="nx">userId</span><span class="p">),</span> <span class="s2">&#34;$likes&#34;</span><span class="p">]</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>So in this case, you should put the <code>$addFields</code> stage before the <code>$project</code> stage.</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2024-01-04
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/database/">database</a>
+          <a href="/tags/mongodb/">mongodb</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/database/001-design-schema/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Design of Database Schema</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/build-website/007-nginx/">
+            <span class="next-text nav-default">Nginx</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

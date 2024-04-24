@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Nodejs Intro - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1 2 3 4 5 6 7 8 9 # make sure npm and node.js are install npm -v node -v # create folder and init node.js project mkdir ws-chat &amp;amp;&amp;amp; cd ws-chat npm init # execute js file touch index.js node xxx.js # or use &amp;#39;npm start&amp;#39; predefined in package.json 1. Intro Node. js is not a programming language. Rather, it&amp;rsquo;s a runtime environment that&amp;rsquo;s used to run JavaScript outside the browser." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/js/nodejs/nodejs-introduction/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Nodejs Intro" />
+<meta property="og:description" content="1 2 3 4 5 6 7 8 9 # make sure npm and node.js are install npm -v node -v # create folder and init node.js project mkdir ws-chat &amp;&amp; cd ws-chat npm init # execute js file touch index.js node xxx.js # or use &#39;npm start&#39; predefined in package.json 1. Intro Node. js is not a programming language. Rather, it&rsquo;s a runtime environment that&rsquo;s used to run JavaScript outside the browser." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/js/nodejs/nodejs-introduction/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-03-07T14:06:27+00:00" />
+<meta property="article:modified_time" content="2024-03-07T14:06:27+00:00" />
+
+<meta itemprop="name" content="Nodejs Intro">
+<meta itemprop="description" content="1 2 3 4 5 6 7 8 9 # make sure npm and node.js are install npm -v node -v # create folder and init node.js project mkdir ws-chat &amp;&amp; cd ws-chat npm init # execute js file touch index.js node xxx.js # or use &#39;npm start&#39; predefined in package.json 1. Intro Node. js is not a programming language. Rather, it&rsquo;s a runtime environment that&rsquo;s used to run JavaScript outside the browser."><meta itemprop="datePublished" content="2024-03-07T14:06:27+00:00" />
+<meta itemprop="dateModified" content="2024-03-07T14:06:27+00:00" />
+<meta itemprop="wordCount" content="457">
+<meta itemprop="keywords" content="javascript," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Nodejs Intro"/>
+<meta name="twitter:description" content="1 2 3 4 5 6 7 8 9 # make sure npm and node.js are install npm -v node -v # create folder and init node.js project mkdir ws-chat &amp;&amp; cd ws-chat npm init # execute js file touch index.js node xxx.js # or use &#39;npm start&#39; predefined in package.json 1. Intro Node. js is not a programming language. Rather, it&rsquo;s a runtime environment that&rsquo;s used to run JavaScript outside the browser."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Nodejs Intro</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-03-07 </span>
+        <div class="post-category">
+            <a href="/categories/javascript/"> javascript </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-intro">1. Intro</a></li>
+        <li><a href="#2-install">2. Install</a></li>
+        <li><a href="#3-npm">3. npm</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># make sure npm and node.js are install</span>
+</span></span><span class="line"><span class="cl">npm -v
+</span></span><span class="line"><span class="cl">node -v
+</span></span><span class="line"><span class="cl"><span class="c1"># create folder and init node.js project</span>
+</span></span><span class="line"><span class="cl">mkdir ws-chat <span class="o">&amp;&amp;</span> <span class="nb">cd</span> ws-chat
+</span></span><span class="line"><span class="cl">npm init
+</span></span><span class="line"><span class="cl"><span class="c1"># execute js file</span>
+</span></span><span class="line"><span class="cl">touch index.js
+</span></span><span class="line"><span class="cl">node xxx.js <span class="c1"># or use &#39;npm start&#39; predefined in package.json</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="1-intro">1. Intro</h2>
+<p>Node. js is not a programming language. Rather, it&rsquo;s a <code>runtime environment</code> that&rsquo;s used to run JavaScript outside the browser. For example on the <code>server</code> or in the <code>command line</code>.</p>
+<p>Recall a paragraph which introduces js engine:</p>
+<blockquote>
+<p>The use of JavaScript engines is not limited to browsers. For example, the <strong>V8 engine is a <code>core component</code> of the <a href="https://www.webopedia.com/definitions/node-js/">Node.js</a></strong>. V8 is the Javascript engine <strong>inside of</strong> node.js that parses and runs your Javascript. The same V8 engine is used <strong>inside of</strong> Chrome to run javascript in the Chrome browser. Both <code>chrome browser</code> and <code>node.js</code> have <code>v8</code> inside.</p>
+</blockquote>
+<blockquote>
+<p>A Node.js app runs in a <code>single process</code>, without creating a new thread for every request. Node.js provides a set of asynchronous I/O primitives in its standard library that prevent JavaScript code from blocking and generally, libraries in Node.js are written using non-blocking paradigms, making blocking behavior the exception rather than the norm.</p>
+</blockquote>
+<h2 id="2-install">2. Install</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># which will insatll both nodejs and npm</span>
+</span></span><span class="line"><span class="cl">brew install node
+</span></span><span class="line"><span class="cl"><span class="c1"># uninstall</span>
+</span></span><span class="line"><span class="cl">brew uninstall node
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Another way: go to <a href="https://nodejs.org/en/download">Download | Node.js</a>, note that when you install, the install pragram will reminds you:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">This</span> <span class="kn">package</span> <span class="nx">will</span> <span class="nx">install</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="err">•</span>	<span class="nx">Node</span><span class="p">.</span><span class="nx">js</span> <span class="nx">v16</span><span class="mf">.17.0</span> <span class="nx">to</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">local</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">node</span>
+</span></span><span class="line"><span class="cl"><span class="err">•</span>	<span class="nx">npm</span> <span class="nx">v8</span><span class="mf">.15.0</span> <span class="nx">to</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">local</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">npm</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-npm">3. npm</h2>
+<p><code>npm</code> is the package manager for JavaScript, commonly used with Node.js. It is widely used for <strong>managing dependencies</strong> in JavaScript projects and for <strong>running scripts</strong> defined in a project&rsquo;s <code>package.json</code> file.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">npm init: This <span class="nb">command</span> initializes a new Node.js project. It creates a package.json file which holds various metadata relevant to the project.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">npm install: This <span class="nb">command</span> is used to install dependencies listed in the package.json file. When used with the --save flag, it also updates the package.json file with the newly installed package.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">npm install &lt;package-name&gt;: This <span class="nb">command</span> installs a specific package. For example, npm install express installs the Express framework.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">npm install -g &lt;package-name&gt;: The -g flag installs the package globally, making it available as a <span class="nb">command</span> line tool.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">npm uninstall &lt;package-name&gt;: This <span class="nb">command</span> removes a package from the node_modules directory and updates the package.json file.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">npm update: This <span class="nb">command</span> updates the installed packages to their latest versions based on the version range specified in the package.json file.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">npm list: This <span class="nb">command</span> displays a tree of every package installed in the current project.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>References:</p>
+<ul>
+<li><a href="https://docs.npmjs.com/about-npm">About npm | npm Docs</a></li>
+<li><a href="https://nodejs.dev/en/learn/">https://nodejs.dev/en/learn/</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2024-03-07
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/javascript/">javascript</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/frontend/000-html-js/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">HTML Basics</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/js/000-event-loop/">
+            <span class="next-text nav-default">Event Loop in Browser</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

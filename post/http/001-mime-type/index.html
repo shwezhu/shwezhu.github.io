@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MIME Types - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Background When I first started writing backend code, if the server return a file (any type), and I would add a Content-Type header and set its value to application/octet-stream:
+1 2 3 4 w.Header().Set(&amp;#34;Content-Disposition&amp;#34;, &amp;#34;attachment; filename=&amp;#34;&#43;strconv.Quote(info.Name())) w.Header().Set(&amp;#34;Content-Type&amp;#34;, &amp;#34;application/octet-stream&amp;#34;) http.ServeFile(w, r, filePath) return I don&amp;rsquo;t know what does this mean, but it works. Haha, it&amp;rsquo;s not a good habit, so I decide to take some time to learn it.
+2. MIME types A media type (also known as a Multipurpose Internet Mail Extensions or MIME type) indicates the nature and format of a document, file, or assortment of bytes." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/http/001-mime-type/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MIME Types" />
+<meta property="og:description" content="1. Background When I first started writing backend code, if the server return a file (any type), and I would add a Content-Type header and set its value to application/octet-stream:
+1 2 3 4 w.Header().Set(&#34;Content-Disposition&#34;, &#34;attachment; filename=&#34;&#43;strconv.Quote(info.Name())) w.Header().Set(&#34;Content-Type&#34;, &#34;application/octet-stream&#34;) http.ServeFile(w, r, filePath) return I don&rsquo;t know what does this mean, but it works. Haha, it&rsquo;s not a good habit, so I decide to take some time to learn it.
+2. MIME types A media type (also known as a Multipurpose Internet Mail Extensions or MIME type) indicates the nature and format of a document, file, or assortment of bytes." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/http/001-mime-type/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-11-06T22:06:07+00:00" />
+<meta property="article:modified_time" content="2023-11-06T22:06:07+00:00" />
+
+<meta itemprop="name" content="MIME Types">
+<meta itemprop="description" content="1. Background When I first started writing backend code, if the server return a file (any type), and I would add a Content-Type header and set its value to application/octet-stream:
+1 2 3 4 w.Header().Set(&#34;Content-Disposition&#34;, &#34;attachment; filename=&#34;&#43;strconv.Quote(info.Name())) w.Header().Set(&#34;Content-Type&#34;, &#34;application/octet-stream&#34;) http.ServeFile(w, r, filePath) return I don&rsquo;t know what does this mean, but it works. Haha, it&rsquo;s not a good habit, so I decide to take some time to learn it.
+2. MIME types A media type (also known as a Multipurpose Internet Mail Extensions or MIME type) indicates the nature and format of a document, file, or assortment of bytes."><meta itemprop="datePublished" content="2023-11-06T22:06:07+00:00" />
+<meta itemprop="dateModified" content="2023-11-06T22:06:07+00:00" />
+<meta itemprop="wordCount" content="385">
+<meta itemprop="keywords" content="http," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="MIME Types"/>
+<meta name="twitter:description" content="1. Background When I first started writing backend code, if the server return a file (any type), and I would add a Content-Type header and set its value to application/octet-stream:
+1 2 3 4 w.Header().Set(&#34;Content-Disposition&#34;, &#34;attachment; filename=&#34;&#43;strconv.Quote(info.Name())) w.Header().Set(&#34;Content-Type&#34;, &#34;application/octet-stream&#34;) http.ServeFile(w, r, filePath) return I don&rsquo;t know what does this mean, but it works. Haha, it&rsquo;s not a good habit, so I decide to take some time to learn it.
+2. MIME types A media type (also known as a Multipurpose Internet Mail Extensions or MIME type) indicates the nature and format of a document, file, or assortment of bytes."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MIME Types</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-11-06 </span>
+        <div class="post-category">
+            <a href="/categories/http/"> http </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-background">1. Background</a></li>
+        <li><a href="#2-mime-types">2. MIME types</a>
+          <ul>
+            <li><a href="#21-structure-of-a-mime-type">2.1. Structure of a MIME type</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-common-mime-types">3. Common MIME types</a>
+          <ul>
+            <li><a href="#31-applicationoctet-stream">3.1. application/octet-stream</a></li>
+            <li><a href="#32-textplain">3.2. text/plain</a></li>
+            <li><a href="#33-textcss">3.3. text/css</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-background">1. Background</h2>
+<p>When I first started writing backend code, if the server return a file (any type), and I would add a <code>Content-Type</code> header and set its value to <code>application/octet-stream</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Disposition&#34;</span><span class="p">,</span> <span class="s">&#34;attachment; filename=&#34;</span><span class="o">+</span><span class="nx">strconv</span><span class="p">.</span><span class="nf">Quote</span><span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nf">Name</span><span class="p">()))</span>
+</span></span><span class="line"><span class="cl"><span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/octet-stream&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">http</span><span class="p">.</span><span class="nf">ServeFile</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">filePath</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">return</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>I don&rsquo;t know what does this mean, but it works. Haha, it&rsquo;s not a good habit, so I decide to take some time to learn it.</p>
+<h2 id="2-mime-types">2. MIME types</h2>
+<p>A <strong>media type</strong> (also known as a <strong>Multipurpose Internet Mail Extensions or MIME type</strong>) indicates the nature and format of a document, file, or assortment of bytes.</p>
+<h3 id="21-structure-of-a-mime-type">2.1. Structure of a MIME type</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">type/subtype
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <strong>type</strong> represents the general category into which the data type falls, such as <code>video</code> or <code>text</code>.</p>
+<p>The <strong>subtype</strong> identifies the exact kind of data of the specified type the MIME type represents. For example, for the MIME type <code>text</code>, the subtype might be <code>plain</code> (plain text), <code>html</code> (<a href="https://developer.mozilla.org/en-US/docs/Glossary/HTML">HTML</a> source code), or <code>calendar</code> (for iCalendar/<code>.ics</code>) files.</p>
+<p>An optional <strong>parameter</strong> can be added to provide additional details:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">type/subtype;parameter=value
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>For any MIME type whose main type is <code>text</code>, you can add the optional <code>charset</code> parameter to specify the character set used for the characters in the data. If no <code>charset</code> is specified, the default is <a href="https://developer.mozilla.org/en-US/docs/Glossary/ASCII">ASCII</a> (<code>US-ASCII</code>) unless overridden by the <a href="https://developer.mozilla.org/en-US/docs/Glossary/User_agent">user agent&rsquo;s</a> settings. To specify a UTF-8 text file, the MIME type <code>text/plain;charset=UTF-8</code> is used.</p>
+<p>There are two classes of type: <strong>discrete</strong> and <strong>multipart</strong>: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_Types#types">https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_Types#types</a></p>
+<h2 id="3-common-mime-types">3. Common MIME types</h2>
+<h3 id="31-applicationoctet-stream">3.1. application/octet-stream</h3>
+<p>This is the default for binary files. As it means <em>unknown binary</em> file, <strong>browsers usually don&rsquo;t execute it, or even ask if it should be executed</strong>. They treat it as if the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition"><code>Content-Disposition</code></a> header was set to <code>attachment</code>, and propose a &ldquo;Save As&rdquo; dialog.</p>
+<h3 id="32-textplain">3.2. text/plain</h3>
+<p>This is the default for textual files. Even if it really means &ldquo;unknown textual file,&rdquo; <strong>browsers assume</strong> they can display it.</p>
+<h3 id="33-textcss">3.3. text/css</h3>
+<p>CSS files used to style a Web page <strong>must</strong> be sent with <code>text/css</code>. If a server doesn&rsquo;t recognize the <code>.css</code> suffix for CSS files, it may send them with <code>text/plain</code> or <code>application/octet-stream</code> MIME types. If so, they <strong>won&rsquo;t be recognized as CSS by most browsers and will be ignored</strong>.</p>
+<p>Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types">Common MIME types - HTTP | MDN</a></p>
+<p>References: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_Types">MIME types (IANA media types) - HTTP | MDN</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-11-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/http/">http</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/other/008-my-mac-config/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">My Mac Configuration</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/grpc/001-grpc-basics/">
+            <span class="next-text nav-default">Intro to gRPC</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

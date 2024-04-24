@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>用Python脚本给文章中英字符以及符号间加空格 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="强迫症, 读博客的时候中英字符或者标点符号后没有空格紧紧的贴在一块看着很不舒服, 于是想着能不能写个脚本来处理一下文章, bash太难用了(是我太" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/python/practice/001-add-space/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="用Python脚本给文章中英字符以及符号间加空格" />
+<meta property="og:description" content="强迫症, 读博客的时候中英字符或者标点符号后没有空格紧紧的贴在一块看着很不舒服, 于是想着能不能写个脚本来处理一下文章, bash太难用了(是我太" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/python/practice/001-add-space/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-06-01T10:41:24+00:00" />
+<meta property="article:modified_time" content="2023-06-01T10:41:24+00:00" />
+
+<meta itemprop="name" content="用Python脚本给文章中英字符以及符号间加空格">
+<meta itemprop="description" content="强迫症, 读博客的时候中英字符或者标点符号后没有空格紧紧的贴在一块看着很不舒服, 于是想着能不能写个脚本来处理一下文章, bash太难用了(是我太"><meta itemprop="datePublished" content="2023-06-01T10:41:24+00:00" />
+<meta itemprop="dateModified" content="2023-06-01T10:41:24+00:00" />
+<meta itemprop="wordCount" content="2931">
+<meta itemprop="keywords" content="python," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="用Python脚本给文章中英字符以及符号间加空格"/>
+<meta name="twitter:description" content="强迫症, 读博客的时候中英字符或者标点符号后没有空格紧紧的贴在一块看着很不舒服, 于是想着能不能写个脚本来处理一下文章, bash太难用了(是我太"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">用Python脚本给文章中英字符以及符号间加空格</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-06-01 </span>
+        <div class="post-category">
+            <a href="/categories/python/"> python </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#1-immutable-object-in-python">1. Immutable Object in Python</a></li>
+            <li><a href="#2-编码">2. 编码</a></li>
+            <li><a href="#3-实现">3. 实现</a></li>
+            <li><a href="#4-程序入口-__name____main__">4. 程序入口 <code>__name__==&quot;__main__&quot;</code></a></li>
+            <li><a href="#5-异常处理">5. 异常处理</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>强迫症, 读博客的时候中英字符或者标点符号后没有空格紧紧的贴在一块看着很不舒服, 于是想着能不能写个脚本来处理一下文章, bash太难用了(是我太菜), 于是用Python简单实现了一下,</p>
+<p>一些芝士在这说一下,</p>
+<h3 id="1-immutable-object-in-python">1. Immutable Object in Python</h3>
+<p>Java虽然string是对象但primitive类型还不是对象, 与Java不同Python里如<em>integers</em>, <em>floats</em>, and <em>strings</em>都是对象, 并且与<em>integers</em>, <em>floats</em>一样, python里string对象也是immutable, 所以直接“修改”string会导致python重新创建新的string对象 销毁旧的:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;hello&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 4378912048</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span> <span class="o">+=</span> <span class="s1">&#39; world&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 4380683504</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>因此每次修改(添加空格)都会重新重建一个新的string, 考虑到文章有的内容也不短, 那开销会不小, 具体做法分析参考: <a href="https://stackoverflow.com/q/1228299/16317008">https://stackoverflow.com/q/1228299/16317008</a></p>
+<h3 id="2-编码">2. 编码</h3>
+<p>另外是关于编码的问题, Unicode和utf-8,</p>
+<p>Python的string使用unicode来表示字符,</p>
+<blockquote>
+<p>Python’s string type uses the Unicode Standard for representing characters, which lets Python programs work with all these different possible characters.</p>
+</blockquote>
+<p>Unicode就是赋予字符一个唯一的value, 如 &lsquo;a&rsquo;的unicode value是 0061, &lsquo;汉&rsquo;的unicode value是6C49,</p>
+<blockquote>
+<p>Unicode (<a href="https://www.unicode.org/">https://www.unicode.org/</a>) is a specification that aims to list every character used by human languages and give each character its own unique code.</p>
+</blockquote>
+<p>而utf-8就是一个编码解码规范, 给我们一个unicode value如<code>6C49</code>, 我们把这个unicode value翻译成哪个字符呢? 根据不同的编码规则, <code>6C49</code>可以被翻译成不同的字符, 甚至两个, 因为有的编码比如ascii就是采用固定1子节编码, 通过查ascii表可知<code>6C</code>会被解释成字母<code>l</code>, 49会被解释成数字<code>1</code>, 但若采取utf-8进行解码, <code>6C49</code>就会被解释成汉字<code>汉</code>, utf-8是一种可变长度的编码,</p>
+<p>如果还不理解ascii, utf-8, unicode的关系, 看下面</p>
+<p>UTF-8 is <em>an</em> encoding scheme. Other encoding schemes include UTF-16 and UTF-32. In modern times, ASCII is now a subset of UTF-8. UTF-8 is backwards compatible with ASCII.</p>
+<p>我们打开一个文本文件的时候需要指定其编码, 文本文件对你的电脑来说就是一串二进制数, 如果你不告诉他让他使用哪种编码方法来翻译这段字符, 那python程序怎么知道把这段二进制翻译成什么呢?</p>
+<p>我们linux下可以使用<code>xxd</code>以16进制输出指定文件内容, 加入我们有个<code>md</code>文件内容为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">汉
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用<code>xxd</code>查看其二进制数据,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ xxd add_whitespace/article.md
+</span></span><span class="line"><span class="cl">00000000: e6b1 <span class="m">89</span>  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>真奇怪, 为什么一个汉字是3字节?  我们在python中明明使用两个字节表示的<code>汉</code>呀:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\u6C49</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">汉</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我查了一个gbk编码一个汉字是2字节, 若使用utf-8编码一个汉字则是3字节, 也就是说<code>text.md</code>可能使用的是utf-8编码, 验证一下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ file text.md
+</span></span><span class="line"><span class="cl">text.md: Unicode text, UTF-8 text
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>果然, 那为什么上面我们用两字节<code>\u6C49</code>就表示出<code>汉</code>了呢? 这就又说到了上面的编码方式utf-8, <code>\u6C49</code>只是Unicode code point, 并不是文件实际存的东西, 我们要存储这个汉字, 还需要使用编码方式, 比如utf-8, 我们看看utf-8编码unicode code的过程,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Binary format of bytes in sequence
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1st Byte    2nd Byte    3rd Byte    4th Byte    Number of Free Bits   Maximum Expressible Unicode Value
+</span></span><span class="line"><span class="cl">0xxxxxxx                                                7             007F hex (127)
+</span></span><span class="line"><span class="cl">110xxxxx    10xxxxxx                                (5+6)=11          07FF hex (2047)
+</span></span><span class="line"><span class="cl">1110xxxx    10xxxxxx    10xxxxxx                  (4+6+6)=16          FFFF hex (65535)
+</span></span><span class="line"><span class="cl">11110xxx    10xxxxxx    10xxxxxx    10xxxxxx    (3+6+6+6)=21          10FFFF hex (1,114,111)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>所以, 上面的<code>6C49</code>经过utf-8编码变成:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 6C49的二进制:0110 1100 0100 1001
+</span></span><span class="line"><span class="cl">11100110 10110001 10001001
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>把这个串二进制数转为16进制: <code>e6b1 89</code>与上面<code>xxd</code>输出一样, 这样也验证了utf-8编码unicode的过程,</p>
+<p>最后需要注意, 如果你直接把utf-8编码的文件转为其它编码比如gbk, 那转换之后你的文件肯定是乱码, 因为在你写入一些内容比如<code>汉</code>到你的文本文件, 此时这个文件的编码方式为<code>utf-8</code>, 那你保存此文件后, 此文件的内容已经是经过utf-8编码的unicode code, 即:<code>11100110 10110001 10001001</code>也就是<code>e6b1 89</code>就是上面的汉字<code>汉</code>, 此时你硬要把文件的编码方式改为gbk, 而gbk采用完全与utf-8不同的编码方式(2字节1个字符),  此时当其他软件是图打开你这个文本文件时, 就会查看你文件的编码信息, 他们看到是gbk编码, 那就会把<code>11100110 10110001 10001001</code>即<code>e6b1 89</code>中的前两个字节解释为一个字符, 然后他们查找<code>11100110 10110001</code>即<code>e6b1</code>, 那肯定匹配不到<code>汉</code>, 就会把<code>11100110 10110001</code>解释为不可打印字符或者英文或者其它语言,,,</p>
+<p>一些工具可以实现不同编码的安全转换, 一个思路是, 我们知道这个文件是用的utf-8编码, 所以我们先把该文件的字符转换为unicode code, 然后再利用gbk进行编码这些unicode code, 具体做法如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">file_path</span> <span class="o">=</span> <span class="s1">&#39;article_1.md&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">utf_8_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">utf_8_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Contents of Text cannot be None!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">gbk_str</span> <span class="o">=</span> <span class="n">utf_8_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;gbk&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;article_2.md&#34;</span><span class="p">,</span> <span class="s2">&#34;wb&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">gbk_str</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="s2">&#34;gbk&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意, 上面代码<code>utf_8_str = f.read()</code>, 此时<code>utf_8_str</code>已经是unicode code, 第二我们写如文件时, 要以二进制写入, 不然你写入的就是长得像16进制数的字符串, 而不是真正的写入二进制数据,</p>
+<h3 id="3-实现">3. 实现</h3>
+<p>最后, python是值传递, 即我们无法传递一个变量给函数, 然后让函数修改它的值, 所以只能使用全局变量和类包装的形式来修改一个变量的值, 准确来说修改的只是变量的指向, 别忘了integer是不可变的, 所以我们执行<code>a+=1</code>的时候其实是python创建了个新的integer对象然后让变量<code>a</code>指向了一个新的integer value, 注意python里的变量都可以理解为reference, 这个reference不是c++里的reference, 而是Java里的reference类型, 别忘了哦, Java的变量分为两种, primitive和reference, 不知道可以参考: <a href="https://davidzhu.xyz/2023/05/27/Other/c-go-java-python-memory-strucutre/">C Go Java Python内存结构及对比 | 橘猫小八的鱼</a></p>
+<p>上面说道使用全局变量和类包装的形式来修改一个变量的指向, 可是python有采用局部变量大于全局变量的约定, 即要是想在函数里修改全局变量, 我们必须在函数前声明<code>global xxx</code>, 这若是修改多个就很不美观, 所以最终采用使用包装类的方式来修改“全局”变量,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Text</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ch_flag</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">    <span class="n">en_flag</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">    <span class="n">back_quote_flag</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="n">text</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">add_space</span><span class="p">(</span><span class="n">before</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">before</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Text</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="n">Text</span><span class="o">.</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">Text</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="n">Text</span><span class="o">.</span><span class="n">i</span><span class="p">:]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Text</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="n">Text</span><span class="o">.</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">Text</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="n">Text</span><span class="o">.</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Text</span><span class="o">.</span><span class="n">en_flag</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Text</span><span class="o">.</span><span class="n">ch_flag</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Text</span><span class="o">.</span><span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>若使用全局变量:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">ch_flag</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl"><span class="n">en_flag</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl"><span class="n">back_quote_flag</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl"><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="n">text</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">add_space</span><span class="p">(</span><span class="n">before</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">text</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">i</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">en_flag</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">ch_flag</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">before</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">en_flag</span> <span class="o">=</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ch_flag</span> <span class="o">=</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>太丑了,</p>
+<h3 id="4-程序入口-__name____main__">4. 程序入口 <code>__name__==&quot;__main__&quot;</code></h3>
+<p><code>if __name__==&quot;__main__&quot;</code>: 就相当于Python 模拟的程序入口, 由于模块之间相互引用, 不同模块可能都有这样的定义, 而入口程序只能有一个, 选中哪个入口程序取决于 <code>__name__</code>的值:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Check that exactly 1 command line argument was passed</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Error: Incorrect number of arguments.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Usage: python file_path.py path/to/file.txt&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">file_path</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;The file path is: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Python sets the global <code>__name__</code> of a module equal to <code>&quot;__main__&quot;</code> if the Python interpreter runs your code in the top-level code environment:</p>
+<blockquote>
+<p>“Top-level code” is the first user-specified Python module that starts running. It’s “top-level” because it imports all other modules that the program needs. (<a href="https://docs.python.org/3/library/__main__.html#what-is-the-top-level-code-environment">Source</a>)</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;look here&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;I&#39;m test.py&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="c1"># print:    </span>
+</span></span><span class="line"><span class="cl"><span class="n">look</span> <span class="n">here</span>
+</span></span><span class="line"><span class="cl"><span class="n">__main__</span>
+</span></span><span class="line"><span class="cl"><span class="n">I</span><span class="s1">&#39;m test.py</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="5-异常处理">5. 异常处理</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">file_path</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Text</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">Text</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Contents of Text cannot be None!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">formatting</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>源码: <a href="https://github.com/shwezhu/PythonLearn/blob/main/add_whitespace/whitespace.py">https://github.com/shwezhu/PythonLearn/blob/main/add_whitespace/whitespace.py</a></p>
+<p>参考:</p>
+<ul>
+<li><a href="https://docs.python.org/3/howto/unicode.html#">Unicode HOWTO — Python 3.11.3 documentation</a></li>
+<li><a href="https://stackoverflow.com/questions/643694/what-is-the-difference-between-utf-8-and-unicode">encoding - What is the difference between UTF-8 and Unicode? - Stack Overflow</a></li>
+<li><a href="https://stackoverflow.com/questions/21297704/ascii-vs-unicode-utf-8">utf 8 - ASCII vs Unicode + UTF-8 - Stack Overflow</a></li>
+<li><a href="https://www.51cto.com/article/710215.html">写 Python 脚本，一定要加上这个！-python写脚本</a></li>
+<li><a href="https://realpython.com/if-name-main-python/">What Does if <strong>name</strong> == &ldquo;<strong>main</strong>&rdquo; Do in Python? – Real Python</a></li>
+<li><a href="https://stackoverflow.com/questions/5627425/what-is-a-good-way-to-handle-exceptions-when-trying-to-read-a-file-in-python">What is a good way to handle exceptions when trying to read a file in python? - Stack Overflow</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-06-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/">python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/cs-basics/001-encoding/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">说说编码 - encoding</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/advance/004-go-scheduler-2/">
+            <span class="next-text nav-default">Go Scheduler (2)</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

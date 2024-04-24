@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Static Linking Go Programs - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="Previous post: Statically Linking in C - David&amp;rsquo;s Blog
+1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
+standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/golang/advance/012-statically-linking/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Static Linking Go Programs" />
+<meta property="og:description" content="Previous post: Statically Linking in C - David&rsquo;s Blog
+1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
+standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/golang/advance/012-statically-linking/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-10T12:09:35+00:00" />
+<meta property="article:modified_time" content="2023-10-10T12:09:35+00:00" />
+
+<meta itemprop="name" content="Static Linking Go Programs">
+<meta itemprop="description" content="Previous post: Statically Linking in C - David&rsquo;s Blog
+1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
+standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary."><meta itemprop="datePublished" content="2023-10-10T12:09:35+00:00" />
+<meta itemprop="dateModified" content="2023-10-10T12:09:35+00:00" />
+<meta itemprop="wordCount" content="1301">
+<meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Static Linking Go Programs"/>
+<meta name="twitter:description" content="Previous post: Statically Linking in C - David&rsquo;s Blog
+1. Static linking on linux Go creates static binaries by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run file on it.
+standard packages os/user and net use cgo, so importing either (directly or indirectly) will result in a dynamic binary."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Static Linking Go Programs</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-10-10 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/advance/"> advance </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-static-linking-on-linux">1. Static linking on linux</a>
+          <ul>
+            <li><a href="#11-disable-dynamically-linking-with--cgo_enabled0">1.1. Disable dynamically linking with <code> CGO_ENABLED=0</code></a></li>
+          </ul>
+        </li>
+        <li><a href="#2-static-linking-on-osx">2. Static linking on osx</a></li>
+        <li><a href="#3--extldflags-static">3. <code>&quot;-extldflags=-static&quot;</code></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>Previous post: <a href="https://davidzhu.xyz/post/c++/basics/002-statically-linking/">Statically Linking in C - David&rsquo;s Blog</a></p>
+<h2 id="1-static-linking-on-linux">1. Static linking on linux</h2>
+<p>Go creates <strong>static binaries</strong> by default unless you use cgo to call C code, in which case it will create a dynamically linked binary. The easiest way to check if your program is statically compiled is to run <code>file</code> on it.</p>
+<p>standard packages <code>os/user</code> and <code>net</code>  use cgo, so importing either (directly or indirectly) will result in a dynamic binary.</p>
+<blockquote>
+<p>Note that <code>net</code> use cgo does&rsquo;t mean that all its implementation is cgo, cgo is just used for Name Resolution and some teivial features. <a href="https://pkg.go.dev/net#section-documentation">https://pkg.go.dev/net#section-documentation</a></p>
+</blockquote>
+<p>I do this test on my Ubuntu server firstly without cgo:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [19:40:23] </span>
+</span></span><span class="line"><span class="cl">$ go build -o server main.go
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [19:40:31] </span>
+</span></span><span class="line"><span class="cl">$ file server 
+</span></span><span class="line"><span class="cl">server: ELF 64-bit LSB executable, x86-64, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, statically linked, Go <span class="nv">BuildID</span><span class="o">=</span>hjbIteBvAg_rZ86av_gy/k1xYD8duMhRTtrThDrrX/5yBtTaOBDsf4F2IOwADX/U1b5vnivY9rWcRUWpC_A, with debug_info, not stripped
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [19:40:36] </span>
+</span></span><span class="line"><span class="cl">$ ldd server 
+</span></span><span class="line"><span class="cl">	not a dynamic executable
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, I just use <code>fmt</code> package, and the executable file is statically linked.</p>
+<p>And then I change the go code to:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;net/http&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">srv</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">NewServeMux</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">srv</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/&#34;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Fprintln</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="s">&#34;hello world&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;running...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">_</span> <span class="p">=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">ListenAndServe</span><span class="p">(</span><span class="s">&#34;:8080&#34;</span><span class="p">,</span> <span class="nx">srv</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then build it on Ubtutu machine:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [19:47:06]</span>
+</span></span><span class="line"><span class="cl">$ go build -o server main.go
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [19:47:31] </span>
+</span></span><span class="line"><span class="cl">$ file server 
+</span></span><span class="line"><span class="cl">server: ELF 64-bit LSB executable, x86-64, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, Go <span class="nv">BuildID</span><span class="o">=</span>KCFaacb5_zSot7hqkTv8/oYQa-0nbl_Gq2_YxF6JO/BnF2hmfFNgVx-UHRKxMt/Oj91sMcK9_or35yi4Xd0, with debug_info, not stripped
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [19:47:39] </span>
+</span></span><span class="line"><span class="cl">$ ldd server 
+</span></span><span class="line"><span class="cl">	linux-vdso.so.1 <span class="o">(</span>0x00007fff10cfb000<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	libc.so.6 <span class="o">=</span>&gt; /lib/x86_64-linux-gnu/libc.so.6 <span class="o">(</span>0x00007f4cd6200000<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	/lib64/ld-linux-x86-64.so.2 <span class="o">(</span>0x00007f4cd6612000<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The binary file is dynamically linked as we expected.</p>
+<h3 id="11-disable-dynamically-linking-with--cgo_enabled0">1.1. Disable dynamically linking with <code> CGO_ENABLED=0</code></h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [19:48:57] </span>
+</span></span><span class="line"><span class="cl">$ <span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span> go build -o server main.go
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [20:11:01] </span>
+</span></span><span class="line"><span class="cl">$ file server 
+</span></span><span class="line"><span class="cl">server: ELF 64-bit LSB executable, x86-64, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, statically linked, Go <span class="nv">BuildID</span><span class="o">=</span>wGRY1RH-HeASVOwzThcj/lQNxgqzqGUe1P8n_WjN7/cEcN362GspK8XKl2L0AG/F7hVHMJfVIyYcLM6Jhz1, with debug_info, not stripped
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Note that the <code>CGO_ENABLED=0</code> is to disable cgo. It is disabled by default when cross-compiling. You can control this by setting the CGO_ENABLED environment variable when running the go tool: set it to 1 to enable the use of cgo, and to 0 to disable it.</p>
+<p>If CGO_ENABLED=0 is set, the Go net package will not use cgo, and instead, it will use a pure Go implementation for its networking functionality.</p>
+<p>Learn more: <a href="https://go-review.googlesource.com/c/go/+/12603/2/src/cmd/cgo/doc.go">https://go-review.googlesource.com/c/go/+/12603/2/src/cmd/cgo/doc.go</a></p>
+</blockquote>
+<h2 id="2-static-linking-on-osx">2. Static linking on osx</h2>
+<p>On Mac, the behavior is totoally different, even don&rsquo;t use cgo the final executable will be dynamically linked.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Build on <strong>MacOS machine</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go build -o server main.go
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ file server 
+</span></span><span class="line"><span class="cl">server: Mach-O 64-bit executable arm64
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># otool is similar to &#39;ldd&#39; on linux</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -L print shared libraries used</span>
+</span></span><span class="line"><span class="cl">$ otool -L server
+</span></span><span class="line"><span class="cl">server:
+</span></span><span class="line"><span class="cl">	/usr/lib/libSystem.B.dylib <span class="o">(</span>compatibility version 0.0.0, current version 0.0.0<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	/usr/lib/libresolv.9.dylib <span class="o">(</span>compatibility version 0.0.0, current version 0.0.0<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong><code>CGO_ENABLED=0</code> won&rsquo;t help on MaxOS</strong>. And I found something could be explain this:</p>
+<blockquote>
+<p>I think this won&rsquo;t work on macOS, where <strong>fully static builds are not allowed/supported by Apple</strong>. Binaries should always go through libSystem, which is also why we changed the way Go calls the kernel in Go 1.12. So, pure Go binaries are already as static as they can be, as far as I can tell.</p>
+<p>I propose that on macOS <code>go build -static</code> simply tries to statically link cgo libraries, so that the final binary doesn&rsquo;t depend on third-party. So but just on system libraries. To do this, unfortunately, it looks like it&rsquo;s not sufficient to add the output of <code>pkg-config --static --libs</code> to <code>LDFLAGS</code> because that output still refers to each library as <code>-L/path/to -lfoo</code> (as this is the correct syntax when <code>--static</code> is passed to the linker, which we are not going to do in macOS). So, the output of <code>pkg-config</code> should be rewritten as <code>/path/to/libfoo.a</code> (using a similar library path search algorithm that the linker does).</p>
+<p>Source: <a href="https://github.com/golang/go/issues/26492#issuecomment-525527016">https://github.com/golang/go/issues/26492#issuecomment-525527016</a></p>
+</blockquote>
+<blockquote>
+<p>Yes, I agree with Volker&rsquo;s comment that some systems don&rsquo;t really allow static binaries.</p>
+<p>Source: <a href="https://stackoverflow.com/a/61324538/16317008">https://stackoverflow.com/a/61324538/16317008</a></p>
+</blockquote>
+<p>Note that fully static builds are not allowed/supported by Apple doesn&rsquo;t mean we cannot create statically linked binaries on Mac, we can build the binary executable on other platforms, linux, for example.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;net/http&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">srv</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">NewServeMux</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">srv</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/&#34;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Fprintln</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="s">&#34;hello world&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;running...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">_</span> <span class="p">=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">ListenAndServe</span><span class="p">(</span><span class="s">&#34;:8080&#34;</span><span class="p">,</span> <span class="nx">srv</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Build on MacOS machine with some flags:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nv">GOOS</span><span class="o">=</span>linux go build -o server main.go
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ file server                          
+</span></span><span class="line"><span class="cl">server: ELF 64-bit LSB executable, ARM aarch64, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, statically linked, Go <span class="nv">BuildID</span><span class="o">=</span>qAraNfnU-cYn-2KsoFx7/rrJYFJTR911CeHr08Y4E/uoFKsYV1LH9as_7QdMc7/fJ71_ARZOiNg7b4tLPIt, with debug_info, not stripped
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, even we use the <code>net</code> package which uses cgo, it still can be statically with <code>GOOS=linux</code> flag, this is called cross compilation, learn more: <a href="https://davidzhu.xyz/post/golang/advance/011-cross-compilation/">Cross Compilation - Go - David&rsquo;s Blog</a></p>
+<p>But the arch is arm64, not amd64, if you want build binary gonna runs on amd64, you should add <code>GOARCH=amd64</code> :</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nv">GOOS</span><span class="o">=</span>linux <span class="nv">GOARCH</span><span class="o">=</span>amd64 go build -o server main.go
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3--extldflags-static">3. <code>&quot;-extldflags=-static&quot;</code></h2>
+<p>In previous part, we know that <code>CGO_ENABLED=0</code> will disable cgo, if we use <code>net</code> and we want statically linking, it&rsquo;s fine we just pass <code>CGO_ENABLED=0</code> to go build, then we will use pure go implementation of <code>net</code>. But what if we use a third party package that only implemented by cgo, <a href="https://github.com/mattn/go-sqlite3">mattn/go-sqlite3</a> for example, and we want make it linked statically, apparently we can&rsquo;t use <code>CGO_ENABLED=0</code> to disable cgo.</p>
+<p>A simle cgo:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// typedef int (*intFunc) ();
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">// int
+</span></span></span><span class="line"><span class="cl"><span class="c1">// bridge_int_func(intFunc f)
+</span></span></span><span class="line"><span class="cl"><span class="c1">// {
+</span></span></span><span class="line"><span class="cl"><span class="c1">//		return f();
+</span></span></span><span class="line"><span class="cl"><span class="c1">// }
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">// int fortytwo()
+</span></span></span><span class="line"><span class="cl"><span class="c1">// {
+</span></span></span><span class="line"><span class="cl"><span class="c1">//	    return 42;
+</span></span></span><span class="line"><span class="cl"><span class="c1">// }
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">import</span> <span class="s">&#34;C&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">f</span> <span class="o">:=</span> <span class="nx">C</span><span class="p">.</span><span class="nf">intFunc</span><span class="p">(</span><span class="nx">C</span><span class="p">.</span><span class="nx">fortytwo</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">C</span><span class="p">.</span><span class="nf">bridge_int_func</span><span class="p">(</span><span class="nx">f</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Output: 42
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then compile it with <code>CGO_ENABLED=0</code> on Ubuntu machine:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span> go build -o server main.go
+</span></span><span class="line"><span class="cl">go: no Go <span class="nb">source</span> files
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [20:58:50] C:1</span>
+</span></span><span class="line"><span class="cl">$ go build -o server main.go 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [21:00:15] </span>
+</span></span><span class="line"><span class="cl">$ file server 
+</span></span><span class="line"><span class="cl">server: ELF 64-bit LSB executable, x86-64, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID<span class="o">[</span>sha1<span class="o">]=</span>da0674602632e4f540cfe58f0be1ffa261f2eefe, <span class="k">for</span> GNU/Linux 3.2.0, with debug_info, not stripped
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then we can use <code>-ldflags</code> to tell the C linker to statically link with <code>-extldflags</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="o">-</span><span class="nx">ldflags</span><span class="p">=</span><span class="s">&#34;-extldflags=-static&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [21:00:18] </span>
+</span></span><span class="line"><span class="cl">$ go build -ldflags<span class="o">=</span><span class="s2">&#34;-extldflags=-static&#34;</span> -o server main.go
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu @ ip-172-31-12-228 in ~/codes [21:01:41] </span>
+</span></span><span class="line"><span class="cl">$ file server 
+</span></span><span class="line"><span class="cl">server: ELF 64-bit LSB executable, x86-64, version <span class="m">1</span> <span class="o">(</span>GNU/Linux<span class="o">)</span>, statically linked, BuildID<span class="o">[</span>sha1<span class="o">]=</span>4031763b8f09ffcd1455840afe89c4644eca0088, <span class="k">for</span> GNU/Linux 3.2.0, with debug_info, not stripped
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Now it&rsquo;s statically linked.</p>
+<p>I hope you can understand the difference between <code>CGO_ENABLED=0</code> and <code>-ldflags=&quot;-extldflags=-static&quot;</code> flag, and when you should use which one. Besides, you should know the different behavior on MacOS and Linux for statically linking in Go. And the two common command <code>ldd</code>,  <code>otool</code>, <code>file</code> will help you.</p>
+<p>Learn more:</p>
+<ul>
+<li><a href="https://www.arp242.net/static-go.html">Statically compiling Go programs</a></li>
+<li><a href="https://blog.hashbangbash.com/2014/04/linking-golang-statically/">#!bash blog/2014/04/linking-golang-statically/</a></li>
+<li><a href="https://dave.cheney.net/tag/cgo">cgo | Dave Cheney</a></li>
+<li><a href="https://mt165.co.uk/blog/static-link-go/index.html">Matt Turner - Statically Linking Go in 2022</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-10-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/docker/002-docker-architecture/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Docker Architecture</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/advance/011-cross-compilation/">
+            <span class="next-text nav-default">Cross Compilation - Go</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

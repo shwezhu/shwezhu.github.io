@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Introduce Redis - In-memory Database - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Redis data types Redis, an acronym for Remote Dictionary Server, is an open-source, in-memory data structure store. It can be employed as a database, cache, and even a message broker. Unlike traditional databases that read and write data to disk, Redis operates primarily in memory, which is one of the key reasons behind its lightning-fast data retrieval capabilities.
+1.1. String Redis Strings is one of the most versatile of Redis’ building blocks, a binary-safe data structure, binary-safe means the strings in Redis can be any binary data." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/database/redis/001-intro-redis/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Introduce Redis - In-memory Database" />
+<meta property="og:description" content="1. Redis data types Redis, an acronym for Remote Dictionary Server, is an open-source, in-memory data structure store. It can be employed as a database, cache, and even a message broker. Unlike traditional databases that read and write data to disk, Redis operates primarily in memory, which is one of the key reasons behind its lightning-fast data retrieval capabilities.
+1.1. String Redis Strings is one of the most versatile of Redis’ building blocks, a binary-safe data structure, binary-safe means the strings in Redis can be any binary data." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/database/redis/001-intro-redis/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-01T10:40:58+00:00" />
+<meta property="article:modified_time" content="2023-10-01T10:40:58+00:00" />
+
+<meta itemprop="name" content="Introduce Redis - In-memory Database">
+<meta itemprop="description" content="1. Redis data types Redis, an acronym for Remote Dictionary Server, is an open-source, in-memory data structure store. It can be employed as a database, cache, and even a message broker. Unlike traditional databases that read and write data to disk, Redis operates primarily in memory, which is one of the key reasons behind its lightning-fast data retrieval capabilities.
+1.1. String Redis Strings is one of the most versatile of Redis’ building blocks, a binary-safe data structure, binary-safe means the strings in Redis can be any binary data."><meta itemprop="datePublished" content="2023-10-01T10:40:58+00:00" />
+<meta itemprop="dateModified" content="2023-10-01T10:40:58+00:00" />
+<meta itemprop="wordCount" content="1130">
+<meta itemprop="keywords" content="database,redis," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Introduce Redis - In-memory Database"/>
+<meta name="twitter:description" content="1. Redis data types Redis, an acronym for Remote Dictionary Server, is an open-source, in-memory data structure store. It can be employed as a database, cache, and even a message broker. Unlike traditional databases that read and write data to disk, Redis operates primarily in memory, which is one of the key reasons behind its lightning-fast data retrieval capabilities.
+1.1. String Redis Strings is one of the most versatile of Redis’ building blocks, a binary-safe data structure, binary-safe means the strings in Redis can be any binary data."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Introduce Redis - In-memory Database</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-10-01 </span>
+        <div class="post-category">
+            <a href="/categories/database/"> database </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-redis-data-types">1. Redis data types</a>
+          <ul>
+            <li><a href="#11-string">1.1. String</a></li>
+            <li><a href="#12-hash">1.2. Hash</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-key-value-database">2. Key-value database</a>
+          <ul>
+            <li><a href="#21-key-is-always-string">2.1. Key is always string</a></li>
+            <li><a href="#22-dont-forget-all-is-string">2.2. Don&rsquo;t forget all is string</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-redis-features">3. Redis features</a></li>
+        <li><a href="#4-use-cases">4. Use cases</a>
+          <ul>
+            <li><a href="#41-session-store">4.1. Session Store</a></li>
+            <li><a href="#42-caching">4.2. Caching</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-redis-data-types">1. Redis data types</h2>
+<p>Redis, an acronym for <strong>Remote Dictionary Server</strong>, is an open-source, in-memory data structure store. It can be employed as a database, cache, and even a message broker. Unlike traditional databases that read and write data to disk, Redis operates primarily in memory, which is one of the key reasons behind its lightning-fast data retrieval capabilities.</p>
+<h3 id="11-string">1.1. String</h3>
+<p>Redis Strings is one of the most versatile of Redis’ building blocks, a <strong>binary-safe</strong> data structure, binary-safe means the strings in Redis can be any binary data. In Redis, strings are multipurpose. They can store data as simple as an integer or as complex as a JPEG image file.</p>
+<p><strong>Strings is an array data structure of bytes</strong> (or words) that stores a sequence of elements, typically characters, using some character encoding. It can store any data-a string, integer, floating point value, JPEG image, serialized Ruby object, or anything else you want it to carry.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">redis&gt; <span class="nb">set</span> mykey <span class="s2">&#34;This is a string&#34;</span>
+</span></span><span class="line"><span class="cl">OK
+</span></span><span class="line"><span class="cl">redis&gt; get mykey
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;This is a string&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="12-hash">1.2. Hash</h3>
+<p>A Redis hash is a data type that represents a <strong>mapping between</strong> <strong>a string field and a string value</strong>. There is no integer or float value in hash, just string.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">&gt; hset bike:1 model Deimos <span class="nb">type</span> <span class="s1">&#39;Enduro bikes&#39;</span> price <span class="m">4972</span>
+</span></span><span class="line"><span class="cl"><span class="o">(</span>integer<span class="o">)</span> <span class="m">3</span>
+</span></span><span class="line"><span class="cl">&gt; hget bike:1 model
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;Deimos&#34;</span>
+</span></span><span class="line"><span class="cl">&gt; hget bike:1 price
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;4972&#34;</span>
+</span></span><span class="line"><span class="cl">&gt; hgetall bike:1
+</span></span><span class="line"><span class="cl">1<span class="o">)</span> <span class="s2">&#34;model&#34;</span>
+</span></span><span class="line"><span class="cl">2<span class="o">)</span> <span class="s2">&#34;Deimos&#34;</span>
+</span></span><span class="line"><span class="cl">3<span class="o">)</span> <span class="s2">&#34;type&#34;</span>
+</span></span><span class="line"><span class="cl">4<span class="o">)</span> <span class="s2">&#34;Enduro bikes&#34;</span>
+</span></span><span class="line"><span class="cl">5<span class="o">)</span> <span class="s2">&#34;price&#34;</span>
+</span></span><span class="line"><span class="cl">6<span class="o">)</span> <span class="s2">&#34;4972&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that the output of <code>&gt; hget bike:1 price</code> is <code>&quot;4972&quot;</code> not <code>4972</code>, which is a string.</p>
+<p>On the surface, think of a hash data type as an enclosed set of key/value pairs inside the value of another key. The embedded keys are called <strong>fields</strong>. So a string is stored inside a <strong>key</strong> and inside a particular <strong>field</strong> within that key.</p>
+<p>Figure 3 shows the basics of how a hash is stored. The key is associated with a hash object. That hash object can have multiple fields (i.e., subkeys) associated with individual strings. This allows you to store more complex data types.</p>
+<p><img src="/001-intro-redis/a.png" alt="a"></p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube-nocookie.com/embed/-KdITaRkQ-U" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+<p>Source:</p>
+<ul>
+<li>
+<p><a href="https://thenewstack.io/redis-data-types-the-basics/">Redis Data Types: The Basics - The New Stack</a></p>
+</li>
+<li>
+<p><a href="https://youtu.be/-KdITaRkQ-U?si=aAQDQfZvUhqGn800">https://youtu.be/-KdITaRkQ-U?si=aAQDQfZvUhqGn800</a></p>
+</li>
+</ul>
+<p>Learn more:</p>
+<p><a href="https://thenewstack.io/redis-data-types-the-basics/">Redis Data Types: The Basics - The New Stack</a></p>
+<p><a href="https://redis.com/redis-enterprise/data-structures/">Data Structures | Redis</a></p>
+<p><a href="https://redis.io/docs/data-types/">Redis data types | Redis</a></p>
+<h2 id="2-key-value-database">2. Key-value database</h2>
+<p>All data in Redis are stored as key-value pairs, <strong>Redis keys</strong> are always strings, <strong>Redis values</strong> can be strings, hashes, lists, sets or sorted sets.</p>
+<blockquote>
+<p>A good practice for naming keys is to create and stick to a particular schema. For example, a common scheme for identifying objects is to use an <code>object-type:id</code> schema. So an object representing user id#1000 would be attached to the key name <code>user:1000</code>. An object representing a purchase order with an order number of 1234 might be attached to a key named <code>order:1234</code>.</p>
+<p>Additionally, keys related to the base object can use suffixes on the key. For example, while the user id#1000 can use the key <code>user:1000</code>, a queue associated with that user could use the key <code>user:1000:queue</code>.</p>
+<p>Source: <a href="https://thenewstack.io/redis-data-types-the-basics/">https://thenewstack.io/redis-data-types-the-basics/</a></p>
+</blockquote>
+<h3 id="21-key-is-always-string">2.1. Key is always string</h3>
+<p>When you store a hash object in Redis, the key is still a string, and the value is a hash data structure:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">127.0.0.1:6379&gt; hset user:1 name Alice age <span class="m">6</span>
+</span></span><span class="line"><span class="cl"><span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; <span class="nb">set</span> os Ubuntu
+</span></span><span class="line"><span class="cl">OK
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; keys *
+</span></span><span class="line"><span class="cl">1<span class="o">)</span> <span class="s2">&#34;user:1&#34;</span>
+</span></span><span class="line"><span class="cl">2<span class="o">)</span> <span class="s2">&#34;os&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see there we created two key-value data above, the first one&rsquo;s value is a hash and second one&rsquo;s value is a string, that&rsquo;s the only difference. You may think the first key <code>&quot;user:1&quot;</code> a littler strange, but it&rsquo;s just a string, you can name it as <code>user-1</code>, <code>user1</code> or other form,  <code>&quot;user:1&quot;</code> is just a hash&rsquo;s key naming convention in Redis.</p>
+<p>And we use key to retrieve data:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">127.0.0.1:6379&gt; get os
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;Ubuntu&#34;</span>
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; hget user:1 age
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;6&#34;</span>
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; hgetall user:1 
+</span></span><span class="line"><span class="cl">1<span class="o">)</span> <span class="s2">&#34;name&#34;</span>
+</span></span><span class="line"><span class="cl">2<span class="o">)</span> <span class="s2">&#34;Alice&#34;</span>
+</span></span><span class="line"><span class="cl">3<span class="o">)</span> <span class="s2">&#34;age&#34;</span>
+</span></span><span class="line"><span class="cl">4<span class="o">)</span> <span class="s2">&#34;6&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Retrieving hash value in Redis is a little complited, as you can see, we use string <code>&quot;user:1&quot;</code> to retrieve the hash value <code>{&quot;name&quot;:&quot;Alice&quot;, &quot;age&quot;, &quot;6&quot;}</code>, then we use the string <code>&quot;age&quot;</code> to get the string value <code>&quot;6&quot;</code>.</p>
+<h3 id="22-dont-forget-all-is-string">2.2. Don&rsquo;t forget all is string</h3>
+<p>Note that we are in the Redis command line, therefore we don&rsquo;t need make the key or value string explicitly, what I mean is that the both codes belwo is fine:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">127.0.0.1:6379&gt; <span class="nb">set</span> <span class="s2">&#34;greeting&#34;</span> <span class="s2">&#34;helloworld&#34;</span>
+</span></span><span class="line"><span class="cl">OK
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; <span class="nb">set</span> greeting helloworld
+</span></span><span class="line"><span class="cl">OK
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; hset user:1 name Alice age <span class="m">12</span>
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; hset <span class="s2">&#34;user:1&#34;</span> <span class="s2">&#34;name&#34;</span> <span class="s2">&#34;Alice&#34;</span> <span class="s2">&#34;age&#34;</span> <span class="s2">&#34;12&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Bu you should know that they are string!</p>
+<blockquote>
+<p>In Redis, a key-value pair is a fundamental data structure used for storing and retrieving data. The &ldquo;key&rdquo; is a unique identifier that is used to access the associated &ldquo;value&rdquo;.</p>
+<p>A Redis hash is a data type that represents a mapping between a string field and a string value.</p>
+</blockquote>
+<h2 id="3-redis-features">3. Redis features</h2>
+<ul>
+<li>
+<p><strong>Atomic Operations</strong>: Redis operations are atomic, ensuring data integrity and consistency, even in concurrent environments, a feature particularly complementary to Go’s concurrent capabilities.</p>
+</li>
+<li>
+<p><strong>Persistence</strong>: Even though Redis is an in-memory store, it offers optional durability. This means you can periodically save the data in memory to disk without compromising performance.</p>
+<ul>
+<li>Redis provides different methods to persist data on disk without sacrificing much performance. Configuring the right persistence option can make a significant impact.</li>
+<li><strong>RDB Snapshots</strong>: RDB persistence offers point-in-time snapshots of your dataset at specified intervals.</li>
+<li><strong>Append-Only File (AOF)</strong>: Logs every write operation received by the server, allowing complete data recovery.</li>
+</ul>
+</li>
+<li>
+<p>Versatility: Redis isn’t just a simple key-value store. It supports various data structures like strings, hashes, lists, sets, and more, making it adaptable to diverse caching needs.</p>
+</li>
+<li>
+<p>Scalability: With features like replication, partitioning, and clustering, Redis is designed for high availability and horizontal scaling, catering to applications of all sizes.</p>
+<ul>
+<li><strong>Horizontal Scaling</strong>: Using Redis Cluster, you can distribute data across multiple machines.</li>
+<li><strong>Vertical Scaling</strong>: Increasing the hardware resources (CPU, Memory) of your existing Redis server.</li>
+<li><strong>Replication</strong>: Setting up master-slave replication to distribute read queries among multiple nodes.</li>
+</ul>
+</li>
+<li>
+<p>Time-to-Live (TTL): Redis supports the assignment of expiration times to keys, making it conducive to caching scenarios.</p>
+</li>
+</ul>
+<p>Source:</p>
+<p><a href="https://voskan.host/2023/08/14/golang-redis-caching/">Go-Redis Caching: Strategies, Best Practices &amp; Common Pitfalls</a></p>
+<p><a href="https://voskan.host/2023/08/10/redis-and-golang-complete-guide/">Complete Guide to Redis in Go - From Installation to Advanced Features | Master Redis with Golang</a></p>
+<h2 id="4-use-cases">4. Use cases</h2>
+<h3 id="41-session-store">4.1. Session Store</h3>
+<p>There are many ways to save sessions, in-memory, file, database and Redis, if you don&rsquo;t know session, please refer to: <a href="https://davidzhu.xyz/post/cs-basics/005-session-cookie/">Cookie &amp; Session</a></p>
+<h3 id="42-caching">4.2. Caching</h3>
+<p>Learn more:</p>
+<p>References:</p>
+<ul>
+<li><a href="https://redis.io/docs/getting-started/installation/install-redis-on-mac-os/">Install Redis on macOS | Redis</a></li>
+<li><a href="https://redis.io/docs/ui/cli/">Redis CLI | Redis</a></li>
+<li><a href="https://developer.redis.com/explore/what-is-redis/">Redis: In-memory database. How it works and Why you should use it | The Home of Redis Developers</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-10-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/database/">database</a>
+          <a href="/tags/redis/">redis</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/practice/006-gorilla-redis-store-code/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Gorilla Sessions RedisStore Source Code Analysis</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/database/redis/002-redis-commands/">
+            <span class="next-text nav-default">Useful Redis Commands</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

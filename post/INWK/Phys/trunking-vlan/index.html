@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Trunk 和 Vlan - Lab 笔记 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Switchport Access Mode vs Trunk Mode As a general case, freshers in networking domain tend to come across TRUNK and ACCESS terminologies in Switching. Trunk ports are generally used in the switch to switch communication or switch to Router (Router on a stick). Trunks carry multiple Vlans across devices and maintain VLAN tags in Ethernet frames for receiving directly connected device differentiates between different Vlans. Access ports are part" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/inwk/phys/trunking-vlan/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Trunk 和 Vlan - Lab 笔记" />
+<meta property="og:description" content="1. Switchport Access Mode vs Trunk Mode As a general case, freshers in networking domain tend to come across TRUNK and ACCESS terminologies in Switching. Trunk ports are generally used in the switch to switch communication or switch to Router (Router on a stick). Trunks carry multiple Vlans across devices and maintain VLAN tags in Ethernet frames for receiving directly connected device differentiates between different Vlans. Access ports are part" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/inwk/phys/trunking-vlan/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-18T00:49:07+00:00" />
+<meta property="article:modified_time" content="2023-05-18T00:49:07+00:00" />
+<meta itemprop="name" content="Trunk 和 Vlan - Lab 笔记">
+<meta itemprop="description" content="1. Switchport Access Mode vs Trunk Mode As a general case, freshers in networking domain tend to come across TRUNK and ACCESS terminologies in Switching. Trunk ports are generally used in the switch to switch communication or switch to Router (Router on a stick). Trunks carry multiple Vlans across devices and maintain VLAN tags in Ethernet frames for receiving directly connected device differentiates between different Vlans. Access ports are part"><meta itemprop="datePublished" content="2023-05-18T00:49:07+00:00" />
+<meta itemprop="dateModified" content="2023-05-18T00:49:07+00:00" />
+<meta itemprop="wordCount" content="3229">
+<meta itemprop="keywords" content="inwk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Trunk 和 Vlan - Lab 笔记"/>
+<meta name="twitter:description" content="1. Switchport Access Mode vs Trunk Mode As a general case, freshers in networking domain tend to come across TRUNK and ACCESS terminologies in Switching. Trunk ports are generally used in the switch to switch communication or switch to Router (Router on a stick). Trunks carry multiple Vlans across devices and maintain VLAN tags in Ethernet frames for receiving directly connected device differentiates between different Vlans. Access ports are part"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Trunk 和 Vlan - Lab 笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-18 </span>
+        <div class="post-category">
+            <a href="/categories/inwk/"> inwk </a>
+            <a href="/categories/phys/"> phys </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-switchport-access-mode-vs-trunk-mode">1. Switchport <code>Access Mode</code> vs <code>Trunk Mode</code></a></li>
+        <li><a href="#2-ieee-8021q-和-isl">2. IEEE 802.1Q 和 ISL</a></li>
+        <li><a href="#3-vtp-vs-dtp">3. VTP vs DTP</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-switchport-access-mode-vs-trunk-mode">1. Switchport <code>Access Mode</code> vs <code>Trunk Mode</code></h2>
+<p>As a general case, freshers in networking domain tend to come across <strong>TRUNK</strong> and <strong>ACCESS</strong> terminologies in Switching.</p>
+<p><strong>Trunk ports</strong> are generally used in the switch to switch communication or switch to Router (Router on a stick). Trunks carry multiple Vlans across devices and maintain VLAN tags in Ethernet frames for receiving directly connected device differentiates between different <a href="https://ipwithease.com/what-is-vlan-virtual-lan/">Vlans</a>.</p>
+<p><strong>Access ports</strong> are part of only one VLAN and normally used for terminating end devices likes PC, Laptop and printer.</p>
+<p>Using the <code>Switchport mode access</code> command forces the port to be an access port while and any device plugged into this port will only be able to communicate with other devices that are in the same VLAN.</p>
+<p>Using the <code>Switchport mode trunk</code> command forces the port to be trunk port.</p>
+<p>Trunk mode和Access mode都是针对两个交换机端口之间的link的, 下图很好的解释了Trunk的作用, 即一个link可以通过多个vlan的packages:</p>
+<p><img src="d.png" alt=""></p>
+<p><img src="e.png" alt=""></p>
+<h2 id="2-ieee-8021q-和-isl">2. IEEE 802.1Q 和 ISL</h2>
+<p>下面这几张图很好的解释了IEEE 802.1Q 和 ISL协议的作用,</p>
+<p><img src="a.png" alt=""></p>
+<p><img src="b.png" alt=""></p>
+<p><img src="c.png" alt=""></p>
+<h2 id="3-vtp-vs-dtp">3. VTP vs DTP</h2>
+<p><strong>VTP (VLAN Trunking Protocol)</strong> is a Cisco proprietary protocol used by Cisco switches to exchange VLAN information. With VTP, you can synchronize VLAN information (such as VLAN ID or VLAN name) with switches inside the same VTP domain. A VTP domain is a set of trunked switches with the matching VTP settings (the domain name, password and VTP version). All switches inside the same VTP domain share their VLAN information with each other.</p>
+<p>To better understand the true value of VTP, consider an example network with 100 switches. Without VTP, if you want to create a VLAN on each switch, you would have to manually enter VLAN configuration commands on every switch! VTP enables you to create the VLAN only on a single switch. That switch can then propagate information about the VLAN to every other switch on the network and cause other switches to create it. Likewise, if you want to delete a VLAN, you only need to delete it on one switch, and the change is automatically propagated to every other switch inside the same VTP domain.</p>
+<p><img src="f.png" alt=""></p>
+<p>On SW1, we have created a new VLAN. SW1 sends a VTP update about the new VLAN to SW2, which in turn sends its VTP update to SW3. These updates will cause SW2 and SW3 to create the same VLAN. You can see how this simplifies network administration – the engineer only had to log in and create the VLAN on the first switch. Other switches have created the same VLAN automatically.</p>
+<blockquote>
+<p>NOTE: VTP does not advertise information about which switch ports are assigned to which VLAN.</p>
+</blockquote>
+<p><strong>DTP, Dynamic Trunking Protocol,</strong> is a trunking protocol that is developed and proprietary to Cisco which is used to automatically negotiate trunks between Cisco switches. Trunk negotiations are managed by DTP only if the port is directly connected to each other.</p>
+<p>Ethernet trunk interfaces <strong>support various trunking modes</strong>(就是下面说的各种模式). Those interfaces can be configured as a trunk or non-trunk, or to initiate negotiating trunking to a neighbor interface or is waiting to receive a trunking negotiation message from another directly connected interface. Most Cisco switches nowadays use IEEE 802.1Q as their trunking type of choice because of less overhead compared to Inter-Switch Link (ISL).</p>
+<p><code>switchport mode access</code> - 将接口（接入端口）置于永久非中继模式，并协商将链路转换成非中继链路。不管相邻接口是否为 TRUNK 接口，该接口都会变为非 TRUNK 接口。</p>
+<p><code>switchport mode dynamic auto</code> - 使接口能够将链路转换为中继链路。当相邻接口设置为 trunk 或 desirable 模式时，该接口将变为 TRUNK 接口。所有以太网接口的默认 switchport 模式为 dynamic auto。</p>
+<p><code>switchport mode dynamic desirable</code> - 使接口主动尝试将链路转换为中继链路。当相邻接口设置为中继、期望或动态自动模式时，该接口将变为中继接口。这是老式交换机的默认 switchport 模式，例如 Catalyst 2950 和 3550 系列交换机。</p>
+<p><code>switchport mode trunk</code> - 中继模式会将接口置为永久中继模式，并协商将相邻链路转换为中继链路。即使相邻端口不是 TRUNK 接口，该接口也会变为 TRUNK 接口。</p>
+<p>switchport nonegotiate - 可防止接口生成 DTP 帧。只有当接口的 switchport 模式是 access 或 trunk 时，可以使用此命令。您必须手动将相邻接口配置为中继接口，才能建立中继链路。</p>
+<p>DTP叫动态中继协议，两个交换机接口间通信接口必须为Trunk(不能是Access)且封装模式必须相同。</p>
+<p>封装模式：</p>
+<ul>
+<li>
+<p>ISL交换机间链路：思科的私有标记方法，只支持1024个VLAN</p>
+</li>
+<li>
+<p>802.1Q：公有的标记方法，支持4096个VLAN</p>
+</li>
+</ul>
+<hr>
+<p>VTP modes</p>
+<ul>
+<li>Server – default mode. Sends VLAN information to other switches.</li>
+<li>Client – receives VLAN information and forwards it to other switches.</li>
+<li>Transparent – forward VTP traffic but do not originate or use it. They can have their own VLANs, not shared with other switches.</li>
+</ul>
+<hr>
+<p>为对比DTP的mode, 我们看看静态手动怎么设置:</p>
+<p><img src="h.png" alt="h"></p>
+<p><img src="i.png" alt="i"></p>
+<p>然后再看看有了DTP是怎么设置的:</p>
+<p><img src="k.png" alt="k"></p>
+<p><img src="l.png" alt="l"></p>
+<hr>
+<p>一些常用命令:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1">#---------------------查看命令-----------------------#</span>
+</span></span><span class="line"><span class="cl">show vlan brief
+</span></span><span class="line"><span class="cl">show interfaces trunk
+</span></span><span class="line"><span class="cl">show interfaces f0/10 switchport
+</span></span><span class="line"><span class="cl">show ip interface brief
+</span></span><span class="line"><span class="cl">sh ip route
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># VTP相关</span>
+</span></span><span class="line"><span class="cl">show vtp status
+</span></span><span class="line"><span class="cl">show vtp password
+</span></span><span class="line"><span class="cl"><span class="c1"># spanning tree 相关</span>
+</span></span><span class="line"><span class="cl">show spanning-tree detail 
+</span></span><span class="line"><span class="cl">show spanning-tree vlan &lt;vlan_value&gt;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># No attempt to perform a DNS resolution/lookup</span>
+</span></span><span class="line"><span class="cl">no ip domain-lookup
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 删除Vlan</span>
+</span></span><span class="line"><span class="cl">no vlan <span class="m">2</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#--------------------------配置spanning tree--------------------------#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看相关信息</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#show spanning-tree vlan 3</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Configure S1 as root bridge, S2 as backup root bridge for VLAN </span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#spanning-tree vlan 1 root primary </span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config<span class="o">)</span><span class="c1">#spanning-tree vlan 1 root secondary</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Change the path of traffic for VLAN 1 from S2 to S1 through S3 </span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface rang f0/10-12</span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config-if-range<span class="o">)</span><span class="c1">#spanning-tree vlan 1 cost 40</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Change the path of traffic for VLAN 1 from S2 to S1 through S3 </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 即让 S1 和 S2之间的接口都blocked, 这样从S2发出的package才能过S3到S1, 如下图</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 另外注意, 一个VLAN有一个独立的spanning tree, 即把多个VLAN看成相对spanning tree互不干涉的很多层</span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface rang f0/10-12</span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config-if-range<span class="o">)</span><span class="c1">#spanning-tree vlan 1 cost 40</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="a-5409600.png" alt="a"></p>
+<p><img src="m.png" alt="m"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 接上...</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Change the root port on S2 for VLAN 1. (root port from F0/16 to F0/18) </span>
+</span></span><span class="line"><span class="cl">S3<span class="o">(</span>config<span class="o">)</span><span class="c1">#int f0/18</span>
+</span></span><span class="line"><span class="cl">S3<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#spanning-tree vlan 1 port-priority 64</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#---------------------密码相关-----------------------#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置enable密码</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#enable password inwk</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 远程配置密码</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config<span class="o">)</span><span class="c1"># line con 0</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-line<span class="o">)</span><span class="c1"># password abc</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-line<span class="o">)</span><span class="c1"># login</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置ssh密码</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config<span class="o">)</span><span class="c1">#line vty 0 4</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-line<span class="o">)</span><span class="c1"># password inwk // 这个密码是当用telnet/ssh远程连接成功之后, 第一次需要输入的密码</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-line<span class="o">)</span><span class="c1">#transport input ssh/telnet</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-line<span class="o">)</span><span class="c1"># login</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#-----------------------设置IP--------------------------#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 为interface设置ip和子网掩码</span>
+</span></span><span class="line"><span class="cl">R1&gt; en
+</span></span><span class="line"><span class="cl">R1# conf t
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config<span class="o">)</span><span class="c1"># interface fa0/0</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-if<span class="o">)</span><span class="c1"># ip address 192.168.10.1 255.255.255.0</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-if<span class="o">)</span><span class="c1"># no shutdown</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-if<span class="o">)</span><span class="c1"># exit</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 为Vlan设置ip, 注意子网掩码24位的时候的数值</span>
+</span></span><span class="line"><span class="cl">要求: 10.1.1.1/24
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface vlan 1</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#ip address 10.1.1.1 255.255.255.0 </span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#no shutdown</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 为路由器或交换机设置默认网关</span>
+</span></span><span class="line"><span class="cl">Sx<span class="o">(</span>config<span class="o">)</span><span class="c1">#ip default-gateway 10.1.1.10</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#----------跨vlan交换信息---------#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># As we know, there should be at least one L3 device; that is, a router or L3-capable switch. </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># So we are using R1 to perform inter-VLAN routing for VLAN 100 and VLAN 200. </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Make sure that the switchport connected to R1 is configured as static trunk because a router does not support DTP. </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Additionally, we must configure sub-interfaces on R1 on the basis of which VLANs we are trying to route to each other.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 这一步是把物理接口设置无ip 然后no shutdown, 然后才能设置子接口</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/0 </span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#no ip address </span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#no shutdown</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置子接口</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/0.100 # 一般这里的0.100与其归属的vlan id一样</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-subif<span class="o">)</span><span class="c1">#encapsulation dot1Q 100  # 这是设置该接口属于vlan 100</span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-subif<span class="o">)</span><span class="c1">#ip add 100.1.1.1 255.255.255.0 </span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#no shutdown</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/0.200 </span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-subif<span class="o">)</span><span class="c1">#encapsulation dot1Q 200 </span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-subif<span class="o">)</span><span class="c1">#ip add 200.1.1.1 255.255.255.0 </span>
+</span></span><span class="line"><span class="cl">R1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#no shutdown</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Because we are using routers as the hosts, we must disable &#34;ip routing&#34; first and set the default gateway accordingly.</span>
+</span></span><span class="line"><span class="cl">R2<span class="o">(</span>config<span class="o">)</span><span class="c1">#no ip routing</span>
+</span></span><span class="line"><span class="cl">R2<span class="o">(</span>config<span class="o">)</span><span class="c1">#ip default-gateway 100.1.1.1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#-----------在交换机为不同Ports设置Vlan-------------------#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 首先创建VLAN</span>
+</span></span><span class="line"><span class="cl">Sx<span class="o">(</span>config<span class="o">)</span><span class="c1">#vlan 100 </span>
+</span></span><span class="line"><span class="cl">Sx<span class="o">(</span>config-vlan<span class="o">)</span><span class="c1">#name A </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置指定接口mode并设置归属vlan</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/1 </span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport mode access </span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport access vlan 100</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 也可以批量设置</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1"># interface rang f0/11-12, f0/14-15 </span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if-range<span class="o">)</span><span class="c1">#....</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#--------------------------设置静态Trunk--------------------------#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置两个交换机接口链路为trunk且encapsulation为802.1Q</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Configure IEEE 802.1Q encapsulation between S1 &amp; S2</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/10</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport trunk encapsulation dot1q </span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport mode trunk</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if-range<span class="o">)</span><span class="c1">#no shutdown</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface range f0/10-12, f0/16-18</span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport trunk encapsulation dot1q </span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport mode trunk</span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config-if-range<span class="o">)</span><span class="c1">#no shutdown</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 指定VLAN可以通过某个Trunk</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Configure Sw1 and Sw2 to allow VLAN 100 and VLAN 200 on their trunk interface:</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/10</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport trunk allowed vlan 100,200 </span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/10</span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport trunk allowed vlan 100,200</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#--------------------------动态Trunk DTP--------------------------#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 注意配置顺序其实和上面是相同的 只是 这个mode不是简单的trunk而是dynamic desirable </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 另外的三个mode在上面有介绍, dynamic auto等</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Configure S1 with DTP dynamic desirable mode for both trunk ports.</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/10</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport mode dynamic desirable </span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport trunk encapsulation dot1q </span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/13</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport mode dynamic desirable </span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport trunk encapsulation dot1q</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Configure S2 with DTP dynamic auto mode on its trunk port:</span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/10</span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport mode dynamic auto </span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport trunk encapsulation dot1q</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#--------------------------设置VTP--------------------------#</span>
+</span></span><span class="line"><span class="cl">1. Create VLAN <span class="m">300</span> on Sw2. 
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config<span class="o">)</span><span class="c1">#vlan 300</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">2. Configure Sw2 as the VTP server. 
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config<span class="o">)</span><span class="c1">#vtp mode server</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">3. Configure VTP parameters as follows on all switches <span class="o">(</span>S1, S2 and S3<span class="o">)</span>: 
+</span></span><span class="line"><span class="cl">VTP version: <span class="m">2</span>
+</span></span><span class="line"><span class="cl">VTP domain: inwk
+</span></span><span class="line"><span class="cl">VTP password: inwk 
+</span></span><span class="line"><span class="cl">Sx<span class="o">(</span>config<span class="o">)</span><span class="c1">#vtp version 2 </span>
+</span></span><span class="line"><span class="cl">Sx<span class="o">(</span>config<span class="o">)</span><span class="c1">#vtp domain inwk </span>
+</span></span><span class="line"><span class="cl">Sx<span class="o">(</span>config<span class="o">)</span><span class="c1">#vtp password inwk</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">4. Configure Sw1 in VTP transparent mode and create VLAN 300. 
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#vtp mode transparent</span>
+</span></span><span class="line"><span class="cl">S1<span class="o">(</span>config<span class="o">)</span><span class="c1">#vlan 300</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">5. Configure Sw3 in VTP client mode.
+</span></span><span class="line"><span class="cl">S3<span class="o">(</span>config<span class="o">)</span><span class="c1">#vtp mode client</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">6. Assign VLAN <span class="m">300</span> on the ports connected to R3 and R4. 
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/4</span>
+</span></span><span class="line"><span class="cl">S2<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport access vlan 300 </span>
+</span></span><span class="line"><span class="cl">S3<span class="o">(</span>config<span class="o">)</span><span class="c1">#interface f0/3</span>
+</span></span><span class="line"><span class="cl">S3<span class="o">(</span>config-if<span class="o">)</span><span class="c1">#switchport access vlan 300</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其它</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">查看trunk相关协议
+</span></span><span class="line"><span class="cl">show interfaces trunk 
+</span></span><span class="line"><span class="cl">show interfaces f0/10 switchport 
+</span></span><span class="line"><span class="cl">查看vtp domain
+</span></span><span class="line"><span class="cl">show vtp status
+</span></span><span class="line"><span class="cl">查看vtp密码
+</span></span><span class="line"><span class="cl">show vtp password
+</span></span><span class="line"><span class="cl">查看默认网关
+</span></span><span class="line"><span class="cl">sh ip route
+</span></span><span class="line"><span class="cl">查看接口信息
+</span></span><span class="line"><span class="cl">show interface brief
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">查看spanning tree的root, 看bridge ID, 如果相同就看MAC地址, 看root ID下面的mac address是谁：
+</span></span><span class="line"><span class="cl">show spanning-tree vlan 3
+</span></span><span class="line"><span class="cl">每个vlan都有一个spanning tree
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Change the path of traffic for VLAN 1 from S2 to S1 through S3 ，意思是对于vlan 1，从s2的到s1的包 必须过s3 所以你就要想办法增加s2与s1相连接口的cost 使其block 这样 便可以从s3过 而不是直接到s1
+</span></span><span class="line"><span class="cl">interface rang f0/10-12 
+</span></span><span class="line"><span class="cl">spanning-tree vlan 1 cost 40 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">修改上游的对应接口，即看先用 show spanning tree vlan 2 在下游路由器查看它的root port，然后再用下面的指令在上游路由器修改对应port，
+</span></span><span class="line"><span class="cl">Change the root port on S2 for VLAN 1. (root port from F0/16 to F0/18)
+</span></span><span class="line"><span class="cl">S3(config)#int f0/18
+</span></span><span class="line"><span class="cl">S3(config-if)#spanning-tree vlan 1 port-priority 64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>References:</p>
+<ul>
+<li><a href="https://ipwithease.com/switchport-trunk-mode-vs-access-mode/">Switchport Access Mode vs Trunk Mode - IP With Ease</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Dynamic_Trunking_Protocol">Dynamic Trunking Protocol</a></li>
+<li><a href="https://study-ccna.com/what-is-vtp/">What is VTP (VLAN Trunking Protocol)? - Study CCNA</a></li>
+<li><a href="https://study-ccna.com/dynamic-trunking-protocol-dtp-cisco/">Cisco Dynamic Trunking Protocol (DTP) Explained - Study CCNA</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-18
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/inwk/">inwk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang/basics/005-go-modules/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Golang模块module和包package的使用之导入自定义包</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/basics/008-error-handling/">
+            <span class="next-text nav-default">Golang错误处理</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

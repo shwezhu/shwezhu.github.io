@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>CSRF Attack and CORS - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Cross-Origin Resource Sharing (CORS) Cross-origin resource sharing (CORS) can be understood as a controlled relaxation of the same-origin policy.
+1.1. How does cross-origin resource sharing work? In standard internet communication, your browser sends an HTTP request to the application server, receives data as an HTTP response, and displays it. In browser terminology, the current browser URL is called the current origin and the third-party URL is cross-origin.
+When you make a cross-origin request, this is the request-response process:" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.121.1 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/http/007-csrf-attack/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="CSRF Attack and CORS" />
+<meta property="og:description" content="1. Cross-Origin Resource Sharing (CORS) Cross-origin resource sharing (CORS) can be understood as a controlled relaxation of the same-origin policy.
+1.1. How does cross-origin resource sharing work? In standard internet communication, your browser sends an HTTP request to the application server, receives data as an HTTP response, and displays it. In browser terminology, the current browser URL is called the current origin and the third-party URL is cross-origin.
+When you make a cross-origin request, this is the request-response process:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/http/007-csrf-attack/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-06T18:29:57+00:00" />
+<meta property="article:modified_time" content="2023-10-06T18:29:57+00:00" />
+
+<meta itemprop="name" content="CSRF Attack and CORS">
+<meta itemprop="description" content="1. Cross-Origin Resource Sharing (CORS) Cross-origin resource sharing (CORS) can be understood as a controlled relaxation of the same-origin policy.
+1.1. How does cross-origin resource sharing work? In standard internet communication, your browser sends an HTTP request to the application server, receives data as an HTTP response, and displays it. In browser terminology, the current browser URL is called the current origin and the third-party URL is cross-origin.
+When you make a cross-origin request, this is the request-response process:"><meta itemprop="datePublished" content="2023-10-06T18:29:57+00:00" />
+<meta itemprop="dateModified" content="2023-10-06T18:29:57+00:00" />
+<meta itemprop="wordCount" content="1393">
+<meta itemprop="keywords" content="cybersecurity,http," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="CSRF Attack and CORS"/>
+<meta name="twitter:description" content="1. Cross-Origin Resource Sharing (CORS) Cross-origin resource sharing (CORS) can be understood as a controlled relaxation of the same-origin policy.
+1.1. How does cross-origin resource sharing work? In standard internet communication, your browser sends an HTTP request to the application server, receives data as an HTTP response, and displays it. In browser terminology, the current browser URL is called the current origin and the third-party URL is cross-origin.
+When you make a cross-origin request, this is the request-response process:"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">CSRF Attack and CORS</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-10-06 </span>
+        <div class="post-category">
+            <a href="/categories/http/"> http </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-cross-origin-resource-sharing-cors">1. Cross-Origin Resource Sharing (CORS)</a>
+          <ul>
+            <li><a href="#11-how-does-cross-origin-resource-sharing-work">1.1. How does cross-origin resource sharing work?</a></li>
+            <li><a href="#12-cross-origin-resource-sharing-example">1.2. <strong>Cross-origin resource sharing example</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#2-what-is-a-cors-preflight-request">2. What is a CORS preflight request?</a></li>
+        <li><a href="#3-csrf">3. CSRF</a></li>
+        <li><a href="#4-cross-site-request-forgery-prevention">4. Cross-site request forgery prevention</a>
+          <ul>
+            <li><a href="#41-synchronizer-token-pattern">4.1. Synchronizer token pattern</a></li>
+            <li><a href="#42-custom-request-headers">4.2. Custom Request Headers</a></li>
+            <li><a href="#43-samesite-attribute">4.3. SameSite Attribute</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-cross-origin-resource-sharing-cors">1. Cross-Origin Resource Sharing (CORS)</h2>
+<p>Cross-origin resource sharing (CORS) can be understood as a controlled relaxation of the same-origin policy.</p>
+<h3 id="11-how-does-cross-origin-resource-sharing-work">1.1. How does cross-origin resource sharing work?</h3>
+<p>In standard internet communication, your browser sends an HTTP request to the application server, receives data as an HTTP response, and displays it. In browser terminology, the current browser URL is called the <em>current origin</em> and the third-party URL is <em>cross-origin</em>.</p>
+<p>When you make a cross-origin request, this is the request-response process:</p>
+<ol>
+<li>The browser adds an origin header to the request with information about the current origin&rsquo;s protocol, host, and port</li>
+<li>The server checks the current origin header and responds with the requested data and an Access-Control-Allow-Origin header</li>
+<li>The browser sees the access control request headers and shares the returned data with the client application</li>
+</ol>
+<p>Alternatively, if the server doesn’t want to allow cross-origin access, it responds with an error message.</p>
+<h3 id="12-cross-origin-resource-sharing-example">1.2. <strong>Cross-origin resource sharing example</strong></h3>
+<p>For example, consider a site called <em><a href="https://news.example.com">https://news.example.com</a>. This site</em> wants to access resources from an API at <em>partner-api.com</em>.</p>
+<p>Developers at <em><a href="https://partner-api.com">https://partner-api.com</a></em> first configure the cross-origin resource sharing (CORS) headers on their server by adding <em>new.example.com</em> to the allowed origins list.</p>
+<p><em>Access-Control-Allow-Origin: <a href="https://news.example.com">https://news.example.com</a></em></p>
+<p>Once CORS access is configured, <em>news.example.com</em> can request resources from <em>partner-api.com</em>. For every request, <em>partner-api.com</em> will respond with <em>Access-Control-Allow-Credentials : &ldquo;true.&rdquo;</em> The browser then knows the communication is authorized and permits cross-origin access.</p>
+<p>If you want grant access to multiple origins, use a comma-separated list or wildcard characters like * that grant access to everyone.</p>
+<h2 id="2-what-is-a-cors-preflight-request">2. What is a CORS preflight request?</h2>
+<p>If a web app needs a complex HTTP request, the browser adds a <strong><a href="https://developer.mozilla.org/docs/Web/HTTP/CORS#preflighted_requests">preflight request</a></strong> to the front of the request chain.</p>
+<p>The CORS specification defines a <strong>complex request</strong> as</p>
+<ul>
+<li>A request that uses methods other than GET, POST, or HEAD</li>
+<li>A request that includes headers other than <code>Accept</code>, <code>Accept-Language</code> or <code>Content-Language</code></li>
+<li>A request that has a <code>Content-Type</code> header other than <code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, or <code>text/plain</code></li>
+</ul>
+<p>Browsers create a preflight request if it is needed. It&rsquo;s an <code>OPTIONS</code> request like below and is sent before the actual request message.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">OPTIONS /data HTTP/1.1
+</span></span><span class="line"><span class="cl">Origin: https://example.com
+</span></span><span class="line"><span class="cl">Access-Control-Request-Method: DELETE
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>On the server side, an application needs to respond to the preflight request with information about the methods the application accepts from this origin.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">HTTP/1.1 200 OK
+</span></span><span class="line"><span class="cl">Access-Control-Allow-Origin: https://example.com
+</span></span><span class="line"><span class="cl">Access-Control-Allow-Methods: GET, DELETE, HEAD, OPTIONS
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The server response can also include an <code>Access-Control-Max-Age</code> header to specify the duration (in seconds) to cache preflight results so the client does not need to make a preflight request every time it sends a complex request.</p>
+<p>References:</p>
+<ul>
+<li><a href="https://web.dev/cross-origin-resource-sharing/">Cross-Origin Resource Sharing (CORS)</a></li>
+<li>[What is CORS? - Cross-Origin Resource Sharing Explained - AWS](<a href="https://aws.amazon.com/what-is/cross-origin-resource-sharing/#:~:text=Cross%2Dorigin%20resource%20sharing%20(CORS,resources%20in%20a%20different%20domain.)">https://aws.amazon.com/what-is/cross-origin-resource-sharing/#:~:text=Cross%2Dorigin%20resource%20sharing%20(CORS,resources%20in%20a%20different%20domain.)</a></li>
+</ul>
+<h2 id="3-csrf">3. CSRF</h2>
+<p><a href="https://owasp.org/www-community/attacks/csrf">Cross-Site Request Forgery (CSRF)</a> is a type of attack that occurs when a malicious web site, email, blog, instant message, or program causes a user&rsquo;s web browser to perform an unwanted action on a trusted site when the user is authenticated. A CSRF attack works because <strong>browser requests automatically include all cookies including session cookies.</strong> Therefore, if the user is authenticated to the site, the site cannot distinguish between legitimate authorized requests and forged authenticated requests. This attack is thwarted when proper Authorization is used, which implies that a challenge-response mechanism is required that verifies the identity and authority of the requester. Source: <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern">https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern</a></p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube-nocookie.com/embed/eWEgUcHPle0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+<p>Video: <a href="https://www.youtube.com/watch?v=eWEgUcHPle0">https://www.youtube.com/watch?v=eWEgUcHPle0</a></p>
+<h2 id="4-cross-site-request-forgery-prevention">4. Cross-site request forgery prevention</h2>
+<ul>
+<li><strong>For stateful software use the <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern">synchronizer token pattern</a></strong></li>
+<li><strong>For stateless software use <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie">double submit cookies</a></strong></li>
+<li><strong>For API-driven sites that don&rsquo;t use <code>&lt;form&gt;</code> tags, consider <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#custom-request-headers">using custom request headers</a></strong></li>
+</ul>
+<h3 id="41-synchronizer-token-pattern">4.1. Synchronizer token pattern</h3>
+<p>CSRF tokens should be generated on the server-side. They can be generated once per user session or for each request. Per-request tokens are more secure than per-session tokens as the time range for an attacker to exploit the stolen tokens is minimal. However, this may result in usability concerns. For example, the &ldquo;Back&rdquo; button browser capability is often hindered as the previous page may contain a token that is no longer valid. Interaction with this previous page will result in a CSRF false positive security event on the server. In per-session token implementations after the initial generation of a token, the value is stored in the session and is used for each subsequent request until the session expires.</p>
+<p>When a request is issued by the client, the server-side component must verify the existence and validity of the token in the request compared to the token found in the user session. If the token was not found within the request, or the value provided does not match the value within the user session, then the request should be rejected. Additional actions such as logging the event as a potential CSRF attack in progress should also be considered.</p>
+<p>CSRF tokens should be:</p>
+<ul>
+<li>Unique per user session.</li>
+<li>Secret</li>
+<li>Unpredictable (large random value generated by a <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#rule---use-cryptographically-secure-pseudo-random-number-generators-csprng">secure method</a>).</li>
+</ul>
+<p>CSRF tokens prevent CSRF because without a token, an attacker cannot create valid requests to the backend server.</p>
+<p><strong>For the Synchronised Token Pattern, CSRF tokens should not be transmitted using cookies.</strong></p>
+<p>The CSRF token can be transmitted to the client as part of a response payload, such as a HTML or JSON response. It can then be transmitted back to the server as a hidden field on a form submission, or via an AJAX request as a custom header value or part of a JSON payload. Make sure that the token is not leaked in the server logs, or in the URL. CSRF tokens in GET requests are potentially leaked at several locations, such as the browser history, log files, network utilities that log the first line of a HTTP request, and Referer headers if the protected site links to an external site.</p>
+<p>For example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&lt;form action=&#34;/transfer.do&#34; method=&#34;post&#34;&gt;
+</span></span><span class="line"><span class="cl">&lt;input type=&#34;hidden&#34; name=&#34;CSRFToken&#34; value=&#34;OWY4NmQwODE4ODRjN2Q2NTlhMmZlYWEwYzU1YWQwMTVhM2JmNGYxYjJiMGI4MjJjZDE1ZDZMGYwMGEwOA==&#34;&gt;
+</span></span><span class="line"><span class="cl">[...]
+</span></span><span class="line"><span class="cl">&lt;/form&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Inserting the CSRF token in a custom HTTP request header via JavaScript is considered more secure than adding the token in the hidden field form parameter because requests with custom headers are automatically subject to the <strong>same-origin policy</strong>.</p>
+<h3 id="42-custom-request-headers">4.2. Custom Request Headers</h3>
+<p>Both the <strong>synchronizer token</strong> and the <strong>double submit cookie</strong> are used to prevent forgery of form data, but they can be tricky to implement and degrade usability. Many modern web applications do not use <code>&lt;form&gt;</code> tags. A user-friendly defense that is particularly well suited for AJAX or API endpoints is the use of a <strong>custom request header</strong>. No token is needed for this approach.</p>
+<p>In this pattern, the client appends a custom header to requests that require CSRF protection. The header can be any arbitrary key-value pair, as long as it does not conflict with existing headers.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">X-YOURSITE-CSRF-PROTECTION=1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When handling the request, the API checks for the existence of this header. I<strong>f the header does not exist, the backend rejects the request as potential forgery.</strong> This approach has several advantages:</p>
+<ul>
+<li>UI changes are not required</li>
+<li>no server state is introduced to track tokens</li>
+</ul>
+<p>If you use <code>&lt;form&gt;</code> tags anywhere in your client, you will still need to protect them with alternate approaches described in this document such as tokens.</p>
+<p>This defense relies on the browser&rsquo;s <a href="https://en.wikipedia.org/wiki/Same-origin_policy">same-origin policy (SOP)</a> restriction that only JavaScript can be used to add a custom header, and only within its origin. By default, browsers do not allow JavaScript to make cross origin requests with custom headers. Only JavaScript that you serve from your origin can add these headers.</p>
+<p>By default, web browsers enforce the same-origin policy, which restricts JavaScript from making cross-origin requests with custom headers.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;http:127.0.0.1:8080&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">body</span><span class="o">:</span> <span class="nx">formData</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// cosutm header
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span><span class="s2">&#34;abc&#34;</span><span class="o">:</span> <span class="s2">&#34;123&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Some <strong>headers in this request</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Origin:http://localhost:8080
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>And <code>Request URL: http://127.0.0.1:8080/upload</code>, as you can see this is a cross-origin request, because the origin is different from the target origin.</p>
+<p>We have <strong>header in response</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Access-Control-Allow-Origin: *
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But this request will still be blocked by the browser, because web browsers enforce the same-origin policy, which restricts JavaScript from making cross-origin requests with custom headers.</p>
+<h3 id="43-samesite-attribute">4.3. SameSite Attribute</h3>
+<p>An emerging way to protect against <a href="https://docs.spring.io/spring-security/reference/features/exploits/csrf.html#csrf">CSRF Attacks</a> is to specify the <a href="https://tools.ietf.org/html/draft-west-first-party-cookies">SameSite Attribute</a> on cookies. A server can specify the <code>SameSite</code> attribute when setting a cookie to indicate that the cookie should not be sent when coming from external sites.</p>
+<p>References:</p>
+<ul>
+<li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern">Cross-Site Request Forgery Prevention - OWASP Cheat Sheet Series</a></li>
+<li><a href="https://docs.spring.io/spring-security/reference/features/exploits/csrf.html">Cross Site Request Forgery (CSRF) :: Spring Security</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-10-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/cybersecurity/">cybersecurity</a>
+          <a href="/tags/http/">http</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/http/003-cross-origin-request/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Cross-origin Request HTTP</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/advance/010-defer-close/">
+            <span class="next-text nav-default">Don&#39;t Defer Close() on Writable Files - Go Notes</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

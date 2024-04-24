@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Ping &amp; ICMP Message - 课堂笔记 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="ping command ping is used to test the reachability of a host on an Internet Protocol (IP) network. Ping uses the Internet Control Message Protocol (ICMP) packets for its operation. Pinging involves sending an ICMP echo request to the target host and waiting for an ICMP echo reply. ICMP Message Format 上面说的 ICMP echo request, ICMP echo reply 是 ICMP Message 的不同类型," />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/inwk/proto/ping-icmp-message/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Ping &amp; ICMP Message - 课堂笔记" />
+<meta property="og:description" content="ping command ping is used to test the reachability of a host on an Internet Protocol (IP) network. Ping uses the Internet Control Message Protocol (ICMP) packets for its operation. Pinging involves sending an ICMP echo request to the target host and waiting for an ICMP echo reply. ICMP Message Format 上面说的 ICMP echo request, ICMP echo reply 是 ICMP Message 的不同类型," />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/inwk/proto/ping-icmp-message/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-06-22T19:49:33+00:00" />
+<meta property="article:modified_time" content="2023-06-22T19:49:33+00:00" />
+<meta itemprop="name" content="Ping &amp; ICMP Message - 课堂笔记">
+<meta itemprop="description" content="ping command ping is used to test the reachability of a host on an Internet Protocol (IP) network. Ping uses the Internet Control Message Protocol (ICMP) packets for its operation. Pinging involves sending an ICMP echo request to the target host and waiting for an ICMP echo reply. ICMP Message Format 上面说的 ICMP echo request, ICMP echo reply 是 ICMP Message 的不同类型,"><meta itemprop="datePublished" content="2023-06-22T19:49:33+00:00" />
+<meta itemprop="dateModified" content="2023-06-22T19:49:33+00:00" />
+<meta itemprop="wordCount" content="3882">
+<meta itemprop="keywords" content="inwk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Ping &amp; ICMP Message - 课堂笔记"/>
+<meta name="twitter:description" content="ping command ping is used to test the reachability of a host on an Internet Protocol (IP) network. Ping uses the Internet Control Message Protocol (ICMP) packets for its operation. Pinging involves sending an ICMP echo request to the target host and waiting for an ICMP echo reply. ICMP Message Format 上面说的 ICMP echo request, ICMP echo reply 是 ICMP Message 的不同类型,"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Ping &amp; ICMP Message - 课堂笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-06-22 </span>
+        <div class="post-category">
+            <a href="/categories/inwk/"> inwk </a>
+            <a href="/categories/proto/"> proto </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#ping-command"><code>ping</code> command</a></li>
+        <li><a href="#icmp-message-format">ICMP Message Format</a></li>
+        <li><a href="#results-of-ping-command">Results of Ping Command</a></li>
+        <li><a href="#icmp">ICMP</a>
+          <ul>
+            <li><a href="#icmp-的类别">ICMP 的类别</a></li>
+            <li><a href="#icmp-差错报文">ICMP 差错报文</a></li>
+          </ul>
+        </li>
+        <li><a href="#icmp-1">ICMP</a>
+          <ul>
+            <li><a href="#1-processing-of-icmp-messages">1. Processing of ICMP Messages</a></li>
+            <li><a href="#2-icmp-error-messages">2. ICMP Error Messages</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="ping-command"><code>ping</code> command</h2>
+<p><code>ping</code> is used to test the reachability of a host on an Internet Protocol (IP) network. Ping uses the Internet Control Message Protocol (ICMP) packets for its operation. Pinging involves sending an ICMP echo request to the target host and waiting for an ICMP echo reply.</p>
+<h2 id="icmp-message-format">ICMP Message Format</h2>
+<p>上面说的 ICMP echo request, ICMP echo reply 是 ICMP Message 的不同类型, 不同类型的 ICMP Message 可以通过 ICMP header 里的 type 和 code field 来判断,</p>
+<p>首先整个协议栈 application 下的协议层的 package 结构都可以认为是 <code>header + payload</code>, 即整个协议栈也就是从上到下一直加不同的header, 比如应用层的数据到了加上运输层加上 TCP header 就成了 TCP segment, TCP segment 的结构即 <code>tcp header + payload</code>, payload 就是运输层的数据, 同理该 TCP segment 到了 IP 层加上 IP header 就成了 IP package, IP package = <code>IP header + payload</code>, 这里的 payload 就是上面的 TCP segment, 这一封装过程也叫 encapsulation,</p>
+<p>其次要知道 ICMP 是工作在 IP层的, 然后它的相关数据是在 IP datagram 里的, 可以理解为 ICMP 在 IP 层之上, TCP 之下, 具体格式如下:</p>
+<p><img src="a.png" alt="a"></p>
+<p>可以看到 ICMP Message 的前两字节是 <code>type</code>, <code>code</code> field, 这两个区域就是判断 ICMP Message 类型的, 具体规则如下:</p>
+<p><img src="b.png" alt="b"></p>
+<p>可以看到若一个 ICMP Message 的 <code>type</code> 和 <code>code</code> field 都为 0 的时候, 该 ICMP Message 的类型就是上面我们说的 ICMP echo reply,</p>
+<p>然后再看一下<a href="https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol">维基百科</a> ICMP Packet 的结构描述:</p>
+<blockquote>
+<p>The ICMP packet is encapsulated in an IPv4 packet. The packet consists of header and data sections. 即与上面我们说的其他层数据结构一样,  <code>ICMP Message =  header + payload</code>,</p>
+</blockquote>
+<blockquote>
+<p>The ICMP header starts after the IPv4 header and is identified by IP protocol number. All ICMP packets have an 8-byte header and variable-sized data section. The first 4 bytes of the header have fixed format, while the last 4 bytes depend on the type/code of that ICMP packet. <a href="https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol">Internet Control Message Protocol</a></p>
+</blockquote>
+<h2 id="results-of-ping-command">Results of Ping Command</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># -c3 的意思是发送三次 ping request</span>
+</span></span><span class="line"><span class="cl">$ ping -c3 google.ca
+</span></span><span class="line"><span class="cl">PING google.ca <span class="o">(</span>142.250.80.35<span class="o">)</span>: <span class="m">56</span> data bytes
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 142.250.80.35: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">0</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">118</span> <span class="nv">time</span><span class="o">=</span>25.531 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 142.250.80.35: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">1</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">118</span> <span class="nv">time</span><span class="o">=</span>32.361 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 142.250.80.35: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">2</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">118</span> <span class="nv">time</span><span class="o">=</span>23.043 ms
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">--- google.ca ping statistics ---
+</span></span><span class="line"><span class="cl"><span class="m">3</span> packets transmitted, <span class="m">3</span> packets received, 0.0% packet loss
+</span></span><span class="line"><span class="cl">round-trip min/avg/max/stddev <span class="o">=</span> 23.043/26.978/32.361/3.939 ms
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到有 3 次回应,</p>
+<p>想用 tcpdump 监控一下 ping 数据包, 看看实际发送收到的什么, 然后就查了一下 ping 的端口号, 就像 ftp, http 应用层协议一般都有自己的默认端口, ping 也是工作在应用层的, 但是, 它没有端口号, 因为 ping 用的是 IP 层的 ICMP 协议, 而端口号和IP地址是属于 TCP层的, 这是在说 ping 不使用在传输层的 UDP 或 TCP, 直接跳过,</p>
+<p>不仅会想, 应用层的每个应用接收信息都是监控的某个端口, 如一个应用推特只用监控手机上的某个特定端口所有的数据便可以收到信息, 但若 ping 没有端口号, 它是怎么知道来的数据包是属于它的呢?</p>
+<p>专业的话讲就是 有多个进程使用TCP, 那么当TCP接收到数据时, 根据端口号知道数据是属于哪个进程的, 但若有多个进程都使用ICMP, 然后 ICMP 又不使用端口号, 那么当ICMP接收到数据时, 怎么知道该数据是属于哪个进程的呢？下面这个图很好(<a href="https://segmentfault.com/q/1010000006052215">来源</a>):</p>
+<p><img src="c.png" alt="c"></p>
+<p>看到一个人的回答:</p>
+<blockquote>
+<ol>
+<li>对于 <a href="https://link.segmentfault.com/?enc=tQT0MRu1f7vLhFYgDdXJnQ%3D%3D.MMFeOwtRILf0oRjsnRPZQqmIEd%2B%2BIls6we5pRkCWObbaoNlRZIFF5sxPX6Bh9m6XoI8WkfZpcK5FNNYb9fUgC4hchL8U344MtmHVb73Qfu8%3D">ICMP 套接字</a>，ICMP id 就是进程号。</li>
+<li>对于 raw 套接字，程序自己记住 id。比如 Linux 的 ping 命令就会判断收到的 ICMP 包是不是对应自己发出的。</li>
+</ol>
+</blockquote>
+<p>这个回答的意思就是说, 虽然 ping 没有端口号, 但是操作系统协议栈过滤了 ICMP Packets之后, ping 可以通过 ICMP Packet 的 id来判断是不是属于该进程, 我们用 tcpdump 监控一下, 看看发生了什么,</p>
+<p>首先监控所有关于 icmp 的数据包,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># -n: Don&#39;t convert addresses (i.e., host addresses, port numbers, etc.) to names.</span>
+</span></span><span class="line"><span class="cl">$ sudo tcpdump -n icmp
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后 <code>ping -c2 google.ca</code>,</p>
+<p>之后 tcpdump 输出如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo tcpdump -n icmp  
+</span></span><span class="line"><span class="cl">tcpdump: data link <span class="nb">type</span> PKTAP
+</span></span><span class="line"><span class="cl">tcpdump: verbose output suppressed, use -v<span class="o">[</span>v<span class="o">]</span>... <span class="k">for</span> full protocol decode
+</span></span><span class="line"><span class="cl">listening on pktap, link-type PKTAP <span class="o">(</span>Apple DLT_PKTAP<span class="o">)</span>, snapshot length <span class="m">524288</span> bytes
+</span></span><span class="line"><span class="cl">00:18:45.390154 IP 192.168.2.15 &gt; 142.250.80.35: ICMP <span class="nb">echo</span> request, id 55385, seq 0, length <span class="m">64</span>
+</span></span><span class="line"><span class="cl">00:18:45.413787 IP 142.250.80.35 &gt; 192.168.2.15: ICMP <span class="nb">echo</span> reply, id 55385, seq 0, length <span class="m">64</span>
+</span></span><span class="line"><span class="cl">00:18:46.395331 IP 192.168.2.15 &gt; 142.250.80.35: ICMP <span class="nb">echo</span> request, id 55385, seq 1, length <span class="m">64</span>
+</span></span><span class="line"><span class="cl">00:18:46.419453 IP 142.250.80.35 &gt; 192.168.2.15: ICMP <span class="nb">echo</span> reply, id 55385, seq 1, length <span class="m">64</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到有4个 icmp 数据包, 因为前面我们发送了两次 ping request, 然后得到了两次 echo reply, 所以是 4 个 ICMP 数据包, 很好理解, 然后前两个的 seq number 是0, 就是为了标注 icmp_seq 0的request对应的reply是 icmp_seq 0, 大概这个意思,  后两个是 1, 同理,</p>
+<p>然后你看 id 一直都是 55385 没有变, 看来和上面那个回答一样, 就是用 id来标注某个 ICMP  Message 属于那个进程的, 这样就不用端口号了, 至于<code>ICMP echo reply</code>, <code>ICMP echo request</code>, 你现在肯定知道是什么了,</p>
+<p>再看一下详细的报告,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># -v: When parsing and printing, produce (slightly more) verbose output. </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># For example, the time to live, identification, total length and options in an IP packet are printed. </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Also enables additional packet integrity checks such as verifying the IP and ICMP header checksum.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -vvv: Even more verbose output. </span>
+</span></span><span class="line"><span class="cl">$ sudo tcpdump -vvv -n icmp
+</span></span><span class="line"><span class="cl">Password:
+</span></span><span class="line"><span class="cl">tcpdump: data link <span class="nb">type</span> PKTAP
+</span></span><span class="line"><span class="cl">tcpdump: listening on pktap, link-type PKTAP <span class="o">(</span>Apple DLT_PKTAP<span class="o">)</span>, snapshot length <span class="m">524288</span> bytes
+</span></span><span class="line"><span class="cl">00:31:08.303605 IP <span class="o">(</span>tos 0x0, ttl 64, id 13722, offset 0, flags <span class="o">[</span>none<span class="o">]</span>, proto ICMP <span class="o">(</span>1<span class="o">)</span>, length 84<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    192.168.2.15 &gt; 142.250.80.35: ICMP <span class="nb">echo</span> request, id 65113, seq 0, length <span class="m">64</span>
+</span></span><span class="line"><span class="cl">00:31:08.327043 IP <span class="o">(</span>tos 0x60, ttl 118, id 0, offset 0, flags <span class="o">[</span>none<span class="o">]</span>, proto ICMP <span class="o">(</span>1<span class="o">)</span>, length 84<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    142.250.80.35 &gt; 192.168.2.15: ICMP <span class="nb">echo</span> reply, id 65113, seq 0, length <span class="m">64</span>
+</span></span><span class="line"><span class="cl">00:31:09.308832 IP <span class="o">(</span>tos 0x0, ttl 64, id 56957, offset 0, flags <span class="o">[</span>none<span class="o">]</span>, proto ICMP <span class="o">(</span>1<span class="o">)</span>, length 84<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    192.168.2.15 &gt; 142.250.80.35: ICMP <span class="nb">echo</span> request, id 65113, seq 1, length <span class="m">64</span>
+</span></span><span class="line"><span class="cl">00:31:09.332058 IP <span class="o">(</span>tos 0x60, ttl 118, id 0, offset 0, flags <span class="o">[</span>none<span class="o">]</span>, proto ICMP <span class="o">(</span>1<span class="o">)</span>, length 84<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    142.250.80.35 &gt; 192.168.2.15: ICMP <span class="nb">echo</span> reply, id 65113, seq 1, length <span class="m">64</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里有两个 id, 第一个 id 是 65113, 一直是不变的这个应该是分辨进程的那个, 但是括号里面的那个 id 是什么? 然后这些 id, ttl, 是存储在哪层数据包的header呢?</p>
+<p>看下 <strong>Claude-instant</strong> 的回答,</p>
+<p>The id information in the round brackets (id 65113) is the <strong>ICMP identifier</strong>, which is used to identify this specific ICMP echo request/reply session. This ID is chosen by the system generating the ICMP echo request (in this case 192.168.2.15) and sent in each echo request. The responding system (142.250.80.35) then includes the same ID in the echo reply so the requestor knows which request it corresponds to.</p>
+<p>The id information outside the round brackets (id 56957) is the <strong>IP identifier</strong>, which is used to reassemble fragmented IP packets. This is a separate identifier used at the IP layer, not specific to ICMP.</p>
+<p>So in summary:</p>
+<ul>
+<li>(id 65113) - <strong>ICMP identifier</strong>, used to identify this specific ICMP echo session</li>
+<li>id 56957 - <strong>IP identifier</strong>, used for IP packet reassembly</li>
+</ul>
+<p>These identifiers are stored and sent in the packet headers:</p>
+<ul>
+<li>The ICMP identifier is stored in the ICMP header</li>
+<li>The IP identifier is stored in the IP header</li>
+</ul>
+<p>The information in the round brackets includes just the relevant ICMP fields:</p>
+<ul>
+<li>id - ICMP identifier</li>
+<li>seq - ICMP sequence number</li>
+<li>length - ICMP payload length</li>
+</ul>
+<p>然后关于 ping 不需要端口号就能正确获取 ICMP Message 的原因, 具体点的解释我也没查到, 只有上面那个简单的回答, 不过经过分析我们也知道了就是通过 ICMP id 来判断的, 看看 AI 咋说的,</p>
+<ol>
+<li>Who generates the ICMP echo reply packet?</li>
+</ol>
+<p>The operating system of the target system will generate the ICMP echo reply packet, not a separate ping program. Most operating systems have built-in functionality to handle and respond to ICMP echo requests.</p>
+<ol start="2">
+<li>How does ping receive ICMP messages?</li>
+</ol>
+<p>ICMP messages, including echo requests and replies, are received directly by the networking stack of the operating system. The ping program then uses APIs provided by the operating system to &ldquo;listen&rdquo; for incoming ICMP echo replies and correlate them to the requests it sent.</p>
+<p>So in more detail:</p>
+<ul>
+<li>
+<p>Ping sends an echo request packet using the operating system&rsquo;s ICMP APIs.</p>
+</li>
+<li>
+<p>That echo request packet is routed to the destination IP address using the IP protocol number of 1.</p>
+</li>
+<li>
+<p>The destination operating system receives the packet on its network interface. Its networking stack filters ICMP packets and recognizes the echo request.</p>
+</li>
+<li>
+<p>The operating system then generates an echo reply packet in response, again using its built-in ICMP functionality.</p>
+</li>
+<li>
+<p>The echo reply packet is routed back to the ping program&rsquo;s system, again using the IP protocol 1.</p>
+</li>
+<li>
+<p>The ping program, running as a userspace application, is using the operating system&rsquo;s ICMP APIs. When an echo reply is received by the operating system, it notifies the ping program via those APIs.</p>
+</li>
+<li>
+<p>The ping program then correlates the received echo reply packet to the original echo request it sent based on the sequence number, and knows a response was received.</p>
+</li>
+</ul>
+<p>总结一下, Ping 利用 ICMP, 看一下当信息类型为 ICMP echo reply 或 echo request 时, ICMP 的格式, 可以看到此时 type 为 0 或 8:</p>
+<p><img src="b1.png" alt="b1"></p>
+<h2 id="icmp">ICMP</h2>
+<h3 id="icmp-的类别">ICMP 的类别</h3>
+<p>ICMP消息大体有两类：双向消息和单向消息。</p>
+<p>双向消息，如常用的ping消息，用来测试网络的可达性。发起方是源设备，应答方是终端设备或者数据传输路径中的节点路由器。</p>
+<p>单向消息一般为告警报错消息（type 3)，或Redirect消息（ type 5)，由于单向的消息是通知源主机出错。发起方都是数据包经过节点路由器。</p>
+<p>ICMP 报文大致可分为两类：差错报文、查询报文。差错报文是单向的，查询报文是双向的。</p>
+<h3 id="icmp-差错报文">ICMP 差错报文</h3>
+<p>&mdash;-ICMP 回送消息：用于进行通信的主机或路由之间，判断发送数据包是否成功到达对端的消息。可以向对端主机发送回送请求消息，也可以接收对端主机回来的回送应答消息。</p>
+<p>&mdash;-ICMP 地址掩码消息：主要用于主机或路由想要了解子网掩码的情况。可以向那些主机或路由器发送 ICMP 地址掩码请求消息，然后通过接收 ICMP 地址掩码应答消息获取子网掩码信息。</p>
+<p>&mdash;-ICMP 时间戳消息：可以向那些主机或路由器发送 ICMP 时间戳请求消息，然后通过接收 ICMP 时间戳应答消息获取时间信息。</p>
+<p>这个讲的很好: <a href="https://zhuanlan.zhihu.com/p/286199789">wireshark分析icmp协议常见范例 - 知乎</a></p>
+<p><a href="https://juejin.cn/post/6844903878752747528">ICMP协议及应用实例（ping，traceroute） - 掘金</a></p>
+<h2 id="icmp-1">ICMP</h2>
+<p>ICMP messages are grouped into two major categories: those messages relating to problems with delivering IP datagrams (called <em><strong>error messages</strong></em>), and those related to information gathering and configuration (called <strong><em>query</em> or <em>informational messages</em></strong>).</p>
+<h3 id="1-processing-of-icmp-messages">1. Processing of ICMP Messages</h3>
+<p>In ICMP, the processing of incoming messages varies from system to system. Generally speaking, the incoming <strong>informational requests are handled automatically by the operating system</strong>, and the error messages are delivered to user processes or to a transport protocol such as TCP [RFC5461]. The processes may choose to act on them or ignore them. Exceptions to this general rule include the Redirect message and the Destination Unreachable—Fragmentation Required messages. The former results in an automatic update to the host’s routing table, whereas the latter is used in the path MTU discovery (PMTUD) mechanism, which is generally implemented by the transport-layer protocols such as TCP</p>
+<h3 id="2-icmp-error-messages">2. ICMP Error Messages</h3>
+<p>The distinction between the error and informational (query) classes of ICMP messages mentioned in the previous section is important because certain restrictions are placed on the generation of ICMPv4 error messages by [RFC1812] and on the generation of ICMPv6 error messages by [RFC4443] that do not apply to queries.</p>
+<p>When an ICMP error message is sent, it contains a copy of the full IP header from the “offending” or “original” datagram (i.e., the IP header of the datagram that caused the error to be generated, including any IP options), plus any other data from the original datagram’s IP payload area such that the generated IP/ ICMP datagram’s size does not exceed a specific value.</p>
+<h4 id="21-destination-unreachable-icmpv4-type-3-icmpv6-type-1">2.1. Destination Unreachable (ICMPv4 Type 3, ICMPv6 Type 1)</h4>
+<p>We now look more closely at one of the more common ICMP message types, <strong>Destination Unreachable</strong>. Messages of this type are used to indicate that a datagram could not be delivered all the way to its destination because of either a problem in transit or the lack of a receiver interested in receiving it. Although 16 different codes are defined for this message in ICMPv4, only 4 are commonly used. These include <strong>Host Unreachable</strong> (code 1), P<strong>ort Unreachable</strong> (code 3), <strong>Fragmentation Required</strong> / Don’t-Fragment Specified (code 4) &hellip;</p>
+<blockquote>
+<p>Destination Unreachable 是一个大类型, 包括 Host Unreachable, Port Unreachable, Fragmentation Required 等常见类型,</p>
+</blockquote>
+<h5 id="211-icmpv4-host-unreachable-code-1">2.1.1. ICMPv4 Host Unreachable (Code 1)</h5>
+<p>This form of the Destination Unreachable message is generated by a router or host when it is required to send an IP datagram to a host using direct delivery (see Chapter 5) but for some reason cannot reach the destination. This situation may arise, for example, because the last-hop router is attempting to send an ARP request to a host that is either missing or down.</p>
+<p><img src="a-8394573.png" alt="a"></p>
+<h5 id="212-icmpv4-port-unreachable-code-3">2.1.2. ICMPv4 Port Unreachable (Code 3)</h5>
+<p>The Port Unreachable message is generated when an incoming datagram is destined for an application that is not ready to receive it. This occurs most commonly in conjunction with UDP (see Chapter 10), when a message is sent to a port number that is not in use by any server process. If UDP receives a datagram and the destination port does not correspond to a port that some process has in use, UDP responds with an ICMP Port Unreachable message.</p>
+<p>We can illustrate the operation of ICMPv4 Port Unreachable messages using the <em>Trivial File Transfer Protocol</em> (TFTP) [RFC1350] client on Windows or Linux while watching the packet exchange using tcpdump. The well-known UDP port for the TFTP service is 69. However, while the TFTP client is available on many systems, most systems do not run TFTP servers. Therefore, it is easy to see what happens when we try to access a nonexistent server. In the example shown in Listing 8-1, we execute the TFTP client, called tftp, on a Windows machine and attempt to fetch a file from a Linux machine. The –s option for tcpdump causes 1500 bytes to be captured per packet; the –i eth1 option tells tcpdump to monitor traffic on the Ethernet interface named eth1; the –vv option causes additional descriptive output to be included; and the expression icmp or port tftp causes traffic matching either the TFTP port (69) or the ICMPv4 protocol to be included in the output.</p>
+<p><img src="a-8403295.png" alt="a"></p>
+<p>Here we see a set of seven requests grouped very close to each other in time. The initial request (identified as RRQ for file /foo) comes from UDP port 3871, destined for the TFTP service (port 69). An ICMPv4 Port Unreachable message is immediately returned (packet 2), but the TFTP client appears to ignore the mes- sage, sending another UDP datagram right away. This continues immediately six more times. After waiting about another 8s, the client tries one last time and finally gives up.</p>
+<p>Note that the ICMPv4 messages are sent without any port number designa- tion, and each 16-byte TFTP packet is from a specific port (3871) and to a specific port (TFTP, equal to 69). The number 16 at the end of each TFTP read request (RRQ) line is the length of the data in the UDP datagram. In this example, 16 is the sum of the TFTP’s 2-byte opcode, the 5-byte null-terminated name /foo, and the 9-byte null-terminated string netascii. The full ICMPv4 Unreachable message is depicted in Figure 8-5. It is 52 bytes long (not including the IPv4 header): 4 bytes for the basic ICMPv4 header, followed by 4 unused bytes, the 20-byte offending IPv4 header, 8 bytes for the UDP header, and finally the remaining 16 bytes from the original tftp application request (4 + 4 + 20 + 8 + 16 = 52).</p>
+<p><img src="a-8403409.png" alt="a"></p>
+<h5 id="213-redirect-icmpv4-type-5">2.1.3. Redirect (ICMPv4 Type 5)</h5>
+<p>If a router receives a datagram from a host and can determine that it is not the cor- rect next hop for the host to have used to deliver the datagram to its destination, the router sends a Redirect message to the host <strong>and</strong> sends the datagram on to the correct router (or host). That is, if it can determine that there is a better next hop than itself for the given datagram, it redirects the host to update its forwarding table so that <strong>future traffic</strong> for the same destination will be directed toward the new node.</p>
+<p>In Figure 8-7, a network segment has a host and two routers, R1 and R2. When the host sends a datagram incorrectly through router R2, R2 responds by sending the Redirect message to the host, while forwarding the datagram to R1. Although hosts may be configured to update their forwarding tables based on ICMP redi- rects, routers are discouraged from doing so under the assumption that rout- ers should already know the best next-hop nodes for all reachable destinations because they are using dynamic routing protocols.</p>
+<p><img src="a-8409179.png" alt="a"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-06-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/inwk/">inwk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/inwk/proto/traceroute/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Ping &amp; Traceroute Command - 课堂笔记</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/js/basics/prototypal-inheritance/">
+            <span class="next-text nav-default">JS 继承之 Prototype Chain 的意义</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

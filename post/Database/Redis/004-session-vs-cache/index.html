@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Caching &amp; Session Management - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Session Session is a server-side state management technique that allows the storage and retrieval of user-specific data across multiple requests. It provides a way to maintain state for individual users during their interaction with a web application. Here are some key points about session:
+Session data is stored on the server, usually in memory or in a session store. Each user is assigned a unique session ID, typically stored as a cookie or in the URL." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/database/redis/004-session-vs-cache/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Caching &amp; Session Management" />
+<meta property="og:description" content="1. Session Session is a server-side state management technique that allows the storage and retrieval of user-specific data across multiple requests. It provides a way to maintain state for individual users during their interaction with a web application. Here are some key points about session:
+Session data is stored on the server, usually in memory or in a session store. Each user is assigned a unique session ID, typically stored as a cookie or in the URL." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/database/redis/004-session-vs-cache/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-02T09:37:58+00:00" />
+<meta property="article:modified_time" content="2023-10-02T09:37:58+00:00" />
+
+<meta itemprop="name" content="Caching &amp; Session Management">
+<meta itemprop="description" content="1. Session Session is a server-side state management technique that allows the storage and retrieval of user-specific data across multiple requests. It provides a way to maintain state for individual users during their interaction with a web application. Here are some key points about session:
+Session data is stored on the server, usually in memory or in a session store. Each user is assigned a unique session ID, typically stored as a cookie or in the URL."><meta itemprop="datePublished" content="2023-10-02T09:37:58+00:00" />
+<meta itemprop="dateModified" content="2023-10-02T09:37:58+00:00" />
+<meta itemprop="wordCount" content="1214">
+<meta itemprop="keywords" content="database,redis," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Caching &amp; Session Management"/>
+<meta name="twitter:description" content="1. Session Session is a server-side state management technique that allows the storage and retrieval of user-specific data across multiple requests. It provides a way to maintain state for individual users during their interaction with a web application. Here are some key points about session:
+Session data is stored on the server, usually in memory or in a session store. Each user is assigned a unique session ID, typically stored as a cookie or in the URL."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Caching &amp; Session Management</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-10-02 </span>
+        <div class="post-category">
+            <a href="/categories/database/"> database </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-session">1. Session</a></li>
+        <li><a href="#2-caching">2. Caching</a></li>
+        <li><a href="#3-additional-session-management">3. Additional: session management</a>
+          <ul>
+            <li><a href="#31-sticky-sessions-with-local-session-caching">3.1. Sticky Sessions with Local Session Caching</a></li>
+            <li><a href="#32-distributed-session-management">3.2. Distributed Session Management</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-conclusion">4. Conclusion</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-session">1. Session</h2>
+<p>Session is a server-side state management technique that allows the storage and retrieval of user-specific data across multiple requests. It provides a way to maintain state for individual users during their interaction with a web application. Here are some key points about session:</p>
+<ol>
+<li>Session data is stored on the server, usually in memory or in a session store.</li>
+<li>Each user is assigned a unique session ID, typically stored as a cookie or in the URL.</li>
+<li>Session data is private to each user and cannot be accessed by other users.</li>
+<li>Session data can be accessed and modified throughout the user&rsquo;s session on any page of the application.</li>
+<li>Session data is available only as long as the session is active. It expires after a certain period of inactivity or can be explicitly cleared.</li>
+</ol>
+<p>Sessions are commonly used to store user-specific information such as <strong>user&rsquo;s authorization state, user&rsquo;s privilege</strong>, user preferences, and temporary data needed during the user&rsquo;s session. And recently, I&rsquo;m writing a chatgpt bot which needs remember user&rsquo;s chat history, this is just a temporary data which need isolated with each user and not that important, session is perfect to store it.</p>
+<p>Learn more: <a href="https://aws.amazon.com/caching/session-management/">Session Management - AWS</a></p>
+<h2 id="2-caching">2. Caching</h2>
+<p>Caching is a mechanism used to temporarily store frequently accessed or expensive-to-compute data in order to improve application performance and reduce database or server load. It involves storing data in memory or another fast-access storage location. Here are some key points about caching:</p>
+<ol>
+<li>Cached data is stored on the server or in a distributed cache, such as Redis or Memcached.</li>
+<li>Cached data is typically shared among all users of an application and can be accessed across multiple requests.</li>
+<li>Cached data is often used to store static or infrequently changing data that is expensive to compute or retrieve from a database.</li>
+<li>Cached data can be set to expire after a certain period or manually invalidated to ensure fresh data is retrieved when necessary.</li>
+</ol>
+<p>Caching can help optimize application performance by reducing the need to fetch data from slower data sources, such as databases or external APIs. <strong>It is commonly used to cache database query results, rendered views, frequently accessed configuration settings,</strong> or other expensive computations.</p>
+<p>Don’t use cache to store anything you can’t regenerate. Cache can be deleted in the middle of the session, or even in the middle of a non-atomic operation. Learn more: <a href="https://www.v2ex.com/t/109856">https://www.v2ex.com/t/109856</a></p>
+<h2 id="3-additional-session-management">3. Additional: session management</h2>
+<p>There are various ways to manage user sessions including s<strong>toring those sessions locally</strong> to the node responding to the HTTP request <strong>or</strong> designating a layer in your architecture which can <strong>store those sessions in a scalable and robust manner</strong>. Common approaches used include utilizing Sticky sessions or using a Distributed Cache for your session management.</p>
+<h3 id="31-sticky-sessions-with-local-session-caching">3.1. Sticky Sessions with Local Session Caching</h3>
+<p>Sticky sessions, also known as <em>session affinity</em>, allow you to route a site user to the particular web server that is managing that individual user’s session. The session’s validity can be determined by a number of methods, including a client-side cookies or via configurable duration parameters that can be set at the load balancer which routes requests to the web servers.</p>
+<p>Some advantages with utilizing sticky sessions are that it’s cost effective due to the fact you are storing sessions on the same web servers running your applications and that retrieval of those sessions is generally fast because it eliminates network latency. A drawback for using storing sessions on an individual node is that in the event of a failure, you are likely to lose the sessions that were resident on the failed node. In addition, in the event the number of your web servers change, for example a scale-up scenario, it’s possible that the traffic may be unequally spread across the web servers as active sessions may exist on particular servers. If not mitigated properly, this can hinder the scalability of your applications.</p>
+<h3 id="32-distributed-session-management">3.2. Distributed Session Management</h3>
+<p>In order to address scalability and to provide a shared data storage for sessions that can be accessible from any individual web server, you can abstract the HTTP sessions from the web servers themselves. A common solution to for this is to leverage an <a href="https://aws.amazon.com/elasticache/">In-Memory Key/Value store</a> such as <a href="https://aws.amazon.com/redis/">Redis</a> and <a href="https://aws.amazon.com/memcached/">Memcached</a>.</p>
+<p>While Key/Value data stores are known to be extremely fast and provide sub-millisecond latency, the added network latency and added cost are the drawbacks. An added benefit of leveraging Key/Value stores is that they can also be utilized to cache any data, not just HTTP sessions, which can help boost the overall performance of your applications.</p>
+<p>A consideration when choosing a distributed cache for session management is determining how many nodes may be needed in order to manage the user sessions. Generally speaking, this decision can be determined by how much traffic is expected and/or how much risk is acceptable. In a distributed session cache, the sessions are divided by the number of nodes in the cache cluster. In the event of a failure, only the sessions that are stored on the failed node are affected. If reducing risk is more important than cost, adding additional nodes to further reduce the percent of stored sessions on each node may be ideal even when fewer nodes are sufficient.</p>
+<p>Another consideration may be whether or not the sessions need to be replicated or not. Some key/value stores offer replication via read replicas. In the event of a node failure, the sessions would not be entirely lost. Whether replica nodes are important in your individual architecture may inform as to which key/value store should be used. <a href="https://aws.amazon.com/elasticache/">ElastiCache</a> offerings for In-Memory key/value stores include <a href="https://aws.amazon.com/elasticache/redis/">ElastiCache for Redis</a>, which can support replication, and <a href="https://aws.amazon.com/elasticache/memcached/">ElastiCache for Memcached</a> which does not support replication.</p>
+<p>There are a number of ways to store sessions in Key/Value stores. Many application frameworks provide libraries which can abstract some of the integration plumbing required to GET/SET those sessions in memory. In other cases, you can write your own session handler to persist the sessions directly.</p>
+<p>Source: <a href="https://aws.amazon.com/caching/session-management/">https://aws.amazon.com/caching/session-management/</a></p>
+<h2 id="4-conclusion">4. Conclusion</h2>
+<p>Sessions are used to store user-specific data across requests, while caching is used to store frequently accessed or expensive-to-compute data to improve application performance, <strong>they’re just unrelated things</strong>. Both mechanisms have their own specific use cases and can be used together to enhance the functionality and performance of application.</p>
+<p>Session data could be <a href="https://aws.amazon.com/caching/session-management/">stored in many places</a>, using a MySQL database for example might be acceptable if that is your existing backend. Or you can store session in a central cache server, such as Redis. As you can see, cache is just a way to store data, session can be cached with Redis server or cached just in loacl memory, cache and session is like the car and high way, they are not same thing. But you should note that adding a cache layer will make your application complexed:</p>
+<blockquote>
+<p>“The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places and at the wrong times; <strong>premature optimization</strong> is the root of all evil (or at least most of it) in programming.” - <a href="https://en.wikipedia.org/wiki/Donald_Knuth">Donald Knuth</a></p>
+</blockquote>
+<p>Therefore, premature optimization is always a disaster. It&rsquo;s not too late to add caching when actual bottlenecks are discovered after deployment or users&rsquo; feedback.</p>
+<p>Reference: <a href="https://net-informations.com/faq/asp/caching.htm">What is the Difference between session and caching?</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-10-02
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/database/">database</a>
+          <a href="/tags/redis/">redis</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/database/mysql/002-index-primary-key/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Index and Primary Key</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/database/redis/003-caching/">
+            <span class="next-text nav-default">Caching Strategies and What should be Cached</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

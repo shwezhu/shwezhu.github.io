@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>排查实验室电脑无法访问一些网站 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时, 首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/bugs/008-computer-lab-cannot-access-youtube/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="排查实验室电脑无法访问一些网站" />
+<meta property="og:description" content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时, 首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/bugs/008-computer-lab-cannot-access-youtube/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-11-22T21:43:22+00:00" />
+<meta property="article:modified_time" content="2023-11-22T21:43:22+00:00" />
+
+<meta itemprop="name" content="排查实验室电脑无法访问一些网站">
+<meta itemprop="description" content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时, 首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需"><meta itemprop="datePublished" content="2023-11-22T21:43:22+00:00" />
+<meta itemprop="dateModified" content="2023-11-22T21:43:22+00:00" />
+<meta itemprop="wordCount" content="701">
+<meta itemprop="keywords" content="bugs,networking," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="排查实验室电脑无法访问一些网站"/>
+<meta name="twitter:description" content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时, 首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">排查实验室电脑无法访问一些网站</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-11-22 </span>
+        <div class="post-category">
+            <a href="/categories/bugs/"> bugs </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时,</p>
+<p>首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需要管理员权限, 失败</p>
+<p>后来无聊想着看看解析出来youtube.com的实际ip是什么, 使用 nklookup 查了一下, (大概这样, 没在实验室)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">❯ nslookup youtube.com
+</span></span><span class="line"><span class="cl">Server:		192.168.2.1
+</span></span><span class="line"><span class="cl">Address:	192.168.100.1#53
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Non-authoritative answer:
+</span></span><span class="line"><span class="cl">Name:	youtube.com
+</span></span><span class="line"><span class="cl">Address: 142.251.40.206
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>于是访问 <code>142.251.40.206</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">❯ wget -O- 142.251.40.206
+</span></span><span class="line"><span class="cl">--2023-11-22 22:23:53--  http://142.251.40.206/
+</span></span><span class="line"><span class="cl">Connecting to 142.251.40.206:80... connected.
+</span></span><span class="line"><span class="cl">HTTP request sent, awaiting response... <span class="m">301</span> Moved Permanently
+</span></span><span class="line"><span class="cl">Location: http://www.google.com/ <span class="o">[</span>following<span class="o">]</span>
+</span></span><span class="line"><span class="cl">--2023-11-22 22:23:53--  http://www.google.com/
+</span></span><span class="line"><span class="cl">Resolving www.google.com <span class="o">(</span>www.google.com<span class="o">)</span>... 142.250.80.36
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到被重定向到了谷歌页面, 当时在实验室也是这种情况, 查了一下, 这确实是正确的地址, 只是<a href="https://stackoverflow.com/questions/5142030/why-does-the-resolved-ip-of-youtube-com-direct-to-google-com">谷歌给重定向</a>了, 所以不是DNS的问题, 那应该就是防火墙的问题, 下次去实验室再看看,</p>
+<p>另外上面 nskookup 返回的是 <a href="https://davidzhu.xyz/post/networking/006-commands-in-network/">Non-authoritative answer</a>, 意思是 ip 地址不是由该域名的 NS 服务器返回的, 而是从 DNS cache获取的, 所以 Non-authoritative answer 并不是代表不安全或者不可靠, 但可能不是最新的, 比如你的域名刚更新了 NS server, 加了层 Cloudflare 的 https 加密代理, 即 <code>your_domain-&gt;proxy-ip-&gt;your_ip</code>, 而学校的 DNS cache 里缓存的却是你之前的 ip, 即 <code>your_domain -&gt; your_ip</code>, 那代理就不会生效,</p>
+<hr>
+<p>去实验室查了一下我域名的NS, 竟然 time-out:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">c: \Users\student&gt;nslookup shaowenzhu.top
+</span></span><span class="line"><span class="cl">Server: Unknown
+</span></span><span class="line"><span class="cl">Address:192.168.102.1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">DNS request timed out.
+</span></span><span class="line"><span class="cl">timeout was 2 seconds.
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查了一下, 看到了一个与我<a href="https://superuser.com/questions/1303128/why-does-nslookup-return-dns-request-timed-out">相似的问题</a>:</p>
+<p><em>DNS request timed out</em> means NSLookup submitted the query to the DNS server, but did not get a response.</p>
+<p>It&rsquo;s possible the DNS server you queried was having a problem and couldn&rsquo;t reply. Network errors could be to blame as well.</p>
+<p>However, given that you did this from a &ldquo;public computer,&rdquo; the most likely explanation is that <strong>your DNS lookup was blocked by the network&rsquo;s firewall</strong>. It&rsquo;s common for network administrators to require that DNS lookups originating from nodes on the internal network be done using approved DNS servers. These can either be DNS servers under the administrator&rsquo;s control, or specific public DNS servers selected by the admin.</p>
+<p>突然想到 DNS 缓存在 Chrome 上也有备份, 于是去查了一下是不是可以修改 DNS server 在 Chrome 上, (在电脑上没有管理员权限),</p>
+<p>真的有, 具体参考(privacy-security -&gt; Advanced -&gt; Use Secure DNS): <a href="https://www.minitool.com/news/how-to-change-dns-server-in-google-chrome.html">How to Change DNS Server in Google Chrome on Computer and Mobile? - MiniTool</a></p>
+<p>然后可以在Chrome上通过域名访问我的网站了, 终于不用输入 IP 了每次, nnd</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-11-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/bugs/">bugs</a>
+          <a href="/tags/networking/">networking</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/python/basics/003-yield-generator/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Yeild &amp; Generator Python</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/http/009-url-encoding/">
+            <span class="next-text nav-default">URL Encoding (Percent Encoding)</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

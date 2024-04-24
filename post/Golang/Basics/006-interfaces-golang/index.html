@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Interfaces in Golang (and Methods Receivers) - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Pointers to Interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &amp;ldquo;type.&amp;rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Interfaces in Golang (and Methods Receivers)" />
+<meta property="og:description" content="1. Pointers to Interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &ldquo;type.&rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/golang/basics/006-interfaces-golang/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-09-02T19:58:32+00:00" />
+<meta property="article:modified_time" content="2023-09-02T19:58:32+00:00" />
+<meta itemprop="name" content="Interfaces in Golang (and Methods Receivers)">
+<meta itemprop="description" content="1. Pointers to Interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &ldquo;type.&rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If"><meta itemprop="datePublished" content="2023-09-02T19:58:32+00:00" />
+<meta itemprop="dateModified" content="2023-09-02T19:58:32+00:00" />
+<meta itemprop="wordCount" content="1856">
+<meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Interfaces in Golang (and Methods Receivers)"/>
+<meta name="twitter:description" content="1. Pointers to Interfaces You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer. An interface is two fields: A pointer to some type-specific information. You can think of this as &ldquo;type.&rdquo; Data pointer. If the data stored is a pointer, it’s stored directly. If"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Interfaces in Golang (and Methods Receivers)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-09-02 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/basics/"> basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-pointers-to-interfaces">1. Pointers to Interfaces</a></li>
+        <li><a href="#2-an-interesting-question">2. An Interesting Question</a></li>
+        <li><a href="#3-first-try---type-admin-isnt-adimin">3. First Try - Type <code>Admin</code> isn&rsquo;t <code>*Adimin</code></a></li>
+        <li><a href="#4-answer">4. Answer</a></li>
+        <li><a href="#5-polymorphism">5. Polymorphism</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-pointers-to-interfaces">1. Pointers to Interfaces</h2>
+<p>You almost never need a pointer to an interface. You should be passing interfaces as values—the underlying data can still be a pointer.</p>
+<p>An interface is two fields:</p>
+<ol>
+<li>A pointer to some type-specific information. You can think of this as &ldquo;type.&rdquo;</li>
+<li>Data pointer. If the data stored is a pointer, it’s stored directly. If the data stored is a value, then a pointer to the value is stored.</li>
+</ol>
+<p>If you want interface methods to modify the underlying data, you must use a pointer.</p>
+<p>Sources: <a href="https://github.com/uber-go/guide/blob/master/style.md#pointers-to-interfaces">https://github.com/uber-go/guide/blob/master/style.md#pointers-to-interfaces</a></p>
+<p>Under the hood, interface values can be thought of as a tuple of a value and a concrete type:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">(value, type)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Calling a method on an interface value executes the method of the same name on its underlying type.</strong></p>
+<p>You should know that value in golang is similar to object in other language.</p>
+<p>Source: <a href="https://go.dev/tour/methods/11">https://go.dev/tour/methods/11</a></p>
+<h2 id="2-an-interesting-question">2. An Interesting Question</h2>
+<p>I found an <a href="https://stackoverflow.com/questions/37851500/how-to-copy-an-interface-value-in-go/37851764#37851764">interesting question</a> on stackoverflow, and find that interface in golang is different from other languages, I&rsquo;ll show you. This is the backgroud code:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">Name</span><span class="p">()</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">SetName</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Admin</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">name</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><span class="nx">Admin</span><span class="p">)</span> <span class="nf">Name</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">name</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><span class="nx">Admin</span><span class="p">)</span> <span class="nf">SetName</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">a</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span> <span class="nx">name</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>OP tries to copy <code>user1</code>&rsquo;s value below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">user1</span> <span class="nx">User</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">user1</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">Admin</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span><span class="s">&#34;user1&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;User1&#39;s name: %s\n&#34;</span><span class="p">,</span> <span class="nx">user1</span><span class="p">.</span><span class="nf">Name</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">user2</span> <span class="nx">User</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">user2</span> <span class="p">=</span> <span class="nx">user1</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">user2</span><span class="p">.</span><span class="nf">SetName</span><span class="p">(</span><span class="s">&#34;user2&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;User2&#39;s name: %s\n&#34;</span><span class="p">,</span> <span class="nx">user2</span><span class="p">.</span><span class="nf">Name</span><span class="p">())</span> <span class="c1">// print: &#34;user2&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;User1&#39;s name: %s\n&#34;</span><span class="p">,</span> <span class="nx">user1</span><span class="p">.</span><span class="nf">Name</span><span class="p">())</span> <span class="c1">// print: &#34;user2&#34; too, How to make the user1 name does not change？
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-first-try---type-admin-isnt-adimin">3. First Try - Type <code>Admin</code> isn&rsquo;t <code>*Adimin</code></h2>
+<p>Because golang everything pass by value, even assignment will make a copy, therefore, at first I tried like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">user1</span> <span class="nx">User</span>
+</span></span><span class="line"><span class="cl"><span class="nx">user1</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">Admin</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span><span class="s">&#34;user1&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;User1&#39;s name: %s\n&#34;</span><span class="p">,</span> <span class="nx">user1</span><span class="p">.</span><span class="nf">Name</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">user2</span> <span class="nx">User</span>
+</span></span><span class="line"><span class="cl"><span class="nx">user2</span> <span class="p">=</span> <span class="o">*</span><span class="nx">user1</span> <span class="c1">// got an error: Invalid indirect of &#39;user1&#39; (type &#39;User&#39;)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>This erorr says that user&rsquo;s type is <code>User</code> not <code>*User</code>, so we cannot dereference it. This reminds me that why <code>user1 = &amp;Admin{name:&quot;user1&quot;}</code> doesn&rsquo;t cause an error?</p>
+<p>Shouldn&rsquo;t the code be <code>user1 = Admin{name:&quot;user1&quot;}</code>, because <code>Admin</code> implements interface <code>User</code>. But this cause an error aggin:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">user1</span> <span class="nx">User</span>
+</span></span><span class="line"><span class="cl"><span class="nx">user1</span> <span class="p">=</span> <span class="nx">Admin</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span><span class="s">&#34;user1&#34;</span><span class="p">}</span> 
+</span></span><span class="line"><span class="cl"><span class="c1">// error: Cannot use &#39;Admin{name:&#34;user1&#34;}&#39; (type Admin) as the type User Type does not implement &#39;User&#39; as the &#39;Name&#39; method has a pointer receiver. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>This error is a little confusing, actually it says that type <code>Admin</code> doesn&rsquo;t implement interface <code>User</code>. You may wonder, you lied, <code>Admin</code> has implemented all methods of <code>User</code>, but wait, really?</p>
+<p>In fact, it&rsquo;s not type <code>Admin</code> implementing interface <code>User</code> but type <code>*Admin</code>, check the definition of <code>Name()</code> and <code>SetName()</code> above, both of these two method have a pointer receiver, not a value receiver. This means <strong>the <code>Name()</code> and <code>GetName()</code> method are in the <a href="https://golang.org/ref/spec#Method_sets">method set</a> of the <code>*Admin</code> type, but not in that of <code>Admin</code>.</strong></p>
+<p>Therefore, it&rsquo;s easy to understand why we can do:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">user1</span> <span class="nx">User</span>
+</span></span><span class="line"><span class="cl"><span class="nx">user1</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">Admin</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span><span class="s">&#34;user1&#34;</span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>we cannot do:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">user1</span> <span class="nx">User</span>
+</span></span><span class="line"><span class="cl"><span class="nx">user1</span> <span class="p">=</span> <span class="nx">Admin</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span><span class="s">&#34;user1&#34;</span><span class="p">}</span> <span class="c1">// error
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>If you change the receiver to value receiver in <code>Name()</code> and <code>GetName()</code>, then both <code>user1 = &amp;Admin{name:&quot;user1&quot;}</code> and  <code>user1 = Admin{name:&quot;user1&quot;}</code> will work fine.</p>
+<p>This is strange we&rsquo;ve talked that <code>*Admin</code> is not <code>Admin</code>, why <code>user1 = &amp;Admin{name:&quot;user1&quot;}</code> works when we change method receiver to value receiver?</p>
+<p>This is not the type problem, even above, the error is not above the type, it&rsquo;s all about the <a href="https://golang.org/ref/spec#Method_sets">method set</a>, <strong>if a type&rsquo;s method set has all methods of a interface, we say that type implements that interface</strong>:</p>
+<ul>
+<li>The method set of a <a href="https://go.dev/ref/spec#Type_definitions">defined type</a> <code>T</code> consists of all <a href="https://go.dev/ref/spec#Method_declarations">methods</a> declared with receiver type <code>T</code>.</li>
+<li>The method set of a pointer to a defined type <code>T</code> (where <code>T</code> is neither a pointer nor an interface) is the set of all methods declared with receiver <code>*T</code> or <code>T</code>.</li>
+</ul>
+<p>You can see the second point, the method set of a ponter type <code>T</code> is the set of all methods declared with receiver <code>*T</code> and <code>T</code>. Therefore, when we make the method receiver of <code>Name()</code> and <code>SetName()</code> into value receiver,  <code>Name()</code> and <code>SetName()</code> are in the method set of <code>*Admin</code> too.</p>
+<p>enlightened by:</p>
+<p><a href="https://stackoverflow.com/questions/37851500/how-to-copy-an-interface-value-in-go/37851764#37851764">pointers - How to copy an interface value in Go? - Stack Overflow </a></p>
+<p><a href="https://stackoverflow.com/questions/53701458/pointer-receiver-and-value-receiver-on-interfaces-in-golang">go - Pointer Receiver and Value Receiver on Interfaces in Golang - Stack Overflow</a></p>
+<h2 id="4-answer">4. Answer</h2>
+<p>Now, we know what&rsquo;s happening here:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">user1</span> <span class="nx">User</span>
+</span></span><span class="line"><span class="cl"><span class="nx">user1</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">Admin</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span><span class="s">&#34;user1&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;User1&#39;s name: %s\n&#34;</span><span class="p">,</span> <span class="nx">user1</span><span class="p">.</span><span class="nf">Name</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">user2</span> <span class="nx">User</span>
+</span></span><span class="line"><span class="cl"><span class="nx">user2</span> <span class="p">=</span> <span class="o">*</span><span class="nx">user1</span> <span class="c1">// error: Invalid indirect of &#39;user1&#39; (type &#39;User&#39;)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then there is an <a href="https://stackoverflow.com/a/37851764/16317008">great explanation</a>:</p>
+<p>The problem here is that your <code>user1</code> variable (which is of type <code>User</code>) holds a <em>pointer</em> to an <code>Admin</code> struct.</p>
+<p>When you assign <code>user1</code> to another variable (of type <code>User</code>), the interface value which is a pair of the dynamic type and value <code>(value;type)</code> will be copied - so the pointer will be copied which will point to the same <code>Admin</code> struct. So you only have one <code>Admin</code> struct value, both <code>user1</code> and <code>user2</code> refer (point) to this. Changing it through any of the interface values changes the one and only value.</p>
+<p><strong>To make <code>user1</code> and <code>user2</code> distinct, you need 2 &ldquo;underlying&rdquo; <code>Admin</code> structs.</strong> (Because user1 and user2 have pair (value; type) in side, the value is a pointer to a struct value)</p>
+<p>One way is to <a href="https://golang.org/ref/spec#Type_assertions">type assert</a> the value in the <code>user1</code> interface value, and make a copy of that struct, and wrap its address in another <code>User</code> value:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">user2</span> <span class="nx">User</span>
+</span></span><span class="line"><span class="cl"><span class="nx">padmin</span> <span class="o">:=</span> <span class="nx">user1</span><span class="p">.(</span><span class="o">*</span><span class="nx">Admin</span><span class="p">)</span> <span class="c1">// Obtain *Admin pointer
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">admin2</span> <span class="o">:=</span> <span class="o">*</span><span class="nx">padmin</span>        <span class="c1">// Make a copy of the Admin struct
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">user2</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">admin2</span>          <span class="c1">// Wrap its address in another User
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">user2</span><span class="p">.</span><span class="nf">SetName</span><span class="p">(</span><span class="s">&#34;user2&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><em><strong>Using reflection:</strong></em></p>
+<p>If we want a &ldquo;general&rdquo; solution (not just one that works with <code>*Admin</code>), we can use reflection (<a href="https://golang.org/pkg/reflect/"><code>reflect</code></a> package).</p>
+<p>Learn more: <a href="https://stackoverflow.com/a/37851764/16317008">https://stackoverflow.com/a/37851764/16317008</a></p>
+<h2 id="5-polymorphism">5. Polymorphism</h2>
+<p>Go does not have classes, however, <strong>you can define methods on types</strong>. A method is a function with a special <em>receiver</em> argument.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// displaySalary() method has Employee as the receiver type
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="nx">Employee</span><span class="p">)</span> <span class="nf">displaySalary</span><span class="p">()</span> <span class="p">{</span>  
+</span></span><span class="line"><span class="cl">    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Salary of %s is %d&#34;</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">salary</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>  
+</span></span><span class="line"><span class="cl">    <span class="nx">emp1</span> <span class="o">:=</span> <span class="nx">Employee</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">name</span><span class="p">:</span>     <span class="s">&#34;Sam Adolf&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">salary</span><span class="p">:</span>   <span class="mi">5000</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">	 <span class="c1">// Calling displaySalary() method of Employee type
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	 <span class="nx">emp1</span><span class="p">.</span><span class="nf">displaySalary</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Methods就是个函数, 只不过多定义了一个receiver, 我们可以用函数来实现相同效果, 不仅会想Go设计Methods干嘛呢, 既然函数也可以实现, 那这不是多此一举吗?</p>
+<p>平时的面向对象语言有重载的概念, 即相同方法名可以有不同的参数, 但是Go的function却不行, 比如我们想计算正方形和圆形的面积, 那我们就得设计两个不同的functions,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Rectangle</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">length</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">width</span>  <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Circle</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">radius</span> <span class="kt">float64</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">RectangleArea</span><span class="p">(</span><span class="nx">r</span> <span class="nx">Rectangle</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">r</span><span class="p">.</span><span class="nx">length</span> <span class="o">*</span> <span class="nx">r</span><span class="p">.</span><span class="nx">width</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">CircleArea</span><span class="p">(</span><span class="nx">c</span> <span class="nx">Circle</span><span class="p">)</span> <span class="kt">float64</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">math</span><span class="p">.</span><span class="nx">Pi</span> <span class="o">*</span> <span class="nx">c</span><span class="p">.</span><span class="nx">radius</span> <span class="o">*</span> <span class="nx">c</span><span class="p">.</span><span class="nx">radius</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在Java里我们可以使这两个形状都继承一个Interface, 然后通过多态和方法重载来简单调用同一个方法<code>Area</code>来求两个形状的面积, 而不是分别调用不同的函数, 如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">interface</span> <span class="nc">Shape</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="nf">Area</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Rectangle</span> <span class="kd">implements</span> <span class="n">Shape</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">6</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">Area</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">length</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Circle</span> <span class="kd">implements</span> <span class="n">Shape</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">Area</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">Math</span><span class="o">.</span><span class="na">PI</span> <span class="o">*</span> <span class="n">radius</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="o">[]</span><span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Shape</span><span class="o">&gt;</span> <span class="n">shapes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">shapes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Rectangle</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">        <span class="n">shapes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Circle</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="o">(</span><span class="n">Shape</span> <span class="n">shape</span> <span class="o">:</span> <span class="n">shapes</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">shape</span><span class="o">.</span><span class="na">Area</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>通过 Golang 的 Interface 和 Methods 可实现上面的效果, Go 的接口并不需要 Java 那样显示 <code>implement</code>, 你直接定义个同名的 method, 然后在 <em>receiver argument</em> 指定对应类型, 就可以说这个类型实现了那个接口,  然后结合interface和methods, 我们就可以实现上面 Java 的代码啦:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;math&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Shape</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">area</span><span class="p">()</span> <span class="kt">float64</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">rect</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">width</span><span class="p">,</span> <span class="nx">height</span> <span class="kt">float64</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">circle</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">radius</span> <span class="kt">float64</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 等于 Rect 实现了Interface Shape, 不用显示 declare
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="nx">rect</span><span class="p">)</span> <span class="nf">area</span><span class="p">()</span> <span class="kt">float64</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">r</span><span class="p">.</span><span class="nx">width</span> <span class="o">*</span> <span class="nx">r</span><span class="p">.</span><span class="nx">height</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="nx">circle</span><span class="p">)</span> <span class="nf">area</span><span class="p">()</span> <span class="kt">float64</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">math</span><span class="p">.</span><span class="nx">Pi</span> <span class="o">*</span> <span class="nx">c</span><span class="p">.</span><span class="nx">radius</span> <span class="o">*</span> <span class="nx">c</span><span class="p">.</span><span class="nx">radius</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">shapes</span> <span class="p">[]</span><span class="nx">Shape</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">shapes</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">shapes</span><span class="p">,</span> <span class="nx">rect</span><span class="p">{</span><span class="nx">width</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="nx">height</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span> <span class="nx">circle</span><span class="p">{</span><span class="nx">radius</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">shape</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">shapes</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">shape</span><span class="p">.</span><span class="nf">area</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Here we saying type <code>rect</code> implements interface <code>Shape</code>  is not accurate, this is java things. We should say all methods of interface <code>Shape</code> are in the method set of type <code>rect</code>, and calling a method on an interface value executes the method of the same name on its underlying type. Therefore, we say type <code>rect</code> implements interface <code>Shape</code>.</p>
+<p>参考:</p>
+<ul>
+<li><a href="https://go.dev/tour/methods/14">A Tour of Go</a></li>
+<li><a href="https://gobyexample.com/interfaces">Go by Example: Interfaces</a></li>
+<li><a href="https://www.golangprograms.com/how-to-iterate-over-a-slice-in-golang.html">How to Iterate Over a Slice in Golang? - golangprograms.com</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-09-02
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/golang/basics/017-interface-value/">
+            <span class="next-text nav-default">Interface Value - Golang</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

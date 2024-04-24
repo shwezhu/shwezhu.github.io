@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Test &amp; Benchmark - Go - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Benchmark 1.1. b.N loop Functions of the form
+1 func BenchmarkXxx(*testing.B) are considered benchmarks, and are executed by the go test command when its -bench flag is provided. Benchmarks are run sequentially.
+A sample benchmark function looks like this:
+1 2 3 4 5 func BenchmarkRandInt(b *testing.B) { for i := 0; i &amp;lt; b.N; i&#43;&#43; { rand.Int() } } The benchmark function must run the target code b.N times." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/golang/advance/009-benchmark-test/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Test &amp; Benchmark - Go" />
+<meta property="og:description" content="1. Benchmark 1.1. b.N loop Functions of the form
+1 func BenchmarkXxx(*testing.B) are considered benchmarks, and are executed by the go test command when its -bench flag is provided. Benchmarks are run sequentially.
+A sample benchmark function looks like this:
+1 2 3 4 5 func BenchmarkRandInt(b *testing.B) { for i := 0; i &lt; b.N; i&#43;&#43; { rand.Int() } } The benchmark function must run the target code b.N times." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/golang/advance/009-benchmark-test/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-09-30T09:58:56+00:00" />
+<meta property="article:modified_time" content="2023-09-30T09:58:56+00:00" />
+
+<meta itemprop="name" content="Test &amp; Benchmark - Go">
+<meta itemprop="description" content="1. Benchmark 1.1. b.N loop Functions of the form
+1 func BenchmarkXxx(*testing.B) are considered benchmarks, and are executed by the go test command when its -bench flag is provided. Benchmarks are run sequentially.
+A sample benchmark function looks like this:
+1 2 3 4 5 func BenchmarkRandInt(b *testing.B) { for i := 0; i &lt; b.N; i&#43;&#43; { rand.Int() } } The benchmark function must run the target code b.N times."><meta itemprop="datePublished" content="2023-09-30T09:58:56+00:00" />
+<meta itemprop="dateModified" content="2023-09-30T09:58:56+00:00" />
+<meta itemprop="wordCount" content="552">
+<meta itemprop="keywords" content="golang,unit test," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Test &amp; Benchmark - Go"/>
+<meta name="twitter:description" content="1. Benchmark 1.1. b.N loop Functions of the form
+1 func BenchmarkXxx(*testing.B) are considered benchmarks, and are executed by the go test command when its -bench flag is provided. Benchmarks are run sequentially.
+A sample benchmark function looks like this:
+1 2 3 4 5 func BenchmarkRandInt(b *testing.B) { for i := 0; i &lt; b.N; i&#43;&#43; { rand.Int() } } The benchmark function must run the target code b.N times."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Test &amp; Benchmark - Go</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-09-30 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> golang </a>
+            <a href="/categories/practice/"> practice </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-benchmark">1. Benchmark</a>
+          <ul>
+            <li><a href="#11-bn-loop">1.1. <code>b.N</code> loop</a></li>
+            <li><a href="#12-ignore-expensive-setup-with-timer">1.2. Ignore expensive setup with timer</a></li>
+            <li><a href="#13-runparallel">1.3. <code>RunParallel()</code></a></li>
+            <li><a href="#14-skip-test">1.4. Skip test</a></li>
+            <li><a href="#15-a-note-on-compiler-optimisations">1.5. A note on compiler optimisations</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-benchmark">1. Benchmark</h2>
+<h3 id="11-bn-loop">1.1. <code>b.N</code> loop</h3>
+<p>Functions of the form</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="k">func</span> <span class="n">BenchmarkXxx</span><span class="p">(</span><span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">B</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>are considered benchmarks, and are executed by the <code>go test</code> command when its <code>-bench</code> flag is provided. Benchmarks are run sequentially.</p>
+<p>A sample benchmark function looks like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">BenchmarkRandInt</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">rand</span><span class="p">.</span><span class="nf">Int</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The benchmark function must run the target code b.N times. During benchmark execution, <strong>b.N is adjusted until the benchmark function lasts long enough to be timed reliably</strong>. The output</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">BenchmarkRandInt-8   	68453040	        17.8 ns/op
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>means that the loop ran 68453040 times at a speed of 17.8 ns per loop.</p>
+<h3 id="12-ignore-expensive-setup-with-timer">1.2. Ignore expensive setup with timer</h3>
+<p>If a benchmark needs some <strong>expensive setup before running</strong>, the timer may be reset:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">BenchmarkBigLen</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">big</span> <span class="o">:=</span> <span class="nf">prepare</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// note this will reset the timer
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">b</span><span class="p">.</span><span class="nf">ResetTimer</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">big</span><span class="p">.</span><span class="nf">Len</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Or something like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">BenchmarkFib</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">n</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">n</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">n</span><span class="o">++</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">b</span><span class="p">.</span><span class="nf">StopTimer</span><span class="p">()</span>  <span class="c1">// pause timer
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nf">prepare</span><span class="p">()</span>      <span class="c1">// prepare, initial setup
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">b</span><span class="p">.</span><span class="nf">StartTimer</span><span class="p">()</span> <span class="c1">// continue counting
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nf">funcUnderTest</span><span class="p">()</span> <span class="c1">// the function was tested 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="13-runparallel">1.3. <code>RunParallel()</code></h3>
+<p>If a benchmark needs to test performance in a parallel setting, it may use the <code>RunParallel</code> helper function; such benchmarks are intended to be used with the <code>go test -cpu</code> flag:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">testing</span><span class="p">.</span><span class="nf">Benchmark</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">templ</span> <span class="o">:=</span> <span class="nx">template</span><span class="p">.</span><span class="nf">Must</span><span class="p">(</span><span class="nx">template</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">).</span><span class="nf">Parse</span><span class="p">(</span><span class="s">&#34;Hello, {{.}}!&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">b</span><span class="p">.</span><span class="nf">RunParallel</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">pb</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">PB</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">// Each goroutine has its own bytes.Buffer.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="kd">var</span> <span class="nx">buf</span> <span class="nx">bytes</span><span class="p">.</span><span class="nx">Buffer</span>
+</span></span><span class="line"><span class="cl">			<span class="k">for</span> <span class="nx">pb</span><span class="p">.</span><span class="nf">Next</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="c1">// The loop body is executed b.N times total across all goroutines.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>				<span class="nx">buf</span><span class="p">.</span><span class="nf">Reset</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">templ</span><span class="p">.</span><span class="nf">Execute</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">buf</span><span class="p">,</span> <span class="s">&#34;World&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">})</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The body function will be run in each goroutine. It should set up any goroutine-local state and then iterate until pb.Next returns false. It should not use the StartTimer, StopTimer, or ResetTimer functions, because they have global effect. It should also not call Run.</p>
+<h3 id="14-skip-test">1.4. Skip test</h3>
+<ul>
+<li><code>TestSomething(t *testing.T)</code> this is called <em>test function</em></li>
+<li><code>func BenchmarkXxx(*testing.B)</code> this is called <em>benchmark function</em></li>
+</ul>
+<p><code>go test</code> run your benchmark function and does not disable run the test functions in the package. If you want to skip the test function, you can do so by passing a regex to the <code>-run</code> flag that will not match anything. I usually use</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">go <span class="nb">test</span> -run<span class="o">=</span>XXX -bench<span class="o">=</span>.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Learn more: <a href="https://davidzhu.xyz/post/golang/advance/005-unit-test-commands/">Unit Test Basic Commands - Go - David&rsquo;s Blog</a></p>
+<h3 id="15-a-note-on-compiler-optimisations">1.5. A note on compiler optimisations</h3>
+<p>Before concluding I wanted to highlight that to be completely accurate, any benchmark should be careful to avoid compiler optimisations eliminating the function under test and artificially lowering the run time of the benchmark.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">result</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">BenchmarkFibComplete</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">r</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="nx">n</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">n</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">n</span><span class="o">++</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// always record the result of Fib to prevent
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// the compiler eliminating the function call.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">r</span> <span class="p">=</span> <span class="nf">Fib</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// always store the result to a package level variable
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// so the compiler cannot eliminate the Benchmark itself.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">result</span> <span class="p">=</span> <span class="nx">r</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>References:</p>
+<ul>
+<li><a href="https://pkg.go.dev/testing#hdr-Benchmarks">https://pkg.go.dev/testing#hdr-Benchmarks</a></li>
+<li><a href="https://pkg.go.dev/testing#B.RunParallel">https://pkg.go.dev/testing#B.RunParallel</a></li>
+<li><a href="https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go">How to write benchmarks in Go | Dave Cheney</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-09-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/golang/">golang</a>
+          <a href="/tags/unit-test/">unit test</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/database/redis/002-redis-commands/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Useful Redis Commands</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/advance/008-do-not-overuse-cahnnel/">
+            <span class="next-text nav-default">Don&#39;t Overuse Channel - Go</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

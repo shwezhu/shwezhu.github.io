@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>TUN Device &amp; utun Interface - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. TUN (network TUNnel) Device In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&amp;rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
+By default, tun devices operate in the layer 3 mode, and it&amp;rsquo;s point to point." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/cs-basics/011-networking/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="TUN Device &amp; utun Interface" />
+<meta property="og:description" content="1. TUN (network TUNnel) Device In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
+By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to point." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/cs-basics/011-networking/" /><meta property="article:section" content="post" />
+
+
+<meta itemprop="name" content="TUN Device &amp; utun Interface">
+<meta itemprop="description" content="1. TUN (network TUNnel) Device In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
+By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to point.">
+
+<meta itemprop="wordCount" content="804">
+<meta itemprop="keywords" content="cs basics," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="TUN Device &amp; utun Interface"/>
+<meta name="twitter:description" content="1. TUN (network TUNnel) Device In computer networking, TUN and TAP are two different kernel virtual network devices. Though both are for tunneling purposes, TUN and TAP can&rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.
+By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to point."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">TUN Device &amp; utun Interface</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 0001-01-01 </span>
+        <div class="post-category">
+            <a href="/categories/cs-basics/"> cs basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-tun-network-tunnel-device">1. TUN (network TUNnel) Device</a></li>
+        <li><a href="#2-utun-interface">2. <code>utun*</code> interface</a>
+          <ul>
+            <li><a href="#21-utun-is-a-peer-to-peer-network-interface-for-tun-device">2.1. <code>utun*</code> is a peer to peer network interface for TUN device</a></li>
+            <li><a href="#22-utun-is-just-a-network-interface">2.2. <code>utun*</code> is just a network interface</a></li>
+            <li><a href="#assign-ip-address-for-an-utun-interface">Assign ip address for an <code>utun</code> interface</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-tun-network-tunnel-device">1. TUN (network TUNnel) Device</h2>
+<p>In computer networking, <strong>TUN</strong> and <strong>TAP</strong> are two different kernel <strong>virtual network devices</strong>. Though both are for tunneling purposes, TUN and TAP can&rsquo;t be used together because they transmit and receive packets at different layers of the network stack. TUN (network TUNnel) devices are used for IP packet-level tunneling, while TAP (network TAP) devices are used for Ethernet frame-level tunneling.</p>
+<blockquote>
+<p>By default, tun devices operate in the layer 3 mode, and it&rsquo;s point to point.</p>
+</blockquote>
+<p>Learn more: <a href="https://en.wikipedia.org/wiki/TUN/TAP">TUN/TAP</a></p>
+<h2 id="2-utun-interface">2. <code>utun*</code> interface</h2>
+<h3 id="21-utun-is-a-peer-to-peer-network-interface-for-tun-device">2.1. <code>utun*</code> is a peer to peer network interface for TUN device</h3>
+<p>On macOS, the <code>utun</code> interface is a type of TUN device specifically designed for VPN connections to handle the network traffic <strong>within the VPN tunnel</strong> <a href="https://apple.stackexchange.com/questions/310220/who-creates-utun0-adapter">regardless of whether VPN is enabled</a>.</p>
+<p>I&rsquo;ll give you an example to demonstrate the realtionship between TUN device and utun interface, the code below written in Go is to create a TUN device:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// New() creates a new TUN/TAP interface using config.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ifce</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">water</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">water</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span><span class="nx">DeviceType</span><span class="p">:</span> <span class="nx">water</span><span class="p">.</span><span class="nx">TUN</span><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Before run this code there are 4 utun interfaces on my mac:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ifconfig
+</span></span><span class="line"><span class="cl">utun0: <span class="nv">flags</span><span class="o">=</span>8051&lt;UP,POINTOPOINT,RUNNING,MULTICAST&gt; mtu <span class="m">1380</span>
+</span></span><span class="line"><span class="cl">	inet6 fe80::652e:88dd:ddb0:ad93%utun0 prefixlen <span class="m">64</span> scopeid 0xf 
+</span></span><span class="line"><span class="cl">	nd6 <span class="nv">options</span><span class="o">=</span>201&lt;PERFORMNUD,DAD&gt;
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">utun4: <span class="nv">flags</span><span class="o">=</span>8051&lt;UP,POINTOPOINT,RUNNING,MULTICAST&gt; mtu <span class="m">1380</span>
+</span></span><span class="line"><span class="cl">	inet6 fe80::e305:5ba8:574a:a5ac%utun4 prefixlen <span class="m">64</span> scopeid 0x13 
+</span></span><span class="line"><span class="cl">	nd6 <span class="nv">options</span><span class="o">=</span>201&lt;PERFORMNUD,DAD&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After I run the Go codes above with <code>sudo</code>, there are 5 utun interfaces but with no ip information:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ifconfig
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">utun4: <span class="nv">flags</span><span class="o">=</span>8051&lt;UP,POINTOPOINT,RUNNING,MULTICAST&gt; mtu <span class="m">1380</span>
+</span></span><span class="line"><span class="cl">	inet6 fe80::e305:5ba8:574a:a5ac%utun4 prefixlen <span class="m">64</span> scopeid 0x13 
+</span></span><span class="line"><span class="cl">	nd6 <span class="nv">options</span><span class="o">=</span>201&lt;PERFORMNUD,DAD&gt;
+</span></span><span class="line"><span class="cl">utun5: <span class="nv">flags</span><span class="o">=</span>8051&lt;UP,POINTOPOINT,RUNNING,MULTICAST&gt; mtu <span class="m">1500</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><code>utun*</code> is a <strong>point-to-point</strong> interface, also called a tunnel or a peer-to-peer interface, It doesn&rsquo;t behave like &ldquo;shared medium&rdquo; interfaces such as Wi-Fi or Ethernet, which connect you to multiple devices. Instead, it behaves like a cable that just has hosts on both ends.</p>
+<p>There are no layer-2 headers, no MAC addresses, and no ARP on a point-to-point interface, because everything sent through it reaches the same destination (the &ldquo;peer&rdquo; host).</p>
+<p>Source: <a href="https://superuser.com/a/1446061/1689666">https://superuser.com/a/1446061/1689666</a></p>
+</blockquote>
+<h3 id="22-utun-is-just-a-network-interface">2.2. <code>utun*</code> is just a network interface</h3>
+<p><code>utun*</code> is just a network interface similar to <code>en0</code>, <code>lo0</code>, when you input <code>ifconfig</code> command, they will listed together:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ifconfig     
+</span></span><span class="line"><span class="cl">lo0: <span class="nv">flags</span><span class="o">=</span>8049&lt;UP,LOOPBACK,RUNNING,MULTICAST&gt; mtu <span class="m">16384</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">options</span><span class="o">=</span>1203&lt;RXCSUM,TXCSUM,TXSTATUS,SW_TIMESTAMP&gt;
+</span></span><span class="line"><span class="cl">	inet 127.0.0.1 netmask 0xff000000 
+</span></span><span class="line"><span class="cl">	inet6 ::1 prefixlen <span class="m">128</span> 
+</span></span><span class="line"><span class="cl">	inet6 fe80::1%lo0 prefixlen <span class="m">64</span> scopeid 0x1 
+</span></span><span class="line"><span class="cl">	nd6 <span class="nv">options</span><span class="o">=</span>201&lt;PERFORMNUD,DAD&gt;
+</span></span><span class="line"><span class="cl">en0: <span class="nv">flags</span><span class="o">=</span>8863&lt;UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST&gt; mtu <span class="m">1500</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">options</span><span class="o">=</span>6463&lt;RXCSUM,TXCSUM,TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM&gt;
+</span></span><span class="line"><span class="cl">	ether d4:57:63:da:b6:98 
+</span></span><span class="line"><span class="cl">	inet6 fe80::475:ca98:8ecc:d86%en0 prefixlen <span class="m">64</span> secured scopeid 0xc 
+</span></span><span class="line"><span class="cl">	inet 192.168.2.15 netmask 0xffffff00 broadcast 192.168.2.255
+</span></span><span class="line"><span class="cl">	inet6 fdd0:ed77:f347:4d69:859:d993:f358:5af9 prefixlen <span class="m">64</span> autoconf secured 
+</span></span><span class="line"><span class="cl">	nd6 <span class="nv">options</span><span class="o">=</span>201&lt;PERFORMNUD,DAD&gt;
+</span></span><span class="line"><span class="cl">	media: autoselect
+</span></span><span class="line"><span class="cl">	status: active
+</span></span><span class="line"><span class="cl">en1: <span class="nv">flags</span><span class="o">=</span>8963&lt;UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST&gt; mtu <span class="m">1500</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">options</span><span class="o">=</span>460&lt;TSO4,TSO6,CHANNEL_IO&gt;
+</span></span><span class="line"><span class="cl">	ether 36:6b:75:95:04:c0 
+</span></span><span class="line"><span class="cl">	media: autoselect &lt;full-duplex&gt;
+</span></span><span class="line"><span class="cl">	status: inactive
+</span></span><span class="line"><span class="cl">utun0: <span class="nv">flags</span><span class="o">=</span>8051&lt;UP,POINTOPOINT,RUNNING,MULTICAST&gt; mtu <span class="m">1380</span>
+</span></span><span class="line"><span class="cl">	inet6 fe80::652e:88dd:ddb0:ad93%utun0 prefixlen <span class="m">64</span> scopeid 0xf 
+</span></span><span class="line"><span class="cl">	nd6 <span class="nv">options</span><span class="o">=</span>201&lt;PERFORMNUD,DAD&gt;
+</span></span><span class="line"><span class="cl">utun1: <span class="nv">flags</span><span class="o">=</span>8051&lt;UP,POINTOPOINT,RUNNING,MULTICAST&gt; mtu <span class="m">2000</span>
+</span></span><span class="line"><span class="cl">	inet6 fe80::a13f:9a63:f8cb:4017%utun1 prefixlen <span class="m">64</span> scopeid 0x10 
+</span></span><span class="line"><span class="cl">	nd6 <span class="nv">options</span><span class="o">=</span>201&lt;PERFORMNUD,DAD&gt;
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Find more about what these interface are: <a href="https://stackoverflow.com/a/55232331/16317008">https://stackoverflow.com/a/55232331/16317008</a></p>
+<p>e.g.,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">utun3: <span class="nv">flags</span><span class="o">=</span>8051&lt;UP,POINTOPOINT,RUNNING,MULTICAST&gt; mtu <span class="m">1500</span>
+</span></span><span class="line"><span class="cl">        inet 10.8.0.18 --&gt; 10.8.0.17 netmask 0xffffffff
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>With &ldquo;normal&rdquo; interfaces, configuring an address with subnet mask like <code>192.168.1.3/24</code> on eth0 is really just shorthand for saying &ldquo;My address is <code>192.168.1.3</code> and I also have an on-link route <code>192.168.1.0/24 dev eth0</code>&rdquo;. The on-link route is derived from combining the address &amp; subnet mask.</p>
+<p>With point-to-point interfaces, it&rsquo;s actually the same idea. This example means &ldquo;My address is <code>10.8.0.18</code> and I also have an on-link route <code>10.8.0.17/32 dev utun3</code>.&rdquo; In this case the autogenerated route is a /32, indicating only one host – the &ldquo;peer&rdquo;.</p>
+<p><em>(Note: My examples use Linux iproute2-style syntax.)</em> So in the end, the difference between <code>10.8.0.17 netmask 0xffffffff</code> and <code>10.8.0.17/32</code> styles is just that automatic route.</p>
+<p>Source: <a href="https://superuser.com/a/1446061/1689666">https://superuser.com/a/1446061/1689666</a></p>
+<h3 id="assign-ip-address-for-an-utun-interface">Assign ip address for an <code>utun</code> interface</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ tldr ifconfig
+</span></span><span class="line"><span class="cl">- View network settings of an Ethernet adapter:
+</span></span><span class="line"><span class="cl">    ifconfig eth0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">- Display details of all interfaces, including disabled interfaces:
+</span></span><span class="line"><span class="cl">    ifconfig -a
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">- Disable eth0 interface:
+</span></span><span class="line"><span class="cl">    ifconfig eth0 down
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">- Enable eth0 interface:
+</span></span><span class="line"><span class="cl">    ifconfig eth0 up
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">- Assign IP address to eth0 interface:
+</span></span><span class="line"><span class="cl">    ifconfig eth0 ip_address
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>For example, if you have two machines, one we label &ldquo;local&rdquo; with a LAN IP address like 192.168.0.12 and another we label &ldquo;remote&rdquo; with a LAN IP address like 192.168.1.14, you can assign tunnel IP addresses thusly:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ifconfig tun0 inet 10.0.0.1 10.0.0.2 up
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>on the local system, and:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ifconfig tun0 inet 10.0.0.2 10.0.0.1 up
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>on the remote system. Note the reversed perspective on the remote machine. Do not set your point to point addresses to anything on an existing subnet; it will not route properly.</p>
+<blockquote>
+<p>Note, if you set a wrong interface, you can cancle it with  <code>sudo ifconfig utun2 delete 10.1.0.10 10.1.0.20 </code> or <code>ifconfig en1 delete 192.168.141.99</code> for differnt types of network interfaces.</p>
+</blockquote>
+<p>Source: <a href="https://stackoverflow.com/a/17511998/16317008">https://stackoverflow.com/a/17511998/16317008</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        0001-01-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/cs-basics/">cs basics</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/cs-basics/009-multithread-singlethread-server/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Is Multithreaded Server Better than a Single Thread Server?</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/golang/practice/001-snake-game/">
+            <span class="next-text nav-default">用Go实现一个简单的贪吃蛇</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Tailwind CSS Flex - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/frontend/000-css-basic/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Tailwind CSS Flex" />
+<meta property="og:description" content="Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/frontend/000-css-basic/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-01-06T20:46:20+00:00" />
+<meta property="article:modified_time" content="2024-01-06T20:46:20+00:00" />
+
+<meta itemprop="name" content="Tailwind CSS Flex">
+<meta itemprop="description" content="Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是"><meta itemprop="datePublished" content="2024-01-06T20:46:20+00:00" />
+<meta itemprop="dateModified" content="2024-01-06T20:46:20+00:00" />
+<meta itemprop="wordCount" content="1526">
+<meta itemprop="keywords" content="front-end," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Tailwind CSS Flex"/>
+<meta name="twitter:description" content="Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Tailwind CSS Flex</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-01-06 </span>
+        <div class="post-category">
+            <a href="/categories/front-end/"> front-end </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#block-and-inline">Block and Inline</a></li>
+        <li><a href="#flex">Flex</a>
+          <ul>
+            <li><a href="#flex-box">flex box</a></li>
+            <li><a href="#flex-items">flex items</a></li>
+          </ul>
+        </li>
+        <li><a href="#position">Position</a>
+          <ul>
+            <li><a href="#absolute">absolute</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="block-and-inline">Block and Inline</h2>
+<ul>
+<li>
+<p>block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定</p>
+<ul>
+<li>特殊情况: button 默认是 inline-block, 支持设置宽高, <strong>即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是由内容决定的.</strong></li>
+<li>其他的 inline 元素, 如 <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;strong&gt;</code>, 如果设置为 block, 则其宽度会自动变为父元素的 100%.</li>
+</ul>
+</li>
+<li>
+<p>inline 元素不会独占一行, 宽高度由内容决定</p>
+<ul>
+<li>不能设置宽高, 若要设置宽和高, 需要将其转换为块级元素. 如 <code>display: block</code> 或 <code>display: inline-block</code>.</li>
+<li>不可以设置上下 padding 和 margin, 可以设置左右 padding 和 margin.</li>
+<li>特殊情况: <code>margin-left: auto</code>, <code>margin-right: auto</code> 无法适用 inline 元素. 这也是为什么 tailwind css 中 <code>mx-auto</code> 使 inline 元素水平居中的原因.</li>
+</ul>
+</li>
+<li>
+<p>inline-block, 既可以设置宽高, 也可以设置所有 padding 和 margin, 其他与 inline 元素一样.</p>
+</li>
+</ul>
+<blockquote>
+<p>flex 子元素既不是块级元素, 也不是内联元素, 而是 flex 元素, 有自己的特性. 若同在 flex box内, 则 <code>&lt;a&gt;</code> 与 <code>&lt;div&gt;</code> 在显示上是完全一样的, 因为他们都是 flex items.
+注意 flex 子元素的默认值是 <code>flex: 0 1 auto</code>, 即 <code>flex-grow: 0</code>, <code>flex-shrink: 1</code>, <code>flex-basis: auto</code>, 即默认情况下, flex 子元素是允许在必要情况下缩小的, 而不会增长, 从而导致 flex 子元素的宽度不是父元素的 100%, 而是由内容决定的.</p>
+</blockquote>
+<h2 id="flex">Flex</h2>
+<p>Flex 有很多性质, 要区分哪些性质是用到 Flex Box 上的, 哪些是用到 Flex Items 上的. 可直接观看: <a href="https://youtu.be/fYq5PXgSsbE?si=yeeW9PDx-Als9CWX">https://youtu.be/fYq5PXgSsbE?si=yeeW9PDx-Als9CWX</a></p>
+<h3 id="flex-box">flex box</h3>
+<ul>
+<li>
+<p><code>flex-direction</code>: row | row-reverse | column | column-reverse;</p>
+<ul>
+<li>Tailwind CSS: <code>flex-row</code>, <code>flex-col</code></li>
+</ul>
+</li>
+<li>
+<p><code>justify-content</code>: flex-start | flex-end | center | space-between | space-around | space-evenly;</p>
+<ul>
+<li>Tailwind CSS: <code>justify-start</code>, <code>justify-end</code>, <code>justify-center</code>, <code>justify-between</code>,</li>
+</ul>
+</li>
+<li>
+<p><code>align-items</code>: flex-start | flex-end | center</p>
+<ul>
+<li>Tailwind CSS: <code>items-start</code>, <code>items-end</code>, <code>items-center</code></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>常用技巧:</strong></p>
+<ol>
+<li>justify-between 主要是用来设置 flex items 之间的间距, 一般是让两个元素分布在容器左右或上下两端,</li>
+<li>聊天软件, 自己信息靠右, 对方信息靠左, 不可以使用 <code>justify-self</code> 或 <code>align-self</code>, 前者是用于 Grid 布局的, 后者是用于 Flex 布局的交叉轴上的对齐方式. 更不可以单独对一个元素设置 <code>justify-start</code> 或 <code>justify-end</code>, 因为这是 flex box 的属性, 会影响所有的 flex items, 而不是单个元素. 你可以使用 <code>margin-left: auto</code> 或 <code>margin-right: auto</code> 来实现这个效果.</li>
+<li><code>mx-auto</code> 用于水平居中, <code>my-auto</code> 用于垂直居中,</li>
+<li>也可使用 order 属性来调整元素的顺序, 配合 justify-between 使用 (控制在两端, 一左一右), 只有两个元素这种简单情况下推荐使用.</li>
+</ol>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">Message</span><span class="p">({</span><span class="nx">role</span><span class="p">,</span> <span class="nx">text</span><span class="p">,</span> <span class="nx">time</span><span class="p">})</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">messageClass</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">===</span> <span class="s1">&#39;bot&#39;</span> <span class="o">?</span> <span class="s1">&#39;mr-auto bg-gray-300 text-black&#39;</span> <span class="o">:</span> <span class="s1">&#39;ml-auto bg-blue-300 text-white&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">timePos</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">===</span> <span class="s1">&#39;bot&#39;</span> <span class="o">?</span> <span class="s1">&#39;order-2&#39;</span> <span class="o">:</span> <span class="s1">&#39;order-1&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">rolePos</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">===</span> <span class="s1">&#39;bot&#39;</span> <span class="o">?</span> <span class="s1">&#39;order-1&#39;</span> <span class="o">:</span> <span class="s1">&#39;order-2&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">sentTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">time</span><span class="p">).</span><span class="nx">toLocaleString</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">messageClass</span><span class="p">}</span> <span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;flex flex-row justify-between&#39;</span><span class="p">}</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">rolePos</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">role</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">timePos</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">sentTime</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">text</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="flex-items">flex items</h3>
+<ul>
+<li><strong>flex-grow:</strong> 用来指定一个 flex 子项（flex item）相对于其他子项在可用空间中的扩展比例, 沿主轴方向。
+<ul>
+<li>Tailwind CSS 类名:<code>flex-grow</code>, <code>flex-grow-0</code></li>
+</ul>
+</li>
+<li><strong>align-self:</strong> 用来指定flex子项在<strong>交叉轴</strong>上的对齐方式, 会覆盖父容器的 align-items 属性。
+<ul>
+<li>很好理解, align-self 是用来指定单个 flex item 在交叉轴上的对齐方式, 而 align-items 是用来指定所有 flex items 在交叉轴上的对齐方式. 前者用在 item上, 后者用在 flex box 上, 前者会覆盖后者.</li>
+<li>Tailwind CSS 类名: <code>self-auto</code>, <code>self-start</code>, <code>self-center</code>, <code>self-end</code>, <code>self-stretch</code></li>
+<li>了解更多: <a href="https://tailwindcss.com/docs/align-self">Align Self - Tailwind CSS</a></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>常用技巧-1:</strong> 把 navigator 和 footer 设置为 <code>flex-grow: 0</code>, 然后中间的内容设置为 <code>flex-grow: 1</code>, 这样中间的内容会占据剩余的空间, 从而实现中间内容自动填充剩余空间的效果. (前提是他们都是 flex items, 即他们都在 flex box 内)</p>
+</blockquote>
+<blockquote>
+<p><strong>常用技巧-2:</strong> 通常把元素设置为 flex-grow 后, 会自动填充剩余空间, 但如果该元素的内容很多, 就会导致溢出, 比如对话框, 此时应该会想到加个 overflow 属性, 但是这样并不会起作用, 原因是你没设置该元素的高度, 此时可以给个高度0, 这样即使内容为空因为 flex-grow 会自动填充剩余空间, 若内容溢出因为定义了高度, overflow 属性就会起作用了.
+了解更多: <a href="https://stackoverflow.com/a/14964944/16317008">https://stackoverflow.com/a/14964944/16317008</a></p>
+</blockquote>
+<p><strong>易错点-1:</strong> flex-grow 是 flex items 的属性, 用来控制 flex tiems 如何在<strong>主轴方向</strong>上增长, 不要简单的以为是用来控制在水平方向上增长的. 比如在 flex-col 的情况下，flex-grow 影响的是items的高度，而不是宽度，因为主轴是垂直的.</p>
+<p><strong>易错点-2:</strong> <code>justify-items</code> 和 <code>justify-self</code> 专门用于Grid布局, 不用于Flex布局, 了解更多: <a href="https://tailwindcss.com/docs/justify-items">Justify Items - Tailwind CSS</a></p>
+<h2 id="position">Position</h2>
+<h3 id="absolute">absolute</h3>
+<p>最近写菜单栏的时候, 菜单栏展开后会将下面的内容挤下去, 像下面这样:</p>
+<p><img src="/000-css-basic/00.jpg" alt="00"></p>
+<p><img src="/000-css-basic/02.jpg" alt="02"></p>
+<p>基本上菜单栏都很窄, 所以当菜单栏展开时, 我希望的是不影响下面的内容, 但是正常情况下两个元素要么是 inline 那种可以在同一行, 要么是 block 那种独占一行, 无法实现我想要的效果. 此时就可以使用 absolute 来实现, 如下:</p>
+<p><img src="/000-css-basic/01.jpg" alt="01"></p>
+<blockquote>
+<p>Absolute positioned elements are removed from the normal flow, and <strong>can overlap elements</strong>.</p>
+</blockquote>
+<p>此时也应该注意覆盖的问题, 若对话框宽度为 100vw, 可能会覆盖掉对话框, 因此要将 z-index 设置大一些.</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2024-01-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/front-end/">front-end</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/frontend/002-tailwind-css-tricks/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Tailwind CSS Tricks</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/frontend/001-tailwindcsss-class/">
+            <span class="next-text nav-default">Tailwind CSS Commonly Used Class</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

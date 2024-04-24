@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>DDoS Attack - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. DDoS attack A distributed denial-of-service (DDoS) attack is a malicious attempt to disrupt the normal traffic of a targeted server, service or network by overwhelming the target or its surrounding infrastructure with a flood of Internet traffic. When a DDoS attack happens, a large volume of traffic is sent to a website. The site under attack typically crashes because the increased traffic exhausts the bandwidth limit or overloads the" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/cs-basics/012-ddos-attack/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="DDoS Attack" />
+<meta property="og:description" content="1. DDoS attack A distributed denial-of-service (DDoS) attack is a malicious attempt to disrupt the normal traffic of a targeted server, service or network by overwhelming the target or its surrounding infrastructure with a flood of Internet traffic. When a DDoS attack happens, a large volume of traffic is sent to a website. The site under attack typically crashes because the increased traffic exhausts the bandwidth limit or overloads the" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/cs-basics/012-ddos-attack/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-09-09T09:29:57+00:00" />
+<meta property="article:modified_time" content="2023-09-09T09:29:57+00:00" />
+<meta itemprop="name" content="DDoS Attack">
+<meta itemprop="description" content="1. DDoS attack A distributed denial-of-service (DDoS) attack is a malicious attempt to disrupt the normal traffic of a targeted server, service or network by overwhelming the target or its surrounding infrastructure with a flood of Internet traffic. When a DDoS attack happens, a large volume of traffic is sent to a website. The site under attack typically crashes because the increased traffic exhausts the bandwidth limit or overloads the"><meta itemprop="datePublished" content="2023-09-09T09:29:57+00:00" />
+<meta itemprop="dateModified" content="2023-09-09T09:29:57+00:00" />
+<meta itemprop="wordCount" content="637">
+<meta itemprop="keywords" content="cs basics,build website,networking,cybersecurity," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="DDoS Attack"/>
+<meta name="twitter:description" content="1. DDoS attack A distributed denial-of-service (DDoS) attack is a malicious attempt to disrupt the normal traffic of a targeted server, service or network by overwhelming the target or its surrounding infrastructure with a flood of Internet traffic. When a DDoS attack happens, a large volume of traffic is sent to a website. The site under attack typically crashes because the increased traffic exhausts the bandwidth limit or overloads the"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">DDoS Attack</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-09-09 </span>
+        <div class="post-category">
+            <a href="/categories/cs-basics/"> cs basics </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-ddos-attack">1. DDoS attack</a></li>
+        <li><a href="#2-how-does-a-ddos-attack-work">2. How does a DDoS attack work?</a></li>
+        <li><a href="#3-how-to-identify-a-ddos-attack">3. How to identify a DDoS attack</a></li>
+        <li><a href="#4-challenge-collapsar-cc-attack---ddos">4. Challenge Collapsar (CC) attack - DDoS</a>
+          <ul>
+            <li><a href="#41-intercept-cc-attack---intercept-http-request">4.1. Intercept cc attack - intercept http request</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-ddos-attack">1. DDoS attack</h2>
+<p>A distributed denial-of-service (DDoS) attack is a malicious attempt to disrupt the normal traffic of a targeted server, service or network by overwhelming the target or its surrounding infrastructure with a flood of Internet traffic.</p>
+<p>When a DDoS attack happens, a large volume of traffic is sent to a website. The site under attack typically crashes because the increased traffic exhausts the bandwidth limit or overloads the website’s servers.</p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube-nocookie.com/embed/7kB9-nQJR44" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+<p>video: <a href="https://youtu.be/7kB9-nQJR44?si=R8qrLRhRwlqofAu5">https://youtu.be/7kB9-nQJR44?si=R8qrLRhRwlqofAu5</a></p>
+<h2 id="2-how-does-a-ddos-attack-work">2. How does a DDoS attack work?</h2>
+<p>DDoS attacks are carried out with networks of Internet-connected machines.</p>
+<p>These networks consist of computers and other devices (such as IoT devices)which have been infected with <a href="https://www.cloudflare.com/learning/ddos/glossary/malware/">malware</a>, allowing them to be controlled remotely by an attacker. These individual devices are referred to as <a href="https://www.cloudflare.com/learning/bots/what-is-a-bot/">bots</a> (or zombies), and a group of bots is called a <a href="https://www.cloudflare.com/learning/ddos/what-is-a-ddos-botnet/">botnet</a>.</p>
+<p>Once a botnet has been established, the attacker is able to direct an attack by sending remote instructions to each bot.</p>
+<p>When a victim’s server or network is targeted by the botnet, each bot sends requests to the target’s <a href="https://www.cloudflare.com/learning/dns/glossary/what-is-my-ip-address/">IP address</a>, potentially causing the server or network to become overwhelmed, resulting in a <a href="https://www.cloudflare.com/learning/ddos/glossary/denial-of-service/">denial-of-service</a> to normal traffic.</p>
+<p>Because each bot is a legitimate Internet device, separating the attack traffic from normal traffic can be difficult.</p>
+<h2 id="3-how-to-identify-a-ddos-attack">3. How to identify a DDoS attack</h2>
+<p>The most obvious symptom of a DDoS attack is a site or service suddenly becoming slow or unavailable. But since a number of causes — such a legitimate spike in traffic — can create similar performance issues, further investigation is usually required. Traffic analytics tools can help you spot some of these telltale signs of a DDoS attack:</p>
+<ul>
+<li>Suspicious amounts of traffic originating from a single IP address or IP range</li>
+<li>A flood of traffic from users who share a single behavioral profile, such as device type, geolocation, or web browser version</li>
+<li>An unexplained surge in requests to a single page or endpoint</li>
+<li>Odd traffic patterns such as spikes at odd hours of the day or patterns that appear to be unnatural (e.g. a spike every 10 minutes)</li>
+</ul>
+<h2 id="4-challenge-collapsar-cc-attack---ddos">4. Challenge Collapsar (CC) attack - DDoS</h2>
+<p>A Challenge Collapsar (CC) attack is an attack where standard HTTP requests are sent to a targeted web server frequently.</p>
+<p>In 2004, a Chinese hacker nicknamed KiKi invented a hacking tool to send these kinds of requests to attack a NSFOCUS firewall named <em>Collapsar</em>, and thus the hacking tool was known as <em>Challenge Collapsar</em>, or <em>CC</em> for short. Consequently, this type of attack got the name <em>CC attack</em>.</p>
+<blockquote>
+<p>DDoS is not a specific attack, but a general term for a large types of attacks. There are dozens of types, and new attack methods are constantly being invented.</p>
+</blockquote>
+<h3 id="41-intercept-cc-attack---intercept-http-request">4.1. Intercept cc attack - intercept http request</h3>
+<p><strong>(1) Hardware firewall</strong></p>
+<p>Set a physical firewall before your server machine which used to filter request, this is best way but most expensive too.</p>
+<p>**(2) Software firewall **</p>
+<p>Almost all OS has firewall installed，Linux server usually use <a href="https://wiki.archlinux.org/index.php/Iptables_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">iptables</a>, intercept request from IP address  <code>1.2.3.4</code>, for example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ iptables -A INPUT -s 1.2.3.4 -j DROP
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>(3) Web server</strong></p>
+<p>Web can also used to intercept IP address <code>1.2.3.4</code>, on nginx:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">location / {
+</span></span><span class="line"><span class="cl">  deny 1.2.3.4;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>On Apache, modify the  <code>.htaccess</code> file:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&lt;RequireAll&gt;
+</span></span><span class="line"><span class="cl">    Require all granted
+</span></span><span class="line"><span class="cl">    Require not ip 1.2.3.4
+</span></span><span class="line"><span class="cl">&lt;/RequireAll&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Web server have a impact impact on the performance when used in firewall and cannot protect when there are huge DDoS attack.</p>
+<p>Learn more: <a href="https://www.ruanyifeng.com/blog/2018/06/ddos.html">https://www.ruanyifeng.com/blog/2018/06/ddos.html</a></p>
+<p>References:</p>
+<ul>
+<li><a href="https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/">What is a distributed denial-of-service (DDoS) attack? | Cloudflare</a></li>
+<li><a href="https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/">What is a distributed denial-of-service (DDoS) attack? | Cloudflare</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Denial-of-service_attack">Denial-of-service attack</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-09-09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/cs-basics/">cs basics</a>
+          <a href="/tags/build-website/">build website</a>
+          <a href="/tags/networking/">networking</a>
+          <a href="/tags/cybersecurity/">cybersecurity</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/build-website/005-aws-basics/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">AWS EC2 - Basic Settings of a Server</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/cs-basics/010-tun-tap-device/">
+            <span class="next-text nav-default">TUN/TAP Devices</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>不定积分和卷积 Graphical Convolution - 课堂笔记 - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. 不定积分 注意区分复合函数求导, 求不定积分步骤: 选出 u 和 v, 求出 du, dv, 选择的时候要考虑 v 的原函数好不好找, 再根据以上公式, 带入 u, v, du, dv, 再看个例子" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://shaowenzhu.top/post/inwk/phys/graphical-convolution/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="不定积分和卷积 Graphical Convolution - 课堂笔记" />
+<meta property="og:description" content="1. 不定积分 注意区分复合函数求导, 求不定积分步骤: 选出 u 和 v, 求出 du, dv, 选择的时候要考虑 v 的原函数好不好找, 再根据以上公式, 带入 u, v, du, dv, 再看个例子" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shaowenzhu.top/post/inwk/phys/graphical-convolution/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-05T22:04:08+00:00" />
+<meta property="article:modified_time" content="2023-05-05T22:04:08+00:00" />
+<meta itemprop="name" content="不定积分和卷积 Graphical Convolution - 课堂笔记">
+<meta itemprop="description" content="1. 不定积分 注意区分复合函数求导, 求不定积分步骤: 选出 u 和 v, 求出 du, dv, 选择的时候要考虑 v 的原函数好不好找, 再根据以上公式, 带入 u, v, du, dv, 再看个例子"><meta itemprop="datePublished" content="2023-05-05T22:04:08+00:00" />
+<meta itemprop="dateModified" content="2023-05-05T22:04:08+00:00" />
+<meta itemprop="wordCount" content="950">
+<meta itemprop="keywords" content="inwk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="不定积分和卷积 Graphical Convolution - 课堂笔记"/>
+<meta name="twitter:description" content="1. 不定积分 注意区分复合函数求导, 求不定积分步骤: 选出 u 和 v, 求出 du, dv, 选择的时候要考虑 v 的原函数好不好找, 再根据以上公式, 带入 u, v, du, dv, 再看个例子"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">不定积分和卷积 Graphical Convolution - 课堂笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-05 </span>
+        <div class="post-category">
+            <a href="/categories/inwk/"> inwk </a>
+            <a href="/categories/phys/"> phys </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-不定积分">1. 不定积分</a></li>
+        <li><a href="#2-图解法求卷积">2. 图解法求卷积</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-不定积分">1. 不定积分</h2>
+<p><img src="001-3335443.png" alt="001"></p>
+<p>注意区分复合函数求导, 求不定积分步骤:</p>
+<ol>
+<li>选出 <code>u</code> 和 <code>v</code>, 求出 <code>du</code>, <code>dv</code>, 选择的时候要考虑 <code>v</code> 的原函数好不好找,</li>
+<li>再根据以上公式, 带入  <code>u</code>, <code>v</code>,  <code>du</code>, <code>dv</code>,</li>
+</ol>
+<p><img src="a.png" alt="a"></p>
+<hr>
+<p><img src="002.png" alt="002"></p>
+<p><img src="003.png" alt="003"></p>
+<p>再看个例子:</p>
+<p><img src="004.png" alt="004"></p>
+<hr>
+<h2 id="2-图解法求卷积">2. 图解法求卷积</h2>
+<p>卷积有三种求法, 卷积定义式，卷积图解法，卷积移位性质, 这里主要说图解法 Graphical Convolution, 先看看定义式:</p>
+<p><img src="005-3344982.png" alt="005"></p>
+<p>其中, 在进行图解法的时候, 我们经常对一个简单的信号图像进行反转, 这个反转也没固定的范围, 比如要求你一定要把图像反转到具体哪, 这个具体位置是需要我们讨论的(判断两个图像是否overlap, 讨论t的范围, 注意是讨论t的范围, 而不是上面定义式中的tao)</p>
+<p><strong>打不出来tao所以下文用<code>x</code>代替tao,</strong> 接下来我们利用图像分析一下上面公式中的 <code>f(t-x)</code>是 <code>f(t)</code> 怎么平移得到的 <em>(<code>f(t-x)</code> 中的 <code>x</code> 是 <code>tao</code> )</em>,  具体可以分成如下三步:</p>
+<p>首先 <code>f(t)</code> -&gt; <code>f(x)</code>, 这就是换个符号, 图像不变,</p>
+<p>第二步 <code>f(x)</code>  -&gt; <code>f(-x)</code>, 这就是原图像相对y轴反转了,</p>
+<p>第三步 <code>f(-x)</code> -&gt;  <code>f(-(x-t))</code>,  这就是图像相对y轴反转后, 还要右移 t 个单位. 注意, 当 t&lt;0 的时, 右移 t 个单位函数图像其实是左移了,</p>
+<p>根据以上, 做题的时候先把图像相对 y 反转, 形成 <code>f(x)</code>  -&gt; <code>f(-x)</code>, 之后再根据 t 的取值范围 (根据t&gt;0就是右移, t&lt;0就是左移) 判断是否overlap, 即上面的第三步  <code>f(-x)</code> -&gt;  <code>f(-(x-t))</code>, 举例, 下面是两个待卷积函数的图像:</p>
+<p><img src="006.png" alt="006"></p>
+<p>你看, 显然g(t)的函数式更简单, 所以我们选择让g(t)变成那个g(t-x), 也就是让g(t)相对y轴反转然后移动讨论, 但是这个g(t)有点特殊, 反转后图像不变, 这时候我们直接考虑t就行了, 上面我们说了t的值不是固定的, 根据实际情况讨论, 判读临界点是否两图像overlap, 如下图, 当t&lt;-2的时候, 即反转后的g(t)向右移动了至少-2个单位, 就成了下图所示的样子, 然后他们没有overlap, 所以讨论下一个临界点, 即-2&lt;t&lt;0, 然后求不定积分, 接着讨论&hellip;.</p>
+<p><img src="007.png" alt="007"></p>
+<p>看个完整的例子:</p>
+<p><img src="b.png" alt="b"></p>
+<p><img src="c.png" alt="c"></p>
+<p>下面这个视频讲的很好:</p>
+<p>{% youtube lnzXrSGWMQE %}</p>
+<p>参考:</p>
+<ul>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/41545813">分部积分法（integration by parts） - 知乎</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/447504951">xlnx的不定积分 - 知乎</a></p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1DS4y1D7n5/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9">分部积分法[高等数学23]_哔哩哔哩_bilibili</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/32850408">从∫e^x*sinxdx出发——积分随想（I） - 知乎</a></p>
+</li>
+<li>
+<p><a href="https://www.youtube.com/watch?v=lnzXrSGWMQE&amp;list=PLYdJCSN8wbG8F08QEPdTdx7FDPH7IGx7P&amp;index=9">珂学原理 No.90 卷积应该怎么卷</a></p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1TK41127sT/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9">最经典的卷积积分题目，完美展现卷积积分图解法_哔哩哔哩_bilibili</a></p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1Nr4y117V9/?vd_source=96c3a39c0ce50f46009a7b1394fbbcf9">【信号与系统】卷积的三种求解办法_哔哩哔哩_bilibili</a></p>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-05-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/inwk/">inwk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/inwk/phys/basic-signal-functions/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">傅立叶变换之rect, sinc, delta 函数 - 课堂笔记</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/git/001-git-basics/">
+            <span class="next-text nav-default">git rm &amp; git restore</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://twitter.com/shwezhu" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://shaowenzhu.top/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

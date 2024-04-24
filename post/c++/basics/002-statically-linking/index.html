@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Statically Linking in C - David&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="David" /><meta name="description" content="1. Compilation process in C C/C&#43;&#43; programs are built in two main phases (ignore the preprocess, assemble):
+Compilation - produces object code (.obj, .o)
+1 2 # Compile source code into an object file without linking: gcc -c path/to/source.c The extension of the object file in DOS is .obj, and in UNIX, the extension is .o. Linking - produces executable code (.exe or .dll)
+executable file with an extension of exe in DOS and ." />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.123.7 with theme even" />
+
+
+<link rel="canonical" href="https://davidzhu.xyz/post/c&#43;&#43;/basics/002-statically-linking/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Statically Linking in C" />
+<meta property="og:description" content="1. Compilation process in C C/C&#43;&#43; programs are built in two main phases (ignore the preprocess, assemble):
+Compilation - produces object code (.obj, .o)
+1 2 # Compile source code into an object file without linking: gcc -c path/to/source.c The extension of the object file in DOS is .obj, and in UNIX, the extension is .o. Linking - produces executable code (.exe or .dll)
+executable file with an extension of exe in DOS and ." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://davidzhu.xyz/post/c&#43;&#43;/basics/002-statically-linking/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-11-03T10:49:20+00:00" />
+<meta property="article:modified_time" content="2023-11-03T10:49:20+00:00" />
+
+<meta itemprop="name" content="Statically Linking in C">
+<meta itemprop="description" content="1. Compilation process in C C/C&#43;&#43; programs are built in two main phases (ignore the preprocess, assemble):
+Compilation - produces object code (.obj, .o)
+1 2 # Compile source code into an object file without linking: gcc -c path/to/source.c The extension of the object file in DOS is .obj, and in UNIX, the extension is .o. Linking - produces executable code (.exe or .dll)
+executable file with an extension of exe in DOS and ."><meta itemprop="datePublished" content="2023-11-03T10:49:20+00:00" />
+<meta itemprop="dateModified" content="2023-11-03T10:49:20+00:00" />
+<meta itemprop="wordCount" content="1149">
+<meta itemprop="keywords" content="c,c&#43;&#43;," /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Statically Linking in C"/>
+<meta name="twitter:description" content="1. Compilation process in C C/C&#43;&#43; programs are built in two main phases (ignore the preprocess, assemble):
+Compilation - produces object code (.obj, .o)
+1 2 # Compile source code into an object file without linking: gcc -c path/to/source.c The extension of the object file in DOS is .obj, and in UNIX, the extension is .o. Linking - produces executable code (.exe or .dll)
+executable file with an extension of exe in DOS and ."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">David&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">David&#39;s Blog</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Statically Linking in C</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-11-03 </span>
+        <div class="post-category">
+            <a href="/categories/c&#43;&#43;/"> c&#43;&#43; </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-compilation-process-in-c">1. Compilation process in C</a></li>
+        <li><a href="#2-static-linking-and-dynamic-linking">2. Static linking and dynamic linking</a>
+          <ul>
+            <li><a href="#21-static-linking---portable-fast">2.1. Static linking - portable, fast</a></li>
+            <li><a href="#22-dynamic-linking---smaller-binary">2.2. Dynamic linking - smaller binary</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-static-library-vs-dynamic-library">3. Static library vs dynamic library</a></li>
+        <li><a href="#4-example-in-practice">4. Example in practice</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="1-compilation-process-in-c">1. Compilation process in C</h2>
+<p>C/C++ programs are built in two main phases (ignore the preprocess, assemble):</p>
+<ol>
+<li>
+<p>Compilation - produces object code (<code>.obj</code>, <code>.o</code>)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># Compile source code into an object file without linking:</span>
+</span></span><span class="line"><span class="cl">gcc -c path/to/source.c
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>The extension of the <em><strong>object file</strong></em> in DOS is <code>.obj</code>, and in UNIX, the extension is <code>.o</code>.</li>
+</ul>
+</li>
+<li>
+<p>Linking - produces executable code (.exe or .dll)</p>
+<ul>
+<li><em><strong>executable file</strong></em> with an extension of <code>exe</code> in DOS and <code>.out</code> in UNIX OSL</li>
+</ul>
+</li>
+</ol>
+<h2 id="2-static-linking-and-dynamic-linking">2. Static linking and dynamic linking</h2>
+<h3 id="21-static-linking---portable-fast">2.1. Static linking - portable, fast</h3>
+<p>Mainly, all the programs written in C use library functions. These library functions are pre-compiled, and the object code of these library files is stored with <code>.lib</code> (or <code>.a</code>) extension. <strong>The main working of the linker</strong> is to combine the <em><strong>object code</strong></em> of library files with the <em><strong>object code</strong></em> of our program. The output of the linker is the executable file. So the <strong>static Linking creates larger binary files</strong>.  Note that this is the process of static linking, and <code>.lib</code> and <code>.a</code> is static library in windows and linux respectively.</p>
+<p>In static linking, everything is bundled into your application, you don’t have to worry that the client will have the right library (and version) available on their system. Since all library code have connected at compile time, the final executable has no dependencies on the library at run time. You have everything under your control and there is no dependency.</p>
+<p>One major advantage of static libraries being preferred even now “is speed”. There will be no dynamic querying of symbols in static libraries.</p>
+<p>One drawback of static libraries is, for any change(up-gradation) in the static libraries, you have to recompile the main program every time.</p>
+<h3 id="22-dynamic-linking---smaller-binary">2.2. Dynamic linking - smaller binary</h3>
+<p>Dynamic Linking doesn’t require the code to be copied, it is done by just placing name of the library in the binary file. The actual linking happens when the program is run, when both the binary file and the library are in memory.</p>
+<p>Source: <a href="https://www.geeksforgeeks.org/static-vs-dynamic-libraries/">Static and Dynamic Libraries | Set 1 - GeeksforGeeks</a></p>
+<h2 id="3-static-library-vs-dynamic-library">3. Static library vs dynamic library</h2>
+<ul>
+<li>
+<p>Static library: windows <code>.lib</code>,  linux <code>.a</code></p>
+</li>
+<li>
+<p>Dynamic library (shared library): windows <code>.dll</code>, linux <code>.so</code></p>
+</li>
+</ul>
+<p>Static library <code>.lib</code> is just a bundle of <code>.obj</code> files and therefore isn&rsquo;t a complete program. It hasn&rsquo;t undergone the second (linking) phase of building a program. Dlls, on the other hand, are like exe&rsquo;s and therefore are complete programs.</p>
+<p><strong>If you build a static library</strong>, it isn&rsquo;t linked yet and therefore consumers of your static library will have to use the same compiler that you used (if you used g++, they will have to use g++). If the static library uses C++ library, such as <code>#include &lt;iostream&gt;</code>.</p>
+<p>If instead you built a dll (and built it <a href="http://www.codeproject.com/Articles/28969/HowTo-Export-C-classes-from-a-DLL">correctly</a>), you have built a complete program that all consumers can use, no matter which compiler they are using. There are several restrictions though, on exporting from a dll, if cross compiler compatibility is desired.</p>
+<p>Source: <a href="https://stackoverflow.com/a/25209275/16317008">https://stackoverflow.com/a/25209275/16317008</a></p>
+<h2 id="4-example-in-practice">4. Example in practice</h2>
+<p>Dynamic linking means the use of shared libraries. Shared libraries usually end with <code>.so</code> (short for &ldquo;shared object&rdquo;) or <code>.dylib</code> on MacOS.</p>
+<p>Another thing to note is that when a bug is fixed in a shared library, every application that references this library will profit from it. This also means that if the bug remains undetected, each referencing application will suffer from it (if the application uses the affected parts).</p>
+<p>It can be very hard for beginners <strong>when an application requires a specific version of the library, but the linker only knows the location of an incompatible versio</strong>n. In this case, you must help the linker find the path to the correct version.</p>
+<p>Although this is not an everyday issue, understanding dynamic linking will surely help you in fixing such problems.</p>
+<p>Fortunately, the mechanics for this are quite straightforward. To detect which libraries are required for an application to start, you can use <code>ldd</code>, which will print out the shared libraries used by a given file.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ ldd my_app 
+</span></span><span class="line"><span class="cl">	linux-vdso.so.1 (0x00007ffd1299c000)
+</span></span><span class="line"><span class="cl">	libmy_shared.so =&gt; not found
+</span></span><span class="line"><span class="cl">	libc.so.6 =&gt; /lib64/libc.so.6 (0x00007f56b869b000)
+</span></span><span class="line"><span class="cl">	/lib64/ld-linux-x86-64.so.2 (0x00007f56b8881000)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that the library <code>libmy_shared.so</code> is part of the repository but is not found. This is because the <strong>dynamic linker</strong>, which is responsible for loading all dependencies into memory before executing the application, cannot find this library in the standard locations it searches.</p>
+<p>Errors associated with linkers finding incompatible versions of common libraries (like <code>bzip2</code>, for example) can be quite confusing for a new user. One way around this is to add the repository folder to the environment variable <code>LD_LIBRARY_PATH</code> to tell the linker where to look for the correct version. In this case, the right version is in this folder, so you can export it:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:<span class="nv">$LD_LIBRARY_PATH</span>
+</span></span><span class="line"><span class="cl">$ <span class="nb">export</span> LD_LIBRARY_PATH
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Now the dynamic linker knows where to find the library, and the application can be executed. You can rerun <code>ldd</code> to invoke the dynamic linker, which inspects the application&rsquo;s dependencies and loads them into memory. The memory address is shown after the object path:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ ldd my_app 
+</span></span><span class="line"><span class="cl">	linux-vdso.so.1 <span class="o">(</span>0x00007ffd385f7000<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	libmy_shared.so <span class="o">=</span>&gt; /home/stephan/library_sample/libmy_shared.so <span class="o">(</span>0x00007f3fad401000<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	libc.so.6 <span class="o">=</span>&gt; /lib64/libc.so.6 <span class="o">(</span>0x00007f3fad21d000<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	/lib64/ld-linux-x86-64.so.2 <span class="o">(</span>0x00007f3fad408000<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>To find out which linker is invoked, you can use <code>file</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ file my_app 
+</span></span><span class="line"><span class="cl">my_app: ELF 64-bit LSB executable, x86-64, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID<span class="o">[</span>sha1<span class="o">]=</span>26c677b771122b4c99f0fd9ee001e6c743550fa6, <span class="k">for</span> GNU/Linux 3.2.0, not stripped
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The linker <code>/lib64/ld-linux-x86–64.so.2</code> is a symbolic link to <code>ld-2.30.so</code>, which is the default linker for my Linux distribution:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ file /lib64/ld-linux-x86-64.so.2 
+</span></span><span class="line"><span class="cl">/lib64/ld-linux-x86-64.so.2: symbolic link to ld-2.31.so
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Looking back to the output of <code>ldd</code>, you can also see (next to <code>libmy_shared.so</code>) that each dependency ends with a number (e.g., <code>/lib64/libc.so.6</code>). The usual naming scheme of shared objects is:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">**lib** XYZ.so **.&lt;MAJOR&gt;** . **&lt;MINOR&gt;**
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>On my system, <code>libc.so.6</code> is also a symbolic link to the shared object <code>libc-2.30.so</code> in the same folder:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ file /lib64/libc.so.6 
+</span></span><span class="line"><span class="cl">/lib64/libc.so.6: symbolic link to libc-2.31.so
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If you are facing the issue that an application will not start because the loaded library has the wrong version, it is very likely that you can fix this issue by inspecting and rearranging the symbolic links or specifying the correct search path (see &ldquo;The dynamic loader: ld.so&rdquo; below).</p>
+<p>For more information, look on the <a href="https://www.man7.org/linux/man-pages/man1/ldd.1.html"><code>ldd</code> man page</a>.</p>
+<p>Source: <a href="https://opensource.com/article/20/6/linux-libraries">How to handle dynamic and static libraries in Linux | Opensource.com</a></p>
+<blockquote>
+<p>Note that the dynamic linker on MacOS is called <code>dyld</code>, try <code>man dyld</code> to check the details. Learn more: <a href="https://stackoverflow.com/a/34905091/16317008">https://stackoverflow.com/a/34905091/16317008</a></p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// go build -o server main.go
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then check the shared libraries this executable file <code>server</code> required:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># otool -L: print shared libraries used</span>
+</span></span><span class="line"><span class="cl">$ otool -L server           
+</span></span><span class="line"><span class="cl">server:
+</span></span><span class="line"><span class="cl">	/usr/lib/libSystem.B.dylib <span class="o">(</span>compatibility version 0.0.0, current version 0.0.0<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	/usr/lib/libresolv.9.dylib <span class="o">(</span>compatibility version 0.0.0, current version 0.0.0<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><code>ldd</code> is on linux, on MaxOS you should use <code>otool</code></p>
+</blockquote>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">David</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2023-11-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/c/">c</a>
+          <a href="/tags/c&#43;&#43;/">c&#43;&#43;</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/http/004-http-versions/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">HTTP 1.1 vs HTTP 2.0</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/networking/005-gfw-dns/">
+            <span class="next-text nav-default">DNS Spoofing - GFW</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:shwezhu@qq.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/shwezhu" class="iconfont icon-github" title="github"></a>
+  <a href="https://davidzhu.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2023 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>David</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
