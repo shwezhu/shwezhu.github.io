@@ -4,11 +4,11 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? # 1. 编码和乱码 (unicode vs ascii) 电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的. ASCII 规定数字65代表字符A, 66代表字符B依次类推, 所以ASCII表就是一个map, 每个字符对应一个数, 把字符按照预定规则对应到数字的过程就叫编码. 到后来计算机普及, 全世界都使用不同语言, 出现了问题, 比如我们用36代表汉字牛, 韩国说用36代表字符&amp;, 当我输入牛, 软件就把0010 0100存入磁盘, 然后我把文件传给韩国的朋友, 他们的程序认为36即0010 0100代表&amp;, 这就产生了乱码: 软件尝试使用与文件编码不同的编码方式来解码文件, 所以我们需要一个新的标准, 可以涵盖全世界字符的那种, 然后所有软件都遵守这个标准, 这样才能无差错沟通, 我发送一串二进制在我这代表字符A, 你的软件收到这串二进制后翻译出的也是字符A, 而不是B或C, 这时候 Unicode 就出来了, 它就是使用0~0x10FFFF的数字来表示世界上所有的字符, 如汉字 在 的Unicode值是 0x5728, 注意0x代表值5728是十六进制, 又如字符 A 的Unicode值是0x41, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的, Unicode 和 ASCII 都是字符集, 但是 ASCII 只包含 128 个字符, 而 Unicode 包含很多很多个字符. # 2. Unicode vs UTF-8 vs UTF-16 # Unicode 定义和目的： Unicode 是一个国际标准，用于不同系统和程序间统一表示文本数据。 它为世界上几乎所有的字符和文本符号分配了唯一的 code point。 Unicode standard describes how characters are represented by code points.">
 <title>说说编码 - encoding</title>
 
-<link rel='canonical' href='https://demo.stack.jimmycai.com/p/%E8%AF%B4%E8%AF%B4%E7%BC%96%E7%A0%81-encoding/'>
+<link rel='canonical' href='https://blog.yorforger.cc/p/%E8%AF%B4%E8%AF%B4%E7%BC%96%E7%A0%81-encoding/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="说说编码 - encoding">
 <meta property='og:description' content="编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? # 1. 编码和乱码 (unicode vs ascii) 电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的. ASCII 规定数字65代表字符A, 66代表字符B依次类推, 所以ASCII表就是一个map, 每个字符对应一个数, 把字符按照预定规则对应到数字的过程就叫编码. 到后来计算机普及, 全世界都使用不同语言, 出现了问题, 比如我们用36代表汉字牛, 韩国说用36代表字符&amp;, 当我输入牛, 软件就把0010 0100存入磁盘, 然后我把文件传给韩国的朋友, 他们的程序认为36即0010 0100代表&amp;, 这就产生了乱码: 软件尝试使用与文件编码不同的编码方式来解码文件, 所以我们需要一个新的标准, 可以涵盖全世界字符的那种, 然后所有软件都遵守这个标准, 这样才能无差错沟通, 我发送一串二进制在我这代表字符A, 你的软件收到这串二进制后翻译出的也是字符A, 而不是B或C, 这时候 Unicode 就出来了, 它就是使用0~0x10FFFF的数字来表示世界上所有的字符, 如汉字 在 的Unicode值是 0x5728, 注意0x代表值5728是十六进制, 又如字符 A 的Unicode值是0x41, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的, Unicode 和 ASCII 都是字符集, 但是 ASCII 只包含 128 个字符, 而 Unicode 包含很多很多个字符. # 2. Unicode vs UTF-8 vs UTF-16 # Unicode 定义和目的： Unicode 是一个国际标准，用于不同系统和程序间统一表示文本数据。 它为世界上几乎所有的字符和文本符号分配了唯一的 code point。 Unicode standard describes how characters are represented by code points.">
-<meta property='og:url' content='https://demo.stack.jimmycai.com/p/%E8%AF%B4%E8%AF%B4%E7%BC%96%E7%A0%81-encoding/'>
+<meta property='og:url' content='https://blog.yorforger.cc/p/%E8%AF%B4%E8%AF%B4%E7%BC%96%E7%A0%81-encoding/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='python' /><meta property='article:tag' content='cs basics' /><meta property='article:published_time' content='2023-06-01T22:13:25&#43;00:00'/><meta property='article:modified_time' content='2023-06-01T22:13:25&#43;00:00'/>
 <meta name="twitter:title" content="说说编码 - encoding">
@@ -842,7 +842,7 @@
     <section class="copyright">
         &copy; 
         
-            2020 - 
+            2023 - 
         
         2024 David&#39;s Blogs
     </section>
