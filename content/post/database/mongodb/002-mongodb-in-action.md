@@ -16,8 +16,17 @@ Every MongoDB document requires an `_id`, and if one isn’t present when the do
 
 Indexes don’t come for free; they take up some space and can make your inserts slightly more expensive, but they are an essential tool for query optimization.
 
-> MongoDB 没有传统数据库中 join 和 foreign key 的的概念, 但是可以通过嵌套文档或 Reference 来表示一对多或多对多的关系, 也可使用聚合来实现类似 Join 的功能. Join 为了同时获得多个表的内容, foreign key 为了数据一致性(data consistency and integrity), [了解更多](https://chat.openai.com/share/419afe95-279b-477f-8afa-8f75ab76edad)
-> 了解更多: [Basic MySQL - David's Blog](https://davidzhu.xyz/post/database/mysql/002-basic-sql/)
+MongoDB store documents in a collection in no particular order. To get documents in a particular order, you must can use the `sort()` method or the `$sort` aggregation pipeline stage. Learn more: [natural order — MongoDB Manual](https://www.mongodb.com/docs/manual/reference/glossary/#std-term-natural-order)
+
+关于 foreign key 的概念常出现在 one to many 关系中, 比如评论表和用户, 一个用户可以有多个评论, 但一个评论只能有一个用户. 在传统数据库中, 评论表中会有一个 `user_id` 字段, 我们叫它外键, 每次查询时可以通过 join 操作将用户信息和评论信息关联起来 (即获取写了这个评论的用户具体信息和评论的具体内容). 
+
+MongoDB 没有传统数据库中 join 操作和 foreign key, 但可以通过 [embedded documents](https://www.mongodb.com/docs/manual/data-modeling/concepts/embedding-vs-references/#embedded-data-models) 或者 [reference](https://www.mongodb.com/docs/manual/data-modeling/concepts/embedding-vs-references/#std-label-data-modeling-referencing) 来表示一对多关系, 也可使用聚合来实现类似 Join 的功能. 具体官方文档有解释: [Model One-to-Many Relationships with Embedded Documents](https://www.mongodb.com/docs/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/), [Model One-to-Many Relationships with Document References](https://www.mongodb.com/docs/manual/tutorial/model-referenced-one-to-many-relationships-between-documents/)
+
+关于一对多, 多对多关系参考: [SQL Server Tutorial - One-to-many and many-to-many table relationships](https://www.youtube.com/watch?v=4q-keGvUnag)
+
+关于外键请参考: [Learning MySQL - FOREIGN KEY CONSTRAINTS](https://www.youtube.com/watch?v=UQK9_gKQHZg) 
+
+关于 join 操作请参考: [SQL Joins Explained](https://www.youtube.com/watch?v=9yeOJ0ZMUYw)
 
 ## Examples in the Book
 
@@ -52,39 +61,49 @@ Also noteworthy is the decision to store votes in the review document itself. It
 >
 > 这段提到了一个关键概念：缓存（Caching）, 这里的 “缓存” 是指在文档中直接存储一个额外的数据项（在这个例子中是“有帮助的投票数”），而不是每次查询时计算这个数值。
 
-## Constructing queries - Action in MongoDB chapter 5
+### Student & Courses - Many to Many Relationship
 
-### Find & FindOne Functions
-`find` returns a cursor object, whereas `findOne` returns a document. The findOne method is similar to the following, though a cursor is returned even when you apply a limit:
+**student:**
 
-```js
-mongoose.products.find({'slug': 'wheel-barrow-9092'}, null, null).limit(1)
-
-mongoose.reviews.find({'product_id': product['_id']}, null, null)
-    .sort({'helpful_votes': -1})
-    .limit(12)
-
-mongoose.users.find({'addresses.zip': {'$gt': 10019, '$lt': 10040}}, null, null)
+```json
+{
+  _id: <number>,
+ name: : <string>,
+ otherDetails: { ... },
+ courses: [
+      { courseId:  <number>, courseName: <string> },
+      { courseId:  <number>, courseName: <string> },
+      ...
+  ]
+}
 ```
 
-> `null` is in the mongoose stryle, I use Nodejs, so this can help remind me of the another two parameters: `projection` and `options`.
-> `db.collection.findOne(query, projection, options)`
+**course:**
 
-
-### Projection parameter of find and findOne
-
-> MongoDB store documents in a collection in no particular order. To get documents in a particular order, you must can use the `sort()` method or the `$sort` aggregation pipeline stage. 
-> Learn more: [natural order — MongoDB Manual](https://www.mongodb.com/docs/manual/reference/glossary/#std-term-natural-order)
-
-```js
-mongoose.users.findOne(
-    {“username': 'kbanker', 'hashed_password': 'bd1cfa194c3a603e7186780824b04419'},
-    {'_id': 1},
-    null,
-)
+```json
+{
+  _id: <number>,
+  name: <string>,
+  description: <string>,
+  otherDetails: { ... }
+}
 ```
 
-If you are already familiar with SQL and RDBMS, this is the difference between `SELECT *` and `SELECT ID`. 
+Now, your application has some queries. To start with some queries I can think about is, get all students in a particular course and get all courses for a particular student. These are simple queries.
+
+To get all courses for a specific student, the query would be:
+
+```js
+db.students.find( { name: "John Doe" }, { courses: 1, name: 1 } )
+```
+
+To get all students enrolled for a specific course, your query can be like this:
+
+```js
+db.students.find( { "courses.courseName": "Database Design" } )
+```
+
+This example is from [Many to many relationship and linked table/collection - Working with Data - MongoDB Developer Community Forums](https://www.mongodb.com/community/forums/t/many-to-many-relationship-and-linked-table-collection/130305/2)
 
 ## Query Operators
 
@@ -126,10 +145,6 @@ db.products.find({
     ]
 })
 ```
-
-## Querying arrays
-
-[Query an Array — MongoDB Manual](https://www.mongodb.com/docs/manual/tutorial/query-arrays/)
 
 ## Update, atomic operations, and delete - Action in MongoDB chapter 7
 

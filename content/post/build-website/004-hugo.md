@@ -7,11 +7,10 @@ tags:
   - hugo
 ---
 
-## Recover
+## 1. Recover
 
 ```shell
 $ hugo new site blogs && cd blogs
-
 ```
 
 ## 2. Deploy to Github Pages

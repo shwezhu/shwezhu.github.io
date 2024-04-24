@@ -1,5 +1,5 @@
 ---
-title: MongoDB Docs - Golang
+title: MongoDB Docs - Golang Basics
 date: 2024-04-23 08:38:35
 categories:
  - database
@@ -36,7 +36,7 @@ Learn more:
 
 [Work with BSON - Go Driver v1.15](https://www.mongodb.com/docs/drivers/go/current/fundamentals/bson/)
 
-## Read Operation
+## Read Operation - Cursor
 
 To match a subset of documents, specify a **query filter**. In a query filter, you can match fields with [literal values](https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#std-label-golang-literal-values) or with [query operators](https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#std-label-golang-query-operators). When you don't know which method you should use, you can go to the [mongo driver go API](https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo@v1.15.0#Collection) to check how to use them. 
 
