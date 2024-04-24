@@ -5,7 +5,6 @@ categories:
  - other
 tags:
  - other
-typora-root-url: ../../../static
 ---
 
 ## 1. iTerm2
@@ -111,12 +110,10 @@ Chnage the theme of nvim, enter nvim and type `space` + `t` + `h`, choose *oneno
 ```shell
 :TSInstall markdown
 :TSInstall markdown_inline
+:setlocal spell spelllang=en_us, cjk spellcapcheck=""
 ```
 
-[Turn VIM into a full featured IDE with only one command](https://www.youtube.com/watch?v=Mtgo-nP_r8Y&list=PL05iK6gnYad1sb4iQyqsim_Jc_peZdNXf)
-
-
-## Plugins
+### Plugins
 
 Edit `~/.config/nvim/lua/custom/chadrc.lua`:
 
@@ -149,6 +146,50 @@ local plugins = {
 return plugins
 ```
 
-## Shortcuts
+### Shortcuts
 
 https://docs.rockylinux.org/books/nvchad/nvchad_ui/nvchad_ui/
+
+### Final
+
+`custom/chadrc.lua`:
+```lua
+---@type ChadrcConfig
+local M = {}
+
+M.ui = { theme = 'onenord' }
+
+M.plugins = 'custom.plugins'
+
+return M
+```
+
+`custom/plugins.lua`:
+```lua
+local plugins = {
+  {
+    "Pocco81/auto-save.nvim",
+    lazy = false,
+    config = function()
+        require("auto-save").setup {
+			    -- your config goes here
+			    -- or just leave it empty :)
+		    }
+	  end,
+  },
+  {
+    "github/copilot.vim",
+    lazy = false,
+  },
+  {
+    'MeanderingProgrammer/markdown.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    ft = 'markdown',
+    config = function()
+        require('render-markdown').setup({})
+    end,
+  },
+}
+
+return plugins
+```

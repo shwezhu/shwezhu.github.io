@@ -12,7 +12,7 @@ tags:
 
 MongoDB stores its information in **documents** rather than **rows**. Where relational databases have **tables**, MongoDB has ***collections***. 
 
-Every MongoDB document requires an _id, and if one isn’t present when the document is created, a special MongoDB ObjectID will be generated and added to the document at that time. You can set your own _id by setting it in the document you insert, the ObjectID is just MongoDB’s default.
+Every MongoDB document requires an `_id`, and if one isn’t present when the document is created, a special MongoDB ObjectID will be generated and added to the document at that time. You can set your own `_id` by setting it in the document you insert, the ObjectID is just MongoDB’s default.
 
 Indexes don’t come for free; they take up some space and can make your inserts slightly more expensive, but they are an essential tool for query optimization.
 
@@ -44,11 +44,13 @@ Each *product* can have many *reviews*, and you create this relationship by stor
 }
 ```
 
-But it may come as a surprise that you store the username as well. If this were an RDBMS, you’d be able to pull in the username with a join on the users table. Because you don’t have the join option with MongoDB, you can proceed in one of two ways: either query against the user collection for each review or accept some **denormalization**. Issuing a query for every review might be unnecessarily costly when username is extremely unlikely to change, so here we’ve chosen to optimize for query speed rather than **normalization**.
+But it may come as a surprise that you store the username as well. If this were an RDBMS, you’d be able to pull in the username with a join on the users table. Because you don’t have the join option with MongoDB, you can proceed in one of two ways: either query against the user collection for each review or accept some **denormalization**. Issuing a query for every review might be unnecessarily costly when username is extremely unlikely to change, so here we’ve chosen to optimize for query speed rather than **normalization**. 
 
 Also noteworthy is the decision to store votes in the review document itself. It’s common for users to be able to vote on reviews. Here, you store the object ID of each voting user in an array of voter IDs. This allows you to prevent users from voting on a review more than once, and it also gives you the ability to query for all the reviews a user has voted on. You **cache** the total number of helpful votes, which among other things allows you to sort reviews based on helpfulness. Caching is useful, a query to sort reviews by helpful votes, for example, is much easier if the size of the voting array is cached in the helpful_votes field.
 
-这段提到了一个关键概念：缓存（Caching）, 这里的 “缓存” 是指在文档中直接存储一个额外的数据项（在这个例子中是“有帮助的投票数”），而不是每次查询时计算这个数值。
+> 用户名信息原本可以通过用户ID (`user_id`) 在用户集合(users collection)中查到, 但这样每次刷新评论都要重新查一次用户名. 
+>
+> 这段提到了一个关键概念：缓存（Caching）, 这里的 “缓存” 是指在文档中直接存储一个额外的数据项（在这个例子中是“有帮助的投票数”），而不是每次查询时计算这个数值。
 
 ## Constructing queries - Action in MongoDB chapter 5
 
