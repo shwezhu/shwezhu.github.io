@@ -7,15 +7,11 @@ tags:
   - hugo
 ---
 
-## 1. Basic Commands
+## Recover
 
 ```shell
-# create a website
-$ hugo new site blogs
-# see your websites locally
-$ hugo server
-# generate static html file in public folder
-$ hugo
+$ hugo new site blogs && cd blogs
+
 ```
 
 ## 2. Deploy to Github Pages
@@ -96,5 +92,4 @@ hugo server
 and visit localhost to check...
 
 References: https://olowolo.com/post/hugo-quick-start/
-
 

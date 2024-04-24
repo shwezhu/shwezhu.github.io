@@ -112,7 +112,7 @@ You may wonder how do I know `opts := options.FindOneAndUpdate().SetReturnDocume
 
 And you can check the `FindOneAndUpdateOptions` just click, to check what is it:
 
-![2222](/Users/David/Downloads/2222.jpg)
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/e8455c6379df455fee9182e24b45305e.jpg)
 
 You can see this option is in the `options` package, and you can create it with `FindOneAndUpdate()`, so it's not difficult to write the codes like this:
 
