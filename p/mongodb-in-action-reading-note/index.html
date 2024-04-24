@@ -10,7 +10,7 @@
 <meta property='og:description' content="# Basic Theory MongoDB stores its information in documents rather than rows. Where relational databases have tables, MongoDB has collections. Every MongoDB document requires an _id, and if one isn’t present when the document is created, a special MongoDB ObjectID will be generated and added to the document at that time. You can set your own _id by setting it in the document you insert, the ObjectID is just MongoDB’s default.">
 <meta property='og:url' content='https://demo.stack.jimmycai.com/p/mongodb-in-action-reading-note/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='database' /><meta property='article:tag' content='mongodb' /><meta property='article:published_time' content='2024-01-08T17:38:35&#43;00:00'/><meta property='article:modified_time' content='2024-01-08T17:38:35&#43;00:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='database' /><meta property='article:tag' content='mongodb' /><meta property='article:published_time' content='2024-04-24T18:29:30&#43;00:00'/><meta property='article:modified_time' content='2024-04-24T18:29:30&#43;00:00'/>
 <meta name="twitter:title" content="MongoDB in Action Reading Note">
 <meta name="twitter:description" content="# Basic Theory MongoDB stores its information in documents rather than rows. Where relational databases have tables, MongoDB has collections. Every MongoDB document requires an _id, and if one isn’t present when the document is created, a special MongoDB ObjectID will be generated and added to the document at that time. You can set your own _id by setting it in the document you insert, the ObjectID is just MongoDB’s default.">
     <link rel="shortcut icon" href="/favicon.png" />
@@ -255,12 +255,7 @@
     <li><a href="#examples-in-the-book">Examples in the Book</a>
       <ol>
         <li><a href="#reviews---one-to-many-relationship">Reviews - One to Many Relationship</a></li>
-      </ol>
-    </li>
-    <li><a href="#constructing-queries---action-in-mongodb-chapter-5">Constructing queries - Action in MongoDB chapter 5</a>
-      <ol>
-        <li><a href="#find--findone-functions">Find &amp; FindOne Functions</a></li>
-        <li><a href="#projection-parameter-of-find-and-findone">Projection parameter of find and findOne</a></li>
+        <li><a href="#student--courses---many-to-many-relationship">Student &amp; Courses - Many to Many Relationship</a></li>
       </ol>
     </li>
     <li><a href="#query-operators">Query Operators</a>
@@ -269,7 +264,6 @@
         <li><a href="#boolean-operators">Boolean operators</a></li>
       </ol>
     </li>
-    <li><a href="#querying-arrays">Querying arrays</a></li>
     <li><a href="#update-atomic-operations-and-delete---action-in-mongodb-chapter-7">Update, atomic operations, and delete - Action in MongoDB chapter 7</a>
       <ol>
         <li><a href="#update">Update</a></li>
@@ -326,7 +320,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">Jan 08, 2024</time>
+                <time class="article-time--published">Apr 24, 2024</time>
             </div>
         
 
@@ -362,12 +356,20 @@
 </h2><p>MongoDB stores its information in <strong>documents</strong> rather than <strong>rows</strong>. Where relational databases have <strong>tables</strong>, MongoDB has <em><strong>collections</strong></em>.</p>
 <p>Every MongoDB document requires an <code>_id</code>, and if one isn’t present when the document is created, a special MongoDB ObjectID will be generated and added to the document at that time. You can set your own <code>_id</code> by setting it in the document you insert, the ObjectID is just MongoDB’s default.</p>
 <p>Indexes don’t come for free; they take up some space and can make your inserts slightly more expensive, but they are an essential tool for query optimization.</p>
-<blockquote>
-<p>MongoDB 没有传统数据库中 join 和 foreign key 的的概念, 但是可以通过嵌套文档或 Reference 来表示一对多或多对多的关系, 也可使用聚合来实现类似 Join 的功能. Join 为了同时获得多个表的内容, foreign key 为了数据一致性(data consistency and integrity), <a class="link" href="https://chat.openai.com/share/419afe95-279b-477f-8afa-8f75ab76edad"  target="_blank" rel="noopener"
-    >了解更多</a>
-了解更多: <a class="link" href="https://davidzhu.xyz/post/database/mysql/002-basic-sql/"  target="_blank" rel="noopener"
-    >Basic MySQL - David&rsquo;s Blog</a></p>
-</blockquote>
+<p>MongoDB store documents in a collection in no particular order. To get documents in a particular order, you must can use the <code>sort()</code> method or the <code>$sort</code> aggregation pipeline stage. Learn more: <a class="link" href="https://www.mongodb.com/docs/manual/reference/glossary/#std-term-natural-order"  target="_blank" rel="noopener"
+    >natural order — MongoDB Manual</a></p>
+<p>关于 foreign key 的概念常出现在 one to many 关系中, 比如评论表和用户, 一个用户可以有多个评论, 但一个评论只能有一个用户. 在传统数据库中, 评论表中会有一个 <code>user_id</code> 字段, 我们叫它外键, 每次查询时可以通过 join 操作将用户信息和评论信息关联起来 (即获取写了这个评论的用户具体信息和评论的具体内容).</p>
+<p>MongoDB 没有传统数据库中 join 操作和 foreign key, 但可以通过 <a class="link" href="https://www.mongodb.com/docs/manual/data-modeling/concepts/embedding-vs-references/#embedded-data-models"  target="_blank" rel="noopener"
+    >embedded documents</a> 或者 <a class="link" href="https://www.mongodb.com/docs/manual/data-modeling/concepts/embedding-vs-references/#std-label-data-modeling-referencing"  target="_blank" rel="noopener"
+    >reference</a> 来表示一对多关系, 也可使用聚合来实现类似 Join 的功能. 具体官方文档有解释: <a class="link" href="https://www.mongodb.com/docs/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/"  target="_blank" rel="noopener"
+    >Model One-to-Many Relationships with Embedded Documents</a>, <a class="link" href="https://www.mongodb.com/docs/manual/tutorial/model-referenced-one-to-many-relationships-between-documents/"  target="_blank" rel="noopener"
+    >Model One-to-Many Relationships with Document References</a></p>
+<p>关于一对多, 多对多关系参考: <a class="link" href="https://www.youtube.com/watch?v=4q-keGvUnag"  target="_blank" rel="noopener"
+    >SQL Server Tutorial - One-to-many and many-to-many table relationships</a></p>
+<p>关于外键请参考: <a class="link" href="https://www.youtube.com/watch?v=UQK9_gKQHZg"  target="_blank" rel="noopener"
+    >Learning MySQL - FOREIGN KEY CONSTRAINTS</a></p>
+<p>关于 join 操作请参考: <a class="link" href="https://www.youtube.com/watch?v=9yeOJ0ZMUYw"  target="_blank" rel="noopener"
+    >SQL Joins Explained</a></p>
 <h2 id="examples-in-the-book">
     <a href="#examples-in-the-book">#</a>
     Examples in the Book
@@ -419,13 +421,37 @@
 <p>用户名信息原本可以通过用户ID (<code>user_id</code>) 在用户集合(users collection)中查到, 但这样每次刷新评论都要重新查一次用户名.</p>
 <p>这段提到了一个关键概念：缓存（Caching）, 这里的 “缓存” 是指在文档中直接存储一个额外的数据项（在这个例子中是“有帮助的投票数”），而不是每次查询时计算这个数值。</p>
 </blockquote>
-<h2 id="constructing-queries---action-in-mongodb-chapter-5">
-    <a href="#constructing-queries---action-in-mongodb-chapter-5">#</a>
-    Constructing queries - Action in MongoDB chapter 5
-</h2><h3 id="find--findone-functions">
-    <a href="#find--findone-functions">#</a>
-    Find &amp; FindOne Functions
-</h3><p><code>find</code> returns a cursor object, whereas <code>findOne</code> returns a document. The findOne method is similar to the following, though a cursor is returned even when you apply a limit:</p>
+<h3 id="student--courses---many-to-many-relationship">
+    <a href="#student--courses---many-to-many-relationship">#</a>
+    Student &amp; Courses - Many to Many Relationship
+</h3><p><strong>student:</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="err">_id:</span> <span class="err">&lt;number&gt;,</span>
+</span></span><span class="line"><span class="cl"> <span class="err">name:</span> <span class="err">:</span> <span class="err">&lt;string&gt;,</span>
+</span></span><span class="line"><span class="cl"> <span class="err">otherDetails:</span> <span class="err">{</span> <span class="err">...</span> <span class="p">}</span><span class="err">,</span>
+</span></span><span class="line"><span class="cl"> <span class="err">courses:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span> <span class="err">courseId:</span>  <span class="err">&lt;number&gt;,</span> <span class="err">courseName:</span> <span class="err">&lt;string&gt;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span> <span class="err">courseId:</span>  <span class="err">&lt;number&gt;,</span> <span class="err">courseName:</span> <span class="err">&lt;string&gt;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="err">...</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="err">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>course:</strong></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -434,47 +460,37 @@
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span><span class="lnt">6
-</span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">mongoose</span><span class="p">.</span><span class="nx">products</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s1">&#39;slug&#39;</span><span class="o">:</span> <span class="s1">&#39;wheel-barrow-9092&#39;</span><span class="p">},</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">).</span><span class="nx">limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">mongoose</span><span class="p">.</span><span class="nx">reviews</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s1">&#39;product_id&#39;</span><span class="o">:</span> <span class="nx">product</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">]},</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="p">.</span><span class="nx">sort</span><span class="p">({</span><span class="s1">&#39;helpful_votes&#39;</span><span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">})</span>
-</span></span><span class="line"><span class="cl">    <span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">mongoose</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s1">&#39;addresses.zip&#39;</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;$gt&#39;</span><span class="o">:</span> <span class="mi">10019</span><span class="p">,</span> <span class="s1">&#39;$lt&#39;</span><span class="o">:</span> <span class="mi">10040</span><span class="p">}},</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="err">_id:</span> <span class="err">&lt;number&gt;,</span>
+</span></span><span class="line"><span class="cl">  <span class="err">name:</span> <span class="err">&lt;string&gt;,</span>
+</span></span><span class="line"><span class="cl">  <span class="err">description:</span> <span class="err">&lt;string&gt;,</span>
+</span></span><span class="line"><span class="cl">  <span class="err">otherDetails:</span> <span class="err">{</span> <span class="err">...</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="err">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
-<p><code>null</code> is in the mongoose stryle, I use Nodejs, so this can help remind me of the another two parameters: <code>projection</code> and <code>options</code>.
-<code>db.collection.findOne(query, projection, options)</code></p>
-</blockquote>
-<h3 id="projection-parameter-of-find-and-findone">
-    <a href="#projection-parameter-of-find-and-findone">#</a>
-    Projection parameter of find and findOne
-</h3><blockquote>
-<p>MongoDB store documents in a collection in no particular order. To get documents in a particular order, you must can use the <code>sort()</code> method or the <code>$sort</code> aggregation pipeline stage.
-Learn more: <a class="link" href="https://www.mongodb.com/docs/manual/reference/glossary/#std-term-natural-order"  target="_blank" rel="noopener"
-    >natural order — MongoDB Manual</a></p>
-</blockquote>
+</div><p>Now, your application has some queries. To start with some queries I can think about is, get all students in a particular course and get all courses for a particular student. These are simple queries.</p>
+<p>To get all courses for a specific student, the query would be:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">mongoose</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">findOne</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="err">“</span><span class="nx">username</span><span class="s1">&#39;: &#39;</span><span class="nx">kbanker</span><span class="s1">&#39;, &#39;</span><span class="nx">hashed_password</span><span class="s1">&#39;: &#39;</span><span class="nx">bd1cfa194c3a603e7186780824b04419</span><span class="s1">&#39;},
-</span></span></span><span class="line"><span class="cl"><span class="s1">    {&#39;</span><span class="nx">_id</span><span class="err">&#39;</span><span class="o">:</span> <span class="mi">1</span><span class="p">},</span>
-</span></span><span class="line"><span class="cl">    <span class="kc">null</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl"><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">db</span><span class="p">.</span><span class="nx">students</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&#34;John Doe&#34;</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">courses</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">name</span><span class="o">:</span> <span class="mi">1</span> <span class="p">}</span> <span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>If you are already familiar with SQL and RDBMS, this is the difference between <code>SELECT *</code> and <code>SELECT ID</code>.</p>
+</div><p>To get all students enrolled for a specific course, your query can be like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">db</span><span class="p">.</span><span class="nx">students</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&#34;courses.courseName&#34;</span><span class="o">:</span> <span class="s2">&#34;Database Design&#34;</span> <span class="p">}</span> <span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This example is from <a class="link" href="https://www.mongodb.com/community/forums/t/many-to-many-relationship-and-linked-table-collection/130305/2"  target="_blank" rel="noopener"
+    >Many to many relationship and linked table/collection - Working with Data - MongoDB Developer Community Forums</a></p>
 <h2 id="query-operators">
     <a href="#query-operators">#</a>
     Query Operators
@@ -543,12 +559,7 @@ Learn more: <a class="link" href="https://www.mongodb.com/docs/manual/reference/
 </span></span><span class="line"><span class="cl"><span class="p">})</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="querying-arrays">
-    <a href="#querying-arrays">#</a>
-    Querying arrays
-</h2><p><a class="link" href="https://www.mongodb.com/docs/manual/tutorial/query-arrays/"  target="_blank" rel="noopener"
-    >Query an Array — MongoDB Manual</a></p>
-<h2 id="update-atomic-operations-and-delete---action-in-mongodb-chapter-7">
+</div><h2 id="update-atomic-operations-and-delete---action-in-mongodb-chapter-7">
     <a href="#update-atomic-operations-and-delete---action-in-mongodb-chapter-7">#</a>
     Update, atomic operations, and delete - Action in MongoDB chapter 7
 </h2><h3 id="update">
@@ -805,12 +816,12 @@ Learn more: <a class="link" href="https://www.mongodb.com/docs/manual/reference/
             
                 
 <article class="">
-    <a href="/p/mongodb-docs-golang/">
+    <a href="/p/mongodb-docs-golang-basics/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">MongoDB Docs - Golang</h2>
+            <h2 class="article-title">MongoDB Docs - Golang Basics</h2>
         </div>
     </a>
 </article>
