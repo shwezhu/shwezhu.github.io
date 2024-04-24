@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+    <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# java &amp; javac 两个指令 Technically, javac is the program that translates Java code into bytecode (.class file) - an intermediate format which is understandable by the Java Virtual Machine (JVM). And java is the program that starts the JVM, which in turn, loads the .class file, verifies the bytecode and executes it. -classpath classpath, or -cp classpath, specifies a list of directories, JAR files, and ZIP archives to search for class files.">
 <title>手动编译运行Java程序之JVM加载类的顺序</title>
 
-<link rel='canonical' href='http://localhost:1313/p/%E6%89%8B%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8Cjava%E7%A8%8B%E5%BA%8F%E4%B9%8Bjvm%E5%8A%A0%E8%BD%BD%E7%B1%BB%E7%9A%84%E9%A1%BA%E5%BA%8F/'>
+<link rel='canonical' href='https://demo.stack.jimmycai.com/p/%E6%89%8B%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8Cjava%E7%A8%8B%E5%BA%8F%E4%B9%8Bjvm%E5%8A%A0%E8%BD%BD%E7%B1%BB%E7%9A%84%E9%A1%BA%E5%BA%8F/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="手动编译运行Java程序之JVM加载类的顺序">
 <meta property='og:description' content="# java &amp; javac 两个指令 Technically, javac is the program that translates Java code into bytecode (.class file) - an intermediate format which is understandable by the Java Virtual Machine (JVM). And java is the program that starts the JVM, which in turn, loads the .class file, verifies the bytecode and executes it. -classpath classpath, or -cp classpath, specifies a list of directories, JAR files, and ZIP archives to search for class files.">
-<meta property='og:url' content='http://localhost:1313/p/%E6%89%8B%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8Cjava%E7%A8%8B%E5%BA%8F%E4%B9%8Bjvm%E5%8A%A0%E8%BD%BD%E7%B1%BB%E7%9A%84%E9%A1%BA%E5%BA%8F/'>
+<meta property='og:url' content='https://demo.stack.jimmycai.com/p/%E6%89%8B%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8Cjava%E7%A8%8B%E5%BA%8F%E4%B9%8Bjvm%E5%8A%A0%E8%BD%BD%E7%B1%BB%E7%9A%84%E9%A1%BA%E5%BA%8F/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Java' /><meta property='article:published_time' content='2023-07-26T17:52:40&#43;00:00'/><meta property='article:modified_time' content='2023-07-26T17:52:40&#43;00:00'/>
 <meta name="twitter:title" content="手动编译运行Java程序之JVM加载类的顺序">
