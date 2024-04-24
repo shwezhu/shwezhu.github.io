@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="原文: 云原生虚拟网络 tun/tap &amp; veth-pair - luozhiyun`s Blog 理解 Linux 虚拟网卡设备 tun/tap 的一切 | 骏马金龙 之前的相关文章: TUN Device &amp; utun Interface - David&rsquo;s Blog Tunneling Protocols - David&rsquo;s Blog # 1. 物理网卡和虚拟网卡 # 1.1. 物理网卡收发数据的流程 物理网卡可以接收和发送数据： 收：外界向该物理网卡发送数据时，外界发送到网卡的数据最终会传输到内核空间的网络协议栈中 发：本机要从物理网卡发送数据时，数据将从内核的网络协议栈传输到网卡，网卡负责将数据发送出去 现在的网卡具备 DMA 能力，所以网卡和网络协议栈之间的数据传输由网卡负责，而非由内核亲自占用 CPU 来执行读和写 一般来说，数据的起点和终点是用户程序，所以多数时候的数据需要在用户空间和内核空间 (网络协议栈) 再传输一次： 当用户进程的数据要发送出去时，数据从用户空间写入内核的网络协议栈，再从网络协议栈传输到网卡，最后发送出去 当用户进程等待外界响应数据时，数据从网卡流入，传输至内核的网络协议栈，最后数据写入用户空间被用户进程读取 在这些过程中，内核和用户空间的数据传输由内核占用 CPU 来完成，内核和网卡之间的数据传输由网卡的 DMA 来完成，不需要占用过多的 CPU。 # 1.2. 虚拟网卡和物理网卡的对比 和物理网卡对比一下，物理网卡是硬件网卡，它位于硬件层，虚拟网卡则可以看作是用户空间的网卡，就像用户空间的文件系统 (fuse) 一样。 物理网卡和虚拟网卡唯一的不同点在于物理网卡本身的硬件功能：物理网卡以比特流的方式传输数据。 也就是说，内核会公平对待物理网卡和虚拟网卡，物理网卡能做的配置，虚拟网卡也能做。比如可以为虚拟网卡接口配置 IP 地址、设置子网掩码，可以将虚拟网卡接入网桥等等。 只有在数据流经物理网卡和虚拟网卡的那一刻，才会体现出它们的不同，即传输数据的方式不同：物理网卡以比特流的方式传输数据，虚拟网卡则直接在内存中拷贝数据 (即，在内核之间和读写虚拟网卡的程序之间传输)。 正因为虚拟网卡不具备物理网卡以比特流方式传输数据的硬件功能，所以，绝不可能通过虚拟网卡向外界发送数据，外界数据也不可能直接发送到虚拟网卡上。能够直接收发外界数据的，只能是物理设备。 虽然虚拟网卡无法将数据传输到外界网络，但却： 可以将数据传输到本机的另一个网卡 (虚拟网卡或物理网卡) 或其它虚拟设备 (如虚拟交换机) 上 可以在用户空间运行一个可读写虚拟网卡的程序，该程序可将流经虚拟网卡的数据包进行处理，这个用户程序就像是物理网卡的硬件功能一样，可以收发数据 (可将物理网卡的硬件功能看作是嵌入在网卡上的程序)，比如 OpenVPN 就是这样的工具 很多人会误解这样的用户空间程序，认为它们可以对数据进行封装。比如认为 OpenVPN 可以在数据包的基础上再封装一层隧道 IP 首部，但这种理解是错的。">
+<title>虚拟网卡 tun/tap - 阅读转载</title>
+
+<link rel='canonical' href='http://localhost:1313/p/%E8%99%9A%E6%8B%9F%E7%BD%91%E5%8D%A1-tun/tap-%E9%98%85%E8%AF%BB%E8%BD%AC%E8%BD%BD/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="虚拟网卡 tun/tap - 阅读转载">
+<meta property='og:description' content="原文: 云原生虚拟网络 tun/tap &amp; veth-pair - luozhiyun`s Blog 理解 Linux 虚拟网卡设备 tun/tap 的一切 | 骏马金龙 之前的相关文章: TUN Device &amp; utun Interface - David&rsquo;s Blog Tunneling Protocols - David&rsquo;s Blog # 1. 物理网卡和虚拟网卡 # 1.1. 物理网卡收发数据的流程 物理网卡可以接收和发送数据： 收：外界向该物理网卡发送数据时，外界发送到网卡的数据最终会传输到内核空间的网络协议栈中 发：本机要从物理网卡发送数据时，数据将从内核的网络协议栈传输到网卡，网卡负责将数据发送出去 现在的网卡具备 DMA 能力，所以网卡和网络协议栈之间的数据传输由网卡负责，而非由内核亲自占用 CPU 来执行读和写 一般来说，数据的起点和终点是用户程序，所以多数时候的数据需要在用户空间和内核空间 (网络协议栈) 再传输一次： 当用户进程的数据要发送出去时，数据从用户空间写入内核的网络协议栈，再从网络协议栈传输到网卡，最后发送出去 当用户进程等待外界响应数据时，数据从网卡流入，传输至内核的网络协议栈，最后数据写入用户空间被用户进程读取 在这些过程中，内核和用户空间的数据传输由内核占用 CPU 来完成，内核和网卡之间的数据传输由网卡的 DMA 来完成，不需要占用过多的 CPU。 # 1.2. 虚拟网卡和物理网卡的对比 和物理网卡对比一下，物理网卡是硬件网卡，它位于硬件层，虚拟网卡则可以看作是用户空间的网卡，就像用户空间的文件系统 (fuse) 一样。 物理网卡和虚拟网卡唯一的不同点在于物理网卡本身的硬件功能：物理网卡以比特流的方式传输数据。 也就是说，内核会公平对待物理网卡和虚拟网卡，物理网卡能做的配置，虚拟网卡也能做。比如可以为虚拟网卡接口配置 IP 地址、设置子网掩码，可以将虚拟网卡接入网桥等等。 只有在数据流经物理网卡和虚拟网卡的那一刻，才会体现出它们的不同，即传输数据的方式不同：物理网卡以比特流的方式传输数据，虚拟网卡则直接在内存中拷贝数据 (即，在内核之间和读写虚拟网卡的程序之间传输)。 正因为虚拟网卡不具备物理网卡以比特流方式传输数据的硬件功能，所以，绝不可能通过虚拟网卡向外界发送数据，外界数据也不可能直接发送到虚拟网卡上。能够直接收发外界数据的，只能是物理设备。 虽然虚拟网卡无法将数据传输到外界网络，但却： 可以将数据传输到本机的另一个网卡 (虚拟网卡或物理网卡) 或其它虚拟设备 (如虚拟交换机) 上 可以在用户空间运行一个可读写虚拟网卡的程序，该程序可将流经虚拟网卡的数据包进行处理，这个用户程序就像是物理网卡的硬件功能一样，可以收发数据 (可将物理网卡的硬件功能看作是嵌入在网卡上的程序)，比如 OpenVPN 就是这样的工具 很多人会误解这样的用户空间程序，认为它们可以对数据进行封装。比如认为 OpenVPN 可以在数据包的基础上再封装一层隧道 IP 首部，但这种理解是错的。">
+<meta property='og:url' content='http://localhost:1313/p/%E8%99%9A%E6%8B%9F%E7%BD%91%E5%8D%A1-tun/tap-%E9%98%85%E8%AF%BB%E8%BD%AC%E8%BD%BD/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='networking' /><meta property='article:published_time' content='2023-09-11T21:57:37&#43;00:00'/><meta property='article:modified_time' content='2023-09-11T21:57:37&#43;00:00'/>
+<meta name="twitter:title" content="虚拟网卡 tun/tap - 阅读转载">
+<meta name="twitter:description" content="原文: 云原生虚拟网络 tun/tap &amp; veth-pair - luozhiyun`s Blog 理解 Linux 虚拟网卡设备 tun/tap 的一切 | 骏马金龙 之前的相关文章: TUN Device &amp; utun Interface - David&rsquo;s Blog Tunneling Protocols - David&rsquo;s Blog # 1. 物理网卡和虚拟网卡 # 1.1. 物理网卡收发数据的流程 物理网卡可以接收和发送数据： 收：外界向该物理网卡发送数据时，外界发送到网卡的数据最终会传输到内核空间的网络协议栈中 发：本机要从物理网卡发送数据时，数据将从内核的网络协议栈传输到网卡，网卡负责将数据发送出去 现在的网卡具备 DMA 能力，所以网卡和网络协议栈之间的数据传输由网卡负责，而非由内核亲自占用 CPU 来执行读和写 一般来说，数据的起点和终点是用户程序，所以多数时候的数据需要在用户空间和内核空间 (网络协议栈) 再传输一次： 当用户进程的数据要发送出去时，数据从用户空间写入内核的网络协议栈，再从网络协议栈传输到网卡，最后发送出去 当用户进程等待外界响应数据时，数据从网卡流入，传输至内核的网络协议栈，最后数据写入用户空间被用户进程读取 在这些过程中，内核和用户空间的数据传输由内核占用 CPU 来完成，内核和网卡之间的数据传输由网卡的 DMA 来完成，不需要占用过多的 CPU。 # 1.2. 虚拟网卡和物理网卡的对比 和物理网卡对比一下，物理网卡是硬件网卡，它位于硬件层，虚拟网卡则可以看作是用户空间的网卡，就像用户空间的文件系统 (fuse) 一样。 物理网卡和虚拟网卡唯一的不同点在于物理网卡本身的硬件功能：物理网卡以比特流的方式传输数据。 也就是说，内核会公平对待物理网卡和虚拟网卡，物理网卡能做的配置，虚拟网卡也能做。比如可以为虚拟网卡接口配置 IP 地址、设置子网掩码，可以将虚拟网卡接入网桥等等。 只有在数据流经物理网卡和虚拟网卡的那一刻，才会体现出它们的不同，即传输数据的方式不同：物理网卡以比特流的方式传输数据，虚拟网卡则直接在内存中拷贝数据 (即，在内核之间和读写虚拟网卡的程序之间传输)。 正因为虚拟网卡不具备物理网卡以比特流方式传输数据的硬件功能，所以，绝不可能通过虚拟网卡向外界发送数据，外界数据也不可能直接发送到虚拟网卡上。能够直接收发外界数据的，只能是物理设备。 虽然虚拟网卡无法将数据传输到外界网络，但却： 可以将数据传输到本机的另一个网卡 (虚拟网卡或物理网卡) 或其它虚拟设备 (如虚拟交换机) 上 可以在用户空间运行一个可读写虚拟网卡的程序，该程序可将流经虚拟网卡的数据包进行处理，这个用户程序就像是物理网卡的硬件功能一样，可以收发数据 (可将物理网卡的硬件功能看作是嵌入在网卡上的程序)，比如 OpenVPN 就是这样的工具 很多人会误解这样的用户空间程序，认为它们可以对数据进行封装。比如认为 OpenVPN 可以在数据包的基础上再封装一层隧道 IP 首部，但这种理解是错的。">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-物理网卡和虚拟网卡">1. 物理网卡和虚拟网卡</a>
+      <ol>
+        <li><a href="#11-物理网卡收发数据的流程">1.1. 物理网卡收发数据的流程</a></li>
+        <li><a href="#12-虚拟网卡和物理网卡的对比">1.2. 虚拟网卡和物理网卡的对比</a></li>
+        <li><a href="#13-程序写入虚拟网卡时的注意事项">1.3. 程序写入虚拟网卡时的注意事项</a></li>
+      </ol>
+    </li>
+    <li><a href="#2-概述">2. 概述</a></li>
+    <li><a href="#3-tuntap">3. tun/tap</a></li>
+    <li><a href="#4-openvpn-使用-tun-设备收发数据">4. OpenVPN 使用 tun 设备收发数据</a></li>
+    <li><a href="#5-flannel-udp-模式使用-tun-设备收发数据">5. flannel UDP 模式使用 tun 设备收发数据</a>
+      <ol>
+        <li><a href="#6-tap-设备作为虚拟机网卡">6. tap 设备作为虚拟机网卡</a></li>
+      </ol>
+    </li>
+    <li><a href="#7-总结">7. 总结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/other/" >
+                Other
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E8%99%9A%E6%8B%9F%E7%BD%91%E5%8D%A1-tun/tap-%E9%98%85%E8%AF%BB%E8%BD%AC%E8%BD%BD/">虚拟网卡 tun/tap - 阅读转载</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Sep 11, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    3 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>原文:</p>
+<ul>
+<li><a class="link" href="https://www.luozhiyun.com/archives/684"  target="_blank" rel="noopener"
+    >云原生虚拟网络 tun/tap &amp; veth-pair - luozhiyun`s Blog</a></li>
+<li><a class="link" href="https://www.junmajinlong.com/virtual/network/all_about_tun_tap/"  target="_blank" rel="noopener"
+    >理解 Linux 虚拟网卡设备 tun/tap 的一切 | 骏马金龙</a></li>
+</ul>
+<p>之前的相关文章:</p>
+<ul>
+<li><a class="link" href="https://davidzhu.xyz/post/cs-basics/011-tun-device/"  target="_blank" rel="noopener"
+    >TUN Device &amp; utun Interface - David&rsquo;s Blog</a></li>
+<li><a class="link" href="https://davidzhu.xyz/post/cs-basics/013-tunneling-protocols/"  target="_blank" rel="noopener"
+    >Tunneling Protocols - David&rsquo;s Blog</a></li>
+</ul>
+<h2 id="1-物理网卡和虚拟网卡">
+    <a href="#1-%e7%89%a9%e7%90%86%e7%bd%91%e5%8d%a1%e5%92%8c%e8%99%9a%e6%8b%9f%e7%bd%91%e5%8d%a1">#</a>
+    1. 物理网卡和虚拟网卡
+</h2><h3 id="11-物理网卡收发数据的流程">
+    <a href="#11-%e7%89%a9%e7%90%86%e7%bd%91%e5%8d%a1%e6%94%b6%e5%8f%91%e6%95%b0%e6%8d%ae%e7%9a%84%e6%b5%81%e7%a8%8b">#</a>
+    1.1. 物理网卡收发数据的流程
+</h3><p>物理网卡可以接收和发送数据：</p>
+<ul>
+<li>收：外界向该物理网卡发送数据时，外界发送到网卡的数据最终会传输到内核空间的网络协议栈中</li>
+<li>发：本机要从物理网卡发送数据时，数据将从内核的网络协议栈传输到网卡，网卡负责将数据发送出去</li>
+<li>现在的网卡具备 DMA 能力，所以网卡和网络协议栈之间的数据传输由网卡负责，而非由内核亲自占用 CPU 来执行读和写</li>
+</ul>
+<p>一般来说，数据的起点和终点是用户程序，所以多数时候的数据需要在用户空间和内核空间 (网络协议栈) 再传输一次：</p>
+<ul>
+<li>当用户进程的数据要发送出去时，数据从用户空间写入内核的网络协议栈，再从网络协议栈传输到网卡，最后发送出去</li>
+<li>当用户进程等待外界响应数据时，数据从网卡流入，传输至内核的网络协议栈，最后数据写入用户空间被用户进程读取</li>
+</ul>
+<p>在这些过程中，<strong>内核和用户空间的数据传输由内核占用 CPU 来完成，内核和网卡之间的数据传输由网卡的 DMA 来完成</strong>，不需要占用过多的 CPU。</p>
+<img src="/007-tun-tap-veth-reading/f.png" alt="f" style="zoom: 50%;" />
+<h3 id="12-虚拟网卡和物理网卡的对比">
+    <a href="#12-%e8%99%9a%e6%8b%9f%e7%bd%91%e5%8d%a1%e5%92%8c%e7%89%a9%e7%90%86%e7%bd%91%e5%8d%a1%e7%9a%84%e5%af%b9%e6%af%94">#</a>
+    1.2. 虚拟网卡和物理网卡的对比
+</h3><p>和物理网卡对比一下，物理网卡是硬件网卡，它位于硬件层，虚拟网卡则可以看作是用户空间的网卡，就像用户空间的文件系统 (fuse) 一样。</p>
+<p>物理网卡和虚拟网卡唯一的不同点在于物理网卡本身的硬件功能：物理网卡以比特流的方式传输数据。</p>
+<p>也就是说，内核会公平对待物理网卡和虚拟网卡，物理网卡能做的配置，虚拟网卡也能做。比如可以为虚拟网卡接口配置 IP 地址、设置子网掩码，可以将虚拟网卡接入网桥等等。</p>
+<p>只有在数据流经物理网卡和虚拟网卡的那一刻，才会体现出它们的不同，即传输数据的方式不同：物理网卡以比特流的方式传输数据，虚拟网卡则直接在内存中拷贝数据 (即，在内核之间和读写虚拟网卡的程序之间传输)。</p>
+<p>正因为虚拟网卡不具备物理网卡以比特流方式传输数据的硬件功能，所以，<strong>绝不可能通过虚拟网卡向外界发送数据，外界数据也不可能直接发送到虚拟网卡上</strong>。能够直接收发外界数据的，只能是物理设备。</p>
+<p>虽然虚拟网卡无法将数据传输到外界网络，但却：</p>
+<ul>
+<li><strong>可以将数据传输到本机的另一个网卡 (虚拟网卡或物理网卡) 或其它虚拟设备 (如虚拟交换机) 上</strong></li>
+<li><strong>可以在用户空间运行一个可读写虚拟网卡的程序，该程序可将流经虚拟网卡的数据包进行处理</strong>，这个用户程序就像是物理网卡的硬件功能一样，可以收发数据 (可将物理网卡的硬件功能看作是嵌入在网卡上的程序)，比如 OpenVPN 就是这样的工具</li>
+</ul>
+<p>很多人会误解这样的用户空间程序，认为它们可以对数据进行封装。比如认为 OpenVPN 可以在数据包的基础上再封装一层隧道 IP 首部，但这种理解是错的。</p>
+<p>一定请注意，<strong>用户空间的程序是无法对数据包做任何封装和解封操作的，所有的封装和解封都只能由内核的网络协议栈来完成</strong>。</p>
+<img src="/007-tun-tap-veth-reading/f-4483381.png" alt="f" style="zoom:50%;" />
+<p>使用 OpenVPN 之所以可以对数据再封装一层隧道 IP 层，是因为 OpenVPN 可以读取已经封装过一次 IP 首部的数据，并将包含 ip 首部的数据作为普通数据通过虚拟网卡再次传输给内核。因为内核接收到的是来自虚拟网卡的数据，所以内核会将其当作普通数据从头开始封装 (从四层封装到二层封装)。当数据从网络协议栈流出时，就有了两层 IP 首部的封装。</p>
+<p>换句话说，每一次看似由用户空间程序进行的额外封装，都意味着数据要从内核空间到用户空间，再到内核空间。以 OpenVPN 为例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">tcp/ip stack --&gt; tun --&gt; OpenVPN --&gt; tcp/ip stack --&gt; Phyical NIC
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中 tun 是 OpenVPN 创建的一个三层虚拟网卡，tun 设备在用户空间和内核空间之间传递数据。</p>
+<p>具体的 openvpn 数据封装和数据流向的细节，参考更详细的<a class="link" href="https://www.junmajinlong.com/virtual/network/data_flow_about_openvpn"  target="_blank" rel="noopener"
+    >通过 openvpn 分析 tun 实现隧道的数据流程</a>。</p>
+<h3 id="13-程序写入虚拟网卡时的注意事项">
+    <a href="#13-%e7%a8%8b%e5%ba%8f%e5%86%99%e5%85%a5%e8%99%9a%e6%8b%9f%e7%bd%91%e5%8d%a1%e6%97%b6%e7%9a%84%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9">#</a>
+    1.3. 程序写入虚拟网卡时的注意事项
+</h3><p>用户空间的程序不可随意向虚拟网卡写入数据，因为写入虚拟网卡的这些数据都会被内核网络协议栈进行解封处理，就像来自物理网卡的数据都会被解封一样。</p>
+<p>因此，如果<strong>用户空间程序要写 tun/tap 设备，所写入的数据需具有特殊结构</strong>：</p>
+<ul>
+<li>要么是已经封装了 PORT 的数据，即传输层的 tcp 数据段或 udp 数据报</li>
+<li>要么是已经封装了 IP+PORT 的数据，即 ip 层数据包</li>
+<li>要么是已经封装了 IP+PORT+MAC 的数据，即链路层数据帧</li>
+<li>要么是其它符合 tcp/ip 协议栈的数据，比如二层的 PPP 点对点数据，比如三层的 icmp 协议数据</li>
+</ul>
+<p>也就是说，程序只能向虚拟网卡写入已经封装过的数据。</p>
+<p>由于网络数据的封装都由内核的网络协议栈负责，所以程序写入虚拟网卡的数据实际上都原封不动地来自于上一轮的网络协议栈，用户空间程序无法对这部分数据做任何修改。</p>
+<p>也就是说，这时<strong>写虚拟网卡的用户空间程序仅充当了一个特殊的【转发】程序：要么转发四层 tcp/udp 数据，要么转发三层数据包，要么转发二层数据帧</strong>。</p>
+<p>这一段话可能不好理解，下面给个简单的示例分析。</p>
+<p>假如物理网卡 eth0 从外界网络接收了这么一段特殊的 ping 请求数据：</p>
+<img src="/007-tun-tap-veth-reading/g.png" alt="g" style="zoom:50%;" />
+<p>这份数据会从物理网卡传输到内核网络协议栈，网络协议栈会对其解封，解封的内容只能是 tcp/ip 协议栈中的内容，即只能解封帧头部、IP 头部以及端口头部，网络协议栈解封后还剩下一段包含了内层 IP 头部 (tun 的 IP) 以及 icmp 请求的数据。</p>
+<p>内核会根据刚才解封的端口号找到对应的服务进程，并将解封剩下的数据传输给该进程，即传输给用户空间的程序。</p>
+<p>用户空间的程序不做任何修改地将读取到的包含了内层 IP 头部和 ICMP 请求的数据原封不动地写入虚拟网卡设备，内核从虚拟网卡接收到数据后，将数据进行解封，解封得到最终的 icmp 请求数据，于是内核开始构建用于响应 ping 请求的数据。</p>
+<h2 id="2-概述">
+    <a href="#2-%e6%a6%82%e8%bf%b0">#</a>
+    2. 概述
+</h2><p>目前主流的虚拟网卡方案有<a class="link" href="https://www.kernel.org/doc/Documentation/networking/tuntap.txt"  target="_blank" rel="noopener"
+    >tun/tap</a>和<a class="link" href="https://man7.org/linux/man-pages/man4/veth.4.html"  target="_blank" rel="noopener"
+    >veth</a>两种。在时间上 tun/tap 出现得更早，在 Linux Kernel 2.4 版之后发布的内核都会默认编译 tun/tap 的驱动。并且 tun/tap 应用非常广泛，其中云原生虚拟网络中， flannel 的 UDP 模式中的 flannel0 就是一个 tun 设备，OpenVPN 也利用到了 tun/tap 进行数据的转发。</p>
+<p>veth 是另一种主流的虚拟网卡方案，在 Linux Kernel 2.6 版本，Linux 开始支持网络名空间隔离的同时，也提供了专门的虚拟以太网（Virtual Ethernet，习惯简写做 veth）让两个隔离的网络名称空间之间可以互相通信。veth 实际上不是一个设备，而是一对设备，因而也常被称作 Veth-Pair。</p>
+<p>Docker 中的 Bridge 模式就是依靠 veth-pair 连接到 docker0 网桥上与宿主机乃至外界的其他机器通信的。</p>
+<img src="/007-tun-tap-veth-reading/a.png" alt="a" style="zoom:50%;" />
+<h2 id="3-tuntap">
+    <a href="#3-tuntap">#</a>
+    3. tun/tap
+</h2><p>tun 和 tap 是两个相对独立的虚拟网络设备，它们作为虚拟网卡，除了不具备物理网卡的硬件功能外，它们和物理网卡的功能是一样的，此外tun/tap负责在内核网络协议栈和用户空间之间传输数据。</p>
+<ul>
+<li>tun 设备是一个三层网络层设备，从 /dev/net/tun 字符设备上读取的是 IP 数据包，写入的也只能是 IP 数据包，因此常用于一些点对点IP隧道，例如OpenVPN，IPSec等；</li>
+<li>tap 设备是二层链路层设备，等同于一个以太网设备，从 /dev/tap0 字符设备上读取 MAC 层数据帧，写入的也只能是 MAC 层数据帧，因此常用来作为虚拟机模拟网卡使用；</li>
+</ul>
+<img src="/007-tun-tap-veth-reading/b.png" alt="b" style="zoom:50%;" />
+<p>从上面图中，我们可以看出物理网卡和 tun/tap 设备模拟的虚拟网卡的区别，虽然它们的一端都是连着网络协议栈，但是物理网卡另一端连接的是物理网络，而 tun/tap 设备另一端连接的是一个文件作为传输通道。</p>
+<p>根据前面的介绍，我们大约知道虚拟网卡主要有两个功能，一个是连接其它设备（虚拟网卡或物理网卡）和 Bridge 这是 tap 设备的作用；另一个是提供用户空间程序去收发虚拟网卡上的数据，这是 tun 设备的作用。</p>
+<p>主要区别是因为它们作用在不同的网络协议层，换句话说 tap设备是一个二层设备所以通常接入到 Bridge上作为局域网的一个节点，tun设备是一个三层设备通常用来实现 vpn。</p>
+<h2 id="4-openvpn-使用-tun-设备收发数据">
+    <a href="#4-openvpn-%e4%bd%bf%e7%94%a8-tun-%e8%ae%be%e5%a4%87%e6%94%b6%e5%8f%91%e6%95%b0%e6%8d%ae">#</a>
+    4. OpenVPN 使用 tun 设备收发数据
+</h2><p>OpenVPN 是使用 tun 设备的常见例子，它可以方便的在不同网络访问场所之间搭建类似于局域网的专用网络通道。其核心机制就是在 OpenVPN 服务器和客户端所在的计算机上都安装一个 tun 设备，通过其虚拟 IP 实现相互访问。</p>
+<p>例如公网上的两个主机节点A、B，物理网卡上配置的IP分别是 ipA_eth0 和 ipB_eth0。然后在A、B两个节点上分别运行 openvpn 的客户端和服务端，它们会在自己的节点上创建 tun 设备，且都会读取或写入这个 tun 设备。</p>
+<p>假设这两个设备对应的虚拟 IP 是 ipA_tun0 和 ipB_tun0，那么节点 B 上面的应用程序想要通过虚拟 IP 对节点 A 通信，那么数据包流向就是：</p>
+<img src="/007-tun-tap-veth-reading/c.png" alt="c" style="zoom:50%;" />
+<p>用户进程对 ipA_tun0 发起请求，经过路由决策后内核将数据从网络协议栈写入 tun0 设备；然后 OpenVPN 从字符设备文件中读取 tun0 设备数据，将数据请求发出去；内核网络协议栈根据路由决策将数据从本机的 eth0 接口流出发往 ipA_eth0 。</p>
+<p>同样我们来看看节点 A 是如何接受数据：</p>
+<img src="/007-tun-tap-veth-reading/d.png" alt="d" style="zoom:50%;" />
+<p>当节点A 通过物理网卡 eth0 接受到数据后会将写入内核网络协议栈，因为目标端口号是OpenVPN程序所监听的，所以网络协议栈会将数据交给 OpenVPN ；</p>
+<p>OpenVPN 程序得到数据之后，发现目标IP是tun0设备的，于是将数据从用户空间写入到字符设备文件中，然后 tun0 设备会将数据写入到协议栈中，网络协议栈最终将数据转发给应用进程。</p>
+<p>从上面我们知道使用 tun/tap 设备传输数据需要经过两次协议栈，不可避免地会有一定的性能损耗，如果条件允许，容器对容器的直接通信并不会把 tun/tap 作为首选方案，一般是基于稍后介绍的 veth 来实现的。但是 tun/tap 没有 veth 那样要求设备成对出现、数据要原样传输的限制，数据包到用户态程序后，程序员就有完全掌控的权力，要进行哪些修改，要发送到什么地方，都可以编写代码去实现，因此 tun/tap 方案比起 veth 方案有更广泛的适用范围。</p>
+<h2 id="5-flannel-udp-模式使用-tun-设备收发数据">
+    <a href="#5-flannel-udp-%e6%a8%a1%e5%bc%8f%e4%bd%bf%e7%94%a8-tun-%e8%ae%be%e5%a4%87%e6%94%b6%e5%8f%91%e6%95%b0%e6%8d%ae">#</a>
+    5. flannel UDP 模式使用 tun 设备收发数据
+</h2><p>早期 flannel 利用 tun 设备实现了 UDP 模式下的跨主网络相互访问，实际上原理和上面的 OpenVPN 是差不多的。</p>
+<p>在 flannel 中 flannel0 是一个三层的 tun 设备，用作在操作系统内核和用户应用程序之间传递 IP 包。当操作系统将一个 IP 包发送给 flannel0 设备之后，flannel0 就会把这个 IP 包，交给创建这个设备的应用程序，也就是 flanneld 进程，flanneld 进程是一个 UDP 进程，负责处理 flannel0 发送过来的数据包：</p>
+<img src="/007-tun-tap-veth-reading/e.png" alt="e" style="zoom:50%;" />
+<p>flanneld 进程会根据目的 IP 的地址匹配到对应的子网，从 Etcd 中找到这个子网对应的宿主机 Node2 的 IP 地址，然后将这个数据包直接封装在 UDP 包里面，然后发送给 Node 2。由于每台宿主机上的 flanneld 都监听着一个 8285 端口，所以 Node2 机器上 flanneld 进程会从 8285 端口获取到传过来的数据，解析出封装在里面的发给 ContainerA 的 IP 地址。</p>
+<p>flanneld 会直接把这个 IP 包发送给它所管理的 TUN 设备，即 flannel0 设备。然后网络栈会将这个数据包根据路由发送到 docker0 网桥，docker0 网桥会扮演二层交换机的角色，将数据包发送给正确的端口，进而通过 veth pair 设备进入到 containerA 的 Network Namespace 里。</p>
+<p>上面所讲的 Flannel UDP 模式现在已经废弃，原因就是因为它经过三次用户态与内核态之间的数据拷贝。容器发送数据包经过 docker0 网桥进入内核态一次；数据包由 flannel0 设备进入到 flanneld 进程又一次；第三次是 flanneld 进行 UDP 封包之后重新进入内核态，将 UDP 包通过宿主机的 eth0 发出去。</p>
+<h3 id="6-tap-设备作为虚拟机网卡">
+    <a href="#6-tap-%e8%ae%be%e5%a4%87%e4%bd%9c%e4%b8%ba%e8%99%9a%e6%8b%9f%e6%9c%ba%e7%bd%91%e5%8d%a1">#</a>
+    6. tap 设备作为虚拟机网卡
+</h3><p>上面我们也说了，tap 设备是一个二层链路层设备，通常用作实现虚拟网卡。以 qemu-kvm 为例，它利用 tap 设备和 Bridge 配合使用拥有极大的灵活性，可以实现各种各样的网络拓扑。</p>
+<img src="/007-tun-tap-veth-reading/j.png" alt="j" style="zoom:50%;" />
+<p>在 qume-kvm 开启 tap 模式之后，在启动的时候会向内核注册了一个tap类型虚拟网卡 tapx，x 代表依次递增的数字； 这个虚拟网卡 tapx 是绑定在 Bridge 上面的，是它上面的一个接口，最终数据会通过 Bridge 来进行转发。</p>
+<p>qume-kvm 会通过其网卡 eth0 向外发送数据，从 Host 角度看就是用户层程序 qume-kvm 进程将字符设备写入数据；然后 tapx 设备会收到数据后由 Bridge 决定数据包如何转发。如果 qume-kvm 要和外界通信，那么数据包会被发送到物理网卡，最终实现与外部通信。</p>
+<p>从上面的图也可以看出 qume-kvm 发出的数据包通过 tap 设备先到达 Bridge ，然后到物理网络中，数据包不需要经过主机的的协议栈，这样效率也比较高。</p>
+<h2 id="7-总结">
+    <a href="#7-%e6%80%bb%e7%bb%93">#</a>
+    7. 总结
+</h2><p>本篇文章只是讲了两种常见的虚拟网络设备。起因是在看 flannel 的时候，书里面都会讲到 flannel0 是一个 tun 设备，但是什么是 tun 设备却不明白，所以导致 flannel 也看的不明白。</p>
+<p>经过研究，发现 tun/tap 设备是一个虚拟网络设备，负责数据转发，但是它需要通过文件作为传输通道，这样不可避免的引申出 tun/tap 设备为什么要转发两次，这也是为什么 flannel 设备 UDP 模式下性能不好的原因，导致了后面这种模式被废弃掉。</p>
+<p>因为 tun/tap 设备作为虚拟网络设备性能不好，容器对容器的直接通信并不会把 tun/tap 作为首选方案，一般是基于后面介绍的 veth 来实现的。veth 作为一个二层设备，可以让两个隔离的网络名称空间之间可以互相通信，不需要反复多次经过网络协议栈， veth pair 是一端连着协议栈，另一端彼此相连的，数据之间的传输变得十分简单，这也让 veth 比起 tap/tun 具有更好的性能。</p>
+<p>了解更多:</p>
+<ul>
+<li><a class="link" href="https://developers.redhat.com/blog/2018/10/22/introduction-to-linux-interfaces-for-virtual-networking"  target="_blank" rel="noopener"
+    >Introduction to Linux interfaces for virtual networking | Red Hat Developer</a></li>
+<li><a class="link" href="https://gist.github.com/mtds/4c4925c2aa022130e4b7c538fdd5a89f"  target="_blank" rel="noopener"
+    >Linux Virtual Networking</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/networking/">Networking</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/%E6%8B%8D%E7%85%A7%E6%9E%84%E5%9B%BE%E6%8A%80%E5%B7%A7/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">拍照构图技巧</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/pass-by-value-or-reference/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Pass by Value or Reference</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/data-types-in-programming-languages/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Data Types in Programming Languages</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/typing-in-programming-language/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Typing in Programming Language</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/typing-in-programming-language-example/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Typing in Programming Language - Example</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

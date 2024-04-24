@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads # 2. Goroutines vs OS Threads Creation and Destruction Creating and destroying OS threads requires interacting with the operating system, involving system calls. Go routines managed by Go scheduler, in user space, no system calls. Context Switching needs a full context switch in os thread Level of Operation User Space Level vs Kernel Space Level Goroutines are multiplexed onto a smaller number of OS threads.">
+<title>Goroutines Model</title>
+
+<link rel='canonical' href='http://localhost:1313/p/goroutines-model/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Goroutines Model">
+<meta property='og:description' content="# 1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads # 2. Goroutines vs OS Threads Creation and Destruction Creating and destroying OS threads requires interacting with the operating system, involving system calls. Go routines managed by Go scheduler, in user space, no system calls. Context Switching needs a full context switch in os thread Level of Operation User Space Level vs Kernel Space Level Goroutines are multiplexed onto a smaller number of OS threads.">
+<meta property='og:url' content='http://localhost:1313/p/goroutines-model/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:tag' content='concurrency' /><meta property='article:published_time' content='2023-08-24T14:58:18&#43;00:00'/><meta property='article:modified_time' content='2023-08-24T14:58:18&#43;00:00'/>
+<meta name="twitter:title" content="Goroutines Model">
+<meta name="twitter:description" content="# 1. Two Styles of Concurrent Programming Go enables two styles of concurrent programming. communicating sequential processes or CSP goroutines and channels shared memory multithreading traditional model multiple threads # 2. Goroutines vs OS Threads Creation and Destruction Creating and destroying OS threads requires interacting with the operating system, involving system calls. Go routines managed by Go scheduler, in user space, no system calls. Context Switching needs a full context switch in os thread Level of Operation User Space Level vs Kernel Space Level Goroutines are multiplexed onto a smaller number of OS threads.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1--two-styles-of-concurrent-programming">1.  Two Styles of Concurrent Programming</a></li>
+    <li><a href="#2-goroutines-vs-os-threads">2. Goroutines vs OS Threads</a>
+      <ol>
+        <li><a href="#21-growable-stacks">2.1. Growable Stacks</a></li>
+        <li><a href="#22-goroutine-scheduling">2.2. Goroutine Scheduling</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-goroutine-model">3. Goroutine Model</a>
+      <ol>
+        <li><a href="#31-physical-thread-vs-kernel-thread">3.1. Physical Thread vs Kernel Thread</a></li>
+      </ol>
+    </li>
+    <li><a href="#4-frequently-asked-questions-faq">4. Frequently Asked Questions (FAQ)</a>
+      <ol>
+        <li><a href="#41-why-goroutines-instead-of-threads">4.1. why goroutines instead of threads?</a></li>
+        <li><a href="#42-why-is-there-no-goroutine-id">4.2. why is there no goroutine ID?</a></li>
+      </ol>
+    </li>
+    <li><a href="#5-conclusion">5. Conclusion</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/golang/" >
+                Golang
+            </a>
+        
+            <a href="/categories/advance/" >
+                Advance
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/goroutines-model/">Goroutines Model</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Aug 24, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    7 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1--two-styles-of-concurrent-programming">
+    <a href="#1--two-styles-of-concurrent-programming">#</a>
+    1.  Two Styles of Concurrent Programming
+</h2><p>Go enables two styles of concurrent programming.</p>
+<ul>
+<li><em>communicating sequential processes</em> or <em>CSP</em>
+<ul>
+<li>goroutines and channels</li>
+</ul>
+</li>
+<li><em>shared memory multithreading</em>
+<ul>
+<li>traditional model</li>
+<li>multiple threads</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-goroutines-vs-os-threads">
+    <a href="#2-goroutines-vs-os-threads">#</a>
+    2. Goroutines vs OS Threads
+</h2><ul>
+<li>Creation and Destruction
+<ul>
+<li>Creating and destroying OS threads requires interacting with the operating system, involving system calls.</li>
+<li>Go routines managed by Go scheduler, in user space, no system calls.</li>
+</ul>
+</li>
+<li>Context Switching
+<ul>
+<li>needs a full context switch in os thread</li>
+</ul>
+</li>
+<li>Level of Operation
+<ul>
+<li>User Space Level vs Kernel Space Level</li>
+<li>Goroutines are multiplexed onto a smaller number of OS threads.</li>
+</ul>
+</li>
+<li>Stack Size
+<ul>
+<li>growable stack vs fixed-size stack</li>
+</ul>
+</li>
+</ul>
+<h3 id="21-growable-stacks">
+    <a href="#21-growable-stacks">#</a>
+    2.1. Growable Stacks
+</h3><p>Each <strong>OS thread</strong> has a fixed-size block of memory (often as large as 2MB) for its <em>stack</em>. This fixed-size stack is simultaneously too much and too little. Yet despite their size, fixed-size stacks are not always big enough for the most complex and deeply recursive of functions. Changing the fixed size can improve space efficiency and allow more threads to be created, or it can enable more deeply recursive functions, but it cannot do both.</p>
+<p>In contrast, a goroutine starts life with a small stack, typically 2KB. A goroutine’s stack, like the stack of an OS thread, holds the local variables of active and suspended function calls, but unlike an OS thread, <strong>a goroutine’s stack is not fixed; it grows and shrinks as needed</strong>. The size limit for a goroutine stack may be as much as 1GB.</p>
+<h3 id="22-goroutine-scheduling">
+    <a href="#22-goroutine-scheduling">#</a>
+    2.2. Goroutine Scheduling
+</h3><p><strong>OS threads are scheduled by the OS kernel</strong>. Every few milliseconds, a hardware timer interrupts the processor, which causes a kernel function called the <em>scheduler</em> to be invoked. This function suspends the currently executing thread and saves its registers in memory, looks over the list of threads and decides which one should run next, restores that thread’s registers from memory, then resumes the execution of that thread. Because OS threads are scheduled by the kernel, passing control from one thread to another requires <strong>a full <em>context switch</em>, that is, saving the state of one user thread to memory, restoring the state of another, and updating the scheduler’s data structures</strong>. This operation is slow, due to its poor locality and the number of memory accesses required</p>
+<p>The Go runtime contains its own scheduler that uses a technique known as <em><strong>m:n scheduling</strong></em>, because it multiplexes (or schedules) <em>m</em> goroutines on <em>n</em> OS threads. The job of the Go scheduler is analogous to that of the kernel scheduler, but it is concerned only with the goroutines of a single Go program.</p>
+<p>Unlike the operating system’s thread scheduler, the Go scheduler is not invoked periodically by a hardware timer, but implicitly by certain Go language constructs. For example, when a goroutine calls <code>time.Sleep</code> or blocks in a channel or mutex operation, the scheduler puts it to sleep and runs another goroutine until it is time to wake the first one up. Because it doesn’t need a switch to kernel context, rescheduling a goroutine is much cheaper than rescheduling a thread.</p>
+<h2 id="3-goroutine-model">
+    <a href="#3-goroutine-model">#</a>
+    3. Goroutine Model
+</h2><p>go-routines are <strong>user-space threads</strong> not <strong>kernel threads</strong>, kernel threads created and managed by OS (sleep, wait, running), OS doesn&rsquo;t know user-space threads exist, Go shcduler multiplexes (or schedules) <em>m</em> goroutines on <em>n</em> OS threads, which is known as <em><strong>m:n scheduling</strong></em>.</p>
+<p>Learn how goroutine works:</p>
+<p>{% youtube YHRO5WQGh0k %}</p>
+<h3 id="31-physical-thread-vs-kernel-thread">
+    <a href="#31-physical-thread-vs-kernel-thread">#</a>
+    3.1. Physical Thread vs Kernel Thread
+</h3><blockquote>
+<p>A &ldquo;hardware thread&rdquo; is just a confusing name for a logical core, aka execution context. It has nothing to do with software threads or kernel threads. One physical core may support more than 1 logical core, e.g. via hyperthreading or other SMT.</p>
+<p>A hardware thread is a set of registers that are able to hold the <a class="link" href="https://en.wikipedia.org/wiki/Context_switch"  target="_blank" rel="noopener"
+    ><em>context</em></a> of a software thread. Having two &ldquo;hardware threads&rdquo; enables a single CPU to concurrently execute the instructions of two software threads without help from the OS. P.S.: If a software thread is like an automobile, then a hardware thread is like a lane on a highway in which the automobile can drive. OK, that&rsquo;s kind of a weak anaology, but what I&rsquo;m trying to say is that a &ldquo;hardware thread&rdquo; and a thread in your program don&rsquo;t have much more in common with each other than the lane on the highway has in common with your car.</p>
+<p>&ndash;<a class="link" href="https://stackoverflow.com/questions/73308353/kernel-threads-vs-cpu-threads"  target="_blank" rel="noopener"
+    >multithreading - Kernel threads VS CPU threads - Stack Overflow</a></p>
+</blockquote>
+<p>Learn more <a class="link" href="https://davidzhu.xyz/2023/05/28/Operating-System/001-cpu-architecture/"  target="_blank" rel="noopener"
+    >Hyper-Threading &amp; Physical Threads </a></p>
+<p>无论语言层面何种并发模型, 到了操作系统一定是运行在 kernel thread 上的, 上面我们说到Go的做法是把多个 user-space threads 映射到一个 kernel thread, 以减少kernel thread切换时带来的消耗, 那其他语言怎么做的呢? 在C++里, 是通过syscall直接调用OS的kernel thread, 线程所有的行为如创建, 终止, 切换等操作都由内核来完成, 一个用户态的线程对应一个系统线程, 这时候C++在频繁创建删除thread的时候就要考虑上下文切换的开销了, 因为操作的直接是kernel thread, 比如来一个tcp连接就创建一个thread, 开销太大了, 所以这时候就出现了线程池, 说到底我们就是想要减少kernel thread创建切换的次数, 以减少开销,  你看无论C++还是Go都有自己的解决办法, 前者是通过thread pool来对kernel thread重复利用, 而后者因为通过map 多个goroutine到较少个kernel thread, 实现对kernel thread的重复利用, 减少上下文切换的次数, 减少开销,</p>
+<h2 id="4-frequently-asked-questions-faq">
+    <a href="#4-frequently-asked-questions-faq">#</a>
+    4. Frequently Asked Questions (FAQ)
+</h2><h3 id="41-why-goroutines-instead-of-threads">
+    <a href="#41-why-goroutines-instead-of-threads">#</a>
+    4.1. why goroutines instead of threads?
+</h3><p>Goroutines are part of making concurrency easy to use. The idea, which has been around for a while, is to multiplex independently executing functions—coroutines—onto a set of threads. When a coroutine blocks, such as by calling a blocking system call, the run-time automatically moves other coroutines on the same operating system thread to a different, runnable thread so they won&rsquo;t be blocked. The programmer sees none of this, which is the point. The result, which we call goroutines, can be very cheap: they have little overhead beyond the memory for the stack, which is just a few kilobytes.</p>
+<p>To make the stacks small, Go&rsquo;s run-time uses resizable, bounded stacks. A newly minted goroutine is given a few kilobytes, which is almost always enough. When it isn&rsquo;t, the run-time grows (and shrinks) the memory for storing the stack automatically, allowing many goroutines to live in a modest amount of memory. The CPU overhead averages about three cheap instructions per function call. It is practical to create hundreds of thousands of goroutines in the same address space. If goroutines were just threads, system resources would run out at a much smaller number.</p>
+<h3 id="42-why-is-there-no-goroutine-id">
+    <a href="#42-why-is-there-no-goroutine-id">#</a>
+    4.2. why is there no goroutine ID?
+</h3><p>Goroutines do not have names; they are just anonymous workers. They expose no unique identifier, name, or data structure to the programmer. Some people are surprised by this, expecting the <code>go</code> statement to return some item that can be used to access and control the goroutine later.</p>
+<p>The fundamental reason goroutines are anonymous is so that the full Go language is available when programming concurrent code. By contrast, the usage patterns that develop when threads and goroutines are named can restrict what a library using them can do.</p>
+<p>Here is an illustration of the difficulties. Once one names a goroutine and constructs a model around it, it becomes special, and one is tempted to associate all computation with that goroutine, ignoring the possibility of using multiple, possibly shared goroutines for the processing. If the <code>net/http</code> package associated per-request state with a goroutine, clients would be unable to use more goroutines when serving a request.</p>
+<p>Moreover, experience with libraries such as those for graphics systems that require all processing to occur on the &ldquo;main thread&rdquo; has shown how awkward and limiting the approach can be when deployed in a concurrent language. The very existence of a special thread or goroutine forces the programmer to distort the program to avoid crashes and other problems caused by inadvertently operating on the wrong thread.</p>
+<p>For those cases where a particular goroutine is truly special, the language provides features such as channels that can be used in flexible ways to interact with it.</p>
+<h2 id="5-conclusion">
+    <a href="#5-conclusion">#</a>
+    5. Conclusion
+</h2><ul>
+<li>OS thread has a fixed-size block of memory (as large as 2MB) for its <em>stack</em>.</li>
+<li>A goroutine starts life with a small stack, typically 2KB but goroutine’s stack is not fixed.</li>
+<li>Thread stack holds the local variables of active and suspended function calls.</li>
+<li>OS threads are scheduled by the OS kernel, Go runtime contains its own scheduler that uses a technique known as <em><strong>m:n scheduling</strong></em>, goroutine is much cheaper than rescheduling a thread.</li>
+</ul>
+<p>A great bolg: <a class="link" href="https://blog.carlmjohnson.net/post/share-memory-by-communicating/"  target="_blank" rel="noopener"
+    >Share memory by communicating · The Ethically-Trained Programmer</a></p>
+<p>参考:</p>
+<ul>
+<li><a class="link" href="https://learning.oreilly.com/library/view/the-go-programming/9780134190570/ebook_split_094.html"  target="_blank" rel="noopener"
+    >9.8 Goroutines and Threads | The Go Programming Language</a></li>
+<li><a class="link" href="https://go.dev/doc/faq"  target="_blank" rel="noopener"
+    >Frequently Asked Questions (FAQ) - The Go Programming Language</a></li>
+<li><a class="link" href="https://www.youtube.com/watch?v=YHRO5WQGh0k"  target="_blank" rel="noopener"
+    >GopherCon 2018: Kavya Joshi - The Scheduler Saga</a></li>
+<li><a class="link" href="https://stackoverflow.com/questions/73308353/kernel-threads-vs-cpu-threads"  target="_blank" rel="noopener"
+    >multithreading - Kernel threads VS CPU threads - Stack Overflow</a></li>
+<li>书籍《Go并发编程实战》</li>
+<li><a class="link" href="https://go.dev/doc/effective_go#introduction"  target="_blank" rel="noopener"
+    >Effective Go - The Go Programming Language</a></li>
+<li><a class="link" href="https://zhuanlan.zhihu.com/p/60613088"  target="_blank" rel="noopener"
+    >https://zhuanlan.zhihu.com/p/60613088</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/golang/">Golang</a>
+        
+            <a href="/tags/concurrency/">Concurrency</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/concurrency-with-shared-variables/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Concurrency with Shared Variables</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/go-scheduler-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Go Scheduler (2)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/go-scheduler-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Go Scheduler (1)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/static-linking-go-programs/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Static Linking Go Programs</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cross-compilation-go/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cross Compilation - Go</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

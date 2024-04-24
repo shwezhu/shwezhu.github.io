@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Quick start Execute the following commands at your terminal, you don&rsquo;t need to execute them under your project folder, just execute them anywhere, it will install the protoc compiler and the protoc-gen-go and protoc-gen-go-grpc plugins into your $GOPATH/bin folder. 1 2 3 4 5 6 7 # install protoc compiler $ brew install protobuf $ protoc --version # Ensure compiler version is 3+ # install plugins for $ go install google.">
+<title>Ptotocol Buffers</title>
+
+<link rel='canonical' href='http://localhost:1313/p/ptotocol-buffers/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Ptotocol Buffers">
+<meta property='og:description' content="# 1. Quick start Execute the following commands at your terminal, you don&rsquo;t need to execute them under your project folder, just execute them anywhere, it will install the protoc compiler and the protoc-gen-go and protoc-gen-go-grpc plugins into your $GOPATH/bin folder. 1 2 3 4 5 6 7 # install protoc compiler $ brew install protobuf $ protoc --version # Ensure compiler version is 3+ # install plugins for $ go install google.">
+<meta property='og:url' content='http://localhost:1313/p/ptotocol-buffers/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='grpc' /><meta property='article:published_time' content='2024-01-19T00:01:08&#43;00:00'/><meta property='article:modified_time' content='2024-01-19T00:01:08&#43;00:00'/>
+<meta name="twitter:title" content="Ptotocol Buffers">
+<meta name="twitter:description" content="# 1. Quick start Execute the following commands at your terminal, you don&rsquo;t need to execute them under your project folder, just execute them anywhere, it will install the protoc compiler and the protoc-gen-go and protoc-gen-go-grpc plugins into your $GOPATH/bin folder. 1 2 3 4 5 6 7 # install protoc compiler $ brew install protobuf $ protoc --version # Ensure compiler version is 3+ # install plugins for $ go install google.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-quick-start">1. Quick start</a></li>
+    <li><a href="#2-usage">2. Usage</a>
+      <ol>
+        <li><a href="#21-搜索路径参数">2.1. 搜索路径参数</a></li>
+        <li><a href="#22-语言插件-protoc-gen-go">2.2. 语言插件 <code>protoc-gen-go</code></a></li>
+        <li><a href="#23-grpc-go-插件">2.3. grpc go 插件</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-example">3. Example</a></li>
+    <li><a href="#4-references">4. References</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/grpc/" >
+                Grpc
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/ptotocol-buffers/">Ptotocol Buffers</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jan 19, 2024</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-quick-start">
+    <a href="#1-quick-start">#</a>
+    1. Quick start
+</h2><p>Execute the following commands at your terminal, you don&rsquo;t need to execute them under your project folder, just execute them anywhere, it will install the <code>protoc</code> compiler and the <code>protoc-gen-go</code> and <code>protoc-gen-go-grpc</code> plugins into your <code>$GOPATH/bin</code> folder.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># install protoc compiler</span>
+</span></span><span class="line"><span class="cl">$ brew install protobuf
+</span></span><span class="line"><span class="cl">$ protoc --version  <span class="c1"># Ensure compiler version is 3+</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># install plugins for </span>
+</span></span><span class="line"><span class="cl">$ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+</span></span><span class="line"><span class="cl">$ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Update your <code>$PATH</code> so that the protoc compiler can find the plugins: <code>export PATH=&quot;$PATH:$(go env GOPATH)/bin&quot;</code></p>
+</blockquote>
+<h2 id="2-usage">
+    <a href="#2-usage">#</a>
+    2. Usage
+</h2><p><code>protoc</code> 命令的基本用法是 <code>protoc [OPTION] PROTO_FILES</code>, 其中 <code>OPTION</code> 包括搜索路径参数, 语言插件参数等, <code>PROTO_FILES</code> 是要编译的 <code>.proto</code> 文件. 可以通过 <code>protoc --help</code> 查看所有参数. 下面主要介绍 <code>[OPTION]</code> 参数.</p>
+<h3 id="21-搜索路径参数">
+    <a href="#21-%e6%90%9c%e7%b4%a2%e8%b7%af%e5%be%84%e5%8f%82%e6%95%b0">#</a>
+    2.1. 搜索路径参数
+</h3><ul>
+<li><code>-IPATH</code> 或 <code>--proto_path=PATH</code>: 指定搜索 <code>.proto</code> 文件的目录
+<ul>
+<li>如: <code>-I.</code> 表示在当前目录下搜索</li>
+<li>如果不指定该参数，则默认在当前路径下进行搜索</li>
+</ul>
+</li>
+</ul>
+<h3 id="22-语言插件-protoc-gen-go">
+    <a href="#22-%e8%af%ad%e8%a8%80%e6%8f%92%e4%bb%b6-protoc-gen-go">#</a>
+    2.2. 语言插件 <code>protoc-gen-go</code>
+</h3><p>protoc 本身支持多种语言, &ndash;cpp_out=，&ndash;python_out=等, 但不支持 Go 由google维护，需要安装 protoc 插件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a class="link" href="https://davidzhu.xyz/post/golang/basics/000-modules-env/"  target="_blank" rel="noopener"
+    >之前介绍了 <code>go install</code></a>会把 <code>protoc-gen-go</code> 安装到 <code>$GOPATH/bin</code> 目录下, 之后就可以在 <code>protoc</code> 命令中使用 <code>--go_out</code> 等参数了.</p>
+<blockquote>
+<p>注意: protoc-gen-go 要求 pb (<code>.proto</code>) 文件中必须指定 go 包的路径, 例如 <code>option go_package = &quot;github.com/shwezhu/consignment-service/proto/consignment&quot;</code>.
+文件结构: <code>consignment-service/proto/consignment/consignment.proto</code></p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ protoc I. --go_out<span class="o">=</span>. --go_opt<span class="o">=</span><span class="nv">paths</span><span class="o">=</span>source_relative <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --go-grpc_out<span class="o">=</span>. --go-grpc_opt<span class="o">=</span><span class="nv">paths</span><span class="o">=</span>source_relative <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    chat.proto
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># or</span>
+</span></span><span class="line"><span class="cl">$ protoc I. --go_out<span class="o">=</span>. --go_opt<span class="o">=</span><span class="nv">paths</span><span class="o">=</span>import <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --go-grpc_out<span class="o">=</span>. --go-grpc_opt<span class="o">=</span><span class="nv">paths</span><span class="o">=</span>import <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    chat.proto
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>解释:</p>
+<ul>
+<li><code>--go_out=.</code>
+<ul>
+<li>作用: 指定go代码生成的基本路径</li>
+<li>属于哪个插件：这个参数是为 protoc-gen-go 插件设置的</li>
+</ul>
+</li>
+<li><code>--go_opt=paths=source_relative</code>
+<ul>
+<li>属于哪个插件：这同样是为 protoc-gen-go 插件设置的</li>
+<li>一般有两个值: <code>paths=source_relative</code> 和 <code>paths=import</code></li>
+<li><code>paths=source_relative</code>: 例如你的 <code>.proto</code> 文件位于 <code>proto/myapp/myproto.proto</code>, 若使用 <code>paths=source_relative</code> 选项，生成的 Go 文件将会在类似 <code>myapp/myproto.pb.go</code> 的路径下</li>
+<li><code>paths=import</code>: 例如你在 <code>myproto.proto</code> 文件中指定了 <code>option go_package = &quot;github.com/example/project/proto&quot;;</code>，那么无论 <code>.proto</code> 文件的实际位置在哪里，生成的 Go 文件都将使用这个路径作为包路径</li>
+</ul>
+</li>
+<li><code>--go-grpc_out=.</code>
+<ul>
+<li>属于哪个插件：这个参数是为 protoc-gen-go-grpc 插件设置的</li>
+</ul>
+</li>
+<li>
+<ul>
+<li><code>--go-grpc_opt=paths=source_relative</code></li>
+<li>属于哪个插件：这是为 protoc-gen-go-grpc 插件设置的</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><code>protoc-gen-go</code> vs <code>protoc-gen-go-grpc</code>: The old-way is using <code>protoc-gen-go</code> that generates both serialization of the protobuf messages and grpc code. Now <code>protoc-gen-go</code> no longer supports generating gRPC service definitions. For gRPC code, a new plugin called <code>protoc-gen-go-grpc</code> was developed by Go gRPC project. <a class="link" href="https://stackoverflow.com/a/64849053/16317008"  target="_blank" rel="noopener"
+    >source</a></p>
+</blockquote>
+<h3 id="23-grpc-go-插件">
+    <a href="#23-grpc-go-%e6%8f%92%e4%bb%b6">#</a>
+    2.3. grpc go 插件
+</h3><p><code>protoc-gen-go</code> 纯粹用来生成pb(<code>.proto</code>)序列化相关的文件, 不再承载 gRPC 代码生成功能, 生成gRPC相关代码需要安装 grpc-go 相关的插件 <code>protoc-gen-go-grpc</code>, 安装命令如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>插件 <code>protoc-gen-go-grpc</code> 也有两个参数, 类似 <code>protoc-gen-go</code> 插件的 <code>--go_out</code>, <code>--go_opt</code> 参数, 分别是 <code>--go-grpc_out</code>, <code>--go-grpc_opt</code>, 用法也是一样的,</p>
+<h2 id="3-example">
+    <a href="#3-example">#</a>
+    3. Example
+</h2><p>文件结构如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">❯ tree -L <span class="m">4</span>
+</span></span><span class="line"><span class="cl">.
+</span></span><span class="line"><span class="cl">├── Makefile
+</span></span><span class="line"><span class="cl">├── go.mod
+</span></span><span class="line"><span class="cl">├── proto
+</span></span><span class="line"><span class="cl">│   └── calculator.proto
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>calculator.proto</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-protobuf" data-lang="protobuf"><span class="line"><span class="cl"><span class="n">syntax</span> <span class="o">=</span> <span class="s">&#34;proto3&#34;</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c1">// &#34;./pb&#34; 指定了生成的 Go 文件将被放置在相对路径 ./pb 的目录下
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 这里的相对路径是相对于 protoc 命令执行的目录, 而不是相对于 .proto 文件的目录
+</span></span></span><span class="line"><span class="cl"><span class="c1">// protoc-gen-go 要求 `.proto` 文件必须指定 go 包的路径
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">option</span> <span class="n">go_package</span> <span class="o">=</span> <span class="s">&#34;./pb&#34;</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="kd">service</span> <span class="n">Calculator</span> <span class="p">{</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>  <span class="k">rpc</span> <span class="n">Add</span><span class="p">(</span><span class="n">CalculationRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">CalculationResponse</span><span class="p">);</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>  <span class="k">rpc</span> <span class="n">Subtract</span><span class="p">(</span><span class="n">CalculationRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">CalculationResponse</span><span class="p">);</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>  <span class="k">rpc</span> <span class="n">Multiply</span><span class="p">(</span><span class="n">CalculationRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">CalculationResponse</span><span class="p">);</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>  <span class="k">rpc</span> <span class="n">Divide</span><span class="p">(</span><span class="n">CalculationRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">CalculationResponse</span><span class="p">);</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>  <span class="k">rpc</span> <span class="n">Sum</span><span class="p">(</span><span class="n">NumbersRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">CalculationResponse</span><span class="p">);</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="p">}</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="kd">message</span> <span class="nc">CalculationRequest</span> <span class="p">{</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>  <span class="kt">int64</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>  <span class="kt">int64</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="p">}</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="kd">message</span> <span class="nc">CalculationResponse</span> <span class="p">{</span> <span class="kt">int64</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="kd">message</span> <span class="nc">NumbersRequest</span> <span class="p">{</span> <span class="k">repeated</span> <span class="kt">int64</span> <span class="n">numbers</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span><span class="err">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>Makefile</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># run: make generate</span>
+</span></span><span class="line"><span class="cl">generate:
+</span></span><span class="line"><span class="cl">	protoc --proto_path<span class="o">=</span>proto proto/*.proto --go_out<span class="o">=</span>. --go-grpc_out<span class="o">=</span>.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 1. 上面使用的所有路径都是相对 protoc 命令执行时所在的目录</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 2. --proto_path=proto: 指定 .proto 文件的搜索路径, 在这，编译器会在名为 proto 的目录下查找 .proto 文件,</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 你也可以使用 -IPATH 命令行参数来指定搜索路径 如 protoc -I. --go_out=. --go-grpc_out=. proto/*.proto</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># proto/*.proto : 指定要编译的 .proto 文件，这里我们指定了 proto 目录下的所有 .proto 文件,</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 不指定会报错, 因为 protoc 需要知道要编译哪个文件, 你可以使用如 proto/xxx.proto</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. --go_out=.: 还记得我们在 .proto 文件中指定了 go_package=&#34;./pb&#34; 吗,</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --go_out=. 为 go_package 指定了所在的工作目录, 举例:</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 若你使用 --go_out=abc, go_package=&#34;./pb&#34;, 则生成的文件会放在 abc/pb 目录下, 前提是你得先创建 abc 目录</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 我们在这指定的是 --go_out=., 所以最终生成的文件会放到 ./pb 目录下</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>执行 <code>make generate</code> 命令, 文件结构如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">❯ tree -L <span class="m">4</span>
+</span></span><span class="line"><span class="cl">.
+</span></span><span class="line"><span class="cl">├── Makefile
+</span></span><span class="line"><span class="cl">├── go.mod
+</span></span><span class="line"><span class="cl">├── pb
+</span></span><span class="line"><span class="cl">│   ├── calculator.pb.go
+</span></span><span class="line"><span class="cl">│   └── calculator_grpc.pb.go
+</span></span><span class="line"><span class="cl">├── proto
+</span></span><span class="line"><span class="cl">│   └── calculator.proto
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>安装 grpc 包, 编写程序:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">❯ go get google.golang.org/grpc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>创建文件 <code>server/main.go</code> (我省略了一些代码):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">server</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">pb</span><span class="p">.</span><span class="nx">UnimplementedCalculatorServer</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">Add</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">in</span> <span class="o">*</span><span class="nx">pb</span><span class="p">.</span><span class="nx">CalculationRequest</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">pb</span><span class="p">.</span><span class="nx">CalculationResponse</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">pb</span><span class="p">.</span><span class="nx">CalculationResponse</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">Result</span><span class="p">:</span> <span class="nx">in</span><span class="p">.</span><span class="nf">GetA</span><span class="p">()</span> <span class="o">+</span> <span class="nx">in</span><span class="p">.</span><span class="nf">GetB</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">listener</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">net</span><span class="p">.</span><span class="nf">Listen</span><span class="p">(</span><span class="s">&#34;tcp&#34;</span><span class="p">,</span> <span class="s">&#34;:8080&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">log</span><span class="p">.</span><span class="nf">Fatalln</span><span class="p">(</span><span class="s">&#34;failed to create listener:&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">s</span> <span class="o">:=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nf">NewServer</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// binds the Calculator service implementation to the gRPC server s.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">pb</span><span class="p">.</span><span class="nf">RegisterCalculatorServer</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">server</span><span class="p">{})</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Serve</span><span class="p">(</span><span class="nx">listener</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">log</span><span class="p">.</span><span class="nf">Fatalln</span><span class="p">(</span><span class="s">&#34;failed to serve:&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后文件结构如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">❯ tree -L <span class="m">4</span>
+</span></span><span class="line"><span class="cl">.
+</span></span><span class="line"><span class="cl">├── Makefile
+</span></span><span class="line"><span class="cl">├── go.mod
+</span></span><span class="line"><span class="cl">├── go.sum
+</span></span><span class="line"><span class="cl">├── pb
+</span></span><span class="line"><span class="cl">│   ├── calculator.pb.go
+</span></span><span class="line"><span class="cl">│   └── calculator_grpc.pb.go
+</span></span><span class="line"><span class="cl">├── proto
+</span></span><span class="line"><span class="cl">│   └── calculator.proto
+</span></span><span class="line"><span class="cl">└── server
+</span></span><span class="line"><span class="cl">    └── main.go
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行服务器:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">❯ go run server/main.go
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-references">
+    <a href="#4-references">#</a>
+    4. References
+</h2><p><a class="link" href="https://www.youtube.com/watch?v=_4TPM6clQjM&amp;t=5s"  target="_blank" rel="noopener"
+    >(1) When RESTful architecture isn&rsquo;t enough&hellip;</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/grpc/">Grpc</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/intro-to-grpc/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Intro to gRPC</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

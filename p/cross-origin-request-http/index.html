@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight request doesn&#39;t pass access control check: It does not have HTTP ok status.">
+<title>Cross-origin Request HTTP</title>
+
+<link rel='canonical' href='http://localhost:1313/p/cross-origin-request-http/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Cross-origin Request HTTP">
+<meta property='og:description' content="# 1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight request doesn&#39;t pass access control check: It does not have HTTP ok status.">
+<meta property='og:url' content='http://localhost:1313/p/cross-origin-request-http/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='http' /><meta property='article:published_time' content='2023-10-06T20:28:50&#43;00:00'/><meta property='article:modified_time' content='2023-10-06T20:28:50&#43;00:00'/>
+<meta name="twitter:title" content="Cross-origin Request HTTP">
+<meta name="twitter:description" content="# 1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight request doesn&#39;t pass access control check: It does not have HTTP ok status.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-cors-issue">1. CORS issue</a></li>
+    <li><a href="#2-how-to-fix-cors-issue">2. How to fix CORS issue</a>
+      <ol>
+        <li><a href="#21-简单场景">2.1. 简单场景</a></li>
+        <li><a href="#22-复杂场景">2.2. 复杂场景</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-cors-vs-sop">3. CORS vs SOP</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/http/" >
+                Http
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/cross-origin-request-http/">Cross-origin Request HTTP</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 06, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    3 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-cors-issue">
+    <a href="#1-cors-issue">#</a>
+    1. CORS issue
+</h2><p>My frontend application is deployed on <code>http://localhost:5173</code>, and backend application is deployed on <code>http://localhost:8080</code>. The frontend application sends HTTP requests to the backend application through <code>fetch</code>, but it fails with the following error:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 显然没有服务器处理 OPTIONS 请求</span>
+</span></span><span class="line"><span class="cl">Access to fetch at <span class="s1">&#39;http://localhost:8080/&#39;</span> from origin <span class="s1">&#39;http://localhost:5173&#39;</span> has been blocked by CORS policy: Response to preflight request doesn<span class="s1">&#39;t pass access control check: It does not have HTTP ok status. 
+</span></span></span><span class="line"><span class="cl"><span class="s1">
+</span></span></span><span class="line"><span class="cl"><span class="s1">Access to fetch at &#39;</span>http://localhost:8080/api/chat<span class="s1">&#39; from origin &#39;</span>http://localhost:5173<span class="err">&#39;</span> has been blocked by CORS policy: Request header field content-type is not allowed by Access-Control-Allow-Headers in preflight response.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This is the famous CORS issue, and it is caused by the <strong>same-origin policy</strong> (SOP) enforced by web browsers.</p>
+<p>CORS is a feature built into browsers for added security. <strong>It prevents any random website from using your authenticated cookies</strong> to send an API request to your bank&rsquo;s website and do stuff like secretly withdraw money.</p>
+<p>想象一下, 如果你点进了一个恶意网站, 这个网站有个JS脚本使用比如 fetch 向你银行 /api/transfers 发送了一个请求, 如果浏览器没有 same-origin policy 限制, 那么这个请求就会被发送出去, 而且会自动带上你的银行网站的 cookie (一些请求头), 这样恶意网站就可以做一些你不知道的事情, 比如转账, 提现等等.</p>
+<p>但是, 有了 same-origin policy 限制, 那么这个请求就不会被浏览器发送出去, 因为这个请求的 origin 和你银行网站的 origin 不一样, 所以浏览器会阻止这个请求. Origin 是浏览器自动添加的请求头, 你不能修改它. Origin 包括三部分: 协议, 域名, 端口. 上面的例子 origin 就是 <code>http://localhost:5173</code> 和 <code>http://localhost:8080</code>, 前端页面的 js 代码是在 <code>http://localhost:5173</code> 运行的, 所以它的 origin 是 <code>http://localhost:5173</code>, 而后端的 API 是在 <code>http://localhost:8080</code> 运行的, 所以它的 origin 是 <code>http://localhost:8080</code>.</p>
+<p>所以理论上来说, 如果你的后端服务器不允许CORS, 那么除了跟你后端服务器同源(Origin)的前端页面, 其他的前端页面都不能在浏览器访问你的后端 API. 当然你可以在终端使用 curl 命令访问你的后端 API, 因为 curl 命令不是浏览器, 它不会自动添加 origin 请求头. 另外 React 的 create-react-app 也有一个 proxy 功能, 可以让你在开发环境下绕过 CORS 限制, 但是这个代理功能<strong>只在开发环境下有效</strong>, 生产环境下还是要你自己配置后端服务器的 CORS.</p>
+<h2 id="2-how-to-fix-cors-issue">
+    <a href="#2-how-to-fix-cors-issue">#</a>
+    2. How to fix CORS issue
+</h2><h3 id="21-简单场景">
+    <a href="#21-%e7%ae%80%e5%8d%95%e5%9c%ba%e6%99%af">#</a>
+    2.1. 简单场景
+</h3><p>解决的办法很简单, 在后端 API 的响应头里添加 <code>Access-Control-Allow-Origin: *</code> 就可以了. 但这仅限于一些简单的场景, 如 GET 请求. 可参考: <a class="link" href="https://www.stackhawk.com/blog/golang-cors-guide-what-it-is-and-how-to-enable-it/"  target="_blank" rel="noopener"
+    >Golang CORS Guide: What It Is and How to Enable It</a></p>
+<h3 id="22-复杂场景">
+    <a href="#22-%e5%a4%8d%e6%9d%82%e5%9c%ba%e6%99%af">#</a>
+    2.2. 复杂场景
+</h3><p>如果你的 API 是 POST 请求, 并且需要带上一些请求头, 那么你可能还需要在响应头里添加 <code>Access-Control-Allow-Headers: *</code>, 这样才能让浏览器发送 POST 请求, 并且带上你需要的请求头. (具体规定可参考: <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"  target="_blank" rel="noopener"
+    >https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS</a>) 这也是为什么在有的前端JS fetch代码里, 你后端简单设置 <code>Access-Control-Allow-Origin: *</code> 就可以了, 但是有的并不会成功.</p>
+<p>除了设置上面两个响应头, 你还需要处理 OPTIONS 请求, 这是因为浏览器在发送跨域请求时, 会先发送一个 OPTIONS 请求, 用来询问服务器是否允许跨域请求, 如果服务器不允许, 那么浏览器就不会发送真正的请求.</p>
+<p>比如我的后端 API 需要客户端带上一个请求头 <code>Content-Type: application/json</code> 和 <code>Content-Type: xxxx</code>, 那么我就需要在响应头里添加 <code>Access-Control-Allow-Headers: Content-Type, Content-Type</code>, 或者 <code>Access-Control-Allow-Headers: *</code>, 这样浏览器发送HTTP请求时才会带上这两个请求头.</p>
+<p>使用 Golang 处理的话, 大致逻辑如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Server</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">enableCors</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">w</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Handle CORS preflighted request sent by browser.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="nx">r</span><span class="p">).</span><span class="nx">Method</span> <span class="o">==</span> <span class="s">&#34;OPTIONS&#34;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 真正的处理逻辑
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">s</span><span class="p">.</span><span class="nx">mux</span><span class="p">.</span><span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">enableCors</span><span class="p">(</span><span class="nx">w</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">(</span><span class="o">*</span><span class="nx">w</span><span class="p">).</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Access-Control-Allow-Origin&#34;</span><span class="p">,</span> <span class="s">&#34;*&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">(</span><span class="o">*</span><span class="nx">w</span><span class="p">).</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Access-Control-Allow-Methods&#34;</span><span class="p">,</span> <span class="s">&#34;POST, GET, OPTIONS&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// We need to allow the Authorization header to be sent to the backend.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">(</span><span class="o">*</span><span class="nx">w</span><span class="p">).</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Access-Control-Allow-Headers&#34;</span><span class="p">,</span> <span class="s">&#34;*&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">(</span><span class="o">*</span><span class="nx">w</span><span class="p">).</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Access-Control-Max-Age&#34;</span><span class="p">,</span> <span class="s">&#34;86400&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-cors-vs-sop">
+    <a href="#3-cors-vs-sop">#</a>
+    3. CORS vs SOP
+</h2><p>The Same-Origin Policy (SOP) is a security feature <strong>enforced by web browsers</strong> that restricts web pages (javascript) from interacting with resources (such as making requests or accessing data) from different origins.</p>
+<p><strong>CORS allows servers</strong> to specify which origins are allowed to access their resources, even if they are from different origins. It provides a set of HTTP headers that the server includes in its responses to explicitly permit cross-origin requests from specific origins.</p>
+<p>References:</p>
+<p><a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"  target="_blank" rel="noopener"
+    >Cross-Origin Resource Sharing (CORS) - HTTP | MDN</a></p>
+<p><a class="link" href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy"  target="_blank" rel="noopener"
+    >Same-origin policy - Web security | MDN</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/http/">Http</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/url-encoding-percent-encoding/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">URL Encoding (Percent Encoding)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/mime-types/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MIME Types</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/http-2.0-binary-frame-server-push-header-compression/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HTTP 2.0 (Binary Frame, Server Push, Header Compression)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/form-data-query-string/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Form Data &amp; Query String</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/http-1.1-vs-http-2.0/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HTTP 1.1 vs HTTP 2.0</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

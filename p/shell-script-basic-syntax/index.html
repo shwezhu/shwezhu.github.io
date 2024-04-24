@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Run a script A hello world script: 1 2 #!/usr/bin/bash echo &#34;hello world&#34; The first here specifies which shell should execute this script, if you don&rsquo;t write, the default shell on your computer will run it, check all the shells on your computer: 1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells.">
+<title>Shell Script Basic Syntax</title>
+
+<link rel='canonical' href='http://localhost:1313/p/shell-script-basic-syntax/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Shell Script Basic Syntax">
+<meta property='og:description' content="# 1. Run a script A hello world script: 1 2 #!/usr/bin/bash echo &#34;hello world&#34; The first here specifies which shell should execute this script, if you don&rsquo;t write, the default shell on your computer will run it, check all the shells on your computer: 1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells.">
+<meta property='og:url' content='http://localhost:1313/p/shell-script-basic-syntax/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='linux' /><meta property='article:published_time' content='2023-09-01T12:23:59&#43;00:00'/><meta property='article:modified_time' content='2023-09-01T12:23:59&#43;00:00'/>
+<meta name="twitter:title" content="Shell Script Basic Syntax">
+<meta name="twitter:description" content="# 1. Run a script A hello world script: 1 2 #!/usr/bin/bash echo &#34;hello world&#34; The first here specifies which shell should execute this script, if you don&rsquo;t write, the default shell on your computer will run it, check all the shells on your computer: 1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-run-a-script">1. Run a script</a></li>
+    <li><a href="#2-bash-variables-are-untyped">2. Bash variables are untyped</a></li>
+    <li><a href="#3-for-loop--and-array">3. for loop  and array</a></li>
+    <li><a href="#4-control-operators">4. Control operators</a></li>
+    <li><a href="#5-quotes">5. Quotes</a>
+      <ol>
+        <li><a href="#51-why-need-qoutes">5.1. Why need qoutes</a></li>
+        <li><a href="#52-backqoute">5.2. Backqoute</a></li>
+        <li><a href="#53-double-quotes">5.3. Double quotes</a></li>
+      </ol>
+    </li>
+    <li><a href="#6----in-bash">6. <code>$</code> &amp; <code>*</code> in bash</a>
+      <ol>
+        <li><a href="#61-">6.1. <code>$</code></a></li>
+        <li><a href="#62-">6.2. <code>*</code></a></li>
+      </ol>
+    </li>
+    <li><a href="#5-arithmetic-expansion">5. Arithmetic expansion</a></li>
+    <li><a href="#6-conclusion">6. Conclusion</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/linux/" >
+                Linux
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/shell-script-basic-syntax/">Shell Script Basic Syntax</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Sep 01, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    8 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-run-a-script">
+    <a href="#1-run-a-script">#</a>
+    1. Run a script
+</h2><p>A hello world script:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="cp">#!/usr/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="nb">echo</span> <span class="s2">&#34;hello world&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The first here specifies which shell should execute this script, if you don&rsquo;t write, the default shell on your computer will run it, check all the shells on your computer:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ cat /etc/shells      
+</span></span><span class="line"><span class="cl"><span class="c1"># List of acceptable shells for chpass(1).</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Ftpd will not allow users to connect who are not using</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># one of these shells.</span>
+</span></span><span class="line"><span class="cl">/bin/bash
+</span></span><span class="line"><span class="cl">/bin/csh
+</span></span><span class="line"><span class="cl">/bin/dash
+</span></span><span class="line"><span class="cl">/bin/ksh
+</span></span><span class="line"><span class="cl">/bin/sh
+</span></span><span class="line"><span class="cl">/bin/tcsh
+</span></span><span class="line"><span class="cl">/bin/zsh
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Don&rsquo;t write a wrong location of bash interpreter, <code>/bin/nmsd</code> below doesn&rsquo;t exist, execute this script will go wrong:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ cat script.sh 
+</span></span><span class="line"><span class="cl"><span class="c1">#!/bin/nmsd</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;hello world&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ chmod u+x script.sh 
+</span></span><span class="line"><span class="cl">$ ./script.sh 
+</span></span><span class="line"><span class="cl">zsh: ./a.sh: bad interpreter: /bin/ash: no such file or directory
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>chmod u+x</code> will made the file executable for your user (it will only add it for your user, though it may be already executable by the group owner, or &ldquo;other&rdquo;). <code>chmod a+x</code> (&lsquo;all plus executable bit&rsquo;) makes the file executable by everyone. The <code>u</code> is standing for &ldquo;user&rdquo;. That means that the executable flag only applies to the current user of the file.</p>
+<ul>
+<li><strong>u for user</strong> (the user who is owner of the file</li>
+<li><strong>g for group</strong> (other users in the file group</li>
+<li><strong>o for others</strong> (users not in the file group</li>
+<li><strong>a for all</strong> (all users</li>
+</ul>
+<h2 id="2-bash-variables-are-untyped">
+    <a href="#2-bash-variables-are-untyped">#</a>
+    2. Bash variables are untyped
+</h2><p>Bash does not type variables like C and related languages, defining them as integers, floating points, or string types. In Bash, all variables are strings. A string that is an integer can be used in integer arithmetic, which is the only type of math that Bash is capable of doing.</p>
+<p>The assignment <code>VAR=10</code> sets the value of the variable <code>VAR</code> to 10. To print the value of the variable, you can use the statement <code>echo $VAR</code>.</p>
+<blockquote>
+<p><em>Note: The syntax of variable assignment is very strict. There must be no spaces on either side of the equal <code>=</code> sign in the assignment statement.</em></p>
+</blockquote>
+<p>It is not suitable for scientific computing or anything that requires decimals, such as financial calculations.</p>
+<h2 id="3-for-loop--and-array">
+    <a href="#3-for-loop--and-array">#</a>
+    3. for loop  and array
+</h2><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="k">for</span> item in <span class="o">(</span>list<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">do</span>
+</span></span><span class="line"><span class="cl">	command_one
+</span></span><span class="line"><span class="cl">	command_two
+</span></span><span class="line"><span class="cl">	...
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><em><strong>e.g.,</strong></em></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="cp">#!/usr/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="nv">archs</span><span class="o">=(</span>amd64 arm64 ppc64le ppc64 s390x<span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> arch in <span class="si">${</span><span class="nv">archs</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">do</span>
+</span></span><span class="line"><span class="cl">	env <span class="nv">GOOS</span><span class="o">=</span>linux <span class="nv">GOARCH</span><span class="o">=</span><span class="si">${</span><span class="nv">arch</span><span class="si">}</span> go build -o prepnode_<span class="si">${</span><span class="nv">arch</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># rename all file under current folder form lowercase to capital</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> file in *<span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="k">do</span>
+</span></span><span class="line"><span class="cl">	mv <span class="s2">&#34;</span><span class="nv">$file</span><span class="s2">&#34;</span> 	<span class="sb">`</span><span class="nb">echo</span> <span class="nv">$file</span> <span class="p">|</span>  tr <span class="s1">&#39;a-z&#39;</span> <span class="s1">&#39;A-Z&#39;</span><span class="sb">`</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But this isn&rsquo;t the best choice, the command below will rename all files recursively which the code above cannot do,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ brew install rename
+</span></span><span class="line"><span class="cl">$ find . -depth -execdir rename -f <span class="s1">&#39;y/A-Z/a-z/&#39;</span> <span class="o">{}</span> <span class="se">\;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You probably wonder what is the <code>&quot;&quot;</code>,  <code>*</code> and <code>;</code>  above, I&rsquo;ll explain it to you next.</p>
+<h2 id="4-control-operators">
+    <a href="#4-control-operators">#</a>
+    4. Control operators
+</h2><ul>
+<li><code>;</code>: Will run one command after another has finished, irrespective of the outcome of the first. This means even there is wrong in fiest command, the second can execute.</li>
+<li><code>&amp;&amp;</code>: if the precceeding command goes wrong, the commands left won&rsquo;t be executed.</li>
+<li><code>||</code>: It executes the command on the right only if the command on the left returned an error.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># even command `cd fd.sh` goes wrong, command `ls` can be executed </span>
+</span></span><span class="line"><span class="cl">$ <span class="nb">cd</span> fd.sh<span class="p">;</span> ls
+</span></span><span class="line"><span class="cl">cd: not a directory: fd.sh
+</span></span><span class="line"><span class="cl">economic fd.sh    test.sh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ <span class="nb">cd</span> fd.sh <span class="o">&amp;&amp;</span> ls
+</span></span><span class="line"><span class="cl">cd: not a directory: fd.sh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ <span class="nb">cd</span> fd.sh <span class="o">||</span> ls
+</span></span><span class="line"><span class="cl">cd: not a directory: fd.sh
+</span></span><span class="line"><span class="cl">economic fd.sh    test.sh
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="5-quotes">
+    <a href="#5-quotes">#</a>
+    5. Quotes
+</h2><h3 id="51-why-need-qoutes">
+    <a href="#51-why-need-qoutes">#</a>
+    5.1. Why need qoutes
+</h3><p>Quoting is used to remove the special meaning of <em><strong>metacharacters</strong></em> or words to the shell. Quoting can be used to disable special treatment for special characters, to prevent reserved words from being recognized as such, and to prevent <em><strong>parameter expansion</strong></em>.</p>
+<blockquote>
+<p><strong>Metacharacter</strong>: a character that, when unquoted, separates words. A metacharacter is a <code>space</code>, <code>tab</code>, <code>newline</code>, or one of the following characters: <code>*</code>,  <code>?</code>,  <code>|</code>,   <code>&amp;</code>,   <code>;</code>,  <code>(</code>,  <code>)</code>,   <code>&lt;</code>, or <code>&gt;</code>, etc&hellip;</p>
+<p><strong>Parameter Expansion</strong>: The <code>$</code> character introduces parameter expansion, command substitution, or arithmetic expansion. <a class="link" href="https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html"  target="_blank" rel="noopener"
+    >source</a></p>
+</blockquote>
+<p>For example, you want to print <code>&lt;-$1500.**&gt;; (update?) [y|n]</code>, but <code>&lt;&gt;*;$</code> has a special meaning in bash, and printing it directly won&rsquo;t work.</p>
+<p>You can use escape character <code>\</code> to solve this problem:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">bash-3.2$ <span class="nb">echo</span> <span class="se">\&lt;</span>-<span class="se">\$</span>1500.<span class="se">\*\*\&gt;\;</span> <span class="se">\(</span>update<span class="se">\?\)</span> <span class="se">\[</span>y<span class="se">\|</span>n<span class="se">\]</span>
+</span></span><span class="line"><span class="cl">&lt;-<span class="nv">$1500</span>.**&gt;<span class="p">;</span> <span class="o">(</span>update?<span class="o">)</span> <span class="o">[</span>y<span class="p">|</span>n<span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But this is not elegant, you can use <strong>single quote</strong> to solve this problem:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">bash-3.2$ <span class="nb">echo</span> <span class="s1">&#39;&lt;-$1500.**&gt;; (update?) [y|n]&#39;</span>
+</span></span><span class="line"><span class="cl">&lt;-<span class="nv">$1500</span>.**&gt;<span class="p">;</span> <span class="o">(</span>update?<span class="o">)</span> <span class="o">[</span>y<span class="p">|</span>n<span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Why does this work?  Because all special characters between single quotes lose their special meaning, I find a table will help:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th style="text-align:center">Sr.No.</th>
+<th style="text-align:center">Quoting &amp; Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">**Single quote ** All special characters between these quotes lose their special meaning.</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center"><strong>Backslash</strong> <code>\</code> Any character immediately following the backslash loses its special meaning.</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center"><strong>Backquote</strong>  Anything in between back quotes would be treated as a command and would be executed.</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">The characters <code> $</code>  and &lsquo;`&rsquo; retain their special meaning within <strong>double quotes</strong>.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="52-backqoute">
+    <a href="#52-backqoute">#</a>
+    5.2. Backqoute
+</h3><p>You may wonder what does back quote mean in the table, I&rsquo;ll give you an example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ cat a.txt 
+</span></span><span class="line"><span class="cl">hello world
+</span></span><span class="line"><span class="cl">$ <span class="nv">A</span><span class="o">=</span><span class="sb">`</span>cat a.txt<span class="sb">`</span><span class="p">;</span> <span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$A</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">hello world
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The code between back quotes will be executed, and if there is output, you can save it into a variable,</p>
+<h3 id="53-double-quotes">
+    <a href="#53-double-quotes">#</a>
+    5.3. Double quotes
+</h3><p>Sometimes <code>*</code> may acts like it remains its spcecial meaning in double quotes:</p>
+<ul>
+<li>
+<p>Without any special options:</p>
+<ul>
+<li>
+<p>Inside double quotes (<code>&quot;</code>), the asterisk <code>*</code> retains its literal meaning and does not perform globbing (expansion to match filenames).</p>
+</li>
+<li>
+<p>For example, <code>&quot;*&quot;</code> will be treated as a literal asterisk character.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>With some spcecial options:</p>
+<ul>
+<li><code>find . -name &quot;*.sh&quot; -type f </code>, in the command the <code>-name &quot;*.sh&quot;</code> the <code>&quot;*.sh&quot;</code> acts as a pattern, the double quotes prevent the shell from interpreting the asterisk as a wildcard character and expanding it to match filenames in the current directory.</li>
+<li>Therefore, in the given command, <code>&quot;*.c&quot;</code> is treated as a literal string by the shell. The <code>find</code> command receives the pattern <code>&quot;*.c&quot;</code> as an argument, and it performs the matching internally during its execution.</li>
+<li>Which acts like the <code>*</code> doesn&rsquo;t lose its special meaning.</li>
+</ul>
+</li>
+</ul>
+<h2 id="6----in-bash">
+    <a href="#6----in-bash">#</a>
+    6. <code>$</code> &amp; <code>*</code> in bash
+</h2><h3 id="61-">
+    <a href="#61-">#</a>
+    6.1. <code>$</code>
+</h3><p><code>$</code> has many use cases, I&rsquo;ll introduce one here, in bash scripting, variables are used to store values, the <code>$</code> symbol is used to retrieve the value of a variable Value.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nv">name</span><span class="o">=</span><span class="s2">&#34;Mark&#34;</span><span class="p">;</span> <span class="nb">echo</span> <span class="s2">&#34;My name is </span><span class="nv">$name</span><span class="s2">&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>⚠ Don&rsquo;t forget <code>$</code> and &lsquo;back quote&rsquo; sign retain their special meaning between double quote.</p>
+</blockquote>
+<h3 id="62-">
+    <a href="#62-">#</a>
+    6.2. <code>*</code>
+</h3><blockquote>
+<p>⚠ <code>*</code> will lose its special meaning between double quote.</p>
+</blockquote>
+<p>The Shell (bash) considers an asterisk <code>*</code> to be a wildcard character that can match one or more occurrences of any character, including no character.</p>
+<p>The “*” character is a shortcut for “everything”. Thus, if you enter <code>ls *</code>, you will see all of the contents of a given directory.</p>
+<ul>
+<li><code>ls *fq</code> lists every file that ends with a <code>fq</code>.</li>
+<li><code>ls /usr/bin/*.sh</code> This lists every file in <code>/usr/bin</code> directory that ends in the characters <code>.sh</code>.</li>
+<li><code>*</code> can be placed anywhere in your pattern: <code>ls Mov10*fq</code></li>
+</ul>
+<p>Now when you check the command we did before, you may understand:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># rename all file under current folder form lower-case to upper-case</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> file in *<span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="k">do</span>
+</span></span><span class="line"><span class="cl">	mv <span class="s2">&#34;</span><span class="nv">$file</span><span class="s2">&#34;</span> 	<span class="sb">`</span><span class="nb">echo</span> <span class="nv">$file</span> <span class="p">|</span>  tr <span class="s1">&#39;a-z&#39;</span> <span class="s1">&#39;A-Z&#39;</span><span class="sb">`</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="5-arithmetic-expansion">
+    <a href="#5-arithmetic-expansion">#</a>
+    5. Arithmetic expansion
+</h2><blockquote>
+<p><strong>Parameter Expansion</strong>: The <code>$</code> character introduces parameter expansion, command substitution, or arithmetic expansion. <a class="link" href="https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html"  target="_blank" rel="noopener"
+    >source</a></p>
+</blockquote>
+<p>The behaviour of bash interpreter is different from other programming interpreter so if you write code like below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="cp">#!/usr/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>$ <span class="nv">a</span><span class="o">=</span>3<span class="p">;</span> <span class="nv">b</span><span class="o">=</span>5<span class="p">;</span> <span class="nv">c</span><span class="o">=</span>a+b<span class="p">;</span> <span class="nb">echo</span> <span class="nv">$c</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Print: a+b </span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You may not get the result you want, the correct way to do this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nv">a</span><span class="o">=</span>3<span class="p">;</span> <span class="nv">b</span><span class="o">=</span>5<span class="p">;</span> <span class="nv">c</span><span class="o">=</span><span class="k">$((</span>a+b<span class="k">))</span><span class="p">;</span> <span class="nb">echo</span> <span class="nv">$c</span>     
+</span></span><span class="line"><span class="cl">$ <span class="nv">a</span><span class="o">=</span>3<span class="p">;</span> <span class="nv">b</span><span class="o">=</span>5<span class="p">;</span> <span class="nb">echo</span> <span class="k">$((</span>a+b<span class="k">))</span>
+</span></span><span class="line"><span class="cl">$ <span class="nv">a</span><span class="o">=</span>3<span class="p">;</span> <span class="nv">b</span><span class="o">=</span>5<span class="p">;</span> <span class="nb">let</span> <span class="nv">c</span><span class="o">=</span><span class="s2">&#34;a+b&#34;</span><span class="p">;</span> <span class="nb">echo</span> <span class="nv">$c</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>$((...))</code> is called <a class="link" href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_06_04"  target="_blank" rel="noopener"
+    >arithmetic expansion</a>, which is typical of the <code>bash</code> and <code>ksh</code> shells. This allows doing simple <em>integer</em> arithmetic, no floating point stuff though. The result of the expression replaces the expression, as in <code>echo $((1+1))</code> would become <code>echo 2</code></li>
+<li><code>((...))</code> is referred to as <a class="link" href="https://wiki-dev.bash-hackers.org/syntax/ccmd/arithmetic_eval"  target="_blank" rel="noopener"
+    >arithmetic evaluation</a> and can be used as part of <code>if ((...)); then</code> or <code>while ((...)) ; do</code> statements. Arithmetic expansion <code>$((..))</code> substitutes the output of the operation and can be used to assign variables as in <code>i=$((i+1))</code> but cannot be used in conditional statements.</li>
+<li><code>let</code> is a <code>bash</code> and <code>ksh</code> keyword which allows for variable creation with simple arithmetic evaluation. If you try to assign a string there like <code>let a=&quot;hello world&quot;</code> you&rsquo;ll get a syntax error.</li>
+</ul>
+<h2 id="6-conclusion">
+    <a href="#6-conclusion">#</a>
+    6. Conclusion
+</h2><ul>
+<li>There must be no spaces on either side of the equal <code>=</code> sign in the assignment statement.</li>
+<li>Three control operators: <code>;</code>, <code>||</code>, <code>&amp;&amp;</code></li>
+<li>set defalul shell: <code>chsh -s /bin/zsh</code>, switch shell temporarily: <code>shell-name</code> + <code>enter</code></li>
+<li>check version of shell: <code>echo &quot;$ZSH_VERSION&quot;</code>, <code>echo &quot;$BASH_VERSION&quot;</code></li>
+<li>check all shells: <code>cat /etc/shells</code></li>
+</ul>
+<p>References:</p>
+<ul>
+<li><a class="link" href="https://askubuntu.com/questions/29589"  target="_blank" rel="noopener"
+    >bash - &lsquo;chmod u+x&rsquo; versus &lsquo;chmod +x&rsquo; - Ask Ubuntu</a></li>
+<li><a class="link" href="https://www.askingbox.com/question/linux-difference-between-chmod-x-and-chmod-u-x"  target="_blank" rel="noopener"
+    >Linux: Difference between &ldquo;chmod +x&rdquo; and &ldquo;chmod u+x&rdquo;</a></li>
+<li><a class="link" href="https://www.gnu.org/software/bash/manual/html_node/Quoting.html"  target="_blank" rel="noopener"
+    >Quoting (Bash Reference Manual)</a></li>
+<li><a class="link" href="https://www.tutorialspoint.com/unix/unix-quoting-mechanisms.htm"  target="_blank" rel="noopener"
+    >Unix / Linux - Shell Quoting Mechanisms</a></li>
+<li><a class="link" href="https://unix.stackexchange.com/questions/48392/understanding-backtick"  target="_blank" rel="noopener"
+    >bash - Understanding backtick (`) - Unix &amp; Linux Stack Exchange</a></li>
+<li><a class="link" href="https://www.gnu.org/software/bash/manual/html_node/Shell-Expansions.html#Shell-Expansions"  target="_blank" rel="noopener"
+    >Shell Expansions (Bash Reference Manual)</a></li>
+<li><a class="link" href="https://hbctraining.github.io/Intro-to-shell-flipped/lessons/02_wildcards_shortcuts.html"  target="_blank" rel="noopener"
+    >The Shell | Introduction to the command line interface (Shell)</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/linux/">Linux</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/tools-commonly-used-on-linux/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tools Commonly Used on Linux</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/shell-expansion/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Shell Expansion</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/commands-commonly-used-in-linux/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Commands Commonly Used in Linux</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

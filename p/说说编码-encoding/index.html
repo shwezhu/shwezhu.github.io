@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? # 1. 编码和乱码 (unicode vs ascii) 电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的. ASCII 规定数字65代表字符A, 66代表字符B依次类推, 所以ASCII表就是一个map, 每个字符对应一个数, 把字符按照预定规则对应到数字的过程就叫编码. 到后来计算机普及, 全世界都使用不同语言, 出现了问题, 比如我们用36代表汉字牛, 韩国说用36代表字符&amp;, 当我输入牛, 软件就把0010 0100存入磁盘, 然后我把文件传给韩国的朋友, 他们的程序认为36即0010 0100代表&amp;, 这就产生了乱码: 软件尝试使用与文件编码不同的编码方式来解码文件, 所以我们需要一个新的标准, 可以涵盖全世界字符的那种, 然后所有软件都遵守这个标准, 这样才能无差错沟通, 我发送一串二进制在我这代表字符A, 你的软件收到这串二进制后翻译出的也是字符A, 而不是B或C, 这时候 Unicode 就出来了, 它就是使用0~0x10FFFF的数字来表示世界上所有的字符, 如汉字 在 的Unicode值是 0x5728, 注意0x代表值5728是十六进制, 又如字符 A 的Unicode值是0x41, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的, Unicode 和 ASCII 都是字符集, 但是 ASCII 只包含 128 个字符, 而 Unicode 包含很多很多个字符. # 2. Unicode vs UTF-8 vs UTF-16 # Unicode 定义和目的： Unicode 是一个国际标准，用于不同系统和程序间统一表示文本数据。 它为世界上几乎所有的字符和文本符号分配了唯一的 code point。 Unicode standard describes how characters are represented by code points.">
+<title>说说编码 - encoding</title>
+
+<link rel='canonical' href='http://localhost:1313/p/%E8%AF%B4%E8%AF%B4%E7%BC%96%E7%A0%81-encoding/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="说说编码 - encoding">
+<meta property='og:description' content="编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? # 1. 编码和乱码 (unicode vs ascii) 电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的. ASCII 规定数字65代表字符A, 66代表字符B依次类推, 所以ASCII表就是一个map, 每个字符对应一个数, 把字符按照预定规则对应到数字的过程就叫编码. 到后来计算机普及, 全世界都使用不同语言, 出现了问题, 比如我们用36代表汉字牛, 韩国说用36代表字符&amp;, 当我输入牛, 软件就把0010 0100存入磁盘, 然后我把文件传给韩国的朋友, 他们的程序认为36即0010 0100代表&amp;, 这就产生了乱码: 软件尝试使用与文件编码不同的编码方式来解码文件, 所以我们需要一个新的标准, 可以涵盖全世界字符的那种, 然后所有软件都遵守这个标准, 这样才能无差错沟通, 我发送一串二进制在我这代表字符A, 你的软件收到这串二进制后翻译出的也是字符A, 而不是B或C, 这时候 Unicode 就出来了, 它就是使用0~0x10FFFF的数字来表示世界上所有的字符, 如汉字 在 的Unicode值是 0x5728, 注意0x代表值5728是十六进制, 又如字符 A 的Unicode值是0x41, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的, Unicode 和 ASCII 都是字符集, 但是 ASCII 只包含 128 个字符, 而 Unicode 包含很多很多个字符. # 2. Unicode vs UTF-8 vs UTF-16 # Unicode 定义和目的： Unicode 是一个国际标准，用于不同系统和程序间统一表示文本数据。 它为世界上几乎所有的字符和文本符号分配了唯一的 code point。 Unicode standard describes how characters are represented by code points.">
+<meta property='og:url' content='http://localhost:1313/p/%E8%AF%B4%E8%AF%B4%E7%BC%96%E7%A0%81-encoding/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='python' /><meta property='article:tag' content='cs basics' /><meta property='article:published_time' content='2023-06-01T22:13:25&#43;00:00'/><meta property='article:modified_time' content='2023-06-01T22:13:25&#43;00:00'/>
+<meta name="twitter:title" content="说说编码 - encoding">
+<meta name="twitter:description" content="编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么? # 1. 编码和乱码 (unicode vs ascii) 电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的. ASCII 规定数字65代表字符A, 66代表字符B依次类推, 所以ASCII表就是一个map, 每个字符对应一个数, 把字符按照预定规则对应到数字的过程就叫编码. 到后来计算机普及, 全世界都使用不同语言, 出现了问题, 比如我们用36代表汉字牛, 韩国说用36代表字符&amp;, 当我输入牛, 软件就把0010 0100存入磁盘, 然后我把文件传给韩国的朋友, 他们的程序认为36即0010 0100代表&amp;, 这就产生了乱码: 软件尝试使用与文件编码不同的编码方式来解码文件, 所以我们需要一个新的标准, 可以涵盖全世界字符的那种, 然后所有软件都遵守这个标准, 这样才能无差错沟通, 我发送一串二进制在我这代表字符A, 你的软件收到这串二进制后翻译出的也是字符A, 而不是B或C, 这时候 Unicode 就出来了, 它就是使用0~0x10FFFF的数字来表示世界上所有的字符, 如汉字 在 的Unicode值是 0x5728, 注意0x代表值5728是十六进制, 又如字符 A 的Unicode值是0x41, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的, Unicode 和 ASCII 都是字符集, 但是 ASCII 只包含 128 个字符, 而 Unicode 包含很多很多个字符. # 2. Unicode vs UTF-8 vs UTF-16 # Unicode 定义和目的： Unicode 是一个国际标准，用于不同系统和程序间统一表示文本数据。 它为世界上几乎所有的字符和文本符号分配了唯一的 code point。 Unicode standard describes how characters are represented by code points.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-编码和乱码-unicode-vs-ascii">1. 编码和乱码 (unicode vs ascii)</a></li>
+    <li><a href="#2-unicode-vs-utf-8-vs-utf-16">2. Unicode vs UTF-8 vs UTF-16</a>
+      <ol>
+        <li><a href="#unicode">Unicode</a></li>
+        <li><a href="#utf-8">UTF-8</a></li>
+        <li><a href="#utf-16">UTF-16</a></li>
+        <li><a href="#主要区别">主要区别</a></li>
+        <li><a href="#3-修改文件编码方式">3. 修改文件编码方式</a></li>
+        <li><a href="#4-python-中的编码">4. Python 中的编码</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/cs-basics/" >
+                Cs Basics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E8%AF%B4%E8%AF%B4%E7%BC%96%E7%A0%81-encoding/">说说编码 - encoding</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 01, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    3 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>编码问题很常见, 有时候读文件打开是乱码, 有的语言说自己字符串采用unicode表示字符, 可又来utf-8编码, 这都是什么?</p>
+<h2 id="1-编码和乱码-unicode-vs-ascii">
+    <a href="#1-%e7%bc%96%e7%a0%81%e5%92%8c%e4%b9%b1%e7%a0%81-unicode-vs-ascii">#</a>
+    1. 编码和乱码 (unicode vs ascii)
+</h2><p>电脑只能看懂二进制数, 所以得想办法把人类语言用二进制表示, 这就是编码的目的. ASCII 规定数字<code>65</code>代表字符<code>A</code>, <code>66</code>代表字符<code>B</code>依次类推, 所以ASCII表就是一个map, 每个字符对应一个数, <strong>把字符按照预定规则对应到数字的过程就叫编码</strong>.</p>
+<p>到后来计算机普及, 全世界都使用不同语言, 出现了问题, 比如我们用<code>36</code>代表汉字<code>牛</code>, 韩国说用<code>36</code>代表字符<code>&amp;</code>, 当我输入<code>牛</code>, 软件就把<code>0010 0100</code>存入磁盘, 然后我把文件传给韩国的朋友, 他们的程序认为<code>36</code>即<code>0010 0100</code>代表<code>&amp;</code>, 这就产生了乱码: <strong>软件尝试使用与文件编码不同的编码方式来解码文件</strong>,</p>
+<p>所以我们需要一个新的标准, 可以涵盖全世界字符的那种, 然后所有软件都遵守这个标准, 这样才能无差错沟通, 我发送一串二进制在我这代表字符<code>A</code>, 你的软件收到这串二进制后翻译出的也是字符<code>A</code>, 而不是<code>B</code>或<code>C</code>,</p>
+<p>这时候 Unicode 就出来了, 它就是使用<code>0~0x10FFFF</code>的数字来表示世界上所有的字符, 如汉字 <code>在</code> 的Unicode值是 <code>0x5728</code>, 注意<code>0x</code>代表值<code>5728</code>是十六进制, 又如字符 <code>A</code> 的Unicode值是<code>0x41</code>, 这里说一下, Unicode表示的字符里英文字符的值和ASCII表是相同的,</p>
+<blockquote>
+<p>Unicode 和 ASCII 都是字符集, 但是 ASCII 只包含 128 个字符, 而 Unicode 包含很多很多个字符.</p>
+</blockquote>
+<h2 id="2-unicode-vs-utf-8-vs-utf-16">
+    <a href="#2-unicode-vs-utf-8-vs-utf-16">#</a>
+    2. Unicode vs UTF-8 vs UTF-16
+</h2><h3 id="unicode">
+    <a href="#unicode">#</a>
+    Unicode
+</h3><ol>
+<li><strong>定义和目的</strong>：
+<ul>
+<li>Unicode 是一个国际标准，用于不同系统和程序间统一表示文本数据。</li>
+<li>它为世界上几乎所有的字符和文本符号分配了唯一的 code point。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>Unicode standard describes how characters are represented by <strong>code points</strong>. A code point value is an integer in the range 0 to 0x10FFFF. In the standard and in this document, a code point is written using the notation <code>U+265E</code> to mean the character with value <code>0x265e</code> (9,822 in decimal).</p>
+</blockquote>
+<ol start="2">
+<li>
+<p><strong>Code point 范围</strong>：</p>
+<ul>
+<li>从 <code>U+0000</code> 到 <code>U+10FFFF</code>，包括了超过 100,000 个字符。</li>
+</ul>
+</li>
+<li>
+<p><strong>重点</strong>：</p>
+<ul>
+<li>Unicode 是字符集（character set），定义了字符和 code point 之间的映射，但不规定具体如何在计算机中存储这些code point。</li>
+</ul>
+</li>
+</ol>
+<h3 id="utf-8">
+    <a href="#utf-8">#</a>
+    UTF-8
+</h3><ol>
+<li>
+<p><strong>定义和特点</strong>：</p>
+<ul>
+<li>UTF-8（8-bit Unicode Transformation Format）是一种对 Unicode code point 进行编码的方式。</li>
+<li>它是一种可变长度的字符编码方法，使用 1 到 4 个字节来表示一个 Unicode code point。</li>
+</ul>
+</li>
+<li>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>兼容性好，ASCII 编码的字符在 UTF-8 中保持单字节形式，与传统 ASCII 编码兼容。</li>
+<li>在存储英文文本时空间效率高。因为英文字符在 UTF-8 中只占用 1 个字节。</li>
+</ul>
+</li>
+</ol>
+<h3 id="utf-16">
+    <a href="#utf-16">#</a>
+    UTF-16
+</h3><ol>
+<li>
+<p><strong>定义和特点</strong>：</p>
+<ul>
+<li>UTF-16（16-bit Unicode Transformation Format）是另一种对 Unicode code point进行编码的格式。</li>
+<li>使用 2 个或 4 个字节来表示一个 Unicode code point。</li>
+<li>在UTF-16中，字符可以用一个或两个16位的 <strong>code units</strong> 来表示.</li>
+</ul>
+</li>
+<li>
+<p><strong>特性</strong>：</p>
+<ul>
+<li>在处理某些语言（如中文、日文、韩文）时可能比 UTF-8 更加空间高效。</li>
+<li>因为多数汉字在 UTF-16 中只占用 2 个字节。</li>
+</ul>
+</li>
+</ol>
+<h3 id="主要区别">
+    <a href="#%e4%b8%bb%e8%a6%81%e5%8c%ba%e5%88%ab">#</a>
+    主要区别
+</h3><ul>
+<li><strong>编码长度</strong>：
+<ul>
+<li>UTF-8 是可变长度的，从 1 到 4 个字节不等。</li>
+<li>UTF-16 通常使用 2 个或 4 个字节。</li>
+</ul>
+</li>
+<li><strong>兼容性</strong>：
+<ul>
+<li>UTF-8 与传统 ASCII 编码完全兼容。</li>
+<li>UTF-16 与 ASCII 不兼容。</li>
+</ul>
+</li>
+<li><strong>空间效率</strong>：
+<ul>
+<li>对于主要包含 ASCII 字符的文本，UTF-8 更加高效。</li>
+<li>对于包含大量非西方字符的文本，UTF-16 可能更加高效。</li>
+</ul>
+</li>
+</ul>
+<p>总的来说，Unicode 是一个广泛的字符集，定义了全球各种字符的 code point。而 UTF-8 和 UTF-16 是这些code point在计算机存储和传输中的具体编码实现方式。选择哪种编码方式取决于特定的应用场景和空间效率需求。</p>
+<p>关于 utf-8 这里举个例子, 汉字<code>汉</code>的Unicode值是两字节即 <code>6C49</code>, 二进制为: <code>0110 1100 0100 1001</code>, 因为 utf-8 规定汉字占 3 字节, 因此选择第三行进行编码, 根据上标经过utf-8编码变成 <code>11100110 10110001 10001001</code>,  因此最终写入文件的是其三字节的 utf-8 encoding <code>11100110 10110001 10001001</code>, 而不是其Unicode <code>0110 1100 0100 1001</code> , 可以使用 <code>xxd</code> 查看文件的16进制内容,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ xxd text.md
+</span></span><span class="line"><span class="cl">00000000: e6b1 <span class="m">89</span>  
+</span></span><span class="line"><span class="cl">$ file text.md
+</span></span><span class="line"><span class="cl">text.md: Unicode text, UTF-8 text
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>e6b1 89</code>  = <code>11100110 10110001 10001001</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">Binary</span> <span class="nx">format</span> <span class="k">of</span> <span class="nx">bytes</span> <span class="k">in</span> <span class="nx">sequence</span>
+</span></span><span class="line"><span class="cl"><span class="mi">1</span><span class="nx">st</span> <span class="nx">Byte</span>    <span class="mi">2</span><span class="nx">nd</span> <span class="nx">Byte</span>    <span class="mi">3</span><span class="nx">rd</span> <span class="nx">Byte</span>    <span class="mi">4</span><span class="nx">th</span> <span class="nx">Byte</span>    <span class="nb">Number</span> <span class="k">of</span> <span class="nx">Free</span> <span class="nx">Bits</span>   <span class="nx">Maximum</span> <span class="nx">Expressible</span> <span class="nx">Unicode</span> <span class="nx">Value</span>
+</span></span><span class="line"><span class="cl"><span class="mi">0</span><span class="nx">xxxxxxx</span>                                                <span class="mi">7</span>             <span class="mi">007</span><span class="nx">F</span> <span class="nx">hex</span> <span class="p">(</span><span class="mi">127</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">110</span><span class="nx">xxxxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>                                <span class="p">(</span><span class="mi">5</span><span class="o">+</span><span class="mi">6</span><span class="p">)</span><span class="o">=</span><span class="mi">11</span>          <span class="mi">07</span><span class="nx">FF</span> <span class="nx">hex</span> <span class="p">(</span><span class="mi">2047</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">1110</span><span class="nx">xxxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>                  <span class="p">(</span><span class="mi">4</span><span class="o">+</span><span class="mi">6</span><span class="o">+</span><span class="mi">6</span><span class="p">)</span><span class="o">=</span><span class="mi">16</span>          <span class="nx">FFFF</span> <span class="nx">hex</span> <span class="p">(</span><span class="mi">65535</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">11110</span><span class="nx">xxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>    <span class="mi">10</span><span class="nx">xxxxxx</span>    <span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="mi">6</span><span class="o">+</span><span class="mi">6</span><span class="o">+</span><span class="mi">6</span><span class="p">)</span><span class="o">=</span><span class="mi">21</span>          <span class="mi">10</span><span class="nx">FFFF</span> <span class="nx">hex</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">114</span><span class="p">,</span><span class="mi">111</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>读到<a class="link" href="http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html"  target="_blank" rel="noopener"
+    >一篇文章</a>总结的很好 分享片段:</p>
+<p>在Unicode出现之前，所有的字符集都是和具体编码方案绑定在一起的，都是直接将字符和最终字节流绑定死了，例如ASCII编码系统规定使用7比特来编码ASCII字符集；GB2312以及GBK字符集，限定了使用最多2个字节来编码所有字符，并且规定了字节序。这样的编码系统通常用简单的查表，也就是通过代码页就可以直接将字符映射为存储设备上的字节流了。例如下面这个例子：</p>
+<p><img src="/001-encoding/a.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="a"
+	
+	
+></p>
+<p>这种方式的缺点在于，字符和字节流之间耦合得太紧密了，从而限定了字符集的扩展能力。假设以后火星人入住地球了，要往现有字符集中加入火星文就变得很难甚至不可能了，而且很容易破坏现有的编码规则。</p>
+<p>因此Unicode在设计上考虑到了这一点，<strong>将字符集和字符编码方案分离开</strong>:</p>
+<p><img src="/001-encoding/b.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="b"
+	
+	
+></p>
+<p>也就是说，<strong>虽然每个字符在Unicode字符集中都能找到唯一确定的编号（字符码，又称Unicode码），但是决定最终字节流的却是具体的字符编码</strong>。例如同样是对Unicode字符“A”进行编码，UTF-8字符编码得到的字节流是0x41，而UTF-16（大端模式）得到的是0x00 0x41。</p>
+<h3 id="3-修改文件编码方式">
+    <a href="#3-%e4%bf%ae%e6%94%b9%e6%96%87%e4%bb%b6%e7%bc%96%e7%a0%81%e6%96%b9%e5%bc%8f">#</a>
+    3. 修改文件编码方式
+</h3><p>如果你直接把utf-8编码的文件转为其它编码比如gbk, 那转换之后你的文件肯定是乱码, 因为在你写入一些内容比如<code>汉</code>到你的文本文件, 此时这个文件的编码方式为<code>utf-8</code>, 那你保存此文件后, 此文件的内容已经是经过utf-8编码二进制数, 即:<code>11100110 10110001 10001001</code>也就是<code>e6b1 89</code>就是上面的汉字<code>汉</code>, 此时你硬要把文件的编码方式改为gbk, 而gbk采用完全与utf-8不同的编码方式(2字节1个字符),  此时当其他软件是图打开你这个文本文件时, 就会查看你文件的编码信息, 他们看到是gbk编码, 那就会把<code>11100110 10110001 10001001</code>即<code>e6b1 89</code>中的前两个字节解释为一个字符, 然后他们查找<code>11100110 10110001</code>即<code>e6b1</code>, 那肯定匹配不到<code>汉</code>, 就会把<code>11100110 10110001</code>解释为不可打印字符或者英文或者其它语言,,,</p>
+<p>但也可以实现不同编码的安全转换, 一个思路是, 假如知道文件是用的utf-8编码, 所以我们先把该文件的字符转换为unicode code point, 然后再利用gbk进行编码这些unicode code, 具体做法如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">file_path</span> <span class="o">=</span> <span class="s1">&#39;article_1.md&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">utf_8_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">utf_8_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Contents of Text cannot be None!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">gbk_str</span> <span class="o">=</span> <span class="n">utf_8_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;gbk&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;article_2.md&#34;</span><span class="p">,</span> <span class="s2">&#34;wb&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">gbk_str</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="s2">&#34;gbk&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意, 上面代码<code>utf_8_str = f.read()</code>, 此时<code>utf_8_str</code>已经是unicode code, 第二我们写如文件时, 要以二进制写入, 不然你写入的就是长得像16进制数的字符串, 而不是真正的写入二进制数据,</p>
+<h3 id="4-python-中的编码">
+    <a href="#4-python-%e4%b8%ad%e7%9a%84%e7%bc%96%e7%a0%81">#</a>
+    4. Python 中的编码
+</h3><p>电脑只能存储二进制数, 而python也有个bytes类用来代表二进制字符串,</p>
+<p>所以这里有两个概念, string和bytes string, 他们是不同的类, 拥有的函数不同, 对于一个普通的string, 它有个函数叫<code>encode()</code>, 该函数的返回类型是<code>bytes</code>, 如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">bytes_str</span> <span class="o">=</span> <span class="s1">&#39;AB&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">bytes_str</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">bytes_str</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">bytes</span><span class="s1">&#39;&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="mi">4142</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后对于bytes类, 有个函数叫<code>decode()</code>, 该函数的返回类型为<code>str</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">bytes_str</span> <span class="o">=</span> <span class="s1">&#39;AB&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="n">bytes_str</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">str</span><span class="s1">&#39;&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>所以在往一个文件写入的时候想好是直接写入二进制还是写入编码后的字符串, 即<strong>注意文件的打开方式</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 文件的内容: 汉在</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 文件的编码方式: gbk, 每个汉字2字节</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;article_2.md&#34;</span><span class="p">,</span> <span class="s2">&#34;rb&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bin_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">bin_str</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">bin_str</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">bytes</span><span class="s1">&#39;&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xba\xba\xd4\xda</span><span class="s1">&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;article_2.md&#34;</span><span class="p">,</span> <span class="s2">&#34;r&#34;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;gbk&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">text_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">text_str</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">text_str</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">str</span><span class="s1">&#39;&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">汉在</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>因为<code>article_2.md</code>采用gbk编码方式, 而python默认是utf-8解码, 所以这里需要指定编码方式, 否则肯定乱码或者出错,</p>
+<p>写入也要<strong>注意打开文件的方式</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">bin_str</span> <span class="o">=</span> <span class="s1">&#39;AB&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;text.md&#34;</span><span class="p">,</span> <span class="s2">&#34;wb&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">bin_str</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="s2">&#34;utf-8&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看文件的内容:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ xxd text.md
+</span></span><span class="line"><span class="cl">00000000: <span class="m">4142</span>              AB
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果我们不指定以二进制写入, 则会报错:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">bin_str</span> <span class="o">=</span> <span class="s1">&#39;AB&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;text.md&#34;</span><span class="p">,</span> <span class="s2">&#34;w&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">bin_str</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="s2">&#34;utf-8&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># error: TypeError: write() argument must be str, not bytes</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意, python挺好有报错, 但是有的语言比如C的接口, 就不会提醒, 你写入什么就是什么, 如果你打开方式不是二进制, 然后写入了二进制的字符串, 那结果就是, 这些二进制的字符串被当作普通字符串写入文件&hellip;</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/python/">Python</a>
+        
+            <a href="/tags/cs-basics/">Cs Basics</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/loop-invariant/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Loop Invariant</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/https-ssl-tls/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HTTPS SSL TLS</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/is-multithreaded-server-better-than-a-single-thread-server/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Is Multithreaded Server Better than a Single Thread Server?</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cookie-session/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cookie &amp; Session</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/type-safety-from-why-rusy-jim-blandy/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Type Safety from Why Rusy - Jim Blandy</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

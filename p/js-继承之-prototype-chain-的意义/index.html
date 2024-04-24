@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Objects are values in Javascript {} 就是个空对象, {} 在 Python 里是个 dictionary, 当然 dictionary 也是个对象, 在说继承之前还要提一下 JS 对象与其它语言不同的地方, 举个例子, 1 2 3 4 5 6 7 8 9 10 const student = { name: &#39;John&#39;, study: function () { return &#39;study&#39; } } console.log(student) // { name: &#39;John&#39;, study: [Function: study] } student.age = 99 // 这里没有出错竟然! console.log(student) // { name: &#39;John&#39;, study: [Function: study], age: 99 } 在其它面向对象语言里, 如果我们尝试赋值或者访问对象不存在的 field就会报错, 在 JS 里并不会, 当你尝试读取不存在的 feild 的时候 (包括 prototype chain, 下面会讨论) 才会报错,">
+<title>JS 继承之 Prototype Chain 的意义</title>
+
+<link rel='canonical' href='http://localhost:1313/p/js-%E7%BB%A7%E6%89%BF%E4%B9%8B-prototype-chain-%E7%9A%84%E6%84%8F%E4%B9%89/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="JS 继承之 Prototype Chain 的意义">
+<meta property='og:description' content="# 1. Objects are values in Javascript {} 就是个空对象, {} 在 Python 里是个 dictionary, 当然 dictionary 也是个对象, 在说继承之前还要提一下 JS 对象与其它语言不同的地方, 举个例子, 1 2 3 4 5 6 7 8 9 10 const student = { name: &#39;John&#39;, study: function () { return &#39;study&#39; } } console.log(student) // { name: &#39;John&#39;, study: [Function: study] } student.age = 99 // 这里没有出错竟然! console.log(student) // { name: &#39;John&#39;, study: [Function: study], age: 99 } 在其它面向对象语言里, 如果我们尝试赋值或者访问对象不存在的 field就会报错, 在 JS 里并不会, 当你尝试读取不存在的 feild 的时候 (包括 prototype chain, 下面会讨论) 才会报错,">
+<meta property='og:url' content='http://localhost:1313/p/js-%E7%BB%A7%E6%89%BF%E4%B9%8B-prototype-chain-%E7%9A%84%E6%84%8F%E4%B9%89/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='javascript' /><meta property='article:published_time' content='2023-06-21T11:08:32&#43;00:00'/><meta property='article:modified_time' content='2023-06-21T11:08:32&#43;00:00'/>
+<meta name="twitter:title" content="JS 继承之 Prototype Chain 的意义">
+<meta name="twitter:description" content="# 1. Objects are values in Javascript {} 就是个空对象, {} 在 Python 里是个 dictionary, 当然 dictionary 也是个对象, 在说继承之前还要提一下 JS 对象与其它语言不同的地方, 举个例子, 1 2 3 4 5 6 7 8 9 10 const student = { name: &#39;John&#39;, study: function () { return &#39;study&#39; } } console.log(student) // { name: &#39;John&#39;, study: [Function: study] } student.age = 99 // 这里没有出错竟然! console.log(student) // { name: &#39;John&#39;, study: [Function: study], age: 99 } 在其它面向对象语言里, 如果我们尝试赋值或者访问对象不存在的 field就会报错, 在 JS 里并不会, 当你尝试读取不存在的 feild 的时候 (包括 prototype chain, 下面会讨论) 才会报错,">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-objects-are-values-in-javascript">1. Objects are values in Javascript</a></li>
+    <li><a href="#2-prototype">2. Prototype</a>
+      <ol>
+        <li><a href="#21-ways-to-access-prototype">2.1. Ways to access prototype</a></li>
+        <li><a href="#22-prototype-的获取与赋值">2.2. Prototype 的获取与赋值</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-prototype-chain-的意义">3. Prototype Chain 的意义</a></li>
+    <li><a href="#4-javascript-不存在真正的类">4. Javascript 不存在真正的类</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/javascript/" >
+                Javascript
+            </a>
+        
+            <a href="/categories/basics/" >
+                Basics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/js-%E7%BB%A7%E6%89%BF%E4%B9%8B-prototype-chain-%E7%9A%84%E6%84%8F%E4%B9%89/">JS 继承之 Prototype Chain 的意义</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 21, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-objects-are-values-in-javascript">
+    <a href="#1-objects-are-values-in-javascript">#</a>
+    1. Objects are values in Javascript
+</h2><blockquote>
+<p><code>{}</code> 就是个空对象, <code>{}</code> 在 Python 里是个 dictionary, 当然 dictionary 也是个对象,</p>
+</blockquote>
+<p>在说继承之前还要提一下 JS 对象与其它语言不同的地方, 举个例子,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">student</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">study</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="s1">&#39;study&#39;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">student</span><span class="p">)</span>  <span class="c1">// { name: &#39;John&#39;, study: [Function: study] }
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">student</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">99</span> <span class="c1">// 这里没有出错竟然!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">student</span><span class="p">)</span>  <span class="c1">// { name: &#39;John&#39;, study: [Function: study], age: 99 }
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>在其它面向对象语言里, 如果我们尝试赋值或者访问对象不存在的 field就会报错, 在 JS 里并不会, 当你尝试读取不存在的 feild 的时候 (包括 prototype chain, 下面会讨论) 才会报错,</p>
+<p>原因是, JS 的对象与其它语言如 Java, Python不同, Java里对象的 fields 是有类决定的, 类似所有对象的蓝图, JS并不是,  JS里的对象不是由类创建的, 更像一个 map,</p>
+<p>我们知道 JS 的值分为两类, Primitive values: immutable, object values: mutable, 这里的 mutable 其实就是指 你可以随意给对象增加属性, 一个对象就是一个value,</p>
+<p>当尝试读取对象的属性时, 会触发 prototype chain, 看下面代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Jack&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">sayHello</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;hello from &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 注意: 通过对象属性 __proto__ 访问对象 prototype
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">student</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">age</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">person</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">student</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>     <span class="c1">// student没有name属性, 通过prototype chain访问其他对象的name属性
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">student</span><span class="p">)</span>         <span class="c1">// { age: 13 }
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">student</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;John&#39;</span>       <span class="c1">// 为 student 创建新属性 name
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">student</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>  <span class="c1">// student 此时已有name属性 直接访问其name属性
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">student</span><span class="p">)</span>      <span class="c1">// { age: 13, name: &#39;John&#39; }
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">student</span><span class="p">.</span><span class="nx">sayHello</span><span class="p">()</span>       <span class="c1">// 因student无sayHello函数, 通过prototype chain查找sayHello函数, 找到后, sayHello中的this被替换为student
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="2-prototype">
+    <a href="#2-prototype">#</a>
+    2. Prototype
+</h2><h3 id="21-ways-to-access-prototype">
+    <a href="#21-ways-to-access-prototype">#</a>
+    2.1. Ways to access prototype
+</h3><p>Every <strong>object value</strong> in JavaScript has a built-in property, which is called its <code>prototype</code>. The <code>prototype</code> is itself <strong>an object value</strong>, so the <code>prototype</code> will have its own <code>prototype</code>, making what&rsquo;s called a <strong>prototype chain</strong>. The chain ends when we reach a prototype that has <code>null</code> for its own prototype.</p>
+<p>关于prototype有一个迷惑的地方, 通过<code>obj.prototype</code>访问到的并不是上面我们讨论的prototype, 只能通过<code>obj.__proto__</code>和全局函数<code>Object.getPrototypeOf()</code>来获取一个对象的<code>prototype</code>属性:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Jack&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">greet</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s1">&#39;Hi, I am&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">person</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// undefined
+</span></span></span><span class="line"><span class="cl"><span class="c1">// [Object: null prototype] {}
+</span></span></span><span class="line"><span class="cl"><span class="c1">// [Object: null prototype] {}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>根据打印可以看出 <code>person.prototype</code>跟<code>person.__proto__</code>压根就不是一个东西,</p>
+<h3 id="22-prototype-的获取与赋值">
+    <a href="#22-prototype-%e7%9a%84%e8%8e%b7%e5%8f%96%e4%b8%8e%e8%b5%8b%e5%80%bc">#</a>
+    2.2. Prototype 的获取与赋值
+</h3><p><code>obj.__proto__</code> 不是访问对象 prototype 属性的标准方法, 因为有的browser可能没实现, 所以访问(只读)一般用<code>Object.getPrototypeOf(student)</code>, 通过创建该对象的时候为其 <code>__proto__</code> 属性赋值的方法给一个对象的 prototype 赋值, 如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Jack&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">sayHello</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;hello from &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">student</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">age</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// Check the assignment here:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">person</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">student</span><span class="p">))</span>  <span class="c1">// { name: &#39;Jack&#39;, sayHello: [Function: sayHello] }
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 或者创建对象后赋值, 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">student</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">person</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 注意若student没有__proto__属性则这里自动为student创建__proto__并赋值, 赋值后我们就可以访问了
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 所以这和上面我们说的不要通过 `obj.__proto__`  访问一个对象的 prototype 并不矛盾
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-prototype-chain-的意义">
+    <a href="#3-prototype-chain-%e7%9a%84%e6%84%8f%e4%b9%89">#</a>
+    3. Prototype Chain 的意义
+</h2><blockquote>
+<p>Javascript is an object-based language, not a class-based language.</p>
+</blockquote>
+<p>If you know Java or C++, you should be familiar with the inheritance concept. <strong>In this programming paradigm</strong>, a class is a blueprint for creating objects. If you want a new class to reuse the functionality of an existing class, you can create a new class that extends the existing class. This is called <strong>classical inheritance</strong>.</p>
+<p>JavaScript doesn’t use <strong>classical inheritance</strong>. Instead, it uses <strong>prototypal inheritance</strong>. In prototypal inheritance, an object “inherits” properties from another object via the <code>prototype</code> linkage.</p>
+<p>Prototype chain 的意义正是代替了传统语言中的继承机制, 只不过是对象之间的继承, 而不是类之间,</p>
+<h2 id="4-javascript-不存在真正的类">
+    <a href="#4-javascript-%e4%b8%8d%e5%ad%98%e5%9c%a8%e7%9c%9f%e6%ad%a3%e7%9a%84%e7%b1%bb">#</a>
+    4. Javascript 不存在真正的类
+</h2><p>JS 不存在真正的类, 即使是ES6之后的类也不过是个语法糖 (syntactic sugar) 而已,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">class</span> <span class="nx">Person</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">getName</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">typeof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//function
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Unlike other programming languages such as Java and C#, JavaScript classes are syntactic sugar over the <strong>prototypal inheritance</strong>. In other words, ES6 classes are just special functions. But class declarations are not <strong>hoisted</strong> like function declarations.</p>
+</blockquote>
+<p>上面提到 <code>obj.prototype</code> 和 <code>obj.__proto__</code> 不是一个东西, 当创建对象后 (除函数对象) 它们的 <code>obj.prototype</code> 是 <code>undefined</code>, 而创建函数对象后, 这个函数的<code>func.prototype</code>会被自动创建, 并且值为一个空对象<code>{}</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">func</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;John&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">cap</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">size</span><span class="o">:</span> <span class="mi">36</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">price</span><span class="o">:</span> <span class="s1">&#39;30CAD&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">func</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span> <span class="c1">//{}
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">cap</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span> <span class="c1">//undefined
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>思考下面代码发生了什么:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">Person</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getName</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span> <span class="c1">// { getName: [Function (anonymous)] }
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">john</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s2">&#34;John Doe&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">john</span><span class="p">));</span> <span class="c1">// { getName: [Function (anonymous)] }
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">john</span><span class="p">);</span> <span class="c1">// Person { name: &#39;John Doe&#39; }
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">john</span><span class="p">.</span><span class="nx">getName</span><span class="p">());</span> <span class="c1">// John Doe
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>第一步发生在定义函数Person时:</p>
+<ol>
+<li>
+<p><code>Person.prototype</code> 被创建, 并被赋值为一个空对象<code>{}</code></p>
+</li>
+<li>
+<p><code>Person.prototype </code>对象增加一个函数 <code>getName()</code></p>
+</li>
+</ol>
+<p>此时 <code>Person.prototype </code>不再是个空对象, 而是有一个名为<code>getName</code>函数的对象<code>{ getName: [Function (anonymous)] }</code></p>
+<p>之后三步发生在调用<code>new Person(&quot;John Doe&quot;)</code>时:</p>
+<ol start="3">
+<li>新创建空对象<code>{}</code>并赋值给john</li>
+<li>执行<code>john.__proto__ = Person.prototype</code></li>
+<li>执行函数Person, 函数体里的 <code>this.name = name</code>变为 <code>john.name = name</code></li>
+</ol>
+<blockquote>
+<p>综上: The <code>john</code> object is an instance of the <code>Person</code> through <strong>prototypal inheritance</strong>.</p>
+</blockquote>
+<p>参考:</p>
+<ul>
+<li><a class="link" href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes"  target="_blank" rel="noopener"
+    >https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes</a></li>
+<li><a class="link" href="https://stackoverflow.com/a/34948211/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/34948211/16317008</a></li>
+<li><a class="link" href="https://www.javascripttutorial.net/es6/javascript-class/"  target="_blank" rel="noopener"
+    >https://www.javascripttutorial.net/es6/javascript-class/</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/javascript/">Javascript</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/tricks-mistakes-in-javascript/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tricks &amp; Mistakes in Javascript</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/error-handling-javascript/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Error Handling Javascript</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/promise-object-in-javascript/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Promise Object in Javascript</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/objects-collections-in-javascript/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Objects &amp; Collections in Javascript</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/ecmascript-vs-javascript-commonjs-vs-es-modules/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">ECMAScript vs JavaScript &amp; CommonJS vs ES Modules</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Compilation process in C C/C++ programs are built in two main phases (ignore the preprocess, assemble): Compilation - produces object code (.obj, .o) 1 2 # Compile source code into an object file without linking: gcc -c path/to/source.c The extension of the object file in DOS is .obj, and in UNIX, the extension is .o. Linking - produces executable code (.exe or .dll) executable file with an extension of exe in DOS and .">
+<title>Statically Linking in C</title>
+
+<link rel='canonical' href='http://localhost:1313/p/statically-linking-in-c/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Statically Linking in C">
+<meta property='og:description' content="# 1. Compilation process in C C/C++ programs are built in two main phases (ignore the preprocess, assemble): Compilation - produces object code (.obj, .o) 1 2 # Compile source code into an object file without linking: gcc -c path/to/source.c The extension of the object file in DOS is .obj, and in UNIX, the extension is .o. Linking - produces executable code (.exe or .dll) executable file with an extension of exe in DOS and .">
+<meta property='og:url' content='http://localhost:1313/p/statically-linking-in-c/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='c' /><meta property='article:tag' content='c&#43;&#43;' /><meta property='article:published_time' content='2023-11-03T10:49:20&#43;00:00'/><meta property='article:modified_time' content='2023-11-03T10:49:20&#43;00:00'/>
+<meta name="twitter:title" content="Statically Linking in C">
+<meta name="twitter:description" content="# 1. Compilation process in C C/C++ programs are built in two main phases (ignore the preprocess, assemble): Compilation - produces object code (.obj, .o) 1 2 # Compile source code into an object file without linking: gcc -c path/to/source.c The extension of the object file in DOS is .obj, and in UNIX, the extension is .o. Linking - produces executable code (.exe or .dll) executable file with an extension of exe in DOS and .">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-compilation-process-in-c">1. Compilation process in C</a></li>
+    <li><a href="#2-static-linking-and-dynamic-linking">2. Static linking and dynamic linking</a>
+      <ol>
+        <li><a href="#21-static-linking---portable-fast">2.1. Static linking - portable, fast</a></li>
+        <li><a href="#22-dynamic-linking---smaller-binary">2.2. Dynamic linking - smaller binary</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-static-library-vs-dynamic-library">3. Static library vs dynamic library</a></li>
+    <li><a href="#4-example-in-practice">4. Example in practice</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c&#43;&#43;/" >
+                C&#43;&#43;
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/statically-linking-in-c/">Statically Linking in C</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Nov 03, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    6 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-compilation-process-in-c">
+    <a href="#1-compilation-process-in-c">#</a>
+    1. Compilation process in C
+</h2><p>C/C++ programs are built in two main phases (ignore the preprocess, assemble):</p>
+<ol>
+<li>
+<p>Compilation - produces object code (<code>.obj</code>, <code>.o</code>)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># Compile source code into an object file without linking:</span>
+</span></span><span class="line"><span class="cl">gcc -c path/to/source.c
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>The extension of the <em><strong>object file</strong></em> in DOS is <code>.obj</code>, and in UNIX, the extension is <code>.o</code>.</li>
+</ul>
+</li>
+<li>
+<p>Linking - produces executable code (.exe or .dll)</p>
+<ul>
+<li><em><strong>executable file</strong></em> with an extension of <code>exe</code> in DOS and <code>.out</code> in UNIX OSL</li>
+</ul>
+</li>
+</ol>
+<h2 id="2-static-linking-and-dynamic-linking">
+    <a href="#2-static-linking-and-dynamic-linking">#</a>
+    2. Static linking and dynamic linking
+</h2><h3 id="21-static-linking---portable-fast">
+    <a href="#21-static-linking---portable-fast">#</a>
+    2.1. Static linking - portable, fast
+</h3><p>Mainly, all the programs written in C use library functions. These library functions are pre-compiled, and the object code of these library files is stored with <code>.lib</code> (or <code>.a</code>) extension. <strong>The main working of the linker</strong> is to combine the <em><strong>object code</strong></em> of library files with the <em><strong>object code</strong></em> of our program. The output of the linker is the executable file. So the <strong>static Linking creates larger binary files</strong>.  Note that this is the process of static linking, and <code>.lib</code> and <code>.a</code> is static library in windows and linux respectively.</p>
+<p>In static linking, everything is bundled into your application, you don’t have to worry that the client will have the right library (and version) available on their system. Since all library code have connected at compile time, the final executable has no dependencies on the library at run time. You have everything under your control and there is no dependency.</p>
+<p>One major advantage of static libraries being preferred even now “is speed”. There will be no dynamic querying of symbols in static libraries.</p>
+<p>One drawback of static libraries is, for any change(up-gradation) in the static libraries, you have to recompile the main program every time.</p>
+<h3 id="22-dynamic-linking---smaller-binary">
+    <a href="#22-dynamic-linking---smaller-binary">#</a>
+    2.2. Dynamic linking - smaller binary
+</h3><p>Dynamic Linking doesn’t require the code to be copied, it is done by just placing name of the library in the binary file. The actual linking happens when the program is run, when both the binary file and the library are in memory.</p>
+<p>Source: <a class="link" href="https://www.geeksforgeeks.org/static-vs-dynamic-libraries/"  target="_blank" rel="noopener"
+    >Static and Dynamic Libraries | Set 1 - GeeksforGeeks</a></p>
+<h2 id="3-static-library-vs-dynamic-library">
+    <a href="#3-static-library-vs-dynamic-library">#</a>
+    3. Static library vs dynamic library
+</h2><ul>
+<li>
+<p>Static library: windows <code>.lib</code>,  linux <code>.a</code></p>
+</li>
+<li>
+<p>Dynamic library (shared library): windows <code>.dll</code>, linux <code>.so</code></p>
+</li>
+</ul>
+<p>Static library <code>.lib</code> is just a bundle of <code>.obj</code> files and therefore isn&rsquo;t a complete program. It hasn&rsquo;t undergone the second (linking) phase of building a program. Dlls, on the other hand, are like exe&rsquo;s and therefore are complete programs.</p>
+<p><strong>If you build a static library</strong>, it isn&rsquo;t linked yet and therefore consumers of your static library will have to use the same compiler that you used (if you used g++, they will have to use g++). If the static library uses C++ library, such as <code>#include &lt;iostream&gt;</code>.</p>
+<p>If instead you built a dll (and built it <a class="link" href="http://www.codeproject.com/Articles/28969/HowTo-Export-C-classes-from-a-DLL"  target="_blank" rel="noopener"
+    >correctly</a>), you have built a complete program that all consumers can use, no matter which compiler they are using. There are several restrictions though, on exporting from a dll, if cross compiler compatibility is desired.</p>
+<p>Source: <a class="link" href="https://stackoverflow.com/a/25209275/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/25209275/16317008</a></p>
+<h2 id="4-example-in-practice">
+    <a href="#4-example-in-practice">#</a>
+    4. Example in practice
+</h2><p>Dynamic linking means the use of shared libraries. Shared libraries usually end with <code>.so</code> (short for &ldquo;shared object&rdquo;) or <code>.dylib</code> on MacOS.</p>
+<p>Another thing to note is that when a bug is fixed in a shared library, every application that references this library will profit from it. This also means that if the bug remains undetected, each referencing application will suffer from it (if the application uses the affected parts).</p>
+<p>It can be very hard for beginners <strong>when an application requires a specific version of the library, but the linker only knows the location of an incompatible versio</strong>n. In this case, you must help the linker find the path to the correct version.</p>
+<p>Although this is not an everyday issue, understanding dynamic linking will surely help you in fixing such problems.</p>
+<p>Fortunately, the mechanics for this are quite straightforward. To detect which libraries are required for an application to start, you can use <code>ldd</code>, which will print out the shared libraries used by a given file.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ ldd my_app 
+</span></span><span class="line"><span class="cl">	linux-vdso.so.1 (0x00007ffd1299c000)
+</span></span><span class="line"><span class="cl">	libmy_shared.so =&gt; not found
+</span></span><span class="line"><span class="cl">	libc.so.6 =&gt; /lib64/libc.so.6 (0x00007f56b869b000)
+</span></span><span class="line"><span class="cl">	/lib64/ld-linux-x86-64.so.2 (0x00007f56b8881000)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that the library <code>libmy_shared.so</code> is part of the repository but is not found. This is because the <strong>dynamic linker</strong>, which is responsible for loading all dependencies into memory before executing the application, cannot find this library in the standard locations it searches.</p>
+<p>Errors associated with linkers finding incompatible versions of common libraries (like <code>bzip2</code>, for example) can be quite confusing for a new user. One way around this is to add the repository folder to the environment variable <code>LD_LIBRARY_PATH</code> to tell the linker where to look for the correct version. In this case, the right version is in this folder, so you can export it:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:<span class="nv">$LD_LIBRARY_PATH</span>
+</span></span><span class="line"><span class="cl">$ <span class="nb">export</span> LD_LIBRARY_PATH
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Now the dynamic linker knows where to find the library, and the application can be executed. You can rerun <code>ldd</code> to invoke the dynamic linker, which inspects the application&rsquo;s dependencies and loads them into memory. The memory address is shown after the object path:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ ldd my_app 
+</span></span><span class="line"><span class="cl">	linux-vdso.so.1 <span class="o">(</span>0x00007ffd385f7000<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	libmy_shared.so <span class="o">=</span>&gt; /home/stephan/library_sample/libmy_shared.so <span class="o">(</span>0x00007f3fad401000<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	libc.so.6 <span class="o">=</span>&gt; /lib64/libc.so.6 <span class="o">(</span>0x00007f3fad21d000<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	/lib64/ld-linux-x86-64.so.2 <span class="o">(</span>0x00007f3fad408000<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>To find out which linker is invoked, you can use <code>file</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ file my_app 
+</span></span><span class="line"><span class="cl">my_app: ELF 64-bit LSB executable, x86-64, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID<span class="o">[</span>sha1<span class="o">]=</span>26c677b771122b4c99f0fd9ee001e6c743550fa6, <span class="k">for</span> GNU/Linux 3.2.0, not stripped
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The linker <code>/lib64/ld-linux-x86–64.so.2</code> is a symbolic link to <code>ld-2.30.so</code>, which is the default linker for my Linux distribution:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ file /lib64/ld-linux-x86-64.so.2 
+</span></span><span class="line"><span class="cl">/lib64/ld-linux-x86-64.so.2: symbolic link to ld-2.31.so
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Looking back to the output of <code>ldd</code>, you can also see (next to <code>libmy_shared.so</code>) that each dependency ends with a number (e.g., <code>/lib64/libc.so.6</code>). The usual naming scheme of shared objects is:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">**lib** XYZ.so **.&lt;MAJOR&gt;** . **&lt;MINOR&gt;**
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>On my system, <code>libc.so.6</code> is also a symbolic link to the shared object <code>libc-2.30.so</code> in the same folder:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ file /lib64/libc.so.6 
+</span></span><span class="line"><span class="cl">/lib64/libc.so.6: symbolic link to libc-2.31.so
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If you are facing the issue that an application will not start because the loaded library has the wrong version, it is very likely that you can fix this issue by inspecting and rearranging the symbolic links or specifying the correct search path (see &ldquo;The dynamic loader: ld.so&rdquo; below).</p>
+<p>For more information, look on the <a class="link" href="https://www.man7.org/linux/man-pages/man1/ldd.1.html"  target="_blank" rel="noopener"
+    ><code>ldd</code> man page</a>.</p>
+<p>Source: <a class="link" href="https://opensource.com/article/20/6/linux-libraries"  target="_blank" rel="noopener"
+    >How to handle dynamic and static libraries in Linux | Opensource.com</a></p>
+<blockquote>
+<p>Note that the dynamic linker on MacOS is called <code>dyld</code>, try <code>man dyld</code> to check the details. Learn more: <a class="link" href="https://stackoverflow.com/a/34905091/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/34905091/16317008</a></p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// go build -o server main.go
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then check the shared libraries this executable file <code>server</code> required:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># otool -L: print shared libraries used</span>
+</span></span><span class="line"><span class="cl">$ otool -L server           
+</span></span><span class="line"><span class="cl">server:
+</span></span><span class="line"><span class="cl">	/usr/lib/libSystem.B.dylib <span class="o">(</span>compatibility version 0.0.0, current version 0.0.0<span class="o">)</span>
+</span></span><span class="line"><span class="cl">	/usr/lib/libresolv.9.dylib <span class="o">(</span>compatibility version 0.0.0, current version 0.0.0<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><code>ldd</code> is on linux, on MaxOS you should use <code>otool</code></p>
+</blockquote>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/c/">C</a>
+        
+            <a href="/tags/c&#43;&#43;/">C&#43;&#43;</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/intros-of-c-standard-library/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Intros of C Standard Library</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/c-operator-overloading/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">C&#43;&#43; Operator Overloading</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E5%B7%A6%E5%80%BC%E5%92%8C%E5%8F%B3%E5%80%BC/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">左值和右值</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/c-class-definition-rules/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">C&#43;&#43; Class Definition Rules</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/c-raii-resource-acquisition-is-initialization/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">C&#43;&#43; RAII (Resource Acquisition Is Initialization)</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Basics concepts Try to understand the exception information (Traceback (most recent call last)) : 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 def foo(): print(10 * (1 / 0)) def main(): foo() if __name__ == &#34;__main__&#34;: main() Traceback (most recent call last): File &#34;main.py&#34;, line 10, in &lt;module&gt; main() File &#34;main.py&#34;, line 6, in main foo() File &#34;main.py&#34;, line 2, in foo print(10 * (1 / 0)) ZeroDivisionError: division by zero As you can see The last line of the error message indicates what happened: print(10 * (1 / 0)).">
+<title>Exception Handling &amp; Expensive or Not Python</title>
+
+<link rel='canonical' href='http://localhost:1313/p/exception-handling-expensive-or-not-python/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Exception Handling & Expensive or Not Python">
+<meta property='og:description' content="# 1. Basics concepts Try to understand the exception information (Traceback (most recent call last)) : 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 def foo(): print(10 * (1 / 0)) def main(): foo() if __name__ == &#34;__main__&#34;: main() Traceback (most recent call last): File &#34;main.py&#34;, line 10, in &lt;module&gt; main() File &#34;main.py&#34;, line 6, in main foo() File &#34;main.py&#34;, line 2, in foo print(10 * (1 / 0)) ZeroDivisionError: division by zero As you can see The last line of the error message indicates what happened: print(10 * (1 / 0)).">
+<meta property='og:url' content='http://localhost:1313/p/exception-handling-expensive-or-not-python/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='python' /><meta property='article:published_time' content='2023-11-24T09:37:26&#43;00:00'/><meta property='article:modified_time' content='2023-11-24T09:37:26&#43;00:00'/>
+<meta name="twitter:title" content="Exception Handling & Expensive or Not Python">
+<meta name="twitter:description" content="# 1. Basics concepts Try to understand the exception information (Traceback (most recent call last)) : 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 def foo(): print(10 * (1 / 0)) def main(): foo() if __name__ == &#34;__main__&#34;: main() Traceback (most recent call last): File &#34;main.py&#34;, line 10, in &lt;module&gt; main() File &#34;main.py&#34;, line 6, in main foo() File &#34;main.py&#34;, line 2, in foo print(10 * (1 / 0)) ZeroDivisionError: division by zero As you can see The last line of the error message indicates what happened: print(10 * (1 / 0)).">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-basics-concepts">1. Basics concepts</a></li>
+    <li><a href="#2-types-of-exceptions">2. Types of Exceptions</a></li>
+    <li><a href="#3-handle-exceptions">3. Handle Exceptions</a>
+      <ol>
+        <li><a href="#predefined-clean-up-actions">Predefined clean-up actions</a></li>
+      </ol>
+    </li>
+    <li><a href="#4-performance">4. Performance</a></li>
+    <li><a href="#5-when-to-catch">5. When to catch</a>
+      <ol>
+        <li><a href="#51-at-the-lowest-possible-level">5.1. At the lowest possible level</a></li>
+        <li><a href="#52-at-the-highest-possible-level">5.2. At the highest possible level</a></li>
+      </ol>
+    </li>
+    <li><a href="#6-when-to-throw-exceptions">6. When to throw exceptions</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/python/" >
+                Python
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/exception-handling-expensive-or-not-python/">Exception Handling &amp; Expensive or Not Python</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Nov 24, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    6 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-basics-concepts">
+    <a href="#1-basics-concepts">#</a>
+    1. Basics concepts
+</h2><p>Try to understand the exception information (<em>Traceback (most recent call last)</em>) :</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">foo</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;main.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">10</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;main.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">6</span><span class="p">,</span> <span class="ow">in</span> <span class="n">main</span>
+</span></span><span class="line"><span class="cl">    <span class="n">foo</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;main.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="ow">in</span> <span class="n">foo</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="ne">ZeroDivisionError</span><span class="p">:</span> <span class="n">division</span> <span class="n">by</span> <span class="n">zero</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see The last line of the error message indicates what happened: <code>print(10 * (1 / 0))</code>.</p>
+<blockquote>
+<p>Errors detected during execution are called <em>exceptions</em>. <a class="link" href="https://docs.python.org/3/tutorial/errors.html"  target="_blank" rel="noopener"
+    >Errors and Exceptions — Python 3.12.0</a></p>
+</blockquote>
+<h2 id="2-types-of-exceptions">
+    <a href="#2-types-of-exceptions">#</a>
+    2. Types of Exceptions
+</h2><p><code>BaseException</code> is the common base class of all exceptions. One of its subclasses, <code>Exception</code>, is the base class of all the <strong>non-fatal</strong> exceptions. Exceptions which are not subclasses of <code>Exception</code> are not typically handled, because they are used to indicate that the program should terminate. They include <code>SystemExit</code>which is raised by <code>sys.exit()</code> and <code>KeyboardInterrupt</code>which is raised when a user wishes to interrupt the program.</p>
+<p><code>Exception</code>can be used as a wildcard that catches (almost) everything. However, it is good practice to be as specific as possible with the types of exceptions that we intend to handle, and to allow any unexpected exceptions to propagate on.</p>
+<h2 id="3-handle-exceptions">
+    <a href="#3-handle-exceptions">#</a>
+    3. Handle Exceptions
+</h2><p>The most common pattern for handling <code>Exception</code> is to <strong>print or log the exception and then re-raise it</strong> (allowing a caller to handle the exception as well):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;myfile.txt&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;OS error:&#34;</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Unexpected </span><span class="si">{</span><span class="n">err</span><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="si">=}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="predefined-clean-up-actions">
+    <a href="#predefined-clean-up-actions">#</a>
+    Predefined clean-up actions
+</h3><p>Some objects define standard clean-up actions to be undertaken when the object is no longer needed, regardless of whether or not the operation using the object succeeded or failed. Look at the following example, which tries to open a file and print its contents to the screen.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;myfile.txt&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The problem with this code is that it leaves the file open for an indeterminate amount of time after this part of the code has finished executing. This is not an issue in simple scripts, but can be a problem for larger applications. The <a class="link" href="https://docs.python.org/3/reference/compound_stmts.html#with"  target="_blank" rel="noopener"
+    ><code>with</code></a> statement allows objects like files to be used in a way that ensures they are always cleaned up promptly and correctly.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;myfile.txt&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After the statement is executed, the file <em>f</em> is always closed, <strong>even if a problem was encountered while processing the lines</strong>. Objects which, like files, provide predefined clean-up actions will indicate this in their documentation.</p>
+<h2 id="4-performance">
+    <a href="#4-performance">#</a>
+    4. Performance
+</h2><p><a class="link" href="https://stackoverflow.com/questions/66536614/how-is-exception-handling-implemented-in-python"  target="_blank" rel="noopener"
+    >performance - How is exception handling implemented in Python? - Stack Overflow</a>:</p>
+<blockquote>
+<p>I&rsquo;ve learned from other SO answers that a try/catch block is <a class="link" href="https://stackoverflow.com/a/2522013/1663614"  target="_blank" rel="noopener"
+    >cheaper than an if/else statement</a> if the exception is expected to be raised rarely, and that <a class="link" href="https://stackoverflow.com/a/36784706/1663614"  target="_blank" rel="noopener"
+    >it&rsquo;s the call depth that&rsquo;s important</a> because filling the stacktrace is expensive. This is probably principally true for all programming languages.</p>
+</blockquote>
+<blockquote>
+<p>If you throw an exception, all functions will be exited back to the point where it finds a <code>try...catch</code> block with a matching <code>catch</code> type. If your function isn&rsquo;t called from within a try block, the program will exit with an unhandled exception.</p>
+</blockquote>
+<p>Find some discussions, from: <a class="link" href="https://stackoverflow.com/questions/1308432/do-try-catch-blocks-hurt-performance-when-exceptions-are-not-thrown?noredirect=1&amp;lq=1"  target="_blank" rel="noopener"
+    >c# - Do try/catch blocks hurt performance when exceptions are not thrown? - Stack Overflow</a></p>
+<blockquote>
+<p>During a code review with a Microsoft employee we came across a large section of code inside a <code>try{}</code> block. She and an IT representative suggested this can have effects on performance of the code. In fact, they suggested most of the code should be outside of try/catch blocks, and that only important sections should be checked. The Microsoft employee added and said an upcoming white paper warns against incorrect try/catch blocks.</p>
+</blockquote>
+<blockquote>
+<p>try catch blocks have a negligible impact on performance but exception Throwing can be pretty sizable, this is probably where your coworker was confused.</p>
+</blockquote>
+<p>Another disscussion: <a class="link" href="https://stackoverflow.com/questions/16451777/is-it-expensive-to-use-try-catch-blocks-even-if-an-exception-is-never-thrown?noredirect=1&amp;lq=1"  target="_blank" rel="noopener"
+    >java - Is it expensive to use try-catch blocks even if an exception is never thrown? - Stack Overflow</a></p>
+<blockquote>
+<p><code>try</code> has almost no expense at all. Instead of doing the work of setting up the <code>try</code> at runtime, the code&rsquo;s metadata is structured at compile time such that when an exception is thrown, it now does a relatively expensive operation of walking up the stack and seeing if any <code>try</code> blocks exist that would catch this exception. From a layman&rsquo;s perspective, <code>try</code> may as well be free. It&rsquo;s actually throwing the exception that costs you - but unless you&rsquo;re throwing hundreds or thousands of exceptions, you still won&rsquo;t notice the cost.</p>
+</blockquote>
+<p>Another post: <a class="link" href="https://stackoverflow.com/questions/299068/what-are-the-effects-of-exceptions-on-performance-in-java?noredirect=1&amp;lq=1"  target="_blank" rel="noopener"
+    >What are the effects of exceptions on performance in Java? - Stack Overflow</a></p>
+<blockquote>
+<p>In Java much of the expense of throwing an exception is the time spent gathering the stack trace, which occurs when the exception object is created. The actual cost of throwing the exception, while large, is considerably less than the cost of creating the exception.</p>
+<p><a class="link" href="https://stackoverflow.com/a/8024032/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/8024032/16317008</a></p>
+</blockquote>
+<h2 id="5-when-to-catch">
+    <a href="#5-when-to-catch">#</a>
+    5. When to catch
+</h2><h3 id="51-at-the-lowest-possible-level">
+    <a href="#51-at-the-lowest-possible-level">#</a>
+    5.1. At the lowest possible level
+</h3><p>This is the level at which you are integrating with third party code, such as an ORM tool or any library performing IO operations (accessing resources over HTTP, reading a file, saving to the database, you name it). That is, <strong>the level at which you leave your application’s native code</strong> to interact with other components.</p>
+<p>The guidelines in this scenario are:</p>
+<ul>
+<li><strong>Handle only specific exceptions</strong>, such as <code>SqlTimeoutException</code> or <code>IOException</code>. Never handle a generic exception (of type <code>Exception</code>)</li>
+<li><strong>Handle it only if you have something meaningful to do about it</strong>, such as retries, triggering compensatory actions, or adding more data to the exception (e.g. context variables), and then re-throw it</li>
+<li><strong>Do not perform logging here</strong></li>
+<li><strong>Let all other exceptions bubble up</strong> as they will be handled by the second case</li>
+</ul>
+<h3 id="52-at-the-highest-possible-level">
+    <a href="#52-at-the-highest-possible-level">#</a>
+    5.2. At the highest possible level
+</h3><p>This would be the last place where you can handle the exception before it is thrown directly to the user.</p>
+<p>Your goal here is to <strong>log the error and forward the details to the programmers</strong> so they can identify and correct the error. Add as much information as possible, record it, and then <strong>show an apology message to the user</strong>, as there’s probably nothing they can do about it, especially if it is a bug in the software.</p>
+<p>The guidelines in this second scenario are:</p>
+<ul>
+<li>Handle the generic Exception class</li>
+<li>Add more information from current execution context</li>
+<li>Log the error and notify the programmers</li>
+<li>Show an apology to the user</li>
+<li>Work it out as soon as you can</li>
+</ul>
+<p>Learn more, very good explanation: <a class="link" href="https://stackoverflow.com/a/59511485"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/59511485</a></p>
+<h2 id="6-when-to-throw-exceptions">
+    <a href="#6-when-to-throw-exceptions">#</a>
+    6. When to throw exceptions
+</h2><p>Easier to explain in the context of developing a library. <strong>You should throw when you reached an error and there&rsquo;s nothing more you can do</strong> besides letting the consumer of your APIs know about it, and letting them decide.</p>
+<p>Imagine you&rsquo;re the developer of some data access library. When you reach a network error, there&rsquo;s nothing you can do besides throwing an exception. That&rsquo;s an irreversible error from a data access library standpoint.</p>
+<p>Learn more, very good explanation: <a class="link" href="https://stackoverflow.com/a/59511485"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/59511485</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/python/">Python</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/common-mistakes-and-tricks-python/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Common Mistakes and Tricks Python</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/objects-variables-python/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Objects &amp; Variables Python</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/yeild-generator-python/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Yeild &amp; Generator Python</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/chatgpt-bot/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">ChatGPT Bot</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/virtual-environment-python/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Virtual Environment Python</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

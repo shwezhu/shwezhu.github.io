@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. DNS Hierarchy DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点. 多出的那个.是Root Level Domain, 比如www.example.com真正的名字是www.example.com.root然后上图就简写为www.example.com. 因为根域名.root对于所有域名都是一样的，所以平时是省略的。 域名的层级结构: hostname.SLD.TLD.root, hostname 也叫 subdomain. # 2. HOSTNAME vs SLD HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指example.com里面的example, 而HOSTNAME是指www.example.com里面的www. HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如www.example.com和blog.example.com是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问www.example.com和blog.example.com时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP: # 3. DNS Records # 3.1. A Record 常见的 DNS Records 有 A, CNAME, TXT, 其中 A 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, CNAME 记录用于将域名指向另一个域名. 当你想给域名添加一个 ip 地址时, 只能添加 A 记录. 添加 A 记录时需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等, @代表空即不填,">
+<title>DNS 基础概念</title>
+
+<link rel='canonical' href='http://localhost:1313/p/dns-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="DNS 基础概念">
+<meta property='og:description' content="# 1. DNS Hierarchy DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点. 多出的那个.是Root Level Domain, 比如www.example.com真正的名字是www.example.com.root然后上图就简写为www.example.com. 因为根域名.root对于所有域名都是一样的，所以平时是省略的。 域名的层级结构: hostname.SLD.TLD.root, hostname 也叫 subdomain. # 2. HOSTNAME vs SLD HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指example.com里面的example, 而HOSTNAME是指www.example.com里面的www. HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如www.example.com和blog.example.com是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问www.example.com和blog.example.com时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP: # 3. DNS Records # 3.1. A Record 常见的 DNS Records 有 A, CNAME, TXT, 其中 A 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, CNAME 记录用于将域名指向另一个域名. 当你想给域名添加一个 ip 地址时, 只能添加 A 记录. 添加 A 记录时需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等, @代表空即不填,">
+<meta property='og:url' content='http://localhost:1313/p/dns-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='build website' /><meta property='article:tag' content='networking' /><meta property='article:published_time' content='2024-04-07T00:15:30&#43;00:00'/><meta property='article:modified_time' content='2024-04-07T00:15:30&#43;00:00'/>
+<meta name="twitter:title" content="DNS 基础概念">
+<meta name="twitter:description" content="# 1. DNS Hierarchy DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点. 多出的那个.是Root Level Domain, 比如www.example.com真正的名字是www.example.com.root然后上图就简写为www.example.com. 因为根域名.root对于所有域名都是一样的，所以平时是省略的。 域名的层级结构: hostname.SLD.TLD.root, hostname 也叫 subdomain. # 2. HOSTNAME vs SLD HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指example.com里面的example, 而HOSTNAME是指www.example.com里面的www. HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如www.example.com和blog.example.com是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问www.example.com和blog.example.com时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP: # 3. DNS Records # 3.1. A Record 常见的 DNS Records 有 A, CNAME, TXT, 其中 A 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, CNAME 记录用于将域名指向另一个域名. 当你想给域名添加一个 ip 地址时, 只能添加 A 记录. 添加 A 记录时需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等, @代表空即不填,">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-dns-hierarchy">1. DNS Hierarchy</a></li>
+    <li><a href="#2-hostname-vs-sld">2. HOSTNAME vs SLD</a></li>
+    <li><a href="#3-dns-records">3. DNS Records</a>
+      <ol>
+        <li><a href="#31-a-record">3.1. A Record</a></li>
+        <li><a href="#32-cname-record">3.2. CNAME Record</a></li>
+        <li><a href="#33-ttl-field">3.3. TTL Field</a></li>
+      </ol>
+    </li>
+    <li><a href="#4-总结">4. 总结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/build-website/" >
+                Build Website
+            </a>
+        
+            <a href="/categories/networking/" >
+                Networking
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/dns-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/">DNS 基础概念</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 07, 2024</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    2 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-dns-hierarchy">
+    <a href="#1-dns-hierarchy">#</a>
+    1. DNS Hierarchy
+</h2><p>DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点<code>.</code></p>
+<p><img src="/001-domain-name-dns-records/c.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>多出的那个<code>.</code>是Root Level Domain, 比如<code>www.example.com</code>真正的名字是<code>www.example.com.root</code>然后上图就简写为<code>www.example.com.</code> 因为根域名<code>.root</code>对于所有域名都是一样的，所以平时是省略的。</p>
+<blockquote>
+<p>域名的层级结构: <code>hostname.SLD.TLD.root</code>, <strong>hostname 也叫 subdomain</strong>.</p>
+</blockquote>
+<h2 id="2-hostname-vs-sld">
+    <a href="#2-hostname-vs-sld">#</a>
+    2. HOSTNAME vs SLD
+</h2><p>HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指<code>example.com</code>里面的<code>example</code>, 而HOSTNAME是指<code>www.example.com</code>里面的<code>www</code>.</p>
+<p>HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如<code>www.example.com</code>和<code>blog.example.com</code>是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问<code>www.example.com</code>和<code>blog.example.com</code>时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP:</p>
+<p><img src="https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/001-domain-name-dns-records%2F01.jpg"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<h2 id="3-dns-records">
+    <a href="#3-dns-records">#</a>
+    3. DNS Records
+</h2><h3 id="31-a-record">
+    <a href="#31-a-record">#</a>
+    3.1. A Record
+</h3><p>常见的 DNS Records 有 <code>A</code>, <code>CNAME</code>, <code>TXT</code>, 其中 <code>A</code> 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, <code>CNAME</code> 记录用于将域名指向另一个域名.</p>
+<p>当你想给域名添加一个 ip 地址时, 只能添加 <code>A</code> 记录. 添加 A 记录时需要指定 HOSTNAME 和 IP, 其中 <code>HOSTNAME</code> 可以填<code>@</code>或者<code>www</code>或<code>blog</code>等, <code>@</code>代表空即不填,</p>
+<p>一般域名自带默认的 DNS Records, 所以买了域名之后做的第一件事就应该删除这些默认记录, 不然等你又添加了一个A记录, 这时候你的域名就会被解析到多个IP(默认的和你刚添加的), 那浏览器访问你域名的时候, 选择哪个呢? 我查了一下论坛, 有人说是choose randomly, 所以如果你不删除域名所有的默认DNS Records, 那浏览器访问你域名的时候就有可能选择“错误”的ip,</p>
+<blockquote>
+<p>Yes you can. It is called round-robin DNS, and <strong>the browser just chooses one of them randomly</strong>. It is a well used method of getting cheap load balancing, but if one host goes down, users will still try to access it. <a class="link" href="https://serverfault.com/q/528742/761923"  target="_blank" rel="noopener"
+    >https://serverfault.com/q/528742/761923</a></p>
+</blockquote>
+<h3 id="32-cname-record">
+    <a href="#32-cname-record">#</a>
+    3.2. CNAME Record
+</h3><p>Use a CNAME record instead of an A record when one domain or subdomain is just another name for a different domain. <strong>All CNAME records must point to a domain, never to an IP address</strong>.</p>
+<blockquote>
+<p>domain: example.com, subdomain: blog.example.com</p>
+</blockquote>
+<p>假设你有个主网站 example.com，它有一个A记录指向IP地址 123.45.67.89。若你还想通过 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
+    >www.example.com</a> 访问这个网站，你可以为 www 设置一个CNAME记录，指向 example.com，而不是再次创建一个A记录指向 123.45.67.89。</p>
+<p>这样的设置如下：</p>
+<ul>
+<li>example.com A记录 -&gt; 123.45.67.89</li>
+<li><a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
+    >www.example.com</a> CNAME记录 -&gt; example.com</li>
+</ul>
+<p>当用户尝试访问 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
+    >www.example.com</a> 时，DNS解析流程如下：</p>
+<ul>
+<li>DNS查找 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
+    >www.example.com</a> 的记录。</li>
+<li>找到CNAME记录，了解到 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
+    >www.example.com</a> 是 example.com 的别名。</li>
+<li>接着，DNS会解析 example.com 的A记录，获取其IP地址 123.45.67.89。</li>
+<li>用户的请求最终被定向到IP地址 123.45.67.89，也就是 example.com 所在的服务器。</li>
+</ul>
+<p>你可能会好奇, 为什么不直接给 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
+    >www.example.com</a> 添加一个 A 记录, 指向 123.45.67.89 呢?</p>
+<p>再次创建一个A记录指向 123.45.67.89 以通过 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
+    >www.example.com</a> 访问网站是完全可行的。 然而，选择为 www 使用CNAME记录而不是另一个A记录主要是为了维护简便性：比如如果你的服务器IP地址发生变化，此时只需要更新 example.com 的A记录。所有指向 example.com 的CNAME记录（如 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
+    >www.example.com</a>）将自动指向新的IP地址。如果使用A记录，你需要手动更新 example.com 和 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
+    >www.example.com</a> 的A记录。</p>
+<blockquote>
+<p>Github Pages 的 custom domain 就可以使用 CNAME 记录, 即只需简单给你的域名添加一个 CNAME 记录, 指向 <code>username.github.io</code> 即可. 注意添加 CNAME 记录时, 我的 HOSTNAME 填的是 <code>blog</code>, 即 <code>blog.example.com</code> 指向 <code>username.github.io</code>, 你也可以把 HOSTNAME 设置为空, 若为空则代表你的主域名 <code>example.com</code> 指向 <code>username.github.io</code>, 根据个人喜好来设置.</p>
+</blockquote>
+<p><img src="https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/f356b3dd152035f92b0ae20335413ab0.jpg"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<h3 id="33-ttl-field">
+    <a href="#33-ttl-field">#</a>
+    3.3. TTL Field
+</h3><p>另外 DNS Records 有一个字段叫 TTL, 这里介绍一下: Time to Live (TTL) is a field on DNS records that controls how long each record is valid and — as a result — how long it takes for record updates to reach your end users. Longer TTLs speed up DNS lookups by increasing the chance of cached results, but a longer TTL also means that updates to your records take longer to go into effect.</p>
+<h2 id="4-总结">
+    <a href="#4-%e6%80%bb%e7%bb%93">#</a>
+    4. 总结
+</h2><p>买过来域名, 根据不同情况可能做的修改如下:</p>
+<ul>
+<li>无托管域名, 则直接去你的域名注册商那里添加 DNS Records, 一般是添加 A 记录, 指向你的服务器 IP 地址 即可.</li>
+<li>若要将域名托管到其他地方 (如 Cloudflare), 则只需要修改域名的 Nameserver 为 Cloudflare 指定的的 Nameserver 即可. 之后在 Cloudflare 上即添加管理不同类似的 DNS Records.</li>
+</ul>
+<p>References:</p>
+<ul>
+<li><a class="link" href="https://developers.cloudflare.com/dns/manage-dns-records/reference/ttl/"  target="_blank" rel="noopener"
+    >Time to Live (TTL) · Cloudflare DNS docs</a></li>
+<li><a class="link" href="https://www.cloudflare.com/zh-cn/learning/dns/dns-records/dns-cname-record/"  target="_blank" rel="noopener"
+    >什么是 DNS CNAME 记录？ | Cloudflare</a></li>
+<li><a class="link" href="https://www.educative.io/answers/what-is-dns-hierarchy"  target="_blank" rel="noopener"
+    >What is DNS Hierarchy?</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/build-website/">Build Website</a>
+        
+            <a href="/tags/networking/">Networking</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/cname-%E6%8C%87%E5%90%91-github-pages-%E9%97%AE%E9%A2%98/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CNAME 指向 GitHub Pages 问题</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cloudflare-r2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cloudflare R2</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/wget-connecting-timeout-issue/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Wget Connecting Timeout Issue</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/nginx/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Nginx</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/google-cloud-get-started/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Google Cloud Get Started</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Introduction Source Code: gptbot # 2. Database - gorm Don&rsquo;t Open db connection for each request, initialize a global DB and use it for all requests. Close is one of the most misused methods, most application don&rsquo;t need it, be sure you really need it. it is not necessary to close when crash, and you can still Close DB connection in V2. jinzhu - creator of gorm">
+<title>Golang Web - A Simple gptbot with Openai API</title>
+
+<link rel='canonical' href='http://localhost:1313/p/golang-web-a-simple-gptbot-with-openai-api/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Golang Web - A Simple gptbot with Openai API">
+<meta property='og:description' content="# 1. Introduction Source Code: gptbot # 2. Database - gorm Don&rsquo;t Open db connection for each request, initialize a global DB and use it for all requests. Close is one of the most misused methods, most application don&rsquo;t need it, be sure you really need it. it is not necessary to close when crash, and you can still Close DB connection in V2. jinzhu - creator of gorm">
+<meta property='og:url' content='http://localhost:1313/p/golang-web-a-simple-gptbot-with-openai-api/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:published_time' content='2023-08-18T09:20:57&#43;00:00'/><meta property='article:modified_time' content='2023-08-18T09:20:57&#43;00:00'/>
+<meta name="twitter:title" content="Golang Web - A Simple gptbot with Openai API">
+<meta name="twitter:description" content="# 1. Introduction Source Code: gptbot # 2. Database - gorm Don&rsquo;t Open db connection for each request, initialize a global DB and use it for all requests. Close is one of the most misused methods, most application don&rsquo;t need it, be sure you really need it. it is not necessary to close when crash, and you can still Close DB connection in V2. jinzhu - creator of gorm">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-introduction">1. Introduction</a></li>
+    <li><a href="#2-database---gorm">2. Database - gorm</a></li>
+    <li><a href="#3-session---gorillasession">3. Session - gorilla/session</a>
+      <ol>
+        <li><a href="#31-encode-before-save">3.1. encode before save</a></li>
+        <li><a href="#32-reset-maxage-whenever-call-sessionsave">3.2. reset MaxAge whenever call <code>session.Save</code></a></li>
+      </ol>
+    </li>
+    <li><a href="#4-session-or-redis-cache">4. Session or redis cache</a></li>
+    <li><a href="#5-session-store">5. Session store</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/golang/" >
+                Golang
+            </a>
+        
+            <a href="/categories/practice/" >
+                Practice
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/golang-web-a-simple-gptbot-with-openai-api/">Golang Web - A Simple gptbot with Openai API</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Aug 18, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    6 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-introduction">
+    <a href="#1-introduction">#</a>
+    1. Introduction
+</h2><p>Source Code: <a class="link" href="https://github.com/shwezhu/gptbot"  target="_blank" rel="noopener"
+    >gptbot</a></p>
+<h2 id="2-database---gorm">
+    <a href="#2-database---gorm">#</a>
+    2. Database - gorm
+</h2><blockquote>
+<p>Don&rsquo;t <code>Open</code> db connection for each request, initialize a global DB and use it for all requests.</p>
+<p><code>Close</code> is one of the most misused methods, most application don&rsquo;t need it, be sure you really need it.</p>
+<p>it is not necessary to close when crash, and you can still <code>Close</code> DB connection in V2.</p>
+<p><a class="link" href="https://github.com/go-gorm/gorm/issues/3145"  target="_blank" rel="noopener"
+    >jinzhu - creator of gorm</a></p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">db</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">gorm</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="nx">sqlite</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="s">&#34;gpt_bot.db&#34;</span><span class="p">),</span> <span class="o">&amp;</span><span class="nx">gorm</span><span class="p">.</span><span class="nx">Config</span><span class="p">{})</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">store</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">redistore</span><span class="p">.</span><span class="nf">NewRediStore</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s">&#34;tcp&#34;</span><span class="p">,</span> <span class="s">&#34;:6379&#34;</span><span class="p">,</span> <span class="s">&#34;&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nf">Getenv</span><span class="p">(</span><span class="s">&#34;SESSION_KEY&#34;</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/login&#34;</span><span class="p">,</span> <span class="nf">LoginHandler</span><span class="p">(</span><span class="nx">db</span><span class="p">,</span> <span class="nx">store</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, we use a global database connection here accross all handler, and it&rsquo;s worth noticing that <strong>every HTTP request that comes in to the server gets its own goroutine</strong>. Therefore, you have to consider data race in the handers.</p>
+<p>Because we share the <code>db</code> across all handlers, we have to consider that if <code>db</code> is thread-safe. I find <a class="link" href="https://stackoverflow.com/questions/61822921/does-gorm-open-create-a-new-connection-pool-every-time-its-called"  target="_blank" rel="noopener"
+    >some answers</a> on stack overflow which explains well:</p>
+<p>Does gorm.Open() create a new connection pool every time it&rsquo;s called?</p>
+<p>yes, try to reuse the returned DB object.</p>
+<p><a class="link" href="https://github.com/jinzhu/gorm/blob/v1.9.12/main.go#L58"  target="_blank" rel="noopener"
+    >gorm.Open</a> does the following: (more or less):</p>
+<ol>
+<li>lookup the driver for the given dialect</li>
+<li>call <code>sql.Open</code> to return a <code>DB</code> object</li>
+<li>call <code>DB.Ping()</code> to force it to talk to the database</li>
+</ol>
+<p>This means that the recommendations for <a class="link" href="https://golang.org/pkg/database/sql/#Open"  target="_blank" rel="noopener"
+    >sql.Open</a> apply to <code>gorm.Open</code>:</p>
+<blockquote>
+<p><strong>The returned DB is safe for concurrent</strong> use by multiple goroutines and maintains its own pool of idle connections. Thus, the Open function should be called just once. It is rarely necessary to close a DB.</p>
+</blockquote>
+<p>Also note that the connection pool can be configured as such, in both GORM v1 and v2:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nf">DB</span><span class="p">().</span><span class="nf">SetMaxIdleConns</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// SetMaxOpenConns sets the maximum number of open connections to the database.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nf">DB</span><span class="p">().</span><span class="nf">SetMaxOpenConns</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nf">DB</span><span class="p">().</span><span class="nf">SetConnMaxLifetime</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Hour</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// d, err := db.DB()
+</span></span></span><span class="line"><span class="cl"><span class="c1">// d.SetMaxIdleConns(10)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-session---gorillasession">
+    <a href="#3-session---gorillasession">#</a>
+    3. Session - gorilla/session
+</h2><h3 id="31-encode-before-save">
+    <a href="#31-encode-before-save">#</a>
+    3.1. encode before save
+</h3><p>When try to save data in session, we usually use the <code>Values</code> field of session, for example,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">session</span><span class="p">.</span><span class="nx">Values</span><span class="p">[</span><span class="s">&#34;username&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;Jack&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The first problem I came across is that, you can save <code>int</code>, <code>bool</code>, <code>string</code> and other basic value into <code>session.Values[]</code> directly, but when you try to assign other type value, custom object, array to <code>session.Values[&quot;xxx&quot;]</code> for example, you have to encode the value before assignment, so that <code>gorilla/session can</code> save data to Redis and read correctly for later request . Otherwise, you cannot get the value corrctly, I mean, after you <strong>restart your server</strong>, you cannot get the session stored in the Redis, <strong>the <code>IsNew</code> will be always <code>true</code>,</strong> this is because the encoing issues,</p>
+<p>I want to save a slice into session, which is chat history, so I have to encode it before assign it to <code>session.Values[&quot;messages&quot;]</code>, I&rsquo;ll choose <code>encoding/json</code> here, you can choose other encoding tech, <code>encoding/gob </code>for example,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// chatHistory == []openai.ChatCompletionMessage
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">data</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">chatHistory</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">session</span><span class="p">.</span><span class="nx">Values</span><span class="p">[</span><span class="s">&#34;messages&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="nx">data</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Bacause <code>json.Marshal(chatHistory)</code> encodes the object I passed in and return as a <code>[]byte</code>, so the type of the variable <code>data</code> above is <code>[]byte</code>, so I set <code>session.Values[&quot;messages&quot;]</code> as a emtpy byte slice at begining, when login,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">initSession</span><span class="p">(</span><span class="nx">session</span> <span class="o">*</span><span class="nx">sessions</span><span class="p">.</span><span class="nx">Session</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">session</span><span class="p">.</span><span class="nx">Options</span><span class="p">.</span><span class="nx">MaxAge</span> <span class="p">=</span> <span class="mi">20</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">session</span><span class="p">.</span><span class="nx">Values</span><span class="p">[</span><span class="s">&#34;authenticated&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">session</span><span class="p">.</span><span class="nx">Values</span><span class="p">[</span><span class="s">&#34;messages&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When you want get message that stored in session, you just need to get the encoded value which is  <code>[]byte</code>, and pass it to <code>json.Unmarshal()</code>, this function will convert the encoded value back to golang object,</p>
+<p><a class="link" href="https://stackoverflow.com/questions/45196950/gorilla-sessions-persistent-between-server-restarts"  target="_blank" rel="noopener"
+    >go - gorilla/sessions persistent between server restarts? - Stack Overflow</a></p>
+<h3 id="32-reset-maxage-whenever-call-sessionsave">
+    <a href="#32-reset-maxage-whenever-call-sessionsave">#</a>
+    3.2. reset MaxAge whenever call <code>session.Save</code>
+</h3><p>I don&rsquo;t know if I did it wrong, or it&rsquo;s a bug in <code>gorilla/sessions</code>, for example, I set the <code>MaxAge</code> of the session to 60 seconds when user first logged in I create session, and for later request, for example, user will send request for talking with chatGPT, and during this process, the server will update the history message which stored in <code>session.Values[&quot;messages&quot;]</code>, after update the value of  <code>session.Values[&quot;messages&quot;]</code>, we should call <code>session.Save()</code> so that this update can be saved for later request,</p>
+<p>But this will make <code>session.Options.MaxAge</code> back to its defalult value, which is 30 days, so you should set it again when you call  <code>session.Save()</code>,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="nx">session</span><span class="p">.</span><span class="nx">Values</span><span class="p">[</span><span class="s">&#34;messages&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="nx">data</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// set MaxAge whenever you call session.Save(r, w)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">session</span><span class="p">.</span><span class="nx">Options</span><span class="p">.</span><span class="nx">MaxAge</span> <span class="p">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">3600</span>
+</span></span><span class="line"><span class="cl"><span class="nx">_</span> <span class="p">=</span> <span class="nx">session</span><span class="p">.</span><span class="nf">Save</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">w</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Otherwise, the session stored in Redis won&rsquo;t be deleted until 30 days later, and your user will keep logged in satus for 30 days,</p>
+<p><a class="link" href="https://stackoverflow.com/questions/21865681/sessions-variables-in-golang-not-saved-while-using-gorilla-sessions"  target="_blank" rel="noopener"
+    >go - Sessions variables in golang not saved while using gorilla sessions - Stack Overflow</a></p>
+<p>Return and wrap error in low layer function (try to provide more context info), only handle errors and log info on the top of the function call stack.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">parseUsernamePassword</span><span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">userInfo</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">ParseForm</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// wrap error which can provide more context info
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// usually, say: &#34;failed to&#34; + &#34;function name&#34; + &#34;error&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// but not always
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;falied to parse username and password: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">updateMessage</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">store</span> <span class="o">*</span><span class="nx">redistore</span><span class="p">.</span><span class="nx">RediStore</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">session</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">store</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="s">&#34;session_id&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;cannot update message: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">session</span><span class="p">.</span><span class="nf">Save</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">w</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;cannot update message: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Learn more: <a class="link" href="https://davidzhu.xyz/post/golang/basics/008-error-handling/"  target="_blank" rel="noopener"
+    >Error handling - Go - David&rsquo;s Blog</a></p>
+<h2 id="4-session-or-redis-cache">
+    <a href="#4-session-or-redis-cache">#</a>
+    4. Session or redis cache
+</h2><p>I did some experiments , found that a query with gorm for sqlite3 takes about 380us, it&rsquo;s not that much, and there will no that many users can overwhelm my server, so I finally decide query the <code>tokens</code> value from database everytime when user make a request to chat with ChatGPT,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// https://stackoverflow.com/a/45791377/16317008
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">start</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nx">err</span> <span class="p">=</span> <span class="nx">db</span><span class="p">.</span><span class="nf">Limit</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nf">Find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">user</span><span class="p">,</span> <span class="s">&#34;username = ?&#34;</span><span class="p">,</span> <span class="p">(</span><span class="o">*</span><span class="nx">userInfo</span><span class="p">)[</span><span class="s">&#34;username&#34;</span><span class="p">]).</span><span class="nx">Error</span>
+</span></span><span class="line"><span class="cl"><span class="nx">t</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nf">Sub</span><span class="p">(</span><span class="nx">start</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="o">--------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="mf">1.514166</span><span class="nx">ms</span> <span class="c1">// first time
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="mf">542.125</span><span class="nx">µs</span>
+</span></span><span class="line"><span class="cl"><span class="mf">387.625</span><span class="nx">µs</span>
+</span></span><span class="line"><span class="cl"><span class="mf">484.958</span><span class="nx">µs</span>
+</span></span><span class="line"><span class="cl"><span class="mf">477.417</span><span class="nx">µs</span>
+</span></span><span class="line"><span class="cl"><span class="mf">377.959</span><span class="nx">µs</span>
+</span></span><span class="line"><span class="cl"><span class="p">..</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="5-session-store">
+    <a href="#5-session-store">#</a>
+    5. Session store
+</h2><p>sessions need a place to store, in-memory, file or Redis, package <a class="link" href="https://github.com/gorilla/sessions"  target="_blank" rel="noopener"
+    >gorilla/sessions</a> provides two way to save sessions, one is file, another is in-memory,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">store</span> <span class="p">=</span> <span class="nx">sessions</span><span class="p">.</span><span class="nf">NewCookieStore</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nf">Getenv</span><span class="p">(</span><span class="s">&#34;SESSION_KEY&#34;</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// or 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">var</span> <span class="nx">store</span> <span class="p">=</span>  <span class="nf">NewFilesytemStore</span><span class="p">(</span><span class="s">&#34;path/to/file&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nf">Getenv</span><span class="p">(</span><span class="s">&#34;SESSION_KEY&#34;</span><span class="p">)))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>I choose redis to save sessions with <a class="link" href="https://github.com/boj/redistore"  target="_blank" rel="noopener"
+    >redistore</a> library, which implements a redis store based on <a class="link" href="https://github.com/gorilla/sessions"  target="_blank" rel="noopener"
+    >gorilla/sessions</a>,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">store</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">redistore</span><span class="p">.</span><span class="nf">NewRediStore</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s">&#34;tcp&#34;</span><span class="p">,</span> <span class="s">&#34;:6379&#34;</span><span class="p">,</span> <span class="s">&#34;&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nf">Getenv</span><span class="p">(</span><span class="s">&#34;SESSION_KEY&#34;</span><span class="p">)))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You can use <a class="link" href="https://github.com/gorilla/sessions"  target="_blank" rel="noopener"
+    >gorilla/sessions</a> which help you save session in-memory, if you want save sessions on a redis server too, you have to install Redis on your computer, learn more about session and Redis:</p>
+<ul>
+<li><a class="link" href="https://davidzhu.xyz/2023/08/18/Database/Redis/001-intro-redis/"  target="_blank" rel="noopener"
+    >Introduce Redis | 橘猫小八的鱼</a></li>
+<li><a class="link" href="https://davidzhu.xyz/2023/08/17/CS-Basics/005-session-cookie/"  target="_blank" rel="noopener"
+    >Cookie &amp; Session | 橘猫小八的鱼</a></li>
+<li><a class="link" href="https://darjun.github.io/2021/07/25/godailylib/gorilla/sessions/"  target="_blank" rel="noopener"
+    >Go 每日一库之 gorilla/sessions - 大俊的博客</a></li>
+<li><a class="link" href="https://github.com/karankumarshreds/GoAuthentication/blob/master/readme.md"  target="_blank" rel="noopener"
+    >GoAuthentication/readme.md at master · karankumarshreds/GoAuthentication</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/golang/">Golang</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/some-http-issues-with-go/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Some HTTP Issues with Go</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/gorilla-sessions-redisstore-source-code-analysis/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Gorilla Sessions RedisStore Source Code Analysis</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/test-benchmark-go/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Test &amp; Benchmark - Go</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/dont-overuse-channel-go/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Don&#39;t Overuse Channel - Go</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/parse-form-data-in-go-server/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Parse Form Data in Go Server</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

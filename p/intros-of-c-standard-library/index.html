@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. ISO the International Organization for Standardization To clarify the relationship between ISO, standards and the standard library, ISO publishes standards, which essentially become the standard library. ISO discusses and develops language standards every year, resulting in standards for languages like C99 and C11. These standards primarily cover two main aspects: the functionality of the language itself and the standard library associated with that language. However, it&rsquo;s important to note that these standards are essentially specifications.">
+<title>Intros of C Standard Library</title>
+
+<link rel='canonical' href='http://localhost:1313/p/intros-of-c-standard-library/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Intros of C Standard Library">
+<meta property='og:description' content="# 1. ISO the International Organization for Standardization To clarify the relationship between ISO, standards and the standard library, ISO publishes standards, which essentially become the standard library. ISO discusses and develops language standards every year, resulting in standards for languages like C99 and C11. These standards primarily cover two main aspects: the functionality of the language itself and the standard library associated with that language. However, it&rsquo;s important to note that these standards are essentially specifications.">
+<meta property='og:url' content='http://localhost:1313/p/intros-of-c-standard-library/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='c' /><meta property='article:tag' content='c&#43;&#43;' /><meta property='article:published_time' content='2023-10-17T17:58:57&#43;00:00'/><meta property='article:modified_time' content='2023-10-17T17:58:57&#43;00:00'/>
+<meta name="twitter:title" content="Intros of C Standard Library">
+<meta name="twitter:description" content="# 1. ISO the International Organization for Standardization To clarify the relationship between ISO, standards and the standard library, ISO publishes standards, which essentially become the standard library. ISO discusses and develops language standards every year, resulting in standards for languages like C99 and C11. These standards primarily cover two main aspects: the functionality of the language itself and the standard library associated with that language. However, it&rsquo;s important to note that these standards are essentially specifications.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-iso-the-international-organization-for-standardization">1. ISO the International Organization for Standardization</a></li>
+    <li><a href="#2-implementation-of-standard-library">2. Implementation of standard library</a>
+      <ol>
+        <li><a href="#21-glibc---the-linux-implementation">2.1. glibc - the linux implementation</a></li>
+        <li><a href="#22-mac-and-ios-implementation">2.2. Mac and iOS Implementation</a></li>
+        <li><a href="#23-windows-implementation">2.3. Windows Implementation</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-glibc-vs-libc">3. glibc vs libc</a></li>
+    <li><a href="#4-glibc-vs-gcc">4. glibc vs gcc</a></li>
+    <li><a href="#5-location-of-the-implementation-of-library">5. Location of the implementation of library</a></li>
+    <li><a href="#6-libca-va-libcso">6. libc.a va libc.so</a></li>
+    <li><a href="#7-conclusion">7. Conclusion</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c&#43;&#43;/" >
+                C&#43;&#43;
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/intros-of-c-standard-library/">Intros of C Standard Library</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 17, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    6 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-iso-the-international-organization-for-standardization">
+    <a href="#1-iso-the-international-organization-for-standardization">#</a>
+    1. ISO the International Organization for Standardization
+</h2><p>To clarify the relationship between <strong>ISO</strong>, <strong>standards</strong> and the <strong>standard library</strong>, ISO publishes standards, which essentially become the standard library. ISO discusses and develops <strong>language standards</strong> every year, resulting in standards for languages like C99 and C11. These standards primarily cover two main aspects: the functionality of the language itself and the standard library associated with that language. However, it&rsquo;s important to note that these standards are essentially specifications. The actual implementations of these standards are carried out by other entities; for instance, glibc and MSVCRT are implementations of the C standard library.</p>
+<p>For example, the outcome of their discussions in 1999 is the <strong>C99 standard</strong>, formally known as <a class="link" href="https://www.dii.uchile.cl/~daespino/files/Iso_C_1999_definition.pdf"  target="_blank" rel="noopener"
+    >ISO/IEC 9899:1999(E) &ndash; Programming Languages &ndash; C</a>, The C99 standard comprises two main parts:</p>
+<ul>
+<li>
+<p>the C/C++ features and functionalities;</p>
+</li>
+<li>
+<p>the C/C++ API — a collection of classes, functions and macros that developers use in their C/C++ programs. It is called the <strong>Standard Library</strong>.</p>
+</li>
+</ul>
+<img src="/001-standard-library/a.png" alt="a" style="zoom:50%;" />
+<p>No implementation, just a specifications.</p>
+<h2 id="2-implementation-of-standard-library">
+    <a href="#2-implementation-of-standard-library">#</a>
+    2. Implementation of standard library
+</h2><p>There are functions for memory allocation, creating threads, and input/output operations (such as those in <code>stdio.h</code>)  in C language. All of these functions rely on system calls. Therefore, when third-party manufacturers implement the standard library of C language, they must create different versions for the different OS because each OS has its own set of system calls.</p>
+<h3 id="21-glibc---the-linux-implementation">
+    <a href="#21-glibc---the-linux-implementation">#</a>
+    2.1. glibc - the linux implementation
+</h3><p><strong>The GNU C Library</strong> and <strong>glibc</strong> are synonyms, which are the <strong>runtime library/standard library</strong> for the C programming language.</p>
+<p>It&rsquo;s important to clarify that the <strong>runtime library includes both static and dynamic libraries</strong>. The term &ldquo;runtime library&rdquo; is used for a general term.</p>
+<p><strong>The term <code>library</code> (runtime library) and <code>header</code> are not same</strong>. <code>Library</code> are the implementations of the <code>header</code>, which exist as binary files (the static library <code>.a</code>/<code>.lib</code> or the dynamic library <code>.so</code>/<code>.dll</code> ), whereas headers are <code>.h</code> files.</p>
+<p>Therefore, we usually cannot find the source code of the implementation of C standard library, such as function <code>printf()</code>, the implementation of these functions are provided as compiled binary files. But you can find the glibc&rsquo;s implementation of <code>printf()</code> on  the internet, because glibc is open source.</p>
+<blockquote>
+<p>The <code>printf()</code> function is part of the C Standard Library and is typically provided by the GNU C Library (glibc) <strong>on Linux systems</strong>. The implementation of <code>printf()</code> in glibc is <strong>open source</strong> and can be found in the glibc source code.</p>
+<p><code>printf()</code> is part of C standard library, which is called &ldquo;standard&rdquo; because it is linked by default by C compiler. Standard library is typically provided by operating system or compiler. On most linux systems, it is located in <code>libc.so</code>, whereas on MS Windows C Library is provided by Visual C runtime file <code>msvcrt.dll</code>.</p>
+<p><a class="link" href="https://stackoverflow.com/a/37154724/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/37154724/16317008</a></p>
+</blockquote>
+<p>Learn more: <a class="link" href="https://www.gnu.org/software/libc/"  target="_blank" rel="noopener"
+    >The GNU C Library</a></p>
+<h3 id="22-mac-and-ios-implementation">
+    <a href="#22-mac-and-ios-implementation">#</a>
+    2.2. Mac and iOS Implementation
+</h3><p>On Mac and iOS the C Standard Library implementation is part of <code>libSystem</code>, a core library located in <code>/usr/lib/libSystem.dylib</code>. LibSystem includes other components such as the math library, the thread library and other low-level utilities.</p>
+<p>C header file on MacOS: <code>/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include</code></p>
+<p>Learn more: <a class="link" href="https://www.internalpointers.com/post/c-c-standard-library"  target="_blank" rel="noopener"
+    >https://www.internalpointers.com/post/c-c-standard-library</a></p>
+<h3 id="23-windows-implementation">
+    <a href="#23-windows-implementation">#</a>
+    2.3. Windows Implementation
+</h3><p>On Windows the implementation of the Standard Libraries has always been strictly bound to <strong>Visual Studio</strong>, the official Microsoft compiler. They use to call it <strong>C/C++ Run-time Library</strong> (CRT) and it covers both implementations.</p>
+<p>Learn more: <a class="link" href="https://www.internalpointers.com/post/c-c-standard-library"  target="_blank" rel="noopener"
+    >https://www.internalpointers.com/post/c-c-standard-library</a></p>
+<h2 id="3-glibc-vs-libc">
+    <a href="#3-glibc-vs-libc">#</a>
+    3. glibc vs libc
+</h2><p>As of today glibc is the most widely used C library on Linux. However, during the ‘90s there was for a while a glibc competitor called <strong>Linux libc</strong> (or just <strong>libc</strong>), born from a fork of glibc 1.x. For a while, Linux libc was the standard C library in many Linux distributions.</p>
+<p>After years of development, glibc turned out to be way superior to Linux libc and all Linux distributions that had been using it switched back to glibc. So don&rsquo;t worry if you find a file in your disk named <code>libc.so.6</code>: it&rsquo;s the modern glibc. The version number got incremented to 6 in order to avoid any confusion with the previous Linux libc versions (they couldn&rsquo;t name it <code>glibc.so.6</code>: all Linux libraries must start with the <code>lib</code> prefix).</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ ls /usr/lib/x86_64-linux-gnu <span class="p">|</span> grep libc
+</span></span><span class="line"><span class="cl">libc.a
+</span></span><span class="line"><span class="cl">libc.so
+</span></span><span class="line"><span class="cl">libc.so.6
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Learn more: <a class="link" href="https://www.internalpointers.com/post/c-c-standard-library"  target="_blank" rel="noopener"
+    >https://www.internalpointers.com/post/c-c-standard-library</a></p>
+<h2 id="4-glibc-vs-gcc">
+    <a href="#4-glibc-vs-gcc">#</a>
+    4. glibc vs gcc
+</h2><p>A few things:</p>
+<ul>
+<li>gcc and glibc are two different things. gcc is the compiler, glibc are the runtime libraries. Pretty much everything needs glibc to run.</li>
+<li><code>.a</code> files are static libraries, <code>.so</code> means shared object and is the Linux equivalent of a DLL</li>
+<li>Most things DON&rsquo;T link against libc.a, they link against libc.so</li>
+</ul>
+<p>Hope that clears it up for you. As for the location, it&rsquo;s almost certainly going to be in <code>/usr/lib/libc.a</code> and / or <code>/usr/lib/libc.so</code>.</p>
+<p>Source: <a class="link" href="https://stackoverflow.com/a/5925691/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/5925691/16317008</a></p>
+<h2 id="5-location-of-the-implementation-of-library">
+    <a href="#5-location-of-the-implementation-of-library">#</a>
+    5. Location of the implementation of library
+</h2><p>If you are looking for <code>libc.a</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ gcc --print-file-name<span class="o">=</span>libc.a
+</span></span><span class="line"><span class="cl">/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/libc.a
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ gcc --print-file-name<span class="o">=</span>libc.so
+</span></span><span class="line"><span class="cl">/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/libc.so
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Source: <a class="link" href="https://stackoverflow.com/a/36103882/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/36103882/16317008</a></p>
+<h2 id="6-libca-va-libcso">
+    <a href="#6-libca-va-libcso">#</a>
+    6. libc.a va libc.so
+</h2><p>The size of libc.a is <code>5.8 MB</code> which is huge for codes, <code>libc.a</code> is a static library, also known as a &ldquo;archive&rdquo; library, It contains compiled object code that gets linked into the final executable at compile time.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ls -lh /usr/lib/x86_64-linux-gnu/libc.a
+</span></span><span class="line"><span class="cl">-rw-r--r-- <span class="m">1</span> root root 5.8M Sep <span class="m">25</span> 14:45 /usr/lib/x86_64-linux-gnu/libc.a
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># Don&#39;t archive libc.a directly, archive it on a different folder</span>
+</span></span><span class="line"><span class="cl">$ ar -x libc.a
+</span></span><span class="line"><span class="cl">$ ls <span class="p">|</span> grep <span class="nb">printf</span>
+</span></span><span class="line"><span class="cl">printf.o
+</span></span><span class="line"><span class="cl">sprintf.o
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>为什么静态运行库里面一个目标文件只包含一个函数？比如libc.a里面printf.o只有printf()函数、strlen.o只有strlen()函数，为什么要这样组织？</p>
+<p>链接器在链接静态库的时候是以目标文件为单位的, 比如我们引用了printf()`函数, 如果进行静态链接的话, 那么链接器就只会把库中包含printf()函数的那个目标文件链接进来, 由于运行库有成百上千个函数, 如果把这些函数都放在一个目标文件中就会很大&hellip;</p>
+<p>如果把整个链接过程比作一台计算机, 那么ld链接器就是计算机的CPU, 所有的目标文件、库文件就是输入, 链接结果输出的可执行文件就是输出, 而链接控制脚本正是这台计算机的“程序”, 它控制CPU的运行, 以“程序”要求的方式将输入加工成所须要的输出结果.</p>
+</blockquote>
+<p><code>libc.so</code> is a shared library, often referred to as a &ldquo;dynamic link library.&rdquo; It contains compiled code that is loaded into memory at runtime, allowing multiple programs to share the same code in memory.</p>
+<p>Both <code>libc.a</code> and <code>libc.so</code> are implementations of the C library, but they differ in their form and how they are linked to programs.</p>
+<p>When we staticlly compile a source file, then <code>libc.a</code> will be used at compiled time, if we dynamically compile a source file (compile with dynamically linked) then <code>libc.so</code> will be used at runtime.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ gcc -static -o main main.c         
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ file main
+</span></span><span class="line"><span class="cl">main: ELF 64-bit LSB executable, x86-64, version <span class="m">1</span> <span class="o">(</span>GNU/Linux<span class="o">)</span>, statically linked, BuildID<span class="o">[</span>sha1<span class="o">]=</span>7fd47f129d345aa2ef6c44b06ffa01be4174d098, <span class="k">for</span> GNU/Linux 3.2.0, not stripped
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ ls -lh main
+</span></span><span class="line"><span class="cl">-rwxrwxr-x <span class="m">1</span> ubuntu ubuntu 880K Oct <span class="m">18</span> 00:51 main
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ gcc -o main main.c 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ file main
+</span></span><span class="line"><span class="cl">main: ELF 64-bit LSB pie executable, x86-64, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID<span class="o">[</span>sha1<span class="o">]=</span>f14bf2e15cabc179d82a09a2de5bf15da6e5b75c, <span class="k">for</span> GNU/Linux 3.2.0, not stripped
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ ls -lh main
+</span></span><span class="line"><span class="cl">-rwxrwxr-x <span class="m">1</span> ubuntu ubuntu 16K Oct <span class="m">18</span> 00:54 main
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, the dynamically linked binary is very small just 1<code>6k</code> compared with the statically linked binary <code>880K</code>.</p>
+<h2 id="7-conclusion">
+    <a href="#7-conclusion">#</a>
+    7. Conclusion
+</h2><p>程序如何使用操作系统提供的API(system call)? 在一般的情况下，一种语言的开发环境往往会附带有语言库（Language Library也可以说是标准库,运行时库）。这些库就是对操作系统的API的包装，比如我们经典的C语言版“Hello World”程序，它使用C语言标准库的“printf”函数来输出一个字符串，“printf”函数对字符串进行一些必要的处理以后，最后会调用操作系统提供的API。各个操作系统下，往终端输出字符串的API都不一样，在Linux下，它是一个“write”的系统调用，而在Windows下它是“WriteConsole”系统API。<strong>标准库函数(运行库)依赖的是system call</strong>。库里面还带有那些很常用的函数，比如C语言标准库里面有很常用一个函数取得一个字符串的长度叫strlen()，该函数即遍历整个字符串后返回字符串长度，这个函数并没有调用任何操作系统的API，也没有做任何输入输出。但是很大一部分库函数(运行库)都是要调用操作系统的API的.</p>
+<blockquote>
+<p>“Any problem in computer science can be solved by another layer of indirection.”</p>
+</blockquote>
+<img src="/001-standard-library/b.png" alt="a" style="zoom:50%;" />
+<p>每个层次之间都须要相互通信，既然须要通信就必须有一个通信的协议，我们一般将其称为接口（Interface），接口的下面那层是接口的提供者，由它定义接口；接口的上面那层是接口的使用者，它使用该接口来实现所需要的功能.</p>
+<blockquote>
+<p>运行时库(标准库, static library, dynamic library) 依赖 system call, 它提供头文件(<code>stdio.h</code>, <code>math.h</code>)供我们使用. 所以它很重要, 它在应用层和操作系统中间. 我们使用它提供的接口(<code>printf()</code>)和操作系统进行交流(通过system call).</p>
+</blockquote>
+<p>我们的软件体系中，位于最上层的是应用程序，比如我们平时用到的网络浏览器、Email客户端、多媒体播放器、图片浏览器等。从整个层次结构上来看，开发工具与应用程序是属于同一个层次的，因为它们都使用一个接口，那就是操作系统应用程序编程接口（Application Programming Interface, 就是标准库的头文件）。应用程序接口(头文件)的提供者是运行库，什么样的运行库提供什么样的API，比如Linux下的Glibc库提供POSIX的API；Windows的运行库提供Windows API，最常见的32位Windows提供的API又被称为Win32。</p>
+<p>运行库使用操作系统提供的系统调用接口（System call Interface），系统调用接口在实现中往往以软件中断（Software Interrupt）的方式提供，比如Linux使用0x80号中断作为系统调用接口，Windows使用0x2E号中断作为系统调用接口（从Windows XP Sp2开始，Windows开始采用一种新的系统调用方式）。</p>
+<p>操作系统内核层对于硬件层来说是硬件接口的使用者，而硬件是接口的定义者，硬件的接口定义决定了操作系统内核，具体来讲就是驱动程序如何操作硬件，如何与硬件进行通信。这种接口往往被叫做硬件规格（Hardware Specification），硬件的生产厂商负责提供硬件规格，操作系统和驱动程序的开发者通过阅读硬件规格文档所规定的各种硬件编程接口标准来编写操作系统和驱动程序。</p>
+<p>&mdash;程序员的自我修养：链接、装载与库</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/c/">C</a>
+        
+            <a href="/tags/c&#43;&#43;/">C&#43;&#43;</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/statically-linking-in-c/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Statically Linking in C</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/c-operator-overloading/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">C&#43;&#43; Operator Overloading</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E5%B7%A6%E5%80%BC%E5%92%8C%E5%8F%B3%E5%80%BC/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">左值和右值</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/c-class-definition-rules/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">C&#43;&#43; Class Definition Rules</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/c-raii-resource-acquisition-is-initialization/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">C&#43;&#43; RAII (Resource Acquisition Is Initialization)</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

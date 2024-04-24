@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Index concepts Learn more: https://www.oreilly.com/library/view/high-performance-mysql/0596003064/ch04.html # 2. When will index be created Primary Key: By default, when you define a primary key constraint on a column or set of columns using the PRIMARY KEY keyword, MySQL automatically creates an index on that column(s). 1 2 3 4 5 6 7 # index will created on user_id column create table `user` ( `user_id` smallint not null auto_increment, `username` varchar(20) not null, `password` varchar(20) not null, primary key (`user_id`) ); Unique Constraints: When you define a unique constraint on a column or set of columns using the UNIQUE keyword, MySQL automatically creates an index to enforce uniqueness.">
+<title>Index and Primary Key</title>
+
+<link rel='canonical' href='http://localhost:1313/p/index-and-primary-key/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Index and Primary Key">
+<meta property='og:description' content="# 1. Index concepts Learn more: https://www.oreilly.com/library/view/high-performance-mysql/0596003064/ch04.html # 2. When will index be created Primary Key: By default, when you define a primary key constraint on a column or set of columns using the PRIMARY KEY keyword, MySQL automatically creates an index on that column(s). 1 2 3 4 5 6 7 # index will created on user_id column create table `user` ( `user_id` smallint not null auto_increment, `username` varchar(20) not null, `password` varchar(20) not null, primary key (`user_id`) ); Unique Constraints: When you define a unique constraint on a column or set of columns using the UNIQUE keyword, MySQL automatically creates an index to enforce uniqueness.">
+<meta property='og:url' content='http://localhost:1313/p/index-and-primary-key/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='database' /><meta property='article:tag' content='mysql' /><meta property='article:published_time' content='2023-10-03T12:06:36&#43;00:00'/><meta property='article:modified_time' content='2023-10-03T12:06:36&#43;00:00'/>
+<meta name="twitter:title" content="Index and Primary Key">
+<meta name="twitter:description" content="# 1. Index concepts Learn more: https://www.oreilly.com/library/view/high-performance-mysql/0596003064/ch04.html # 2. When will index be created Primary Key: By default, when you define a primary key constraint on a column or set of columns using the PRIMARY KEY keyword, MySQL automatically creates an index on that column(s). 1 2 3 4 5 6 7 # index will created on user_id column create table `user` ( `user_id` smallint not null auto_increment, `username` varchar(20) not null, `password` varchar(20) not null, primary key (`user_id`) ); Unique Constraints: When you define a unique constraint on a column or set of columns using the UNIQUE keyword, MySQL automatically creates an index to enforce uniqueness.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-index-concepts">1. Index concepts</a></li>
+    <li><a href="#2-when-will-index-be-created">2. When will index be created</a></li>
+    <li><a href="#3-why-use-index">3. Why use index</a></li>
+    <li><a href="#4-table-types">4. Table types</a>
+      <ol>
+        <li><a href="#41-innodb-tables">4.1. InnoDB tables</a></li>
+        <li><a href="#42-myisam-tables">4.2. MyISAM tables</a></li>
+      </ol>
+    </li>
+    <li><a href="#5-clustered-vs-secondary-indexes">5. Clustered vs secondary indexes</a></li>
+    <li><a href="#6-should-each-table-have-a-primary-key">6. Should each table have a primary key</a></li>
+    <li><a href="#7-unique-indexes-versus-primary-keys">7. Unique indexes versus primary keys</a></li>
+    <li><a href="#8-index-adds-places-and-time-overhead">8. Index adds places and time overhead</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/database/" >
+                Database
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/index-and-primary-key/">Index and Primary Key</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 03, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    10 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-index-concepts">
+    <a href="#1-index-concepts">#</a>
+    1. Index concepts
+</h2><p>Learn more: <a class="link" href="https://www.oreilly.com/library/view/high-performance-mysql/0596003064/ch04.html"  target="_blank" rel="noopener"
+    >https://www.oreilly.com/library/view/high-performance-mysql/0596003064/ch04.html</a></p>
+<h2 id="2-when-will-index-be-created">
+    <a href="#2-when-will-index-be-created">#</a>
+    2. When will index be created
+</h2><p><strong>Primary Key:</strong> By default, when you define a primary key constraint on a column or set of columns using the PRIMARY KEY keyword, MySQL automatically creates an index on that column(s).</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="o">#</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">created</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="k">column</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="o">`</span><span class="k">user</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">user_id</span><span class="o">`</span><span class="w"> </span><span class="nb">smallint</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="n">auto_increment</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">username</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">password</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">primary</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">user_id</span><span class="o">`</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Unique Constraints:</strong> When you define a unique constraint on a column or set of columns using the UNIQUE keyword, MySQL automatically creates an index to enforce uniqueness.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="o">#</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">created</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">column</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="o">`</span><span class="k">user</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">user_id</span><span class="o">`</span><span class="w"> </span><span class="nb">smallint</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">username</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">password</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="k">unique</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">username</span><span class="o">`</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">#</span><span class="w"> </span><span class="n">there</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="n">indexes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">#</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">created</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">both</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">column</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="o">`</span><span class="k">user</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">user_id</span><span class="o">`</span><span class="w"> </span><span class="nb">smallint</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="n">auto_increment</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">username</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">password</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">primary</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">user_id</span><span class="o">`</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">unique</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">username</span><span class="o">`</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-why-use-index">
+    <a href="#3-why-use-index">#</a>
+    3. Why use index
+</h2><p>Indexes are used to find rows with specific column values quickly. Without an index, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs. If the table has an index for the columns in question, MySQL can quickly determine the position to seek to in the middle of the data file without having to look at all the data. This is much faster than reading every row sequentially.</p>
+<p>Most MySQL indexes (<code>PRIMARY KEY</code>, <code>UNIQUE</code>, <code>INDEX</code>, and <code>FULLTEXT</code>) are stored in <a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/glossary.html#glos_b_tree"  target="_blank" rel="noopener"
+    >B-trees</a>. Exceptions: Indexes on spatial data types use R-trees; <code>MEMORY</code> tables also support <a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/glossary.html#glos_hash_index"  target="_blank" rel="noopener"
+    >hash indexes</a>; <code>InnoDB</code> uses inverted lists for <code>FULLTEXT</code> indexes.</p>
+<p>The best way to improve the performance of <a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/select.html"  target="_blank" rel="noopener"
+    ><code>SELECT</code></a> operations is to create indexes on one or more of the columns that are tested in the query. <strong>The index entries act like pointers to the table rows</strong>, allowing the query to quickly determine which rows match a condition in the <code>WHERE</code> clause, and retrieve the other column values for those rows. All MySQL data types can be indexed.</p>
+<blockquote>
+<p>Although it can be tempting to create an indexes for every possible column used in a query, unnecessary indexes waste space and waste time for MySQL to determine which indexes to use. Indexes also add to the cost of inserts, updates, and deletes because each index must be updated. You must find the right balance to achieve fast queries using the optimal set of indexes.</p>
+</blockquote>
+<p>Source: <a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/optimization-indexes.html"  target="_blank" rel="noopener"
+    >MySQL :: MySQL 8.0 Reference Manual :: 8.3 Optimization and Indexes</a></p>
+<p>Learn when index will be used in MySQL operations: <a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/mysql-indexes.html"  target="_blank" rel="noopener"
+    >https://dev.mysql.com/doc/refman/8.0/en/mysql-indexes.html</a></p>
+<h2 id="4-table-types">
+    <a href="#4-table-types">#</a>
+    4. Table types
+</h2><p><code>MyISAM</code> and <code>InnoDB</code> are two different storage engines in MySQL, each with its own characteristics and features.</p>
+<h3 id="41-innodb-tables">
+    <a href="#41-innodb-tables">#</a>
+    4.1. InnoDB tables
+</h3><p>InnoDB tables provide B-tree indexes. The indexes provide no packing or prefix compression. In addition, InnoDB also requires a primary key for each table. As with BDB, though, if you don’t provide a primary key, MySQL will supply a 64-bit value for you.</p>
+<p>The indexes are stored in the InnoDB tablespace, just like the data and data dictionary (table definitions, etc.). Furthermore, <code>InnoDB</code> uses clustered indexes. That is, the <strong>primary key’s value directly affects the physical location of the row</strong> as well as its corresponding index node. Because of this, lookups based on primary key in InnoDB are very fast. Once the index node is found, the relevant records are likely to already be cached in InnoDB’s buffer pool.</p>
+<blockquote>
+<p>With <em>clustered indexes</em>, the primary key and the record itself are “clustered” together, and the records are all stored in primary-key order. InnoDB table uses clustered indexes.</p>
+</blockquote>
+<h3 id="42-myisam-tables">
+    <a href="#42-myisam-tables">#</a>
+    4.2. MyISAM tables
+</h3><p>MySQL’s default table type provides B-tree indexes, and as of Version 4.1.0, it provides R-tree indexes for spatial data.</p>
+<p>With MyISAM tables, the indexes are kept in a completely separate file that contains a list of primary (and possibly secondary) keys and a value that represents the byte offset for the record. These ensure MySQL can find and then quickly skip to that point within the database to locate the record. MySQL has to store the indexes this way because <strong>the records are stored in essentially random order</strong>.</p>
+<blockquote>
+<p>Note that the difference between MyISAM table and InnoDB table is that the records are stored in random order, another tables&rsquo;s record stored according to clustered indexe (primary key).</p>
+<p>With a standard MyISAM table index, there are two lookups, one to the index, and a second to the table itself via the location specified in the index. With clustered indexes in InnoDB table, there’s a single lookup that points directly to the record in question. Therefore, when your data is almost always searched on via its primary key, clustered indexes can make lookups incredibly fast.</p>
+</blockquote>
+<h2 id="5-clustered-vs-secondary-indexes">
+    <a href="#5-clustered-vs-secondary-indexes">#</a>
+    5. Clustered vs secondary indexes
+</h2><p>Each <code>InnoDB</code> table has a special index called the <strong>clustered index</strong> that stores row data. Typically, the clustered index is synonymous with the primary key. To get the best performance from queries, inserts, and other database operations, it is important to understand how <code>InnoDB</code> uses the clustered index to optimize the common lookup and DML operations.</p>
+<ul>
+<li>When you define a <code>PRIMARY KEY</code> on a table, <code>InnoDB</code> uses it as the clustered index. A primary key should be defined for each table. If there is no logical unique and non-null column or set of columns to use a the primary key, add an auto-increment column. Auto-increment column values are unique and are added automatically as new rows are inserted.</li>
+<li>If you do not define a <code>PRIMARY KEY</code> for a table, <code>InnoDB</code> uses the first <code>UNIQUE</code> index with all key columns defined as <code>NOT NULL</code> as the clustered index.</li>
+<li>If a table has no <code>PRIMARY KEY</code> or suitable <code>UNIQUE</code> index, <code>InnoDB</code> generates a hidden clustered index named <code>GEN_CLUST_INDEX</code> on a synthetic column that contains row ID values. The rows are ordered by the row ID that <code>InnoDB</code> assigns. The row ID is a 6-byte field that increases monotonically as new rows are inserted. Thus, the rows ordered by the row ID are physically in order of insertion.</li>
+</ul>
+<p>Source: <a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html"  target="_blank" rel="noopener"
+    >https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html</a></p>
+<p><strong>Secondary indexes</strong> point to the primary key rather than the row. Therefore, if you index on a very large value and have several secondary indexes, you will end up with many duplicate copies of that primary index, first as the clustered index stored alongside the records themselves, but then again for as many times as you have secondary indexes pointing to those clustered indexes. With a small value as the primary key, this may not be so bad, but if you are using something potentially long, such as a URL, this repeated storage of the primary key on disk may cause storage issues.</p>
+<p>Some operations render clustered indexes less effective. For instance, consider when a secondary index is in use. Going back to our phone book example, suppose you have <code>last_name</code> set as the primary index and <code>phone_number</code> set as a secondary index, and you perform the following query:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">SELECT * FROM phone_book WHERE phone_number = &#39;555-7271&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>MySQL scans the <code>phone_number</code> index to find the entry for <code>555-7271</code>, which contains the primary key entry <code>Zawodny</code> because <code>phone_book</code>’s primary index is the last name. MySQL then skips to the relevant entry in the database itself.</p>
+<p>In other words, lookups based on your primary key happen exceedingly fast, and lookups based on secondary indexes happen at essentially the same speed as MyISAM index lookups would.</p>
+<p>Another less common but equally problematic condition happens when the data is altered such that the <strong>primary key is changed on a record</strong>. This is the most costly function of clustered indexes. A number of things can happen to make this operation a more severe performance hit:</p>
+<ul>
+<li>Alter the record in question according to the query that was issued.</li>
+<li>Determine the new primary key for that record, based on the altered data record.</li>
+<li>Relocate the stored records so that the record in question is moved to the proper location in the tablespace.</li>
+<li>Update any secondary indexes that point to that primary key.</li>
+</ul>
+<p>As you might imagine, if you’re altering the primary key for a number of records, that <code>UPDATE</code> command might take quite some time to do its job, especially on larger tables. Choose your primary keys wisely. Use values that are unlikely to change, such as a Social Security account number instead of a last name, serial number instead of a product name, and so on.</p>
+<p>Source: <a class="link" href="https://www.oreilly.com/library/view/high-performance-mysql/0596003064/ch04.html"  target="_blank" rel="noopener"
+    >https://www.oreilly.com/library/view/high-performance-mysql/0596003064/ch04.html</a></p>
+<h2 id="6-should-each-table-have-a-primary-key">
+    <a href="#6-should-each-table-have-a-primary-key">#</a>
+    6. Should each table have a primary key
+</h2><p>Short answer: yes, each table should have a PRIMARY KEY so that you could distinguish two records.</p>
+<p>In MySQL, the <strong>InnoDB storage engine</strong> always creates a primary key if you didn&rsquo;t specify it explicitly, thus making an extra column you don&rsquo;t have access to.</p>
+<p>Learn more: <a class="link" href="https://stackoverflow.com/a/840182/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/840182/16317008</a></p>
+<h2 id="7-unique-indexes-versus-primary-keys">
+    <a href="#7-unique-indexes-versus-primary-keys">#</a>
+    7. Unique indexes versus primary keys
+</h2><p>If you’re coming from other relational databases, you might wonder what the difference between a primary key and a unique index is in MySQL. As usual, it depends. In <strong>MyISAM tables</strong>, there’s almost no difference. The only thing special about a primary key is that it can’t contain NULL values. The primary key is simply a <code>NOT</code> <code>NULL</code> <code>UNIQUE</code> <code>INDEX</code> named <code>PRIMARY</code>. MyISAM tables don’t require that you declare a primary key.</p>
+<p><strong>InnoDB and BDB tables</strong> require primary keys for every table. There’s no requirement that you specify one, however. If you don’t, the storage engine automatically adds a hidden primary key for you. In both cases, the primary keys are simply incrementing numeric values, similar to an <code>AUTO-INCREMENT</code> column. If you decide to add your own primary key at a later time, simply use <code>ALTER</code> <code>TABLE</code> to add one. Both storage engines will discard their internally generated keys in favor of yours. Heap tables don’t require a primary key but will create one for you. In fact, you can create Heap tables with no indexes at all.</p>
+<h2 id="8-index-adds-places-and-time-overhead">
+    <a href="#8-index-adds-places-and-time-overhead">#</a>
+    8. Index adds places and time overhead
+</h2><p><strong>Time overhead</strong> is easy to understand, indexes add to the cost of inserts, updates, and deletes because each index must be updated.</p>
+<p><strong>For taking up place,</strong> there is an example: try to think our book or dictionary which have index (table of contents) which helps us to find the content quickly, the table of contents usually has multiple pages, just like this, index in a table also will take up some place which makes a table bigger.</p>
+<p>Given that creating an index requires additional disk space (277,778 blocks extra from the above example, a ~28% increase), and that too many indices can cause issues arising from the file systems size limits, careful thought must be used to select the correct fields to index. Learn more: <a class="link" href="https://stackoverflow.com/a/1130/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/1130/16317008</a></p>
+<p>Since indices are only used to speed up the searching for a matching field within the records, it stands to reason that <strong>indexing fields used only for output</strong> would be simply a waste of disk space and processing time when doing an insert or delete operation, and thus should be avoided.</p>
+<p>What does &ldquo;<em>indexing fields used only for output</em>&rdquo; mean?</p>
+<p>For example, imagine a table of products. Some fields like &ldquo;name&rdquo; or &ldquo;price&rdquo; are used for searching and filtering, while other fields like &ldquo;description&rdquo; or &ldquo;image_url&rdquo; are used only to provide additional information in the output. Creating an index on fields used only for output is not helpful and can waste resources.</p>
+<blockquote>
+<p>Indexes trade space for performance. Because MySQL needs to maintain a separate list of indexes’ values and keep them updated as your data changes, you really don’t want to index every column in a table. Indexes are a trade-off between space and time. You’re sacrificing some extra disk space and a bit of CPU overhead on each <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> query to make most (if not all) your queries much faster. Source: <a class="link" href="https://www.oreilly.com/library/view/high-performance-mysql/0596003064/ch04.html"  target="_blank" rel="noopener"
+    >https://www.oreilly.com/library/view/high-performance-mysql/0596003064/ch04.html</a></p>
+</blockquote>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/database/">Database</a>
+        
+            <a href="/tags/mysql/">Mysql</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/practice-of-mysql/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Practice of MySQL</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/basic-mysql/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Basic MySQL</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/mongodb-docs-golang/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MongoDB Docs - Golang</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/mongodb-in-action-reading-note/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MongoDB in Action Reading Note</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/design-of-database-schema/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Design of Database Schema</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

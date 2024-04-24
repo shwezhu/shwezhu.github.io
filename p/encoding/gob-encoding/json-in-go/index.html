@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’s gob package. # 2. encoding/gob # 2.1. Why gob Why define a new encoding?">
+<title>encoding/gob &amp; encoding/json in Go</title>
+
+<link rel='canonical' href='http://localhost:1313/p/encoding/gob-encoding/json-in-go/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="encoding/gob & encoding/json in Go">
+<meta property='og:description' content="# 1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’s gob package. # 2. encoding/gob # 2.1. Why gob Why define a new encoding?">
+<meta property='og:url' content='http://localhost:1313/p/encoding/gob-encoding/json-in-go/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:published_time' content='2023-08-31T11:38:20&#43;00:00'/><meta property='article:modified_time' content='2023-08-31T11:38:20&#43;00:00'/>
+<meta name="twitter:title" content="encoding/gob & encoding/json in Go">
+<meta name="twitter:description" content="# 1. Why do we need encoding To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary. There are many encodings available, of course: JSON, XML, Google’s protocol buffers, and more. And now there’s another, provided by Go’s gob package. # 2. encoding/gob # 2.1. Why gob Why define a new encoding?">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-why-do-we-need-encoding">1. Why do we need encoding</a></li>
+    <li><a href="#2-encodinggob">2. encoding/gob</a>
+      <ol>
+        <li><a href="#21-why-gob">2.1. Why gob</a></li>
+        <li><a href="#22-googles-protocol-buffers-misfeatures">2.2. Google’s Protocol Buffers misfeatures</a></li>
+        <li><a href="#23-how-does-gob-work---value-of-encoded-gob-data-is-just-integer">2.3. How does gob work - value of encoded gob data is just integer</a></li>
+        <li><a href="#24-values-are-flattened">2.4. Values are flattened</a></li>
+        <li><a href="#25-types-on-the-wire">2.5. Types on the wire</a></li>
+        <li><a href="#26-functions-and-channels">2.6. Functions and channels</a></li>
+        <li><a href="#27-gobregister-method">2.7. gob.Register method</a></li>
+        <li><a href="#28-gobregister">2.8. gob.Register</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-encodingjson">3. encoding/json</a>
+      <ol>
+        <li><a href="#31-jsonmarshal">3.1. <code>json.Marshal()</code></a></li>
+        <li><a href="#32-jsonunmarshal">3.2. <code>json.Unmarshal()</code></a></li>
+        <li><a href="#33-jsonnewdecoder--jsonunmarshal">3.3. <code>json.NewDecoder()</code> &amp; <code>json.Unmarshal()</code></a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/golang/" >
+                Golang
+            </a>
+        
+            <a href="/categories/basics/" >
+                Basics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/encoding/gob-encoding/json-in-go/">encoding/gob &amp; encoding/json in Go</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Aug 31, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    11 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-why-do-we-need-encoding">
+    <a href="#1-why-do-we-need-encoding">#</a>
+    1. Why do we need encoding
+</h2><blockquote>
+<p>To transmit a data structure across a network or to store it in a file, it must be encoded and then decoded again. Cause computer just know binary.</p>
+</blockquote>
+<p>There are many encodings available, of course: <a class="link" href="http://www.json.org/"  target="_blank" rel="noopener"
+    >JSON</a>, <a class="link" href="http://www.w3.org/XML/"  target="_blank" rel="noopener"
+    >XML</a>, Google’s <a class="link" href="http://code.google.com/p/protobuf"  target="_blank" rel="noopener"
+    >protocol buffers</a>, and more. And now there’s another, provided by Go’s <a class="link" href="https://go.dev/pkg/encoding/gob/"  target="_blank" rel="noopener"
+    >gob</a> package.</p>
+<h2 id="2-encodinggob">
+    <a href="#2-encodinggob">#</a>
+    2. encoding/gob
+</h2><h3 id="21-why-gob">
+    <a href="#21-why-gob">#</a>
+    2.1. Why gob
+</h3><p>Why define a new encoding? It’s a lot of work and redundant at that. Why not just use one of the existing formats? Well, for one thing, we do! Go has <a class="link" href="https://go.dev/pkg/"  target="_blank" rel="noopener"
+    >packages</a> supporting all the encodings just mentioned (the <a class="link" href="http://github.com/golang/protobuf"  target="_blank" rel="noopener"
+    >protocol buffer package</a> is in a separate repository but it’s one of the most frequently downloaded). And for many purposes, including communicating with tools and systems written in other languages, they’re the right choice.</p>
+<p>But for a Go-specific environment, such as communicating between two servers written in Go, there’s an opportunity to build something much easier to use and possibly more efficient.</p>
+<blockquote>
+<p>Gob is much more preferred when communicating between Go programs. However, gob is currently supported only in Go and, well, <a class="link" href="https://code.google.com/archive/p/libgob/"  target="_blank" rel="noopener"
+    >C</a>, so only ever use that when you&rsquo;re sure no program written in any other programming language will try to decode the values. <a class="link" href="https://stackoverflow.com/questions/41179453/difference-between-encoding-gob-and-encoding-json"  target="_blank" rel="noopener"
+    >source</a></p>
+</blockquote>
+<h3 id="22-googles-protocol-buffers-misfeatures">
+    <a href="#22-googles-protocol-buffers-misfeatures">#</a>
+    2.2. Google’s Protocol Buffers misfeatures
+</h3><p>Gobs implements thress important features compared with Google&rsquo;s Protocol Buffers:</p>
+<ul>
+<li>The type being encoded does&rsquo;t need to be a struct, it can be a map, slice, array etc&hellip;</li>
+<li>Don&rsquo;t need all fields of a type exist when decoding and encoding.</li>
+<li>If the varibale being transmitted has &ldquo;zero value&rdquo; for its type, it doesn&rsquo;t need to be transmitted. Decoder know its type, it will set its default value automatically.</li>
+</ul>
+<h3 id="23-how-does-gob-work---value-of-encoded-gob-data-is-just-integer">
+    <a href="#23-how-does-gob-work---value-of-encoded-gob-data-is-just-integer">#</a>
+    2.3. How does gob work - value of encoded gob data is just integer
+</h3><p>The <strong>encoded gob data</strong> isn’t about types like <code>int8</code> and <code>uint16</code>. Instead, somewhat analogous to constants in Go, its integer values are abstract, sizeless numbers, either signed or unsigned. When you encode an <code>int8</code>, its value is transmitted as an unsized, variable-length integer. When you encode an <code>string</code>, its value is also transmitted as an unsized, variable-length integer.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Initialize the encoder and decoder.  Normally enc and dec would be
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// bound to network connections and the encoder and decoder would
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// run in different processes.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kd">var</span> <span class="nx">network</span> <span class="nx">bytes</span><span class="p">.</span><span class="nx">Buffer</span>        <span class="c1">// Stand-in for a network connection
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">enc</span> <span class="o">:=</span> <span class="nx">gob</span><span class="p">.</span><span class="nf">NewEncoder</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">network</span><span class="p">)</span> <span class="c1">// Will write to network.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">dec</span> <span class="o">:=</span> <span class="nx">gob</span><span class="p">.</span><span class="nf">NewDecoder</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">network</span><span class="p">)</span> <span class="c1">// Will read from network.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">message</span> <span class="o">:=</span> <span class="s">&#34;hello, there&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Encode (send) the value.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">_</span> <span class="p">=</span> <span class="nx">enc</span><span class="p">.</span><span class="nf">Encode</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">network</span><span class="p">.</span><span class="nf">Bytes</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Decode (receive) the value.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kd">var</span> <span class="nx">ms</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">_</span> <span class="p">=</span> <span class="nx">dec</span><span class="p">.</span><span class="nf">Decode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ms</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">network</span><span class="p">.</span><span class="nf">Bytes</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">ms</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">------------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="mi">15</span> <span class="mi">12</span> <span class="mi">0</span> <span class="mi">12</span> <span class="mi">104</span> <span class="mi">101</span> <span class="mi">108</span> <span class="mi">108</span> <span class="mi">111</span> <span class="mi">44</span> <span class="mi">32</span> <span class="mi">116</span> <span class="mi">104</span> <span class="mi">101</span> <span class="mi">114</span> <span class="mi">101</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">hello</span><span class="p">,</span> <span class="nx">there</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, all <strong>encoded data</strong> is a variable-length integer, <code>bytes.Buffer</code> is just a struct, network is an object of it,  <code>network.Bytes()</code> returns a slice holding the unread portion of the buffer so it print <code>[]</code> on second line,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Buffer</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">buf</span>      <span class="p">[]</span><span class="kt">byte</span> <span class="c1">// contents are the bytes buf[off : len(buf)]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">off</span>      <span class="kt">int</span>    <span class="c1">// read at &amp;buf[off], write at &amp;buf[len(buf)]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">lastRead</span> <span class="nx">readOp</span> <span class="c1">// last read operation, so that Unread* can work correctly.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Besides, <code>enc.Encode(message)</code> does two things: encode message and transmit it, similar to<code>dec.Decode(&amp;ms)</code>.</p>
+<h3 id="24-values-are-flattened">
+    <a href="#24-values-are-flattened">#</a>
+    2.4. Values are flattened
+</h3><blockquote>
+<p>A stream of gobs is <strong>self-describing</strong>. Each data item in the stream is preceded by a specification of its type, expressed in terms of a small set of predefined types. <strong>Pointers are not transmitted, but the things they point to are transmitted</strong>; that is, the values are flattened. Nil pointers are not permitted, as they have no value. <strong>Recursive types work fine</strong>, but recursive values (data with cycles) are problematic. <a class="link" href="https://pkg.go.dev/encoding/gob#pkg-overview"  target="_blank" rel="noopener"
+    >source</a></p>
+</blockquote>
+<p>I find a <a class="link" href="https://gist.github.com/soroushjp/0ec92102641ddfc3ad5515ca76405f4d"  target="_blank" rel="noopener"
+    >blog</a>, which implement a function that can deep copy a map with gobs, even the map has a map inside. Golang: deepcopy <code>map[string]interface{}.</code> Could be used for any other Go type with minor modifications.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Package deepcopy provides a function for deep copying map[string]interface{}
+</span></span></span><span class="line"><span class="cl"><span class="c1">// values. Inspired by the StackOverflow answer at:
+</span></span></span><span class="line"><span class="cl"><span class="c1">// http://stackoverflow.com/a/28579297/1366283
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Uses the golang.org/pkg/encoding/gob package to do this and therefore has the
+</span></span></span><span class="line"><span class="cl"><span class="c1">// same caveats.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// See: https://blog.golang.org/gobs-of-data
+</span></span></span><span class="line"><span class="cl"><span class="c1">// See: https://golang.org/pkg/encoding/gob/
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">package</span> <span class="nx">deepcopy</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;bytes&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;encoding/gob&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">gob</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{})</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Map performs a deep copy of the given map m.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">Map</span><span class="p">(</span><span class="nx">m</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{})</span> <span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">buf</span> <span class="nx">bytes</span><span class="p">.</span><span class="nx">Buffer</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">enc</span> <span class="o">:=</span> <span class="nx">gob</span><span class="p">.</span><span class="nf">NewEncoder</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">dec</span> <span class="o">:=</span> <span class="nx">gob</span><span class="p">.</span><span class="nf">NewDecoder</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">err</span> <span class="o">:=</span> <span class="nx">enc</span><span class="p">.</span><span class="nf">Encode</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">copy</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">err</span> <span class="p">=</span> <span class="nx">dec</span><span class="p">.</span><span class="nf">Decode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">copy</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">copy</span><span class="p">,</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="25-types-on-the-wire">
+    <a href="#25-types-on-the-wire">#</a>
+    2.5. Types on the wire
+</h3><p>The first time you send a given type, the gob package includes in the data stream a description of that type. In fact, what happens is that the encoder is used to encode, in the standard gob encoding format, <strong>an internal struct</strong> that describes the type and gives it a unique number. (Basic types, plus the layout of the type description structure, are predefined by the software for bootstrapping.) After the type is described, it can be referenced by its type number.</p>
+<p>Thus when we send our first type <code>T</code>, the gob encoder sends a description of <code>T</code> and tags it with a type number, say 127. All values, including the first, are then prefixed by that number, so a stream of <code>T</code> values looks like:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="p">(</span><span class="s">&#34;define type id&#34;</span> <span class="mi">127</span><span class="p">,</span> <span class="nx">definition</span> <span class="nx">of</span> <span class="kd">type</span> <span class="nx">T</span><span class="p">)(</span><span class="mi">127</span><span class="p">,</span> <span class="nx">T</span> <span class="nx">value</span><span class="p">)(</span><span class="mi">127</span><span class="p">,</span> <span class="nx">T</span> <span class="nx">value</span><span class="p">),</span> <span class="o">...</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>CommonType holds elements of all types. It is a historical artifact, kept for binary compatibility and exported only for the benefit of the package&rsquo;s encoding of type descriptors. It is not intended for direct use by clients.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">CommonType</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Name</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Id</span>   <span class="nx">typeId</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="26-functions-and-channels">
+    <a href="#26-functions-and-channels">#</a>
+    2.6. Functions and channels
+</h3><p>Functions and channels will not be sent in a gob. Attempting to encode such a value at the top level will fail. A struct field of chan or func type is treated exactly like an unexported field and is ignored.</p>
+<h3 id="27-gobregister-method">
+    <a href="#27-gobregister-method">#</a>
+    2.7. gob.Register method
+</h3><p>Register records a type, identified by a value for that type, under its internal type name. That name will identify the concrete type of a value sent or received as an interface variable. <strong>Only types that will be transferred as implementations of interface values need to be registered.</strong> Expecting to be used only during initialization, it panics if the mapping between types and names is not a bijection.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Register</span><span class="p">(</span><span class="nx">value</span> <span class="nx">any</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If you&rsquo;re dealing with concrete types (structs) only, you don&rsquo;t really need it. Once you&rsquo;re dealing with interfaces you must register your concrete type first.</p>
+<p>For example, let&rsquo;s assume we have these struct and interface (the struct implements the interface):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Getter</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">Get</span><span class="p">()</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Foo</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Bar</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <span class="nx">Foo</span><span class="p">)</span> <span class="nf">Get</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Bar</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>To send a <code>Foo</code> over gob <strong>as a <code>Getter</code></strong> and decode it back, we must first call</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="nx">gob</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="nx">Foo</span><span class="p">{})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>So the flow would be:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="c1">// init and register
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">buf</span> <span class="o">:=</span> <span class="nx">bytes</span><span class="p">.</span><span class="nf">NewBuffer</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">gob</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="nx">Foo</span><span class="p">{})</span>    
+</span></span><span class="line"><span class="cl"><span class="c1">// create a getter of Foo
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">g</span> <span class="o">:=</span> <span class="nf">Getter</span><span class="p">(</span><span class="nx">Foo</span><span class="p">{</span><span class="s">&#34;wazzup&#34;</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// encode
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">enc</span> <span class="o">:=</span> <span class="nx">gob</span><span class="p">.</span><span class="nf">NewEncoder</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">enc</span><span class="p">.</span><span class="nf">Encode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">g</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// decode
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">dec</span> <span class="o">:=</span> <span class="nx">gob</span><span class="p">.</span><span class="nf">NewDecoder</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">gg</span> <span class="nx">Getter</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">dec</span><span class="p">.</span><span class="nf">Decode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gg</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Now try removing the <code>Register</code> and this won&rsquo;t work because gob wouldn&rsquo;t know how to map things back to their appropriate type.</p>
+<h3 id="28-gobregister">
+    <a href="#28-gobregister">#</a>
+    2.8. gob.Register
+</h3><p>When there is an interface, be careful, you should figure out all the possiable concrete types (implementations) of the interface would be, and if these concrete type is not primitive type, you need register for them. <strong>You don&rsquo;t need to register for interface itself</strong>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">gob</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{})</span>
+</span></span><span class="line"><span class="cl"><span class="nx">expectedCopy</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;id&#34;</span><span class="p">:</span> <span class="s">&#34;0007&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;kitten&#34;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;milo&#34;</span><span class="p">:</span>   <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If you don&rsquo;t register for <code>map[string]int</code> you will get an error</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">error: gob: type not registered for interface: map[string]int
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>All of this because we have <code>map[string]interface{}</code>, there is an interface, according to <a class="link" href="https://pkg.go.dev/encoding/gob"  target="_blank" rel="noopener"
+    >gob package</a>, <strong>Only types that will be transferred as implementations of interface values need to be registered.</strong></p>
+<p>You need to register for nothing if <code>expectedCopy</code> type is <code>map[string]map[string]int</code> (because there is no interface):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// don&#39;t need this: gob.Register(map[string]map[string]int{})
+</span></span></span><span class="line"><span class="cl"><span class="c1">// don&#39;t need this: gob.Register(map[string]int{})
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">expectedCopy</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;kitten&#34;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;milo&#34;</span><span class="p">:</span>   <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that you <strong>don&rsquo;t need to register for a slice of primitive type or primitive type itself</strong> when they are the implementations of an interface, because Go has done that for you:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">registerBasics</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">Register</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">Register</span><span class="p">(</span><span class="nb">float32</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">Register</span><span class="p">(</span><span class="nb">complex64</span><span class="p">(</span><span class="m">0i</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">Register</span><span class="p">([]</span><span class="nb">uint</span><span class="p">(</span><span class="kc">nil</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">Register</span><span class="p">([]</span><span class="nb">bool</span><span class="p">(</span><span class="kc">nil</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">Register</span><span class="p">([]</span><span class="nb">string</span><span class="p">(</span><span class="kc">nil</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Therefore, if you want encode <code>expectedOriginal</code> below, you need register for nothing:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Go has done this for use: gob.Register([]string{})
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">expectedOriginal</span><span class="p">:</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;Coco&#34;</span><span class="p">,</span> <span class="s">&#34;Bella&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If the implementation&rsquo;s type of the interface is a custom type, you have to register for that type:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Cat</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Name</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// you have to register for Cat
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">gob</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="nx">Cat</span><span class="p">{})</span>
+</span></span><span class="line"><span class="cl"><span class="nx">expectedOriginal</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="nx">Cat</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;jack&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Similarly to we have talked above:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// don&#39;t need this: gob.Register(Cat{})
+</span></span></span><span class="line"><span class="cl"><span class="c1">// there is no interface
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">expectedOriginal</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nx">Cat</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="nx">Cat</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;jack&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>And don&rsquo;t forget, the first letter of the field of Cat must be Capital, namely, expored fields, otherwise, it (the field) won&rsquo;t encode by gob.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Cat</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Name</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">m</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kd">interface</span><span class="p">{}][]</span><span class="nx">Cat</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;cats&#34;</span><span class="p">:</span> <span class="p">[]</span><span class="nx">Cat</span><span class="p">{{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;jack&#34;</span><span class="p">}},</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">buf</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Buffer</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">enc</span> <span class="o">:=</span> <span class="nx">gob</span><span class="p">.</span><span class="nf">NewEncoder</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">dec</span> <span class="o">:=</span> <span class="nx">gob</span><span class="p">.</span><span class="nf">NewDecoder</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">enc</span><span class="p">.</span><span class="nf">Encode</span><span class="p">(</span><span class="nx">m</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;failed to copy map: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">result</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kd">interface</span><span class="p">{}][]</span><span class="nx">Cat</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">dec</span><span class="p">.</span><span class="nf">Decode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">result</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;failed to copy map: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-encodingjson">
+    <a href="#3-encodingjson">#</a>
+    3. encoding/json
+</h2><ul>
+<li><code>Marshal()</code> → to encode GO values to JSON in string format</li>
+<li><code>Unmarshal()</code> → to decode JSON data to GO values</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Marshal</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">data</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="31-jsonmarshal">
+    <a href="#31-jsonmarshal">#</a>
+    3.1. <code>json.Marshal()</code>
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Cat</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// lowercase field cannot be exported
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// `json:&#34;name&#34;` makes &#34;Name&#34; to &#34;name&#34; in json string after apply json.Marshal()
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// check in output
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">Name</span> <span class="kt">string</span> <span class="s">`json:&#34;name&#34;`</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Age</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">IsAdult</span> <span class="kt">bool</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">data</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">Cat</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Kitten&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">Age</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">IsAdult</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl">	<span class="nb">println</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nb">println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">data</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="s">&#34;Hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nb">println</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nb">println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">----------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="mi">40</span><span class="o">/</span><span class="mi">48</span><span class="p">]</span><span class="mh">0x140000161b0</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="s">&#34;name&#34;</span><span class="p">:</span><span class="s">&#34;Kitten&#34;</span><span class="p">,</span><span class="s">&#34;Age&#34;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="s">&#34;IsAdult&#34;</span><span class="p">:</span><span class="kc">true</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="mi">7</span><span class="o">/</span><span class="mi">8</span><span class="p">]</span><span class="mh">0x1400001c1a8</span>
+</span></span><span class="line"><span class="cl"><span class="s">&#34;Hello&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>⚠️Note: <em>Channel</em>, complex, and <em>function</em> values cannot be encoded in JSON. Attempting to encode such a value causes <em>Marshal</em> to return an UnsupportedTypeError. <a class="link" href="https://pkg.go.dev/encoding/json"  target="_blank" rel="noopener"
+    >json package - encoding/json - Go Packages</a></p>
+</blockquote>
+<p>In the past, if you use <code>json.Marshal()</code> to encode map, you need to ensure that the type of the key is strin, otherwise, it will fail, It&rsquo;s not because of Go, but because of Json: Json does not support anything else than strings for keys.</p>
+<p>Learn more: <a class="link" href="https://stackoverflow.com/questions/24284612/failed-to-json-marshal-map-with-non-string-keys"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/questions/24284612/failed-to-json-marshal-map-with-non-string-keys</a></p>
+<p>But now you can use <code>json.Marshal()</code> to encode the map whose key&rsquo;s type is int, but not float:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">float32</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">m</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;helllo&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">b</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// panic: json: unsupported type: map[float32]string
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Therefore, you may want do something like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// JSONSerializer encode the session map to JSON.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">JSONSerializer</span> <span class="kd">struct</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Serialize to JSON. Will err if there are unmarshalable key values
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">JSONSerializer</span><span class="p">)</span> <span class="nf">Serialize</span><span class="p">(</span><span class="nx">ss</span> <span class="o">*</span><span class="nx">sessions</span><span class="p">.</span><span class="nx">Session</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{},</span> <span class="nb">len</span><span class="p">(</span><span class="nx">ss</span><span class="p">.</span><span class="nx">Values</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ss</span><span class="p">.</span><span class="nx">Values</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">ks</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">k</span><span class="p">.(</span><span class="kt">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">err</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Non-string key value, cannot serialize session to JSON: %v&#34;</span><span class="p">,</span> <span class="nx">k</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;redistore.JSONSerializer.serialize() Error: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">m</span><span class="p">[</span><span class="nx">ks</span><span class="p">]</span> <span class="p">=</span> <span class="nx">v</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Code from: <a class="link" href="https://github.com/boj/redistore"  target="_blank" rel="noopener"
+    >https://github.com/boj/redistore</a></p>
+<p>Now support for non string key types for maps for json Marshal/UnMarshal has been added through the use of <a class="link" href="https://golang.org/pkg/encoding/#TextMarshaler"  target="_blank" rel="noopener"
+    >TextMarshaler</a> and <a class="link" href="https://golang.org/pkg/encoding/#TextUnmarshaler"  target="_blank" rel="noopener"
+    >TextUnmarshaler</a> interfaces <a class="link" href="https://go-review.googlesource.com/c/go/&#43;/20356/1"  target="_blank" rel="noopener"
+    >here</a>. You could just implement these interfaces for your key types and then <code>json.Marshal</code> would work as expected. Learn more: <a class="link" href="https://stackoverflow.com/a/55879732/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/55879732/16317008</a></p>
+<h3 id="32-jsonunmarshal">
+    <a href="#32-jsonunmarshal">#</a>
+    3.2. <code>json.Unmarshal()</code>
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">data</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">Cat</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Kitten&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">Age</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">IsAdult</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">cat</span> <span class="o">:=</span> <span class="nx">Cat</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">	 <span class="nx">_</span> <span class="p">=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">cat</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">cat</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">----------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="nx">Kitten</span> <span class="mi">2</span> <span class="kc">true</span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="33-jsonnewdecoder--jsonunmarshal">
+    <a href="#33-jsonnewdecoder--jsonunmarshal">#</a>
+    3.3. <code>json.NewDecoder()</code> &amp; <code>json.Unmarshal()</code>
+</h3><ul>
+<li>Use <code>json.Decoder</code> if your data is coming from an <code>io.Reader</code> stream, or you need to decode multiple values from a stream of data.</li>
+<li>Use <code>json.Unmarshal</code> if you already have the JSON data in memory.</li>
+</ul>
+<p>If you check the signature, you should understand:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">NewDecoder</span><span class="p">(</span><span class="nx">r</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Reader</span><span class="p">)</span> <span class="o">*</span><span class="nx">Decoder</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">data</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">v</span> <span class="nx">any</span><span class="p">)</span> <span class="kt">error</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Source: <a class="link" href="https://stackoverflow.com/a/21198571/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/21198571/16317008</a></p>
+<p>References:</p>
+<ul>
+<li><a class="link" href="https://go.dev/blog/gob"  target="_blank" rel="noopener"
+    >Gobs of data - The Go Programming Language</a></li>
+<li><a class="link" href="https://pkg.go.dev/encoding/gob"  target="_blank" rel="noopener"
+    >gob package - encoding/gob - Go Packages</a></li>
+<li><a class="link" href="https://stackoverflow.com/questions/41179453/difference-between-encoding-gob-and-encoding-json"  target="_blank" rel="noopener"
+    >difference between encoding/gob and encoding/json</a></li>
+<li><a class="link" href="https://stackoverflow.com/questions/32676898/whats-the-purpose-of-gob-register-method/32677598#32677598"  target="_blank" rel="noopener"
+    >go - What&rsquo;s the purpose of gob.Register method? - Stack Overflow</a></li>
+<li><a class="link" href="https://stackoverflow.com/questions/31467602/gob-register-by-type-or-for-each-variable"  target="_blank" rel="noopener"
+    >go - gob.Register() by type or for each variable? - Stack Overflow</a></li>
+</ul>
+<p>Learn more:</p>
+<ul>
+<li><a class="link" href="https://gist.github.com/evalphobia/a2ba2636acbc112f68dcd89e8b81d349"  target="_blank" rel="noopener"
+    >Golang Benchmark: gob vs json</a></li>
+<li><a class="link" href="https://www.cs.ubc.ca/~bestchai/teaching/cs416_2015w2/go1.4.3-docs/pkg/encoding/gob/index.html"  target="_blank" rel="noopener"
+    >gob - The Go Programming Language</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/golang/">Golang</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/go-modules-and-environment/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Go Modules and Environment</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/interfaces-basics-go/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Interfaces Basics - Go</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/value-variable-and-types-go/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Value, Variable and Types - Go</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/map-go/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">map - Go</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/slice-array-go/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">slice &amp; array - Go</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

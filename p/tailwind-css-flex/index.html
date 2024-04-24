@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是由内容决定的. 其他的 inline 元素, 如 &lt;span&gt;, &lt;a&gt;, &lt;strong&gt;, 如果设置为 block, 则其宽度会自动变为父元素的 100%. inline 元素不会独占一行, 宽高度由内容决定 不能设置宽高, 若要设置宽和高, 需要将其转换为块级元素. 如 display: block 或 display: inline-block. 不可以设置上下 padding 和 margin, 可以设置左右 padding 和 margin. 特殊情况: margin-left: auto, margin-right: auto 无法适用 inline 元素. 这也是为什么 tailwind css 中 mx-auto 使 inline 元素水平居中的原因.">
+<title>Tailwind CSS Flex</title>
+
+<link rel='canonical' href='http://localhost:1313/p/tailwind-css-flex/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Tailwind CSS Flex">
+<meta property='og:description' content="# Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是由内容决定的. 其他的 inline 元素, 如 &lt;span&gt;, &lt;a&gt;, &lt;strong&gt;, 如果设置为 block, 则其宽度会自动变为父元素的 100%. inline 元素不会独占一行, 宽高度由内容决定 不能设置宽高, 若要设置宽和高, 需要将其转换为块级元素. 如 display: block 或 display: inline-block. 不可以设置上下 padding 和 margin, 可以设置左右 padding 和 margin. 特殊情况: margin-left: auto, margin-right: auto 无法适用 inline 元素. 这也是为什么 tailwind css 中 mx-auto 使 inline 元素水平居中的原因.">
+<meta property='og:url' content='http://localhost:1313/p/tailwind-css-flex/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='front-end' /><meta property='article:published_time' content='2024-01-06T20:46:20&#43;00:00'/><meta property='article:modified_time' content='2024-01-06T20:46:20&#43;00:00'/>
+<meta name="twitter:title" content="Tailwind CSS Flex">
+<meta name="twitter:description" content="# Block and Inline block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定 特殊情况: button 默认是 inline-block, 支持设置宽高, 即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是由内容决定的. 其他的 inline 元素, 如 &lt;span&gt;, &lt;a&gt;, &lt;strong&gt;, 如果设置为 block, 则其宽度会自动变为父元素的 100%. inline 元素不会独占一行, 宽高度由内容决定 不能设置宽高, 若要设置宽和高, 需要将其转换为块级元素. 如 display: block 或 display: inline-block. 不可以设置上下 padding 和 margin, 可以设置左右 padding 和 margin. 特殊情况: margin-left: auto, margin-right: auto 无法适用 inline 元素. 这也是为什么 tailwind css 中 mx-auto 使 inline 元素水平居中的原因.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#block-and-inline">Block and Inline</a></li>
+    <li><a href="#flex">Flex</a>
+      <ol>
+        <li><a href="#flex-box">flex box</a></li>
+        <li><a href="#flex-items">flex items</a></li>
+      </ol>
+    </li>
+    <li><a href="#position">Position</a>
+      <ol>
+        <li><a href="#absolute">absolute</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/front-end/" >
+                Front-End
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/tailwind-css-flex/">Tailwind CSS Flex</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jan 06, 2024</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    3 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="block-and-inline">
+    <a href="#block-and-inline">#</a>
+    Block and Inline
+</h2><ul>
+<li>
+<p>block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定</p>
+<ul>
+<li>特殊情况: button 默认是 inline-block, 支持设置宽高, <strong>即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是由内容决定的.</strong></li>
+<li>其他的 inline 元素, 如 <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;strong&gt;</code>, 如果设置为 block, 则其宽度会自动变为父元素的 100%.</li>
+</ul>
+</li>
+<li>
+<p>inline 元素不会独占一行, 宽高度由内容决定</p>
+<ul>
+<li>不能设置宽高, 若要设置宽和高, 需要将其转换为块级元素. 如 <code>display: block</code> 或 <code>display: inline-block</code>.</li>
+<li>不可以设置上下 padding 和 margin, 可以设置左右 padding 和 margin.</li>
+<li>特殊情况: <code>margin-left: auto</code>, <code>margin-right: auto</code> 无法适用 inline 元素. 这也是为什么 tailwind css 中 <code>mx-auto</code> 使 inline 元素水平居中的原因.</li>
+</ul>
+</li>
+<li>
+<p>inline-block, 既可以设置宽高, 也可以设置所有 padding 和 margin, 其他与 inline 元素一样.</p>
+</li>
+</ul>
+<blockquote>
+<p>flex 子元素既不是块级元素, 也不是内联元素, 而是 flex 元素, 有自己的特性. 若同在 flex box内, 则 <code>&lt;a&gt;</code> 与 <code>&lt;div&gt;</code> 在显示上是完全一样的, 因为他们都是 flex items.
+注意 flex 子元素的默认值是 <code>flex: 0 1 auto</code>, 即 <code>flex-grow: 0</code>, <code>flex-shrink: 1</code>, <code>flex-basis: auto</code>, 即默认情况下, flex 子元素是允许在必要情况下缩小的, 而不会增长, 从而导致 flex 子元素的宽度不是父元素的 100%, 而是由内容决定的.</p>
+</blockquote>
+<h2 id="flex">
+    <a href="#flex">#</a>
+    Flex
+</h2><p>Flex 有很多性质, 要区分哪些性质是用到 Flex Box 上的, 哪些是用到 Flex Items 上的. 可直接观看: <a class="link" href="https://youtu.be/fYq5PXgSsbE?si=yeeW9PDx-Als9CWX"  target="_blank" rel="noopener"
+    >https://youtu.be/fYq5PXgSsbE?si=yeeW9PDx-Als9CWX</a></p>
+<h3 id="flex-box">
+    <a href="#flex-box">#</a>
+    flex box
+</h3><ul>
+<li>
+<p><code>flex-direction</code>: row | row-reverse | column | column-reverse;</p>
+<ul>
+<li>Tailwind CSS: <code>flex-row</code>, <code>flex-col</code></li>
+</ul>
+</li>
+<li>
+<p><code>justify-content</code>: flex-start | flex-end | center | space-between | space-around | space-evenly;</p>
+<ul>
+<li>Tailwind CSS: <code>justify-start</code>, <code>justify-end</code>, <code>justify-center</code>, <code>justify-between</code>,</li>
+</ul>
+</li>
+<li>
+<p><code>align-items</code>: flex-start | flex-end | center</p>
+<ul>
+<li>Tailwind CSS: <code>items-start</code>, <code>items-end</code>, <code>items-center</code></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>常用技巧:</strong></p>
+<ol>
+<li>justify-between 主要是用来设置 flex items 之间的间距, 一般是让两个元素分布在容器左右或上下两端,</li>
+<li>聊天软件, 自己信息靠右, 对方信息靠左, 不可以使用 <code>justify-self</code> 或 <code>align-self</code>, 前者是用于 Grid 布局的, 后者是用于 Flex 布局的交叉轴上的对齐方式. 更不可以单独对一个元素设置 <code>justify-start</code> 或 <code>justify-end</code>, 因为这是 flex box 的属性, 会影响所有的 flex items, 而不是单个元素. 你可以使用 <code>margin-left: auto</code> 或 <code>margin-right: auto</code> 来实现这个效果.</li>
+<li><code>mx-auto</code> 用于水平居中, <code>my-auto</code> 用于垂直居中,</li>
+<li>也可使用 order 属性来调整元素的顺序, 配合 justify-between 使用 (控制在两端, 一左一右), 只有两个元素这种简单情况下推荐使用.</li>
+</ol>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">Message</span><span class="p">({</span><span class="nx">role</span><span class="p">,</span> <span class="nx">text</span><span class="p">,</span> <span class="nx">time</span><span class="p">})</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">messageClass</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">===</span> <span class="s1">&#39;bot&#39;</span> <span class="o">?</span> <span class="s1">&#39;mr-auto bg-gray-300 text-black&#39;</span> <span class="o">:</span> <span class="s1">&#39;ml-auto bg-blue-300 text-white&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">timePos</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">===</span> <span class="s1">&#39;bot&#39;</span> <span class="o">?</span> <span class="s1">&#39;order-2&#39;</span> <span class="o">:</span> <span class="s1">&#39;order-1&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">rolePos</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">===</span> <span class="s1">&#39;bot&#39;</span> <span class="o">?</span> <span class="s1">&#39;order-1&#39;</span> <span class="o">:</span> <span class="s1">&#39;order-2&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">sentTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">time</span><span class="p">).</span><span class="nx">toLocaleString</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">messageClass</span><span class="p">}</span> <span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;flex flex-row justify-between&#39;</span><span class="p">}</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">rolePos</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">role</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">timePos</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">sentTime</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">text</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="flex-items">
+    <a href="#flex-items">#</a>
+    flex items
+</h3><ul>
+<li><strong>flex-grow:</strong> 用来指定一个 flex 子项（flex item）相对于其他子项在可用空间中的扩展比例, 沿主轴方向。
+<ul>
+<li>Tailwind CSS 类名:<code>flex-grow</code>, <code>flex-grow-0</code></li>
+</ul>
+</li>
+<li><strong>align-self:</strong> 用来指定flex子项在<strong>交叉轴</strong>上的对齐方式, 会覆盖父容器的 align-items 属性。
+<ul>
+<li>很好理解, align-self 是用来指定单个 flex item 在交叉轴上的对齐方式, 而 align-items 是用来指定所有 flex items 在交叉轴上的对齐方式. 前者用在 item上, 后者用在 flex box 上, 前者会覆盖后者.</li>
+<li>Tailwind CSS 类名: <code>self-auto</code>, <code>self-start</code>, <code>self-center</code>, <code>self-end</code>, <code>self-stretch</code></li>
+<li>了解更多: <a class="link" href="https://tailwindcss.com/docs/align-self"  target="_blank" rel="noopener"
+    >Align Self - Tailwind CSS</a></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>常用技巧-1:</strong> 把 navigator 和 footer 设置为 <code>flex-grow: 0</code>, 然后中间的内容设置为 <code>flex-grow: 1</code>, 这样中间的内容会占据剩余的空间, 从而实现中间内容自动填充剩余空间的效果. (前提是他们都是 flex items, 即他们都在 flex box 内)</p>
+</blockquote>
+<blockquote>
+<p><strong>常用技巧-2:</strong> 通常把元素设置为 flex-grow 后, 会自动填充剩余空间, 但如果该元素的内容很多, 就会导致溢出, 比如对话框, 此时应该会想到加个 overflow 属性, 但是这样并不会起作用, 原因是你没设置该元素的高度, 此时可以给个高度0, 这样即使内容为空因为 flex-grow 会自动填充剩余空间, 若内容溢出因为定义了高度, overflow 属性就会起作用了.
+了解更多: <a class="link" href="https://stackoverflow.com/a/14964944/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/14964944/16317008</a></p>
+</blockquote>
+<p><strong>易错点-1:</strong> flex-grow 是 flex items 的属性, 用来控制 flex tiems 如何在<strong>主轴方向</strong>上增长, 不要简单的以为是用来控制在水平方向上增长的. 比如在 flex-col 的情况下，flex-grow 影响的是items的高度，而不是宽度，因为主轴是垂直的.</p>
+<p><strong>易错点-2:</strong> <code>justify-items</code> 和 <code>justify-self</code> 专门用于Grid布局, 不用于Flex布局, 了解更多: <a class="link" href="https://tailwindcss.com/docs/justify-items"  target="_blank" rel="noopener"
+    >Justify Items - Tailwind CSS</a></p>
+<h2 id="position">
+    <a href="#position">#</a>
+    Position
+</h2><h3 id="absolute">
+    <a href="#absolute">#</a>
+    absolute
+</h3><p>最近写菜单栏的时候, 菜单栏展开后会将下面的内容挤下去, 像下面这样:</p>
+<p><img src="/000-css-basic/00.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="00"
+	
+	
+></p>
+<p><img src="/000-css-basic/02.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="02"
+	
+	
+></p>
+<p>基本上菜单栏都很窄, 所以当菜单栏展开时, 我希望的是不影响下面的内容, 但是正常情况下两个元素要么是 inline 那种可以在同一行, 要么是 block 那种独占一行, 无法实现我想要的效果. 此时就可以使用 absolute 来实现, 如下:</p>
+<p><img src="/000-css-basic/01.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="01"
+	
+	
+></p>
+<blockquote>
+<p>Absolute positioned elements are removed from the normal flow, and <strong>can overlap elements</strong>.</p>
+</blockquote>
+<p>此时也应该注意覆盖的问题, 若对话框宽度为 100vw, 可能会覆盖掉对话框, 因此要将 z-index 设置大一些.</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/front-end/">Front-End</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/html-basics/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HTML Basics</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/rendering-react/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Rendering - React</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/pure-function-state-event-loop-react/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Pure Function &amp; State &amp; Event Loop - React</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/tailwind-css-tricks/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tailwind CSS Tricks</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/tailwind-css-commonly-used-class/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tailwind CSS Commonly Used Class</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

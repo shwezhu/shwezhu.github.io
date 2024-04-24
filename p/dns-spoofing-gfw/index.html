@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="声明: 本文只用于学习目的, 请勿用于非法用途. # 1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;. # 1.1. DNS Caching Learn more about DNS caching: DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog # 1.2. How do attackers poison DNS caches?">
+<title>DNS Spoofing - GFW</title>
+
+<link rel='canonical' href='http://localhost:1313/p/dns-spoofing-gfw/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="DNS Spoofing - GFW">
+<meta property='og:description' content="声明: 本文只用于学习目的, 请勿用于非法用途. # 1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;. # 1.1. DNS Caching Learn more about DNS caching: DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog # 1.2. How do attackers poison DNS caches?">
+<meta property='og:url' content='http://localhost:1313/p/dns-spoofing-gfw/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cybersecurity' /><meta property='article:tag' content='networking' /><meta property='article:published_time' content='2023-10-31T15:29:25&#43;00:00'/><meta property='article:modified_time' content='2023-10-31T15:29:25&#43;00:00'/>
+<meta name="twitter:title" content="DNS Spoofing - GFW">
+<meta name="twitter:description" content="声明: 本文只用于学习目的, 请勿用于非法用途. # 1. DNS spoofing DNS cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;. # 1.1. DNS Caching Learn more about DNS caching: DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog # 1.2. How do attackers poison DNS caches?">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-dns-spoofing">1. DNS spoofing</a>
+      <ol>
+        <li><a href="#11-dns-caching">1.1. DNS Caching</a></li>
+        <li><a href="#12-how-do-attackers-poison-dns-caches">1.2. How do attackers poison DNS caches?</a></li>
+      </ol>
+    </li>
+    <li><a href="#2-gfw">2. GFW</a>
+      <ol>
+        <li><a href="#21-http-劫持">2.1. HTTP 劫持</a></li>
+        <li><a href="#22-dns污染投毒">2.2. DNS污染投毒</a></li>
+        <li><a href="#23-ip黑名单">2.3. ip黑名单</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-常见代理方式">3. 常见代理方式</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/networking/" >
+                Networking
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/dns-spoofing-gfw/">DNS Spoofing - GFW</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 31, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    2 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>声明: 本文只用于学习目的, 请勿用于非法用途.</p>
+<h2 id="1-dns-spoofing">
+    <a href="#1-dns-spoofing">#</a>
+    1. DNS spoofing
+</h2><p><a class="link" href="https://www.cloudflare.com/learning/dns/what-is-dns/"  target="_blank" rel="noopener"
+    >DNS</a> cache poisoning is the act of entering false information into a DNS cache, so that DNS queries return an incorrect response and users are directed to the wrong websites. DNS cache poisoning is also known as &lsquo;DNS spoofing&rsquo;.</p>
+<h3 id="11-dns-caching">
+    <a href="#11-dns-caching">#</a>
+    1.1. DNS Caching
+</h3><p>Learn more about DNS caching: <a class="link" href="https://davidzhu.xyz/post/networking/002-dns-basics/"  target="_blank" rel="noopener"
+    >DNS Concepts (NameServer(NS), DNS Records and Caching) - David&rsquo;s Blog</a></p>
+<h3 id="12-how-do-attackers-poison-dns-caches">
+    <a href="#12-how-do-attackers-poison-dns-caches">#</a>
+    1.2. How do attackers poison DNS caches?
+</h3><p>Attackers can poison DNS caches by impersonating <a class="link" href="https://www.cloudflare.com/learning/dns/dns-server-types/"  target="_blank" rel="noopener"
+    >DNS nameservers</a>, making a request to a DNS resolver, and then forging the reply when the DNS resolver queries a nameserver. This is possible because DNS servers use <a class="link" href="https://www.cloudflare.com/learning/ddos/glossary/user-datagram-protocol-udp/"  target="_blank" rel="noopener"
+    >UDP</a> instead of <a class="link" href="https://www.cloudflare.com/learning/ddos/glossary/tcp-ip/"  target="_blank" rel="noopener"
+    >TCP</a>, and because currently there is no verification for DNS information.</p>
+<p>DNS Cache Poisoning Process:</p>
+<img src="/005-gfw-dns/c.png" alt="c" style="zoom: 33%;" />
+<p>Poisoned DNS Cache:</p>
+<img src="/005-gfw-dns/d.png" alt="d" style="zoom: 33%;" />
+<p>If a DNS resolver receives a forged response, it accepts and caches the data uncritically because there is no way to verify if the information is accurate and comes from a legitimate source.</p>
+<p>Despite these major points of vulnerability in the DNS caching process, DNS poisoning attacks are not easy. Because the DNS resolver does actually query the authoritative nameserver, attackers have only a few milliseconds to send the fake reply before the real reply from the authoritative nameserver arrives.</p>
+<blockquote>
+<p>The way to prevent this is to set the /etc/host file directly, because checking host file happens before DNS resolution.</p>
+<p>Learn more: <a class="link" href="https://davidzhu.xyz/post/networking/002-host-file-dns-stub-resolver/"  target="_blank" rel="noopener"
+    >DNS Stub and Recursive Resolver - Config Files - David&rsquo;s Blog</a></p>
+</blockquote>
+<p>Learn more: <a class="link" href="https://www.cloudflare.com/learning/dns/dns-cache-poisoning/"  target="_blank" rel="noopener"
+    >What is DNS cache poisoning? | DNS spoofing | Cloudflare</a></p>
+<h2 id="2-gfw">
+    <a href="#2-gfw">#</a>
+    2. GFW
+</h2><h3 id="21-http-劫持">
+    <a href="#21-http-%e5%8a%ab%e6%8c%81">#</a>
+    2.1. HTTP 劫持
+</h3><p>原文: <a class="link" href="https://doubibackup.com/6t3mypbm-5.html#comments"  target="_blank" rel="noopener"
+    >浅谈HTTP劫持、DNS污染的影响及解决办法（仅个人理解） | 逗比根据地</a></p>
+<p>HTTP劫持很容易理解，因为HTTP传输协议是明文的，并且我的网站服务器是在海外，要访问我的网站就要通过中国的国际宽带出口，出去与我的网站建立连接。我的网站也是因为关键词的原因在经过出口的时候，被“<strong>检查站：墙</strong>”扫描到了违规关键词，于是掐断了TCP链接。所以当时用户访问网站会遇到：<strong>链接已重置、该网站已永久移动到其他地址等等。</strong></p>
+<p>HTTP劫持很容易解决，那就是<strong>加上SSL证书，网站链接全部内容加密</strong>，这样“检查站：墙”就无法解密数据分析关键词了。但是这不是绝对能解决这个问题的，如果你的网站只是误杀或者违规擦边球，那还好，如果是大型网站，就会特殊对待了。</p>
+<p>HTTPS在建立加密连接的时候，需要一次握手，也就是达成链接协议建立加密连接，但是这次握手是明文的（建立加密链接首先就是链接双方信任，比如网站的SSL证书是自己签的，或者SSL证书到期或伪造的，在访问这个网站的时候浏览器就会进行提示，表示此网站不安全啥的。）握手是明文的就意味着，如果你的域名被重点关注，即使你加上了SSL证书，也会在首次握手的时候，被关键词匹配然后掐断链接。 learn more: <a class="link" href="https://davidzhu.xyz/post/http/006-https-ssl/"  target="_blank" rel="noopener"
+    >HTTPS SSL TLS - David&rsquo;s Blog</a></p>
+<h3 id="22-dns污染投毒">
+    <a href="#22-dns%e6%b1%a1%e6%9f%93%e6%8a%95%e6%af%92">#</a>
+    2.2. DNS污染投毒
+</h3><p>我们假设A为用户端也就是你的电脑设备，B为DNS服务器，C为A到B链路中一个节点的网络设备（路由器、交换机、网关等）。</p>
+<p>然后我们模拟一次被污染的DNS请求过程。</p>
+<p>A访问一个网站，比如 <code>google.com</code> ，然后，A向B通过UDP方式发送查询请求，比如查询内容 <code>A google.com</code> ，这个数据库在前往B的时候要经过数个节点网络设备比如C，然后继续前往DNS服务器B。</p>
+<p>然而在这个传输过程中，C针对这个数据包进行特征分析，（DNS端口为53，进行特定端口监视扫描，对UDP明文传输的DNS查询请求进行特征和关键词匹配分析，比如“google.com”是关键词，也或者是“A记录”），从而立刻返回一个错误的解析结果（比如返回了 <code>A 233.233.233.233</code> ）。</p>
+<p>众所周知，作为链路上的一个节点，网络设备 C 必定比真正的 DNS 服务器 B 更快的返回结果到 用户电脑A，而目前的DNS解析机制策略有一个重要的原则，就是只认第一。因此 节点网络设备C所返回的查询结果就被 用户电脑A当作了最终结果，于是用户电脑A因为获得了错误的IP，导致无法正常访问 <code>google.com </code>。</p>
+<p>验证污染 我的 doub.ssrshare.usm 主域名虽然在大部分地区解除了DNS污染，但是我的两个SS站域名并没有，所以我尝试对我的SS 子域名进行nslookup测试。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">C:<span class="se">\U</span>sers<span class="se">\A</span>dministrator&gt;nslookup ss.dou-bi.com 8.8.8.8
+</span></span><span class="line"><span class="cl">服务器: google-public-dns-a.google.com
+</span></span><span class="line"><span class="cl">Address: 8.8.8.8
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">非权威应答:
+</span></span><span class="line"><span class="cl">名称: ss.dou-bi.com
+</span></span><span class="line"><span class="cl">Addresses: 200:2:9f6a:794b::
+</span></span><span class="line"><span class="cl">8.7.198.45
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我使用的是谷歌的 8.8.8.8 DNS，但是我得到的A记录 IP却是8.7.198.45，这个明显不是我的IP，看一下其他被DNS污染的域名就会发现都会有这个IP。很明显，我的 ss.dou-bi.com 域名受到了DNS污染。</p>
+<p><strong>解决办法</strong></p>
+<ul>
+<li>
+<p><strong>使用加密代理</strong>，比如Shadowsocks，在加密代理里进行远程DNS解析，或者使用VPN上网。</p>
+</li>
+<li>
+<p><strong>修改hosts文件</strong>，操作系统中Hosts文件的权限优先级高于DNS服务器，操作系统在访问某个域名时，会先检测HOSTS文件，然后再查询DNS服务器。可以在hosts添加受到污染的DNS地址来解决DNS污染和DNS劫持。</p>
+</li>
+<li>
+<p><strong>通过一些软件编程处理</strong>，可以直接忽略返回结果是虚假IP地址的数据包，直接解决DNS污染的问题。如果你是Firefox用户，并且只用Firefox，又懒得折腾，直接打开Firefox的远程DNS解析就行了。在地址栏中输入：<code>about:config</code>找到 <code>network.proxy.socks_remote_dns</code> 一项改成true。</p>
+</li>
+<li>
+<p><strong>使用DNSCrypt软件</strong>，此软件与使用的OpenDNS直接建立相对安全的TCP连接并加密请求数据，从而不会被污染。 对于被DNS污染的网站站长来说，最有效的方法就是 换域名或者IP 了。</p>
+</li>
+</ul>
+<h3 id="23-ip黑名单">
+    <a href="#23-ip%e9%bb%91%e5%90%8d%e5%8d%95">#</a>
+    2.3. ip黑名单
+</h3><p>即使没有DNS污染 或者 你获得了正确的IP，你就能正常访问这些被屏蔽的网站了吗？</p>
+<p>不，墙目前已经有了IP黑名单，针对谷歌这种网站已经不再是普通的DNS污染了，因为总会有办法访问被DNS污染的网站（比如指定Hosts）。</p>
+<p>那么就直接把所有的谷歌IP拉黑不就好了？就算你获得了正确的谷歌IP，但是当你去访问这个IP的时候，墙会发现这个IP存在于黑名单中，于是直接阻断，于是浏览器就会提示：www.google.com 的响应时间过长等等</p>
+<h2 id="3-常见代理方式">
+    <a href="#3-%e5%b8%b8%e8%a7%81%e4%bb%a3%e7%90%86%e6%96%b9%e5%bc%8f">#</a>
+    3. 常见代理方式
+</h2><ul>
+<li>VPN
+<ul>
+<li>常见协议: IPSec, OpenVPN, L2TP, WireGuard</li>
+</ul>
+</li>
+<li>Shadowsocks (代理服务器)
+<ul>
+<li>常见协议: SOCKS5</li>
+</ul>
+</li>
+<li>V2Ray (代理服务器)
+<ul>
+<li>常见协议: VMess</li>
+</ul>
+</li>
+<li>HTTP 代理 (代理服务器)
+<ul>
+<li>已被封锁, 原因是HTTP代理并不对数据进行加密, 即使流量能够绕过初步的审查，传输的内容仍然是透明的，容易被监控。</li>
+<li>即使使用 HTTPS 也不会实现全局加密, 在建立 TLS 握手验证时还是需要一个HTTP明文连接</li>
+</ul>
+</li>
+</ul>
+<p>了解更多: <a class="link" href="https://superxlcr.github.io/2018/07/01/%E4%B8%8A%E7%BD%91%E9%99%90%E5%88%B6%E5%92%8C%E7%BF%BB%E5%A2%99%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/"  target="_blank" rel="noopener"
+    >上网限制和翻墙基本原理 | superxlcr&rsquo;s notebook</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/cybersecurity/">Cybersecurity</a>
+        
+            <a href="/tags/networking/">Networking</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/common-network-attacks/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Common Network Attacks</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/ddos-attack/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DDoS Attack</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cname-%E6%8C%87%E5%90%91-github-pages-%E9%97%AE%E9%A2%98/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CNAME 指向 GitHub Pages 问题</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/dns-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DNS 基础概念</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/mpls/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MPLS</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

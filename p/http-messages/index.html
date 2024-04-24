@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server. HTTP requests, and responses, share similar structure and are composed of: A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP headers specifying the request, or describing the body included in the message.">
+<title>HTTP Messages</title>
+
+<link rel='canonical' href='http://localhost:1313/p/http-messages/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="HTTP Messages">
+<meta property='og:description' content="# 1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server. HTTP requests, and responses, share similar structure and are composed of: A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP headers specifying the request, or describing the body included in the message.">
+<meta property='og:url' content='http://localhost:1313/p/http-messages/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='http' /><meta property='article:published_time' content='2023-09-23T09:51:30&#43;00:00'/><meta property='article:modified_time' content='2023-09-23T09:51:30&#43;00:00'/>
+<meta name="twitter:title" content="HTTP Messages">
+<meta name="twitter:description" content="# 1. Intro of HTTP messages There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server. HTTP requests, and responses, share similar structure and are composed of: A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line. An optional set of HTTP headers specifying the request, or describing the body included in the message.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-intro-of-http-messages">1. Intro of HTTP messages</a></li>
+    <li><a href="#2-http-requests">2. HTTP Requests</a>
+      <ol>
+        <li><a href="#21-start-line">2.1. Start line</a></li>
+        <li><a href="#22-headers">2.2. Headers</a></li>
+        <li><a href="#23-body">2.3. Body</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-http-responses">3. HTTP Responses</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/http/" >
+                Http
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/http-messages/">HTTP Messages</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Sep 23, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-intro-of-http-messages">
+    <a href="#1-intro-of-http-messages">#</a>
+    1. Intro of HTTP messages
+</h2><p>There are two types of messages: <em><strong>requests</strong></em> sent by the client to trigger an action on the server, and <em><strong>responses</strong></em>, the answer from the server.</p>
+<p>HTTP requests, and responses, share similar structure and are composed of:</p>
+<ol>
+<li>A <code>start-line</code> describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line.</li>
+<li>An optional set of <code>HTTP headers</code> specifying the request, or describing the body included in the message.</li>
+<li>A <code>blank line</code> indicating all meta-information for the request has been sent.</li>
+<li>An optional <code>body</code> containing data associated with the request (like content of an HTML form), or the document associated with a response. The presence of the body and its size is specified by the start-line and HTTP headers.</li>
+</ol>
+<p><img src="/004-http-messages/aa.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="aa"
+	
+	
+></p>
+<p>The <code>start-line</code> and <code>HTTP headers</code> of the HTTP message are collectively known as the <em><strong>head</strong></em> of the requests, whereas its <code>payload</code> is known as the <em><strong>body</strong></em>.</p>
+<h2 id="2-http-requests">
+    <a href="#2-http-requests">#</a>
+    2. HTTP Requests
+</h2><h3 id="21-start-line">
+    <a href="#21-start-line">#</a>
+    2.1. Start line
+</h3><p>A start line contains three parts:</p>
+<ul>
+<li>Their <em>start-line</em> contain three elements:
+<ul>
+<li>An HTTP method, a verb (like <code>GET</code>, <code>PUT</code> or <code>POST</code>) or a noun (like HEAD or OPTIONS), that describes the action to be performed.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>GET 请求的结果可被浏览器和其他中间件(代理服务器)缓存，并且可能会被重复执行（例如，用户刷新页面时）。
+如果你是在用户点击某个按钮后通过 GET 请求来处理点赞功能，那么理论上，仅当用户再次点击这个按钮时，该 GET 请求才会被重新发送。如果你的前端逻辑确保了每次点击都对应一个点赞操作，那么不会因为浏览器页面刷新而导致重复提交。然而，即使是这种情况，使用 GET 请求来处理点赞动作仍然不是最佳实践，原因包括：
+非幂等性：点赞操作是非幂等的，因为每次操作都改变了服务器上的状态（即增加了点赞计数）。而 GET 请求应当是幂等的，即多次执行相同的请求应该具有相同的副作用。在这种情况下，多次点击按钮会导致多次点赞，违反了 GET 请求的幂等性原则。</p>
+</blockquote>
+<ul>
+<li>
+<p>The <em>request target</em></p>
+<ul>
+<li>Usually a URL</li>
+<li>Sometimes url followed by a <code>'?'</code> and <strong>query string</strong>: <code>http://example.com/?bar1=a&amp;bar2=b</code></li>
+</ul>
+</li>
+<li>
+<p>The <em>HTTP version</em></p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">POST www.example.com/test.html?username=alibaba HTTP/1.1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="22-headers">
+    <a href="#22-headers">#</a>
+    2.2. Headers
+</h3><p>An HTTP header consists of its case-insensitive name followed by a colon (<code>:</code>), then by its value. Whitespace before the value is ignored. This is an HTTP header:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Content-Type: text/html; charset=utf-8
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Usually, a request or response consist of many headers:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">GET /home.html HTTP/1.1
+</span></span><span class="line"><span class="cl">Host: developer.mozilla.org
+</span></span><span class="line"><span class="cl">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0
+</span></span><span class="line"><span class="cl">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+</span></span><span class="line"><span class="cl">Accept-Language: en-US,en;q=0.5
+</span></span><span class="line"><span class="cl">Accept-Encoding: gzip, deflate, br
+</span></span><span class="line"><span class="cl">Referer: https://developer.mozilla.org/testpage.html
+</span></span><span class="line"><span class="cl">Connection: keep-alive
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see above, there are 7 headers in this request, a header like a key-value string, <strong>different header usually has different syntax and its own type</strong>. For example:</p>
+<p>The type of <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept"  target="_blank" rel="noopener"
+    ><code>Accept header</code></a> is a <a class="link" href="https://developer.mozilla.org/en-US/docs/Glossary/Request_header"  target="_blank" rel="noopener"
+    > Request header</a>, and its syntax is below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Accept: &lt;MIME_type&gt;/&lt;MIME_subtype&gt;
+</span></span><span class="line"><span class="cl">Accept: &lt;MIME_type&gt;/*
+</span></span><span class="line"><span class="cl">Accept: */*
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">// Multiple types, weighted with the quality value syntax:
+</span></span><span class="line"><span class="cl">Accept: text/html, application/xhtml+xml, application/xml;q=0.9, image/webp, */*;q=0.8
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The type of  <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type"  target="_blank" rel="noopener"
+    ><code>Content-Type header</code></a> is <a class="link" href="https://developer.mozilla.org/en-US/docs/Glossary/Representation_header"  target="_blank" rel="noopener"
+    >Representation header</a>, and its syntax:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Content-Type: text/html; charset=utf-8
+</span></span><span class="line"><span class="cl">Content-Type: multipart/form-data; boundary=something
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The offcial way to indicate aobve is:</p>
+<p>Many different headers can appear in an HTTP request. They can be divided in several groups:</p>
+<ul>
+<li><a class="link" href="https://developer.mozilla.org/en-US/docs/Glossary/General_header"  target="_blank" rel="noopener"
+    >General headers</a>, like <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Via"  target="_blank" rel="noopener"
+    ><code>Via</code></a>, apply to the message as a whole.</li>
+<li><a class="link" href="https://developer.mozilla.org/en-US/docs/Glossary/Request_header"  target="_blank" rel="noopener"
+    >Request headers</a>, like <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent"  target="_blank" rel="noopener"
+    ><code>User-Agent</code></a> or <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept"  target="_blank" rel="noopener"
+    ><code>Accept</code></a>, modify the request by specifying it further (like <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language"  target="_blank" rel="noopener"
+    ><code>Accept-Language</code></a>), by giving context (like <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer"  target="_blank" rel="noopener"
+    ><code>Referer</code></a>), or by conditionally restricting it (like <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None"  target="_blank" rel="noopener"
+    ><code>If-None</code></a>).</li>
+<li><a class="link" href="https://developer.mozilla.org/en-US/docs/Glossary/Representation_header"  target="_blank" rel="noopener"
+    >Representation headers</a> like <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type"  target="_blank" rel="noopener"
+    ><code>Content-Type</code></a> that describe the original format of the message data and any encoding applied (only present if the message has a body).</li>
+</ul>
+<p><img src="/004-http-messages/a1.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="a"
+	
+	
+></p>
+<h3 id="23-body">
+    <a href="#23-body">#</a>
+    2.3. Body
+</h3><p>The final part of the request is its body. Not all requests have one: requests fetching resources, like <code>GET</code>, <code>HEAD</code>, <code>DELETE</code>, or <code>OPTIONS</code>, usually don&rsquo;t need one. Some requests send data to the server in order to update it: as often the case with <code>POST</code> requests (containing HTML form data).</p>
+<p>Bodies can be broadly divided into two categories:</p>
+<ul>
+<li>Single-resource bodies, consisting of one single file, defined by the two headers: <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type"  target="_blank" rel="noopener"
+    ><code>Content-Type</code></a> and <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length"  target="_blank" rel="noopener"
+    ><code>Content-Length</code></a>.</li>
+<li><a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#multipartform-data"  target="_blank" rel="noopener"
+    >Multiple-resource bodies</a>, consisting of a multipart body, each containing a different bit of information. This is typically associated with <a class="link" href="https://developer.mozilla.org/en-US/docs/Learn/Forms"  target="_blank" rel="noopener"
+    >HTML Forms</a>.</li>
+</ul>
+<h2 id="3-http-responses">
+    <a href="#3-http-responses">#</a>
+    3. HTTP Responses
+</h2><p>HTTP Reponse also contains three parts:</p>
+<ul>
+<li>
+<p>Status line</p>
+<ul>
+<li>Three part:  <em>protocol version</em>, a <em>status code</em>, a <em>status text</em> (A brief, purely informational, textual description of the status code to help a human understand the HTTP message.)</li>
+<li><code>HTTP/1.1 404 Not Found</code></li>
+</ul>
+</li>
+<li>
+<p>Headers</p>
+<ul>
+<li>Same as http request.</li>
+</ul>
+</li>
+<li>
+<p>Body</p>
+<ul>
+<li>Same as http request.</li>
+</ul>
+</li>
+</ul>
+<p>Reference: <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages"  target="_blank" rel="noopener"
+    >HTTP Messages - HTTP | MDN</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/http/">Http</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/url-encoding-percent-encoding/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">URL Encoding (Percent Encoding)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/mime-types/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MIME Types</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/http-2.0-binary-frame-server-push-header-compression/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HTTP 2.0 (Binary Frame, Server Push, Header Compression)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/form-data-query-string/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Form Data &amp; Query String</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/http-1.1-vs-http-2.0/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HTTP 1.1 vs HTTP 2.0</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

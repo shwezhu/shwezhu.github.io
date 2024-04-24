@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.">
+<title>Concurrency with Shared Variables</title>
+
+<link rel='canonical' href='http://localhost:1313/p/concurrency-with-shared-variables/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Concurrency with Shared Variables">
+<meta property='og:description' content="# 1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.">
+<meta property='og:url' content='http://localhost:1313/p/concurrency-with-shared-variables/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:tag' content='concurrency' /><meta property='article:published_time' content='2023-08-24T19:16:59&#43;00:00'/><meta property='article:modified_time' content='2023-08-24T19:16:59&#43;00:00'/>
+<meta name="twitter:title" content="Concurrency with Shared Variables">
+<meta name="twitter:description" content="# 1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-concurrency-safe">1. Concurrency Safe</a></li>
+    <li><a href="#2-data-race">2. Data Race</a></li>
+    <li><a href="#3-mutual-exclusion">3. Mutual Exclusion</a>
+      <ol>
+        <li><a href="#31-mutex-vs-semaphore">3.1. Mutex vs Semaphore</a></li>
+        <li><a href="#32-mutual-exclusion-syncmutex">3.2. Mutual Exclusion: <code>sync.Mutex</code></a></li>
+        <li><a href="#33-readwrite-mutexes-syncrwmutex">3.3. Read/Write Mutexes: <code>sync.RWMutex</code></a></li>
+      </ol>
+    </li>
+    <li><a href="#4-memory-synchronization">4. Memory Synchronization</a></li>
+    <li><a href="#5-race-conditions-vs-data-race">5. Race Conditions vs Data Race</a></li>
+    <li><a href="#6-conclusion">6. Conclusion</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/golang/" >
+                Golang
+            </a>
+        
+            <a href="/categories/advance/" >
+                Advance
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/concurrency-with-shared-variables/">Concurrency with Shared Variables</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Aug 24, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    13 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-concurrency-safe">
+    <a href="#1-concurrency-safe">#</a>
+    1. Concurrency Safe
+</h2><p>In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event <em>x</em> in one goroutine happens before an event <em>y</em> in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event <em>happens before</em> the other, then the events <em>x</em> and <em>y</em> are <em><strong>concurrent</strong></em>.</p>
+<p>That function is <em><strong>concurrency-safe</strong></em> if it continues to work correctly even when called concurrently, that is, from two or more goroutines with no additional synchronization. We can generalize this notion to a set of collaborating functions, such as the methods and operations of a particular type. A type is <em><strong>concurrency-safe</strong></em> if all its accessible methods and operations are concurrency-safe.</p>
+<p>Concurrency-safe types are the exception rather than the rule, so you should access a variable concurrently only if the documentation for its type says that this is safe. We avoid concurrent access to most variables either by <em>confining</em> them to a single goroutine or by maintaining a higher-level invariant of <em>mutual exclusion</em>.</p>
+<p>In contrast, exported package-level functions <em>are</em> generally expected to be concurrency-safe. Since package-level variables cannot be confined to a single goroutine, functions that modify them must enforce <em><strong>mutual exclusion</strong></em>.</p>
+<h2 id="2-data-race">
+    <a href="#2-data-race">#</a>
+    2. Data Race
+</h2><p>A <em><strong>data race</strong></em> occurs whenever two goroutines access the same variable <em><strong>concurrently</strong></em> and at least one of the accesses is a write. Notice that &ldquo;access the same variable concurrently&rdquo; means: there are two or more goroutines (threads) to access a same variable <code>x</code>, and we cannot assure the order of accessing variable <code>x</code>.</p>
+<p>Aussume we have these code:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">balance</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Deposit</span><span class="p">(</span><span class="nx">amount</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="nx">balance</span> <span class="p">=</span> <span class="nx">balance</span> <span class="o">+</span> <span class="nx">amount</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Balance</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">balance</span> <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>And there are two goroutines access <code>balance</code>  concurrently,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Alice:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">bank</span><span class="p">.</span><span class="nf">Deposit</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>                <span class="c1">// A1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;=&#34;</span><span class="p">,</span> <span class="nx">bank</span><span class="p">.</span><span class="nf">Balance</span><span class="p">())</span> <span class="c1">// A2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Bob:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">go</span> <span class="nx">bank</span><span class="p">.</span><span class="nf">Deposit</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>                 <span class="c1">// B
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Alice deposits $200, then checks her balance, while Bob deposits $100. Since the steps <code>A1</code> and <code>A2</code> occur <em><strong>concurrently</strong></em> with <code>B</code>, we cannot predict the order in which they happen. Intuitively, it might seem that there are only three possible orderings, which we’ll call “Alice first,” “Bob first,” and “Alice/Bob/Alice.” The following table shows the value of the <code>balance</code> variable after each step. The quoted strings represent the printed balance slips.</p>
+<p>In all cases the final balance is $300. The only variation is whether Alice’s balance slip includes Bob’s transaction or not, but the customers are satisfied either way.</p>
+<p>But this intuition is wrong. There is a fourth possible outcome, in which Bob’s deposit occurs in the middle of Alice’s deposit, after the balance has been read (<code>balance + amount</code>) but before it has been updated (<code>balance = ...</code>), causing Bob’s transaction to disappear. This is because Alice’s deposit operation <code>A1</code> is really a sequence of two operations, a read and a write; call them <code>A1r</code> and <code>A1w</code>. Here’s the problematic interleaving:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">Data race
+</span></span><span class="line"><span class="cl">         <span class="m">0</span>
+</span></span><span class="line"><span class="cl">A1r      <span class="m">0</span>          ... <span class="o">=</span> balance + amount
+</span></span><span class="line"><span class="cl"><span class="c1"># happend in the middle, balance = 100 but A1 will make balance = balance + amount which equals to 200 above</span>
+</span></span><span class="line"><span class="cl">B      <span class="m">100</span>
+</span></span><span class="line"><span class="cl">A1w    <span class="m">200</span>          <span class="nv">balance</span> <span class="o">=</span> ...
+</span></span><span class="line"><span class="cl">A2  <span class="s2">&#34;= 200&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After <code>A1r</code>, the expression <code>balance + amount</code> evaluates to 200, so this is the value written during <code>A1w</code>, despite the intervening deposit. The final balance is only $200.</p>
+<p>We’ll repeat the definition, since it is so important: A data race occurs whenever two goroutines access the same variable concurrently and at least one of the accesses is a write. It follows from this definition that there are three ways to avoid a data race:</p>
+<ul>
+<li>first way: not to write the variable
+<ul>
+<li>try to use read only variable</li>
+</ul>
+</li>
+<li>second way: avoid accessing the variable from multiple goroutines (<em>confined</em> to a single goroutine)
+<ul>
+<li>access the variable need to write in only one goroutine which called monitor goroutine</li>
+<li>other goroutine want to modify this variable can notify the monitor goroutine of that variable</li>
+<li>Since other goroutines cannot access the variable directly, they must use a channel to send the confining goroutine a request to query or update the variable. This is what is meant by the Go mantra “Do not communicate by sharing memory; instead, share memory by communicating.”</li>
+</ul>
+</li>
+</ul>
+<p>Here’s the bank example rewritten with the <code>balance</code> variable confined to a monitor goroutine called <code>teller</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Package bank provides a concurrency-safe bank with one account.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">package</span> <span class="nx">bank</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">deposits</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="c1">// send amount to deposit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">var</span> <span class="nx">balances</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="c1">// receive balance
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Deposit</span><span class="p">(</span><span class="nx">amount</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="nx">deposits</span> <span class="o">&lt;-</span> <span class="nx">amount</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Balance</span><span class="p">()</span> <span class="kt">int</span>       <span class="p">{</span> <span class="k">return</span> <span class="o">&lt;-</span><span class="nx">balances</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">teller</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">balance</span> <span class="kt">int</span> <span class="c1">// balance is confined to teller goroutine
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">select</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">case</span> <span class="nx">amount</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">deposits</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">balance</span> <span class="o">+=</span> <span class="nx">amount</span>
+</span></span><span class="line"><span class="cl">        <span class="k">case</span> <span class="nx">balances</span> <span class="o">&lt;-</span> <span class="nx">balance</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">go</span> <span class="nf">teller</span><span class="p">()</span> <span class="c1">// start the monitor goroutine
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You can see, when there are some variables in a package, we better tell user if it is concurrency-safe.</p>
+<p>The third way to avoid a data race is to allow many goroutines to access the variable, but only one at a time. This approach is known as <em><strong>mutual exclusion</strong></em>.</p>
+<h2 id="3-mutual-exclusion">
+    <a href="#3-mutual-exclusion">#</a>
+    3. Mutual Exclusion
+</h2><h3 id="31-mutex-vs-semaphore">
+    <a href="#31-mutex-vs-semaphore">#</a>
+    3.1. Mutex vs Semaphore
+</h3><p>A semaphore is a non-negative integer variable that is shared between various threads. Mutex is a specific kind of binary semaphore that is used to provide a locking mechanism.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">P(mutex);
+</span></span><span class="line"><span class="cl">execute CS;
+</span></span><span class="line"><span class="cl">V(mutex);
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="table-wrapper"><table>
+<thead>
+<tr>
+<th style="text-align:center">Mutex</th>
+<th style="text-align:center">Semaphore</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">A mutex is an object.</td>
+<td style="text-align:center">A semaphore is an integer.</td>
+</tr>
+<tr>
+<td style="text-align:center">Mutex works upon the locking mechanism.</td>
+<td style="text-align:center">Semaphore uses signaling mechanism</td>
+</tr>
+<tr>
+<td style="text-align:center">Operations on mutex:LockUnlock</td>
+<td style="text-align:center">Operation on semaphore:WaitSignal</td>
+</tr>
+<tr>
+<td style="text-align:center">Mutex doesn’t have any subtypes.</td>
+<td style="text-align:center">Semaphore is of two types:Counting SemaphoreBinary Semaphore</td>
+</tr>
+<tr>
+<td style="text-align:center">A mutex can only be modified by the process that is requesting or releasing a resource.</td>
+<td style="text-align:center">Semaphore work with two atomic operations (Wait, signal) which can modify it.</td>
+</tr>
+<tr>
+<td style="text-align:center">If the mutex is locked then the process needs to wait in the process queue, and mutex can only be accessed once the lock is released.</td>
+<td style="text-align:center">If the process needs a resource, and no resource is free. So, the process needs to perform a wait operation until the semaphore value is greater than zero.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="32-mutual-exclusion-syncmutex">
+    <a href="#32-mutual-exclusion-syncmutex">#</a>
+    3.2. Mutual Exclusion: <code>sync.Mutex</code>
+</h3><p>In <a class="link" href="https://learning.oreilly.com/library/view/the-go-programming/9780134190570/ebook_split_081.html#id-exampleconcurrentwebcrawler"  target="_blank" rel="noopener"
+    >Section 8.6</a>, we used a buffered channel as a <em><strong>counting semaphore</strong></em> to ensure that no more than 20 goroutines made simultaneous HTTP requests. With the same idea, we can use a channel of capacity 1 to ensure that at most one goroutine accesses a shared variable at a time. A semaphore that counts only to 1 is called a <em><strong>binary semaphore</strong></em>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">sema</span>    <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{},</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">// a binary semaphore guarding balance
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">balance</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Deposit</span><span class="p">(</span><span class="nx">amount</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">sema</span> <span class="o">&lt;-</span> <span class="kd">struct</span><span class="p">{}{}</span> <span class="c1">// acquire token
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">balance</span> <span class="p">=</span> <span class="nx">balance</span> <span class="o">+</span> <span class="nx">amount</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;-</span><span class="nx">sema</span> <span class="c1">// release token
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Balance</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">sema</span> <span class="o">&lt;-</span> <span class="kd">struct</span><span class="p">{}{}</span> <span class="c1">// acquire token
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">b</span> <span class="o">:=</span> <span class="nx">balance</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;-</span><span class="nx">sema</span> <span class="c1">// release token
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="nx">b</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This pattern of <em>mutual exclusion</em> is so useful that it is supported directly by the <code>Mutex</code> type from the <code>sync</code> package. Its <code>Lock</code> method acquires the token (called a <em>lock</em>) and its <code>Unlock</code> method releases it:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;sync&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mu</span>      <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span> <span class="c1">// guards balance
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">balance</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Deposit</span><span class="p">(</span><span class="nx">amount</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">balance</span> <span class="p">=</span> <span class="nx">balance</span> <span class="o">+</span> <span class="nx">amount</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Balance</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b</span> <span class="o">:=</span> <span class="nx">balance</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">b</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="33-readwrite-mutexes-syncrwmutex">
+    <a href="#33-readwrite-mutexes-syncrwmutex">#</a>
+    3.3. Read/Write Mutexes: <code>sync.RWMutex</code>
+</h3><p>Since the <code>Balance</code> function only needs to <em>read</em> the state of the variable, it would in fact be safe for multiple <code>Balance</code> calls to run concurrently, so long as no <code>Deposit</code> or <code>Withdraw</code> call is running. In this scenario we need a special kind of lock that allows read-only operations to proceed in parallel with each other, but write operations to have fully exclusive access. This lock is called a <em>multiple readers</em>, <em>single writer</em> lock, and in Go it’s provided by <code>sync.RWMutex</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">mu</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">balance</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Balance</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mu</span><span class="p">.</span><span class="nf">RLock</span><span class="p">()</span> <span class="c1">// readers lock
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">defer</span> <span class="nx">mu</span><span class="p">.</span><span class="nf">RUnlock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">balance</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-memory-synchronization">
+    <a href="#4-memory-synchronization">#</a>
+    4. Memory Synchronization
+</h2><p>You may wonder why the <code>Balance</code> method needs mutual exclusion, either channel-based or mutex-based. After all, unlike <code>Deposit</code>, it consists only of a single operation, so there is no danger of another goroutine executing “in the middle” of it.</p>
+<p>The reason is that synchronization is about more than just the order of execution of multiple goroutines; synchronization also affects memory.</p>
+<p>In a modern computer there may be dozens of processors, <strong>each with its own local cache of the main memory</strong>. <strong>For efficiency, writes to memory are buffered</strong> within each processor and flushed out to main memory only when necessary. <em><strong>Synchronization primitives</strong></em> like <em><strong>channel communications</strong></em> and <em><strong>mutex operations</strong></em> cause the processor to flush out and commit all its accumulated writes so that the effects of goroutine execution up to that point <strong>are guaranteed to be visible to</strong> goroutines running on other processors.</p>
+<p>Consider the possible outputs of the following snippet of code:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">x</span> <span class="p">=</span> <span class="mi">1</span>                   <span class="c1">// A1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;y:&#34;</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="s">&#34; &#34;</span><span class="p">)</span> <span class="c1">// A2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}()</span>
+</span></span><span class="line"><span class="cl"><span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">y</span> <span class="p">=</span> <span class="mi">1</span>                   <span class="c1">// B1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;x:&#34;</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="s">&#34; &#34;</span><span class="p">)</span> <span class="c1">// B2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Since these two goroutines are concurrent and access shared variables without mutual exclusion, there is a data race, so we should not be surprised that the program is not deterministic.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">y:0 x:1
+</span></span><span class="line"><span class="cl">x:0 y:1
+</span></span><span class="line"><span class="cl">x:1 y:1
+</span></span><span class="line"><span class="cl">y:1 x:1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The fourth line could be explained by the sequence <code>A1,B1,A2,B2</code> or by <code>B1,A1,A2,B2</code>, for example. However, these two outcomes might come as a surprise:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">x:0 y:0
+</span></span><span class="line"><span class="cl">y:0 x:0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>but depending on the compiler, CPU, and many other factors, they can happen too. What possible interleaving of the four statements could explain them?</p>
+<p>Within a single goroutine, the effects of each statement are guaranteed to occur in the order of execution; goroutines are <em>sequentially consistent</em>. But in the absence of explicit synchronization using a channel or mutex, there is no guarantee that events are seen in the same order by all goroutines. Although goroutine <em>A</em> must observe the effect of the write <code>x = 1</code> before it reads the value of <code>y</code>, it does not necessarily observe the write to <code>y</code> done by goroutine <em>B</em>, so <em>A</em> may print a <em>stale</em> value of <code>y</code>.</p>
+<p>It is tempting to try to understand concurrency as if it corresponds to <em>some</em> interleaving of the statements of each goroutine, but as the example above shows, this is not how a modern compiler or CPU works. Because the assignment and the <code>Print</code> refer to different variables, <strong>a compiler may conclude that the order of the two statements</strong> cannot affect the result, and swap them. If the two goroutines execute on different CPUs, each with its own cache, writes by one goroutine <strong>are not visible to</strong> the other goroutine’s <code>Print</code> until the caches are synchronized with main memory.</p>
+<p>All these concurrency problems can be avoided by the consistent use of simple, established patterns. Where possible, confine variables to a single goroutine; for all other variables, use mutual exclusion.</p>
+<h2 id="5-race-conditions-vs-data-race">
+    <a href="#5-race-conditions-vs-data-race">#</a>
+    5. Race Conditions vs Data Race
+</h2><p>A <em><strong>race condition</strong></em> is a flaw that occurs when the timing or ordering of events affects a program’s correctness. Generally speaking, some kind of external timing or ordering non-determinism is needed to produce a race condition; typical examples are context switches, OS signals, memory operations on a multiprocessor, and hardware interrupts.</p>
+<p>A <em><strong>data race</strong></em> occurs whenever two goroutines access the same variable <em><strong>concurrently</strong></em> and at least one of the accesses is a write.</p>
+<p>Race conditions are pernicious because they may remain latent in a program and appear infrequently, perhaps only under heavy load or when using certain compilers, platforms, or architectures. This makes them hard to reproduce and diagnose.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nf">transfer1</span> <span class="p">(</span><span class="nx">amount</span><span class="p">,</span> <span class="nx">account_from</span><span class="p">,</span> <span class="nx">account_to</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">account_from</span><span class="p">.</span><span class="nx">balance</span> <span class="p">&lt;</span> <span class="nx">amount</span><span class="p">)</span> <span class="k">return</span> <span class="nx">NOPE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">account_to</span><span class="p">.</span><span class="nx">balance</span> <span class="o">+=</span> <span class="nx">amount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">account_from</span><span class="p">.</span><span class="nx">balance</span> <span class="o">-=</span> <span class="nx">amount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">YEP</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Of course this is not how banks really move money, but the example is useful anyway because we understand intuitively that account balances should be non-negative and that a transfer must not create or lose money. When called from multiple threads without external synchronization, this function admits both data races (multiple threads can concurrently try to update an account balance) and race conditions (in a parallel context it will create or lose money). We can try to fix it like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nf">transfer2</span> <span class="p">(</span><span class="nx">amount</span><span class="p">,</span> <span class="nx">account_from</span><span class="p">,</span> <span class="nx">account_to</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">atomic</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">bal</span> <span class="p">=</span> <span class="nx">account_from</span><span class="p">.</span><span class="nx">balance</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">bal</span> <span class="p">&lt;</span> <span class="nx">amount</span><span class="p">)</span> <span class="k">return</span> <span class="nx">NOPE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">atomic</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">account_to</span><span class="p">.</span><span class="nx">balance</span> <span class="o">+=</span> <span class="nx">amount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">atomic</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">account_from</span><span class="p">.</span><span class="nx">balance</span> <span class="o">-=</span> <span class="nx">amount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">YEP</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Here “atomic” is implemented by the language runtime, perhaps simply by acquiring a thread mutex at the start of the atomic block and releasing it at the end, perhaps using some sort of transaction, or perhaps by disabling interrupts — for purposes of the example it doesn’t matter as long as the code inside the block executes atomically.</p>
+<p>transfer2 has no data races when called by multiple threads, but obviously it is an extremely silly function containing race conditions that will cause it to create or lose money almost as badly as the unsynchronized function. From a technical point of view, the problem with transfer2 is that it permits other threads to see memory states where a key invariant — conservation of money — is broken.</p>
+<p>To preserve the invariant, we have to use a better locking strategy. As long as atomic’s semanatics are to end the atomic section on any exit from the block, the solution can be blunt:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">transfer3 (amount, account_from, account_to) {
+</span></span><span class="line"><span class="cl">  atomic {
+</span></span><span class="line"><span class="cl">    if (account_from.balance &lt; amount) return NOPE;
+</span></span><span class="line"><span class="cl">    account_to.balance += amount;
+</span></span><span class="line"><span class="cl">    account_from.balance -= amount;
+</span></span><span class="line"><span class="cl">    return YEP;
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This function is free of data races and also of race conditions.</p>
+<p>Everything in this post is pretty obvious, but I’ve observed real confusion about the distinction between data race and race condition by people who should know better (for example because they are doing research on concurrency correctness). Muddying the waters further, even when people are perfectly clear on the underlying concepts, they sometimes say “race condition” when the really mean “data race.” Certainly I’ve caught myself doing this.</p>
+<h2 id="6-conclusion">
+    <a href="#6-conclusion">#</a>
+    6. Conclusion
+</h2><ul>
+<li>
+<p><em><strong>concurrent</strong></em> envolves two or more threads, and it&rsquo;s all about the <em>unpredictable</em> order of the execution.</p>
+</li>
+<li>
+<p><em><strong>concurrency-safe type</strong></em> if that all its accessible methods and operations are concurrency-safe.</p>
+</li>
+<li>
+<p>A <em><strong>data race</strong></em> occurs whenever two goroutines access the same variable <em><strong>concurrently</strong></em> and at least one of the accesses is a write.</p>
+<ul>
+<li>data race can cause data lost, the bank example</li>
+<li>when there is data race, you&rsquo;d better use <em><strong>Mutual Exclusion</strong></em>: <code>sync.RWMutex</code>,  <code>sync.Mutex</code></li>
+</ul>
+</li>
+<li>
+<p>Mutex vs Semaphore</p>
+</li>
+<li>
+<p>A <em><strong>race condition</strong></em> is a flaw that occurs when the timing or ordering of events affects a program’s correctness.</p>
+</li>
+</ul>
+<p>References:</p>
+<ul>
+<li><a class="link" href="https://learning.oreilly.com/library/view/the-go-programming/9780134190570/ebook_split_087.html"  target="_blank" rel="noopener"
+    >9.1 Race Conditions | The Go Programming Language</a></li>
+<li><a class="link" href="https://www.geeksforgeeks.org/mutex-vs-semaphore/"  target="_blank" rel="noopener"
+    >Mutex vs Semaphore - GeeksforGeeks</a></li>
+<li><a class="link" href="https://blog.regehr.org/archives/490"  target="_blank" rel="noopener"
+    >Race Condition vs. Data Race – Embedded in Academia</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/golang/">Golang</a>
+        
+            <a href="/tags/concurrency/">Concurrency</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/goroutines-model/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Goroutines Model</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/go-scheduler-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Go Scheduler (2)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/go-scheduler-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Go Scheduler (1)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/static-linking-go-programs/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Static Linking Go Programs</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cross-compilation-go/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cross Compilation - Go</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

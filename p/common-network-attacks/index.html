@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Man-in-the-middle attack Learn more: https://davidzhu.xyz/post/cs-basics/002-ssh/ HTTPS SSL TLS - David&rsquo;s Blog # 2. DDoS attack Learn more: DDoS Attack - David&rsquo;s Blog # 3. CSRF attack Learn more: CSRF Attack and CORS - David&rsquo;s Blog # 4. SSL stripping SSL stripping attacks, also known as SSL strip, SSL downgrade, or HTTP downgrade attacks, strip the encryption offered by HTTPS, reducing the connection to the less-secure HTTP. In order to “strip” the SSL, an attacker intervenes in the redirection of the HTTP to the secure HTTPS protocol and intercepts a request from the user to the server.">
+<title>Common Network Attacks</title>
+
+<link rel='canonical' href='http://localhost:1313/p/common-network-attacks/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Common Network Attacks">
+<meta property='og:description' content="# 1. Man-in-the-middle attack Learn more: https://davidzhu.xyz/post/cs-basics/002-ssh/ HTTPS SSL TLS - David&rsquo;s Blog # 2. DDoS attack Learn more: DDoS Attack - David&rsquo;s Blog # 3. CSRF attack Learn more: CSRF Attack and CORS - David&rsquo;s Blog # 4. SSL stripping SSL stripping attacks, also known as SSL strip, SSL downgrade, or HTTP downgrade attacks, strip the encryption offered by HTTPS, reducing the connection to the less-secure HTTP. In order to “strip” the SSL, an attacker intervenes in the redirection of the HTTP to the secure HTTPS protocol and intercepts a request from the user to the server.">
+<meta property='og:url' content='http://localhost:1313/p/common-network-attacks/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cybersecurity' /><meta property='article:tag' content='http' /><meta property='article:tag' content='networking' /><meta property='article:published_time' content='2023-10-30T22:44:57&#43;00:00'/><meta property='article:modified_time' content='2023-10-30T22:44:57&#43;00:00'/>
+<meta name="twitter:title" content="Common Network Attacks">
+<meta name="twitter:description" content="# 1. Man-in-the-middle attack Learn more: https://davidzhu.xyz/post/cs-basics/002-ssh/ HTTPS SSL TLS - David&rsquo;s Blog # 2. DDoS attack Learn more: DDoS Attack - David&rsquo;s Blog # 3. CSRF attack Learn more: CSRF Attack and CORS - David&rsquo;s Blog # 4. SSL stripping SSL stripping attacks, also known as SSL strip, SSL downgrade, or HTTP downgrade attacks, strip the encryption offered by HTTPS, reducing the connection to the less-secure HTTP. In order to “strip” the SSL, an attacker intervenes in the redirection of the HTTP to the secure HTTPS protocol and intercepts a request from the user to the server.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-man-in-the-middle-attack">1. Man-in-the-middle attack</a></li>
+    <li><a href="#2-ddos-attack">2. DDoS attack</a></li>
+    <li><a href="#3-csrf-attack">3. CSRF attack</a></li>
+    <li><a href="#4-ssl-stripping">4. SSL stripping</a>
+      <ol>
+        <li><a href="#41-enable-ssl-sitewide-at-all-websites">4.1. Enable SSL sitewide at all websites</a></li>
+        <li><a href="#42-why-enable-hsts">4.2. Why enable HSTS?</a></li>
+      </ol>
+    </li>
+    <li><a href="#5-dns">5. DNS</a>
+      <ol>
+        <li><a href="#51-dns-hijacking">5.1. DNS hijacking</a></li>
+        <li><a href="#52-dns-spoofing-vs-dns-cache-poisoning">5.2. DNS spoofing vs DNS (cache) poisoning</a></li>
+        <li><a href="#53-others">5.3. Others</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/networking/" >
+                Networking
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/common-network-attacks/">Common Network Attacks</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 30, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    5 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-man-in-the-middle-attack">
+    <a href="#1-man-in-the-middle-attack">#</a>
+    1. Man-in-the-middle attack
+</h2><p>Learn more:</p>
+<p><a class="link" href="https://davidzhu.xyz/post/cs-basics/002-ssh/"  target="_blank" rel="noopener"
+    >https://davidzhu.xyz/post/cs-basics/002-ssh/</a></p>
+<p><a class="link" href="https://davidzhu.xyz/post/cs-basics/003-ssl-secure-communication/#4-details-in-tls-handshake---avoid-man-in-middle-attack"  target="_blank" rel="noopener"
+    >HTTPS SSL TLS - David&rsquo;s Blog</a></p>
+<h2 id="2-ddos-attack">
+    <a href="#2-ddos-attack">#</a>
+    2. DDoS attack
+</h2><p>Learn more: <a class="link" href="https://davidzhu.xyz/post/networking/004-ddos-attack/"  target="_blank" rel="noopener"
+    >DDoS Attack - David&rsquo;s Blog</a></p>
+<h2 id="3-csrf-attack">
+    <a href="#3-csrf-attack">#</a>
+    3. CSRF attack
+</h2><p>Learn more: <a class="link" href="https://davidzhu.xyz/post/http/007-csrf-attack/"  target="_blank" rel="noopener"
+    >CSRF Attack and CORS - David&rsquo;s Blog</a></p>
+<h2 id="4-ssl-stripping">
+    <a href="#4-ssl-stripping">#</a>
+    4. SSL stripping
+</h2><p>SSL stripping attacks, also known as SSL strip, SSL downgrade, or HTTP downgrade attacks, strip the encryption offered by HTTPS, reducing the connection to the less-secure HTTP.</p>
+<p>In order to <a class="link" href="https://avicoder.me/2016/02/22/SSLstrip-for-newbies/"  target="_blank" rel="noopener"
+    >“strip” the SSL</a>, an attacker intervenes in the redirection of the HTTP to the secure HTTPS protocol and intercepts a request from the user to the server. The attacker will then continue to establish an HTTPS connection between himself and the server, and an unsecured HTTP connection with the user, acting as a “bridge” between them.</p>
+<img src="/004-common-attacks/a.png" alt="a" style="zoom:50%;" />
+<p>How can the SSL strip trick both the browser and the website’s server? The SSL strip takes advantage of the way most users come to SSL websites. The majority of visitors connect to a website’s page that redirects through a 302 redirect, or they arrive on an SSL page via a link from a non-SSL site. If the victim wants, for instance, to buy a product and types the URL <a class="link" href="https://www.buyme.com"  target="_blank" rel="noopener"
+    >www.buyme.com</a> in the address bar, the browser connects to the attacker&rsquo;s machine and waits for a response from the server. In an SSL strip, the attacker, in turn, forwards the victim’s request to the online shop’s server and receives the secure HTTPS payment page. For example <a class="link" href="https://www.buyme.com"  target="_blank" rel="noopener"
+    >https://www.buyme.com</a>. At this point, the attacker has complete control over the secure payment page. He downgrades it from HTTPS to HTTP and sends it back to the victim’s browser. The browser is now redirected to <a class="link" href="http://www.buyme.com"  target="_blank" rel="noopener"
+    >http://www.buyme.com</a>. From now onward, all the victim’s data will be transferred in plain text format, and the attacker will be able to intercept it. Meanwhile, the website’s server will think that it has successfully established the secure connection, which indeed it has—but with the attacker’s machine, not the victim’s.</p>
+<h3 id="41-enable-ssl-sitewide-at-all-websites">
+    <a href="#41-enable-ssl-sitewide-at-all-websites">#</a>
+    4.1. Enable SSL sitewide at all websites
+</h3><p>To mitigate this threat, financial institutions and technology firms have <a class="link" href="https://venafi.com/blog/https-should-be-implemented-everywhereincluding-static-websites/"  target="_blank" rel="noopener"
+    >already enabled</a> HTTPS on a site-wide basis. Enabling HTTPS encrypts the connection between a browser and the website, thereby securing sensitive data transmissions. Therefore it makes perfect sense for banks and high-profile technology firms to enable HTTPS on their dynamic websites because of the transaction of important and sensitive information.</p>
+<h3 id="42-why-enable-hsts">
+    <a href="#42-why-enable-hsts">#</a>
+    4.2. Why enable HSTS?
+</h3><p>In addition to enabling HTTPS on a site-wide basis, corporations should weigh the benefits of enabling <a class="link" href="https://www.globalsign.com/en/blog/what-is-hsts-and-how-do-i-use-it/"  target="_blank" rel="noopener"
+    >HSTS</a> (HTTP Strict Transport Security), which is a web security policy mechanism that helps to protect websites against SSL stripping attacks and cookie hijacking. <strong>It allows</strong> <strong>web servers to declare that</strong> web browsers should interact with them using only secure HTTPS connections, and never via the insecure HTTP protocol.</p>
+<p>When a web application issues HSTS Policy to user browsers, conformant user browsers will <a class="link" href="https://www.owasp.org/index.php/HTTP_Strict_Transport_Security_Cheat_Sheet"  target="_blank" rel="noopener"
+    >automatically redirect</a> any insecure HTTP requests to HTTPS for the target website. In addition, when a man-in-the-middle attacker attempts to intercept traffic from a victim using an invalid certificate, HSTS does not allow the user to override the invalid certificate warning message. By having a HSTS policy installed, it will be nearly impossible for the attackers to intercept any information at all!</p>
+<p>Source: <a class="link" href="https://venafi.com/blog/what-are-ssl-stripping-attacks/"  target="_blank" rel="noopener"
+    >What Are SSL Stripping Attacks? | Venafi</a></p>
+<h2 id="5-dns">
+    <a href="#5-dns">#</a>
+    5. DNS
+</h2><h3 id="51-dns-hijacking">
+    <a href="#51-dns-hijacking">#</a>
+    5.1. DNS hijacking
+</h3><p>To prevent DNS hijacking, first, you have to know the different kinds of attacks. DNS hijacking can take four different forms:</p>
+<ol>
+<li><strong>Local DNS hijacking:</strong> An attacker installs <a class="link" href="https://www.fortinet.com/resources/cyberglossary/trojan-horse-virus"  target="_blank" rel="noopener"
+    >Trojan software</a> on a user&rsquo;s computer, then modifies the local DNS settings (cahnge its DNS server to a Rogue DNS server).</li>
+<li><strong>DNS hijacking using a router:</strong> Many routers have weak firmware or use the default passwords they were shipped with. Attackers can take advantage of this to hack a router and change its DNS settings, which will affect everyone that uses that router.</li>
+<li><strong>Man-in-the-middle (MITM) attacks:</strong> Attackers use <a class="link" href="https://www.fortinet.com/resources/cyberglossary/man-in-the-middle-attack"  target="_blank" rel="noopener"
+    >man-in-the-middle attack techniques</a> to intercept communications between users and a <a class="link" href="https://www.fortinet.com/resources/cyberglossary/dynamic-dns"  target="_blank" rel="noopener"
+    >DNS server</a>. They then direct the target to malicious websites.</li>
+</ol>
+<p>Learn more <a class="link" href="https://www.fortinet.com/resources/cyberglossary/dns-hijacking"  target="_blank" rel="noopener"
+    >What Is DNS Hijacking? How to Detect &amp; Prevent It | Fortinet</a></p>
+<h3 id="52-dns-spoofing-vs-dns-cache-poisoning">
+    <a href="#52-dns-spoofing-vs-dns-cache-poisoning">#</a>
+    5.2. DNS spoofing vs DNS (cache) poisoning
+</h3><ul>
+<li>
+<p><strong>DNS Poisoning</strong>:</p>
+<ul>
+<li><strong>Definition</strong>: The attacker inserts false address records into the DNS server&rsquo;s cache, causing the server to return incorrect IP addresses for domain names.</li>
+<li><strong>Target</strong>: The attack is on the DNS server.</li>
+<li><strong>Example</strong>: If <code>www.example.com</code> is supposed to resolve to IP <code>1.2.3.4</code>, in a DNS poisoning attack, the DNS server might be tricked into resolving it to <code>5.6.7.8</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>DNS Spoofing</strong>:</p>
+<ul>
+<li><strong>Definition</strong>: The attacker intercepts and responds to DNS requests with false information, usually <strong>before</strong> the legitimate response is received.</li>
+<li><strong>Example</strong>: When a user tries to access <code>www.example.com</code>, an attacker might intercept this request and send a fake response directing the user to IP <code>5.6.7.8</code> instead of the real IP <code>1.2.3.4</code>.</li>
+</ul>
+</li>
+</ul>
+<p>Learn more: <a class="link" href="https://davidzhu.xyz/post/networking/005-gfw-dns/"  target="_blank" rel="noopener"
+    >GFW and DNS Poisoning - David&rsquo;s Blog</a></p>
+<h3 id="53-others">
+    <a href="#53-others">#</a>
+    5.3. Others
+</h3><ol>
+<li>
+<p><strong>DNS Poisoning vs DNS Spoofing</strong>:</p>
+<ul>
+<li>DNS Poisoning: Inject false DNS info to the real server&rsquo;s cache.</li>
+<li>DNS Spoofing: Send false response back with a malicious DNS server.</li>
+</ul>
+</li>
+<li>
+<p><strong>Purpose of MAC Address Spoofing</strong>:</p>
+<ul>
+<li>To make a switch forward packets to an attacker&rsquo;s device by mimicking a legitimate MAC address.</li>
+</ul>
+</li>
+<li>
+<p><strong>Use of ICMP Redirects in Man-in-the-Middle Attacks</strong>:</p>
+<ul>
+<li>An attacker sends forged &ldquo;ICMP redirect messages&rdquo; to mislead a host into changing its routing table, diverting traffic through the attacker&rsquo;s machine.</li>
+</ul>
+</li>
+</ol>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/cybersecurity/">Cybersecurity</a>
+        
+            <a href="/tags/http/">Http</a>
+        
+            <a href="/tags/networking/">Networking</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/dns-spoofing-gfw/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DNS Spoofing - GFW</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/ddos-attack/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DDoS Attack</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cname-%E6%8C%87%E5%90%91-github-pages-%E9%97%AE%E9%A2%98/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CNAME 指向 GitHub Pages 问题</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/dns-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DNS 基础概念</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/mpls/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MPLS</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Interview on David&#39;s Blogs</title>
+        <link>http://localhost:1313/categories/interview/</link>
+        <description>Recent content in Interview on David&#39;s Blogs</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Sat, 20 Apr 2024 09:58:10 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/interview/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>OS Related</title>
+        <link>http://localhost:1313/p/os-related/</link>
+        <pubDate>Sat, 20 Apr 2024 09:58:10 +0000</pubDate>
+        
+        <guid>http://localhost:1313/p/os-related/</guid>
+        <description>&lt;h2 id=&#34;1-virtual-memory&#34;&gt;
+    &lt;a href=&#34;#1-virtual-memory&#34;&gt;#&lt;/a&gt;
+    1. Virtual Memory
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;What is virtual memory? Indirection between the program&amp;rsquo;s addresses and the RAM addresses. Mapping disk space into memory.&lt;/li&gt;
+&lt;li&gt;Virtual memory addresses (VA) and Physical memory addresses (PA). VA is the address that the program uses. PA is the address in RAM. The MMU translates VA to PA.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A memory management unit (MMU) is &lt;strong&gt;a computer hardware unit&lt;/strong&gt; that examines all memory references on the memory bus, translating these requests, known as virtual memory addresses, into physical addresses in main memory. &lt;a class=&#34;link&#34; href=&#34;https://en.wikipedia.org/wiki/Memory_management_unit&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Memory management unit&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;11-example&#34;&gt;
+    &lt;a href=&#34;#11-example&#34;&gt;#&lt;/a&gt;
+    1.1. Example
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ld r1, 400(r2)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;This instruction means to load data into register r1 from the address calculated by adding an &lt;strong&gt;offset of 400&lt;/strong&gt; to the content of register r2.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Calculate the Virtual Address:
+&lt;ul&gt;
+&lt;li&gt;Assume the register r2 currently holds the virtual address 0x1000 (4096 in decimal).&lt;/li&gt;
+&lt;li&gt;The offset 400 (in decimal) is added to the content of r2.&lt;/li&gt;
+&lt;li&gt;Therefore, the calculated virtual address is 0x1000 + 0x190 = 0x1190 (virtual address).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Virtual to Physical Address Translation:
+&lt;ul&gt;
+&lt;li&gt;The MMU receives the virtual address 0x1190 and begins to look up the page table &lt;strong&gt;for the current process&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Suppose the page table entry shows that this virtual address maps to the physical address 0x5000.&lt;/li&gt;
+&lt;li&gt;The page offset (offset within the page) remains 0x190.&lt;/li&gt;
+&lt;li&gt;Thus, the complete physical address is 0x5000 + 0x190 = 0x5190.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Access Physical Memory and Execute Instruction:
+&lt;ul&gt;
+&lt;li&gt;Once the physical address is determined, the MMU instructs the system to load data from physical address 0x5190.&lt;/li&gt;
+&lt;li&gt;The data is loaded into register r1.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;12-other-concepts&#34;&gt;
+    &lt;a href=&#34;#12-other-concepts&#34;&gt;#&lt;/a&gt;
+    1.2. Other Concepts
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Both MIPS and ARM are types of RISC architectures. RISC is a type of microprocessor design.&lt;/li&gt;
+&lt;li&gt;MIPS gives each program its own 32-bit address space. Programs can only access any byte in their own address space.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+&lt;li&gt;What if we don&amp;rsquo;t have enough memory?&lt;/li&gt;
+&lt;li&gt;Holes in our address space?&lt;/li&gt;
+&lt;li&gt;Keeping programs secure with virtual memory.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.youtube.com/watch?v=59rEMnKWoS4&amp;amp;list=PLiwt1iVUib9s2Uo5BeYmwkDFUh70fJPxX&amp;amp;index=4&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;(1) Virtual Memory: 4 How Does Virtual Memory Work?&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;segment-fault&#34;&gt;
+    &lt;a href=&#34;#segment-fault&#34;&gt;#&lt;/a&gt;
+    Segment Fault
+&lt;/h2&gt;&lt;p&gt;A segmentation fault is a specific type of error that occurs when a program tries to access a segment of memory that it doesn’t have the permissions to access or that doesn’t exist, leading to the program’s abrupt termination by the operating system.&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.percona.com/blog/segmentation-fault-a-dba-perspective/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Understanding Segmentation Fault: What it is &amp;amp; How to Fix it&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;how-does-a-game-that-is-several-hundred-gigabytes-run-on-a-computer-with-only-a-few-gigabytes-of-memory&#34;&gt;
+    &lt;a href=&#34;#how-does-a-game-that-is-several-hundred-gigabytes-run-on-a-computer-with-only-a-few-gigabytes-of-memory&#34;&gt;#&lt;/a&gt;
+    How does a game that is several hundred gigabytes run on a computer with only a few gigabytes of memory?
+&lt;/h2&gt;&lt;h2 id=&#34;how-does-user-mode-switch-to-kernel-mode&#34;&gt;
+    &lt;a href=&#34;#how-does-user-mode-switch-to-kernel-mode&#34;&gt;#&lt;/a&gt;
+    How does user mode switch to kernel mode?
+&lt;/h2&gt;&lt;p&gt;Reference: &lt;a class=&#34;link&#34; href=&#34;https://zhuanlan.zhihu.com/p/681401956&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;莉莉丝后端服务器go开发实习生一面二面挂 - 知乎&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

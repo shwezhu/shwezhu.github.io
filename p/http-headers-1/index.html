@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 0. Header types Headers can be grouped according to their contexts: Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport.">
+<title>HTTP Headers (1)</title>
+
+<link rel='canonical' href='http://localhost:1313/p/http-headers-1/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="HTTP Headers (1)">
+<meta property='og:description' content="# 0. Header types Headers can be grouped according to their contexts: Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport.">
+<meta property='og:url' content='http://localhost:1313/p/http-headers-1/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='http' /><meta property='article:published_time' content='2023-10-26T09:58:10&#43;00:00'/><meta property='article:modified_time' content='2023-10-26T09:58:10&#43;00:00'/>
+<meta name="twitter:title" content="HTTP Headers (1)">
+<meta name="twitter:description" content="# 0. Header types Headers can be grouped according to their contexts: Request headers contain more information about the resource to be fetched, or about the client requesting the resource. Response headers hold additional information about the response, like its location or about the server providing it. Representation headers contain information about the body of the resource, like its MIME type, or encoding/compression applied. Payload headers contain representation-independent information about payload data, including content length and the encoding used for transport.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#0-header-types">0. Header types</a></li>
+        <li><a href="#1-content-type">1. <code>Content-Type</code></a></li>
+        <li><a href="#2-access-control-allow-origin">2. <code>Access-Control-Allow-Origin</code></a></li>
+        <li><a href="#3-location">3. <code>Location</code></a></li>
+        <li><a href="#4-cache-control">4. <code>Cache-Control</code></a></li>
+        <li><a href="#5-authorization---www-authenticate">5. <code>Authorization </code> &amp; <code>WWW-Authenticate</code></a></li>
+        <li><a href="#6-cookie">6. cookie</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/http/" >
+                Http
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/http-headers-1/">HTTP Headers (1)</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 26, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    8 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h3 id="0-header-types">
+    <a href="#0-header-types">#</a>
+    0. Header types
+</h3><p>Headers can be grouped according to their contexts:</p>
+<ul>
+<li><a class="link" href="https://developer.mozilla.org/en-US/docs/Glossary/Request_header"  target="_blank" rel="noopener"
+    >Request headers</a> contain more information about the resource to be fetched, or about the client requesting the resource.</li>
+<li><a class="link" href="https://developer.mozilla.org/en-US/docs/Glossary/Response_header"  target="_blank" rel="noopener"
+    >Response headers</a> hold additional information about the response, like its location or about the server providing it.</li>
+<li><a class="link" href="https://developer.mozilla.org/en-US/docs/Glossary/Representation_header"  target="_blank" rel="noopener"
+    >Representation headers</a> contain information about the body of the resource, like its <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types"  target="_blank" rel="noopener"
+    >MIME type</a>, or encoding/compression applied.</li>
+<li><a class="link" href="https://developer.mozilla.org/en-US/docs/Glossary/Payload_header"  target="_blank" rel="noopener"
+    >Payload headers</a> contain representation-independent information about payload data, including content length and the encoding used for transport.</li>
+</ul>
+<p>Learn more: <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers"  target="_blank" rel="noopener"
+    >HTTP headers - HTTP | MDN</a></p>
+<h3 id="1-content-type">
+    <a href="#1-content-type">#</a>
+    1. <code>Content-Type</code>
+</h3><p>Common values of <code>Content-Type</code> header can be <code>application/json</code>, <code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, the first two is usually used with posting form data to server, the third is used to upload file to the server.</p>
+<ul>
+<li><code>application/x-www-form-urlencoded</code>: the keys and values are encoded in key-value tuples separated by <code>'&amp;'</code>, with a <code>'='</code> between the key and the value.
+<ul>
+<li>The format of <code>application/x-www-form-urlencoded</code> is <code>&quot;username=davidzhu&amp;password=778899a&quot; </code>.</li>
+</ul>
+</li>
+<li>The format of <code>application/json</code> is <code>'{&quot;username&quot;:&quot;davidzhu&quot;, &quot;password&quot;:&quot;778899a&quot;}'</code>.</li>
+<li><code>multipart/form-data</code>: each value is sent as a block of data (&ldquo;body part&rdquo;), with a user agent-defined delimiter (&ldquo;boundary&rdquo;) separating each part. The keys are given in the <code>Content-Disposition</code> header of each part.</li>
+<li><code>text/plain</code></li>
+</ul>
+<p>HTML provides no way to generate JSON from form data, learn more: <a class="link" href="https://davidzhu.xyz/post/http/008-form-post-query-string/#4-form-data-restriction"  target="_blank" rel="noopener"
+    >Form Data &amp; Query String - David&rsquo;s Blog</a></p>
+<h3 id="2-access-control-allow-origin">
+    <a href="#2-access-control-allow-origin">#</a>
+    2. <code>Access-Control-Allow-Origin</code>
+</h3><blockquote>
+<p><code>Access-Control-Allow-Origin</code> header allows servers to specify which origins <strong>are allowed to access their resources</strong>, even if they are from different origins.</p>
+</blockquote>
+<p>Learn more: <a class="link" href="https://davidzhu.xyz/post/http/003-cors-sop/"  target="_blank" rel="noopener"
+    >Cross-origin Request HTTP - David&rsquo;s Blog</a></p>
+<h3 id="3-location">
+    <a href="#3-location">#</a>
+    3. <code>Location</code>
+</h3><p>The <strong><code>Location</code></strong> response header indicates the URL to redirect a page to. It only provides a meaning when served with a <code>3xx</code> (redirection) or <code>201</code> (created) status response.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">handleMkdir</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">currentPath</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Parse form.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">ParseForm</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">err</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to parse folder name: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// clean url and redirect
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span> <span class="p">=</span> <span class="s">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Location&#34;</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nf">String</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">w</span><span class="p">.</span><span class="nf">WriteHeader</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">StatusSeeOther</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Note that <code>Location</code> is a response header.</p>
+<p>Ajax call in js doesn&rsquo;t need redirection to go back to the current page.</p>
+</blockquote>
+<p>Status code 303: <a class="link" href="https://davidzhu.xyz/post/http/002-http-status-codes/"  target="_blank" rel="noopener"
+    >HTTP Status Codes - David&rsquo;s Blog</a></p>
+<h3 id="4-cache-control">
+    <a href="#4-cache-control">#</a>
+    4. <code>Cache-Control</code>
+</h3><p><code>cache-control: no-cache</code>: This directive means that cached versions of <strong>the requested resource</strong> cannot be used without first checking to see if there is an updated version. <code>max-age=0</code> is <em>a workaround for no-cache</em> , because many old (HTTP/1.0) cache implementations don&rsquo;t support no-cache.</p>
+<p><code>cache-control: private</code>: A response with a <code>private</code> directive can only be cached by the client and never by an intermediary agent, such as a <a class="link" href="https://www.cloudflare.com/learning/cdn/what-is-a-cdn/"  target="_blank" rel="noopener"
+    >CDN</a> or a proxy. These are often resources containing private data, such as a website displaying a user’s personal information.</p>
+<p><code>cache-control: public</code>: Conversely, the <code>public</code> directive means the requested resource can be stored by any cache.</p>
+<p>When we access a web page, there may have multiple http requests being made, such as <code>favicon.ico</code>, <code>xxx.js</code>, <code>xxx.json</code>, <code>xxx.png</code>, for each of these resources there is a http request needed to be sent, and indeed there is a corresponding http response. These resourses are called <strong>the requested resources</strong> above we mentioned. So each of the repsonse have their own http headers:</p>
+<p><img src="/001-http-headers/a.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="a"
+	
+	
+></p>
+<p><img src="/001-http-headers/b.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="b"
+	
+	
+></p>
+<p>Browser caching is a great way to both preserve resources and improve user experience on the Internet, but without cache-control, it would be very brittle. Every resource on every site would be bound by the same caching rules, meaning that sensitive information would be cached the same way as public information, and <strong>frequently-updated resources would be cached for the same amount of time as ones that rarely change</strong>.</p>
+<p>The code below is written in Go which responsible for handle assets request from client, <code>favicon.ico</code> for example.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">RenderAsset</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">assetPath</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">header</span> <span class="o">:=</span> <span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Cache-Control&#34;</span><span class="p">,</span> <span class="s">&#34;public, max-age=0&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">http</span><span class="p">.</span><span class="nf">ServeFile</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">filename</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><strong>Browser caching</strong> is when a web browser saves website resources so it doesn’t have to fetch them again from a server. For example, a background image on a website might be saved locally in cache so that when a user visits that page for the second time, the image will load from the user’s local files and the page will load much faster.</p>
+</blockquote>
+<blockquote>
+<p><strong>Cookies are HTTP Headers</strong>. The header is called <code>Cookie:</code>, and it contains your cookie.</p>
+</blockquote>
+<p>Learn more: <a class="link" href="https://www.cloudflare.com/learning/cdn/glossary/what-is-cache-control/"  target="_blank" rel="noopener"
+    >What is cache-control? | Cache explained | Cloudflare</a></p>
+<h3 id="5-authorization---www-authenticate">
+    <a href="#5-authorization---www-authenticate">#</a>
+    5. <code>Authorization </code> &amp; <code>WWW-Authenticate</code>
+</h3><p>HTTP supports the use of several authentication mechanisms to control access to pages and other resources. These mechanisms are all based around the use of the <code>401</code> status code and the <code>WWW-Authenticate</code> response header.</p>
+<p>The most widely used <strong>HTTP authentication mechanisms</strong> are:</p>
+<ul>
+<li>
+<p><strong>Basic:</strong> the client sends the user name and password as unencrypted base64 encoded text. It should only be used with HTTPS, as the password can be easily captured and reused over HTTP.</p>
+</li>
+<li>
+<p><strong>Digest:</strong> the client sends a hashed form of the password to the server. Although, the password cannot be captured over HTTP, it may be possible to replay requests using the hashed password.</p>
+</li>
+<li>
+<p><strong>NTLM:</strong> this uses a secure challenge/response mechanism that prevents password capture or replay attacks over HTTP. However, the authentication is per connection and will only work with HTTP/1.1 persistent connections. For this reason, it may not work through all HTTP proxies and can introduce large numbers of network roundtrips if connections are regularly closed by the web server.</p>
+</li>
+</ul>
+<p>In this section, we will just discuss the <strong>Basic authentication mechanism</strong>:</p>
+<p>If an HTTP receives an anonymous request for a protected resource it can force the use of Basic authentication by rejecting the request with a <code>401</code> (Access Denied) status code and setting the <code>WWW-Authenticate</code> response header as shown below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">401</span> <span class="ne">Access Denied</span>
+</span></span><span class="line"><span class="cl"><span class="n">WWW-Authenticate</span><span class="o">:</span> <span class="l">Basic realm=&#34;My Server&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Length</span><span class="o">:</span> <span class="l">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The word <strong>Basic</strong> in the <strong>WWW-Authenticate</strong> selects the authentication mechanism that the HTTP client must use to access the resource. The <strong>realm</strong> string can be set to any value to identify the secure area and may used by HTTP clients to manage passwords. Most web browsers will display a login dialog when this response is received, allowing the user to enter a username and password. This information is then used to retry the request with an <code>Authorization</code> request header:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">GET</span> <span class="nn">/securefiles/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">www.httpwatch.com</span>
+</span></span><span class="line"><span class="cl"><span class="n">Authorization</span><span class="o">:</span> <span class="l">Basic aHR0cHdhdGNoOmY=</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <strong>Authorization</strong> specifies the authentication mechanism (in this case <strong>Basic</strong>) followed by the username and password. Although, the string <strong>aHR0cHdhdGNoOmY=</strong> may look encrypted it is simply a base64 encoded version of <username>:<password>. In this example, the un-encoded string <strong>&ldquo;httpwatch:foo&rdquo;</strong> was used and would be readily available to anyone who could intercept the HTTP request.</p>
+<ul>
+<li>
+<p>The HTTP <strong><code>Authorization</code></strong> <strong>request header</strong> can be used to provide credentials that authenticate a user agent with a server, allowing access to a protected resource.</p>
+</li>
+<li>
+<p>The HTTP <strong><code>WWW-Authenticate</code></strong> <strong>response header</strong> defines the <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"  target="_blank" rel="noopener"
+    >HTTP authentication</a> methods (&ldquo;challenges&rdquo;) that might be used to gain access to a specific resource.</p>
+</li>
+</ul>
+<p>Learn more: <a class="link" href="http://www.httpwatch.com/httpgallery/authentication/"  target="_blank" rel="noopener"
+    >http://www.httpwatch.com/httpgallery/authentication/</a></p>
+<blockquote>
+<p>The <strong><code>Authorization</code></strong> header is usually, but not always, sent after the user agent first attempts to request a protected resource without credentials. The server responds with a <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"  target="_blank" rel="noopener"
+    ><code>401</code></a> <code>Unauthorized</code> message that includes at least one <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/WWW-Authenticate"  target="_blank" rel="noopener"
+    ><code>WWW-Authenticate</code></a> header. This header indicates what authentication schemes can be used to access the resource (and any additional information needed by the client to use them).</p>
+</blockquote>
+<blockquote>
+<p><strong>Warning:</strong> The &ldquo;Basic&rdquo; authentication scheme used in the diagram above sends the credentials <strong>encoded but not encrypted</strong>. This would be completely insecure unless the exchange was over a secure connection (HTTPS/TLS).</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="nx">username</span><span class="p">,</span> <span class="nx">password</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">BasicAuth</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">usernameMatch</span> <span class="o">:=</span> <span class="nx">subtle</span><span class="p">.</span><span class="nf">ConstantTimeCompare</span><span class="p">(</span><span class="nx">usernameHash</span><span class="p">[:],</span> <span class="nx">expectedUsernameHash</span><span class="p">[:])</span> <span class="o">==</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">passwordMatch</span> <span class="o">:=</span> <span class="nx">subtle</span><span class="p">.</span><span class="nf">ConstantTimeCompare</span><span class="p">(</span><span class="nx">passwordHash</span><span class="p">[:],</span> <span class="nx">expectedPasswordHash</span><span class="p">[:])</span> <span class="o">==</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">usernameMatch</span> <span class="o">&amp;&amp;</span> <span class="nx">passwordMatch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="o">...</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;WWW-Authenticate&#34;</span><span class="p">,</span> <span class="s">`Basic realm=&#34;restricted&#34;, charset=&#34;UTF-8&#34;`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">http</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="s">&#34;Unauthorized&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusUnauthorized</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>Basic realm=&quot;restricted&quot;</code>, what does this mean?</p>
+<p>In short, endpoints in the same realm should share credentials. If your credentials work for a endpoint with the realm <code>&quot;restricted&quot;</code>, it should be assumed that the same username and password combination should work for another endpoint with the same realm.</p>
+<p>How to group pages (endpoints) with realm?</p>
+<p><code>realm</code> value doesn&rsquo;t have magic, you still need apply the auth middleware for each endpoint at server side. But different value of realm will instruct browser use different credentials (username, password) for the different request url automatically. The concept of realms in the context of authentication is primarily used to instruct the client (typically a web browser) to send different credentials for different request URLs automatically. The server-side implementation still requires applying the authentication middleware to each endpoint.</p>
+<p>Code credit to: <a class="link" href="https://www.alexedwards.net/blog/basic-authentication-in-go"  target="_blank" rel="noopener"
+    >Go BasicAuth</a></p>
+<p>HTTP authentication framework: <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"  target="_blank" rel="noopener"
+    >HTTP authentication - HTTP | MDN</a></p>
+<p>Learn more: <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization"  target="_blank" rel="noopener"
+    >Authorization - HTTP | MDN</a></p>
+<h3 id="6-cookie">
+    <a href="#6-cookie">#</a>
+    6. cookie
+</h3><p>There are two headers related to cookie, one is <code>Set-Cookie</code> header another is <code>Cookie</code> header.</p>
+<p>After receiving an HTTP request, a server can send one or more <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie"  target="_blank" rel="noopener"
+    ><code>Set-Cookie</code></a> headers with the response. The browser usually stores the cookie and sends it with requests made to the same server inside a <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie"  target="_blank" rel="noopener"
+    ><code>Cookie</code></a> HTTP header.</p>
+<p>For example, a response from server contains cookie headers may looks like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">HTTP/2.0 200 OK
+</span></span><span class="line"><span class="cl">Content-Type: text/html
+</span></span><span class="line"><span class="cl">Set-Cookie: yummy_cookie=choco
+</span></span><span class="line"><span class="cl">Set-Cookie: tasty_cookie=strawberry
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[page content]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>A HTTP request may looks like this below:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">GET /sample_page.html HTTP/2.0
+</span></span><span class="line"><span class="cl">Host: www.example.org
+</span></span><span class="line"><span class="cl">Cookie: yummy_cookie=choco; tasty_cookie=strawberry
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Therefore, when I want set cookie manually for my http request, I&rsquo;ll probably do something like this (I do this in Go):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">req</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">NewRequest</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">MethodPost</span><span class="p">,</span> <span class="s">&#34;/chat&#34;</span><span class="p">,</span> <span class="nx">your_encoded_message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// set content-type header
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">req</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// set cookie header (cookie is a key value data)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">req</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Cookie&#34;</span><span class="p">,</span> <span class="s">&#34;session_id=xxxxxxxxxxx&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If I want get cookie from repsonse, I&rsquo;ll probably retrieve the cookie like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">response</span> <span class="o">:=</span> <span class="nf">makeRequest</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">my_cooke</span> <span class="o">:=</span> <span class="nx">response</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;Set-Cookie&#34;</span><span class="p">)</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Cookie is just a header which having no doubt resides in the header of HTTP mesages, don&rsquo;t overthinking.</p>
+<p>Reference: <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies"  target="_blank" rel="noopener"
+    >https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#creating_cookies</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/http/">Http</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/url-encoding-percent-encoding/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">URL Encoding (Percent Encoding)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/mime-types/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MIME Types</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/http-2.0-binary-frame-server-push-header-compression/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HTTP 2.0 (Binary Frame, Server Push, Header Compression)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/form-data-query-string/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Form Data &amp; Query String</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/http-1.1-vs-http-2.0/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HTTP 1.1 vs HTTP 2.0</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

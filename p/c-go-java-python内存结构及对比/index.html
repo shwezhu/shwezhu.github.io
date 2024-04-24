@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Javascript Taken from JavaScript | MDN but this applies for all language with GC: Low-level languages like C, have manual memory management primitives such as malloc() and free(). In contrast, JavaScript automatically allocates memory when objects are created and frees it when they are not used anymore (garbage collection). This automaticity is a potential source of confusion: it can give developers the false impression that they don&rsquo;t need to worry about memory management.">
+<title>C Go Java Python内存结构及对比</title>
+
+<link rel='canonical' href='http://localhost:1313/p/c-go-java-python%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AF%B9%E6%AF%94/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="C Go Java Python内存结构及对比">
+<meta property='og:description' content="# 1. Javascript Taken from JavaScript | MDN but this applies for all language with GC: Low-level languages like C, have manual memory management primitives such as malloc() and free(). In contrast, JavaScript automatically allocates memory when objects are created and frees it when they are not used anymore (garbage collection). This automaticity is a potential source of confusion: it can give developers the false impression that they don&rsquo;t need to worry about memory management.">
+<meta property='og:url' content='http://localhost:1313/p/c-go-java-python%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AF%B9%E6%AF%94/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:tag' content='java' /><meta property='article:tag' content='c' /><meta property='article:tag' content='python' /><meta property='article:tag' content='other' /><meta property='article:published_time' content='2023-05-27T19:59:17&#43;00:00'/><meta property='article:modified_time' content='2023-05-27T19:59:17&#43;00:00'/>
+<meta name="twitter:title" content="C Go Java Python内存结构及对比">
+<meta name="twitter:description" content="# 1. Javascript Taken from JavaScript | MDN but this applies for all language with GC: Low-level languages like C, have manual memory management primitives such as malloc() and free(). In contrast, JavaScript automatically allocates memory when objects are created and frees it when they are not used anymore (garbage collection). This automaticity is a potential source of confusion: it can give developers the false impression that they don&rsquo;t need to worry about memory management.">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-javascript">1. Javascript</a>
+      <ol>
+        <li><a href="#11-allocation">1.1. Allocation</a></li>
+        <li><a href="#12-using-values">1.2. Using values</a></li>
+        <li><a href="#13-release-when-the-memory-is-not-needed-anymore">1.3. Release when the memory is not needed anymore</a></li>
+      </ol>
+    </li>
+    <li><a href="#2-python">2. Python</a></li>
+    <li><a href="#3-golang">3. Golang</a></li>
+    <li><a href="#4-java">4. Java</a></li>
+    <li><a href="#5-cc">5. C/C++</a>
+      <ol>
+        <li><a href="#51-static-memory">5.1. Static memory</a></li>
+        <li><a href="#52-stack-memory">5.2. Stack memory</a></li>
+        <li><a href="#53-heap-memory">5.3. Heap Memory</a></li>
+      </ol>
+    </li>
+    <li><a href="#6-conclusion">6. Conclusion</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/other/" >
+                Other
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/c-go-java-python%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AF%B9%E6%AF%94/">C Go Java Python内存结构及对比</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">May 27, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    7 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-javascript">
+    <a href="#1-javascript">#</a>
+    1. Javascript
+</h2><p>Taken from <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_management"  target="_blank" rel="noopener"
+    >JavaScript | MDN</a> but <strong>this applies for all language with GC</strong>:</p>
+<p>Low-level languages like C, have manual memory management primitives such as <a class="link" href="https://pubs.opengroup.org/onlinepubs/009695399/functions/malloc.html"  target="_blank" rel="noopener"
+    ><code>malloc()</code></a> and <a class="link" href="https://en.wikipedia.org/wiki/C_dynamic_memory_allocation#Overview_of_functions"  target="_blank" rel="noopener"
+    ><code>free()</code></a>. In contrast, JavaScript automatically allocates memory when objects are created and frees it when they are not used anymore (<em>garbage collection</em>). This automaticity is a potential source of confusion: it can give developers the false impression that they don&rsquo;t need to worry about memory management.</p>
+<p>Regardless of the programming language, the memory life cycle is pretty much always the same:</p>
+<ol>
+<li><strong>Allocate</strong> the memory you need</li>
+<li>Use the allocated memory (read, write), <strong>each variable exists as long as there are references to it</strong>.</li>
+<li><strong>Release</strong> the allocated memory when it is not needed anymore (Usually done by GC)</li>
+</ol>
+<p>The second part is explicit in all languages. The first and last parts are explicit in low-level languages but are mostly implicit in high-level languages like JavaScript.</p>
+<h3 id="11-allocation">
+    <a href="#11-allocation">#</a>
+    1.1. Allocation
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">n</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span> <span class="c1">// allocates memory for a number
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">s</span> <span class="o">=</span> <span class="s2">&#34;azerty&#34;</span><span class="p">;</span> <span class="c1">// allocates memory for a string
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">o</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">b</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span> <span class="c1">// allocates memory for an object and contained values
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// (like object) allocates memory for the array and
+</span></span></span><span class="line"><span class="cl"><span class="c1">// contained values
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="s2">&#34;abra&#34;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">f</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="c1">// allocates a function (which is a callable object)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// function expressions also allocate an object
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">someElement</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;click&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">someElement</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="s2">&#34;blue&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="12-using-values">
+    <a href="#12-using-values">#</a>
+    1.2. Using values
+</h3><p>Using values basically means reading and writing in allocated memory. This can be done by reading or writing the value of a variable or an object property or even passing an argument to a function.</p>
+<h3 id="13-release-when-the-memory-is-not-needed-anymore">
+    <a href="#13-release-when-the-memory-is-not-needed-anymore">#</a>
+    1.3. Release when the memory is not needed anymore
+</h3><p>The majority of memory management issues occur at this phase. The most difficult aspect of this stage is determining when the allocated memory is no longer needed.</p>
+<p><strong>Low-level languages</strong> require the developer to manually determine at which point in the program the allocated memory is no longer needed and to release it.</p>
+<p>Some <strong>high-level languages</strong>, such as JavaScript, utilize a form of automatic memory management known as <a class="link" href="https://en.wikipedia.org/wiki/Garbage_collection_%28computer_science%29"  target="_blank" rel="noopener"
+    >garbage collection</a> (GC). The purpose of a garbage collector is to monitor memory allocation and determine when a block of allocated memory is no longer needed and reclaim it.</p>
+<p>Learn more: <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_management"  target="_blank" rel="noopener"
+    >Memory management - JavaScript | MDN</a></p>
+<h2 id="2-python">
+    <a href="#2-python">#</a>
+    2. Python
+</h2><p>Memory management in Python involves a private heap containing <strong>all Python objects</strong> and data structures. The management of this private heap is ensured internally by the <em><strong>Python memory manager</strong></em>. The Python memory manager has different components which deal with various dynamic storage management aspects, like sharing, segmentation, preallocation or caching.</p>
+<blockquote>
+<p>Everything is an object in Python, even types such as <code>int</code> and <code>str</code>.</p>
+</blockquote>
+<p>Learn more: <a class="link" href="https://docs.python.org/3/c-api/memory.html"  target="_blank" rel="noopener"
+    >Memory Management — Python 3.12.0 documentation</a></p>
+<h2 id="3-golang">
+    <a href="#3-golang">#</a>
+    3. Golang
+</h2><p>From a correctness standpoint, you don&rsquo;t need to know. Each variable in Go exists as long as there are references to it. The storage location chosen by the implementation is irrelevant to the semantics of the language.</p>
+<p>The storage location does have an effect on writing efficient programs. When possible, the Go compilers will allocate variables that are local to a function in that function&rsquo;s <strong>stack frame</strong>. However, if the compiler cannot prove that the variable is not referenced after the function returns, then the compiler must allocate the variable on the <strong>garbage-collected heap</strong> to avoid dangling pointer errors. Also, if a local variable is very large, it might make more sense to store it on the heap rather than the stack.</p>
+<p>In the current compilers, if a variable has its address taken, that variable is a candidate for allocation on the heap. However, a basic <em>escape analysis</em> recognizes some cases when such variables will not live past the return from the function and can reside on the stack.</p>
+<h2 id="4-java">
+    <a href="#4-java">#</a>
+    4. Java
+</h2><p>Learn more: <a class="link" href="https://davidzhu.xyz/post/java/basics/005-memory-structure/"  target="_blank" rel="noopener"
+    >https://davidzhu.xyz/post/java/basics/005-memory-structure/</a></p>
+<h2 id="5-cc">
+    <a href="#5-cc">#</a>
+    5. C/C++
+</h2><p>C has three different pools of memory:</p>
+<ul>
+<li><strong>static</strong>: global variable storage, permanent for the entire run of the program.</li>
+<li><strong>stack</strong>: local variable storage (automatic, continuous memory).</li>
+<li><strong>heap</strong>: dynamic storage (large pool of memory, not allocated in contiguous order).</li>
+</ul>
+<h3 id="51-static-memory">
+    <a href="#51-static-memory">#</a>
+    5.1. Static memory
+</h3><p>Static memory persists throughout the entire life of the program, and is usually used to store things like <em>global</em> variables, or variables created with the static clause. If a variable is declared <em>outside</em> of a function, it is considered global, meaning it is accessible anywhere in the program. Global variables are static, and there is only one copy for the entire program. Inside a function the variable is allocated on the stack. It is also possible to force a variable to be static using the <strong>static</strong> clause. For example, the same variable created inside a function using the static clause would allow it to be stored in static memory.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">int</span> <span class="n">theforce</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="52-stack-memory">
+    <a href="#52-stack-memory">#</a>
+    5.2. Stack memory
+</h3><p>The <em>stack</em> is used to store variables used on the inside of a function (including the <code>main()</code> function). It’s a LIFO, “<strong>L</strong>ast-<strong>I</strong>n,-<strong>F</strong>irst-<strong>O</strong>ut”, structure. Every time a function declares a new variable it is “pushed” onto the stack. Then when a function finishes running, all the variables associated with that function on the stack are deleted, and the memory they use is freed up. This leads to the “local” scope of function variables.</p>
+<p>Note that there is generally a limit on the size of the stack – which can vary with the operating system (for example OSX currently has a default stack size of 8MB). If a program tries to put too much information on the stack, <strong>stack overflow</strong> will occur. Stack overflow happens when all the memory in the stack has been allocated, and further allocations begin overflowing into other sections of memory. Stack overflow also occurs in situations where recursion is incorrectly used.</p>
+<ul>
+<li>the stack grows and shrinks as variables are created and destroyed</li>
+<li>stack variables only exist whilst the function that created them exists</li>
+</ul>
+<h3 id="53-heap-memory">
+    <a href="#53-heap-memory">#</a>
+    5.3. Heap Memory
+</h3><p>The <em>heap</em> is the diametrical opposite of the stack. The <em>heap</em> is a large pool of memory that can be used dynamically – it is also known as the “free store”. This is memory that is not automatically managed in C/C++ – you have to explicitly allocate (using functions such as malloc), and deallocate (e.g. free) the memory. Failure to free the memory when you are finished with it will result in what is known as a <em>memory leak</em> – memory that is still “being used”, and not available to other processes. Unlike the stack, there are generally no restrictions on the size of the heap (or the variables it creates), other than the physical size of memory in the machine. Variables created on the heap are accessible anywhere in the program.</p>
+<h2 id="6-conclusion">
+    <a href="#6-conclusion">#</a>
+    6. Conclusion
+</h2><p>Most of languages are designed with stack and heap, the concept of stack and heap are not mentioned in Javascript, but some concepts like the function stack frame, heap are shared among the modern languages designs. Our goal is to grab the lifetime of objects so that can write good and robust codes, not stack and heap.</p>
+<p>References:</p>
+<ul>
+<li><a class="link" href="https://craftofcoding.wordpress.com/2015/12/07/memory-in-c-the-stack-the-heap-and-static/"  target="_blank" rel="noopener"
+    >Memory in C – the stack, the heap, and static – The Craft of Coding</a></li>
+<li><a class="link" href="https://stackoverflow.com/questions/18406703/when-will-a-string-be-garbage-collected-in-java"  target="_blank" rel="noopener"
+    >When will a string be garbage collected in java - Stack Overflow</a></li>
+<li><a class="link" href="https://www.baeldung.com/java-choosing-gc-algorithm"  target="_blank" rel="noopener"
+    >Choosing a GC Algorithm in Java | Baeldung</a></li>
+<li><a class="link" href="https://segment.com/blog/allocation-efficiency-in-high-performance-go-services/"  target="_blank" rel="noopener"
+    >Golang Memory Management: Allocation Efficiency in Go Services</a></li>
+<li><a class="link" href="https://docs.python.org/3/c-api/memory.html"  target="_blank" rel="noopener"
+    >Memory Management — Python 3.11.3 documentation</a></li>
+<li><a class="link" href="https://www.honeybadger.io/blog/memory-management-in-python/"  target="_blank" rel="noopener"
+    >Memory Management in Python - Honeybadger Developer Blog</a></li>
+<li><a class="link" href="https://en.wikipedia.org/wiki/CPython"  target="_blank" rel="noopener"
+    >CPython</a></li>
+<li><a class="link" href="https://deepu.tech/memory-management-in-golang/"  target="_blank" rel="noopener"
+    >🚀 Visualizing memory management in Golang | Technorage</a></li>
+<li><a class="link" href="https://stackoverflow.com/a/73021/16317008"  target="_blank" rel="noopener"
+    >methods - Is Java &ldquo;pass-by-reference&rdquo; or &ldquo;pass-by-value&rdquo;? - Stack Overflow</a></li>
+<li><a class="link" href="https://stackoverflow.com/questions/10866195/stack-vs-heap-allocation-of-structs-in-go-and-how-they-relate-to-garbage-collec"  target="_blank" rel="noopener"
+    >Stack vs heap allocation of structs in Go, and how they relate to garbage collection - Stack Overflow</a></li>
+<li><a class="link" href="https://stackoverflow.com/questions/986006/how-do-i-pass-a-variable-by-reference"  target="_blank" rel="noopener"
+    >python - How do I pass a variable by reference? - Stack Overflow</a></li>
+<li><a class="link" href="https://devguide.python.org/internals/garbage-collector/"  target="_blank" rel="noopener"
+    >Garbage Collector Design</a></li>
+<li><a class="link" href="https://deepu.tech/memory-management-in-programming/"  target="_blank" rel="noopener"
+    >🚀 Demystifying memory management in modern programming languages | Technorage</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/golang/">Golang</a>
+        
+            <a href="/tags/java/">Java</a>
+        
+            <a href="/tags/c/">C</a>
+        
+            <a href="/tags/python/">Python</a>
+        
+            <a href="/tags/other/">Other</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/pass-by-value-or-reference/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Pass by Value or Reference</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/data-types-in-programming-languages/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Data Types in Programming Languages</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/typing-in-programming-language/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Typing in Programming Language</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/typing-in-programming-language-example/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Typing in Programming Language - Example</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E8%AF%B4%E8%AF%B4c%E7%9A%84%E7%BC%96%E8%AF%91%E5%8A%A8%E6%80%81%E9%9D%99%E6%80%81%E5%BA%93%E5%8F%8Ago%E7%9A%84runtime/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">说说C的编译动态静态库及Go的Runtime</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

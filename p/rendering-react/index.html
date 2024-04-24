@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# setState 同步 OR 异步 我们首先需要明确, 从 API 层面上说, 它就是普通的调用执行的函数, 自然是同步的. 这里所说的同步和异步指的是 API 调用后更新 DOM 是同步还是异步的. 如果 setState 在 React 能够控制的范围被调用，它就是异步的。 例如：合成事件处理函数, 生命周期函数, 此时会进行批量更新, 也就是将状态合并后再进行 DOM 更新。 如果 setState 在原生 JavaScript 控制的范围被调用，它就是同步的。 例如：原生事件处理函数中, 定时器回调函数中, Ajax 回调函数中, 此时 setState 被调用后会立即更新 DOM 。 一文彻底搞懂React的setState是同步还是异步 - 掘金 React 通过异步更新状态，可以批量处理多个状态更新，而不是对每个状态更新都重新渲染组件。这种批处理方式减少了不必要的渲染次数，提高了应用的性能。(batch multiple state updates together, instead of re-rendering components for each individual state update.) # setState 的坑 刚开始很容易写出以下错误代码: 1 2 3 4 5 const [age, setAge] = useState(0); function handleClick() { setAge(() =&gt; age + 1); // .">
+<title>Rendering - React</title>
+
+<link rel='canonical' href='http://localhost:1313/p/rendering-react/'>
+
+<link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Rendering - React">
+<meta property='og:description' content="# setState 同步 OR 异步 我们首先需要明确, 从 API 层面上说, 它就是普通的调用执行的函数, 自然是同步的. 这里所说的同步和异步指的是 API 调用后更新 DOM 是同步还是异步的. 如果 setState 在 React 能够控制的范围被调用，它就是异步的。 例如：合成事件处理函数, 生命周期函数, 此时会进行批量更新, 也就是将状态合并后再进行 DOM 更新。 如果 setState 在原生 JavaScript 控制的范围被调用，它就是同步的。 例如：原生事件处理函数中, 定时器回调函数中, Ajax 回调函数中, 此时 setState 被调用后会立即更新 DOM 。 一文彻底搞懂React的setState是同步还是异步 - 掘金 React 通过异步更新状态，可以批量处理多个状态更新，而不是对每个状态更新都重新渲染组件。这种批处理方式减少了不必要的渲染次数，提高了应用的性能。(batch multiple state updates together, instead of re-rendering components for each individual state update.) # setState 的坑 刚开始很容易写出以下错误代码: 1 2 3 4 5 const [age, setAge] = useState(0); function handleClick() { setAge(() =&gt; age + 1); // .">
+<meta property='og:url' content='http://localhost:1313/p/rendering-react/'>
+<meta property='og:site_name' content='David&#39;s Blogs'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='front-end' /><meta property='article:published_time' content='2024-01-07T19:27:22&#43;00:00'/><meta property='article:modified_time' content='2024-01-07T19:27:22&#43;00:00'/>
+<meta name="twitter:title" content="Rendering - React">
+<meta name="twitter:description" content="# setState 同步 OR 异步 我们首先需要明确, 从 API 层面上说, 它就是普通的调用执行的函数, 自然是同步的. 这里所说的同步和异步指的是 API 调用后更新 DOM 是同步还是异步的. 如果 setState 在 React 能够控制的范围被调用，它就是异步的。 例如：合成事件处理函数, 生命周期函数, 此时会进行批量更新, 也就是将状态合并后再进行 DOM 更新。 如果 setState 在原生 JavaScript 控制的范围被调用，它就是同步的。 例如：原生事件处理函数中, 定时器回调函数中, Ajax 回调函数中, 此时 setState 被调用后会立即更新 DOM 。 一文彻底搞懂React的setState是同步还是异步 - 掘金 React 通过异步更新状态，可以批量处理多个状态更新，而不是对每个状态更新都重新渲染组件。这种批处理方式减少了不必要的渲染次数，提高了应用的性能。(batch multiple state updates together, instead of re-rendering components for each individual state update.) # setState 的坑 刚开始很容易写出以下错误代码: 1 2 3 4 5 const [age, setAge] = useState(0); function handleClick() { setAge(() =&gt; age + 1); // .">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                            height="274" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✨</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">David&#39;s Blogs</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/shwezhu'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/hutumaomao'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#setstate-同步-or-异步">setState 同步 OR 异步</a></li>
+    <li><a href="#setstate-的坑">setState 的坑</a></li>
+    <li><a href="#组件渲染过程">组件渲染过程</a></li>
+    <li><a href="#组件渲染会导致异步函数暂停吗">组件渲染会导致异步函数暂停吗</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/front-end/" >
+                Front-End
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/rendering-react/">Rendering - React</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jan 07, 2024</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    2 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="setstate-同步-or-异步">
+    <a href="#setstate-%e5%90%8c%e6%ad%a5-or-%e5%bc%82%e6%ad%a5">#</a>
+    setState 同步 OR 异步
+</h2><p>我们首先需要明确, 从 API 层面上说, 它就是普通的调用执行的函数, 自然是同步的. 这里所说的同步和异步指的是 API 调用后更新 DOM 是同步还是异步的.</p>
+<ul>
+<li>如果 setState 在 React 能够控制的范围被调用，它就是异步的。
+<ul>
+<li>例如：合成事件处理函数, 生命周期函数, 此时会进行批量更新, 也就是将状态合并后再进行 DOM 更新。</li>
+</ul>
+</li>
+<li>如果 setState 在原生 JavaScript 控制的范围被调用，它就是同步的。
+<ul>
+<li>例如：原生事件处理函数中, 定时器回调函数中, Ajax 回调函数中, 此时 setState 被调用后会立即更新 DOM 。</li>
+</ul>
+</li>
+</ul>
+<p><a class="link" href="https://juejin.cn/post/7085897363314704414"  target="_blank" rel="noopener"
+    >一文彻底搞懂React的setState是同步还是异步 - 掘金</a></p>
+<blockquote>
+<p>React 通过异步更新状态，可以批量处理多个状态更新，而不是对每个状态更新都重新渲染组件。这种批处理方式减少了不必要的渲染次数，提高了应用的性能。(<strong>batch multiple state updates together</strong>, instead of re-rendering components for each individual state update.)</p>
+</blockquote>
+<h2 id="setstate-的坑">
+    <a href="#setstate-%e7%9a%84%e5%9d%91">#</a>
+    setState 的坑
+</h2><p>刚开始很容易写出以下错误代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">const</span> <span class="p">[</span><span class="nx">age</span><span class="p">,</span> <span class="nx">setAge</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">handleClick</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">setAge</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="nx">age</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// ...
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这样访问准确来说并不是<strong>上一次</strong>的state, 而是组件在它<strong>当时</strong>状态值, 因为有可能发生多次连续的状态更新, 比如其它 event handler 也调用了 setAge 函数, 不要忘了这些 setXXX() 是异步的, 会被React集中到一起执行, 所以要确保 setAge() 更新的是上一次的值, 要使用（即 setXXX(previousState =&gt; newState)），这样可以确保你的更新基于最新的状态值。</p>
+<p>正确方式如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">const</span> <span class="p">[</span><span class="nx">age</span><span class="p">,</span> <span class="nx">setAge</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">handleClick</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">setAge</span><span class="p">(</span><span class="nx">age</span> <span class="p">=&gt;</span> <span class="nx">age</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// ...
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意第二个 setXXX() 的参数是一个匿名函数, 这个<strong>匿名函数的参数</strong>是上一次的 state, 由 React 负责传入, 返回值更新后的 state,</p>
+<h2 id="组件渲染过程">
+    <a href="#%e7%bb%84%e4%bb%b6%e6%b8%b2%e6%9f%93%e8%bf%87%e7%a8%8b">#</a>
+    组件渲染过程
+</h2><p>This process of requesting and serving UI has three steps:</p>
+<ul>
+<li><strong>Triggering</strong> a render
+<ul>
+<li>A render is triggered when a component’s <code>props</code> or <code>state</code> changes.</li>
+<li>A render can also be triggered by its parent component re-rendering.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这里注意, 使用自定义 hook 时, 其返回的 state 变化时, 也会触发组件的重新渲染. 并不是自定义 hook 的状态改变而导致的重新渲染, 而是自定义 hook 返回的 state 改变而导致的重新渲染. 自定义 Hooks 的主要优势在于它们允许你重用状态逻辑，而不是创建全新的状态机制。每次在组件中使用自定义 Hook 时 (若该 hook 中定义了 state <code>const [xxx, setXXX] = useState(xx)</code>) ，都相当于在该组件内部创建了一个新的独立状态 xxx, 因此当 hook 中调用 setXXX 时, 会触发该组件的重新渲染.</p>
+</blockquote>
+<ul>
+<li>
+<p><strong>Rendering</strong> the component</p>
+<ul>
+<li>The process of rendering is recursive.</li>
+</ul>
+</li>
+<li>
+<p>React <strong>commits</strong> changes to the DOM</p>
+<ul>
+<li>React will apply the minimal necessary operations (calculated while rendering!) to make the DOM match the latest rendering output.</li>
+<li>Think the <a class="link" href="https://react.dev/learn/render-and-commit"  target="_blank" rel="noopener"
+    >clock and input</a> example.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>The default behavior of rendering all components nested within the updated component is not optimal for performance if the updated component is very high in the tree. If you run into a performance issue, there are several opt-in ways to solve it described in the <a class="link" href="https://reactjs.org/docs/optimizing-performance.html"  target="_blank" rel="noopener"
+    >Performance</a> section. <strong>Don’t optimize prematurely!</strong></p>
+</blockquote>
+<blockquote>
+<p>When developing in “Strict Mode”, React calls each component’s function twice, which can help surface mistakes caused by impure functions. <a class="link" href="https://react.dev/learn/render-and-commit"  target="_blank" rel="noopener"
+    >Source</a></p>
+</blockquote>
+<p>Learn more: <a class="link" href="https://react.dev/learn/render-and-commit"  target="_blank" rel="noopener"
+    >Render and Commit – React</a></p>
+<h2 id="组件渲染会导致异步函数暂停吗">
+    <a href="#%e7%bb%84%e4%bb%b6%e6%b8%b2%e6%9f%93%e4%bc%9a%e5%af%bc%e8%87%b4%e5%bc%82%e6%ad%a5%e5%87%bd%e6%95%b0%e6%9a%82%e5%81%9c%e5%90%97">#</a>
+    组件渲染会导致异步函数暂停吗
+</h2><p>React组件的重新渲染不会导致其中正在执行的异步函数暂停或中断,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">MyComponent</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;组件开始渲染&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 异步函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;异步函数执行&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;组件渲染中&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 组件渲染的返回
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">Hello</span> <span class="nx">World</span><span class="o">&lt;</span><span class="err">/div&gt;;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 当MyComponent被渲染时
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">MyComponent</span> <span class="o">/&gt;</span><span class="p">,</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">));</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在这个例子中，当<code>MyComponent</code>组件开始渲染时，它首先打印<code>&quot;组件开始渲染&quot;</code>。接下来，尽管有一个<code>setTimeout</code>异步函数，它不会立即执行。相反，组件会继续执行下一行同步代码，打印<code>&quot;组件渲染中&quot;</code>。只有在所有同步代码执行完毕后，即组件渲染完成后，事件循环才会处理<code>setTimeout</code>中的异步回调，打印<code>&quot;异步函数执行&quot;</code>。</p>
+<p>因此，在React中，组件的渲染过程是不会被其中的异步函数所打断的。同步代码总是在异步代码之前执行完毕。这保证了组件的渲染逻辑的一致性和可预测性。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/front-end/">Front-End</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/html-basics/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HTML Basics</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/pure-function-state-event-loop-react/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Pure Function &amp; State &amp; Event Loop - React</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/tailwind-css-tricks/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tailwind CSS Tricks</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/tailwind-css-flex/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tailwind CSS Flex</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/tailwind-css-commonly-used-class/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tailwind CSS Commonly Used Class</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 David&#39;s Blogs
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.25.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
