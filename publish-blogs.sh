@@ -2,8 +2,8 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title publish_blog
-# @raycast.mode compact
+# @raycast.title Publish Blogs
+# @raycast.mode fullOutput
 
 # Optional parameters:
 # @raycast.icon 🤖
