@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+    <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="刚开始使用printf &quot;123\\n24567\\n8930\\n234\\n&quot; | egrep '(?&lt;!2)3'提示egrep: repetition-operator operand invalid, 然后查到可以使用参数-P, 如下: 1 $ printf &#34;123\\n24567\\n8930\\n234\\n&#34; | grep -P &#39;(?&lt;!2)3&#39; 但是仍然报错和上面报错相同, 然后就考虑是不是版本问题, 1 2 $ grep --v grep (BSD grep, GNU compatible) 2.6.0-FreeBSD 尝试更新, 1 2 $ brew upgrade grep Error: grep not installed 然后尝试安装, 1 2 3 4 5 6 $ brew install grep ... All commands have been installed with the prefix &#34;g&#34;. If you need to use these commands with their normal names, you can add a &#34;gnubin&#34; directory to your PATH from your bashrc like: PATH=&#34;/opt/homebrew/opt/grep/libexec/gnubin:$PATH&#34; 安装成功, 然后根据提示往.">
 <title>grep不支持Negative Lookahead问题</title>
 
-<link rel='canonical' href='http://localhost:1313/p/grep%E4%B8%8D%E6%94%AF%E6%8C%81negative-lookahead%E9%97%AE%E9%A2%98/'>
+<link rel='canonical' href='https://blog.yorforger.cc/p/grep%E4%B8%8D%E6%94%AF%E6%8C%81negative-lookahead%E9%97%AE%E9%A2%98/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="grep不支持Negative Lookahead问题">
 <meta property='og:description' content="刚开始使用printf &quot;123\\n24567\\n8930\\n234\\n&quot; | egrep '(?&lt;!2)3'提示egrep: repetition-operator operand invalid, 然后查到可以使用参数-P, 如下: 1 $ printf &#34;123\\n24567\\n8930\\n234\\n&#34; | grep -P &#39;(?&lt;!2)3&#39; 但是仍然报错和上面报错相同, 然后就考虑是不是版本问题, 1 2 $ grep --v grep (BSD grep, GNU compatible) 2.6.0-FreeBSD 尝试更新, 1 2 $ brew upgrade grep Error: grep not installed 然后尝试安装, 1 2 3 4 5 6 $ brew install grep ... All commands have been installed with the prefix &#34;g&#34;. If you need to use these commands with their normal names, you can add a &#34;gnubin&#34; directory to your PATH from your bashrc like: PATH=&#34;/opt/homebrew/opt/grep/libexec/gnubin:$PATH&#34; 安装成功, 然后根据提示往.">
-<meta property='og:url' content='http://localhost:1313/p/grep%E4%B8%8D%E6%94%AF%E6%8C%81negative-lookahead%E9%97%AE%E9%A2%98/'>
+<meta property='og:url' content='https://blog.yorforger.cc/p/grep%E4%B8%8D%E6%94%AF%E6%8C%81negative-lookahead%E9%97%AE%E9%A2%98/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='bugs' /><meta property='article:tag' content='regex' /><meta property='article:published_time' content='2023-05-02T22:29:30&#43;00:00'/><meta property='article:modified_time' content='2023-05-02T22:29:30&#43;00:00'/>
 <meta name="twitter:title" content="grep不支持Negative Lookahead问题">

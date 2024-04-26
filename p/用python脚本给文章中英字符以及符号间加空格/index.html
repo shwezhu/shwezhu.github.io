@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+    <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="强迫症, 读博客的时候中英字符或者标点符号后没有空格紧紧的贴在一块看着很不舒服, 于是想着能不能写个脚本来处理一下文章, bash太难用了(是我太菜), 于是用Python简单实现了一下, 一些芝士在这说一下, # 1. Immutable Object in Python Java虽然string是对象但primitive类型还不是对象, 与Java不同Python里如integers, floats, and strings都是对象, 并且与integers, floats一样, python里string对象也是immutable, 所以直接“修改”string会导致python重新创建新的string对象 销毁旧的: 1 2 3 4 5 6 a = &#39;hello&#39; print(id(a)) # 4378912048 a += &#39; world&#39; print(id(a)) # 4380683504 因此每次修改(添加空格)都会重新重建一个新的string, 考虑到文章有的内容也不短, 那开销会不小, 具体做法分析参考: https://stackoverflow.com/q/1228299/16317008 # 2. 编码 另外是关于编码的问题, Unicode和utf-8, Python的string使用unicode来表示字符, Python’s string type uses the Unicode Standard for representing characters, which lets Python programs work with all these different possible characters.">
 <title>用Python脚本给文章中英字符以及符号间加空格</title>
 
-<link rel='canonical' href='http://localhost:1313/p/%E7%94%A8python%E8%84%9A%E6%9C%AC%E7%BB%99%E6%96%87%E7%AB%A0%E4%B8%AD%E8%8B%B1%E5%AD%97%E7%AC%A6%E4%BB%A5%E5%8F%8A%E7%AC%A6%E5%8F%B7%E9%97%B4%E5%8A%A0%E7%A9%BA%E6%A0%BC/'>
+<link rel='canonical' href='https://blog.yorforger.cc/p/%E7%94%A8python%E8%84%9A%E6%9C%AC%E7%BB%99%E6%96%87%E7%AB%A0%E4%B8%AD%E8%8B%B1%E5%AD%97%E7%AC%A6%E4%BB%A5%E5%8F%8A%E7%AC%A6%E5%8F%B7%E9%97%B4%E5%8A%A0%E7%A9%BA%E6%A0%BC/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="用Python脚本给文章中英字符以及符号间加空格">
 <meta property='og:description' content="强迫症, 读博客的时候中英字符或者标点符号后没有空格紧紧的贴在一块看着很不舒服, 于是想着能不能写个脚本来处理一下文章, bash太难用了(是我太菜), 于是用Python简单实现了一下, 一些芝士在这说一下, # 1. Immutable Object in Python Java虽然string是对象但primitive类型还不是对象, 与Java不同Python里如integers, floats, and strings都是对象, 并且与integers, floats一样, python里string对象也是immutable, 所以直接“修改”string会导致python重新创建新的string对象 销毁旧的: 1 2 3 4 5 6 a = &#39;hello&#39; print(id(a)) # 4378912048 a += &#39; world&#39; print(id(a)) # 4380683504 因此每次修改(添加空格)都会重新重建一个新的string, 考虑到文章有的内容也不短, 那开销会不小, 具体做法分析参考: https://stackoverflow.com/q/1228299/16317008 # 2. 编码 另外是关于编码的问题, Unicode和utf-8, Python的string使用unicode来表示字符, Python’s string type uses the Unicode Standard for representing characters, which lets Python programs work with all these different possible characters.">
-<meta property='og:url' content='http://localhost:1313/p/%E7%94%A8python%E8%84%9A%E6%9C%AC%E7%BB%99%E6%96%87%E7%AB%A0%E4%B8%AD%E8%8B%B1%E5%AD%97%E7%AC%A6%E4%BB%A5%E5%8F%8A%E7%AC%A6%E5%8F%B7%E9%97%B4%E5%8A%A0%E7%A9%BA%E6%A0%BC/'>
+<meta property='og:url' content='https://blog.yorforger.cc/p/%E7%94%A8python%E8%84%9A%E6%9C%AC%E7%BB%99%E6%96%87%E7%AB%A0%E4%B8%AD%E8%8B%B1%E5%AD%97%E7%AC%A6%E4%BB%A5%E5%8F%8A%E7%AC%A6%E5%8F%B7%E9%97%B4%E5%8A%A0%E7%A9%BA%E6%A0%BC/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='python' /><meta property='article:published_time' content='2023-06-01T10:41:24&#43;00:00'/><meta property='article:modified_time' content='2023-06-01T10:41:24&#43;00:00'/>
 <meta name="twitter:title" content="用Python脚本给文章中英字符以及符号间加空格">

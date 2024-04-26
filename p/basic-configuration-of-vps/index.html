@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+    <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Login without using keypairs Copy your ssh public key on your computer into the ~/.ssh/authorized_keys file on you EC2 instance. On you local machine: 1 2 $ cat ~/.ssh/id_rsa.pub ... Copy the content into your EC2 instance: 1 $ sudo vi .ssh/authorized_keys Then you can login directly. # 2. oh-my-zsh shell 1 2 3 4 5 sudo apt install zsh -y chsh -s /bin/zsh sh -c &#34;$(wget https://raw.">
 <title>Basic Configuration of VPS</title>
 
-<link rel='canonical' href='http://localhost:1313/p/basic-configuration-of-vps/'>
+<link rel='canonical' href='https://blog.yorforger.cc/p/basic-configuration-of-vps/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Basic Configuration of VPS">
 <meta property='og:description' content="# 1. Login without using keypairs Copy your ssh public key on your computer into the ~/.ssh/authorized_keys file on you EC2 instance. On you local machine: 1 2 $ cat ~/.ssh/id_rsa.pub ... Copy the content into your EC2 instance: 1 $ sudo vi .ssh/authorized_keys Then you can login directly. # 2. oh-my-zsh shell 1 2 3 4 5 sudo apt install zsh -y chsh -s /bin/zsh sh -c &#34;$(wget https://raw.">
-<meta property='og:url' content='http://localhost:1313/p/basic-configuration-of-vps/'>
+<meta property='og:url' content='https://blog.yorforger.cc/p/basic-configuration-of-vps/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='build website' /><meta property='article:published_time' content='2023-09-09T15:53:57&#43;00:00'/><meta property='article:modified_time' content='2023-09-09T15:53:57&#43;00:00'/>
 <meta name="twitter:title" content="Basic Configuration of VPS">
@@ -395,9 +395,12 @@
 </span><span class="lnt">10
 </span><span class="lnt">11
 </span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">➜  ~ sudo ufw status
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">➜  ~ ufw status
 </span></span><span class="line"><span class="cl">Status: active
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">To                         Action      From
@@ -406,9 +409,12 @@
 </span></span><span class="line"><span class="cl">22/tcp <span class="o">(</span>v6<span class="o">)</span>                ALLOW       Anywhere <span class="o">(</span>v6<span class="o">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1"># if you need 443, do this:</span>
-</span></span><span class="line"><span class="cl">➜  ~ sudo ufw allow <span class="m">443</span>
+</span></span><span class="line"><span class="cl">➜  ~ ufw allow <span class="m">443</span>
 </span></span><span class="line"><span class="cl">Rule added
 </span></span><span class="line"><span class="cl">Rule added <span class="o">(</span>v6<span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># or just disable</span>
+</span></span><span class="line"><span class="cl">➜  ~ ufw disable
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Learn more: <a class="link" href="https://davidzhu.xyz/post/build-website/006-ufw-aws-sg/"  target="_blank" rel="noopener"
@@ -485,7 +491,17 @@
 	
 	
 ></p>
-
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># vpn x-ui</span>
+</span></span><span class="line"><span class="cl">bash &lt;<span class="o">(</span>curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/956bf85bbac978d56c0e319c5fac2d6db7df9564/install.sh<span class="o">)</span> 0.3.4.4
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
 </section>
 
 

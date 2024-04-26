@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+    <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 为什么 useEffect 不能是异步函数 异步函数隐式地返回一个Promise，而useEffect的设计是期望返回一个清理函数或者什么都不返回（undefined）。这个设计原则确保了React能够正确地处理副作用和它们的清理逻辑。 如果你需要在useEffect中执行异步操作，正确的做法是在useEffect的函数体内定义一个异步函数，并在该函数内执行异步操作，然后立即调用这个异步函数。例如： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 useEffect(() =&gt; { async function fetchData() { // 异步操作 const data = await fetchSomeData(); // 使用数据更新状态 setState(data); } fetchData(); // 清理函数（如果需要） return () =&gt; { // 清理逻辑 }; }, [/* 依赖列表 */]); 这种模式允许在useEffect内部使用异步操作，同时遵循React的副作用处理规则。 函数组件在其主体内不应该执行有副作用的操作，比如直接进行网络请求、订阅事件、直接操作DOM等。这些操作应该放在特定的生命周期方法或钩子（如useEffect） # 2. When useEffect is called What does useEffect do? By using this Hook, you tell React that your component needs to do something after render.">
 <title>useEffect Hook in React</title>
 
-<link rel='canonical' href='http://localhost:1313/p/useeffect-hook-in-react/'>
+<link rel='canonical' href='https://blog.yorforger.cc/p/useeffect-hook-in-react/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="useEffect Hook in React">
 <meta property='og:description' content="# 为什么 useEffect 不能是异步函数 异步函数隐式地返回一个Promise，而useEffect的设计是期望返回一个清理函数或者什么都不返回（undefined）。这个设计原则确保了React能够正确地处理副作用和它们的清理逻辑。 如果你需要在useEffect中执行异步操作，正确的做法是在useEffect的函数体内定义一个异步函数，并在该函数内执行异步操作，然后立即调用这个异步函数。例如： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 useEffect(() =&gt; { async function fetchData() { // 异步操作 const data = await fetchSomeData(); // 使用数据更新状态 setState(data); } fetchData(); // 清理函数（如果需要） return () =&gt; { // 清理逻辑 }; }, [/* 依赖列表 */]); 这种模式允许在useEffect内部使用异步操作，同时遵循React的副作用处理规则。 函数组件在其主体内不应该执行有副作用的操作，比如直接进行网络请求、订阅事件、直接操作DOM等。这些操作应该放在特定的生命周期方法或钩子（如useEffect） # 2. When useEffect is called What does useEffect do? By using this Hook, you tell React that your component needs to do something after render.">
-<meta property='og:url' content='http://localhost:1313/p/useeffect-hook-in-react/'>
+<meta property='og:url' content='https://blog.yorforger.cc/p/useeffect-hook-in-react/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='front-end' /><meta property='article:published_time' content='2023-12-26T19:49:22&#43;00:00'/><meta property='article:modified_time' content='2023-12-26T19:49:22&#43;00:00'/>
 <meta name="twitter:title" content="useEffect Hook in React">
