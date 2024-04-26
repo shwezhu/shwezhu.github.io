@@ -30,7 +30,6 @@ Popular ISAs:
 
 Different OSs have different system calls. We use standard libraries to make system calls, such as `printf` in C. 
 
-
 ## Cross-compilation
 
 Cross-compilation is the process of compiling code for a platform different from the one on which the compiler is running. 
