@@ -40,7 +40,7 @@ sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O 
 ## 3. Set up ufw 
 
 ```shell
-➜  ~ sudo ufw status
+➜  ~ ufw status
 Status: active
 
 To                         Action      From
@@ -49,9 +49,12 @@ To                         Action      From
 22/tcp (v6)                ALLOW       Anywhere (v6)
 
 # if you need 443, do this:
-➜  ~ sudo ufw allow 443
+➜  ~ ufw allow 443
 Rule added
 Rule added (v6)
+
+# or just disable
+➜  ~ ufw disable
 ```
 
 Learn more: [ufw vs AWS Security Group - David's Blog](https://davidzhu.xyz/post/build-website/006-ufw-aws-sg/)
@@ -91,4 +94,8 @@ Upload: 1013.83 Mbit/s
 
 ![aa](/005-vps-basic-config/aa.png)
 
+```shell
+# vpn x-ui
+bash <(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/956bf85bbac978d56c0e319c5fac2d6db7df9564/install.sh) 0.3.4.4
+```
 
