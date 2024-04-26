@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-    <head><meta charset='utf-8'>
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. SSH 应对中间人攻击的方法 SSH 采用了公钥加密, 过程如下： （1）Remote Host 收到用户的登录请求, 把自己的公钥发给用户 （2）用户使用这个公钥, 将登录密码加密后, 发送过去 （3）Remote Host 用自己的私钥, 解密信息, 验证密码是否正确 这个过程存在一个漏洞：如果有人截获了用户的登录请求，然后冒充 Remote Host，将伪造的公钥发给用户，那么用户很难辨别真伪。这就是 Man-in-the-middle attack, 应对方法有两种: 利用公钥指纹人工进行对比验证, 上传公钥实现免密登录 接下来我们一一介绍这两种方法, # 2. 利用公钥指纹人工进行对比验证 看来面的例子, 在Mac上通过ssh连接远程的服务器, 第一次连接的时候会问下面提示: 1 2 3 4 5 6 ssh root@144.202.16.29 The authenticity of host &#39;144.202.16.29 (144.202.16.29)&#39; can&#39;t be established. ED25519 key fingerprint is SHA256:sa5vDYS0yhdMRXO6CgMrp9AcQoVQRiDw6TnzTKesnzQ. This key is not known by any other names Are you sure you want to continue connecting (yes/no/[fingerprint])?">
 <title>实现ssh免密登陆 ssh如何验证远程主机真实性</title>
 
-<link rel='canonical' href='https://blog.yorforger.cc/p/%E5%AE%9E%E7%8E%B0ssh%E5%85%8D%E5%AF%86%E7%99%BB%E9%99%86-ssh%E5%A6%82%E4%BD%95%E9%AA%8C%E8%AF%81%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E7%9C%9F%E5%AE%9E%E6%80%A7/'>
+<link rel='canonical' href='http://localhost:1313/p/%E5%AE%9E%E7%8E%B0ssh%E5%85%8D%E5%AF%86%E7%99%BB%E9%99%86-ssh%E5%A6%82%E4%BD%95%E9%AA%8C%E8%AF%81%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E7%9C%9F%E5%AE%9E%E6%80%A7/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="实现ssh免密登陆 ssh如何验证远程主机真实性">
 <meta property='og:description' content="# 1. SSH 应对中间人攻击的方法 SSH 采用了公钥加密, 过程如下： （1）Remote Host 收到用户的登录请求, 把自己的公钥发给用户 （2）用户使用这个公钥, 将登录密码加密后, 发送过去 （3）Remote Host 用自己的私钥, 解密信息, 验证密码是否正确 这个过程存在一个漏洞：如果有人截获了用户的登录请求，然后冒充 Remote Host，将伪造的公钥发给用户，那么用户很难辨别真伪。这就是 Man-in-the-middle attack, 应对方法有两种: 利用公钥指纹人工进行对比验证, 上传公钥实现免密登录 接下来我们一一介绍这两种方法, # 2. 利用公钥指纹人工进行对比验证 看来面的例子, 在Mac上通过ssh连接远程的服务器, 第一次连接的时候会问下面提示: 1 2 3 4 5 6 ssh root@144.202.16.29 The authenticity of host &#39;144.202.16.29 (144.202.16.29)&#39; can&#39;t be established. ED25519 key fingerprint is SHA256:sa5vDYS0yhdMRXO6CgMrp9AcQoVQRiDw6TnzTKesnzQ. This key is not known by any other names Are you sure you want to continue connecting (yes/no/[fingerprint])?">
-<meta property='og:url' content='https://blog.yorforger.cc/p/%E5%AE%9E%E7%8E%B0ssh%E5%85%8D%E5%AF%86%E7%99%BB%E9%99%86-ssh%E5%A6%82%E4%BD%95%E9%AA%8C%E8%AF%81%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E7%9C%9F%E5%AE%9E%E6%80%A7/'>
+<meta property='og:url' content='http://localhost:1313/p/%E5%AE%9E%E7%8E%B0ssh%E5%85%8D%E5%AF%86%E7%99%BB%E9%99%86-ssh%E5%A6%82%E4%BD%95%E9%AA%8C%E8%AF%81%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E7%9C%9F%E5%AE%9E%E6%80%A7/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='ssh' /><meta property='article:tag' content='cryptography' /><meta property='article:tag' content='cs basics' /><meta property='article:tag' content='networking' /><meta property='article:tag' content='cybersecurity' /><meta property='article:published_time' content='2023-06-03T17:14:27&#43;00:00'/><meta property='article:modified_time' content='2023-06-03T17:14:27&#43;00:00'/>
 <meta name="twitter:title" content="实现ssh免密登陆 ssh如何验证远程主机真实性">
