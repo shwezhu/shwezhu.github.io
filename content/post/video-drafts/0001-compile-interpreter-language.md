@@ -30,6 +30,13 @@ Popular ISAs:
 
 Different OSs have different system calls. We use standard libraries to make system calls, such as `printf` in C. 
 
+Hardware ---Drivers---> OS ---System Call---> Standard Library used by our program. 
+
+```c
+// call system call 'open' internally 
+FILE *file = fopen("hello.txt", "r");
+```
+
 ## Cross-compilation
 
 Cross-compilation is the process of compiling code for a platform different from the one on which the compiler is running. 
@@ -46,7 +53,7 @@ Java - Write once, run anywhere. Benefits from the JVM.
 
 Python - Benefits from the Python interpreter. 
 
-C, C++ - Cross-compile the code.
+C, C++ - Cross-compile tools.
 
 ## References
 
@@ -55,5 +62,6 @@ C, C++ - Cross-compile the code.
 > x86 processors typically operate independently of peripheral components, such as RAM and GPUs. But ARM processors were designed to package these additional components into a central unit. That's why ARM processors operate as part of a System on Chip (SOC). [source](https://arc.net/l/quote/zvffhkyc)
 
 > When you communicate with GPUs, you typically use graphics libraries such as OpenGL, Vulkan, or DirectX. The company that sold you the **graphics card** also provides a graphics driver that translates commands from these graphics libraries into instructions that the GPU can understand. The instructions that your graphics driver generate are in a proprietary protocol known only to a few wizards at NVIDIA and AMD who actually understand how GPUs work on a low level. Us mere mortals don't get to look under the hood at these instructions.
-> Interestingly, many modern CPUs operate the same way. They take your x86 code and internally translate it into something better, faster, and chip specific. Adopted from [source](https://arc.net/l/quote/zvuupchl)
+> Interestingly, many modern CPUs operate the same way. They take your x86 code and internally translate it into something better, faster, and chip specific. Adopted from [Stackoverflow](https://arc.net/l/quote/zvuupchl)
 
+> `open()` is *both* a syscall and a function in the standard C library, `fopen()` is a function in the standard C library, that sets up a file handle -- a data structure of type `FILE` that contains additional stuff like optional buffering --, and internally calls `open()` also.  [source](https://arc.net/l/quote/xqtpqwti)

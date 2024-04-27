@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 # Required parameters:
 # @raycast.schemaVersion 1
@@ -16,6 +16,7 @@ export PATH='/Users/David/sdk/go1.20.4/bin/:$PATH'
 export PATH='/opt/homebrew/bin/:$PATH'
 export PATH='/usr/bin/:$PATH'
 
+cd blogs/
 hugo
 cd public/
 git switch master
