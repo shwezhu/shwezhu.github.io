@@ -62,8 +62,6 @@ This will print a stirng:
 
 The `innerHTML` property is part of the Document Object Model (DOM) that allows Javascript code to manipulate a website being displayed. Specifically, it allows reading and replacing everything within a given DOM element (HTML tag).
 
-
-
-References:
+## References
 
 - [What is the use of the defer attribute in the HTML <script> tag?](https://www.educative.io/answers/what-is-the-use-of-the-defer-attribute-in-the-html-script-tag)

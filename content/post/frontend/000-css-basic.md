@@ -11,7 +11,7 @@ typora-root-url: ../../../static
 ## Block and Inline
 
 - block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定
-  - 特殊情况: button 默认是 inline-block, 支持设置宽高, **即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是由内容决定的.**
+  - 特殊情况: button 默认是 inline-block, 支持设置宽高, **即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是由内容决定的.** 
   - 其他的 inline 元素, 如 `<span>`, `<a>`, `<strong>`, 如果设置为 block, 则其宽度会自动变为父元素的 100%. 
 
 - inline 元素不会独占一行, 宽高度由内容决定
