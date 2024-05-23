@@ -11,7 +11,7 @@ tags:
 
 | `+`  | one occurrences of the preceding element         |
 | ---- | ------------------------------------------------ |
-| `*`  | zero occurrence of the preceding element         |
+| `*`  | zero or more occurrence of the preceding element |
 | `?`  | zero or one occurrences of the preceding element |
 | `.`  | matches any single character (exclude newlines)  |
 

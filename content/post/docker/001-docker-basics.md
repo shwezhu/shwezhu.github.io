@@ -30,34 +30,35 @@ CMD ["-p", "80"]
 ## 2. Docker commands
 
 ```shell
+#-------------- build and delete image --------------
+$ docker build -t davidzhu/go-learning:v1.0 .
+$ docker rmi shwezhu/file-station:v1	# if docker is in-use, delete with -f
+$ docker rm container_id
+
+# docker run 用于创建一个新的容器并在其中运行一个命令
+# specify the container name, if not specified, generate a name for running contianer
+$ docker run --name mysql-volume ...
+# --rm automatically removes the container when it exits,
+# -d: Run container in background
+$ docker run -d -p 80:80 --rm file-server
+
+# docker exec 用于在已经运行的容器中执行命令
+# run a contianer, 'file-server' is the container name, not image
+$ docker exec -it file-server bash # specify'bash' as the shell of container
+$ docker exec -it file-server /bin/sh # specify '/bin/sh' as the shell of container
+
+# publish and pull image from repo
+$ docker push shwezhu/file-station:v1
+$ docker pull davidzhu/file-station:v1
+
+#-------------------- show info ------------------------
+$ docker container ls -a
+$ docker image ls -a
 # check the output of the program running in the container
 $ docker logs container_name
 
 # volumes, mount the folder on the machine '~/root' to the '/app/root' dir of the container
 $ docker run --name file-server --rm -d -p 80:80 -v ~/root:/app/root shwezhu/file-server:v1.0 ./server -p 80 
-
-# file-server is the container name, not image
-$ docker exec -it file-server bash 
-$ docker exec -it file-server /bin/sh 
-#------------- show --------------
-$ docker container ls -a
-$ docker image ls -a
-
-#-------------- build and delete --------------
-$ docker build -t davidzhu/go-learning:v1.0 .
-$ docker rmi shwezhu/file-station:v1	# if docker is in-use, delete with -f
-$ docker rm container_id
-
-#------------------ run image ----------------------
-# --rm automatically removes the container when it exits,
-# -d: Run container in background
-$ docker run -d -p 80:80 --rm davidzhu/go-learning:v1.0
-# specify the container name
-$ docker run --name mysql-volume ...
-
-# publish and pull image from repo
-$ docker push shwezhu/file-station:v1
-$ docker pull davidzhu/file-station:v1
 ```
 
 ## 3. Build image
