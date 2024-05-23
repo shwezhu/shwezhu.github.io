@@ -8,10 +8,11 @@ categories:
 
 # 1. Implicit returns SE-0255
 
-If the entire body of the function is a single expression, the function implicitly returns that expression.
+This is a feature in Swift (SE-0255) that, for the sake of syntactic conciseness, allows the `return` keyword to be omitted when a method, computed property, or closure contains only a single expression.
 
 ```swift
-// for: external parameter name
+// function or methods
+// for: external parameter name or call it 'parameter label'
 func greeting(for person: String) -> String {
     "Hello, " + person + "!"
 }
@@ -19,7 +20,32 @@ print(greeting(for: "Dave"))
 // Prints "Hello, Dave!"
 ```
 
-## 2. Closure Expression
+```swift
+// computed property
+struct Circle {
+    var radius: Double
+
+    var circumference: Double {
+        2 * .pi * radius
+    }
+}
+```
+
+```swift
+// closures before
+let square: (Int) -> Int = { (number: Int) in
+    return number * number
+}
+
+// closures now, no returns
+let square: (Int) -> Int = { number in
+    number * number
+}
+```
+
+## 2. Closure
+
+### 2.1. Closure Syntax
 
 ```swift
 { (<#parameters#>) -> <#return type#> in
@@ -39,6 +65,107 @@ reversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in
 let names = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
 reversedNames = names.sorted(by: { s1, s2 in s1 > s2 } )
 ```
+
+### 2.2 Trailing Closure
+
+If the last parameter to a function is a closure, Swift lets you use special syntax called *trailing closure syntax*. Rather than pass in your closure as a parameter, you pass it directly after the function inside braces.
+
+```swift
+func travel(action: () -> Void) {
+    print("I'm getting ready to go.")
+    action()
+    print("I arrived!")
+}
+```
+
+Because its last parameter is a closure, we can call `travel()` using trailing closure syntax like this:
+
+```swift
+travel() {
+    print("I'm driving in my car")
+}
+```
+
+In fact, because there aren’t any other parameters, we can eliminate the parentheses entirely:
+
+```swift
+travel {
+    print("I'm driving in my car")
+}
+```
+
+疑问: 参数 `action` 的类型是 `() -> Void`, 而 `print()` 接受了一个参数, 他们明明不是同一个类型, 为什么把 `print("I'm driving in my car")` 当参数传给了 `action` 呢?
+
+解答: 当你调用 `travel` 并传递 `print("I'm driving in my car")` 时(如下)：
+
+```swift
+travel {
+    print("I'm driving in my car")
+}
+```
+
+你传递的是一个闭包。这个闭包的定义如下：
+
+```swift
+{
+    print("I'm driving in my car")
+}
+```
+
+这个闭包本身符合 `() -> Void` 类型，因为它不接受任何参数并且不返回任何值. 虽然闭包单个语句会自动加上 return, 但是 print 返回为空, 在此合法. 
+
+References: [Trailing closure syntax - a free Hacking with Swift tutorial](https://www.hackingwithswift.com/sixty/6/5/trailing-closure-syntax)
+
+### 2.3. Trailing Closure in SwiftUI
+
+VStack 的简单定义:
+
+```swift
+struct VStack<Content: View>: View {
+    // 最后一个参数是闭包, 因此构建 VStack 可以使用 尾随闭包语法
+    init(@ViewBuilder content: () -> Content)
+
+    var body: some View {
+        // 内部实现
+    }
+}
+```
+
+实际使用
+```swift
+var body: some View { 
+    VStack {         // Trailing Closure
+        Text("Hello World")
+        Text("Title")
+    }
+}
+
+var body: some View {
+    VStack(content:{ // No Trailing Closure
+        Text("Hello World")
+        Text("Title")
+    })
+}
+```
+
+`@ViewBuilder` 允许你在一个闭包中返回多个视图，并且会自动将这些视图组合成一个视图。比如：
+
+```swift
+VStack {
+    Text("Hello, world!")
+    Text("Hello World")
+}
+```
+
+在这里，`VStack` 的闭包传递给了 `content` 参数。这个闭包内部包含了两个 `Text` 视图。`@ViewBuilder` 属性包装器会处理这个闭包，将其转换为单一的视图内容。
+
+**具体工作机制**
+
+1. **闭包定义**：你在 `VStack` 中传递了一个闭包，这个闭包包含多个视图。
+2. **`@ViewBuilder` 处理**：`@ViewBuilder` 会将闭包中的多个视图组合成一个视图。它会将这些视图收集起来，构建一个包含所有子视图的视图树。
+3. **传递组合视图**：最终，这个组合视图被传递给 `VStack`，作为其内容。
+
+因此，尽管看起来你传递了多个视图（比如 `Text("Hello, world!")` 和 `Text("Hello World")`），但实际上你传递的是一个闭包，这个闭包在 `@ViewBuilder` 的帮助下返回了一个组合视图。
 
 ## 3. Properties
 
