@@ -117,15 +117,46 @@ print("someInt is now \(someInt), and anotherInt is now \(anotherInt)")
 // Prints "someInt is now 107, and anotherInt is now 3"
 ```
 
+## 5. Opaque type
+
+A function or method that returns an opaque type **hides** its return value’s **type information**. Instead of providing a concrete type as the function’s return type, the return value is described in terms of the protocols it supports.
+
+```swift
+
+protocol Animal {
+    func makeSound() -> String
+}
+
+struct Dog: Animal {
+    func makeSound() -> String {
+        return "Woof"
+    }
+}
+
+struct Cat: Animal {
+    func makeSound() -> String {
+        return "Meow"
+    }
+}
+
+// Although we know that it returns either a Cat or a Dog, the exact type is hidden.
+func getAnimal() -> some Animal {
+    return Dog()
+}
+```
+
+```swift
+var myCar: some Vehicle = Car()
+myCar = Car() // 🔴 Compile error: Cannot assign value of type 'Car' to type 'some Vehicle'
 
 
+var myCar1: some Vehicle = Car()
+var myCar2: some Vehicle = Car()
+myCar2 = myCar1 // 🔴 Compile error: Cannot assign value of type 'some Vehicle' (type of 'myCar1') to type 'some Vehicle' (type of 'myCar2')
+```
 
-
-
-
-
-
-
+- [Understanding the "some" and "any" keywords in Swift 5.7 - Swift Senpai](https://swiftsenpai.com/swift/understanding-some-and-any/)
+- [How to use Swift's opaque types | Reintech media](https://reintech.io/blog/understanding-using-swifts-opaque-types)
 
 
 
