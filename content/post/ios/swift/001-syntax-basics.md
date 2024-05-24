@@ -51,19 +51,21 @@ let square: (Int) -> Int = { number in
 { (<#parameters#>) -> <#return type#> in
    <#statements#>
 }
-
-// example
-let names = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
-reversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in
-    return s1 > s2
-})
 ```
 
 ```swift
-// Implicit Returns from Single-Expression Closures
-// Inferring Type From Contextin page link
-let names = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
-reversedNames = names.sorted(by: { s1, s2 in s1 > s2 } )
+let coo = {() -> Void in
+     print("closure")
+}
+
+let foo = { (str:String) -> String in
+    return str
+}
+
+coo()
+
+let str = foo("closure")
+print(str)
 ```
 
 ### 2.2 Trailing Closure
