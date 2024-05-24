@@ -167,6 +167,25 @@ VStack {
 
 因此，尽管看起来你传递了多个视图（比如 `Text("Hello, world!")` 和 `Text("Hello World")`），但实际上你传递的是一个闭包，这个闭包在 `@ViewBuilder` 的帮助下返回了一个组合视图。
 
+> `@ViewBuilder` 实际上是 Swift 中的一种 Result Builder, 后面会讲. 
+
+综上:
+
+```swift
+struct ContentView: View {
+    // 计算属性 省略 return
+    var body: some View {
+        // Trailing Closure 和 Result Builder 特性
+        VStack {
+            Text("Hello World")
+            Text("Title")
+        }
+    }
+}
+```
+
+References: [(一) SwiftUI - 声明式语法分析 - 掘金](https://juejin.cn/post/6897910455138779144)
+
 ## 3. Properties
 
 ### 3.1. Lazy Stored Properties
@@ -207,7 +226,7 @@ let rectangle = Rectangle(width: 5.0, height: 10.0)
 print(rectangle.area)  // 50.0
 ```
 
-## 4. Function
+## 4. Functions
 
 ### 4.1. Variadic Parameters
 
@@ -285,7 +304,62 @@ myCar2 = myCar1 // 🔴 Compile error: Cannot assign value of type 'some Vehicle
 - [Understanding the "some" and "any" keywords in Swift 5.7 - Swift Senpai](https://swiftsenpai.com/swift/understanding-some-and-any/)
 - [How to use Swift's opaque types | Reintech media](https://reintech.io/blog/understanding-using-swifts-opaque-types)
 
+## 6. Result Builders
 
+```swift
+func makeSentence1() -> String { 
+     // single expression, implicit return
+    "Why settle for a Duke when you can have a Prince?"
+}
 
+print(makeSentence1())
+```
 
+That works great, but what if had several strings we wanted to join together? Just like SwiftUI, we might want to provide them all individually and have Swift figure it out, however this kind of code won’t work:
+
+```swift
+// This is invalid Swift, and will not compile.
+// func makeSentence2() -> String {
+//     "Why settle for a Duke"
+//     "when you can have"
+//     "a Prince?"
+// }
+```
+
+By itself, that code won’t work because Swift no longer understands what we mean. However, we could create a result builder that understands how to convert several strings into one string using whatever transformation we want, like this:
+
+```swift
+@resultBuilder
+struct SimpleStringBuilder {
+    static func buildBlock(_ parts: String...) -> String {
+        parts.joined(separator: "\n")
+    }
+}
+```
+
+There’s nothing to stop us from using `SimpleStringBuilder.buildBlock()` directly, like this:
+
+```swift
+let joined = SimpleStringBuilder.buildBlock(
+    "Why settle for a Duke",
+    "when you can have",
+    "a Prince?"
+)
+
+print(joined)
+```
+
+However, because we used the `@resultBuilder` annotation with our `SimpleStringBuilder` struct, we can also apply that to functions, like this:
+
+```swift
+@SimpleStringBuilder func makeSentence3() -> String {
+    "Why settle for a Duke"
+    "when you can have"
+    "a Prince?"
+}
+
+print(makeSentence3())
+```
+
+References: [Result builders – available from Swift 5.4](https://www.hackingwithswift.com/swift/5.4/result-builders)
 
