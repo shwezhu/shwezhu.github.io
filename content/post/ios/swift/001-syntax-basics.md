@@ -58,14 +58,18 @@ let coo = {() -> Void in
      print("closure")
 }
 
+// 因为 coo 无返回值也无参数, 可以简写为如下:
+let coo = {
+     print("closure")
+}
+
+// 带参数以及返回值的闭包
 let foo = { (str:String) -> String in
     return str
 }
 
 coo()
-
-let str = foo("closure")
-print(str)
+print(foo("closure"))
 ```
 
 ### 2.2 Trailing Closure
@@ -118,7 +122,54 @@ travel {
 
 References: [Trailing closure syntax - a free Hacking with Swift tutorial](https://www.hackingwithswift.com/sixty/6/5/trailing-closure-syntax)
 
-### 2.3. Trailing Closure in SwiftUI
+### 2.3. Call function without parentheses
+
+Only when you call a function with trailing closure, you can call it without parenthese. 
+
+```swift
+func getName(action: () -> Void) -> String {
+    action()
+    return "Jack"
+}
+
+// call function getName, and pass a closure which contains two expressions
+let a = getName {
+    print("hello...")
+    print("Getting your name...")
+}
+
+print(a)
+```
+
+> 对于上面的代码, 因为闭包参数和返回值皆为空, 我们省略了一些东西, 完整的写法应该如下
+>
+> ```swift
+> let a = getName {() -> Void in
+>     print("hello...")
+>     print("Getting your name...")
+> }
+> ```
+>
+> 如果你需要更完整的写法, 即不使用尾随闭包, 写法应该如下:
+>
+> ```swift
+> let a = getName(action: { () -> Void in
+>     print("hello...")
+>     print("Getting your name...")
+> })
+> ```
+
+Assume `getName` doesn't have parameters, you cannot omit the parentheses when call it:
+
+```swift
+func getName() -> String {
+    return "Jack"
+}
+
+let a = getName // This is not calling getName, this is assign a function to variable 'a'
+```
+
+### 2.4. Trailing Closure in SwiftUI
 
 VStack 的简单定义:
 
@@ -136,14 +187,15 @@ struct VStack<Content: View>: View {
 实际使用
 ```swift
 var body: some View { 
-    VStack {         // Trailing Closure
+    VStack { // 这里使用了尾随闭包, 因为这里没有给VStack构造函数传递其他参数, 因此调用时可省略括号()
         Text("Hello World")
         Text("Title")
     }
 }
 
+// 不使用尾随闭包
 var body: some View {
-    VStack(content:{ // No Trailing Closure
+    VStack(content:{
         Text("Hello World")
         Text("Title")
     })
@@ -187,6 +239,51 @@ struct ContentView: View {
 ```
 
 References: [(一) SwiftUI - 声明式语法分析 - 掘金](https://juejin.cn/post/6897910455138779144)
+
+### 2.5. Trailing Closure in SwiftUI
+
+```swift
+private func addItem() {
+    withAnimation {
+        let newItem = Item(context: viewContext)
+        newItem.timestamp = Date()
+
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+}
+```
+
+`withAnimation` 是个函数,  最后一个参数是个闭包, 因此调用 withAnimation 时可以直接将参数闭包放于函数体内, 从而省略了圆括号, 这个语法上面讲了,  另外这里传递闭包的时候我们还省略的闭包的返回值, 因为当返回值为 Void, 原本的写法应该是这样:
+
+```swift
+withAnimation { () -> Void in
+    // 闭包体
+}
+```
+
+我们省略了闭包的返回值类型, 即如下:
+
+```swift
+withAnimation {
+    // 闭包体
+}
+```
+
+withAnimation 定义如下:
+
+```swift
+func withAnimation<Result>(
+    _ animation: Animation? = .default,
+    _ body: () throws -> Result
+) rethrows -> Result
+```
+
+可以看出withAnimation 有一个返回值, 切参数闭包 body 也有返回值, 但是上面我们调用  withAnimation 时却忽略了闭包的返回值, 这是因为 `<Result>` 可以为任何类型, 所以也可以为 Viod, 这是泛型的用法.
 
 ## 3. Properties
 
