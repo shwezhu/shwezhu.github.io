@@ -1,12 +1,12 @@
 ---
-title: Swift Syntax - Function & Class
+title: Swift Functions
 date: 2024-05-26 16:03:35
 categories:
  - swift
  - ios
 ---
 
-## Function
+## Functions
 
 
 ### Optional Parameters
@@ -92,4 +92,21 @@ func greet(name: String?) {
     ...
 }
 ```
+
+> 参数必须为可选参数才可以使用 `??` , **只有可选参数可以为空**, 如果参数不是可选参数, 给的默认值也不能是空, 
+>
+> ```swift
+> // 报错: Nil default argument value cannot be converted to type 'String'
+> init(name: String = nil) {
+>         self.name = name ?? ""
+> }
+> ```
+
+
+
+
+
+
+
+
 

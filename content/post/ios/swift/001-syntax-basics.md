@@ -463,15 +463,7 @@ print(makeSentence3())
 References: [Result builders – available from Swift 5.4](https://www.hackingwithswift.com/swift/5.4/result-builders)
 
 ```swift
-//
-//  TaskEditView.swift
-//  TodoList
-//
-//  Created by David Zhu on 2024-05-25.
-//
-
 import SwiftUI
-instance, 通过 TaskItem()
 struct TaskEditView: View {
     @State var selectedTaskItem: TaskItem?
     @State var name: String
