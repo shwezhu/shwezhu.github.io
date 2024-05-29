@@ -43,3 +43,7 @@ struct TaskEditView: View {
 ### 2. Modifiers
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/05/df1383f3a902606d7301b8da47bff81f.jpg)
+
+### 3. Image & Space
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/05/43d67a15e7778406b97e2cbfc1d27cf6.jpg)
