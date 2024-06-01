@@ -1,5 +1,5 @@
 ---
-title: SwiftUI Basics
+title: SwiftUI Basics - Weather App
 date: 2024-05-27 18:26:30
 categories:
  - swift
@@ -32,15 +32,15 @@ struct TaskEditView: View {
 }
 ```
 
-`@State` 属性包装器在创建时, 会自动生成三个重要的组件：
-
 1. **Wrapped Value (`self.name`)**: 这是通过 `@State` 包装的值的直接访问方式，即在你的例子中是类型为 `String` 的值。
 2. **Storage (`self._name`)**: 这是对包装器本身的直接访问，允许你看到和操作底层的存储机制，通常在初始化或特定的操作中使用。
-3. **Projected Value (`self.$name`)**: 这是一个提供了双向数据绑定能力的 `Binding` 类型。当你使用 `@State` 属性时，SwiftUI 为你自动生成这个 `Binding`，它允许你将状态与 UI 组件绑定，**使得 UI 可以显示状态的当前值，并在状态变化时自动更新显示. 这也是为什么上面有代码: `TextField("Task Name", text: self.$name)`
+3. **Projected Value (`self.$name`)**: 类型: `Binding<String>`, passing data down to subviews 经常会用到, 注意这是双向的, 如果在其 subview 修改 name, 主 view 中的 name 也会被修改, 这才是使用 binding 的目的, 即子视图打算修改主视图的数据. 
 
 参考: https://stackoverflow.com/a/65209375/16317008
 
-### 2. Modifiers
+### 2. The Order of Applying Modifiers matters
+
+可以看出 background 并没有作用在 frame 上, 即每个 modifier 都是返回了一个新的视图, 当前 modifier 都是作用在了前面的视图上, 所以使用 modifier 的顺序会影响最终视图的结果, 
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/05/df1383f3a902606d7301b8da47bff81f.jpg)
 
@@ -50,7 +50,40 @@ struct TaskEditView: View {
 
 > 把 Spacer() 理解成一个双向弹簧, 负责挤压元素
 
-### 4. 读文档写代码
+### 4. Background Color - LinearGradient
+
+```swift
+struct BackgroundView: View {
+    var isNight: Bool
+    
+    var body: some View {
+        LinearGradient(gradient: Gradient(colors: [isNight ? .black : .blue, isNight ? .gray : .white]), startPoint:.top, endPoint: .bottom)
+            .edgesIgnoringSafeArea(.all)
+    }
+}
+
+// 在 ZStack 中创建背景实例
+ZStack {
+  BackgroundView(isNight: false)
+  // 其他组件...
+}
+```
+
+除了 LinearGradient() 还可以使用ContainerRelativeShape()创建背景, 另外颜色也有 `.gradient ` 属性, 即不用像上面那样手动指定开头结尾了, 比较简洁但失去了定制性. 
+
+```swift
+struct BackgroundView: View {
+    var isNight: Bool
+    
+    var body: some View {
+        ContainerRelativeShape()
+            .fill(.blue.gradient) // 颜色可以用 .gradient
+            .ignoresSafeArea()  // 背景全屏
+    }
+}
+```
+
+### 5. 读文档写代码
 
 ```swift
 Button {
@@ -82,7 +115,7 @@ func clipShape<S>(
 6. 两个参数, cornerSize 不可省略, 查看 `CGSize` 构造函数: `init(width: Float, height: Float)`
 7. 最后创建出圆角矩形: `.clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))`
 
-### 5. 练习代码
+### 6. 练习代码
 
 ```swift
 struct ContentView: View {
@@ -162,6 +195,8 @@ struct WeatherDayView: View {
 效果图:
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/05/69f2f45f523c984efcee3d4c6a98feba.jpg)
+
+
 
 
 
