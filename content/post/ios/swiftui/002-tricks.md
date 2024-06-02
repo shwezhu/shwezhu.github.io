@@ -18,7 +18,7 @@ categories:
 > .background(Color.red)
 > ```
 >
-> it cannot be omitted, as the parameter isnt typed `Color`, but `some View`. it wouldn't know where to look for `red` if type was missing.
+> it cannot be omitted, as the parameter isnt typed `Color`, but `some View`. it wouldn't know where to look for `red` if type was missing. [Source](https://stackoverflow.com/a/70132472/16317008)
 
 如下定义所示, 调用 foregroundColor 时就可以直接使用 `.red`, 不必指定类型, 
 
