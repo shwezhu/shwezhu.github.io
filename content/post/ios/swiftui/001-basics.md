@@ -6,51 +6,19 @@ categories:
  - ios
 ---
 
-### 1. Property Wrappers
-
-```swift
-struct TaskEditView: View {
-    @State var selectedTaskItem: TaskItem?
-    @State var name: String
-    
-    init(passedTaskItem: TaskItem? = nil) {
-        if let taskItem = passedTaskItem {
-            self._selectedTaskItem = State(initialValue: taskItem)
-            self._name = State(initialValue: taskItem.name ?? "")
-        } else {
-            self._name = State(initialValue: "")
-        }
-    }
-    
-    var body: some View {
-        Form {
-            Section(header: Text("Task")) {
-                TextField("Task Name", text: self.$name)
-            }
-        }
-    }
-}
-```
-
-1. **Wrapped Value (`self.name`)**: 这是通过 `@State` 包装的值的直接访问方式，即在你的例子中是类型为 `String` 的值。
-2. **Storage (`self._name`)**: 这是对包装器本身的直接访问，允许你看到和操作底层的存储机制，通常在初始化或特定的操作中使用。
-3. **Projected Value (`self.$name`)**: 类型: `Binding<String>`, passing data down to subviews 经常会用到, 注意这是双向的, 如果在其 subview 修改 name, 主 view 中的 name 也会被修改, 这才是使用 binding 的目的, 即子视图打算修改主视图的数据. 
-
-参考: https://stackoverflow.com/a/65209375/16317008
-
-### 2. The Order of Applying Modifiers matters
+### 1. The Order of Applying Modifiers matters
 
 可以看出 background 并没有作用在 frame 上, 即每个 modifier 都是返回了一个新的视图, 当前 modifier 都是作用在了前面的视图上, 所以使用 modifier 的顺序会影响最终视图的结果, 
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/05/df1383f3a902606d7301b8da47bff81f.jpg)
 
-### 3. Image & Space
+### 2. Image & Space
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/05/8a5cd0431f346d79496187cf2c56c5ea.jpg)
 
 > 把 Spacer() 理解成一个双向弹簧, 负责挤压元素
 
-### 4. Background Color - LinearGradient
+### 3. Background Color - LinearGradient
 
 ```swift
 struct BackgroundView: View {
@@ -83,7 +51,7 @@ struct BackgroundView: View {
 }
 ```
 
-### 5. 读文档写代码
+### 4. 读文档写代码
 
 ```swift
 Button {
@@ -115,7 +83,7 @@ func clipShape<S>(
 6. 两个参数, cornerSize 不可省略, 查看 `CGSize` 构造函数: `init(width: Float, height: Float)`
 7. 最后创建出圆角矩形: `.clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))`
 
-### 6. 练习代码
+### 5. 练习代码
 
 ```swift
 struct ContentView: View {
@@ -195,8 +163,4 @@ struct WeatherDayView: View {
 效果图:
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/05/69f2f45f523c984efcee3d4c6a98feba.jpg)
-
-
-
-
 

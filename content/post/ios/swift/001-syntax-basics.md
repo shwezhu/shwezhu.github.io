@@ -2,7 +2,6 @@
 title: Swift Basic Syntax and Data types
 date: 2024-05-15 22:03:35
 categories:
- - swift
  - ios
 ---
 

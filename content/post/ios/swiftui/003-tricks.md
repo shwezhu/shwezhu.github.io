@@ -2,7 +2,6 @@
 title: SwiftUI Basics - Weather App
 date: 2024-05-31 16:17:30
 categories:
- - swift
  - ios
 ---
 
@@ -30,4 +29,10 @@ func background<S>(
     ignoresSafeAreaEdges edges: Edge.Set = .all
 ) -> some View where S : ShapeStyle
 ```
+
+### 2. 使用 HStack 水平排列
+
+Button 直接放入 VStack, 默认会在中间, 
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/2f90b40d6bfa9c748e1f9dce5ec3a737.jpg)
 
