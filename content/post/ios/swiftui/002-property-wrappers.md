@@ -7,9 +7,9 @@ categories:
 
 ### 1. @State 
 
-`@State` is a property wrapper struct that just wraps any value to make sure your view will refresh or redraw whenever that value changes. References: https://stackoverflow.com/a/59616812/16317008
+`@State` is a property wrapper struct that just wraps any value to make sure your view will refresh or redraw **whenever that value changes**. References: https://stackoverflow.com/a/59616812/16317008
 
-### 2. Two-Way Binding - Projected Value
+#### 1.1. Two-Way Binding - Projected Value
 
 For state variables — variables defined with a [`State`](https://developer.apple.com/documentation/SwiftUI/State) property wrapper — the dollar sign (`$`) prefix tells SwiftUI to pass the **projectedValue**, which is a **Binding**. 
 
@@ -19,7 +19,7 @@ For state variables — variables defined with a [`State`](https://developer.app
 >
 > Use a binding to create a two-way connection **between** a property that stores data, **and** a view that displays and changes the data. A binding connects a property to a source of truth stored elsewhere, instead of storing data directly.
 
- For example, a button that toggles between play and pause can **create a binding to a property of its parent view** using the `Binding` property wrapper. 
+ For example, a button that toggles between play and pause can create a binding to a property of its parent view using the `Binding` property wrapper. 
 
 ```swift
 struct PlayButton: View {
@@ -62,3 +62,15 @@ References:
 - https://arc.net/l/quote/dtuxzrwy
 - https://stackoverflow.com/a/59616812/16317008
 - https://developer.apple.com/documentation/swiftui/state/projectedvalue
+
+### 2. @Published
+
+> ⚠️ In iOS 17 and later, the `ObservableObject` protocol has been replaced by the `Observable` macro. It is now recommended to use the `Observable` macro to create observable objects and the `@Observable` property wrapper to publish property changes. [Click to learn more](https://www.youtube.com/watch?v=EK7SthdWV2w&t=306s)
+
+In practical terms, that means **whenever an object with a property marked** `@Published` is changed, all views using that object will be reloaded to reflect those changes.
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/429b5b2b4d2b2bb43f74563fa5c27715.jpg)
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/02e6f5fb20d45ebdc1f70a677f0d42f4.jpg)
+
+Learn more: [SwiftUI Data Flow in iOS 17 - Observation & @Observable - YouTube](https://www.youtube.com/watch?v=EK7SthdWV2w&t=306s)
