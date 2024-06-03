@@ -284,49 +284,9 @@ func withAnimation<Result>(
 
 可以看出withAnimation 有一个返回值, 切参数闭包 body 也有返回值, 但是上面我们调用  withAnimation 时却忽略了闭包的返回值, 这是因为 `<Result>` 可以为任何类型, 所以也可以为 Viod, 这是泛型的用法.
 
-## 3. Properties
+## 3. Functions
 
-### 3.1. Lazy Stored Properties
-
-A *lazy stored property* is a property whose initial value isn’t calculated until the first time it’s used. 
-
-```swift
-class DataManager {
-    lazy var importer = DataImporter()
-    var data: [String] = []
-    // the DataManager class would provide data management functionality here
-}
-
-let manager = DataManager()
-manager.data.append("Some data")
-manager.data.append("Some more data")
-// the DataImporter instance for the importer property hasn't yet been created
-
-print(manager.importer.filename)
-// the DataImporter instance for the importer property has now been created
-// Prints "data.txt"
-```
-
-Because it’s possible for a `DataManager` instance to manage its data without ever importing data from a file, `DataManager` doesn’t create a new `DataImporter` instance when the `DataManager` itself is created. Instead, it makes more sense to create the `DataImporter` instance if and when it’s first used.
-
-### 3.2. Computed Properties
-
-```swift
-struct Rectangle {
-   var width: Double
-   var height: Double
-   var area: Double {
-       return width * height
-   }
-}
-
-let rectangle = Rectangle(width: 5.0, height: 10.0)
-print(rectangle.area)  // 50.0
-```
-
-## 4. Functions
-
-### 4.1. Variadic Parameters
+### 3.1. Variadic Parameters
 
 A *variadic parameter* accepts zero or more values of a specified type. 
 
@@ -341,7 +301,7 @@ func total(_ numbers: Double...) -> Double {
 total(1, 2, 3) // 6
 ```
 
-### 4.2. In-Out Parameters
+### 3.2. In-Out Parameters
 
 Function parameters are constants by default. Trying to change the value of a function parameter from within the body of that function results in a compile-time error. 
 
@@ -361,7 +321,7 @@ print("someInt is now \(someInt), and anotherInt is now \(anotherInt)")
 // Prints "someInt is now 107, and anotherInt is now 3"
 ```
 
-## 5. Opaque type
+## 4. Opaque type
 
 A function or method that returns an opaque type **hides** its return value’s **type information**. Instead of providing a concrete type as the function’s return type, the return value is described in terms of the protocols it supports.
 

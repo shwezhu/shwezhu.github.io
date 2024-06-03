@@ -6,8 +6,6 @@ categories:
  - ios
 ---
 
-## Functions
-
 
 ### 1. Optional Parameters
 
