@@ -74,3 +74,5 @@ In practical terms, that means **whenever an object with a property marked** `@P
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/02e6f5fb20d45ebdc1f70a677f0d42f4.jpg)
 
 Learn more: [SwiftUI Data Flow in iOS 17 - Observation & @Observable - YouTube](https://www.youtube.com/watch?v=EK7SthdWV2w&t=306s)
+
+MVVM: [SwiftUI - Intro to MVVM | Example Refactor | Model View ViewModel](https://www.youtube.com/watch?v=FwGMU_Grnf8)
