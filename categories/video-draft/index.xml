@@ -45,7 +45,18 @@
     &lt;a href=&#34;#os-operating-system&#34;&gt;#&lt;/a&gt;
     OS (Operating System)
 &lt;/h3&gt;&lt;p&gt;Different OSs have different system calls. We use standard libraries to make system calls, such as &lt;code&gt;printf&lt;/code&gt; in C.&lt;/p&gt;
-&lt;h2 id=&#34;cross-compilation&#34;&gt;
+&lt;p&gt;Hardware &amp;mdash;Drivers&amp;mdash;&amp;gt; OS &amp;mdash;System Call&amp;mdash;&amp;gt; Standard Library used by our program.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// call system call &amp;#39;open&amp;#39; internally 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FILE&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;file&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;fopen&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;hello.txt&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;r&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;cross-compilation&#34;&gt;
     &lt;a href=&#34;#cross-compilation&#34;&gt;#&lt;/a&gt;
     Cross-compilation
 &lt;/h2&gt;&lt;p&gt;Cross-compilation is the process of compiling code for a platform different from the one on which the compiler is running.&lt;/p&gt;
@@ -61,7 +72,7 @@
     Cross platform
 &lt;/h2&gt;&lt;p&gt;Java - Write once, run anywhere. Benefits from the JVM.&lt;/p&gt;
 &lt;p&gt;Python - Benefits from the Python interpreter.&lt;/p&gt;
-&lt;p&gt;C, C++ - Cross-compile the code.&lt;/p&gt;
+&lt;p&gt;C, C++ - Cross-compile tools.&lt;/p&gt;
 &lt;h2 id=&#34;references&#34;&gt;
     &lt;a href=&#34;#references&#34;&gt;#&lt;/a&gt;
     References
@@ -76,6 +87,10 @@
 &lt;blockquote&gt;
 &lt;p&gt;When you communicate with GPUs, you typically use graphics libraries such as OpenGL, Vulkan, or DirectX. The company that sold you the &lt;strong&gt;graphics card&lt;/strong&gt; also provides a graphics driver that translates commands from these graphics libraries into instructions that the GPU can understand. The instructions that your graphics driver generate are in a proprietary protocol known only to a few wizards at NVIDIA and AMD who actually understand how GPUs work on a low level. Us mere mortals don&amp;rsquo;t get to look under the hood at these instructions.
 Interestingly, many modern CPUs operate the same way. They take your x86 code and internally translate it into something better, faster, and chip specific. Adopted from &lt;a class=&#34;link&#34; href=&#34;https://arc.net/l/quote/zvuupchl&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Stackoverflow&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;open()&lt;/code&gt; is &lt;em&gt;both&lt;/em&gt; a syscall and a function in the standard C library, &lt;code&gt;fopen()&lt;/code&gt; is a function in the standard C library, that sets up a file handle &amp;ndash; a data structure of type &lt;code&gt;FILE&lt;/code&gt; that contains additional stuff like optional buffering &amp;ndash;, and internally calls &lt;code&gt;open()&lt;/code&gt; also.  &lt;a class=&#34;link&#34; href=&#34;https://arc.net/l/quote/xqtpqwti&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;source&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 </description>

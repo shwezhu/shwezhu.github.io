@@ -378,7 +378,18 @@
     <a href="#os-operating-system">#</a>
     OS (Operating System)
 </h3><p>Different OSs have different system calls. We use standard libraries to make system calls, such as <code>printf</code> in C.</p>
-<h2 id="cross-compilation">
+<p>Hardware &mdash;Drivers&mdash;&gt; OS &mdash;System Call&mdash;&gt; Standard Library used by our program.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// call system call &#39;open&#39; internally 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">FILE</span> <span class="o">*</span><span class="n">file</span> <span class="o">=</span> <span class="nf">fopen</span><span class="p">(</span><span class="s">&#34;hello.txt&#34;</span><span class="p">,</span> <span class="s">&#34;r&#34;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="cross-compilation">
     <a href="#cross-compilation">#</a>
     Cross-compilation
 </h2><p>Cross-compilation is the process of compiling code for a platform different from the one on which the compiler is running.</p>
@@ -394,7 +405,7 @@
     Cross platform
 </h2><p>Java - Write once, run anywhere. Benefits from the JVM.</p>
 <p>Python - Benefits from the Python interpreter.</p>
-<p>C, C++ - Cross-compile the code.</p>
+<p>C, C++ - Cross-compile tools.</p>
 <h2 id="references">
     <a href="#references">#</a>
     References
@@ -409,6 +420,10 @@
 <blockquote>
 <p>When you communicate with GPUs, you typically use graphics libraries such as OpenGL, Vulkan, or DirectX. The company that sold you the <strong>graphics card</strong> also provides a graphics driver that translates commands from these graphics libraries into instructions that the GPU can understand. The instructions that your graphics driver generate are in a proprietary protocol known only to a few wizards at NVIDIA and AMD who actually understand how GPUs work on a low level. Us mere mortals don&rsquo;t get to look under the hood at these instructions.
 Interestingly, many modern CPUs operate the same way. They take your x86 code and internally translate it into something better, faster, and chip specific. Adopted from <a class="link" href="https://arc.net/l/quote/zvuupchl"  target="_blank" rel="noopener"
+    >Stackoverflow</a></p>
+</blockquote>
+<blockquote>
+<p><code>open()</code> is <em>both</em> a syscall and a function in the standard C library, <code>fopen()</code> is a function in the standard C library, that sets up a file handle &ndash; a data structure of type <code>FILE</code> that contains additional stuff like optional buffering &ndash;, and internally calls <code>open()</code> also.  <a class="link" href="https://arc.net/l/quote/xqtpqwti"  target="_blank" rel="noopener"
     >source</a></p>
 </blockquote>
 

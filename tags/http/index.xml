@@ -1645,9 +1645,9 @@ Because &lt;code&gt;r.ParseMultipartForm()&lt;/code&gt; will return an error if 
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;This is the famous CORS issue, and it is caused by the &lt;strong&gt;same-origin policy&lt;/strong&gt; (SOP) enforced by web browsers.&lt;/p&gt;
 &lt;p&gt;CORS is a feature built into browsers for added security. &lt;strong&gt;It prevents any random website from using your authenticated cookies&lt;/strong&gt; to send an API request to your bank&amp;rsquo;s website and do stuff like secretly withdraw money.&lt;/p&gt;
-&lt;p&gt;想象一下, 如果你点进了一个恶意网站, 这个网站有个JS脚本使用比如 fetch 向你银行 /api/transfers 发送了一个请求, 如果浏览器没有 same-origin policy 限制, 那么这个请求就会被发送出去, 而且会自动带上你的银行网站的 cookie (一些请求头), 这样恶意网站就可以做一些你不知道的事情, 比如转账, 提现等等.&lt;/p&gt;
+&lt;p&gt;想象一下, 如果你点进了一个恶意网站, 这个网站有个JS脚本使用比如 fetch 向你银行 /api/transfers 发送了一个请求 (origin 是恶意网站), 如果浏览器没有 same-origin policy 限制, 那么这个请求就会被发送出去, 而且会自动带上你的银行网站的 cookie (若银行后台也允许任意 cors, 这就意味着可以通过银行后台的验证), 这样恶意网站就可以做一些你不知道的事情, 比如转账, 提现等等.&lt;/p&gt;
 &lt;p&gt;但是, 有了 same-origin policy 限制, 那么这个请求就不会被浏览器发送出去, 因为这个请求的 origin 和你银行网站的 origin 不一样, 所以浏览器会阻止这个请求. Origin 是浏览器自动添加的请求头, 你不能修改它. Origin 包括三部分: 协议, 域名, 端口. 上面的例子 origin 就是 &lt;code&gt;http://localhost:5173&lt;/code&gt; 和 &lt;code&gt;http://localhost:8080&lt;/code&gt;, 前端页面的 js 代码是在 &lt;code&gt;http://localhost:5173&lt;/code&gt; 运行的, 所以它的 origin 是 &lt;code&gt;http://localhost:5173&lt;/code&gt;, 而后端的 API 是在 &lt;code&gt;http://localhost:8080&lt;/code&gt; 运行的, 所以它的 origin 是 &lt;code&gt;http://localhost:8080&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;所以理论上来说, 如果你的后端服务器不允许CORS, 那么除了跟你后端服务器同源(Origin)的前端页面, 其他的前端页面都不能在浏览器访问你的后端 API. 当然你可以在终端使用 curl 命令访问你的后端 API, 因为 curl 命令不是浏览器, 它不会自动添加 origin 请求头. 另外 React 的 create-react-app 也有一个 proxy 功能, 可以让你在开发环境下绕过 CORS 限制, 但是这个代理功能&lt;strong&gt;只在开发环境下有效&lt;/strong&gt;, 生产环境下还是要你自己配置后端服务器的 CORS.&lt;/p&gt;
+&lt;p&gt;如果你的后端服务器不允许CORS, 那么除了跟你后端服务器同源(Origin)的前端页面, 其他的前端页面都不能在浏览器访问你的后端 API. 当然你可以在终端使用 curl 命令访问你的后端 API, 因为 curl 命令不是浏览器, 它不会自动添加 origin 请求头. 另外 React 的 create-react-app 也有一个 proxy 功能, 可以让你在开发环境下绕过 CORS 限制, 但是这个代理功能&lt;strong&gt;只在开发环境下有效&lt;/strong&gt;, 生产环境下还是要你自己配置后端服务器的 CORS.&lt;/p&gt;
 &lt;h2 id=&#34;2-how-to-fix-cors-issue&#34;&gt;
     &lt;a href=&#34;#2-how-to-fix-cors-issue&#34;&gt;#&lt;/a&gt;
     2. How to fix CORS issue
