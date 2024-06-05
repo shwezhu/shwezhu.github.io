@@ -28,22 +28,16 @@ greet(name: "Bob", withGreeting: "Hi") // Uses the provided greeting: "Hi, Bob!"
 
 > "if let greeting = greeting" 这不是这个赋值语句吗, 怎么能用来判断呢?
 >
-> 在 Swift 中，`if let` 语句是一种特殊的语法结构，用于可选绑定（optional binding）。它不仅可以用来赋值，还可以用来判断一个可选值是否为 `nil`，并在可选值不为 `nil` 的情况下解包这个值。
->
-> `if let` 语句的形式如下：
+> 在 Swift 中，`if let` 常用来 unwrap optional value，名字叫可选绑定（optional binding）, 形式如下：
 >
 > ```swift
-> if let unwrappedValue = optionalValue {
->     // 使用 unwrappedValue
+>if let unwrappedValue = optionalValue {
+>  // 使用 unwrappedValue
 > } else {
 >     // optionalValue 为 nil
 > }
-> ```
->
-> 在这段代码中：
->
-> - `optionalValue` 是一个可选类型（即 `Optional`），可能包含一个值，也可能为 `nil`。
-> - `unwrappedValue` 是一个常量，只有在 `optionalValue` 不为 `nil` 时才会被赋值，并且会被解包（unwrap）。
+>    ```
+> 
 
 ### 2. Default Parameters
 
@@ -68,37 +62,6 @@ greet(name: "Alice", withGreeting: nil)
 ```
 
 > 分清你要的东西是什么, 是允许参数为 nil 还是调用函数的时候不提供参数. 
-
-### 可选参数常见用法 nil-coalescing operator
-
-前面已经学到了使用 if 进行 unwrap 可选参数的值, 如下:
-
-```swift
-if let unwrappedValue = optionalValue {
- // 使用 unwrappedValue
-} else {
- // optionalValue 为 nil
-}
-```
-
-还有另一个常见的用法: nil-coalescing operator
-
-```swift
-func greet(name: String?) {
-    // 如果 name 为 nil, 则 greetingName == "Guest"
-    let greetingName = name ?? "Guest"
-    ...
-}
-```
-
-> 参数必须为可选参数才可以使用 `??` , **只有可选参数可以为空**, 如果参数不是可选参数, 给的默认值也不能是空, 
->
-> ```swift
-> // 报错: Nil default argument value cannot be converted to type 'String'
-> init(name: String = nil) {
->         self.name = name ?? ""
-> }
-> ```
 
 ### 3. Optional Chaining
 
@@ -147,8 +110,45 @@ withAnimation {
 
 这是因为在 Swift 中，即使你在条件分支中对一个可选变量进行了赋值，这个变量的类型仍然保持为可选类型 (`Optional`)。因此，即使我们已经确信该可选变量不为 `nil`，编译器仍要求我们对其进行安全访问，因为从类型系统的角度来看，该变量仍然是可选的。
 
-### 3. Parameter Labels
+### 4. Parameter Labels
 
 > 关于参数的 label, 如果不指定, 参数的 label 被设置为参数名, 即调用函数的时候必须指定label, 如 `getName(id: 123)`, id 就是label, 必须指定不可以写为 `getName(123)`
 >
 > 因此常有些 `_` 来忽略 label, 为了调用函数的时候不用显示指出 label. 
+
+### 5. Unwrapping Optional Value
+
+SafariView 是个自定义 view, 构造函数需要传递一个 URL 类型的参数, 而下面代码却报错, 
+
+```swift
+// error: Value of optional type 'URL?' must be unwrapped to a value of type 'URL'
+SafariView(url: URL(string: urlString))
+```
+
+根据报错信息可以看出, URL构造函数应该是返回了一个 optional value, 即可能为 nil, 因此编译器提示我们要 unwrap `URL?`, 
+
+```swift
+// URL 的一个构造函数
+init?(string: String)
+```
+
+有多种方法 unwrap 可选类型, 分别为 Optional Binding, Force Unwrapping 和 Nil-Coalescing, 其中 Force Unwrapping 不推荐使用, 因为可能导致运行时错误. 
+
+```swift
+// Optional Binding
+if let url = URL(string: urlString) {
+    SafariView(url: url)
+} else {
+    Text("Invalid URL")
+}
+
+// Force Unwrapping
+let urlString = "https://www.apple.com"
+let url = URL(string: urlString)! // Force unwrap
+
+// Nil-Coalescing 
+let url = URL(string: urlString) ?? URL(string: "https://www.example.com")! 
+```
+
+在这个地方的 Nil-Coalescing 也用到了 Force Unwrapping, 因为 URL() 总是会返回可选类型, 所以此时最优解是使用 Optional Binding. 
+
