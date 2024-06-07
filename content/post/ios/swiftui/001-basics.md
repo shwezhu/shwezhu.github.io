@@ -50,7 +50,7 @@ struct BackgroundView: View {
 }
 ```
 
-### 4. 读文档写代码
+### 4. 读文档
 
 ```swift
 Button {
@@ -82,7 +82,15 @@ func clipShape<S>(
 6. 两个参数, cornerSize 不可省略, 查看 `CGSize` 构造函数: `init(width: Float, height: Float)`
 7. 最后创建出圆角矩形: `.clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))`
 
-### 5. 练习代码
+### 5. 读文档找 modifiers
+
+首先, 所有的组件都是 View, 所以下面的 modifier 都可以使用, 比如背景图, 字体颜色, 显示形状 等等, 可以在这找, 如果找某个 view 特有的组件, 那就找那个组件, 然后就可以找到属于它的 modifiers, 
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/ff88fc0f5cda332ef32c4edd1849c1b4.jpg)
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/72d568dc4c7861264bbe9e1691659a03.jpg)
+
+### 6. 练习代码
 
 ```swift
 struct ContentView: View {

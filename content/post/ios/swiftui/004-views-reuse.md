@@ -5,7 +5,7 @@ categories:
  - ios
 ---
 
-### 1. Custom Button
+### 1. Custom Button 
 
 ```swift
 struct AFButton: View {
@@ -35,7 +35,7 @@ Button {
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/9c65f6e30f91557aafbd388f268c4bea.jpg)
 
-
+### 2. System Button
 
 
 
