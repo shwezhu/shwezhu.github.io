@@ -1,5 +1,5 @@
 ---
-title: SwiftUI Views for Reuse Purpose
+title: SwiftUI Views
 date: 2024-06-06 21:55:30
 categories:
  - ios
@@ -45,9 +45,11 @@ Button {
 
 Learn more: [sheet(isPresented:onDismiss:content:) | Apple Developer Documentation](https://developer.apple.com/documentation/swiftui/view/sheet(ispresented:ondismiss:content:))
 
+### 4. Label & `.infinity`
 
+指定宽度或高度时使用, 填充宽度或者高度整个屏幕, 无论屏幕多宽或者多高,
 
-
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/2c32221b7ca5738e95775e5f1dc9b81e.jpg)
 
 
 
