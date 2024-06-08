@@ -39,7 +39,11 @@ Button {
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/793f52e618bd81d76dd8d2c3e2aa8345.jpg)
 
+### 3. Sheet
 
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/2499a584512d308df3ef3d8080cc3651.jpg)
+
+Learn more: [sheet(isPresented:onDismiss:content:) | Apple Developer Documentation](https://developer.apple.com/documentation/swiftui/view/sheet(ispresented:ondismiss:content:))
 
 
 
