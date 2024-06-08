@@ -17,3 +17,21 @@ categories:
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/918b49e2021b1534f1274e732efe1522.jpg)
 
+### 2. Other Common Used Modifiers
+
+#### 2.1. Text Modifiers
+
+- `.font()`: `.largeTitle`, `.title`, `.title2`, `.headline`, `.subheadline`, `.body`, `.footnote`, `.font(.system(...))`
+
+- 
+
+#### 2.2. Image Modifiers
+
+`.resizable()`, `.scaledToFit()`, `.scaledToFill()`, `aspectRatio(contentMode: .fill)`, 
+
+> **Note**
+>
+> `.frame()` must be used after `.resizable()`, because image is not resizable by default. 
+>
+> `.scaledToFit()` and `.scaledToFill()` should be used before `.frame()`, if used after `.frame()`, it will not work. 
+
