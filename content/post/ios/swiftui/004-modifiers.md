@@ -23,8 +23,6 @@ categories:
 
 - `.font()`: `.largeTitle`, `.title`, `.title2`, `.headline`, `.subheadline`, `.body`, `.footnote`, `.font(.system(...))`
 
-- 
-
 #### 2.2. Image Modifiers
 
 `.resizable()`, `.scaledToFit()`, `.scaledToFill()`, `aspectRatio(contentMode: .fill)`, 
