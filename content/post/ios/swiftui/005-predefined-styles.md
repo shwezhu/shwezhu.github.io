@@ -1,5 +1,5 @@
 ---
-title: Some Common Used Properties SwiftUI
+title: Predefined Styles SwiftUI
 date: 2024-06-07 22:02:30
 categories:
  - ios
@@ -30,3 +30,4 @@ func background<S>(
 If you **want the `foregroundStyle` color to adapt automatically** **to the system theme** (such as light mode and dark mode), you can use some predefined colors like `.primary`, `.secondary`, `.label`, etc. These colors will automatically adjust according to different themes. However, it's important to note that using system colors like `.label` directly in `foregroundStyle` might encounter issues because `foregroundStyle` is more commonly used to define composite styles or gradients, rather than just a single color.
 
 考虑到 foregroundColor 已经被 foregroundStyle 替代, 有时候使用 primiary 并不能修改字体颜色, 比如 NavigationLink 默认是蓝色, 此时使用 primiary, 依然会是蓝色, 所以可以使用 label: `.foregroundStyle(Color(.label))`
+
