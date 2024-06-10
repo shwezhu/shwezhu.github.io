@@ -7,6 +7,8 @@ categories:
 
 ### 1. Struct vs Class
 
+#### 1.1. Value Types and Reference Types
+
 Structures are value types—unlike classes—local changes to a structure aren’t visible to the rest of your app unless you intentionally communicate those changes as part of the flow of your app. 
 
 - **Structures are Value Types:** When you pass a structure to a function, or assign it to a variable, a *copy* of the structure's data is created. Modifying the copy doesn't affect the original.
@@ -14,6 +16,64 @@ Structures are value types—unlike classes—local changes to a structure aren�
 - **Classes are Reference Types:** When you pass a class instance around, you're essentially passing a reference to the *same* underlying object. Changes made through one reference impact the original object and are visible everywhere else it's referenced.
 
 References: [Choosing Between Structures and Classes | Apple Developer Documentation](https://developer.apple.com/documentation/swift/choosing-between-structures-and-classes)
+
+#### 1.2. Mutable and Immutable
+
+Structs are immutable, classed are mutable. What does this mean?
+
+> Structures and enumerations are *value types*. By default, the properties of a value type can’t be modified from within its instance methods. However, if you need to modify the properties of your structure or enumeration within a particular method, you can opt in to `mutating` behavior for that method. [--Apple Docs](https://arc.net/l/quote/hqruhecu)
+
+```swift
+struct Rectangle {
+    var width: Double = 0
+    var height: Double = 0
+    var area: Double {
+        get {
+            width = 9 // error: Cannot assign to property: 'self' is immutable
+            return width * height
+        }
+        set {
+            height = 3 // only here is allowed
+        }
+    }
+    func setWidth(width: Double) {
+        self.width = width // error: Cannot assign to property: 'self' is immutable
+    }
+}
+```
+
+除了使用 mutating 关键字, 在 SwiftUI 中, 我们可以通过 @State 允许 struct 的属性被修改:
+
+```swift
+struct ContentView: View {
+    @State private var age = 12
+    private var name = "John"
+    
+    var body: some View {
+        VStack {
+            Text("Name: \(name), Age: \(age)")
+            Button("Click to Increase Age by One") {
+                age += 1
+            }
+            Button("Change Name") {
+                //name = "Jane" // error: Cannot assign to property: 'self' is immutable
+            }
+        }
+    }
+}
+```
+
+#### 1.3. Struct in SwiftUI
+
+细心观察可以发现 SwiftUI 的 Views 都是 struct 而不是 class, 这也是因为 struct 是值类型, 这样每当你进行拷贝或者传递一个 view 时, 被传递的是个新的单独的 view, 而不是传递一个引用, 这样便有很好的隔离性, 这是什么意思呢, 
+
+The few posts here are missing the point. The point of structs is that they are copied on assignment. Why is that good? Because it’s the only thing that encourages local reasoning, which means the ability to look at one block of code and only have to think about what it is doing.
+
+With classes, you pass them around by reference and all of a sudden you can have objects on the other side of the planet that are all referencing the same object. That’s not clear at all from looking at them, so you need to trace their origin back to some unrelated part of the system. This is known as reference aliasing. It’s not bad in itself, but when shared references are also allowed to be mutated, you can’t reason locally about anything. You have to know who had references to each object at all times. That can be the difference between looking at 10 and 100,000 lines of code. Which would you rather look at?
+
+Yes, structs are also allocated on the stack. But that’s not what makes them useful. What makes them useful is their inability to be shared.
+
+Reference: https://www.reddit.com/r/swift/comments/dg2lrp/comment/f39if54/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 
 ### 2. Property observers: `didSet` and `willSet`
 
@@ -88,32 +148,48 @@ References: https://arc.net/l/quote/uimgdzep
 
 ### 4. Computed Properties - getter and setter
 
-In addition to stored properties, classes, structures, and enumerations can define *computed properties*, which don’t actually store a value. Instead, they provide a getter and an optional setter to retrieve and set other properties and values indirectly.
+In addition to stored properties, classes, structures, and enumerations can define *computed properties*. In Swift, a computed property does not store a value itself. Instead, it provides a getter to retrieve a value and an optional setter to indirectly set other properties or values. 
 
 ```swift
-class Rectangle {
-    var width: Double
-    var height: Double
-
-    var area: Double {
+struct Cat {
+    var age: Int
+    var months: Int {
         get {
-            return width * height
+            age * 12
         }
-        set(newArea) {
-            width = sqrt(newArea / height) // 根据新面积调整宽度
+        // newValue is default parameter name of the setter.
+        set {
+            age = newValue / 12
         }
     }
 }
 
-let rect = Rectangle(width: 5, height: 4)
-print(rect.area)  // 输出 20.0
-
-rect.area = 50  // 修改面积，触发 setter
-print(rect.width) // 输出 7.071... (约等于 √50/4)
+var cat = Cat(age: 2)
+print(cat.months) // 24
+cat.months = 12
+print(cat.age) // 1
 ```
 
-> Stored property has default setter and getter, you cannot override `get`/`set` for a stored property.  But You can use property observers `willSet`/`didSet` to achiveve what you want.  Source: https://stackoverflow.com/a/24116083/16317008
+计算属性本身并不存储任何东西, 它更像是个函数, 代码 `cat.months = 12` 就是把 `12` 传给其 `setter`, 而 `cat.months` 就是调用其 `getter`, 返回 `age * 12`, 这也是为什么说其是计算属性. 所以有没有觉得如果在其 getter 里尝试访问 `months`的值很奇怪? 因为 months 本身就不存在啊, 它其实就是 `age * 12`, 
 
-### 6. Property Wrappers
+> Stored property has default setter and getter, you cannot override `get`/`set` for a stored property.  But You can use property observers `willSet`/`didSet` to achiveve what you want.  Source: https://stackoverflow.com/a/24116083/16317008 
 
-Learn more: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties/#Property-Wrappers
+如果不显示设置 getter 和 setter, 那计算属性就是一个 read-only 属性, 即默认 getter 是函数体, 如下:
+
+```swift
+struct Rectangle {
+    var width: Double = 5.0
+    var height: Double = 3.0
+    var area: Double {
+        // implicit return
+        width * height
+    }
+}
+
+let rectangle = Rectangle()
+print(rectangle.area) // 15.0
+
+rectangle.area = 20.0 // 错误: Cannot assign to property: 'area' is a get-only property
+```
+
+设想一下, 每当你访问 area `rectangle.area`, 就会执行 `width * height` 并返回, 如果我们要在里面直接修改其他属性的值, 是不是很奇怪? 而 SwiftUI 中的 body 就是一个 read-only 计算属性, 所以直接在 body 中直接修改其属性是不推荐的, 

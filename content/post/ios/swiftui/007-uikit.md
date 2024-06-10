@@ -40,3 +40,4 @@ The Delegate Pattern, a common design pattern in traditional iOS development wit
 忘了说, 协议在 Swift 语法里其实就是其他语言里的 接口, 即只声明一些函数, 由继承该协议的类进行实现, 可以实现多态...
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/9da1df8146b465d5381307c38da4f103.jpg)
+
