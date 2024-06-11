@@ -60,6 +60,7 @@ struct PlayerView: View {
 References: 
 
 - https://arc.net/l/quote/dtuxzrwy
+- https://arc.net/l/quote/nqdjqafx
 - https://stackoverflow.com/a/59616812/16317008
 - https://developer.apple.com/documentation/swiftui/state/projectedvalue
 

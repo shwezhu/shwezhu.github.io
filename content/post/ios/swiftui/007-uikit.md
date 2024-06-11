@@ -41,3 +41,6 @@ The Delegate Pattern, a common design pattern in traditional iOS development wit
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/06/9da1df8146b465d5381307c38da4f103.jpg)
 
+### 3. Do not Pass Reference of a View
+
+I would definitely *not* recommend using references to SwiftUI views via `self`, passing them to other views. SwiftUI views are transient and you shouldn't rely on a reference like this. You can, however, pass closures back and forth or bindings like you suggested. Check original: [ios - Is delegate pattern a good approach in SwiftUI? - Stack Overflow](https://stackoverflow.com/questions/70219779/is-delegate-pattern-a-good-approach-in-swiftui)
