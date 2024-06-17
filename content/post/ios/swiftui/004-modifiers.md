@@ -25,7 +25,7 @@ categories:
 
 #### 2.2. Image Modifiers
 
-`.resizable()`, `.scaledToFit()`, `.scaledToFill()`, `aspectRatio(contentMode: .fill)`, 
+`.resizable()`, `.scaledToFit()`, `.scaledToFill()`, `aspectRatio(contentMode: .fill)`, `imageScale()`
 
 > **Note**
 >

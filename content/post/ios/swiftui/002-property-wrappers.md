@@ -9,6 +9,8 @@ categories:
 
 `@State` is a property wrapper struct that just wraps any value to make sure your view will refresh or redraw **whenever that value changes**. References: https://stackoverflow.com/a/59616812/16317008
 
+**Always declare state as private,** and place it in the highest view in the view hierarchy that needs access to the value. Learn more: https://stackoverflow.com/a/72946113/16317008
+
 #### 1.1. Two-Way Binding - Projected Value
 
 For state variables — variables defined with a [`State`](https://developer.apple.com/documentation/SwiftUI/State) property wrapper — the dollar sign (`$`) prefix tells SwiftUI to pass the **projectedValue**, which is a **Binding**. 
