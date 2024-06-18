@@ -11,60 +11,110 @@ categories:
 
 **Always declare state as private,** and place it in the highest view in the view hierarchy that needs access to the value. Learn more: https://stackoverflow.com/a/72946113/16317008
 
-#### 1.1. Two-Way Binding - Projected Value
-
-For state variables — variables defined with a [`State`](https://developer.apple.com/documentation/SwiftUI/State) property wrapper — the dollar sign (`$`) prefix tells SwiftUI to pass the **projectedValue**, which is a **Binding**. 
-
-首先看看 projectedValue 和 Binding 是干什么的: 
-
-> Use the *projected value* to get a *Binding* to the *stored value*. To access the `projectedValue`, prefix the property variable with a dollar sign (`$`).
->
-> Use a binding to create a two-way connection **between** a property that stores data, **and** a view that displays and changes the data. A binding connects a property to a source of truth stored elsewhere, instead of storing data directly.
-
- For example, a button that toggles between play and pause can create a binding to a property of its parent view using the `Binding` property wrapper. 
+@State 修饰的变量, 声明的时候一般要初始化, 因为 @State 都会被 private 修饰, 不能被外部访问, 而 @Binding 修饰的变量声明时不应该有值, 因为它要接受外部的 binding 值, 以便可以修改, 正如[文档](https://arc.net/l/quote/itwvjdmw)所表述: A binding connects a property to a source of truth stored elsewhere, instead of storing data directly. 
 
 ```swift
-struct PlayButton: View {
-    // create a binding to a property of its parent view. 
-    @Binding var isPlaying: Bool
+@State private var isPlaying: Bool = false
+@Binding var isPlaying: Bool 
+```
 
+看到[一篇文章](https://onevcat.com/2021/01/swiftui-state/), 例子举的很好, 帮助理解State, 分享在这: 在 SwiftUI 中，我们使用 `@State` 进行私有状态管理，并驱动 `View` 的显示，下面的 `ContentView` 将在点击加号按钮时将显示的数字 +1：
+
+```swift
+struct ContentView: View {
+    @State private var value = 99
     var body: some View {
-        Button(isPlaying ? "Pause" : "Play") {
-            isPlaying.toggle()
+        VStack(alignment: .leading) {
+            Text("Number: \(value)")
+            Button("+") { value += 1 }
         }
     }
 }
 ```
 
-The parent view declares a property to hold the playing state, using the [`State`](https://developer.apple.com/documentation/swiftui/state) property wrapper to indicate that this property is the value’s source of truth.
+当我们想要将这个状态值传递给下层子 View 的时候，直接在子 View 中声明一个变量就可以了:
 
 ```swift
-struct PlayerView: View {
-    var episode: Episode
-    // @State indicates that this property is the value’s source of truth.
-    @State private var isPlaying: Bool = false
-
-
+struct DetailView: View {
+    let number: Int
     var body: some View {
-        VStack {
-            Text(episode.title)
-                .foregroundStyle(isPlaying ? .primary : .secondary)
-            PlayButton(isPlaying: $isPlaying) // Pass a binding.
+        Text("Number: \(number)")
+    }
+}
+
+struct ContentView: View {
+    @State private var value = 99
+    var body: some View {
+        VStack(alignment: .leading) {
+            DetailView(number: value)
+            Button("+") { value += 1 }
         }
     }
 }
 ```
 
-通过 `$` 来访问 State 修饰的属性可以得到该属性的 Projected Value, 而 Binding 就是一个行为: 允许子 view 修改父 view 的属性的值. 
+在 `ContentView` 中的 `@State value` 发生改变时，*`ContentView.body` 被重新求值，`DetailView` 将被重新创建*，包含新数字的 `Text` 被重新渲染。
 
-比如上面我们创建 PlayButton 视图实例的时候 `PlayButton(isPlaying: $isPlaying)`, 就是把 PlayerView 的属性 `isPlaying` 的 Projected Value `$isPlaying` 传递给`PlayButton`, `$isPlaying` 的类型是 `Binding<bool>`, 之所以可以这么传递, 是因为 `PlayButton` 的属性是 `@Binding var isPlaying: Bool`. 即把父视图的属性 `isPlaying` 绑定到了子视图的 `isPlaying` 属性上, 因此子视图修改其自己的属性 `isPlaying` 时, 也会影响父视图的 `isPlaying`. 
+如果我们希望的不完全是这种被动的传递，而是希望 `DetailView` 也拥有这个传入的状态值，并且可以自己对这个值进行管理的话，一种方法是在让 `DetailView` 持有自己的 `@State`，然后通过初始化方法把值传递进去：
 
-References: 
+```swift
+struct DetailView0: View {
+    @State var number: Int
+    var body: some View {
+        HStack {
+            Text("0: \(number)")
+            Button("+") { number += 1 }
+        }
+    }
+}
 
-- https://arc.net/l/quote/dtuxzrwy
-- https://arc.net/l/quote/nqdjqafx
-- https://stackoverflow.com/a/59616812/16317008
-- https://developer.apple.com/documentation/swiftui/state/projectedvalue
+// ContentView
+@State private var value = 99
+var body: some View {
+    // ...
+    DetailView0(number: value)
+}
+```
+
+这种方法能够奏效，但是违背了 `@State` 文档中关于这个属性标签的说明：
+
+> … declare your state properties as private, to prevent clients of your view from accessing them.
+
+**如果一个 `@State` 无法被标记为 private 的话，一定是哪里出了问题**。一种很朴素的想法是，将 `@State` 声明为 `private`，然后使用合适的 `init` 方法来设置它。
+
+```swift
+struct DetailView1: View {
+    @State private var number: Int
+
+    init(number: Int) {
+        self.number = number + 1
+    }
+    //
+}
+```
+
+另外还有一些想说的, 看下面代码: 
+
+```swift
+struct DetailView: View {
+    let randomNumber = Int.random(in: 1...100)
+    var body: some View {
+        Text("Random Number: \(randomNumber)")
+    }
+}
+
+struct ContentView: View {
+    @State private var value = 99
+    
+    var body: some View {
+        Text("Number: \(value)")
+        DetailView()
+        Button("+") { value += 1 }
+    }
+}
+```
+
+ 每次点击按钮, DetailView 的数字也会变化, 这就意味着每次 ContentView 被重新渲染的时候, 它的子 view 也被重新渲染了, 可是根据[官方文档](https://arc.net/l/quote/ekwiznyu)表述: When the @State value changes, SwiftUI updates the parts of the view hierarchy that depend on the value. 可是子 view `DetailView` 并没有依赖 @State value, 为什么还会被更新呢, 难道说每次 view 更新都会带着更新他的所有子 views?
 
 ### 2. @Published
 
