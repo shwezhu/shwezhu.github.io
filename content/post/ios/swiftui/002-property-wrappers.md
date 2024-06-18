@@ -114,7 +114,7 @@ struct ContentView: View {
 }
 ```
 
- 每次点击按钮, DetailView 的数字也会变化, 这就意味着每次 ContentView 被重新渲染的时候, 它的子 view 也被重新渲染了, 可是根据[官方文档](https://arc.net/l/quote/ekwiznyu)表述: When the @State value changes, SwiftUI updates the parts of the view hierarchy that depend on the value. 可是子 view `DetailView` 并没有依赖 @State value, 为什么还会被更新呢, 难道说每次 view 更新都会带着更新他的所有子 views?
+ 每次点击按钮, DetailView 的数字也会变化, 这就意味着每次 ContentView 被重新渲染的时候, 它的子 view 也被重新渲染了, 可是根据[官方文档](https://arc.net/l/quote/ekwiznyu)表述: When the @State value changes, SwiftUI updates the parts of the view hierarchy that depend on the value. 可是子 view `DetailView` 并没有依赖 @State value, 为什么还会被更新呢, 难道说每次 view 更新都会带着更新他的所有子 views? 答案是: 对的. 了解更多: [swift - Why does one child view in SwiftUI re-render on parent state change but another doesn't? - Stack Overflow](https://stackoverflow.com/questions/78635057/why-does-one-child-view-in-swiftui-re-render-on-parent-state-change-but-another)
 
 ### 2. @Published
 
