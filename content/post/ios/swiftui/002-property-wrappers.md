@@ -130,4 +130,57 @@ Learn more: [SwiftUI Data Flow in iOS 17 - Observation & @Observable - YouTube](
 
 MVVM: [SwiftUI - Intro to MVVM | Example Refactor | Model View ViewModel](https://www.youtube.com/watch?v=FwGMU_Grnf8)
 
-### 3. 
+### 3. @Binding vs @Bindable 
+
+文档说的很详细: [State | Apple Developer Documentation](https://developer.apple.com/documentation/swiftui/state)
+
+- 修改单个值使用 @Binding , 如一个 bool 一个 double, 或者改变一个引用的指向, 
+
+- 若修改对象的属性, 直接传递引用就行了 (前提 Book 是 class 而不是 struct)
+
+```swift
+struct ContentView: View {
+    @State private var book = Book()
+    var body: some View {
+        BookCheckoutView(book: book)
+    }
+}
+
+struct BookCheckoutView: View {
+    var book: Book
+    var body: some View {
+        Button(book.isAvailable ? "Check out book" : "Return book") {
+            book.isAvailable.toggle()
+        }
+    }
+}
+```
+
+- 若需要 binding 值则使用 @Bindable:
+
+```swift
+struct ContentView: View {
+    @State private var book = Book()
+    var body: some View {
+        BookView(book: book)
+    }
+}
+
+struct BookView: View {
+    let book: Book
+    var body: some View {
+        BookEditorView(book: book)
+    }
+}
+
+struct BookEditorView: View {
+    @Bindable var book: Book
+    var body: some View {
+        // 此时需要 $book.title 而不是上面那种 book.isAvailable.toggle() 直接修改
+        TextField("Title", text: $book.title)
+    }
+}
+```
+
+
+
