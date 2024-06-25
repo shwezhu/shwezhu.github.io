@@ -255,9 +255,9 @@
       <ol>
         <li><a href="#1-optional-parameters">1. Optional Parameters</a></li>
         <li><a href="#2-default-parameters">2. Default Parameters</a></li>
-        <li><a href="#可选参数常见用法-nil-coalescing-operator">可选参数常见用法 nil-coalescing operator</a></li>
         <li><a href="#3-optional-chaining">3. Optional Chaining</a></li>
-        <li><a href="#3-parameter-labels">3. Parameter Labels</a></li>
+        <li><a href="#4-parameter-labels">4. Parameter Labels</a></li>
+        <li><a href="#5-unwrapping-optional-value">5. Unwrapping Optional Value</a></li>
       </ol>
     </li>
   </ol>
@@ -379,8 +379,7 @@
 </div>
 </div><blockquote>
 <p>&ldquo;if let greeting = greeting&rdquo; 这不是这个赋值语句吗, 怎么能用来判断呢?</p>
-<p>在 Swift 中，<code>if let</code> 语句是一种特殊的语法结构，用于可选绑定（optional binding）。它不仅可以用来赋值，还可以用来判断一个可选值是否为 <code>nil</code>，并在可选值不为 <code>nil</code> 的情况下解包这个值。</p>
-<p><code>if let</code> 语句的形式如下：</p>
+<p>在 Swift 中，<code>if let</code> 常用来 unwrap optional value，名字叫可选绑定（optional binding）, 形式如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -391,18 +390,13 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="k">if</span> <span class="kd">let</span> <span class="nv">unwrappedValue</span> <span class="p">=</span> <span class="n">optionalValue</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// 使用 unwrappedValue</span>
+</span></span><span class="line"><span class="cl"> <span class="c1">// 使用 unwrappedValue</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">// optionalValue 为 nil</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>在这段代码中：</p>
-<ul>
-<li><code>optionalValue</code> 是一个可选类型（即 <code>Optional</code>），可能包含一个值，也可能为 <code>nil</code>。</li>
-<li><code>unwrappedValue</code> 是一个常量，只有在 <code>optionalValue</code> 不为 <code>nil</code> 时才会被赋值，并且会被解包（unwrap）。</li>
-</ul>
-</blockquote>
+</div></blockquote>
 <h3 id="2-default-parameters">
     <a href="#2-default-parameters">#</a>
     2. Default Parameters
@@ -446,60 +440,6 @@
 </div><blockquote>
 <p>分清你要的东西是什么, 是允许参数为 nil 还是调用函数的时候不提供参数.</p>
 </blockquote>
-<h3 id="可选参数常见用法-nil-coalescing-operator">
-    <a href="#%e5%8f%af%e9%80%89%e5%8f%82%e6%95%b0%e5%b8%b8%e8%a7%81%e7%94%a8%e6%b3%95-nil-coalescing-operator">#</a>
-    可选参数常见用法 nil-coalescing operator
-</h3><p>前面已经学到了使用 if 进行 unwrap 可选参数的值, 如下:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="k">if</span> <span class="kd">let</span> <span class="nv">unwrappedValue</span> <span class="p">=</span> <span class="n">optionalValue</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"> <span class="c1">// 使用 unwrappedValue</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"> <span class="c1">// optionalValue 为 nil</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>还有另一个常见的用法: nil-coalescing operator</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">greet</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">?)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// 如果 name 为 nil, 则 greetingName == &#34;Guest&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nv">greetingName</span> <span class="p">=</span> <span class="n">name</span> <span class="p">??</span> <span class="s">&#34;Guest&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><blockquote>
-<p>参数必须为可选参数才可以使用 <code>??</code> , <strong>只有可选参数可以为空</strong>, 如果参数不是可选参数, 给的默认值也不能是空,</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="c1">// 报错: Nil default argument value cannot be converted to type &#39;String&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="kd">init</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">String</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="kc">self</span><span class="p">.</span><span class="n">name</span> <span class="p">=</span> <span class="n">name</span> <span class="p">??</span> <span class="s">&#34;&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div></blockquote>
 <h3 id="3-optional-chaining">
     <a href="#3-optional-chaining">#</a>
     3. Optional Chaining
@@ -578,13 +518,72 @@
 </div>
 </div><p>答案并不是, 如果直接写为 <code>selectedTaskItem.name = name</code>, 则编译器会报错: <code>Value of optional type 'TaskItem?' must be unwrapped to refer to member 'created' of wrapped base type 'TaskItem'</code></p>
 <p>这是因为在 Swift 中，即使你在条件分支中对一个可选变量进行了赋值，这个变量的类型仍然保持为可选类型 (<code>Optional</code>)。因此，即使我们已经确信该可选变量不为 <code>nil</code>，编译器仍要求我们对其进行安全访问，因为从类型系统的角度来看，该变量仍然是可选的。</p>
-<h3 id="3-parameter-labels">
-    <a href="#3-parameter-labels">#</a>
-    3. Parameter Labels
+<h3 id="4-parameter-labels">
+    <a href="#4-parameter-labels">#</a>
+    4. Parameter Labels
 </h3><blockquote>
 <p>关于参数的 label, 如果不指定, 参数的 label 被设置为参数名, 即调用函数的时候必须指定label, 如 <code>getName(id: 123)</code>, id 就是label, 必须指定不可以写为 <code>getName(123)</code></p>
 <p>因此常有些 <code>_</code> 来忽略 label, 为了调用函数的时候不用显示指出 label.</p>
 </blockquote>
+<h3 id="5-unwrapping-optional-value">
+    <a href="#5-unwrapping-optional-value">#</a>
+    5. Unwrapping Optional Value
+</h3><p>SafariView 是个自定义 view, 构造函数需要传递一个 URL 类型的参数, 而下面代码却报错,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="c1">// error: Value of optional type &#39;URL?&#39; must be unwrapped to a value of type &#39;URL&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">SafariView</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="n">URL</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="n">urlString</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>根据报错信息可以看出, URL构造函数应该是返回了一个 optional value, 即可能为 nil, 因此编译器提示我们要 unwrap <code>URL?</code>,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="c1">// URL 的一个构造函数</span>
+</span></span><span class="line"><span class="cl"><span class="kd">init</span><span class="p">?(</span><span class="n">string</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>有多种方法 unwrap 可选类型, 分别为 Optional Binding, Force Unwrapping 和 Nil-Coalescing, 其中 Force Unwrapping 不推荐使用, 因为可能导致运行时错误.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="c1">// Optional Binding</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="kd">let</span> <span class="nv">url</span> <span class="p">=</span> <span class="n">URL</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="n">urlString</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">SafariView</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Text</span><span class="p">(</span><span class="s">&#34;Invalid URL&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Force Unwrapping</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nv">urlString</span> <span class="p">=</span> <span class="s">&#34;https://www.apple.com&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nv">url</span> <span class="p">=</span> <span class="n">URL</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="n">urlString</span><span class="p">)</span><span class="o">!</span> <span class="c1">// Force unwrap</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Nil-Coalescing </span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nv">url</span> <span class="p">=</span> <span class="n">URL</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="n">urlString</span><span class="p">)</span> <span class="p">??</span> <span class="n">URL</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="s">&#34;https://www.example.com&#34;</span><span class="p">)</span><span class="o">!</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在这个地方的 Nil-Coalescing 也用到了 Force Unwrapping, 因为 URL() 总是会返回可选类型, 所以此时最优解是使用 Optional Binding.</p>
 
 </section>
 
@@ -621,64 +620,64 @@
             
                 
 <article class="">
+    <a href="/p/uikit-in-swiftui/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">UIKit in SwiftUI</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/predefined-styles-swiftui/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Predefined Styles SwiftUI</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/swiftui-modifiers/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">SwiftUI Modifiers</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/swiftui-views/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">SwiftUI Views</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
     <a href="/p/property-wrappers-swiftui/">
         
         
 
         <div class="article-details">
             <h2 class="article-title">Property Wrappers - SwiftUI</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="">
-    <a href="/p/swiftui-basics-weather-app/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">SwiftUI Basics - Weather App</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="">
-    <a href="/p/swiftui-basics-weather-app/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">SwiftUI Basics - Weather App</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="">
-    <a href="/p/struct-class-swift/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Struct &amp; Class - Swift</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="">
-    <a href="/p/swift-basic-syntax-and-data-types/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Swift Basic Syntax and Data types</h2>
         </div>
     </a>
 </article>

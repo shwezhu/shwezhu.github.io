@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. @State @State is a property wrapper struct that just wraps any value to make sure your view will refresh or redraw whenever that value changes. References: https://stackoverflow.com/a/59616812/16317008 # 1.1. Two-Way Binding - Projected Value For state variables — variables defined with a State property wrapper — the dollar sign ($) prefix tells SwiftUI to pass the projectedValue, which is a Binding. 首先看看 projectedValue 和 Binding 是干什么的: Use the projected value to get a Binding to the stored value.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. @State @State is a property wrapper struct that just wraps any value to make sure your view will refresh or redraw whenever that value changes. References: https://stackoverflow.com/a/59616812/16317008 Always declare state as private, and place it in the highest view in the view hierarchy that needs access to the value. Learn more: https://stackoverflow.com/a/72946113/16317008 @State 修饰的变量, 声明的时候一般要初始化, 因为 @State 都会被 private 修饰, 不能被外部访问, 而 @Binding 修饰的变量声明时不应该有值, 因为它要接受外部的 binding 值, 以便可以修改, 正如文档所表述: A binding connects a property to a source of truth stored elsewhere, instead of storing data directly.">
 <title>Property Wrappers - SwiftUI</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/property-wrappers-swiftui/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Property Wrappers - SwiftUI">
-<meta property='og:description' content="# 1. @State @State is a property wrapper struct that just wraps any value to make sure your view will refresh or redraw whenever that value changes. References: https://stackoverflow.com/a/59616812/16317008 # 1.1. Two-Way Binding - Projected Value For state variables — variables defined with a State property wrapper — the dollar sign ($) prefix tells SwiftUI to pass the projectedValue, which is a Binding. 首先看看 projectedValue 和 Binding 是干什么的: Use the projected value to get a Binding to the stored value.">
+<meta property='og:description' content="# 1. @State @State is a property wrapper struct that just wraps any value to make sure your view will refresh or redraw whenever that value changes. References: https://stackoverflow.com/a/59616812/16317008 Always declare state as private, and place it in the highest view in the view hierarchy that needs access to the value. Learn more: https://stackoverflow.com/a/72946113/16317008 @State 修饰的变量, 声明的时候一般要初始化, 因为 @State 都会被 private 修饰, 不能被外部访问, 而 @Binding 修饰的变量声明时不应该有值, 因为它要接受外部的 binding 值, 以便可以修改, 正如文档所表述: A binding connects a property to a source of truth stored elsewhere, instead of storing data directly.">
 <meta property='og:url' content='https://blog.yorforger.cc/p/property-wrappers-swiftui/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-06-02T16:32:10&#43;00:00'/><meta property='article:modified_time' content='2024-06-02T16:32:10&#43;00:00'/>
 <meta name="twitter:title" content="Property Wrappers - SwiftUI">
-<meta name="twitter:description" content="# 1. @State @State is a property wrapper struct that just wraps any value to make sure your view will refresh or redraw whenever that value changes. References: https://stackoverflow.com/a/59616812/16317008 # 1.1. Two-Way Binding - Projected Value For state variables — variables defined with a State property wrapper — the dollar sign ($) prefix tells SwiftUI to pass the projectedValue, which is a Binding. 首先看看 projectedValue 和 Binding 是干什么的: Use the projected value to get a Binding to the stored value.">
+<meta name="twitter:description" content="# 1. @State @State is a property wrapper struct that just wraps any value to make sure your view will refresh or redraw whenever that value changes. References: https://stackoverflow.com/a/59616812/16317008 Always declare state as private, and place it in the highest view in the view hierarchy that needs access to the value. Learn more: https://stackoverflow.com/a/72946113/16317008 @State 修饰的变量, 声明的时候一般要初始化, 因为 @State 都会被 private 修饰, 不能被外部访问, 而 @Binding 修饰的变量声明时不应该有值, 因为它要接受外部的 binding 值, 以便可以修改, 正如文档所表述: A binding connects a property to a source of truth stored elsewhere, instead of storing data directly.">
     <link rel="shortcut icon" href="/favicon.png" />
 
   
@@ -253,12 +253,9 @@
   <ol>
     <li>
       <ol>
-        <li><a href="#1-state">1. @State</a>
-          <ol>
-            <li><a href="#11-two-way-binding---projected-value">1.1. Two-Way Binding - Projected Value</a></li>
-          </ol>
-        </li>
+        <li><a href="#1-state">1. @State</a></li>
         <li><a href="#2-published">2. @Published</a></li>
+        <li><a href="#3-binding-vs-bindable">3. @Binding vs @Bindable</a></li>
       </ol>
     </li>
   </ol>
@@ -325,7 +322,7 @@
 
 
                 <time class="article-time--reading">
-                    3 minute read
+                    4 minute read
                 </time>
             </div>
         
@@ -345,45 +342,47 @@
     1. @State
 </h3><p><code>@State</code> is a property wrapper struct that just wraps any value to make sure your view will refresh or redraw <strong>whenever that value changes</strong>. References: <a class="link" href="https://stackoverflow.com/a/59616812/16317008"  target="_blank" rel="noopener"
     >https://stackoverflow.com/a/59616812/16317008</a></p>
-<h4 id="11-two-way-binding---projected-value">
-    <a href="#11-two-way-binding---projected-value">#</a>
-    1.1. Two-Way Binding - Projected Value
-</h4><p>For state variables — variables defined with a <a class="link" href="https://developer.apple.com/documentation/SwiftUI/State"  target="_blank" rel="noopener"
-    ><code>State</code></a> property wrapper — the dollar sign (<code>$</code>) prefix tells SwiftUI to pass the <strong>projectedValue</strong>, which is a <strong>Binding</strong>.</p>
-<p>首先看看 projectedValue 和 Binding 是干什么的:</p>
-<blockquote>
-<p>Use the <em>projected value</em> to get a <em>Binding</em> to the <em>stored value</em>. To access the <code>projectedValue</code>, prefix the property variable with a dollar sign (<code>$</code>).</p>
-<p>Use a binding to create a two-way connection <strong>between</strong> a property that stores data, <strong>and</strong> a view that displays and changes the data. A binding connects a property to a source of truth stored elsewhere, instead of storing data directly.</p>
-</blockquote>
-<p>For example, a button that toggles between play and pause can create a binding to a property of its parent view using the <code>Binding</code> property wrapper.</p>
+<p><strong>Always declare state as private,</strong> and place it in the highest view in the view hierarchy that needs access to the value. Learn more: <a class="link" href="https://stackoverflow.com/a/72946113/16317008"  target="_blank" rel="noopener"
+    >https://stackoverflow.com/a/72946113/16317008</a></p>
+<p>@State 修饰的变量, 声明的时候一般要初始化, 因为 @State 都会被 private 修饰, 不能被外部访问, 而 @Binding 修饰的变量声明时不应该有值, 因为它要接受外部的 binding 值, 以便可以修改, 正如<a class="link" href="https://arc.net/l/quote/itwvjdmw"  target="_blank" rel="noopener"
+    >文档</a>所表述: A binding connects a property to a source of truth stored elsewhere, instead of storing data directly.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">PlayButton</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// create a binding to a property of its parent view. </span>
-</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">Binding</span> <span class="kd">var</span> <span class="nv">isPlaying</span><span class="p">:</span> <span class="nb">Bool</span>
-</span></span><span class="line"><span class="cl">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="p">@</span><span class="n">State</span> <span class="kd">private</span> <span class="kd">var</span> <span class="nv">isPlaying</span><span class="p">:</span> <span class="nb">Bool</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl"><span class="p">@</span><span class="n">Binding</span> <span class="kd">var</span> <span class="nv">isPlaying</span><span class="p">:</span> <span class="nb">Bool</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>看到<a class="link" href="https://onevcat.com/2021/01/swiftui-state/"  target="_blank" rel="noopener"
+    >一篇文章</a>, 例子举的很好, 帮助理解State, 分享在这: 在 SwiftUI 中，我们使用 <code>@State</code> 进行私有状态管理，并驱动 <code>View</code> 的显示，下面的 <code>ContentView</code> 将在点击加号按钮时将显示的数字 +1：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">ContentView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">State</span> <span class="kd">private</span> <span class="kd">var</span> <span class="nv">value</span> <span class="p">=</span> <span class="mi">99</span>
 </span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Button</span><span class="p">(</span><span class="n">isPlaying</span> <span class="p">?</span> <span class="s">&#34;Pause&#34;</span> <span class="p">:</span> <span class="s">&#34;Play&#34;</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">isPlaying</span><span class="p">.</span><span class="n">toggle</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">VStack</span><span class="p">(</span><span class="n">alignment</span><span class="p">:</span> <span class="p">.</span><span class="n">leading</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Text</span><span class="p">(</span><span class="s">&#34;Number: </span><span class="si">\(</span><span class="n">value</span><span class="si">)</span><span class="s">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Button</span><span class="p">(</span><span class="s">&#34;+&#34;</span><span class="p">)</span> <span class="p">{</span> <span class="n">value</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>The parent view declares a property to hold the playing state, using the <a class="link" href="https://developer.apple.com/documentation/swiftui/state"  target="_blank" rel="noopener"
-    ><code>State</code></a> property wrapper to indicate that this property is the value’s source of truth.</p>
+</div><p>当我们想要将这个状态值传递给下层子 View 的时候，直接在子 View 中声明一个变量就可以了:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -400,35 +399,137 @@
 </span><span class="lnt">12
 </span><span class="lnt">13
 </span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">PlayerView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">episode</span><span class="p">:</span> <span class="n">Episode</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// @State indicates that this property is the value’s source of truth.</span>
-</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">State</span> <span class="kd">private</span> <span class="kd">var</span> <span class="nv">isPlaying</span><span class="p">:</span> <span class="nb">Bool</span> <span class="p">=</span> <span class="kc">false</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">DetailView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nv">number</span><span class="p">:</span> <span class="nb">Int</span>
 </span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">VStack</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">Text</span><span class="p">(</span><span class="n">episode</span><span class="p">.</span><span class="n">title</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="n">foregroundStyle</span><span class="p">(</span><span class="n">isPlaying</span> <span class="p">?</span> <span class="p">.</span><span class="n">primary</span> <span class="p">:</span> <span class="p">.</span><span class="n">secondary</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">PlayButton</span><span class="p">(</span><span class="n">isPlaying</span><span class="p">:</span> <span class="err">$</span><span class="n">isPlaying</span><span class="p">)</span> <span class="c1">// Pass a binding.</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Text</span><span class="p">(</span><span class="s">&#34;Number: </span><span class="si">\(</span><span class="n">number</span><span class="si">)</span><span class="s">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">ContentView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">State</span> <span class="kd">private</span> <span class="kd">var</span> <span class="nv">value</span> <span class="p">=</span> <span class="mi">99</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">VStack</span><span class="p">(</span><span class="n">alignment</span><span class="p">:</span> <span class="p">.</span><span class="n">leading</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">DetailView</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="n">value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Button</span><span class="p">(</span><span class="s">&#34;+&#34;</span><span class="p">)</span> <span class="p">{</span> <span class="n">value</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>通过 <code>$</code> 来访问 State 修饰的属性可以得到该属性的 Projected Value, 而 Binding 就是一个行为: 允许子 view 修改父 view 的属性的值.</p>
-<p>比如上面我们创建 PlayButton 视图实例的时候 <code>PlayButton(isPlaying: $isPlaying)</code>, 就是把 PlayerView 的属性 <code>isPlaying</code> 的 Projected Value <code>$isPlaying</code> 传递给<code>PlayButton</code>, <code>$isPlaying</code> 的类型是 <code>Binding&lt;bool&gt;</code>, 之所以可以这么传递, 是因为 <code>PlayButton</code> 的属性是 <code>@Binding var isPlaying: Bool</code>. 即把父视图的属性 <code>isPlaying</code> 绑定到了子视图的 <code>isPlaying</code> 属性上, 因此子视图修改其自己的属性 <code>isPlaying</code> 时, 也会影响父视图的 <code>isPlaying</code>.</p>
-<p>References:</p>
-<ul>
-<li><a class="link" href="https://arc.net/l/quote/dtuxzrwy"  target="_blank" rel="noopener"
-    >https://arc.net/l/quote/dtuxzrwy</a></li>
-<li><a class="link" href="https://stackoverflow.com/a/59616812/16317008"  target="_blank" rel="noopener"
-    >https://stackoverflow.com/a/59616812/16317008</a></li>
-<li><a class="link" href="https://developer.apple.com/documentation/swiftui/state/projectedvalue"  target="_blank" rel="noopener"
-    >https://developer.apple.com/documentation/swiftui/state/projectedvalue</a></li>
-</ul>
+</div><p>在 <code>ContentView</code> 中的 <code>@State value</code> 发生改变时，<em><code>ContentView.body</code> 被重新求值，<code>DetailView</code> 将被重新创建</em>，包含新数字的 <code>Text</code> 被重新渲染。</p>
+<p>如果我们希望的不完全是这种被动的传递，而是希望 <code>DetailView</code> 也拥有这个传入的状态值，并且可以自己对这个值进行管理的话，一种方法是在让 <code>DetailView</code> 持有自己的 <code>@State</code>，然后通过初始化方法把值传递进去：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">DetailView0</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">State</span> <span class="kd">var</span> <span class="nv">number</span><span class="p">:</span> <span class="nb">Int</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">HStack</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Text</span><span class="p">(</span><span class="s">&#34;0: </span><span class="si">\(</span><span class="n">number</span><span class="si">)</span><span class="s">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Button</span><span class="p">(</span><span class="s">&#34;+&#34;</span><span class="p">)</span> <span class="p">{</span> <span class="n">number</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ContentView</span>
+</span></span><span class="line"><span class="cl"><span class="p">@</span><span class="n">State</span> <span class="kd">private</span> <span class="kd">var</span> <span class="nv">value</span> <span class="p">=</span> <span class="mi">99</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...</span>
+</span></span><span class="line"><span class="cl">    <span class="n">DetailView0</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="n">value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这种方法能够奏效，但是违背了 <code>@State</code> 文档中关于这个属性标签的说明：</p>
+<blockquote>
+<p>… declare your state properties as private, to prevent clients of your view from accessing them.</p>
+</blockquote>
+<p><strong>如果一个 <code>@State</code> 无法被标记为 private 的话，一定是哪里出了问题</strong>。一种很朴素的想法是，将 <code>@State</code> 声明为 <code>private</code>，然后使用合适的 <code>init</code> 方法来设置它。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">DetailView1</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">State</span> <span class="kd">private</span> <span class="kd">var</span> <span class="nv">number</span><span class="p">:</span> <span class="nb">Int</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">init</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kc">self</span><span class="p">.</span><span class="n">number</span> <span class="p">=</span> <span class="n">number</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>另外还有一些想说的, 看下面代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">DetailView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nv">randomNumber</span> <span class="p">=</span> <span class="nb">Int</span><span class="p">.</span><span class="n">random</span><span class="p">(</span><span class="k">in</span><span class="p">:</span> <span class="mf">1.</span><span class="p">..</span><span class="mi">100</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Text</span><span class="p">(</span><span class="s">&#34;Random Number: </span><span class="si">\(</span><span class="n">randomNumber</span><span class="si">)</span><span class="s">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">ContentView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">State</span> <span class="kd">private</span> <span class="kd">var</span> <span class="nv">value</span> <span class="p">=</span> <span class="mi">99</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Text</span><span class="p">(</span><span class="s">&#34;Number: </span><span class="si">\(</span><span class="n">value</span><span class="si">)</span><span class="s">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">DetailView</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Button</span><span class="p">(</span><span class="s">&#34;+&#34;</span><span class="p">)</span> <span class="p">{</span> <span class="n">value</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>每次点击按钮, DetailView 的数字也会变化, 这就意味着每次 ContentView 被重新渲染的时候, 它的子 view 也被重新渲染了, 可是根据<a class="link" href="https://arc.net/l/quote/ekwiznyu"  target="_blank" rel="noopener"
+    >官方文档</a>表述: When the @State value changes, SwiftUI updates the parts of the view hierarchy that depend on the value. 可是子 view <code>DetailView</code> 并没有依赖 @State value, 为什么还会被更新呢, 难道说每次 view 更新都会带着更新他的所有子 views? 答案是: 对的. 了解更多: <a class="link" href="https://stackoverflow.com/questions/78635057/why-does-one-child-view-in-swiftui-re-render-on-parent-state-change-but-another"  target="_blank" rel="noopener"
+    >swift - Why does one child view in SwiftUI re-render on parent state change but another doesn&rsquo;t? - Stack Overflow</a></p>
 <h3 id="2-published">
     <a href="#2-published">#</a>
     2. @Published
@@ -457,7 +558,110 @@
     >SwiftUI Data Flow in iOS 17 - Observation &amp; @Observable - YouTube</a></p>
 <p>MVVM: <a class="link" href="https://www.youtube.com/watch?v=FwGMU_Grnf8"  target="_blank" rel="noopener"
     >SwiftUI - Intro to MVVM | Example Refactor | Model View ViewModel</a></p>
-
+<h3 id="3-binding-vs-bindable">
+    <a href="#3-binding-vs-bindable">#</a>
+    3. @Binding vs @Bindable
+</h3><blockquote>
+<p>SwiftData: @Bindable 即可将修改数据的数据实时保存到数据库 不用调用 context 其它函数</p>
+</blockquote>
+<p>文档说的很详细: <a class="link" href="https://developer.apple.com/documentation/swiftui/state"  target="_blank" rel="noopener"
+    >State | Apple Developer Documentation</a></p>
+<ul>
+<li>
+<p>修改单个值使用 @Binding , 如一个 bool 一个 double, 或者改变一个引用的指向,</p>
+</li>
+<li>
+<p>若修改对象的属性, 直接传递引用就行了 (前提 Book 是 class 而不是 struct)</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">ContentView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">State</span> <span class="kd">private</span> <span class="kd">var</span> <span class="nv">book</span> <span class="p">=</span> <span class="n">Book</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">BookCheckoutView</span><span class="p">(</span><span class="n">book</span><span class="p">:</span> <span class="n">book</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">BookCheckoutView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">book</span><span class="p">:</span> <span class="n">Book</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Button</span><span class="p">(</span><span class="n">book</span><span class="p">.</span><span class="n">isAvailable</span> <span class="p">?</span> <span class="s">&#34;Check out book&#34;</span> <span class="p">:</span> <span class="s">&#34;Return book&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">book</span><span class="p">.</span><span class="n">isAvailable</span><span class="p">.</span><span class="n">toggle</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>若需要 binding 值则使用 @Bindable:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">ContentView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">State</span> <span class="kd">private</span> <span class="kd">var</span> <span class="nv">book</span> <span class="p">=</span> <span class="n">Book</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">BookView</span><span class="p">(</span><span class="n">book</span><span class="p">:</span> <span class="n">book</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">BookView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nv">book</span><span class="p">:</span> <span class="n">Book</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">BookEditorView</span><span class="p">(</span><span class="n">book</span><span class="p">:</span> <span class="n">book</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">BookEditorView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">Bindable</span> <span class="kd">var</span> <span class="nv">book</span><span class="p">:</span> <span class="n">Book</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 此时需要 $book.title 而不是上面那种 book.isAvailable.toggle() 直接修改</span>
+</span></span><span class="line"><span class="cl">        <span class="n">TextField</span><span class="p">(</span><span class="s">&#34;Title&#34;</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="err">$</span><span class="n">book</span><span class="p">.</span><span class="n">title</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
 </section>
 
 
@@ -493,12 +697,12 @@
             
                 
 <article class="">
-    <a href="/p/swiftui-basics-weather-app/">
+    <a href="/p/uikit-in-swiftui/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">SwiftUI Basics - Weather App</h2>
+            <h2 class="article-title">UIKit in SwiftUI</h2>
         </div>
     </a>
 </article>
@@ -506,12 +710,12 @@
             
                 
 <article class="">
-    <a href="/p/swiftui-basics-weather-app/">
+    <a href="/p/predefined-styles-swiftui/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">SwiftUI Basics - Weather App</h2>
+            <h2 class="article-title">Predefined Styles SwiftUI</h2>
         </div>
     </a>
 </article>
@@ -519,12 +723,12 @@
             
                 
 <article class="">
-    <a href="/p/struct-class-swift/">
+    <a href="/p/swiftui-modifiers/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Struct &amp; Class - Swift</h2>
+            <h2 class="article-title">SwiftUI Modifiers</h2>
         </div>
     </a>
 </article>
@@ -532,12 +736,12 @@
             
                 
 <article class="">
-    <a href="/p/swift-functions/">
+    <a href="/p/swiftui-views/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Swift Functions</h2>
+            <h2 class="article-title">SwiftUI Views</h2>
         </div>
     </a>
 </article>
@@ -545,12 +749,12 @@
             
                 
 <article class="">
-    <a href="/p/swift-basic-syntax-and-data-types/">
+    <a href="/p/swiftui-%E7%90%90%E7%A2%8E%E5%B0%8F%E7%9F%A5%E8%AF%86/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Swift Basic Syntax and Data types</h2>
+            <h2 class="article-title">SwiftUI 琐碎小知识</h2>
         </div>
     </a>
 </article>
