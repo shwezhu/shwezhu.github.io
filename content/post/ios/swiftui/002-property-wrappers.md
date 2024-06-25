@@ -132,6 +132,8 @@ MVVM: [SwiftUI - Intro to MVVM | Example Refactor | Model View ViewModel](https:
 
 ### 3. @Binding vs @Bindable 
 
+> SwiftData: @Bindable 即可将修改数据的数据实时保存到数据库 不用调用 context 其它函数
+
 文档说的很详细: [State | Apple Developer Documentation](https://developer.apple.com/documentation/swiftui/state)
 
 - 修改单个值使用 @Binding , 如一个 bool 一个 double, 或者改变一个引用的指向, 
