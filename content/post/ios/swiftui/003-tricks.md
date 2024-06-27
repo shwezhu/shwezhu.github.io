@@ -28,7 +28,7 @@ ReminderCatagoryView {
   var body: some view {
     ...
     Image(systemName: "flag.slash")
-    .onTapGesture(perform: onDropped)
+    .onTapGesture(perform: onDropped) // 使用onTapGesture
   }
 }
 ```
