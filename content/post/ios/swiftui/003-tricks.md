@@ -33,3 +33,19 @@ ReminderCatagoryView {
 }
 ```
 
+### 4. 隐藏 NavigationLink 的箭头
+
+```swift
+// Wrapping the row in a ScrollView
+List {
+    ScrollView{
+        NavigationLink{
+            // destination
+        } label: {
+            // your label view
+        }
+    }
+}
+```
+
+[How to hide an arrow inside List w… | Apple Developer Forums](https://forums.developer.apple.com/forums/thread/702376)
