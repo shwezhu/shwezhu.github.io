@@ -49,3 +49,31 @@ List {
 ```
 
 [How to hide an arrow inside List w… | Apple Developer Forums](https://forums.developer.apple.com/forums/thread/702376)
+
+### 5. 使用 SwiftData `Predicate` 的 View 不可以直接放到 NavigationStack 中
+
+```swift
+// 加一层
+struct ContentView: View {
+    var body: some View {
+        NavigationStack {
+            DummyView()
+        }
+    }
+}
+
+struct DummyView: View {
+    var body: some View {
+        ListsView()
+    }
+}
+
+struct ListsView: View {
+    @Environment(\.modelContext) private var modelContext
+    
+    @Query(filter: #Predicate<Item> { _ in true }) 
+
+// ...
+}
+```
+
