@@ -174,8 +174,74 @@ var body: some Scene {
 
 ### 4. UISceneDelegate
 
-Before iOS 13, the main entry point for your app was the AppDelegate, and it was in charge of many logic and state handling. Now the work of the AppDelegate has been split, between the AppDelegate and the SceneDelegate.
+Before iOS 13, the main entry point for your app was the AppDelegate, and it was in charge of many logic and state handling. Now the work of the AppDelegate has been split, between the AppDelegate and the SceneDelegate [1 Dev].
 
-The AppDelegate being only responsible for the initial app setup, the SceneDelegate will handle and manage the way your app is shown.
+The AppDelegate being only responsible for the initial app setup, the SceneDelegate will handle and manage the way your app is shown [1 Dev]. 
 
-As an app could have multiple instances, a SceneDelegate will be called every time an instance of your app is created.
+As an app could have multiple instances, a SceneDelegate will be called every time an instance of your app is created [1 Dev]. 
+
+> Don’t create `UISceneDelegate` objects directly. Instead, specify the name of your custom delegate class as part of the configuration data for your scenes. 
+>
+> You can specify this information in your app’s `Info.plist` file, **or** in the UISceneConfiguration object you return from your app delegate’s `application:configurationForConnectingSceneSession:options:` method [2 App].
+
+For the adivice of Apple Docs, we can write code like this:
+
+```swift
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        let sceneConfig = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+        sceneConfig.delegateClass = SceneDelegate.self
+        return sceneConfig
+    }
+}
+
+class SceneDelegate: NSObject, UIWindowSceneDelegate {
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        print("App is entering the foreground")
+    }
+}
+
+@main
+struct MyApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    ...
+}
+```
+
+### 5. Conclusion
+
+After iOS 13, the management responsibilities for app states were subdivided. Previously, all tasks were handled by the AppDelegate, but now they are divided between the AppDelegate and the SceneDelegate. The AppDelegate primarily handles initial setup, such as startup initialization, while the SceneDelegate manages the logic for scene transitions, such as moving the app from the foreground to the background, or from an active state to an inactive state. 
+
+If you have setup tasks, asign them to AppDelegate, like this:
+
+```swift
+final class AppDelegate: NSObject, UIApplicationDelegate {
+    // Get called when app launchs, launch is not simply from background to foreground.
+    func application(_ application: UIApplication, 
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        NotificationManager.requestNotificationPermission()
+        // Specify user notification delegate.
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+  
+  func application(_ application: UIApplication, 
+                     configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        // Specify scene delegate.
+        let sceneConfig = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+        sceneConfig.delegateClass = SceneDelegate.self
+        return sceneConfig
+    }
+}
+```
+
+If you want do something for scene transitions, implement SceneDelegate.
+
+**References:** 
+
+[1Dev] [Add a Scene Delegate to your current project - DEV Community](https://dev.to/kevinmaarek/add-a-scene-delegate-to-your-current-project-5on)
+
+[2App] [UISceneDelegate | Apple Developer Documentation](https://developer.apple.com/documentation/uikit/uiscenedelegate?language=objc)
+
+
+
