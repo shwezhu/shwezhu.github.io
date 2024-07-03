@@ -1,5 +1,5 @@
 ---
-title: SwiftUI UNUserNotificationCenterDelegate 和 UIApplicationDelegate 协议
+title: SwiftUI UNUserNotificationCenterDelegate, UIApplicationDelegate, UISceneDelegate 协议
 date: 2024-07-03 10:37:20
 categories:
  - ios
@@ -64,6 +64,8 @@ struct todolistApp: App {
 方法二, 合并  UNUserNotificationCenterDelegate 和 UIApplicationDelegate 
 
 ```swift
+import UIKit
+
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     // MARK: - UIApplicationDelegate
@@ -81,7 +83,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     // MARK: - UNUserNotificationCenterDelegate
     
-    // Tells the delegate how to handle a notification that arrived while the app was running in the foreground.
+    // Tells the delegate how to handle a notification that arrived while the app was running in the foreground. 
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -143,6 +145,17 @@ The app delegate will still receive the `willFinishLaunchingWithOptions:` and `d
 
 我把 Application Scene Manifest 删除了, 依然不能正常工作, 好奇怪, 打算直接用 onReceive 或者复杂的情况使用 SceneDelegate. 
 
+更新: 可能没办法根除 scene 吧? 刚开始学习, 太复杂了, 还是留着以后解决吧, 
+
+```swift
+// @main...
+var body: some Scene {
+    WindowGroup {
+        HomeView()
+    }
+}
+```
+
 ### 3. APP 三个状态的区别
 
 再看一下 applicationWillEnterForeground 文档:
@@ -159,3 +172,10 @@ The app delegate will still receive the `willFinishLaunchingWithOptions:` and `d
 
 注意, launch 和 简单的从后台切入到app页面不一样, 
 
+### 4. UISceneDelegate
+
+Before iOS 13, the main entry point for your app was the AppDelegate, and it was in charge of many logic and state handling. Now the work of the AppDelegate has been split, between the AppDelegate and the SceneDelegate.
+
+The AppDelegate being only responsible for the initial app setup, the SceneDelegate will handle and manage the way your app is shown.
+
+As an app could have multiple instances, a SceneDelegate will be called every time an instance of your app is created.
