@@ -1,5 +1,5 @@
 ---
-title: SwiftUI 琐碎小知识
+title: SwiftUI 踩坑记
 date: 2024-05-31 16:17:30
 categories:
  - ios
@@ -105,105 +105,23 @@ func createNotificationContent(for reminder: Reminder) -> UNMutableNotificationC
 }
 ```
 
-### 8. UNUserNotificationCenterDelegate 和 UIApplicationDelegate 协议
+### 8. 监控从后台进入主页面事件
 
-**注意:** 使用 `UNUserNotificationCenterDelegate` 时, 要记得初始化, 因为其方法都是在特定条件下被系统自动调用的, 如果你不告诉系统谁是你的 通知代表, 系统只会调用默认 通知代表的方法, 即什么都不做. 
-
-初始化方法一, 在实现 UNUserNotificationCenterDelegate 接口的类的 init() 函数中指定, 然后在程序启动时创建改该类的实例 (间接调用 init 函数)
+除了 scene delegate, 比较简单的方法是使用 onReceive() modifier, 
 
 ```swift
-class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
-  // 单例模式
-  static let shared = NotificationDelegate()
-  
-  override init() {
-    super.init()
-    // 告诉系统谁是你的 通知代表 是谁
-    UNUserNotificationCenter.current().delegate = self
-  }
-
-    func userNotificationCenter(willPresent notification...) {
-        // In App, no sound, just banner.
-        completionHandler([.banner])
-    }
-    ...
-}
-
-class AppDelegate: NSObject, UIApplicationDelegate {
-    // 应用 launch (杀后台再进) 时被调用, 从后台切入不会被调用
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        // 确保 NotificationDelegate 的 init 函数被调用, 即初始化 NotificationDelegate.shared
-        _ = NotificationDelegate.shared
-        return true
-    }
-    // 进入前台 active 的时候被调用
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        print("aaa")
-        NotificationManager.clearBadges()
-    }
-}
-
 @main
 struct todolistApp: App {
-     // ApplicationDelegate 被指定为 AppDelegate, 程序启动会调用其application(...) 函数, 也就会初始化 NotificationDelegate.shared
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDeleagte
-    
-    init() {
-        NotificationManager.requestNotificationPermission()
-    }
-    
     var body: some Scene {
         WindowGroup {
             HomeView()
+                .onReceive(NotificationCenter.default.publisher(
+                  for: UIApplication.didBecomeActiveNotification)) { _ in
+                    NotificationManager.clearBadges()
+                }
+        }
     }
 }
+
 ```
 
-方法二, 合并  UNUserNotificationCenterDelegate 和 UIApplicationDelegate 
-
-```swift
-class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-    
-    // MARK: - UIApplicationDelegate
-    
-    // 应用 launch (杀后台再进) 时被调用, 从后台切入不会被调用
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        // 这行代码很重要
-        UNUserNotificationCenter.current().delegate = self
-        return true
-    }
-    
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        print("aaa")
-        NotificationManager.clearBadges()
-    }
-    
-    // MARK: - UNUserNotificationCenterDelegate
-    
-    // Tells the delegate how to handle a notification that arrived while the app was running in the foreground.
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        // In App, no sound, just banner.
-        completionHandler([.banner])
-    }
-    
-    // When there is a notification, and user click the notification, this function will be called.
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: @escaping () -> Void) {
-        completionHandler()
-    }
-}
-```
-
-> UIApplicationDelegate,  UNUserNotificationCenterDelegate 的方法都是在特定场景被自动调用的, 我们只需要写好方法体内的逻辑就好了, 要做的就是指定 UIApplicationDelegate 是谁, UNUserNotificationCenterDelegate  是谁:
->
-> ```swift
-> // 指定 UNUserNotificationCenterDelegate 
-> UNUserNotificationCenter.current().delegate = self
-> // 指定 UIApplicationDelegate
-> @UIApplicationDelegateAdaptor(AppDelegate.self) var appDeleagte
-> ```
-
-### 8. 
