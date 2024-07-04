@@ -243,5 +243,5 @@ If you want do something for scene transitions, implement SceneDelegate.
 
 [2App] [UISceneDelegate | Apple Developer Documentation](https://developer.apple.com/documentation/uikit/uiscenedelegate?language=objc)
 
-
+举例解释如何在 SwiftUI 中使用 UISceneDelegate 的 **sceneWillEnterForeground() 方法**
 

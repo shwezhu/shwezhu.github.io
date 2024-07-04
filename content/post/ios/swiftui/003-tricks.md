@@ -125,3 +125,21 @@ struct todolistApp: App {
 
 ```
 
+### 9. 强制更新页面
+
+```swift
+var body: some View {
+    NavigationStack {
+        ...
+    }
+    .id(refreshID)
+    .onReceive(willEnterForegroundNotification) { _ in
+        refreshID = UUID()
+    }
+}
+
+private var willEnterForegroundNotification: NotificationCenter.Publisher {
+    NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
+}
+```
+
