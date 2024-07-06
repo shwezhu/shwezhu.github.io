@@ -75,10 +75,12 @@ struct ContentView: View {
 每次点击按钮, DetailView 的数字也会变化, 这就意味着每次 ContentView 被重新渲染的时候, 它的子 view 也被重新渲染了, 可是根据[官方文档](https://arc.net/l/quote/ekwiznyu)表述: When the @State value changes, SwiftUI updates the parts of the view hierarchy that depend on the value. 可是子 view `DetailView` 并没有依赖 @State value, 为什么还会被更新呢, 难道说每次 view 更新都会带着更新他的所有子 views? 答案是: 对的, 所以每次我们要把一个View分成好多 subviews, 这样才能更好的控制更新的粒度, 而不是每次更新都全部重建, 了解更多: [swift - Why does one child view in SwiftUI re-render on parent state change but another doesn't? - Stack Overflow](https://stackoverflow.com/questions/78635057/why-does-one-child-view-in-swiftui-re-render-on-parent-state-change-but-another)
 
 > SwiftData 补充: `@Model` = `@Model` + `@Observable`, `@Query` = `@State` +  `@Query` 
+>
+> 另外修改 `@Query` 标记的数组内的元素属性, 框架会自动保存到数据库, 但肯能会延迟, 想要立即生效, 需要使用 context强制立刻保存. 
 
 ### 2. @Published
 
-> ⚠️ The `@Observable` Macro was first introduced during WWDC 2023 to replace `ObservableObject` and its `@Published` parameters. It is now recommended to use the `Observable` macro to create observable objects and the `@Observable` property wrapper to publish property changes. [Click to learn more](https://www.youtube.com/watch?v=EK7SthdWV2w&t=306s)
+> ⚠️ The `@Observable` Macro was first introduced during WWDC 2023 to replace `ObservableObject` and its `@Published` parameters. It is now recommended to use the `Observable` macro to create observable objects. [Click to learn more](https://www.youtube.com/watch?v=EK7SthdWV2w&t=306s)
 
 In practical terms, that means **whenever an object with a property marked** `@Published` is changed, all views using that object will be reloaded to reflect those changes.
 
@@ -143,8 +145,4 @@ struct BookEditorView: View {
     }
 }
 ```
-
-
-
-
 
