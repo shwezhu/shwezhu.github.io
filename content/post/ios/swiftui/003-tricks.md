@@ -143,3 +143,27 @@ private var willEnterForegroundNotification: NotificationCenter.Publisher {
 }
 ```
 
+### 10. Group
+
+However, it performs an important purpose as a transparent layout container: it gives us the ability to add SwiftUI modifiers to multiple views without changing their layout, or send back multiple views without using `@ViewBuilder`.
+
+[Using groups as transparent layout containers - a free Hacking with iOS: SwiftUI Edition tutorial](https://www.hackingwithswift.com/books/ios-swiftui/using-groups-as-transparent-layout-containers)
+
+### 11. NavigationStack
+
+**Modifier Placement**: All modifiers should be applied to the direct child view of the NavigationStack, not to the NavigationStack itself. `.overly(alignment: .bottomLeading) {...}`, `.searchable(text: $searchText)`, `.navigationTitle("...")`. 
+
+**Persistent Views**: Any view or control added directly to the NavigationStack will appear on every page within that navigation context, regardless of how deep you navigate.
+
+### 12. 按钮不容易点击成功
+
+```swift
+Menu {
+    menuContent
+} label: {
+    Image(systemName: "ellipsis")
+        .foregroundColor(.secondary)
+        .padding() // 增加图标那边距, 直接增加 Menu 内边距无效果. 
+}
+```
+
