@@ -167,3 +167,26 @@ Menu {
 }
 ```
 
+### 13. `GeometryReader`  side effect: expand space 
+
+`GeometryReader` has an interesting side effect that might catch you out at first: the view that gets returned has a flexible preferred size, which means it will expand to take up more space as needed. You can see this in action if you place the `GeometryReader` into a `VStack` then put some more text below it, like this:
+
+```swift
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            GeometryReader { proxy in
+                Text("Hello, World!")
+                    .frame(width: proxy.size.width * 0.9, height: 40)
+                    .background(.red)
+            }
+
+            Text("More text")
+                .background(.blue)
+        }
+    }
+}
+```
+
+References: [Understanding frames and coordinates inside GeometryReader](https://www.hackingwithswift.com/books/ios-swiftui/understanding-frames-and-coordinates-inside-geometryreader)
+
