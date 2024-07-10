@@ -144,5 +144,27 @@ References: [Flexible Frames - SwiftUI Field Guide](https://www.swiftuifieldguid
 
 ## 5. 实例分析
 
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/07/2cbd400fbd4b67eb7cbb16d3235f2c3f.jpg)
 
+前面了提到了 `.resizable()` 的默认行为: A mode to enlarge or reduce the size of an image so that it fills the available space. 宽度被 LazyVGrid 平均分配好了(两列), 图片想要填满屏幕, 就被纵向拉伸, 变成上图的样子. 
+
+加下来我们使用 `.aspectRatio(contentMode: .fill)`, 前面也提到了 `.aspectRatio()` 会根据比例修改 propose size, 我们没有指定比例, 所以比例就是原图的比例, 因为宽度确定了, 所以为了保持原图的比例, 图片自然就变得没那么长了. 如下图:
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/07/33b3eaa93f02824289f4472a95509ed1.jpg)
+
+可是为啥宽度不一样呢? 很简单, 左边的图比较宽, LazyVGrid 会给每行分配相同的高度,  也就是两张图的  `.aspectRatio()`  接受到的高度是相同的, 但是比例不同(各自图片的比例),   `.aspectRatio()`  会根据现在的宽度高度和比例来修改修改后的 propose size (如192*158) 肯定也不同,  `.resizable() ` 会完全接受 propose size, 所以两张图的宽度不同, 
+
+想让宽度相同, 可以给相同的比例:
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/07/2a6f50eb50ed95c4d5c54953f00f771e.jpg)
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/07/4b789f645112c205d5649edeb6029025.jpg)
+
+但如果我们不想让图片被拉伸,  想保持原图的比例呢, 那就使用 Flexible Frame, 提供 minWidth: 0, 意思是无条件接受上级propose width, 因为我们两列都是 flexible: `[.init(.flexible()), .init(.flexible())]`, LazyVGrid 分配的宽度自然也相同, frame 就得到了相同的宽度,  前面提到了 frame 会修改 report size from child, 也就是说无论 child 的尺寸是多少, frame 都会向上级报告自己的尺寸,  
+
+当然  `.aspectRatio()`  会修改 frame 传递的尺寸, 因为有比例存在, 这没关系, 我们最后在 frame 上使用 clip 就好了. 
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/07/05aacc4a64e76ac0a4216217e3d0e03f.jpg)
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/07/dfa3cc016b54ca0f77e016dcf1de53b3.jpg)
 
