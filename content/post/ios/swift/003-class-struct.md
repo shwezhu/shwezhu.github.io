@@ -32,7 +32,7 @@ struct Point {
 var point1 = Point(x: 1, y: 2)
 point.x = 10  // Can directly modify properties
 let point2 = Point(x: 3, y: 4)
-point2.x = 5  // This would cause a compile-time error
+point2.x = 5  // This would cause a compile-time error, class has no this limit
 ```
 
 #### 1.2.2. `mutating` keyword in `struct`

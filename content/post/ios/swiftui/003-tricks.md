@@ -149,7 +149,7 @@ However, it performs an important purpose as a transparent layout container: it 
 
 [Using groups as transparent layout containers - a free Hacking with iOS: SwiftUI Edition tutorial](https://www.hackingwithswift.com/books/ios-swiftui/using-groups-as-transparent-layout-containers)
 
-### 11. NavigationStack
+### 11. NavigationStack Modifiers Issues
 
 **Modifier Placement**: All modifiers should be applied to the direct child view of the NavigationStack, not to the NavigationStack itself. `.overly(alignment: .bottomLeading) {...}`, `.searchable(text: $searchText)`, `.navigationTitle("...")`. 
 
@@ -164,6 +164,7 @@ Menu {
     Image(systemName: "ellipsis")
         .foregroundColor(.secondary)
         .padding() // 增加图标那边距, 直接增加 Menu 内边距无效果. 
+        // 或者使用: .frame(width: 44, height: 44)
 }
 ```
 
