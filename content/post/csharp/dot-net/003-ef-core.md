@@ -32,7 +32,8 @@ Tool 'dotnet-ef' was reinstalled with the stable version (version '8.0.7').
 Tool 'dotnet-ef' was successfully updated from version '8.0.7' to version '9.0.0-preview.1.24081.2'.
 ```
 
-## 2. Model Binding
+
+
 
 
 

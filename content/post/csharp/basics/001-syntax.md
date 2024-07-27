@@ -54,3 +54,42 @@ public class Genre
 > - Declare an [init](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/init) accessor instead of a `set` accessor, which makes the property settable only in the constructor or by using an [object initializer](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/object-and-collection-initializers).
 > - Declare the [set](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/set) accessor to be [private](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/private). The property is settable within the type, but it's immutable to consumers.
 
+## 2. Field vs Property
+
+If a class in C# has fields without explicit get and set accessors, they are fields:
+
+```c#
+public class Cat
+{
+    public string Name;
+    public int Age;
+}
+```
+
+Fields: A field is a variable declared directly in a class. It's typically used for storing data.
+
+```c#
+public class Person
+{
+    public string name; // This is a field
+    private int age; // This is also a field, but private
+}
+```
+
+Properties:A property is a member that provides a flexible mechanism to read, write, or compute the value of a private field.
+
+```c#
+public class Person
+{
+    private string _name; // Backing field
+    public string Name   // This is a property
+    {
+        get { return _name; }
+        set { _name = value; }
+    }
+
+    public int Age { get; set; } // Auto-implemented property
+}
+```
+
+## 3. 
