@@ -103,7 +103,7 @@ Now cannot find the documents talk about this, but we can know that we don't nee
 
 - Don't need declare constructor explicitly for the DTO class. 
 - It's case insensitive. 
-- In addition to missing required properties causing serialization to fail, missing non-nullable properties will also cause serialization to fail. 
+- In addition to missing required properties causing serialization to fail, missing non-nullable properties will also cause serialization to fail. If fails, client will get error message for 500 bad request. 
 - Furthermore, fields will be ignored.
 
 ### 2. Simple types
@@ -119,5 +119,4 @@ By default, model binding gets data in the form of key-value pairs from the foll
 3. Route data
 4. Query string parameters
 5. Uploaded files
-
 

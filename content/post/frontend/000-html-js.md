@@ -62,6 +62,29 @@ This will print a stirng:
 
 The `innerHTML` property is part of the Document Object Model (DOM) that allows Javascript code to manipulate a website being displayed. Specifically, it allows reading and replacing everything within a given DOM element (HTML tag).
 
+## Get Form Element Value
+
+```html 
+<form id="registerForm">
+    <input type="text" id="regUsername" name="regUsername" placeholder="Username" required>
+    <input type="password" id="regPassword" name="regPassword" placeholder="Password" required>
+    <button type="submit">Register</button>
+</form>
+
+<script>
+  const registerForm = document.getElementById('registerForm')
+
+  registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      // Form elements must have a name attribute to be accessed this way.
+      const formData = {
+          username: registerForm.regUsername.value,
+          password: registerForm.regPassword.value,
+      }
+      ...
+</script>
+```
+
 ## References
 
 - [What is the use of the defer attribute in the HTML <script> tag?](https://www.educative.io/answers/what-is-the-use-of-the-defer-attribute-in-the-html-script-tag)
