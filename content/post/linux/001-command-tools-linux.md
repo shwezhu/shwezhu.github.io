@@ -38,13 +38,17 @@ $ ls -lh folder_name
 >
 > `-h`: human-readable file sizes (e.g., 1K, 234M, 2G)
 
+---
+
 ```bash
 $ df -lh
 ```
 
 >`df`: disk filesystem.
 >
->`-l` means "local file systems only": It limits the output to local file systems, excluding any network or special file systems. 
+>- `-l` means "local file systems only": It limits the output to local file systems, excluding any network or special file systems. 
+
+---
 
 ```bash
 $ du  -sh  *
@@ -52,7 +56,7 @@ $ du  -sh  *
 
 > `du`: disk usage.
 >
-> `-s`: stands for "summarize". It tells `du` to display only a total for each argument (each item (folder, file) in the current directory).
+> - `-s`: stands for "summarize". It tells `du` to display only a total for each argument (each item (folder, file) in the current directory).
 >
 > Without `-s`:
 >
@@ -71,6 +75,9 @@ $ du  -sh  *
 > 16K     downloads
 > ```
 > 
+
+---
+
 
 ## 2. Monitor Commands
 
@@ -138,18 +145,49 @@ $ brew services start mongodb-community
 > - Mounting filesystems
 > - Logging system events
 
----
-
-## 3. Network
+## 3. Network Tools
 
 ```shell
 # -O write documents to FILE: download the file and save it into install.sh
 wget -O install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-# -q quiet, same as above but output nothing
-wget -qO install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-# just output the content to stdout, no file saving
+# The hyphen after -O tells wget to output the downloaded content to stdout (standard output) instead of saving it to a file.
 wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 
+# -q quiet, same as above but output nothing
+wget -qO install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+
+# -c flag tells the shell to read commands from the string that follows it.
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
+
+---
+
+```shell
+$ dstat
+You did not select any stats, using -cdngy by default.
+--total-cpu-usage-- -dsk/total- -net/total- ---paging-- ---system--
+usr sys idl wai stl| read  writ| recv  send|  in   out | int   csw
+  0   0  99   0   0|  30B  536B|   0     0 |   0     0 |  53    94
+  2   1  97   0   0|   0     0 |3089B 4156B|   0     0 |  95   238
+  3   1  95   0   1|   0     0 |5654B 4804B|   0     0 | 111   234
+```
+
+> Test real time network IO and disk IO
+>
+> - `-n` option stands for "network"
+>
+> - `-d` option stands for "disk" or "device"
+
+---
+
+```shell
+iperf3 -s -p 5202 # server
+
+iperf3 -c server_ip_address -p 5202 # test the upload speed (client upload to server)
+iperf3 -c server_ip_address -p 5202 -R # test the download speed (client download from server)
+```
+
+> `speedtest-cli` and `iperf3`: speedtest-cli measures speeds to public servers, reflecting general internet performance to the user; iperf3 can perform tests between any two points, ideal for real performance between your local machine and remote server. 
+>
+> So there is no suprise that the result of `iperf3` is different from `speedtest-cli`, usually quite slower than the result `speedtest-cli`. 
 
