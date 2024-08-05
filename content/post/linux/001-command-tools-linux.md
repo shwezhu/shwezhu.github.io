@@ -1,6 +1,6 @@
 ---
 title: Commands Commonly Used in Linux
-date: 2023-05-03 12:40:56
+date: 2024-08-05 12:40:56
 categories:
  - linux
 tags:
