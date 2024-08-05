@@ -7,31 +7,73 @@ tags:
  - linux
 ---
 
-## 1. Some Commands
+```bash
+$ ls -lh folder_name 
+```
 
-You can use `xxx --help `, `man xxx`, `tldr you-command` to check the usage of the command. 
+> `-l` means "long listing format":
+>
+> It displays detailed information about each file or directory, including: File permissions, Number of links, Group, File size, Last modification date/time. 
+>
+> `-h`: human-readable file sizes (e.g., 1K, 234M, 2G)
+
+```bash
+$ df -lh
+```
+
+>`df`: disk filesystem
+>
+>`-l` means "local file systems only": It limits the output to local file systems, excluding any network or special file systems. 
+
+```bash
+$ du  -sh  *
+```
+
+> `du`: disk usage.
+>
+> `-s`: stands for "summarize". It tells `du` to display only a total for each argument (each item (folder, file) in the current directory).
+>
+> Without `-s`:
+>
+> ```bash
+> $ du -h downloads
+> 4.0K    downloads/file1.txt
+> 8.0K    downloads/videos/learn.mp4
+> 12K     downloads/videos/bbc.mp4
+> ...
+> ```
+>
+> With `-s`:
+>
+> ```bash
+> $ du -sh downloads
+> 16K     downloads
+> ```
+> 
+
+----
 
 ```shell
+$ scp -rp tls/* root@86.150.206.117:/root/tls/
 $ nohup ./server -p 8080 &
-$ zip -r root.zip root
-$ git log --all --decorate --oneline --graph # "A Dog" 
-$ ls -lh xxx
-$ file server
-$ uname -a
-$ otool # mac only for xxd
-$ xxd a.class
 
-$ du  -sh  *   # h: human-readable, *: all, s: sort
-$ df -lh    # disk usage, h: human-readable, l: local file system
+$ uname -a # Displays all system information (kernel, hostname, version, etc.).
+$ file server 
+$ otool # macOS tool for examining object files and executables.
+$ xxd main.class # Display the contents in hexadecimal format.
 
 $ chmod +x test.sh
 $ ipconfig getifaddr en0  # check your ip on Mac
 
 $ find themes/source/css -name "*header*" -type f
 $ grep -nr 'ul$' themes/source/css  # n: line number, r: recursive
+
+$ git log --all --decorate --oneline --graph # "A Dog" 
 ```
 
-### 1.1. `netstat`
+----
+
+**`netstat`**
 
 The basic `netstat` command without any options will list all **active TCP connections** and listening ports. Alternatively, you can use `lsof -i` on Mac.
 
@@ -55,7 +97,9 @@ e.g., you can use `netstat -anp | grep 8080` to find the PID of the process, so 
 
 You can also use `ps aux` to find a specific process by name, then use `netstat` to find the ip and port of the process.
 
-### 1.2. `ps`
+---
+
+**`ps`**
 
 The ps command, short for Process Status, is used to view information related to the processes running in a Linux system. 
 
@@ -72,7 +116,9 @@ COMMAND: The command that started this process.
 
 e.g., you can use `ps aux | grep ./server` to find the PID of `./server` process, so that you can kill it by `kill PID`.
 
-### 1.3. `brew services list`
+---
+
+ **`brew services list`**
 
 ```shell
 ❯  brew services list
@@ -91,7 +137,9 @@ mongodb-community started David ~/Library/LaunchAgents/homebrew.mxcl.mongodb-com
 ...
 ```
 
-### 1.4. `systemctl`
+----
+
+ **`systemctl`**
 
 The `systemctl` command is used to manage systemd services and units, such as starting, stopping, and checking the status of units. 
 
@@ -99,9 +147,11 @@ The `systemctl` command is used to manage systemd services and units, such as st
 - Stopping a Service: To stop a service, you can use `systemctl stop <service-name>`.
 - Checking the Status of a Service: To check the status of a service, you can use `systemctl status <service-name>`.
 
-The systemd is a service manager for Linux operating systems. It is responsible for initializing and managing system services, daemons, and other processes during the boot process and while the system is running. 
+The systemd is a service manager for Linux operating systems. It is responsible for initializing and managing system services, daemons, and other processes during the boot process and while the system is running.
 
-## 2. wget
+---
+
+**wget**
 
 ```shell
 # -O write documents to FILE: download the file and save it into install.sh

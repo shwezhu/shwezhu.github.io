@@ -28,17 +28,17 @@ There are two steps to add your domain to Cloudflare:
 
 Go to this website: https://dash.cloudflare.com/
 
-![aa](/008-enable-cloudflare-reverse-proxy/aa.png)
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/08/5ec8185791f488d73320ceadd0db79dc.png)
 
 And you will get instructions for updating your nameserver of your domain. After change your nameserver, waite about one hour, your site will be **active** on Cloudflare. Then you can choose the TLS encryption mode:
 
-![b](/008-enable-cloudflare-reverse-proxy/b.png)
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/08/3ff225afee4374761c3943c1c6ed009a.png)
 
 > **Note:** choose `full mode`, don't use `flexbile mode`, otherwise you **probably would** get [ERR_TOO_MANY_REDIRECTS](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/) when access your website. 
 
 ### 1.2. Install TLS certificate
 
-![c](/008-enable-cloudflare-reverse-proxy/c.png)
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/08/d3d8aa4e52defcc7961fe8fad4d3eb88.png)
 
 The generated two files `cert.pem` and `cert.key` is used for encryption between your server and Cloudflare. 
 
@@ -88,7 +88,7 @@ If you changed a vps, all you need to do is to change the A record of your domai
 
 > Cloudflare serves as a **reverse proxy**, directing all traffic for the specified proxied domain to the target IP address.
 
-![cc](/008-enable-cloudflare-reverse-proxy/cc.png)
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/08/af17da33f67f363301b8d14cf87428ea.png)
 
 ## 3. Allow custom port
 
