@@ -113,7 +113,7 @@ password: 778899s
 
 > **Note:** if you don't set `Content-Type` header explicitly, the browser will set Content-Type header to `multipart/form-data` automatically. 
 
-### 4.1. Special situation in Go
+### Notes in Go
 
 If your server written in Go, you may parse the form like this:
 

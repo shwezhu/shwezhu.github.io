@@ -85,7 +85,7 @@ Let's say there is a html file looks like this:
 </form>
 ```
 
-When I push the regiser buttion to submit the form, the http request looks like this:
+When I click the regiser buttion to submit the form, the http request looks like this:
 
 ![c](/008-form-post-query-string/c.png)
 
