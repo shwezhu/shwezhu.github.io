@@ -390,12 +390,17 @@
     <a href="#32-cname-record">#</a>
     3.2. CNAME Record
 </h3><p>Use a CNAME record instead of an A record when one domain or subdomain is just another name for a different domain. <strong>All CNAME records must point to a domain, never to an IP address</strong>.</p>
-<blockquote>
-<p>domain: example.com, subdomain: blog.example.com</p>
-</blockquote>
 <p>假设你有个主网站 example.com，它有一个A记录指向IP地址 123.45.67.89。若你还想通过 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
-    >www.example.com</a> 访问这个网站，你可以为 www 设置一个CNAME记录，指向 example.com，而不是再次创建一个A记录指向 123.45.67.89。</p>
-<p>这样的设置如下：</p>
+    >www.example.com</a> 访问这个网站，有两个办法,</p>
+<ul>
+<li>
+<p>再创建一个A记录 host name 写为 www 指向 123.45.67.89, (注意对于 example.com 的A记录 host name 是空).</p>
+</li>
+<li>
+<p>创建一个 CNAME 记录, Host Name 写为 www, 指向 example.com</p>
+</li>
+</ul>
+<p>第二种办法的工作原理：</p>
 <ul>
 <li>example.com A记录 -&gt; 123.45.67.89</li>
 <li><a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
@@ -411,14 +416,10 @@
 <li>接着，DNS会解析 example.com 的A记录，获取其IP地址 123.45.67.89。</li>
 <li>用户的请求最终被定向到IP地址 123.45.67.89，也就是 example.com 所在的服务器。</li>
 </ul>
-<p>你可能会好奇, 为什么不直接给 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
-    >www.example.com</a> 添加一个 A 记录, 指向 123.45.67.89 呢?</p>
-<p>再次创建一个A记录指向 123.45.67.89 以通过 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
-    >www.example.com</a> 访问网站是完全可行的。 然而，选择为 www 使用CNAME记录而不是另一个A记录主要是为了维护简便性：比如如果你的服务器IP地址发生变化，此时只需要更新 example.com 的A记录。所有指向 example.com 的CNAME记录（如 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
-    >www.example.com</a>）将自动指向新的IP地址。如果使用A记录，你需要手动更新 example.com 和 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
-    >www.example.com</a> 的A记录。</p>
+<p>添加 CNAME 有什么优点呢? 比如你的服务器IP地址发生变化, 此时只需要更新 example.com 的A记录就行了, 如果全都使用A记录，你需要手动更新 example.com 和 <a class="link" href="https://www.example.com"  target="_blank" rel="noopener"
+    >www.example.com</a> 的 A 记录,</p>
 <blockquote>
-<p>Github Pages 的 custom domain 就可以使用 CNAME 记录, 即只需简单给你的域名添加一个 CNAME 记录, 指向 <code>username.github.io</code> 即可. 注意添加 CNAME 记录时, 我的 HOSTNAME 填的是 <code>blog</code>, 即 <code>blog.example.com</code> 指向 <code>username.github.io</code>, 你也可以把 HOSTNAME 设置为空, 若为空则代表你的主域名 <code>example.com</code> 指向 <code>username.github.io</code>, 根据个人喜好来设置.</p>
+<p>Github Pages 的 custom domain 就可以使用 CNAME 记录, 即只需简单给你的域名添加一个 CNAME 记录, 指向 <code>username.github.io</code> 即可, <strong>不用修改任何 NS 服务器</strong>. 注意添加 CNAME 记录时, 我的 HOSTNAME 填的是 <code>blog</code>, 即 <code>blog.example.com</code> 指向 <code>username.github.io</code>, 你也可以把 HOSTNAME 设置为空, 若为空则代表你的主域名 <code>example.com</code> 指向 <code>username.github.io</code>, 根据个人喜好来设置.</p>
 </blockquote>
 <p><img src="https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/f356b3dd152035f92b0ae20335413ab0.jpg"
 	

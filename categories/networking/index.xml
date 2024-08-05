@@ -111,12 +111,17 @@ Ensure you only have one domain listed in your CNAME file. If you wish to have m
     &lt;a href=&#34;#32-cname-record&#34;&gt;#&lt;/a&gt;
     3.2. CNAME Record
 &lt;/h3&gt;&lt;p&gt;Use a CNAME record instead of an A record when one domain or subdomain is just another name for a different domain. &lt;strong&gt;All CNAME records must point to a domain, never to an IP address&lt;/strong&gt;.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;domain: example.com, subdomain: blog.example.com&lt;/p&gt;
-&lt;/blockquote&gt;
 &lt;p&gt;假设你有个主网站 example.com，它有一个A记录指向IP地址 123.45.67.89。若你还想通过 &lt;a class=&#34;link&#34; href=&#34;https://www.example.com&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;www.example.com&lt;/a&gt; 访问这个网站，你可以为 www 设置一个CNAME记录，指向 example.com，而不是再次创建一个A记录指向 123.45.67.89。&lt;/p&gt;
-&lt;p&gt;这样的设置如下：&lt;/p&gt;
+    &gt;www.example.com&lt;/a&gt; 访问这个网站，有两个办法,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;再创建一个A记录 host name 写为 www 指向 123.45.67.89, (注意对于 example.com 的A记录 host name 是空).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;创建一个 CNAME 记录, Host Name 写为 www, 指向 example.com&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;第二种办法的工作原理：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;example.com A记录 -&amp;gt; 123.45.67.89&lt;/li&gt;
 &lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.example.com&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
@@ -132,14 +137,10 @@ Ensure you only have one domain listed in your CNAME file. If you wish to have m
 &lt;li&gt;接着，DNS会解析 example.com 的A记录，获取其IP地址 123.45.67.89。&lt;/li&gt;
 &lt;li&gt;用户的请求最终被定向到IP地址 123.45.67.89，也就是 example.com 所在的服务器。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;你可能会好奇, 为什么不直接给 &lt;a class=&#34;link&#34; href=&#34;https://www.example.com&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;www.example.com&lt;/a&gt; 添加一个 A 记录, 指向 123.45.67.89 呢?&lt;/p&gt;
-&lt;p&gt;再次创建一个A记录指向 123.45.67.89 以通过 &lt;a class=&#34;link&#34; href=&#34;https://www.example.com&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;www.example.com&lt;/a&gt; 访问网站是完全可行的。 然而，选择为 www 使用CNAME记录而不是另一个A记录主要是为了维护简便性：比如如果你的服务器IP地址发生变化，此时只需要更新 example.com 的A记录。所有指向 example.com 的CNAME记录（如 &lt;a class=&#34;link&#34; href=&#34;https://www.example.com&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;www.example.com&lt;/a&gt;）将自动指向新的IP地址。如果使用A记录，你需要手动更新 example.com 和 &lt;a class=&#34;link&#34; href=&#34;https://www.example.com&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;www.example.com&lt;/a&gt; 的A记录。&lt;/p&gt;
+&lt;p&gt;添加 CNAME 有什么优点呢? 比如你的服务器IP地址发生变化, 此时只需要更新 example.com 的A记录就行了, 如果全都使用A记录，你需要手动更新 example.com 和 &lt;a class=&#34;link&#34; href=&#34;https://www.example.com&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;www.example.com&lt;/a&gt; 的 A 记录,&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Github Pages 的 custom domain 就可以使用 CNAME 记录, 即只需简单给你的域名添加一个 CNAME 记录, 指向 &lt;code&gt;username.github.io&lt;/code&gt; 即可. 注意添加 CNAME 记录时, 我的 HOSTNAME 填的是 &lt;code&gt;blog&lt;/code&gt;, 即 &lt;code&gt;blog.example.com&lt;/code&gt; 指向 &lt;code&gt;username.github.io&lt;/code&gt;, 你也可以把 HOSTNAME 设置为空, 若为空则代表你的主域名 &lt;code&gt;example.com&lt;/code&gt; 指向 &lt;code&gt;username.github.io&lt;/code&gt;, 根据个人喜好来设置.&lt;/p&gt;
+&lt;p&gt;Github Pages 的 custom domain 就可以使用 CNAME 记录, 即只需简单给你的域名添加一个 CNAME 记录, 指向 &lt;code&gt;username.github.io&lt;/code&gt; 即可, &lt;strong&gt;不用修改任何 NS 服务器&lt;/strong&gt;. 注意添加 CNAME 记录时, 我的 HOSTNAME 填的是 &lt;code&gt;blog&lt;/code&gt;, 即 &lt;code&gt;blog.example.com&lt;/code&gt; 指向 &lt;code&gt;username.github.io&lt;/code&gt;, 你也可以把 HOSTNAME 设置为空, 若为空则代表你的主域名 &lt;code&gt;example.com&lt;/code&gt; 指向 &lt;code&gt;username.github.io&lt;/code&gt;, 根据个人喜好来设置.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;&lt;img src=&#34;https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/f356b3dd152035f92b0ae20335413ab0.jpg&#34;
 	

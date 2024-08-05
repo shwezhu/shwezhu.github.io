@@ -251,23 +251,24 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li>
+    <li><a href="#1-struct-vs-class">1. Struct vs Class</a>
       <ol>
-        <li><a href="#1-struct-vs-class">1. Struct vs Class</a>
+        <li><a href="#11-value-types-and-reference-types">1.1. Value Types and Reference Types</a></li>
+        <li><a href="#12-mutable-and-immutable">1.2. Mutable and Immutable</a>
           <ol>
-            <li><a href="#11-value-types-and-reference-types">1.1. Value Types and Reference Types</a></li>
-            <li><a href="#12-mutable-and-immutable">1.2. Mutable and Immutable</a></li>
-            <li><a href="#13-struct-in-swiftui">1.3. Struct in SwiftUI</a></li>
+            <li><a href="#121-let-and-var-instance-of-struct">1.2.1. <code>let</code> and <code>var</code> instance of <code>struct</code></a></li>
+            <li><a href="#122-mutating-keyword-in-struct">1.2.2. <code>mutating</code> keyword in <code>struct</code></a></li>
+            <li><a href="#123-weird-behavior">1.2.3. Weird Behavior</a></li>
           </ol>
         </li>
-        <li><a href="#2-property-observers-didset-and-willset">2. Property observers: <code>didSet</code> and <code>willSet</code></a></li>
-        <li><a href="#3-properties">3. Properties</a>
-          <ol>
-            <li><a href="#31-lazy-stored-properties">3.1. Lazy Stored Properties</a></li>
-            <li><a href="#32-computed-properties">3.2. Computed Properties</a></li>
-          </ol>
-        </li>
-        <li><a href="#4-computed-properties---getter-and-setter">4. Computed Properties - getter and setter</a></li>
+        <li><a href="#struct-in-swiftui---practice"><code>struct</code> in SwiftUI - Practice</a></li>
+      </ol>
+    </li>
+    <li><a href="#2-property-observers-didset-and-willset">2. Property observers: <code>didSet</code> and <code>willSet</code></a></li>
+    <li><a href="#3-properties">3. Properties</a>
+      <ol>
+        <li><a href="#31-lazy-stored-properties">3.1. Lazy Stored Properties</a></li>
+        <li><a href="#32-computed-properties">3.2. Computed Properties</a></li>
       </ol>
     </li>
   </ol>
@@ -334,7 +335,7 @@
 
 
                 <time class="article-time--reading">
-                    6 minute read
+                    7 minute read
                 </time>
             </div>
         
@@ -349,13 +350,13 @@
     <section class="article-content">
     
     
-    <h3 id="1-struct-vs-class">
+    <h2 id="1-struct-vs-class">
     <a href="#1-struct-vs-class">#</a>
     1. Struct vs Class
-</h3><h4 id="11-value-types-and-reference-types">
+</h2><h3 id="11-value-types-and-reference-types">
     <a href="#11-value-types-and-reference-types">#</a>
     1.1. Value Types and Reference Types
-</h4><p>Structures are value types—unlike classes—local changes to a structure aren’t visible to the rest of your app unless you intentionally communicate those changes as part of the flow of your app.</p>
+</h3><p>Structures are value types—unlike classes—local changes to a structure aren’t visible to the rest of your app unless you intentionally communicate those changes as part of the flow of your app.</p>
 <ul>
 <li>
 <p><strong>Structures are Value Types:</strong> When you pass a structure to a function, or assign it to a variable, a <em>copy</em> of the structure&rsquo;s data is created. Modifying the copy doesn&rsquo;t affect the original.</p>
@@ -366,14 +367,41 @@
 </ul>
 <p>References: <a class="link" href="https://developer.apple.com/documentation/swift/choosing-between-structures-and-classes"  target="_blank" rel="noopener"
     >Choosing Between Structures and Classes | Apple Developer Documentation</a></p>
-<h4 id="12-mutable-and-immutable">
+<h3 id="12-mutable-and-immutable">
     <a href="#12-mutable-and-immutable">#</a>
     1.2. Mutable and Immutable
-</h4><p>Structs are immutable, classed are mutable. What does this mean?</p>
-<blockquote>
-<p>Structures and enumerations are <em>value types</em>. By default, the properties of a value type can’t be modified from within its instance methods. However, if you need to modify the properties of your structure or enumeration within a particular method, you can opt in to <code>mutating</code> behavior for that method. <a class="link" href="https://arc.net/l/quote/hqruhecu"  target="_blank" rel="noopener"
-    >&ndash;Apple Docs</a></p>
-</blockquote>
+</h3><p>Structs are immutable, classed are mutable. What does this mean?</p>
+<h4 id="121-let-and-var-instance-of-struct">
+    <a href="#121-let-and-var-instance-of-struct">#</a>
+    1.2.1. <code>let</code> and <code>var</code> instance of <code>struct</code>
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">Point</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">x</span><span class="p">:</span> <span class="nb">Int</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">y</span><span class="p">:</span> <span class="nb">Int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nv">point1</span> <span class="p">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">point</span><span class="p">.</span><span class="n">x</span> <span class="p">=</span> <span class="mi">10</span>  <span class="c1">// Can directly modify properties</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nv">point2</span> <span class="p">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">point2</span><span class="p">.</span><span class="n">x</span> <span class="p">=</span> <span class="mi">5</span>  <span class="c1">// This would cause a compile-time error, class has no this limit</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="122-mutating-keyword-in-struct">
+    <a href="#122-mutating-keyword-in-struct">#</a>
+    1.2.2. <code>mutating</code> keyword in <code>struct</code>
+</h4><p>Structures and enumerations are <em>value types</em>. By default, the properties of a value type can’t be modified from within its instance methods. However, if you need to modify the properties of your structure or enumeration within a particular method, you can opt in to <code>mutating</code> behavior for that method. [&ndash;Apple Docs](</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -392,6 +420,11 @@
 </span><span class="lnt">14
 </span><span class="lnt">15
 </span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">Rectangle</span> <span class="p">{</span>
@@ -406,13 +439,59 @@
 </span></span><span class="line"><span class="cl">            <span class="n">height</span> <span class="p">=</span> <span class="mi">3</span> <span class="c1">// only here is allowed</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  
 </span></span><span class="line"><span class="cl">    <span class="kd">func</span> <span class="nf">setWidth</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="nb">Double</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="kc">self</span><span class="p">.</span><span class="n">width</span> <span class="p">=</span> <span class="n">width</span> <span class="c1">// error: Cannot assign to property: &#39;self&#39; is immutable</span>
+</span></span><span class="line"><span class="cl">        <span class="kc">self</span><span class="p">.</span><span class="n">width</span> <span class="p">=</span> <span class="n">width</span> <span class="c1">// error: Cannot assign to property: &#39;self&#39; is immutable.</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kr">mutating</span> <span class="kd">func</span> <span class="nf">setHeight</span><span class="p">(</span><span class="n">height</span><span class="p">:</span> <span class="nb">Double</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kc">self</span><span class="p">.</span><span class="n">height</span> <span class="p">=</span> <span class="n">height</span> <span class="c1">// No error.</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>除了使用 mutating 关键字, 在 SwiftUI 中, 我们可以通过 @State 允许 struct 的属性被修改:</p>
+</div><h4 id="123-weird-behavior">
+    <a href="#123-weird-behavior">#</a>
+    1.2.3. Weird Behavior
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">Rectangle</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">width</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">height</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">area</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">get</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">width</span> <span class="p">=</span> <span class="mi">9</span> <span class="c1">// error: Cannot assign to property: &#39;self&#39; is immutable</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">width</span> <span class="o">*</span> <span class="n">height</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">set</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">height</span> <span class="p">=</span> <span class="mi">3</span> <span class="c1">// only here is allowed, don&#39;t know why...</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><strong>Note:</strong> <code>class</code> has no those limitations listed above.</p>
+</blockquote>
+<h3 id="struct-in-swiftui---practice">
+    <a href="#struct-in-swiftui---practice">#</a>
+    <code>struct</code> in SwiftUI - Practice
+</h3><p>除了使用 mutating 关键字, 在 SwiftUI 中, 我们常通过 @State 允许 struct 的属性被修改:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -441,7 +520,7 @@
 </span></span><span class="line"><span class="cl">        <span class="n">VStack</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">            <span class="n">Text</span><span class="p">(</span><span class="s">&#34;Name: </span><span class="si">\(</span><span class="n">name</span><span class="si">)</span><span class="s">, Age: </span><span class="si">\(</span><span class="n">age</span><span class="si">)</span><span class="s">&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="n">Button</span><span class="p">(</span><span class="s">&#34;Click to Increase Age by One&#34;</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                <span class="n">age</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">                <span class="n">age</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1">// No error. </span>
 </span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">            <span class="n">Button</span><span class="p">(</span><span class="s">&#34;Change Name&#34;</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                <span class="c1">//name = &#34;Jane&#34; // error: Cannot assign to property: &#39;self&#39; is immutable</span>
@@ -451,19 +530,16 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="13-struct-in-swiftui">
-    <a href="#13-struct-in-swiftui">#</a>
-    1.3. Struct in SwiftUI
-</h4><p>细心观察可以发现 SwiftUI 的 Views 都是 struct 而不是 class, 这也是因为 struct 是值类型, 这样每当你进行拷贝或者传递一个 view 时, 被传递的是个新的单独的 view, 而不是传递一个引用, 这样便有很好的隔离性, 这是什么意思呢,</p>
+</div><p>细心观察可以发现 SwiftUI 的 Views 都是 struct 而不是 class, 这也是因为 struct 是值类型, 这样每当你进行拷贝或者传递一个 view 时, 被传递的是个新的单独的 view, 而不是传递一个引用, 这样便有很好的隔离性, 这是什么意思呢,</p>
 <p>The few posts here are missing the point. The point of structs is that they are copied on assignment. Why is that good? Because it’s the only thing that encourages local reasoning, which means the ability to look at one block of code and only have to think about what it is doing.</p>
 <p>With classes, you pass them around by reference and all of a sudden you can have objects on the other side of the planet that are all referencing the same object. That’s not clear at all from looking at them, so you need to trace their origin back to some unrelated part of the system. This is known as reference aliasing. It’s not bad in itself, but when shared references are also allowed to be mutated, you can’t reason locally about anything. You have to know who had references to each object at all times. That can be the difference between looking at 10 and 100,000 lines of code. Which would you rather look at?</p>
 <p>Yes, structs are also allocated on the stack. But that’s not what makes them useful. What makes them useful is their inability to be shared.</p>
 <p>Reference: <a class="link" href="https://www.reddit.com/r/swift/comments/dg2lrp/comment/f39if54/?utm_source=share&amp;utm_medium=web3x&amp;utm_name=web3xcss&amp;utm_term=1&amp;utm_content=share_button"  target="_blank" rel="noopener"
     >https://www.reddit.com/r/swift/comments/dg2lrp/comment/f39if54/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button</a></p>
-<h3 id="2-property-observers-didset-and-willset">
+<h2 id="2-property-observers-didset-and-willset">
     <a href="#2-property-observers-didset-and-willset">#</a>
     2. Property observers: <code>didSet</code> and <code>willSet</code>
-</h3><p>Property observers let you execute code whenever a property has changed. To make them work, we use either <code>didSet</code> to execute code when a property has just been set, or <code>willSet</code> to execute code before a property has been set.</p>
+</h2><p>Property observers let you execute code whenever a property has changed. To make them work, we use either <code>didSet</code> to execute code when a property has just been set, or <code>willSet</code> to execute code before a property has been set.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -499,16 +575,16 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The default parameter names are <code>newValue</code> for <code>willSet</code> and <code>oldValue</code> for <code>didSet</code>, or you can name them yourself as in <code>willSet(newTotalSteps)</code>.</p>
-<h3 id="3-properties">
+<h2 id="3-properties">
     <a href="#3-properties">#</a>
     3. Properties
-</h3><p><em>Stored</em> and <em>computed properties</em> are usually associated with instances of a particular type. However, properties can also be associated with the type itself. Such properties are known as <em>type properties</em>.</p>
+</h2><p><em>Stored</em> and <em>computed properties</em> are usually associated with instances of a particular type. However, properties can also be associated with the type itself. Such properties are known as <em>type properties</em>.</p>
 <p>In addition, you can define <strong>property observers</strong> to monitor changes in a property’s value, which you can respond to with custom actions. Property observers can be added to stored properties you define yourself, and also to properties that a subclass inherits from its superclass.</p>
 <p>You can also use a <strong>property wrapper</strong> to reuse code in the getter and setter of multiple properties.</p>
-<h4 id="31-lazy-stored-properties">
+<h3 id="31-lazy-stored-properties">
     <a href="#31-lazy-stored-properties">#</a>
     3.1. Lazy Stored Properties
-</h4><p>A <em>lazy stored property</em> is a property whose initial value isn’t calculated until the first time it’s used.</p>
+</h3><p>A <em>lazy stored property</em> is a property whose initial value isn’t calculated until the first time it’s used.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -544,10 +620,11 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Because it’s possible for a <code>DataManager</code> instance to manage its data without ever importing data from a file, <code>DataManager</code> doesn’t create a new <code>DataImporter</code> instance when the <code>DataManager</code> itself is created. Instead, it makes more sense to create the <code>DataImporter</code> instance if and when it’s first used.</p>
-<h4 id="32-computed-properties">
+<h3 id="32-computed-properties">
     <a href="#32-computed-properties">#</a>
     3.2. Computed Properties
-</h4><div class="highlight"><div class="chroma">
+</h3><p>In addition to stored properties, classes, structures, and enumerations can define <em>computed properties</em>. In Swift, a computed property does not store a value itself. Instead, it provides a getter to retrieve a value and an optional setter to indirectly set other properties or values.</p>
+<div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -559,13 +636,15 @@
 </span><span class="lnt"> 8
 </span><span class="lnt"> 9
 </span><span class="lnt">10
+</span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">Rectangle</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">   <span class="kd">var</span> <span class="nv">width</span><span class="p">:</span> <span class="nb">Double</span>
 </span></span><span class="line"><span class="cl">   <span class="kd">var</span> <span class="nv">height</span><span class="p">:</span> <span class="nb">Double</span>
 </span></span><span class="line"><span class="cl">   <span class="kd">var</span> <span class="nv">area</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">       <span class="k">return</span> <span class="n">width</span> <span class="o">*</span> <span class="n">height</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// implicit return</span>
+</span></span><span class="line"><span class="cl">       <span class="n">width</span> <span class="o">*</span> <span class="n">height</span>
 </span></span><span class="line"><span class="cl">   <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
@@ -573,12 +652,22 @@
 </span></span><span class="line"><span class="cl"><span class="bp">print</span><span class="p">(</span><span class="n">rectangle</span><span class="p">.</span><span class="n">area</span><span class="p">)</span>  <span class="c1">// 50.0</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>References: <a class="link" href="https://arc.net/l/quote/uimgdzep"  target="_blank" rel="noopener"
-    >https://arc.net/l/quote/uimgdzep</a></p>
-<h3 id="4-computed-properties---getter-and-setter">
-    <a href="#4-computed-properties---getter-and-setter">#</a>
-    4. Computed Properties - getter and setter
-</h3><p>In addition to stored properties, classes, structures, and enumerations can define <em>computed properties</em>. In Swift, a computed property does not store a value itself. Instead, it provides a getter to retrieve a value and an optional setter to indirectly set other properties or values.</p>
+</div><p>如果对计算属性赋值会发生什么?</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nv">rectangle</span> <span class="p">=</span> <span class="n">Rectangle</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="bp">print</span><span class="p">(</span><span class="n">rectangle</span><span class="p">.</span><span class="n">area</span><span class="p">)</span> <span class="c1">// 15.0</span>
+</span></span><span class="line"><span class="cl"><span class="n">rectangle</span><span class="p">.</span><span class="n">area</span> <span class="p">=</span> <span class="mf">20.0</span> <span class="c1">// Error: Cannot assign to property: &#39;area&#39; is a get-only property</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面的例子中是计算属性常见的样子, 即拥有一个默认的 getter, 此时它是一个只读属性,  你也可以让其可以被“赋值”, 如下:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -619,45 +708,13 @@
 </span></span><span class="line"><span class="cl"><span class="bp">print</span><span class="p">(</span><span class="n">cat</span><span class="p">.</span><span class="n">age</span><span class="p">)</span> <span class="c1">// 1</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>计算属性本身并不存储任何东西, 它更像是个函数, 代码 <code>cat.months = 12</code> 就是把 <code>12</code> 传给其 <code>setter</code>, 而 <code>cat.months</code> 就是调用其 <code>getter</code>, 返回 <code>age * 12</code>, 这也是为什么说其是计算属性. 所以有没有觉得如果在其 getter 里尝试访问 <code>months</code>的值很奇怪? 因为 months 本身就不存在啊, 它其实就是 <code>age * 12</code>,</p>
+</div><p>计算属性本身并不存储任何东西, 它更像是个函数, 为什么可以被“赋值”呢? 仔细看看 set 函数里, <code>months</code> 真的被赋值了吗? 仍然没有, 只是在其复制的时候执行了 <code>age = newValue / 12</code> 而已.</p>
+<p>代码 <code>cat.months = 12</code> 就是把 <code>12</code> 传给其 <code>setter</code>, 而 <code>cat.months</code> 就是调用其 <code>getter</code>, 返回 <code>age * 12</code>, 这也是为什么说其是计算属性. 所以有没有觉得如果在其 getter 里尝试访问 <code>months</code>的值很奇怪? 因为 months 本身就不存在啊, 它其实就是 <code>age * 12</code>,</p>
 <blockquote>
 <p>Stored property has default setter and getter, you cannot override <code>get</code>/<code>set</code> for a stored property.  But You can use property observers <code>willSet</code>/<code>didSet</code> to achiveve what you want.  Source: <a class="link" href="https://stackoverflow.com/a/24116083/16317008"  target="_blank" rel="noopener"
     >https://stackoverflow.com/a/24116083/16317008</a></p>
 </blockquote>
-<p>如果不显示设置 getter 和 setter, 那计算属性就是一个 read-only 属性, 即默认 getter 是函数体, 如下:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">Rectangle</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">width</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">=</span> <span class="mf">5.0</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">height</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">=</span> <span class="mf">3.0</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">area</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// implicit return</span>
-</span></span><span class="line"><span class="cl">        <span class="n">width</span> <span class="o">*</span> <span class="n">height</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nv">rectangle</span> <span class="p">=</span> <span class="n">Rectangle</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="bp">print</span><span class="p">(</span><span class="n">rectangle</span><span class="p">.</span><span class="n">area</span><span class="p">)</span> <span class="c1">// 15.0</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">rectangle</span><span class="p">.</span><span class="n">area</span> <span class="p">=</span> <span class="mf">20.0</span> <span class="c1">// 错误: Cannot assign to property: &#39;area&#39; is a get-only property</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>设想一下, 每当你访问 area <code>rectangle.area</code>, 就会执行 <code>width * height</code> 并返回, 如果我们要在里面直接修改其他属性的值, 是不是很奇怪? 而 SwiftUI 中的 body 就是一个 read-only 计算属性, 所以直接在 body 中直接修改其属性是不推荐的,</p>
+<p>设想一下, 每当你访问 area <code>rectangle.area</code>, 就会执行 <code>width * height</code> 并返回, 如果我们要在里面直接修改其他属性的值, 是不是很奇怪? 而 SwiftUI 中的 body 就是一个 read-only 计算属性, 所以直接在 body 中直接修改其属性是不推荐的,</p>
 
 </section>
 
@@ -694,6 +751,45 @@
             
                 
 <article class="">
+    <a href="/p/swiftui-containers/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">SwiftUI Containers</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/swiftui-unusernotificationcenterdelegate-uiapplicationdelegate-uiscenedelegate-%E5%8D%8F%E8%AE%AE/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">SwiftUI UNUserNotificationCenterDelegate, UIApplicationDelegate, UISceneDelegate 协议</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/bugs/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Bugs</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
     <a href="/p/uikit-in-swiftui/">
         
         
@@ -713,45 +809,6 @@
 
         <div class="article-details">
             <h2 class="article-title">Predefined Styles SwiftUI</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="">
-    <a href="/p/swiftui-modifiers/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">SwiftUI Modifiers</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="">
-    <a href="/p/swiftui-views/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">SwiftUI Views</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="">
-    <a href="/p/property-wrappers-swiftui/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Property Wrappers - SwiftUI</h2>
         </div>
     </a>
 </article>
