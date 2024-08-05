@@ -44,11 +44,13 @@ HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如`www.e
 
 Use a CNAME record instead of an A record when one domain or subdomain is just another name for a different domain. **All CNAME records must point to a domain, never to an IP address**. 
 
-> domain: example.com, subdomain: blog.example.com
+假设你有个主网站 example.com，它有一个A记录指向IP地址 123.45.67.89。若你还想通过 www.example.com 访问这个网站，有两个办法, 
 
-假设你有个主网站 example.com，它有一个A记录指向IP地址 123.45.67.89。若你还想通过 www.example.com 访问这个网站，你可以为 www 设置一个CNAME记录，指向 example.com，而不是再次创建一个A记录指向 123.45.67.89。
+- 再创建一个A记录 host name 写为 www 指向 123.45.67.89, (注意对于 example.com 的A记录 host name 是空).
 
-这样的设置如下：
+- 创建一个 CNAME 记录, Host Name 写为 www, 指向 example.com
+
+第二种办法的工作原理：
 
 - example.com A记录 -> 123.45.67.89
 - www.example.com CNAME记录 -> example.com
@@ -60,11 +62,9 @@ Use a CNAME record instead of an A record when one domain or subdomain is just a
 - 接着，DNS会解析 example.com 的A记录，获取其IP地址 123.45.67.89。
 - 用户的请求最终被定向到IP地址 123.45.67.89，也就是 example.com 所在的服务器。
 
-你可能会好奇, 为什么不直接给 www.example.com 添加一个 A 记录, 指向 123.45.67.89 呢? 
+添加 CNAME 有什么优点呢? 比如你的服务器IP地址发生变化, 此时只需要更新 example.com 的A记录就行了, 如果全都使用A记录，你需要手动更新 example.com 和 www.example.com 的 A 记录, 
 
-再次创建一个A记录指向 123.45.67.89 以通过 www.example.com 访问网站是完全可行的。 然而，选择为 www 使用CNAME记录而不是另一个A记录主要是为了维护简便性：比如如果你的服务器IP地址发生变化，此时只需要更新 example.com 的A记录。所有指向 example.com 的CNAME记录（如 www.example.com）将自动指向新的IP地址。如果使用A记录，你需要手动更新 example.com 和 www.example.com 的A记录。
-
-> Github Pages 的 custom domain 就可以使用 CNAME 记录, 即只需简单给你的域名添加一个 CNAME 记录, 指向 `username.github.io` 即可. 注意添加 CNAME 记录时, 我的 HOSTNAME 填的是 `blog`, 即 `blog.example.com` 指向 `username.github.io`, 你也可以把 HOSTNAME 设置为空, 若为空则代表你的主域名 `example.com` 指向 `username.github.io`, 根据个人喜好来设置. 
+> Github Pages 的 custom domain 就可以使用 CNAME 记录, 即只需简单给你的域名添加一个 CNAME 记录, 指向 `username.github.io` 即可, **不用修改任何 NS 服务器**. 注意添加 CNAME 记录时, 我的 HOSTNAME 填的是 `blog`, 即 `blog.example.com` 指向 `username.github.io`, 你也可以把 HOSTNAME 设置为空, 若为空则代表你的主域名 `example.com` 指向 `username.github.io`, 根据个人喜好来设置. 
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/f356b3dd152035f92b0ae20335413ab0.jpg)
 

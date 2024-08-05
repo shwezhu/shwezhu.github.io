@@ -1,5 +1,5 @@
 ---
-title: AJAX Request Methods in JavaScript
+title: AJAX Request Methods in JS
 date: 2024-08-04 20:02:10
 categories:
  - front-end
