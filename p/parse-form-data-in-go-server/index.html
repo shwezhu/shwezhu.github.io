@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Content-Type header The Content-Type header can be application/json, application/x-www-form-urlencoded, multipart/form-data, the first two is usually used with posting form data to server, the third is used to upload file to the server. The format of application/json is '{&quot;username&quot;:&quot;davidzhu&quot;, &quot;password&quot;:&quot;778899a&quot;}'. The format of application/x-www-form-urlencoded is &quot;username=davidzhu&amp;password=778899a&quot; . # 2. Parse query string and x-www-form-urlencoded data In previous post I have talked that r.ParseForm() will try to parse both query string and request body in Go, but there is a condition: the Content-Type header of the reuqest must be application/x-www-form-urlencoded and you have the correct format data in the request body.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Parse query string and x-www-form-urlencoded data 1 2 3 4 5 6 if e := r.ParseForm(); err != nil { err = fmt.Errorf(&#34;failed to parse username and password: %v&#34;, e) return } username = r.Form.Get(&#34;username&#34;) password = r.Form.Get(&#34;password&#34;) According to Golang docs, r.ParseForm() will try to parse both query string and request body in Go, but there is a condition: the Content-Type header of the reuqest must be application/x-www-form-urlencoded.">
 <title>Parse Form Data in Go Server</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/parse-form-data-in-go-server/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Parse Form Data in Go Server">
-<meta property='og:description' content="# 1. Content-Type header The Content-Type header can be application/json, application/x-www-form-urlencoded, multipart/form-data, the first two is usually used with posting form data to server, the third is used to upload file to the server. The format of application/json is '{&quot;username&quot;:&quot;davidzhu&quot;, &quot;password&quot;:&quot;778899a&quot;}'. The format of application/x-www-form-urlencoded is &quot;username=davidzhu&amp;password=778899a&quot; . # 2. Parse query string and x-www-form-urlencoded data In previous post I have talked that r.ParseForm() will try to parse both query string and request body in Go, but there is a condition: the Content-Type header of the reuqest must be application/x-www-form-urlencoded and you have the correct format data in the request body.">
+<meta property='og:description' content="# 1. Parse query string and x-www-form-urlencoded data 1 2 3 4 5 6 if e := r.ParseForm(); err != nil { err = fmt.Errorf(&#34;failed to parse username and password: %v&#34;, e) return } username = r.Form.Get(&#34;username&#34;) password = r.Form.Get(&#34;password&#34;) According to Golang docs, r.ParseForm() will try to parse both query string and request body in Go, but there is a condition: the Content-Type header of the reuqest must be application/x-www-form-urlencoded.">
 <meta property='og:url' content='https://blog.yorforger.cc/p/parse-form-data-in-go-server/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:tag' content='http' /><meta property='article:published_time' content='2023-09-23T18:08:55&#43;00:00'/><meta property='article:modified_time' content='2023-09-23T18:08:55&#43;00:00'/>
 <meta name="twitter:title" content="Parse Form Data in Go Server">
-<meta name="twitter:description" content="# 1. Content-Type header The Content-Type header can be application/json, application/x-www-form-urlencoded, multipart/form-data, the first two is usually used with posting form data to server, the third is used to upload file to the server. The format of application/json is '{&quot;username&quot;:&quot;davidzhu&quot;, &quot;password&quot;:&quot;778899a&quot;}'. The format of application/x-www-form-urlencoded is &quot;username=davidzhu&amp;password=778899a&quot; . # 2. Parse query string and x-www-form-urlencoded data In previous post I have talked that r.ParseForm() will try to parse both query string and request body in Go, but there is a condition: the Content-Type header of the reuqest must be application/x-www-form-urlencoded and you have the correct format data in the request body.">
+<meta name="twitter:description" content="# 1. Parse query string and x-www-form-urlencoded data 1 2 3 4 5 6 if e := r.ParseForm(); err != nil { err = fmt.Errorf(&#34;failed to parse username and password: %v&#34;, e) return } username = r.Form.Get(&#34;username&#34;) password = r.Form.Get(&#34;password&#34;) According to Golang docs, r.ParseForm() will try to parse both query string and request body in Go, but there is a condition: the Content-Type header of the reuqest must be application/x-www-form-urlencoded.">
     <link rel="shortcut icon" href="/favicon.png" />
 
   
@@ -251,9 +251,12 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#1-content-type-header">1. <code>Content-Type</code> header</a></li>
-    <li><a href="#2-parse-query-string-and-x-www-form-urlencoded-data">2. Parse query string and <code>x-www-form-urlencoded</code> data</a></li>
-    <li><a href="#3-parse-json-data-from-request-body">3. Parse json data from request body</a></li>
+    <li><a href="#1-parse-query-string-and-x-www-form-urlencoded-data">1. Parse query string and <code>x-www-form-urlencoded</code> data</a></li>
+    <li><a href="#3-parse-json-data-from-request-body">3. Parse json data from request body</a>
+      <ol>
+        <li><a href="#4-notes">4. Notes</a></li>
+      </ol>
+    </li>
   </ol>
 </nav>
         </div>
@@ -337,23 +340,32 @@
     <section class="article-content">
     
     
-    <h2 id="1-content-type-header">
-    <a href="#1-content-type-header">#</a>
-    1. <code>Content-Type</code> header
-</h2><p>The <code>Content-Type</code> header can be <code>application/json</code>, <code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, the first two is usually used with posting form data to server, the third is used to upload file to the server.</p>
-<ul>
-<li>
-<p>The format of <code>application/json</code> is <code>'{&quot;username&quot;:&quot;davidzhu&quot;, &quot;password&quot;:&quot;778899a&quot;}'</code>.</p>
-</li>
-<li>
-<p>The format of <code>application/x-www-form-urlencoded</code> is <code>&quot;username=davidzhu&amp;password=778899a&quot; </code>.</p>
-</li>
-</ul>
-<h2 id="2-parse-query-string-and-x-www-form-urlencoded-data">
-    <a href="#2-parse-query-string-and-x-www-form-urlencoded-data">#</a>
-    2. Parse query string and <code>x-www-form-urlencoded</code> data
-</h2><p>In <a class="link" href="https://davidzhu.xyz/post/cs-basics/018-http-messages/#2-form-data-vs-query-string"  target="_blank" rel="noopener"
-    >previous post</a> I have talked that <code>r.ParseForm()</code> will try to parse both query string and request body in Go, but there is a condition: the <code>Content-Type</code> header of the reuqest must be <code>application/x-www-form-urlencoded</code> and you have the correct format data in the request body. Otherwise, the request body will be ignored by <code>r.ParseForm()</code>, it just tries to parse query string resides in the URL. Talk is cheap let&rsquo;s show the codes,</p>
+    <h2 id="1-parse-query-string-and-x-www-form-urlencoded-data">
+    <a href="#1-parse-query-string-and-x-www-form-urlencoded-data">#</a>
+    1. Parse query string and <code>x-www-form-urlencoded</code> data
+</h2><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">e</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">ParseForm</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">err</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to parse username and password: %v&#34;</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">username</span> <span class="p">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Form</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;username&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">password</span> <span class="p">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Form</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;password&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>According to  <a class="link" href="https://pkg.go.dev/net/http#Request.ParseForm"  target="_blank" rel="noopener"
+    >Golang docs</a>, <code>r.ParseForm()</code> will try to parse both query string and request body in Go, but there is a condition: the <code>Content-Type</code> header of the reuqest must be <code>application/x-www-form-urlencoded</code>. Otherwise, the request body will be ignored by <code>r.ParseForm()</code>, it just tries to parse query string resides in the URL.</p>
+<blockquote>
+<p>If you don&rsquo;t know query string or <code>application/x-www-form-urlencoded</code>:</p>
+</blockquote>
 <p>First, there is a simple handler which parses form data or query string:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -511,7 +523,42 @@
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ curl localhost:8080/postbody -d <span class="s1">&#39;{&#34;username&#34;:&#34;davidzhu&#34;, &#34;password&#34;:&#34;778899a&#34;}&#39;</span> 
 </span></span></code></pre></td></tr></table>
 </div>
+</div><h3 id="4-notes">
+    <a href="#4-notes">#</a>
+    4. Notes
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URLSearchParams</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">pair</span> <span class="k">of</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;login-form&#34;</span><span class="p">)))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">data</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">String</span><span class="p">(</span><span class="nx">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">&#34;/login&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">method</span><span class="o">:</span> <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//headers:{&#34;Content-Type&#34;:&#34;application/x-www-form-urlencoded&#34;},
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">body</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
 </div>
+</div><p>I find this solution on <a class="link" href="https://stackoverflow.com/a/46642899/16317008"  target="_blank" rel="noopener"
+    >an answer at Stackoverflow</a>, the problem caused by <code>new FormData()</code>:</p>
+<blockquote>
+<p>The <strong><code>FormData</code></strong> interface provides a way to easily construct a set of key/value pairs representing form fields and their values, which can then be easily sent using the <code>XMLHttpRequest.send()</code> method. <strong>It uses the same format a form would use if the encoding type were set to <code>&quot;multipart/form-data&quot;</code></strong>.</p>
+</blockquote>
+<p>So when using <code>FormData</code> you are locking yourself into <code>multipart/form-data</code>. There is no way to send a <code>FormData</code> object as the body and <em>not</em> sending data in the <code>multipart/form-data</code> format.</p>
+<p>If you want to send the data as <code>application/x-www-form-urlencoded</code> you will either have to specify the body as an URL-encoded string, or pass a <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams"  target="_blank" rel="noopener"
+    ><code>URLSearchParams</code></a> object.</p>
+
 </section>
 
 

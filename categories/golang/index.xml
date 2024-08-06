@@ -4396,23 +4396,32 @@ Because &lt;code&gt;r.ParseMultipartForm()&lt;/code&gt; will return an error if 
         <pubDate>Sat, 23 Sep 2023 18:08:55 +0000</pubDate>
         
         <guid>https://blog.yorforger.cc/p/parse-form-data-in-go-server/</guid>
-        <description>&lt;h2 id=&#34;1-content-type-header&#34;&gt;
-    &lt;a href=&#34;#1-content-type-header&#34;&gt;#&lt;/a&gt;
-    1. &lt;code&gt;Content-Type&lt;/code&gt; header
-&lt;/h2&gt;&lt;p&gt;The &lt;code&gt;Content-Type&lt;/code&gt; header can be &lt;code&gt;application/json&lt;/code&gt;, &lt;code&gt;application/x-www-form-urlencoded&lt;/code&gt;, &lt;code&gt;multipart/form-data&lt;/code&gt;, the first two is usually used with posting form data to server, the third is used to upload file to the server.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;The format of &lt;code&gt;application/json&lt;/code&gt; is &lt;code&gt;&#39;{&amp;quot;username&amp;quot;:&amp;quot;davidzhu&amp;quot;, &amp;quot;password&amp;quot;:&amp;quot;778899a&amp;quot;}&#39;&lt;/code&gt;.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;The format of &lt;code&gt;application/x-www-form-urlencoded&lt;/code&gt; is &lt;code&gt;&amp;quot;username=davidzhu&amp;amp;password=778899a&amp;quot; &lt;/code&gt;.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;2-parse-query-string-and-x-www-form-urlencoded-data&#34;&gt;
-    &lt;a href=&#34;#2-parse-query-string-and-x-www-form-urlencoded-data&#34;&gt;#&lt;/a&gt;
-    2. Parse query string and &lt;code&gt;x-www-form-urlencoded&lt;/code&gt; data
-&lt;/h2&gt;&lt;p&gt;In &lt;a class=&#34;link&#34; href=&#34;https://davidzhu.xyz/post/cs-basics/018-http-messages/#2-form-data-vs-query-string&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;previous post&lt;/a&gt; I have talked that &lt;code&gt;r.ParseForm()&lt;/code&gt; will try to parse both query string and request body in Go, but there is a condition: the &lt;code&gt;Content-Type&lt;/code&gt; header of the reuqest must be &lt;code&gt;application/x-www-form-urlencoded&lt;/code&gt; and you have the correct format data in the request body. Otherwise, the request body will be ignored by &lt;code&gt;r.ParseForm()&lt;/code&gt;, it just tries to parse query string resides in the URL. Talk is cheap let&amp;rsquo;s show the codes,&lt;/p&gt;
+        <description>&lt;h2 id=&#34;1-parse-query-string-and-x-www-form-urlencoded-data&#34;&gt;
+    &lt;a href=&#34;#1-parse-query-string-and-x-www-form-urlencoded-data&#34;&gt;#&lt;/a&gt;
+    1. Parse query string and &lt;code&gt;x-www-form-urlencoded&lt;/code&gt; data
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;ParseForm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;err&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;nil&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nx&#34;&gt;err&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Errorf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;failed to parse username and password: %v&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;username&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Form&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;username&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;password&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Form&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;According to  &lt;a class=&#34;link&#34; href=&#34;https://pkg.go.dev/net/http#Request.ParseForm&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Golang docs&lt;/a&gt;, &lt;code&gt;r.ParseForm()&lt;/code&gt; will try to parse both query string and request body in Go, but there is a condition: the &lt;code&gt;Content-Type&lt;/code&gt; header of the reuqest must be &lt;code&gt;application/x-www-form-urlencoded&lt;/code&gt;. Otherwise, the request body will be ignored by &lt;code&gt;r.ParseForm()&lt;/code&gt;, it just tries to parse query string resides in the URL.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you don&amp;rsquo;t know query string or &lt;code&gt;application/x-www-form-urlencoded&lt;/code&gt;:&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;First, there is a simple handler which parses form data or query string:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
@@ -4570,7 +4579,42 @@ Because &lt;code&gt;r.ParseMultipartForm()&lt;/code&gt; will return an error if 
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ curl localhost:8080/postbody -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;username&amp;#34;:&amp;#34;davidzhu&amp;#34;, &amp;#34;password&amp;#34;:&amp;#34;778899a&amp;#34;}&amp;#39;&lt;/span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description>
+&lt;/div&gt;&lt;h3 id=&#34;4-notes&#34;&gt;
+    &lt;a href=&#34;#4-notes&#34;&gt;#&lt;/a&gt;
+    4. Notes
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kr&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;data&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;URLSearchParams&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kr&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;pair&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;of&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;FormData&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;document&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getElementById&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;login-form&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nx&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;append&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;pair&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;pair&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kd&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kr&#34;&gt;await&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;fetch&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/login&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nx&#34;&gt;method&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;c1&#34;&gt;//headers:{&amp;#34;Content-Type&amp;#34;:&amp;#34;application/x-www-form-urlencoded&amp;#34;},
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;nx&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;I find this solution on &lt;a class=&#34;link&#34; href=&#34;https://stackoverflow.com/a/46642899/16317008&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;an answer at Stackoverflow&lt;/a&gt;, the problem caused by &lt;code&gt;new FormData()&lt;/code&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The &lt;strong&gt;&lt;code&gt;FormData&lt;/code&gt;&lt;/strong&gt; interface provides a way to easily construct a set of key/value pairs representing form fields and their values, which can then be easily sent using the &lt;code&gt;XMLHttpRequest.send()&lt;/code&gt; method. &lt;strong&gt;It uses the same format a form would use if the encoding type were set to &lt;code&gt;&amp;quot;multipart/form-data&amp;quot;&lt;/code&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;So when using &lt;code&gt;FormData&lt;/code&gt; you are locking yourself into &lt;code&gt;multipart/form-data&lt;/code&gt;. There is no way to send a &lt;code&gt;FormData&lt;/code&gt; object as the body and &lt;em&gt;not&lt;/em&gt; sending data in the &lt;code&gt;multipart/form-data&lt;/code&gt; format.&lt;/p&gt;
+&lt;p&gt;If you want to send the data as &lt;code&gt;application/x-www-form-urlencoded&lt;/code&gt; you will either have to specify the body as an URL-encoded string, or pass a &lt;a class=&#34;link&#34; href=&#34;https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;&lt;code&gt;URLSearchParams&lt;/code&gt;&lt;/a&gt; object.&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>The Router of Go Web App - ServeMux</title>

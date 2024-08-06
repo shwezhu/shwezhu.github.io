@@ -604,11 +604,15 @@
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;The format of &lt;code&gt;application/json&lt;/code&gt; is &lt;code&gt;&#39;{&amp;quot;username&amp;quot;:&amp;quot;davidzhu&amp;quot;, &amp;quot;password&amp;quot;:&amp;quot;778899a&amp;quot;}&#39;&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;multipart/form-data&lt;/code&gt;: each value is sent as a block of data (&amp;ldquo;body part&amp;rdquo;), with a user agent-defined delimiter (&amp;ldquo;boundary&amp;rdquo;) separating each part. The keys are given in the &lt;code&gt;Content-Disposition&lt;/code&gt; header of each part.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;multipart/form-data&lt;/code&gt;: each value is sent as a block of data (&amp;ldquo;body part&amp;rdquo;), with a user agent-defined delimiter (&amp;ldquo;boundary&amp;rdquo;) separating each part. The keys are given in the &lt;code&gt;Content-Disposition&lt;/code&gt; header of each part. Usually used to send form data that contains both files and strings. Learn more: check &lt;code&gt;FormData()&lt;/code&gt; object.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;text/plain&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;HTML provides no way to generate JSON from form data, learn more: &lt;a class=&#34;link&#34; href=&#34;https://davidzhu.xyz/post/http/008-form-post-query-string/#4-form-data-restriction&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;Form Data &amp;amp; Query String - David&amp;rsquo;s Blog&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note 1:&lt;/strong&gt; if you don&amp;rsquo;t set &lt;code&gt;Content-Type&lt;/code&gt; header explicitly, the browser will set Content-Type header to &lt;code&gt;multipart/form-data&lt;/code&gt; automatically.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note 2:&lt;/strong&gt; Query String vs &lt;code&gt;application/x-www-form-urlencoded&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Query string: Appended to the URL after a question mark (?).&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;application/x-www-form-urlencoded&lt;/code&gt;: Sent in the request body&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id=&#34;2-access-control-allow-origin&#34;&gt;
     &lt;a href=&#34;#2-access-control-allow-origin&#34;&gt;#&lt;/a&gt;
     2. &lt;code&gt;Access-Control-Allow-Origin&lt;/code&gt;
@@ -1014,13 +1018,11 @@
 &lt;li&gt;A &lt;code&gt;blank line&lt;/code&gt; indicating all meta-information for the request has been sent.&lt;/li&gt;
 &lt;li&gt;An optional &lt;code&gt;body&lt;/code&gt; containing data associated with the request (like content of an HTML form), or the document associated with a response. The presence of the body and its size is specified by the start-line and HTTP headers.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.yorforger.cc/004-http-messages/aa.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/08/a4f4596c8e375a14960ad3c0db7c931d.png&#34;
 	
 	
 	
 	loading=&#34;lazy&#34;
-	
-		alt=&#34;aa&#34;
 	
 	
 &gt;&lt;/p&gt;
@@ -1151,13 +1153,11 @@
     &gt;Representation headers&lt;/a&gt; like &lt;a class=&#34;link&#34; href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;&lt;code&gt;Content-Type&lt;/code&gt;&lt;/a&gt; that describe the original format of the message data and any encoding applied (only present if the message has a body).&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.yorforger.cc/004-http-messages/a1.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/08/9e388793983a1fdf0afb5f3e51305a73.png&#34;
 	
 	
 	
 	loading=&#34;lazy&#34;
-	
-		alt=&#34;a&#34;
 	
 	
 &gt;&lt;/p&gt;

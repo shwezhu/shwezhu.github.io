@@ -369,11 +369,15 @@
 </ul>
 </li>
 <li>The format of <code>application/json</code> is <code>'{&quot;username&quot;:&quot;davidzhu&quot;, &quot;password&quot;:&quot;778899a&quot;}'</code>.</li>
-<li><code>multipart/form-data</code>: each value is sent as a block of data (&ldquo;body part&rdquo;), with a user agent-defined delimiter (&ldquo;boundary&rdquo;) separating each part. The keys are given in the <code>Content-Disposition</code> header of each part.</li>
+<li><code>multipart/form-data</code>: each value is sent as a block of data (&ldquo;body part&rdquo;), with a user agent-defined delimiter (&ldquo;boundary&rdquo;) separating each part. The keys are given in the <code>Content-Disposition</code> header of each part. Usually used to send form data that contains both files and strings. Learn more: check <code>FormData()</code> object.</li>
 <li><code>text/plain</code></li>
 </ul>
-<p>HTML provides no way to generate JSON from form data, learn more: <a class="link" href="https://davidzhu.xyz/post/http/008-form-post-query-string/#4-form-data-restriction"  target="_blank" rel="noopener"
-    >Form Data &amp; Query String - David&rsquo;s Blog</a></p>
+<blockquote>
+<p><strong>Note 1:</strong> if you don&rsquo;t set <code>Content-Type</code> header explicitly, the browser will set Content-Type header to <code>multipart/form-data</code> automatically.</p>
+<p><strong>Note 2:</strong> Query String vs <code>application/x-www-form-urlencoded</code></p>
+<p>Query string: Appended to the URL after a question mark (?).</p>
+<p><code>application/x-www-form-urlencoded</code>: Sent in the request body</p>
+</blockquote>
 <h3 id="2-access-control-allow-origin">
     <a href="#2-access-control-allow-origin">#</a>
     2. <code>Access-Control-Allow-Origin</code>
