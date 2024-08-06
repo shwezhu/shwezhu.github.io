@@ -49,3 +49,40 @@ const formData = new FormData(registerForm);
 formData.append('extraData', 'someValue');
 ```
 
+----
+
+You should notice that when using `FormData` you are locking yourself into `multipart/form-data`. There is no way to send a `FormData` object as the request  body and *not* in the `multipart/form-data` format. Check this code:
+
+```js
+fetch("api/xxx", {
+    body: new FormData(document.getElementById("login-form")),
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+    },
+    method: "post",
+}
+```
+
+Looks good, right?
+
+The content of the request will looks like this:
+
+```
+-----------------------------114782935826962
+Content-Disposition: form-data; name="email"
+
+test@example.com
+-----------------------------114782935826962
+Content-Disposition: form-data; name="password"
+
+pw
+-----------------------------114782935826962--
+```
+
+Obviously, this data is not sent in "application/x-www-form-urlencoded" format which should be "username=david&password=123abc". It is  `multipart/form-data`. So if you try to parse the request body in  "application/x-www-form-urlencoded", you will get error in your server. 
+
+> **Note:** If you don't set `Content-Type` header explicitly, the browser will set Content-Type header to `multipart/form-data` automatically. 
+
+Therefore, if you want to send the data as `application/x-www-form-urlencoded`, just create a json object not a FormData object. 
+
+Learn more: https://stackoverflow.com/questions/46640024/how-do-i-post-form-data-with-fetch-api/46642899#46642899

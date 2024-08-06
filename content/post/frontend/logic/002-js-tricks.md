@@ -1,6 +1,6 @@
 ---
-title: HTML Basics
-date: 2024-03-07 20:02:10
+title: Frontend JS Tricks
+date: 2024-08-05 22:17:19
 categories:
  - front-end
 tags:

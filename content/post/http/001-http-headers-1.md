@@ -29,7 +29,7 @@ Common values of `Content-Type` header can be `application/json`, `application/x
 - `multipart/form-data`: each value is sent as a block of data ("body part"), with a user agent-defined delimiter ("boundary") separating each part. The keys are given in the `Content-Disposition` header of each part. Usually used to send form data that contains both files and strings. Learn more: check `FormData()` object. 
 - `text/plain`
 
-> **Note 1:** if you don't set `Content-Type` header explicitly, the browser will set Content-Type header to `multipart/form-data` automatically. 
+> **Note 1:** If you don't set `Content-Type` header explicitly, the browser will set Content-Type header to `multipart/form-data` automatically. 
 >
 > **Note 2:** Query String vs `application/x-www-form-urlencoded`
 >
