@@ -26,10 +26,16 @@ Common values of `Content-Type` header can be `application/json`, `application/x
 - `application/x-www-form-urlencoded`: the keys and values are encoded in key-value tuples separated by `'&'`, with a `'='` between the key and the value. 
   - The format of `application/x-www-form-urlencoded` is `"username=davidzhu&password=778899a" `. 
 - The format of `application/json` is `'{"username":"davidzhu", "password":"778899a"}'`. 
-- `multipart/form-data`: each value is sent as a block of data ("body part"), with a user agent-defined delimiter ("boundary") separating each part. The keys are given in the `Content-Disposition` header of each part.
+- `multipart/form-data`: each value is sent as a block of data ("body part"), with a user agent-defined delimiter ("boundary") separating each part. The keys are given in the `Content-Disposition` header of each part. Usually used to send form data that contains both files and strings. Learn more: check `FormData()` object. 
 - `text/plain`
 
-HTML provides no way to generate JSON from form data, learn more: [Form Data & Query String - David's Blog](https://davidzhu.xyz/post/http/008-form-post-query-string/#4-form-data-restriction)
+> **Note 1:** if you don't set `Content-Type` header explicitly, the browser will set Content-Type header to `multipart/form-data` automatically. 
+>
+> **Note 2:** Query String vs `application/x-www-form-urlencoded`
+>
+> Query string: Appended to the URL after a question mark (?). 
+>
+> `application/x-www-form-urlencoded`: Sent in the request body
 
 ### 2. `Access-Control-Allow-Origin`
 
