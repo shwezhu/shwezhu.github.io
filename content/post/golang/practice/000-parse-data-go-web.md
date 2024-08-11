@@ -1,9 +1,6 @@
 ---
 title: Parse Data - Go Web
 date: 2023-09-23 18:08:55
-categories:
- - golang
- - practice
 tags:
  - golang
  - http
