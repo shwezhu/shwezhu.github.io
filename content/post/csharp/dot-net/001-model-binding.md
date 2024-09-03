@@ -1,13 +1,25 @@
 ---
-title: Asp .Net Core Basics
+title: Asp .Net Core Model Binding
 date: 2024-07-26 19:42:36
 categories:
  - c sharp
 ---
 
-## Model Binding
+### 1. Data Source
 
-### 1. Complex Type
+By default, model binding gets data in the form of key-value pairs from the following sources in an HTTP request:
+
+1. Form fields
+2. The request body (For [controllers that have the [ApiController\] attribute](https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-8.0#binding-source-parameter-inference).)
+3. Route data
+4. Query string parameters
+5. Uploaded files
+
+### 2. Simple types
+
+[Model Binding in ASP.NET Core | Microsoft Learn](https://learn.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-8.0#simple-types)
+
+### 3. Complex Type
 
 A complex type must have a **public default constructor** and **public writable properties** to bind. When model binding occurs, the class is instantiated using the public default constructor.
 
@@ -35,7 +47,7 @@ public class Cat
 }
 ```
 
-### 1.1. No `public writable properties`
+### 3.1. No `public writable properties`
 
 We make a post request and get a empty json response:
 
@@ -83,7 +95,7 @@ Then we get the response as we expected:
 {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"One or more validation errors occurred.","status":400,"errors":{"Name":["The Name field is required."]},"traceId":"00-8ac6e0182eaa34cbbfa93a2ea031d780-220d5f992ad3ab26-00"}
 ```
 
-### 1.2. No `public default constructor`
+### 3.2. No `public default constructor`
 
 ```c#
 public class Cat
@@ -107,18 +119,4 @@ Now cannot find the documents talk about this, but we can know that we don't nee
 - It's case insensitive. 
 - In addition to missing required properties causing serialization to fail, missing non-nullable properties will also cause serialization to fail. If fails, client will get error message for 500 bad request. 
 - Furthermore, fields will be ignored.
-
-### 2. Simple types
-
-[Model Binding in ASP.NET Core | Microsoft Learn](https://learn.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-8.0#simple-types)
-
-### 3. Data Source
-
-By default, model binding gets data in the form of key-value pairs from the following sources in an HTTP request:
-
-1. Form fields
-2. The request body (For [controllers that have the [ApiController\] attribute](https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-8.0#binding-source-parameter-inference).)
-3. Route data
-4. Query string parameters
-5. Uploaded files
 
