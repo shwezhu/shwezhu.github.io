@@ -52,7 +52,9 @@ Then the web server's console output:
 Cat Info: , Age: 0
 ```
 
-Why? Because class `Cat` has two fields no **public writable properties**. So if we change our code like this:
+Why? Because class `Cat` has two fields not **public writable properties**. 
+
+If we change our code like this:
 
 ```c#
 public class Cat
