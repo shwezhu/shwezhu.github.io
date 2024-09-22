@@ -7,12 +7,34 @@ tags:
  - http
 ---
 
-## 1. CORS issue
+## 0. CORS Issue 1
+
+Safari shows in console:
+
+```
+[Error] Preflight response is not successful
+[Error] XMLHttpRequest cannot load [https://xxxxxxxxxxxx](https://xxxxxxxxxxxx/) due to access control checks.
+```
+
+Chrome shows in console:
+
+```
+Access to XMLHttpRequest at 'https://xxxxxxxxxxx' from origin 'xxxx' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+```
+
+This means the OPTIONS calls is failing, even if all the headers (allow-origin etc....) are available server-side.
+
+> 说到 CORS 前，需要了解“同源”概念。同源即协议、域名和端口三者完全相同。浏览器使用同源政策，目的是为了保证用户信息的安全，防止恶意的网站窃取数据，不同源的访问会受到限制（主要是 Cookie / Local Storage 访问、iframe DOM 访问、发起 HTTP 请求）。 
+> 对于 HTML 标签的外部链接如 `<img>、<audio>、<video>、<script>`，没有跨域问题。不过对于这样的外部链接请求不会带上 Cookie。
+> 对于 JavaScript 发起 HTTP 请求，三要素有任何之一不匹配即是跨域，浏览器即会出于安全考虑进行限制，这时就需要使用 CORS （Cross-origin resource sharing）。CORS 主要由服务器端实现，对用户透明。
+> Source: https://ogr.xyz/p/js-cors/
+
+## 1. CORS Issue 2
 
 My frontend application is deployed on `http://localhost:5173`, and backend application is deployed on `http://localhost:8080`. The frontend application sends HTTP requests to the backend application through `fetch`, but it fails with the following error:
 
 ```shell
-# 显然没有服务器处理 OPTIONS 请求
+# 显然服务器没有处理 OPTIONS 请求
 Access to fetch at 'http://localhost:8080/' from origin 'http://localhost:5173' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: It does not have HTTP ok status. 
 
 Access to fetch at 'http://localhost:8080/api/chat' from origin 'http://localhost:5173' has been blocked by CORS policy: Request header field content-type is not allowed by Access-Control-Allow-Headers in preflight response.
