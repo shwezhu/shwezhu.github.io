@@ -98,3 +98,5 @@ References:
 [Cross-Origin Resource Sharing (CORS) - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 
 [Same-origin policy - Web security | MDN](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
+
+[JavaScript CORS 跨域请求](https://ogr.xyz/p/js-cors/)
