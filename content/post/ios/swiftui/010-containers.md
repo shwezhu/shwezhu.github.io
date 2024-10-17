@@ -5,8 +5,6 @@ categories:
  - ios
 ---
 
-
-
 ## 1.  LazyVGrid
 
 ### 1.1. Column Layout Algorithm 
@@ -14,7 +12,6 @@ categories:
 The column layout algorithm runs in two steps. It takes the remaining width, and distributes it among the columns, similar to [HStack](https://www.swiftuifieldguide.com/layout/hstack/). These are the steps to distribute the space:
 
 - 初始设置: 首先, 系统计算出可用的总宽度, 通常是 LazyVGrid 的容器宽度。
-
 - For each column but the last, the spacing is subtracted from the remaining width. 系统会从总宽度中减去除最后一列外所有列之间的间距。例如,如果有3列,只需要减去2个间距的宽度。
 - The columns are given their width in order, but all the fixed width columns come first.
 - For each column, we propose the remaining width divided by the number of remaining columns, and subtract the returned column width from the remainder. 对于每一个灵活宽度的列: a. 系统计算当前剩余宽度除以剩余的列数。 b. 将这个值作为建议宽度提供给列。 c. 列可能会接受这个宽度,或者要求更小的宽度。 d. 系统从剩余宽度中减去列实际使用的宽度。重复进行...

@@ -15,7 +15,7 @@ categories:
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/05/8a5cd0431f346d79496187cf2c56c5ea.jpg)
 
-> 把 Spacer() 理解成一个双向弹簧, 负责挤压元素
+> 把 Spacer() 理解成一个双向弹簧, 负责挤压元素 
 
 ### 3. Background Color - LinearGradient
 

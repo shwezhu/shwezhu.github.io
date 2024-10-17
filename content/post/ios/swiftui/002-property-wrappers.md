@@ -96,17 +96,37 @@ MVVM: [SwiftUI - Intro to MVVM | Example Refactor | Model View ViewModel](https:
 
 > SwiftData: @Bindable 即可将修改数据的数据实时保存到数据库 不用调用 context 其它函数
 
-文档说的很详细: [State | Apple Developer Documentation](https://developer.apple.com/documentation/swiftui/state)
+@Binding 用于创建对**某个值**的引用，允许子视图修改父视图中的状态。它主要用于简单的值类型，如 Bool、Int、String 等。
 
-- 修改单个值使用 @Binding , 如一个 bool 一个 double, 或者改变一个引用的指向, 
+```swift
+struct ParentView: View {
+    @State private var isOn = false
+    
+    var body: some View {
+        VStack {
+            Text("Switch is \(isOn ? "on" : "off")")
+            ChildView(isOn: $isOn)
+        }
+    }
+}
 
-- 若修改对象的属性, 直接传递引用就行了 (前提 Book 是 class 而不是 struct)
+struct ChildView: View {
+    @Binding var isOn: Bool
+    
+    var body: some View {
+        Toggle("Toggle Switch", isOn: $isOn)
+    }
+}
+```
+
+有时候也可以直接传递引用
 
 ```swift
 struct ContentView: View {
+    // Book 是 class 不是 struct
     @State private var book = Book()
     var body: some View {
-        BookCheckoutView(book: book)
+        BookCheckoutView(book: book) // 直接传递引用给子视图
     }
 }
 
@@ -120,29 +140,33 @@ struct BookCheckoutView: View {
 }
 ```
 
-- 若需要 binding 值则使用 @Bindable:
+@Bindable 是在 iOS 17 中引入的，用于处理遵循 Observable 协议的**引用类型对象**。它允许在视图中直接绑定到可观察对象的属性。
 
 ```swift
+@Observable class UserProfile {
+    var name: String = ""
+    var age: Int = 0
+}
+
+struct ProfileView: View {
+    @Bindable var profile: UserProfile
+    
+    var body: some View {
+        Form {
+            // 绑定 profile 的 name 和 age 属性, 与上面 Book 例子不同, 这里绑定的是对象的属性, 而不是修改
+            TextField("Name", text: $profile.name)
+            Stepper("Age: \(profile.age)", value: $profile.age)
+        }
+    }
+}
+
 struct ContentView: View {
-    @State private var book = Book()
+    @State private var userProfile = UserProfile()
+    
     var body: some View {
-        BookView(book: book)
-    }
-}
-
-struct BookView: View {
-    let book: Book
-    var body: some View {
-        BookEditorView(book: book)
-    }
-}
-
-struct BookEditorView: View {
-    @Bindable var book: Book
-    var body: some View {
-        // 此时需要 $book.title 而不是上面那种 book.isAvailable.toggle() 直接修改
-        TextField("Title", text: $book.title)
+        ProfileView(profile: userProfile)
     }
 }
 ```
 
+文档说的很详细: [State | Apple Developer Documentation](https://developer.apple.com/documentation/swiftui/state)
