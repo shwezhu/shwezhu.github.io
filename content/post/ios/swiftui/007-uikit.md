@@ -9,7 +9,7 @@ categories:
 
 `UIViewControllerRepresentable` is a view that represents a UIKit view controller. Use a [`UIViewControllerRepresentable`](https://developer.apple.com/documentation/swiftui/uiviewcontrollerrepresentable) instance to create and manage a [`UIViewController`](https://developer.apple.com/documentation/uikit/uiviewcontroller) object in your SwiftUI interface. 
 
-We want use SFSafariViewController, cause SwiftUI cannot use `SFSafariViewController` directly, so we wrap it with `UIViewControllerRepresentable`. 
+SwiftUI cannot use `SFSafariViewController` directly, so we wrap it in a `UIViewControllerRepresentable`. 
 
 ```swift
 import SwiftUI
