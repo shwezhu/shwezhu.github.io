@@ -91,7 +91,7 @@ List {
 - `userNotificationCenter(_ center:, willPresent:)`: get called the app was running in the foreground.
 - `userNotificationCenter(_ center:, didReceive:)`: get called user interact with the notification.
 
-然后苦逼的我苦苦思索了一下午不得解, 最后还是用了原来的旧方法:
+苦逼的我苦苦思索了一下午不得解, 最后还是用了原来的旧方法:
 
 ```swift
 func createNotificationContent(for reminder: Reminder) -> UNMutableNotificationContent {
