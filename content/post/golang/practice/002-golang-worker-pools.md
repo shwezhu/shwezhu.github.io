@@ -30,7 +30,7 @@ tags:
 
 用Go实现Worker Pool利用的是buffered channel的两个特性:即满的时候写入操作阻塞, 空的时候读取操作阻塞, 
 
-具体方法是提前创建多个goroutines, 然后这些线程持续监听同一个buffered channel, 如果该channel是空的, 那他们就阻塞等待下一个任务的到来:
+具体方法是提前创建多个 goroutines, 然后这些线程持续监听同一个buffered channel, 如果该channel是空的, 那他们就阻塞等待下一个任务的到来:
 
 ```go
 // var keysChannel = make(chan int, 6)

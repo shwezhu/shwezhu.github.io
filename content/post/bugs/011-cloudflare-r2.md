@@ -38,7 +38,7 @@ public class R2Service
         var config = new AmazonS3Config { 
             ServiceURL = endpoint,
             SignatureVersion = "4", // 注意这里
-            ForcePathStyle = true,
+            ForcePathStyle = true,  // 重要！R2 需要这个配置
             AuthenticationRegion = "auto",
         };
 
