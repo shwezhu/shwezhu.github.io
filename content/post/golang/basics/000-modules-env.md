@@ -38,9 +38,12 @@ $go get .
 ```
 
 To add a specific dependency, specify its module path as an argument to the command:
+
 ```shell
 $ go get github.com/example/xxmodule
 ```
+
+> The package installed by `go get` will be downloaded into the `$GOPATH/pkg/mod/cache` directory.
 
 - **go mod tidy**
 

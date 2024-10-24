@@ -18,7 +18,7 @@ f()    // call f(); wait for it to return
 go f() // create a new goroutine that calls f(); don't wait
 ```
 
-The code below will just print `helllo`, this because when `main` function returns, all goroutines are abruptly terminated and the program exits. 
+The code below will just print `hello`, this because when `main` function returns, all goroutines are abruptly terminated and the program exits. 
 
 ```go
 func main() {
@@ -143,7 +143,7 @@ ch <- true
 ```
 
 > Don't close a channel from the receiver side and don't close a channel if the channel has multiple concurrent senders. -> Don't close (or send values to) closed channels.
-> Close channel elegently: https://qcrao91.gitbook.io/go/channel/ru-he-you-ya-di-guan-bi-channel
+> Close channel elegantly: https://qcrao91.gitbook.io/go/channel/ru-he-you-ya-di-guan-bi-channel
 
 ### 2.5. Read & send on a nil channel
 

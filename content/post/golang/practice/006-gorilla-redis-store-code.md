@@ -26,11 +26,7 @@ Let's check the source code, the `Get()` method of Redistore:
 func (s *RediStore) Get(r *http.Request, name string) (*sessions.Session, error) {
 	return sessions.GetRegistry(r).Get(s, name)
 }
-```
 
-It gets a registry associated  with the request, then get the session by the registry. The code:
-
-```go
 // GetRegistry returns a registry instance for the current request.
 func GetRegistry(r *http.Request) *Registry {
 	var ctx = r.Context()
