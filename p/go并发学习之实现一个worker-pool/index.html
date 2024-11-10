@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的: 线程池的概念: 预先创建多个线程，线程池里的线程等待处理新来的任务，处理完之后线程并不会被销毁而是等待下一个任务。 使用线程池的原因: 创建和销毁线程都消耗系统资源，如果你的程序需要频繁地创建和销毁线程那这时候就可以考虑使用线程池来提高程序的性能。 注意以上这两点针对是OS级线程的创建销毁, goroutine模型并不是这样, 很轻量, 这也是不需要 wroker poll 的原因, 另外线程池 thread pool 是不是 worker pool 看法不一, 下面这个描述感觉最贴切: The worker pool pattern is a design in which a fixed number of workers are given a stream of tasks to process in a queue. Go Worker Pools 至于thread pool, 普遍看法是: A thread pool reuses previously created threads to execute current tasks and offers a solution to the problem of thread cycle overhead and resource thrashing.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的:\n线程池的概念: 预先创建多个线程，线程池里的线程等待处理新来的任务，处理完之后线程并不会被销毁而是等待下一个任务。 使用线程池的原因: 创建和销毁线程都消耗系统资源，如果你的程序需要频繁地创建和销毁线程那这时候就可以考虑使用线程池来提高程序的性能。 注意以上这两点针对是OS级线程的创建销毁, goroutine模型并不是这样, 很轻量, 这也是不需要 worker poll 的原因,\n另外线程池 thread pool 是不是 worker pool 看法不一, 下面这个描述感觉最贴切:\nThe worker pool pattern is a design in which a fixed number of workers are given a stream of tasks to process in a queue. Go Worker Pools\n至于thread pool, 普遍看法是:\nA thread pool reuses previously created threads to execute current tasks and offers a solution to the problem of thread cycle overhead and resource thrashing. Thread Pools Java\n">
 <title>Go并发学习之实现一个Worker Pool</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/go%E5%B9%B6%E5%8F%91%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAworker-pool/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Go并发学习之实现一个Worker Pool">
-<meta property='og:description' content="有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的: 线程池的概念: 预先创建多个线程，线程池里的线程等待处理新来的任务，处理完之后线程并不会被销毁而是等待下一个任务。 使用线程池的原因: 创建和销毁线程都消耗系统资源，如果你的程序需要频繁地创建和销毁线程那这时候就可以考虑使用线程池来提高程序的性能。 注意以上这两点针对是OS级线程的创建销毁, goroutine模型并不是这样, 很轻量, 这也是不需要 wroker poll 的原因, 另外线程池 thread pool 是不是 worker pool 看法不一, 下面这个描述感觉最贴切: The worker pool pattern is a design in which a fixed number of workers are given a stream of tasks to process in a queue. Go Worker Pools 至于thread pool, 普遍看法是: A thread pool reuses previously created threads to execute current tasks and offers a solution to the problem of thread cycle overhead and resource thrashing.">
+<meta property='og:description' content="有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的:\n线程池的概念: 预先创建多个线程，线程池里的线程等待处理新来的任务，处理完之后线程并不会被销毁而是等待下一个任务。 使用线程池的原因: 创建和销毁线程都消耗系统资源，如果你的程序需要频繁地创建和销毁线程那这时候就可以考虑使用线程池来提高程序的性能。 注意以上这两点针对是OS级线程的创建销毁, goroutine模型并不是这样, 很轻量, 这也是不需要 worker poll 的原因,\n另外线程池 thread pool 是不是 worker pool 看法不一, 下面这个描述感觉最贴切:\nThe worker pool pattern is a design in which a fixed number of workers are given a stream of tasks to process in a queue. Go Worker Pools\n至于thread pool, 普遍看法是:\nA thread pool reuses previously created threads to execute current tasks and offers a solution to the problem of thread cycle overhead and resource thrashing. Thread Pools Java\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/go%E5%B9%B6%E5%8F%91%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAworker-pool/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:tag' content='concurrency' /><meta property='article:published_time' content='2023-05-25T14:13:13&#43;00:00'/><meta property='article:modified_time' content='2023-05-25T14:13:13&#43;00:00'/>
 <meta name="twitter:title" content="Go并发学习之实现一个Worker Pool">
-<meta name="twitter:description" content="有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的: 线程池的概念: 预先创建多个线程，线程池里的线程等待处理新来的任务，处理完之后线程并不会被销毁而是等待下一个任务。 使用线程池的原因: 创建和销毁线程都消耗系统资源，如果你的程序需要频繁地创建和销毁线程那这时候就可以考虑使用线程池来提高程序的性能。 注意以上这两点针对是OS级线程的创建销毁, goroutine模型并不是这样, 很轻量, 这也是不需要 wroker poll 的原因, 另外线程池 thread pool 是不是 worker pool 看法不一, 下面这个描述感觉最贴切: The worker pool pattern is a design in which a fixed number of workers are given a stream of tasks to process in a queue. Go Worker Pools 至于thread pool, 普遍看法是: A thread pool reuses previously created threads to execute current tasks and offers a solution to the problem of thread cycle overhead and resource thrashing.">
+<meta name="twitter:description" content="有人认为Worker Pool在go里是anti-pattern, 不管怎样, 先实现一个简单版本来帮助理解Worker Pool的概念, 实现之前我们先看看传统的线程池相关的:\n线程池的概念: 预先创建多个线程，线程池里的线程等待处理新来的任务，处理完之后线程并不会被销毁而是等待下一个任务。 使用线程池的原因: 创建和销毁线程都消耗系统资源，如果你的程序需要频繁地创建和销毁线程那这时候就可以考虑使用线程池来提高程序的性能。 注意以上这两点针对是OS级线程的创建销毁, goroutine模型并不是这样, 很轻量, 这也是不需要 worker poll 的原因,\n另外线程池 thread pool 是不是 worker pool 看法不一, 下面这个描述感觉最贴切:\nThe worker pool pattern is a design in which a fixed number of workers are given a stream of tasks to process in a queue. Go Worker Pools\n至于thread pool, 普遍看法是:\nA thread pool reuses previously created threads to execute current tasks and offers a solution to the problem of thread cycle overhead and resource thrashing. Thread Pools Java\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -310,7 +307,7 @@
 <li>线程池的概念: 预先创建多个线程，线程池里的线程等待处理新来的任务，处理完之后线程并不会被销毁而是等待下一个任务。</li>
 <li>使用线程池的原因: 创建和销毁线程都消耗系统资源，如果你的程序需要<strong>频繁地创建和销毁线程</strong>那这时候就可以考虑使用线程池来提高程序的性能。</li>
 </ul>
-<p>注意以上这两点针对是OS级线程的创建销毁, goroutine模型并不是这样, 很轻量, 这也是不需要 wroker poll 的原因,</p>
+<p>注意以上这两点针对是OS级线程的创建销毁, goroutine模型并不是这样, 很轻量, 这也是不需要 worker poll 的原因,</p>
 <p>另外线程池 thread pool 是不是 worker pool 看法不一, 下面这个描述感觉最贴切:</p>
 <blockquote>
 <p>The <strong>worker pool pattern</strong> is a design in which a fixed number of workers are given a stream of tasks to process in a queue. <a class="link" href="https://shopify.engineering/leveraging-go-worker-pools"  target="_blank" rel="noopener"
@@ -324,7 +321,7 @@
 <p>所以这么看, worker pool也算是一个basic thread pool, 即<em>reuses previously created threads to execute current tasks</em>,</p>
 <hr>
 <p>用Go实现Worker Pool利用的是buffered channel的两个特性:即满的时候写入操作阻塞, 空的时候读取操作阻塞,</p>
-<p>具体方法是提前创建多个goroutines, 然后这些线程持续监听同一个buffered channel, 如果该channel是空的, 那他们就阻塞等待下一个任务的到来:</p>
+<p>具体方法是提前创建多个 goroutines, 然后这些线程持续监听同一个buffered channel, 如果该channel是空的, 那他们就阻塞等待下一个任务的到来:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -617,12 +614,12 @@
             
                 
 <article class="">
-    <a href="/p/parse-form-data-in-go-server/">
+    <a href="/p/the-router-of-go-web-app-servemux/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Parse Form Data in Go Server</h2>
+            <h2 class="article-title">The Router of Go Web App - ServeMux</h2>
         </div>
     </a>
 </article>

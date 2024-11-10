@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically, js code: 1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 1. r.URL.Path vs r.URL.RawPath 1 2 3 4 5 6 7 8 9 func main() { u, err := url.Parse(&#34;http://example.com/x/xx%20a&#34;) if err != nil { log.Fatal(err) } fmt.Println(&#34;Path:&#34;, u.Path) fmt.Println(&#34;RawPath:&#34;, u.RawPath) fmt.Println(&#34;EscapedPath:&#34;, u.EscapedPath()) } 1 2 3 Path: /x/xx a RawPath: EscapedPath: /x/xx%20a If url changes to &ldquo;http://example.com/x/xx%2Fa\", then will print:\n1 2 3 Path: /x/xx/a RawPath: /x/xx%2Fa EscapedPath: /x/xx%2Fa In general, code should call EscapedPath() instead of reading u.RawPath directly.\nLearn more:\nhttps://pkg.go.dev/net/url#URL.EscapedPath\nURL Encoding (Percent Encoding) - David&rsquo;s Blog\n">
 <title>Some HTTP Issues with Go</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/some-http-issues-with-go/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Some HTTP Issues with Go">
-<meta property='og:description' content="# 1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically, js code: 1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground.">
+<meta property='og:description' content=" # 1. r.URL.Path vs r.URL.RawPath 1 2 3 4 5 6 7 8 9 func main() { u, err := url.Parse(&#34;http://example.com/x/xx%20a&#34;) if err != nil { log.Fatal(err) } fmt.Println(&#34;Path:&#34;, u.Path) fmt.Println(&#34;RawPath:&#34;, u.RawPath) fmt.Println(&#34;EscapedPath:&#34;, u.EscapedPath()) } 1 2 3 Path: /x/xx a RawPath: EscapedPath: /x/xx%20a If url changes to &ldquo;http://example.com/x/xx%2Fa\", then will print:\n1 2 3 Path: /x/xx/a RawPath: /x/xx%2Fa EscapedPath: /x/xx%2Fa In general, code should call EscapedPath() instead of reading u.RawPath directly.\nLearn more:\nhttps://pkg.go.dev/net/url#URL.EscapedPath\nURL Encoding (Percent Encoding) - David&rsquo;s Blog\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/some-http-issues-with-go/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:tag' content='http' /><meta property='article:published_time' content='2023-10-29T11:30:50&#43;00:00'/><meta property='article:modified_time' content='2023-10-29T11:30:50&#43;00:00'/>
 <meta name="twitter:title" content="Some HTTP Issues with Go">
-<meta name="twitter:description" content="# 1. Parse raw query string 1 2 3 4 5 6 7 8 9 10 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // handle asset. const assetPrefix = &#34;asset=&#34; if strings.HasPrefix(r.URL.RawQuery, assetPrefix) { r.URL.RawQuery[len(assetPrefix):] s.asset(w, r, assetName) return } ... } If there are whitespaces in query string, the whitespace will be encoded to %20 or + automatically, js code: 1 2 3 4 5 6 async function getUrl(filepath) { const filename = &#34;back ground.">
+<meta name="twitter:description" content=" # 1. r.URL.Path vs r.URL.RawPath 1 2 3 4 5 6 7 8 9 func main() { u, err := url.Parse(&#34;http://example.com/x/xx%20a&#34;) if err != nil { log.Fatal(err) } fmt.Println(&#34;Path:&#34;, u.Path) fmt.Println(&#34;RawPath:&#34;, u.RawPath) fmt.Println(&#34;EscapedPath:&#34;, u.EscapedPath()) } 1 2 3 Path: /x/xx a RawPath: EscapedPath: /x/xx%20a If url changes to &ldquo;http://example.com/x/xx%2Fa\", then will print:\n1 2 3 Path: /x/xx/a RawPath: /x/xx%2Fa EscapedPath: /x/xx%2Fa In general, code should call EscapedPath() instead of reading u.RawPath directly.\nLearn more:\nhttps://pkg.go.dev/net/url#URL.EscapedPath\nURL Encoding (Percent Encoding) - David&rsquo;s Blog\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -251,24 +248,16 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#1-parse-raw-query-string">1. Parse raw query string</a></li>
-    <li><a href="#2-rurlpath-vs-rurlrawpath">2. <code>r.URL.Path</code> vs <code>r.URL.RawPath</code></a></li>
-    <li><a href="#3-relative-path">3. Relative path</a></li>
-    <li><a href="#4-redirection">4. Redirection</a>
+    <li><a href="#1-rurlpath-vs-rurlrawpath">1. <code>r.URL.Path</code> vs <code>r.URL.RawPath</code></a></li>
+    <li><a href="#2-relative-path">2. Relative path</a></li>
+    <li><a href="#3-redirection">3. Redirection</a>
       <ol>
-        <li><a href="#41-redirect-at-front-end">4.1. Redirect at front end</a></li>
-        <li><a href="#42-redirect-at-server-with-location-header">4.2. Redirect at server with <code>Location</code> header</a></li>
-        <li><a href="#43-redirect-at-server-with-httpredirect-method">4.3. Redirect at server with <code>http.Redirect()</code> method</a></li>
+        <li><a href="#31-redirect-at-front-end">3.1. Redirect at front end</a></li>
+        <li><a href="#32-redirect-at-server-with-location-header">3.2. Redirect at server with <code>Location</code> header</a></li>
+        <li><a href="#33-redirect-at-server-with-httpredirect-method">3.3. Redirect at server with <code>http.Redirect()</code> method</a></li>
       </ol>
     </li>
-    <li><a href="#5-parse-form-and-query-string">5. Parse form and query string</a></li>
-    <li><a href="#6-check-the-type-of-the-request">6. Check the type of the request</a></li>
-    <li><a href="#7-receive-file-from-http-request">7. Receive file from http request</a>
-      <ol>
-        <li><a href="#71-issue">7.1. Issue</a></li>
-        <li><a href="#72-solution">7.2. Solution</a></li>
-      </ol>
-    </li>
+    <li><a href="#4-check-the-type-of-the-request">4. Check the type of the request</a></li>
   </ol>
 </nav>
         </div>
@@ -337,7 +326,7 @@
 
 
                 <time class="article-time--reading">
-                    7 minute read
+                    2 minute read
                 </time>
             </div>
         
@@ -352,110 +341,9 @@
     <section class="article-content">
     
     
-    <h2 id="1-parse-raw-query-string">
-    <a href="#1-parse-raw-query-string">#</a>
-    1. Parse raw query string
-</h2><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="c1">// handle asset.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kd">const</span> <span class="nx">assetPrefix</span> <span class="p">=</span> <span class="s">&#34;asset=&#34;</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">HasPrefix</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span><span class="p">,</span> <span class="nx">assetPrefix</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nx">assetPrefix</span><span class="p">):]</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">s</span><span class="p">.</span><span class="nf">asset</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">assetName</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">		<span class="k">return</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">  <span class="o">...</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>If there are whitespaces in query string, the <a class="link" href="https://stackoverflow.com/a/1211256/16317008"  target="_blank" rel="noopener"
-    >whitespace will be encoded</a> to <code>%20</code> or <code>+</code> automatically, js code:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">getUrl</span><span class="p">(</span><span class="nx">filepath</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">filename</span> <span class="o">=</span> <span class="s2">&#34;back ground.png&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&#34;?asset=&#34;</span> <span class="o">+</span> <span class="nx">filename</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The request URL will be: <code>http://localhost:8080?filepath=back%20ground.png</code>. Therefore, if you use <code>r.URL.RawQuery</code> in Go:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nf">Query</span><span class="p">())</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>This will print:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">2023/10/29 12:19:36 filepath=back%20ground.png
-</span></span><span class="line"><span class="cl">2023/10/29 12:19:36 map[filepath:[back ground.png]]
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>As you can see, <code>r.URL.RawQuery</code> isn&rsquo;t friendly to string with whitespace, you should try to use <code>r.URL.Query()</code> to emliminate the <code>%20</code> characters.</p>
-<p>So the recommended way is as below:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="c1">// handle asset.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kd">const</span> <span class="nx">assetPrefix</span> <span class="p">=</span> <span class="s">&#34;asset=&#34;</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">HasPrefix</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span><span class="p">,</span> <span class="nx">assetPrefix</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// r.URL.Query() returns a map[string][]string
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">assetName</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nf">Query</span><span class="p">()[</span><span class="nx">strings</span><span class="p">.</span><span class="nf">TrimSuffix</span><span class="p">(</span><span class="nx">assetPrefix</span><span class="p">,</span> <span class="s">&#34;=&#34;</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">s</span><span class="p">.</span><span class="nf">asset</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">assetName</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">		<span class="k">return</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">  <span class="o">...</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="2-rurlpath-vs-rurlrawpath">
-    <a href="#2-rurlpath-vs-rurlrawpath">#</a>
-    2. <code>r.URL.Path</code> vs <code>r.URL.RawPath</code>
+    <h2 id="1-rurlpath-vs-rurlrawpath">
+    <a href="#1-rurlpath-vs-rurlrawpath">#</a>
+    1. <code>r.URL.Path</code> vs <code>r.URL.RawPath</code>
 </h2><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -512,9 +400,9 @@
     >https://pkg.go.dev/net/url#URL.EscapedPath</a></p>
 <p><a class="link" href="https://davidzhu.xyz/post/http/009-url-encoding/"  target="_blank" rel="noopener"
     >URL Encoding (Percent Encoding) - David&rsquo;s Blog</a></p>
-<h2 id="3-relative-path">
-    <a href="#3-relative-path">#</a>
-    3. Relative path
+<h2 id="2-relative-path">
+    <a href="#2-relative-path">#</a>
+    2. Relative path
 </h2><p>You can write relative path directly for the endpoint, because the browser know the <strong>Origin</strong>, when you make HTTP request, it knows where should go.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -539,12 +427,12 @@
 </span></span><span class="line"><span class="cl">http.Redirect(w, r, &#34;/login&#34;, http.StatusFound)
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="4-redirection">
-    <a href="#4-redirection">#</a>
-    4. Redirection
-</h2><h3 id="41-redirect-at-front-end">
-    <a href="#41-redirect-at-front-end">#</a>
-    4.1. Redirect at front end
+</div><h2 id="3-redirection">
+    <a href="#3-redirection">#</a>
+    3. Redirection
+</h2><h3 id="31-redirect-at-front-end">
+    <a href="#31-redirect-at-front-end">#</a>
+    3.1. Redirect at front end
 </h3><p>For redirection, you can use js code to redirect based on the status code passed from server:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -574,37 +462,18 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="s2">&#34;/home&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="42-redirect-at-server-with-location-header">
-    <a href="#42-redirect-at-server-with-location-header">#</a>
-    4.2. Redirect at server with <code>Location</code> header
+</div><h3 id="32-redirect-at-server-with-location-header">
+    <a href="#32-redirect-at-server-with-location-header">#</a>
+    3.2. Redirect at server with <code>Location</code> header
 </h3><p>Learn more: <a class="link" href="https://davidzhu.xyz/post/http/001-http-headers/"  target="_blank" rel="noopener"
     >HTTP Headers - David&rsquo;s Blog</a></p>
-<h3 id="43-redirect-at-server-with-httpredirect-method">
-    <a href="#43-redirect-at-server-with-httpredirect-method">#</a>
-    4.3. Redirect at server with <code>http.Redirect()</code> method
+<h3 id="33-redirect-at-server-with-httpredirect-method">
+    <a href="#33-redirect-at-server-with-httpredirect-method">#</a>
+    3.3. Redirect at server with <code>http.Redirect()</code> method
 </h3><p>See above <strong>Relative path</strong> section.</p>
-<h2 id="5-parse-form-and-query-string">
-    <a href="#5-parse-form-and-query-string">#</a>
-    5. Parse form and query string
-</h2><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Request</span><span class="p">)</span> <span class="nf">ParseForm</span><span class="p">()</span> <span class="kt">error</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>For all requests, <code>ParseForm()</code> parses the <strong>raw query</strong> from the URL and updates r.Form. For POST, PUT, and PATCH requests, <strong>it also reads the request body</strong>, parses it as a form and puts the results into both r.PostForm and r.Form. Request body parameters take precedence over URL query string values in r.Form. For other HTTP methods, <strong>or when the Content-Type is not application/x-www-form-urlencoded, the request Body is not read</strong>.</p>
-<p>Therefore, you can pass data in query string or in the request body. When you pass data with request body and the <code>Content-Type</code> header is <code>application/x-www-form-urlencoded</code>, it will be same to sending data with query stirng.</p>
-<p>The <code>Content-Type</code> header can be <code>application/json</code>, <code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, learn more: <a class="link" href="https://davidzhu.xyz/post/cs-basics/017-curl/"  target="_blank" rel="noopener"
-    >Curl Basics - David&rsquo;s Blog</a></p>
-<p>How to send form data in <code>application/x-www-form-urlencoded</code> format: <a class="link" href="https://davidzhu.xyz/post/js/practice/001-tricks/#4-send-username-and-password-form"  target="_blank" rel="noopener"
-    >Tricks in Javascript - David&rsquo;s Blog</a></p>
-<p>Learn more: <a class="link" href="https://pkg.go.dev/net/http#Request.ParseForm"  target="_blank" rel="noopener"
-    >http package - net/http - Go Packages</a></p>
-<h2 id="6-check-the-type-of-the-request">
-    <a href="#6-check-the-type-of-the-request">#</a>
-    6. Check the type of the request
+<h2 id="4-check-the-type-of-the-request">
+    <a href="#4-check-the-type-of-the-request">#</a>
+    4. Check the type of the request
 </h2><p>When You are starting a HTTP/s server You use either <code>ListenAndServe</code> or <code>ListenAndServeTLS</code> or both together on different ports. If You are using just one of them, then from <code>Listen..</code> it&rsquo;s obvious which scheme request is using and You don&rsquo;t need a way to check and set it. But if You are serving on both HTTP and HTTP/s then You can use <code>request.TLS</code> state. if its <code>nil</code> it means it&rsquo;s HTTP.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -651,188 +520,7 @@
 </div>
 </div><p>Source: <a class="link" href="https://stackoverflow.com/a/76143800/16317008"  target="_blank" rel="noopener"
     >https://stackoverflow.com/a/76143800/16317008</a></p>
-<h2 id="7-receive-file-from-http-request">
-    <a href="#7-receive-file-from-http-request">#</a>
-    7. Receive file from http request
-</h2><h3 id="71-issue">
-    <a href="#71-issue">#</a>
-    7.1. Issue
-</h3><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
-</span><span class="lnt">42
-</span><span class="lnt">43
-</span><span class="lnt">44
-</span><span class="lnt">45
-</span><span class="lnt">46
-</span><span class="lnt">47
-</span><span class="lnt">48
-</span><span class="lnt">49
-</span><span class="lnt">50
-</span><span class="lnt">51
-</span><span class="lnt">52
-</span><span class="lnt">53
-</span><span class="lnt">54
-</span><span class="lnt">55
-</span><span class="lnt">56
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">server</span><span class="p">)</span> <span class="nf">handleUpload</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">currentDir</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">error</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">maxFileSize</span> <span class="o">:=</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">maxFileSize</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="c1">// limit the size of incoming request bodies.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">r</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">MaxBytesReader</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Body</span><span class="p">,</span> <span class="nx">maxFileSize</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="c1">// parse form from request body.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// !!!This will load the file into RAM
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">ParseMultipartForm</span><span class="p">(</span><span class="nx">maxFileSize</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;file is too large:%v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">),</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusBadRequest</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="c1">// obtain file from parsed form.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">parsedFile</span><span class="p">,</span> <span class="nx">parsedFileHeader</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">FormFile</span><span class="p">(</span><span class="s">&#34;file&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">Is</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ErrMissingFile</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Location&#34;</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nf">String</span><span class="p">())</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusSeeOther</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="k">defer</span> <span class="nx">parsedFile</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="nx">dstPath</span> <span class="o">:=</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">currentDir</span><span class="p">,</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Base</span><span class="p">(</span><span class="nx">parsedFileHeader</span><span class="p">.</span><span class="nx">Filename</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">dst</span> <span class="o">*</span><span class="nx">os</span><span class="p">.</span><span class="nx">File</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Stat</span><span class="p">(</span><span class="nx">dstPath</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="c1">// the name of parsed file already exists, create a dst file with a new name.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">filename</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nx">parsedFileHeader</span><span class="p">.</span><span class="nx">Filename</span><span class="p">,</span> <span class="s">&#34;.&#34;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
-</span></span><span class="line"><span class="cl">			<span class="s">&#34;_&#34;</span> <span class="o">+</span>
-</span></span><span class="line"><span class="cl">			<span class="nx">strconv</span><span class="p">.</span><span class="nf">FormatInt</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">().</span><span class="nf">UnixNano</span><span class="p">(),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span>
-</span></span><span class="line"><span class="cl">			<span class="nx">filepath</span><span class="p">.</span><span class="nf">Ext</span><span class="p">(</span><span class="nx">parsedFileHeader</span><span class="p">.</span><span class="nx">Filename</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">		<span class="nx">dst</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="nx">filepath</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">currentDir</span><span class="p">,</span> <span class="nx">filename</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">os</span><span class="p">.</span><span class="nf">IsNotExist</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="c1">// the name of parsed file already exists, create a dst file with original name.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">dst</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="nx">dstPath</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to create file: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">),</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusInternalServerError</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="k">defer</span> <span class="nx">dst</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">io</span><span class="p">.</span><span class="nf">Copy</span><span class="p">(</span><span class="nx">dst</span><span class="p">,</span> <span class="nx">parsedFile</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to copy file: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">),</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusInternalServerError</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="c1">// considering the buffering mechanism, getting error when close a writable file is needed.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">dst</span><span class="p">.</span><span class="nf">Close</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to close dst fileHtml: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">),</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusInternalServerError</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="c1">// clean url and redirect
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span> <span class="p">=</span> <span class="s">&#34;&#34;</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">w</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Location&#34;</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nf">String</span><span class="p">())</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">w</span><span class="p">.</span><span class="nf">WriteHeader</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">StatusSeeOther</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusSeeOther</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong><code>http.MaxBytesReader()</code></strong>: Doesn&rsquo;t load any data, it just wraps the request body with a <code>http.maxBytesReader</code>, learn more: <a class="link" href="https://davidzhu.xyz/post/golang/basics/018-io/"  target="_blank" rel="noopener"
-    >IO in Golang - David&rsquo;s Blog</a></p>
-<p><strong>Usage of <code>r.ParseMultipartForm(maxFileSize)</code></strong>: This is where the actual parsing of data (request body) occurs. The whole request body is parsed and <strong>up to a total of maxMemory bytes of its file parts are stored in memory</strong>, with the remainder stored on disk in temporary files. This will cause a spike in the usage of RAM, because it doesn&rsquo;t stream the data, it loads maxMemory bytes of data into memory, and the rest of data into disk <strong>one time</strong>. Learn more: <a class="link" href="https://davidzhu.xyz/post/golang/basics/018-io/"  target="_blank" rel="noopener"
-    >IO in Golang - David&rsquo;s Blog</a></p>
-<p><strong>Reading and Writing the File</strong>: The file is read from the form data and written to the destination path. The <code>io.Copy</code> function used here is efficient as <strong>it streams the data to dst file</strong>.</p>
-<h3 id="72-solution">
-    <a href="#72-solution">#</a>
-    7.2. Solution
-</h3><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Request</span><span class="p">)</span> <span class="nf">MultipartReader</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><span class="nx">multipart</span><span class="p">.</span><span class="nx">Reader</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><a class="link" href="https://pkg.go.dev/net/http#Request.MultipartReader"  target="_blank" rel="noopener"
-    >MultipartReader</a> returns a MIME multipart reader if this is a multipart/form-data or a multipart/mixed POST request, else returns nil and an error. Use this function instead of ParseMultipartForm to process the request body <strong>as a stream</strong>.</p>
-<p><strong>Note:</strong> When use <code>MultipartReader()</code>, you cannot use <code>http.MaxBytesReader()</code> to limit the size of incoming request bodies as what we did with <code>ParseMultipartForm()</code>.
-Because <code>r.ParseMultipartForm()</code> will return an error if the request body is larger than maxMemory, which <code>MultipartReader()</code> doesn&rsquo;t. If you try use <code>http.MaxBytesReader()</code> with <code>MultipartReader()</code>, when the request body exceeds the specified max size, <code>part, err := reader.NextPart()</code> will return an error:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">err.Error(): multipart: NextPart: http: request body too large
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>You can do something like this:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">reader</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">MultipartReader</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="o">...</span>
-</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">part</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">reader</span><span class="p">.</span><span class="nf">NextPart</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#34;multipart: NextPart: http: request body too large&#34;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="o">...</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">		<span class="o">...</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div>
+
 </section>
 
 
@@ -873,19 +561,6 @@ Because <code>r.ParseMultipartForm()</code> will return an error if the request 
     <h2 class="section-title">Related content</h2>
     <div class="related-content">
         <div class="flex article-list--tile">
-            
-                
-<article class="">
-    <a href="/p/parse-form-data-in-go-server/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Parse Form Data in Go Server</h2>
-        </div>
-    </a>
-</article>
-
             
                 
 <article class="">
@@ -934,6 +609,19 @@ Because <code>r.ParseMultipartForm()</code> will return an error if the request 
 
         <div class="article-details">
             <h2 class="article-title">The Router of Go Web App - ServeMux</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/function-closures-go/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Function Closures - Go</h2>
         </div>
     </a>
 </article>

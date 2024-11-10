@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. DNS Hierarchy DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点. 多出的那个.是Root Level Domain, 比如www.example.com真正的名字是www.example.com.root然后上图就简写为www.example.com. 因为根域名.root对于所有域名都是一样的，所以平时是省略的。 域名的层级结构: hostname.SLD.TLD.root, hostname 也叫 subdomain. # 2. HOSTNAME vs SLD HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指example.com里面的example, 而HOSTNAME是指www.example.com里面的www. HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如www.example.com和blog.example.com是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问www.example.com和blog.example.com时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP: # 3. DNS Records # 3.1. A Record 常见的 DNS Records 有 A, CNAME, TXT, 其中 A 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, CNAME 记录用于将域名指向另一个域名. 当你想给域名添加一个 ip 地址时, 只能添加 A 记录. 添加 A 记录时需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等, @代表空即不填,">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 1. DNS Hierarchy DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点.\n多出的那个.是Root Level Domain, 比如www.example.com真正的名字是www.example.com.root然后上图就简写为www.example.com. 因为根域名.root对于所有域名都是一样的，所以平时是省略的。\n域名的层级结构: hostname.SLD.TLD.root, hostname 也叫 subdomain.\n# 2. HOSTNAME vs SLD HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指example.com里面的example, 而HOSTNAME是指www.example.com里面的www.\nHOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如www.example.com和blog.example.com是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问www.example.com和blog.example.com时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP:\n# 3. DNS Records # 3.1. A Record 常见的 DNS Records 有 A, CNAME, TXT, 其中 A 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, CNAME 记录用于将域名指向另一个域名.\n当你想给域名添加一个 ip 地址时, 只能添加 A 记录. 添加 A 记录时需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等, @代表空即不填,\n">
 <title>DNS 基础概念</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/dns-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="DNS 基础概念">
-<meta property='og:description' content="# 1. DNS Hierarchy DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点. 多出的那个.是Root Level Domain, 比如www.example.com真正的名字是www.example.com.root然后上图就简写为www.example.com. 因为根域名.root对于所有域名都是一样的，所以平时是省略的。 域名的层级结构: hostname.SLD.TLD.root, hostname 也叫 subdomain. # 2. HOSTNAME vs SLD HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指example.com里面的example, 而HOSTNAME是指www.example.com里面的www. HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如www.example.com和blog.example.com是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问www.example.com和blog.example.com时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP: # 3. DNS Records # 3.1. A Record 常见的 DNS Records 有 A, CNAME, TXT, 其中 A 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, CNAME 记录用于将域名指向另一个域名. 当你想给域名添加一个 ip 地址时, 只能添加 A 记录. 添加 A 记录时需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等, @代表空即不填,">
+<meta property='og:description' content=" # 1. DNS Hierarchy DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点.\n多出的那个.是Root Level Domain, 比如www.example.com真正的名字是www.example.com.root然后上图就简写为www.example.com. 因为根域名.root对于所有域名都是一样的，所以平时是省略的。\n域名的层级结构: hostname.SLD.TLD.root, hostname 也叫 subdomain.\n# 2. HOSTNAME vs SLD HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指example.com里面的example, 而HOSTNAME是指www.example.com里面的www.\nHOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如www.example.com和blog.example.com是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问www.example.com和blog.example.com时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP:\n# 3. DNS Records # 3.1. A Record 常见的 DNS Records 有 A, CNAME, TXT, 其中 A 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, CNAME 记录用于将域名指向另一个域名.\n当你想给域名添加一个 ip 地址时, 只能添加 A 记录. 添加 A 记录时需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等, @代表空即不填,\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/dns-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='build website' /><meta property='article:tag' content='networking' /><meta property='article:published_time' content='2024-04-07T00:15:30&#43;00:00'/><meta property='article:modified_time' content='2024-04-07T00:15:30&#43;00:00'/>
 <meta name="twitter:title" content="DNS 基础概念">
-<meta name="twitter:description" content="# 1. DNS Hierarchy DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点. 多出的那个.是Root Level Domain, 比如www.example.com真正的名字是www.example.com.root然后上图就简写为www.example.com. 因为根域名.root对于所有域名都是一样的，所以平时是省略的。 域名的层级结构: hostname.SLD.TLD.root, hostname 也叫 subdomain. # 2. HOSTNAME vs SLD HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指example.com里面的example, 而HOSTNAME是指www.example.com里面的www. HOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如www.example.com和blog.example.com是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问www.example.com和blog.example.com时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP: # 3. DNS Records # 3.1. A Record 常见的 DNS Records 有 A, CNAME, TXT, 其中 A 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, CNAME 记录用于将域名指向另一个域名. 当你想给域名添加一个 ip 地址时, 只能添加 A 记录. 添加 A 记录时需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等, @代表空即不填,">
+<meta name="twitter:description" content=" # 1. DNS Hierarchy DNS服务器怎么会知道每个域名的IP地址呢？答案是分级查询, 仔细看下面DNS解析过程，每个域名的尾部都多了一个点.\n多出的那个.是Root Level Domain, 比如www.example.com真正的名字是www.example.com.root然后上图就简写为www.example.com. 因为根域名.root对于所有域名都是一样的，所以平时是省略的。\n域名的层级结构: hostname.SLD.TLD.root, hostname 也叫 subdomain.\n# 2. HOSTNAME vs SLD HOSTNAME 和二级域名(SLD)是不一样的, 二级域名是指example.com里面的example, 而HOSTNAME是指www.example.com里面的www.\nHOSTNAME 的作用是为了区分同一个域名下的不同服务, 比如www.example.com和blog.example.com是同一个域名下的不同服务, 现在都是采用微服务分布式架构, 即每个服务通常不在一个主机, 这样用户访问www.example.com和blog.example.com时就会访问到不同的服务器, 从而提供不同的服务. 如下图可以看出一个 HOSTNAME 可以对应一个 IP:\n# 3. DNS Records # 3.1. A Record 常见的 DNS Records 有 A, CNAME, TXT, 其中 A 记录是最常见的, 用于将域名指向一个 ipv4 IP地址, CNAME 记录用于将域名指向另一个域名.\n当你想给域名添加一个 ip 地址时, 只能添加 A 记录. 添加 A 记录时需要指定 HOSTNAME 和 IP, 其中 HOSTNAME 可以填@或者www或blog等, @代表空即不填,\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 

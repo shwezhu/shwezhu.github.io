@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Login without using keypairs Copy your ssh public key on your computer into the ~/.ssh/authorized_keys file on you EC2 instance. On you local machine: 1 2 $ cat ~/.ssh/id_rsa.pub ... Copy the content into your EC2 instance: 1 $ sudo vi .ssh/authorized_keys Then you can login directly. # 2. oh-my-zsh shell 1 2 3 4 5 sudo apt install zsh -y chsh -s /bin/zsh sh -c &#34;$(wget https://raw.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 1. Login without using keypairs Copy your ssh public key on your computer into the ~/.ssh/authorized_keys file on you EC2 instance.\nOn you local machine:\n1 2 $ cat ~/.ssh/id_rsa.pub ... Copy the content into your EC2 instance:\n1 $ sudo vi .ssh/authorized_keys Then you can login directly.\n# 2. oh-my-zsh shell 1 2 3 4 5 sudo apt install zsh -y chsh -s /bin/zsh sh -c &#34;$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)&#34; # wget 有时候会出现 timeout, 可以用 curl 代替: # sh -c &#34;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&#34; # 3. Set up ufw 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ➜ ~ ufw status Status: active To Action From -- ------ ---- 22/tcp ALLOW Anywhere 22/tcp (v6) ALLOW Anywhere (v6) # if you need 443, do this: ➜ ~ ufw allow 443 Rule added Rule added (v6) # or just disable ➜ ~ ufw disable Learn more: ufw vs AWS Security Group - David&rsquo;s Blog\n">
 <title>Basic Configuration of VPS</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/basic-configuration-of-vps/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Basic Configuration of VPS">
-<meta property='og:description' content="# 1. Login without using keypairs Copy your ssh public key on your computer into the ~/.ssh/authorized_keys file on you EC2 instance. On you local machine: 1 2 $ cat ~/.ssh/id_rsa.pub ... Copy the content into your EC2 instance: 1 $ sudo vi .ssh/authorized_keys Then you can login directly. # 2. oh-my-zsh shell 1 2 3 4 5 sudo apt install zsh -y chsh -s /bin/zsh sh -c &#34;$(wget https://raw.">
+<meta property='og:description' content=" # 1. Login without using keypairs Copy your ssh public key on your computer into the ~/.ssh/authorized_keys file on you EC2 instance.\nOn you local machine:\n1 2 $ cat ~/.ssh/id_rsa.pub ... Copy the content into your EC2 instance:\n1 $ sudo vi .ssh/authorized_keys Then you can login directly.\n# 2. oh-my-zsh shell 1 2 3 4 5 sudo apt install zsh -y chsh -s /bin/zsh sh -c &#34;$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)&#34; # wget 有时候会出现 timeout, 可以用 curl 代替: # sh -c &#34;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&#34; # 3. Set up ufw 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ➜ ~ ufw status Status: active To Action From -- ------ ---- 22/tcp ALLOW Anywhere 22/tcp (v6) ALLOW Anywhere (v6) # if you need 443, do this: ➜ ~ ufw allow 443 Rule added Rule added (v6) # or just disable ➜ ~ ufw disable Learn more: ufw vs AWS Security Group - David&rsquo;s Blog\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/basic-configuration-of-vps/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='build website' /><meta property='article:published_time' content='2023-09-09T15:53:57&#43;00:00'/><meta property='article:modified_time' content='2023-09-09T15:53:57&#43;00:00'/>
 <meta name="twitter:title" content="Basic Configuration of VPS">
-<meta name="twitter:description" content="# 1. Login without using keypairs Copy your ssh public key on your computer into the ~/.ssh/authorized_keys file on you EC2 instance. On you local machine: 1 2 $ cat ~/.ssh/id_rsa.pub ... Copy the content into your EC2 instance: 1 $ sudo vi .ssh/authorized_keys Then you can login directly. # 2. oh-my-zsh shell 1 2 3 4 5 sudo apt install zsh -y chsh -s /bin/zsh sh -c &#34;$(wget https://raw.">
+<meta name="twitter:description" content=" # 1. Login without using keypairs Copy your ssh public key on your computer into the ~/.ssh/authorized_keys file on you EC2 instance.\nOn you local machine:\n1 2 $ cat ~/.ssh/id_rsa.pub ... Copy the content into your EC2 instance:\n1 $ sudo vi .ssh/authorized_keys Then you can login directly.\n# 2. oh-my-zsh shell 1 2 3 4 5 sudo apt install zsh -y chsh -s /bin/zsh sh -c &#34;$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)&#34; # wget 有时候会出现 timeout, 可以用 curl 代替: # sh -c &#34;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&#34; # 3. Set up ufw 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ➜ ~ ufw status Status: active To Action From -- ------ ---- 22/tcp ALLOW Anywhere 22/tcp (v6) ALLOW Anywhere (v6) # if you need 443, do this: ➜ ~ ufw allow 443 Rule added Rule added (v6) # or just disable ➜ ~ ufw disable Learn more: ufw vs AWS Security Group - David&rsquo;s Blog\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 

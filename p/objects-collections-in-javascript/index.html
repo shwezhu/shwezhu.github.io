@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Javascript objects 在其他语言, 如C++,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成. 可是在JS里面, 类的概念变得模糊了, 我很少用到 new, 但又有人说 “JavaScript is designed on a simple object-based paradigm”, I‘m confused now. 什么是variable, type, type 和 object 的关系是什么? 什么又是value? 我尝试在迷惑中找出答案: Javascript is dynamic language, which means values have types, not variables. Values can have two main types: primitives (immutable), object. 所以 object 是 data types 中的一种, 显然这和其他语言不一样, 那 object type 具体是什么呢? An object is a collection of properties, and a property is an association between a name (or key) and a value.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 1. Javascript objects 在其他语言, 如C++,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成.\n可是在JS里面, 类的概念变得模糊了, 我很少用到 new, 但又有人说 “JavaScript is designed on a simple object-based paradigm”, I‘m confused now.\n什么是variable, type, type 和 object 的关系是什么? 什么又是value? 我尝试在迷惑中找出答案:\nJavascript is dynamic language, which means values have types, not variables.\nValues can have two main types: primitives (immutable), object.\n所以 object 是 data types 中的一种, 显然这和其他语言不一样, 那 object type 具体是什么呢?\nAn object is a collection of properties, and a property is an association between a name (or key) and a value. A cup is an object, with properties. A cup has a color, a design, weight, a material it is made of, etc. The same way, JavaScript objects can have properties, which define their characteristics.\n">
 <title>Objects &amp; Collections in Javascript</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/objects-collections-in-javascript/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Objects & Collections in Javascript">
-<meta property='og:description' content="# 1. Javascript objects 在其他语言, 如C++,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成. 可是在JS里面, 类的概念变得模糊了, 我很少用到 new, 但又有人说 “JavaScript is designed on a simple object-based paradigm”, I‘m confused now. 什么是variable, type, type 和 object 的关系是什么? 什么又是value? 我尝试在迷惑中找出答案: Javascript is dynamic language, which means values have types, not variables. Values can have two main types: primitives (immutable), object. 所以 object 是 data types 中的一种, 显然这和其他语言不一样, 那 object type 具体是什么呢? An object is a collection of properties, and a property is an association between a name (or key) and a value.">
+<meta property='og:description' content=" # 1. Javascript objects 在其他语言, 如C++,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成.\n可是在JS里面, 类的概念变得模糊了, 我很少用到 new, 但又有人说 “JavaScript is designed on a simple object-based paradigm”, I‘m confused now.\n什么是variable, type, type 和 object 的关系是什么? 什么又是value? 我尝试在迷惑中找出答案:\nJavascript is dynamic language, which means values have types, not variables.\nValues can have two main types: primitives (immutable), object.\n所以 object 是 data types 中的一种, 显然这和其他语言不一样, 那 object type 具体是什么呢?\nAn object is a collection of properties, and a property is an association between a name (or key) and a value. A cup is an object, with properties. A cup has a color, a design, weight, a material it is made of, etc. The same way, JavaScript objects can have properties, which define their characteristics.\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/objects-collections-in-javascript/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='javascript' /><meta property='article:published_time' content='2023-06-20T20:51:31&#43;00:00'/><meta property='article:modified_time' content='2023-06-20T20:51:31&#43;00:00'/>
 <meta name="twitter:title" content="Objects & Collections in Javascript">
-<meta name="twitter:description" content="# 1. Javascript objects 在其他语言, 如C++,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成. 可是在JS里面, 类的概念变得模糊了, 我很少用到 new, 但又有人说 “JavaScript is designed on a simple object-based paradigm”, I‘m confused now. 什么是variable, type, type 和 object 的关系是什么? 什么又是value? 我尝试在迷惑中找出答案: Javascript is dynamic language, which means values have types, not variables. Values can have two main types: primitives (immutable), object. 所以 object 是 data types 中的一种, 显然这和其他语言不一样, 那 object type 具体是什么呢? An object is a collection of properties, and a property is an association between a name (or key) and a value.">
+<meta name="twitter:description" content=" # 1. Javascript objects 在其他语言, 如C++,Java, 对象是一个类的实例(instance), 对象必须由对应类的constructor生成.\n可是在JS里面, 类的概念变得模糊了, 我很少用到 new, 但又有人说 “JavaScript is designed on a simple object-based paradigm”, I‘m confused now.\n什么是variable, type, type 和 object 的关系是什么? 什么又是value? 我尝试在迷惑中找出答案:\nJavascript is dynamic language, which means values have types, not variables.\nValues can have two main types: primitives (immutable), object.\n所以 object 是 data types 中的一种, 显然这和其他语言不一样, 那 object type 具体是什么呢?\nAn object is a collection of properties, and a property is an association between a name (or key) and a value. A cup is an object, with properties. A cup has a color, a design, weight, a material it is made of, etc. The same way, JavaScript objects can have properties, which define their characteristics.\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 

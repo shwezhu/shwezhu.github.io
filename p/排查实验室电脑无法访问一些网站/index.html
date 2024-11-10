@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时, 首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需要管理员权限, 失败 后来无聊想着看看解析出来youtube.com的实际ip是什么, 使用 nklookup 查了一下, (大概这样, 没在实验室) 1 2 3 4 5 6 7 ❯ nslookup youtube.com Server:\t192.168.2.1 Address:\t192.168.100.1#53 Non-authoritative answer: Name:\tyoutube.com Address: 142.251.40.206 于是访问 142.251.40.206 1 2 3 4 5 6 7 ❯ wget -O- 142.251.40.206 --2023-11-22 22:23:53-- http://142.251.40.206/ Connecting to 142.251.40.206:80... connected. HTTP request sent, awaiting response... 301 Moved Permanently Location: http://www.google.com/ [following] --2023-11-22 22:23:53-- http://www.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时,\n首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需要管理员权限, 失败\n后来无聊想着看看解析出来youtube.com的实际ip是什么, 使用 nklookup 查了一下, (大概这样, 没在实验室)\n1 2 3 4 5 6 7 ❯ nslookup youtube.com Server:\t192.168.2.1 Address:\t192.168.100.1#53 Non-authoritative answer: Name:\tyoutube.com Address: 142.251.40.206 于是访问 142.251.40.206\n1 2 3 4 5 6 7 ❯ wget -O- 142.251.40.206 --2023-11-22 22:23:53-- http://142.251.40.206/ Connecting to 142.251.40.206:80... connected. HTTP request sent, awaiting response... 301 Moved Permanently Location: http://www.google.com/ [following] --2023-11-22 22:23:53-- http://www.google.com/ Resolving www.google.com (www.google.com)... 142.250.80.36 可以看到被重定向到了谷歌页面, 当时在实验室也是这种情况, 查了一下, 这确实是正确的地址, 只是谷歌给重定向了, 所以不是DNS的问题, 那应该就是防火墙的问题, 下次去实验室再看看,\n">
 <title>排查实验室电脑无法访问一些网站</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/%E6%8E%92%E6%9F%A5%E5%AE%9E%E9%AA%8C%E5%AE%A4%E7%94%B5%E8%84%91%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E4%B8%80%E4%BA%9B%E7%BD%91%E7%AB%99/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="排查实验室电脑无法访问一些网站">
-<meta property='og:description' content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时, 首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需要管理员权限, 失败 后来无聊想着看看解析出来youtube.com的实际ip是什么, 使用 nklookup 查了一下, (大概这样, 没在实验室) 1 2 3 4 5 6 7 ❯ nslookup youtube.com Server:\t192.168.2.1 Address:\t192.168.100.1#53 Non-authoritative answer: Name:\tyoutube.com Address: 142.251.40.206 于是访问 142.251.40.206 1 2 3 4 5 6 7 ❯ wget -O- 142.251.40.206 --2023-11-22 22:23:53-- http://142.251.40.206/ Connecting to 142.251.40.206:80... connected. HTTP request sent, awaiting response... 301 Moved Permanently Location: http://www.google.com/ [following] --2023-11-22 22:23:53-- http://www.">
+<meta property='og:description' content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时,\n首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需要管理员权限, 失败\n后来无聊想着看看解析出来youtube.com的实际ip是什么, 使用 nklookup 查了一下, (大概这样, 没在实验室)\n1 2 3 4 5 6 7 ❯ nslookup youtube.com Server:\t192.168.2.1 Address:\t192.168.100.1#53 Non-authoritative answer: Name:\tyoutube.com Address: 142.251.40.206 于是访问 142.251.40.206\n1 2 3 4 5 6 7 ❯ wget -O- 142.251.40.206 --2023-11-22 22:23:53-- http://142.251.40.206/ Connecting to 142.251.40.206:80... connected. HTTP request sent, awaiting response... 301 Moved Permanently Location: http://www.google.com/ [following] --2023-11-22 22:23:53-- http://www.google.com/ Resolving www.google.com (www.google.com)... 142.250.80.36 可以看到被重定向到了谷歌页面, 当时在实验室也是这种情况, 查了一下, 这确实是正确的地址, 只是谷歌给重定向了, 所以不是DNS的问题, 那应该就是防火墙的问题, 下次去实验室再看看,\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/%E6%8E%92%E6%9F%A5%E5%AE%9E%E9%AA%8C%E5%AE%A4%E7%94%B5%E8%84%91%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E4%B8%80%E4%BA%9B%E7%BD%91%E7%AB%99/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='bugs' /><meta property='article:tag' content='networking' /><meta property='article:published_time' content='2023-11-22T21:43:22&#43;00:00'/><meta property='article:modified_time' content='2023-11-22T21:43:22&#43;00:00'/>
 <meta name="twitter:title" content="排查实验室电脑无法访问一些网站">
-<meta name="twitter:description" content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时, 首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需要管理员权限, 失败 后来无聊想着看看解析出来youtube.com的实际ip是什么, 使用 nklookup 查了一下, (大概这样, 没在实验室) 1 2 3 4 5 6 7 ❯ nslookup youtube.com Server:\t192.168.2.1 Address:\t192.168.100.1#53 Non-authoritative answer: Name:\tyoutube.com Address: 142.251.40.206 于是访问 142.251.40.206 1 2 3 4 5 6 7 ❯ wget -O- 142.251.40.206 --2023-11-22 22:23:53-- http://142.251.40.206/ Connecting to 142.251.40.206:80... connected. HTTP request sent, awaiting response... 301 Moved Permanently Location: http://www.google.com/ [following] --2023-11-22 22:23:53-- http://www.">
+<meta name="twitter:description" content="首先可以联网, 谷歌和微软邮箱等其他的一些网站都可访问, 但是访问油管的时候总是会超时,\n首先想到了是 DNS 服务器的问题, 尝试把电脑的 DNS server 改为 8.8.8.8, 可惜需要管理员权限, 失败\n后来无聊想着看看解析出来youtube.com的实际ip是什么, 使用 nklookup 查了一下, (大概这样, 没在实验室)\n1 2 3 4 5 6 7 ❯ nslookup youtube.com Server:\t192.168.2.1 Address:\t192.168.100.1#53 Non-authoritative answer: Name:\tyoutube.com Address: 142.251.40.206 于是访问 142.251.40.206\n1 2 3 4 5 6 7 ❯ wget -O- 142.251.40.206 --2023-11-22 22:23:53-- http://142.251.40.206/ Connecting to 142.251.40.206:80... connected. HTTP request sent, awaiting response... 301 Moved Permanently Location: http://www.google.com/ [following] --2023-11-22 22:23:53-- http://www.google.com/ Resolving www.google.com (www.google.com)... 142.250.80.36 可以看到被重定向到了谷歌页面, 当时在实验室也是这种情况, 查了一下, 这确实是正确的地址, 只是谷歌给重定向了, 所以不是DNS的问题, 那应该就是防火墙的问题, 下次去实验室再看看,\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 

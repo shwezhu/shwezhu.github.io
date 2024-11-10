@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. LazyVGrid # 1.1. Column Layout Algorithm The column layout algorithm runs in two steps. It takes the remaining width, and distributes it among the columns, similar to HStack. These are the steps to distribute the space: 初始设置: 首先, 系统计算出可用的总宽度, 通常是 LazyVGrid 的容器宽度。 For each column but the last, the spacing is subtracted from the remaining width. 系统会从总宽度中减去除最后一列外所有列之间的间距。例如,如果有3列,只需要减去2个间距的宽度。 The columns are given their width in order, but all the fixed width columns come first.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 1. LazyVGrid # 1.1. Column Layout Algorithm The column layout algorithm runs in two steps. It takes the remaining width, and distributes it among the columns, similar to HStack. These are the steps to distribute the space:\n初始设置: 首先, 系统计算出可用的总宽度, 通常是 LazyVGrid 的容器宽度。 For each column but the last, the spacing is subtracted from the remaining width. 系统会从总宽度中减去除最后一列外所有列之间的间距。例如,如果有3列,只需要减去2个间距的宽度。 The columns are given their width in order, but all the fixed width columns come first. For each column, we propose the remaining width divided by the number of remaining columns, and subtract the returned column width from the remainder. 对于每一个灵活宽度的列: a. 系统计算当前剩余宽度除以剩余的列数。 b. 将这个值作为建议宽度提供给列。 c. 列可能会接受这个宽度,或者要求更小的宽度。 d. 系统从剩余宽度中减去列实际使用的宽度。重复进行&hellip; Each of the column types responds differently to the proposed width:\n">
 <title>SwiftUI Containers</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/swiftui-containers/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="SwiftUI Containers">
-<meta property='og:description' content="# 1. LazyVGrid # 1.1. Column Layout Algorithm The column layout algorithm runs in two steps. It takes the remaining width, and distributes it among the columns, similar to HStack. These are the steps to distribute the space: 初始设置: 首先, 系统计算出可用的总宽度, 通常是 LazyVGrid 的容器宽度。 For each column but the last, the spacing is subtracted from the remaining width. 系统会从总宽度中减去除最后一列外所有列之间的间距。例如,如果有3列,只需要减去2个间距的宽度。 The columns are given their width in order, but all the fixed width columns come first.">
+<meta property='og:description' content=" # 1. LazyVGrid # 1.1. Column Layout Algorithm The column layout algorithm runs in two steps. It takes the remaining width, and distributes it among the columns, similar to HStack. These are the steps to distribute the space:\n初始设置: 首先, 系统计算出可用的总宽度, 通常是 LazyVGrid 的容器宽度。 For each column but the last, the spacing is subtracted from the remaining width. 系统会从总宽度中减去除最后一列外所有列之间的间距。例如,如果有3列,只需要减去2个间距的宽度。 The columns are given their width in order, but all the fixed width columns come first. For each column, we propose the remaining width divided by the number of remaining columns, and subtract the returned column width from the remainder. 对于每一个灵活宽度的列: a. 系统计算当前剩余宽度除以剩余的列数。 b. 将这个值作为建议宽度提供给列。 c. 列可能会接受这个宽度,或者要求更小的宽度。 d. 系统从剩余宽度中减去列实际使用的宽度。重复进行&hellip; Each of the column types responds differently to the proposed width:\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/swiftui-containers/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-07-09T20:55:10&#43;00:00'/><meta property='article:modified_time' content='2024-07-09T20:55:10&#43;00:00'/>
 <meta name="twitter:title" content="SwiftUI Containers">
-<meta name="twitter:description" content="# 1. LazyVGrid # 1.1. Column Layout Algorithm The column layout algorithm runs in two steps. It takes the remaining width, and distributes it among the columns, similar to HStack. These are the steps to distribute the space: 初始设置: 首先, 系统计算出可用的总宽度, 通常是 LazyVGrid 的容器宽度。 For each column but the last, the spacing is subtracted from the remaining width. 系统会从总宽度中减去除最后一列外所有列之间的间距。例如,如果有3列,只需要减去2个间距的宽度。 The columns are given their width in order, but all the fixed width columns come first.">
+<meta name="twitter:description" content=" # 1. LazyVGrid # 1.1. Column Layout Algorithm The column layout algorithm runs in two steps. It takes the remaining width, and distributes it among the columns, similar to HStack. These are the steps to distribute the space:\n初始设置: 首先, 系统计算出可用的总宽度, 通常是 LazyVGrid 的容器宽度。 For each column but the last, the spacing is subtracted from the remaining width. 系统会从总宽度中减去除最后一列外所有列之间的间距。例如,如果有3列,只需要减去2个间距的宽度。 The columns are given their width in order, but all the fixed width columns come first. For each column, we propose the remaining width divided by the number of remaining columns, and subtract the returned column width from the remainder. 对于每一个灵活宽度的列: a. 系统计算当前剩余宽度除以剩余的列数。 b. 将这个值作为建议宽度提供给列。 c. 列可能会接受这个宽度,或者要求更小的宽度。 d. 系统从剩余宽度中减去列实际使用的宽度。重复进行&hellip; Each of the column types responds differently to the proposed width:\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -345,18 +342,10 @@
 </h3><p>The column layout algorithm runs in two steps. It takes the remaining width, and distributes it among the columns, similar to <a class="link" href="https://www.swiftuifieldguide.com/layout/hstack/"  target="_blank" rel="noopener"
     >HStack</a>. These are the steps to distribute the space:</p>
 <ul>
-<li>
-<p>初始设置: 首先, 系统计算出可用的总宽度, 通常是 LazyVGrid 的容器宽度。</p>
-</li>
-<li>
-<p>For each column but the last, the spacing is subtracted from the remaining width. 系统会从总宽度中减去除最后一列外所有列之间的间距。例如,如果有3列,只需要减去2个间距的宽度。</p>
-</li>
-<li>
-<p>The columns are given their width in order, but all the fixed width columns come first.</p>
-</li>
-<li>
-<p>For each column, we propose the remaining width divided by the number of remaining columns, and subtract the returned column width from the remainder. 对于每一个灵活宽度的列: a. 系统计算当前剩余宽度除以剩余的列数。 b. 将这个值作为建议宽度提供给列。 c. 列可能会接受这个宽度,或者要求更小的宽度。 d. 系统从剩余宽度中减去列实际使用的宽度。重复进行&hellip;</p>
-</li>
+<li>初始设置: 首先, 系统计算出可用的总宽度, 通常是 LazyVGrid 的容器宽度。</li>
+<li>For each column but the last, the spacing is subtracted from the remaining width. 系统会从总宽度中减去除最后一列外所有列之间的间距。例如,如果有3列,只需要减去2个间距的宽度。</li>
+<li>The columns are given their width in order, but all the fixed width columns come first.</li>
+<li>For each column, we propose the remaining width divided by the number of remaining columns, and subtract the returned column width from the remainder. 对于每一个灵活宽度的列: a. 系统计算当前剩余宽度除以剩余的列数。 b. 将这个值作为建议宽度提供给列。 c. 列可能会接受这个宽度,或者要求更小的宽度。 d. 系统从剩余宽度中减去列实际使用的宽度。重复进行&hellip;</li>
 </ul>
 <p>Each of the column types responds differently to the proposed width:</p>
 <ul>

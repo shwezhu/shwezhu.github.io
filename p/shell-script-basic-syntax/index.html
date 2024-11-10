@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Run a script A hello world script: 1 2 #!/usr/bin/bash echo &#34;hello world&#34; The first here specifies which shell should execute this script, if you don&rsquo;t write, the default shell on your computer will run it, check all the shells on your computer: 1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 1. Run a script A hello world script:\n1 2 #!/usr/bin/bash echo &#34;hello world&#34; The first here specifies which shell should execute this script, if you don&rsquo;t write, the default shell on your computer will run it, check all the shells on your computer:\n1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells. /bin/bash /bin/csh /bin/dash /bin/ksh /bin/sh /bin/tcsh /bin/zsh Don&rsquo;t write a wrong location of bash interpreter, /bin/nmsd below doesn&rsquo;t exist, execute this script will go wrong:\n">
 <title>Shell Script Basic Syntax</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/shell-script-basic-syntax/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Shell Script Basic Syntax">
-<meta property='og:description' content="# 1. Run a script A hello world script: 1 2 #!/usr/bin/bash echo &#34;hello world&#34; The first here specifies which shell should execute this script, if you don&rsquo;t write, the default shell on your computer will run it, check all the shells on your computer: 1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells.">
+<meta property='og:description' content=" # 1. Run a script A hello world script:\n1 2 #!/usr/bin/bash echo &#34;hello world&#34; The first here specifies which shell should execute this script, if you don&rsquo;t write, the default shell on your computer will run it, check all the shells on your computer:\n1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells. /bin/bash /bin/csh /bin/dash /bin/ksh /bin/sh /bin/tcsh /bin/zsh Don&rsquo;t write a wrong location of bash interpreter, /bin/nmsd below doesn&rsquo;t exist, execute this script will go wrong:\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/shell-script-basic-syntax/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='linux' /><meta property='article:published_time' content='2023-09-01T12:23:59&#43;00:00'/><meta property='article:modified_time' content='2023-09-01T12:23:59&#43;00:00'/>
 <meta name="twitter:title" content="Shell Script Basic Syntax">
-<meta name="twitter:description" content="# 1. Run a script A hello world script: 1 2 #!/usr/bin/bash echo &#34;hello world&#34; The first here specifies which shell should execute this script, if you don&rsquo;t write, the default shell on your computer will run it, check all the shells on your computer: 1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells.">
+<meta name="twitter:description" content=" # 1. Run a script A hello world script:\n1 2 #!/usr/bin/bash echo &#34;hello world&#34; The first here specifies which shell should execute this script, if you don&rsquo;t write, the default shell on your computer will run it, check all the shells on your computer:\n1 2 3 4 5 6 7 8 9 10 11 $ cat /etc/shells # List of acceptable shells for chpass(1). # Ftpd will not allow users to connect who are not using # one of these shells. /bin/bash /bin/csh /bin/dash /bin/ksh /bin/sh /bin/tcsh /bin/zsh Don&rsquo;t write a wrong location of bash interpreter, /bin/nmsd below doesn&rsquo;t exist, execute this script will go wrong:\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -572,30 +569,30 @@
 </div>
 </div><p>Why does this work?  Because all special characters between single quotes lose their special meaning, I find a table will help:</p>
 <div class="table-wrapper"><table>
-<thead>
-<tr>
-<th style="text-align:center">Sr.No.</th>
-<th style="text-align:center">Quoting &amp; Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">**Single quote ** All special characters between these quotes lose their special meaning.</td>
-</tr>
-<tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center"><strong>Backslash</strong> <code>\</code> Any character immediately following the backslash loses its special meaning.</td>
-</tr>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center"><strong>Backquote</strong>  Anything in between back quotes would be treated as a command and would be executed.</td>
-</tr>
-<tr>
-<td style="text-align:center">4</td>
-<td style="text-align:center">The characters <code> $</code>  and &lsquo;`&rsquo; retain their special meaning within <strong>double quotes</strong>.</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center">Sr.No.</th>
+          <th style="text-align: center">Quoting &amp; Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">1</td>
+          <td style="text-align: center">**Single quote ** All special characters between these quotes lose their special meaning.</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">2</td>
+          <td style="text-align: center"><strong>Backslash</strong> <code>\</code> Any character immediately following the backslash loses its special meaning.</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">3</td>
+          <td style="text-align: center"><strong>Backquote</strong>  Anything in between back quotes would be treated as a command and would be executed.</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">4</td>
+          <td style="text-align: center">The characters <code> $</code>  and &lsquo;`&rsquo; retain their special meaning within <strong>double quotes</strong>.</td>
+      </tr>
+  </tbody>
 </table></div>
 <h3 id="52-backqoute">
     <a href="#52-backqoute">#</a>

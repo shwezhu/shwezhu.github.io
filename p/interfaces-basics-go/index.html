@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Type Admin isn&rsquo;t *Adimin I found an interesting question on stackoverflow, this is the code: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a.name = name } OP tries to copy user1&rsquo;s value below:">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 1. Type Admin isn&rsquo;t *Adimin I found an interesting question on stackoverflow, this is the code:\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a.name = name } OP tries to copy user1&rsquo;s value below:\n1 2 3 4 5 6 7 8 9 10 11 12 13 func main() { var user1 User user1 = &amp;Admin{name:&#34;user1&#34;} fmt.Printf(&#34;User1&#39;s name: %s\\n&#34;, user1.Name()) var user2 User user2 = user1 user2.SetName(&#34;user2&#34;) fmt.Printf(&#34;User2&#39;s name: %s\\n&#34;, user2.Name()) // print: &#34;user2&#34; fmt.Printf(&#34;User1&#39;s name: %s\\n&#34;, user1.Name()) // print: &#34;user2&#34; too, How to make the user1 name does not change？ } Everything pass by value in Golang, even assignment will make a copy. Therefore, I tried something like this:\n">
 <title>Interfaces Basics - Go</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/interfaces-basics-go/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Interfaces Basics - Go">
-<meta property='og:description' content="# 1. Type Admin isn&rsquo;t *Adimin I found an interesting question on stackoverflow, this is the code: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a.name = name } OP tries to copy user1&rsquo;s value below:">
+<meta property='og:description' content=" # 1. Type Admin isn&rsquo;t *Adimin I found an interesting question on stackoverflow, this is the code:\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a.name = name } OP tries to copy user1&rsquo;s value below:\n1 2 3 4 5 6 7 8 9 10 11 12 13 func main() { var user1 User user1 = &amp;Admin{name:&#34;user1&#34;} fmt.Printf(&#34;User1&#39;s name: %s\\n&#34;, user1.Name()) var user2 User user2 = user1 user2.SetName(&#34;user2&#34;) fmt.Printf(&#34;User2&#39;s name: %s\\n&#34;, user2.Name()) // print: &#34;user2&#34; fmt.Printf(&#34;User1&#39;s name: %s\\n&#34;, user1.Name()) // print: &#34;user2&#34; too, How to make the user1 name does not change？ } Everything pass by value in Golang, even assignment will make a copy. Therefore, I tried something like this:\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/interfaces-basics-go/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:published_time' content='2023-12-07T15:12:32&#43;00:00'/><meta property='article:modified_time' content='2023-12-07T15:12:32&#43;00:00'/>
 <meta name="twitter:title" content="Interfaces Basics - Go">
-<meta name="twitter:description" content="# 1. Type Admin isn&rsquo;t *Adimin I found an interesting question on stackoverflow, this is the code: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a.name = name } OP tries to copy user1&rsquo;s value below:">
+<meta name="twitter:description" content=" # 1. Type Admin isn&rsquo;t *Adimin I found an interesting question on stackoverflow, this is the code:\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 type User interface { Name() string SetName(name string) } type Admin struct { name string } func (a *Admin) Name() string { return a.name } func (a *Admin) SetName(name string) { a.name = name } OP tries to copy user1&rsquo;s value below:\n1 2 3 4 5 6 7 8 9 10 11 12 13 func main() { var user1 User user1 = &amp;Admin{name:&#34;user1&#34;} fmt.Printf(&#34;User1&#39;s name: %s\\n&#34;, user1.Name()) var user2 User user2 = user1 user2.SetName(&#34;user2&#34;) fmt.Printf(&#34;User2&#39;s name: %s\\n&#34;, user2.Name()) // print: &#34;user2&#34; fmt.Printf(&#34;User1&#39;s name: %s\\n&#34;, user1.Name()) // print: &#34;user2&#34; too, How to make the user1 name does not change？ } Everything pass by value in Golang, even assignment will make a copy. Therefore, I tried something like this:\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 

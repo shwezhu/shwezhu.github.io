@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight request doesn&#39;t pass access control check: It does not have HTTP ok status.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 0. CORS Issue 1 Safari shows in console:\n1 2 [Error] Preflight response is not successful [Error] XMLHttpRequest cannot load [https://xxxxxxxxxxxx](https://xxxxxxxxxxxx/) due to access control checks. Chrome shows in console:\n1 Access to XMLHttpRequest at &#39;https://xxxxxxxxxxx&#39; from origin &#39;xxxx&#39; has been blocked by CORS policy: Response to preflight request doesn&#39;t pass access control check: No &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource. This means the OPTIONS calls is failing, even if all the headers (allow-origin etc&hellip;.) are available server-side.\n说到 CORS 前，需要了解“同源”概念。同源即协议、域名和端口三者完全相同。浏览器使用同源政策，目的是为了保证用户信息的安全，防止恶意的网站窃取数据，不同源的访问会受到限制（主要是 Cookie / Local Storage 访问、iframe DOM 访问、发起 HTTP 请求）。 对于 HTML 标签的外部链接如 &lt;img&gt;、&lt;audio&gt;、&lt;video&gt;、&lt;script&gt;，没有跨域问题。不过对于这样的外部链接请求不会带上 Cookie。 对于 JavaScript 发起 HTTP 请求，三要素有任何之一不匹配即是跨域，浏览器即会出于安全考虑进行限制，这时就需要使用 CORS （Cross-origin resource sharing）。CORS 主要由服务器端实现，对用户透明。 Source: https://ogr.xyz/p/js-cors/\n">
 <title>Cross-origin Request HTTP</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/cross-origin-request-http/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Cross-origin Request HTTP">
-<meta property='og:description' content="# 1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight request doesn&#39;t pass access control check: It does not have HTTP ok status.">
+<meta property='og:description' content=" # 0. CORS Issue 1 Safari shows in console:\n1 2 [Error] Preflight response is not successful [Error] XMLHttpRequest cannot load [https://xxxxxxxxxxxx](https://xxxxxxxxxxxx/) due to access control checks. Chrome shows in console:\n1 Access to XMLHttpRequest at &#39;https://xxxxxxxxxxx&#39; from origin &#39;xxxx&#39; has been blocked by CORS policy: Response to preflight request doesn&#39;t pass access control check: No &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource. This means the OPTIONS calls is failing, even if all the headers (allow-origin etc&hellip;.) are available server-side.\n说到 CORS 前，需要了解“同源”概念。同源即协议、域名和端口三者完全相同。浏览器使用同源政策，目的是为了保证用户信息的安全，防止恶意的网站窃取数据，不同源的访问会受到限制（主要是 Cookie / Local Storage 访问、iframe DOM 访问、发起 HTTP 请求）。 对于 HTML 标签的外部链接如 &lt;img&gt;、&lt;audio&gt;、&lt;video&gt;、&lt;script&gt;，没有跨域问题。不过对于这样的外部链接请求不会带上 Cookie。 对于 JavaScript 发起 HTTP 请求，三要素有任何之一不匹配即是跨域，浏览器即会出于安全考虑进行限制，这时就需要使用 CORS （Cross-origin resource sharing）。CORS 主要由服务器端实现，对用户透明。 Source: https://ogr.xyz/p/js-cors/\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/cross-origin-request-http/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='http' /><meta property='article:published_time' content='2023-10-06T20:28:50&#43;00:00'/><meta property='article:modified_time' content='2023-10-06T20:28:50&#43;00:00'/>
 <meta name="twitter:title" content="Cross-origin Request HTTP">
-<meta name="twitter:description" content="# 1. CORS issue My frontend application is deployed on http://localhost:5173, and backend application is deployed on http://localhost:8080. The frontend application sends HTTP requests to the backend application through fetch, but it fails with the following error: 1 2 3 4 # 显然没有服务器处理 OPTIONS 请求 Access to fetch at &#39;http://localhost:8080/&#39; from origin &#39;http://localhost:5173&#39; has been blocked by CORS policy: Response to preflight request doesn&#39;t pass access control check: It does not have HTTP ok status.">
+<meta name="twitter:description" content=" # 0. CORS Issue 1 Safari shows in console:\n1 2 [Error] Preflight response is not successful [Error] XMLHttpRequest cannot load [https://xxxxxxxxxxxx](https://xxxxxxxxxxxx/) due to access control checks. Chrome shows in console:\n1 Access to XMLHttpRequest at &#39;https://xxxxxxxxxxx&#39; from origin &#39;xxxx&#39; has been blocked by CORS policy: Response to preflight request doesn&#39;t pass access control check: No &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource. This means the OPTIONS calls is failing, even if all the headers (allow-origin etc&hellip;.) are available server-side.\n说到 CORS 前，需要了解“同源”概念。同源即协议、域名和端口三者完全相同。浏览器使用同源政策，目的是为了保证用户信息的安全，防止恶意的网站窃取数据，不同源的访问会受到限制（主要是 Cookie / Local Storage 访问、iframe DOM 访问、发起 HTTP 请求）。 对于 HTML 标签的外部链接如 &lt;img&gt;、&lt;audio&gt;、&lt;video&gt;、&lt;script&gt;，没有跨域问题。不过对于这样的外部链接请求不会带上 Cookie。 对于 JavaScript 发起 HTTP 请求，三要素有任何之一不匹配即是跨域，浏览器即会出于安全考虑进行限制，这时就需要使用 CORS （Cross-origin resource sharing）。CORS 主要由服务器端实现，对用户透明。 Source: https://ogr.xyz/p/js-cors/\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -251,7 +248,8 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#1-cors-issue">1. CORS issue</a></li>
+    <li><a href="#0-cors-issue-1">0. CORS Issue 1</a></li>
+    <li><a href="#1-cors-issue-2">1. CORS Issue 2</a></li>
     <li><a href="#2-how-to-fix-cors-issue">2. How to fix CORS issue</a>
       <ol>
         <li><a href="#21-简单场景">2.1. 简单场景</a></li>
@@ -338,9 +336,40 @@
     <section class="article-content">
     
     
-    <h2 id="1-cors-issue">
-    <a href="#1-cors-issue">#</a>
-    1. CORS issue
+    <h2 id="0-cors-issue-1">
+    <a href="#0-cors-issue-1">#</a>
+    0. CORS Issue 1
+</h2><p>Safari shows in console:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">Error</span><span class="p">]</span> <span class="n">Preflight</span> <span class="n">response</span> <span class="n">is</span> <span class="ow">not</span> <span class="n">successful</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">Error</span><span class="p">]</span> <span class="n">XMLHttpRequest</span> <span class="n">cannot</span> <span class="nb">load</span> <span class="p">[</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">xxxxxxxxxxxx</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">xxxxxxxxxxxx</span><span class="o">/</span><span class="p">)</span> <span class="n">due</span> <span class="n">to</span> <span class="n">access</span> <span class="n">control</span> <span class="n">checks</span><span class="o">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Chrome shows in console:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Access to XMLHttpRequest at &#39;https://xxxxxxxxxxx&#39; from origin &#39;xxxx&#39; has been blocked by CORS policy: Response to preflight request doesn&#39;t pass access control check: No &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This means the OPTIONS calls is failing, even if all the headers (allow-origin etc&hellip;.) are available server-side.</p>
+<blockquote>
+<p>说到 CORS 前，需要了解“同源”概念。同源即协议、域名和端口三者完全相同。浏览器使用同源政策，目的是为了保证用户信息的安全，防止恶意的网站窃取数据，不同源的访问会受到限制（主要是 Cookie / Local Storage 访问、iframe DOM 访问、发起 HTTP 请求）。
+对于 HTML 标签的外部链接如 <code>&lt;img&gt;、&lt;audio&gt;、&lt;video&gt;、&lt;script&gt;</code>，没有跨域问题。不过对于这样的外部链接请求不会带上 Cookie。
+对于 JavaScript 发起 HTTP 请求，三要素有任何之一不匹配即是跨域，浏览器即会出于安全考虑进行限制，这时就需要使用 CORS （Cross-origin resource sharing）。CORS 主要由服务器端实现，对用户透明。
+Source: <a class="link" href="https://ogr.xyz/p/js-cors/"  target="_blank" rel="noopener"
+    >https://ogr.xyz/p/js-cors/</a></p>
+</blockquote>
+<h2 id="1-cors-issue-2">
+    <a href="#1-cors-issue-2">#</a>
+    1. CORS Issue 2
 </h2><p>My frontend application is deployed on <code>http://localhost:5173</code>, and backend application is deployed on <code>http://localhost:8080</code>. The frontend application sends HTTP requests to the backend application through <code>fetch</code>, but it fails with the following error:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -350,7 +379,7 @@
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 显然没有服务器处理 OPTIONS 请求</span>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 显然服务器没有处理 OPTIONS 请求</span>
 </span></span><span class="line"><span class="cl">Access to fetch at <span class="s1">&#39;http://localhost:8080/&#39;</span> from origin <span class="s1">&#39;http://localhost:5173&#39;</span> has been blocked by CORS policy: Response to preflight request doesn<span class="s1">&#39;t pass access control check: It does not have HTTP ok status. 
 </span></span></span><span class="line"><span class="cl"><span class="s1">
 </span></span></span><span class="line"><span class="cl"><span class="s1">Access to fetch at &#39;</span>http://localhost:8080/api/chat<span class="s1">&#39; from origin &#39;</span>http://localhost:5173<span class="err">&#39;</span> has been blocked by CORS policy: Request header field content-type is not allowed by Access-Control-Allow-Headers in preflight response.
@@ -429,6 +458,8 @@
     >Cross-Origin Resource Sharing (CORS) - HTTP | MDN</a></p>
 <p><a class="link" href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy"  target="_blank" rel="noopener"
     >Same-origin policy - Web security | MDN</a></p>
+<p><a class="link" href="https://ogr.xyz/p/js-cors/"  target="_blank" rel="noopener"
+    >JavaScript CORS 跨域请求</a></p>
 
 </section>
 

@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Basic concepts A map value is a pointer to a runtime.hmap structure, when you write the statement: 1 m := make(map[int]int) The compiler replaces it with a call to runtime.makemap, which has the signature 1 2 3 4 5 6 // makemap implements a Go map creation make(map[k]v, hint) // If the compiler has determined that the map or the first bucket // can be created on the stack, h and/or bucket may be non-nil.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 1. Basic concepts A map value is a pointer to a runtime.hmap structure, when you write the statement:\n1 m := make(map[int]int) The compiler replaces it with a call to runtime.makemap, which has the signature\n1 2 3 4 5 6 // makemap implements a Go map creation make(map[k]v, hint) // If the compiler has determined that the map or the first bucket // can be created on the stack, h and/or bucket may be non-nil. // If h != nil, the map can be created directly in h. // If bucket != nil, bucket can be used as the first bucket. func makemap(t *maptype, hint int64, h *hmap, bucket unsafe.Pointer) *hmap 1 2 3 4 5 func main() { var m map[int]int var p uintptr fmt.Println(unsafe.Sizeof(m), unsafe.Sizeof(p)) // 8 8 (linux/amd64) } ⚠️ Map value just a pointer, therefore, we don&rsquo;t need to pass a pointer to a map for better performance. This is similar to slices, slice just a struct that has a pointer element which pointer to an underlaying array, so we don&rsquo;t need to set a pointer of slice as a paramter. This also applys function&rsquo;s return type.\n">
 <title>map - Go</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/map-go/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="map - Go">
-<meta property='og:description' content="# 1. Basic concepts A map value is a pointer to a runtime.hmap structure, when you write the statement: 1 m := make(map[int]int) The compiler replaces it with a call to runtime.makemap, which has the signature 1 2 3 4 5 6 // makemap implements a Go map creation make(map[k]v, hint) // If the compiler has determined that the map or the first bucket // can be created on the stack, h and/or bucket may be non-nil.">
+<meta property='og:description' content=" # 1. Basic concepts A map value is a pointer to a runtime.hmap structure, when you write the statement:\n1 m := make(map[int]int) The compiler replaces it with a call to runtime.makemap, which has the signature\n1 2 3 4 5 6 // makemap implements a Go map creation make(map[k]v, hint) // If the compiler has determined that the map or the first bucket // can be created on the stack, h and/or bucket may be non-nil. // If h != nil, the map can be created directly in h. // If bucket != nil, bucket can be used as the first bucket. func makemap(t *maptype, hint int64, h *hmap, bucket unsafe.Pointer) *hmap 1 2 3 4 5 func main() { var m map[int]int var p uintptr fmt.Println(unsafe.Sizeof(m), unsafe.Sizeof(p)) // 8 8 (linux/amd64) } ⚠️ Map value just a pointer, therefore, we don&rsquo;t need to pass a pointer to a map for better performance. This is similar to slices, slice just a struct that has a pointer element which pointer to an underlaying array, so we don&rsquo;t need to set a pointer of slice as a paramter. This also applys function&rsquo;s return type.\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/map-go/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:published_time' content='2023-12-06T23:43:50&#43;00:00'/><meta property='article:modified_time' content='2023-12-06T23:43:50&#43;00:00'/>
 <meta name="twitter:title" content="map - Go">
-<meta name="twitter:description" content="# 1. Basic concepts A map value is a pointer to a runtime.hmap structure, when you write the statement: 1 m := make(map[int]int) The compiler replaces it with a call to runtime.makemap, which has the signature 1 2 3 4 5 6 // makemap implements a Go map creation make(map[k]v, hint) // If the compiler has determined that the map or the first bucket // can be created on the stack, h and/or bucket may be non-nil.">
+<meta name="twitter:description" content=" # 1. Basic concepts A map value is a pointer to a runtime.hmap structure, when you write the statement:\n1 m := make(map[int]int) The compiler replaces it with a call to runtime.makemap, which has the signature\n1 2 3 4 5 6 // makemap implements a Go map creation make(map[k]v, hint) // If the compiler has determined that the map or the first bucket // can be created on the stack, h and/or bucket may be non-nil. // If h != nil, the map can be created directly in h. // If bucket != nil, bucket can be used as the first bucket. func makemap(t *maptype, hint int64, h *hmap, bucket unsafe.Pointer) *hmap 1 2 3 4 5 func main() { var m map[int]int var p uintptr fmt.Println(unsafe.Sizeof(m), unsafe.Sizeof(p)) // 8 8 (linux/amd64) } ⚠️ Map value just a pointer, therefore, we don&rsquo;t need to pass a pointer to a map for better performance. This is similar to slices, slice just a struct that has a pointer element which pointer to an underlaying array, so we don&rsquo;t need to set a pointer of slice as a paramter. This also applys function&rsquo;s return type.\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 

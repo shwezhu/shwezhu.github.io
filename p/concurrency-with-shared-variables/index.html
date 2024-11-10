@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.\n">
 <title>Concurrency with Shared Variables</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/concurrency-with-shared-variables/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Concurrency with Shared Variables">
-<meta property='og:description' content="# 1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.">
+<meta property='og:description' content=" # 1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/concurrency-with-shared-variables/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:tag' content='concurrency' /><meta property='article:published_time' content='2023-08-24T19:16:59&#43;00:00'/><meta property='article:modified_time' content='2023-08-24T19:16:59&#43;00:00'/>
 <meta name="twitter:title" content="Concurrency with Shared Variables">
-<meta name="twitter:description" content="# 1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.">
+<meta name="twitter:description" content=" # 1. Concurrency Safe In a program with two or more goroutines, the steps within each goroutine happen in the familiar order, but in general we don’t know whether an event x in one goroutine happens before an event y in another goroutine, or happens after it, or is simultaneous with it. When we cannot confidently say that one event happens before the other, then the events x and y are concurrent.\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -511,38 +508,38 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><div class="table-wrapper"><table>
-<thead>
-<tr>
-<th style="text-align:center">Mutex</th>
-<th style="text-align:center">Semaphore</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">A mutex is an object.</td>
-<td style="text-align:center">A semaphore is an integer.</td>
-</tr>
-<tr>
-<td style="text-align:center">Mutex works upon the locking mechanism.</td>
-<td style="text-align:center">Semaphore uses signaling mechanism</td>
-</tr>
-<tr>
-<td style="text-align:center">Operations on mutex:LockUnlock</td>
-<td style="text-align:center">Operation on semaphore:WaitSignal</td>
-</tr>
-<tr>
-<td style="text-align:center">Mutex doesn’t have any subtypes.</td>
-<td style="text-align:center">Semaphore is of two types:Counting SemaphoreBinary Semaphore</td>
-</tr>
-<tr>
-<td style="text-align:center">A mutex can only be modified by the process that is requesting or releasing a resource.</td>
-<td style="text-align:center">Semaphore work with two atomic operations (Wait, signal) which can modify it.</td>
-</tr>
-<tr>
-<td style="text-align:center">If the mutex is locked then the process needs to wait in the process queue, and mutex can only be accessed once the lock is released.</td>
-<td style="text-align:center">If the process needs a resource, and no resource is free. So, the process needs to perform a wait operation until the semaphore value is greater than zero.</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center">Mutex</th>
+          <th style="text-align: center">Semaphore</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">A mutex is an object.</td>
+          <td style="text-align: center">A semaphore is an integer.</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Mutex works upon the locking mechanism.</td>
+          <td style="text-align: center">Semaphore uses signaling mechanism</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Operations on mutex:LockUnlock</td>
+          <td style="text-align: center">Operation on semaphore:WaitSignal</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Mutex doesn’t have any subtypes.</td>
+          <td style="text-align: center">Semaphore is of two types:Counting SemaphoreBinary Semaphore</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">A mutex can only be modified by the process that is requesting or releasing a resource.</td>
+          <td style="text-align: center">Semaphore work with two atomic operations (Wait, signal) which can modify it.</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">If the mutex is locked then the process needs to wait in the process queue, and mutex can only be accessed once the lock is released.</td>
+          <td style="text-align: center">If the process needs a resource, and no resource is free. So, the process needs to perform a wait operation until the semaphore value is greater than zero.</td>
+      </tr>
+  </tbody>
 </table></div>
 <h3 id="32-mutual-exclusion-syncmutex">
     <a href="#32-mutual-exclusion-syncmutex">#</a>

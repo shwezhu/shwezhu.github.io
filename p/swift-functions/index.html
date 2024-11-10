@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="# 1. Optional Parameters Swift中可选参数的行为很容易误导人, 让人错误的以为可选参数在调用函数的时候可以不提供, 然而并不是这样, 可选参数只是允许该参数值为 nil, 即使该值是 nil, 也必须显示提供. 1 2 3 4 5 6 7 8 9 10 11 12 // withGreeting: external parameter name (or argument label) func greet(name: String, withGreeting greeting: String?) { if let greeting = greeting { print(&#34;\\(greeting), \\(name)!&#34;) } else { print(&#34;\\(name)!&#34;) } } // 即使 withGreeting 为 nil, 也必须提供 greet(name: &#34;Alice&#34;, withGreeting: nil) // No greeting: &#34;Alice!&#34; greet(name: &#34;Bob&#34;, withGreeting: &#34;Hi&#34;) // Uses the provided greeting: &#34;Hi, Bob!">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" # 1. Optional Parameters Swift中可选参数的行为很容易误导人, 让人错误的以为可选参数在调用函数的时候可以不提供, 然而并不是这样, 可选参数只是允许该参数值为 nil, 即使该值是 nil, 也必须显示提供.\n1 2 3 4 5 6 7 8 9 10 11 12 // withGreeting: external parameter name (or argument label) func greet(name: String, withGreeting greeting: String?) { if let greeting = greeting { print(&#34;\\(greeting), \\(name)!&#34;) } else { print(&#34;\\(name)!&#34;) } } // 即使 withGreeting 为 nil, 也必须提供 greet(name: &#34;Alice&#34;, withGreeting: nil) // No greeting: &#34;Alice!&#34; greet(name: &#34;Bob&#34;, withGreeting: &#34;Hi&#34;) // Uses the provided greeting: &#34;Hi, Bob!&#34; &ldquo;if let greeting = greeting&rdquo; 这不是这个赋值语句吗, 怎么能用来判断呢?\n">
 <title>Swift Functions</title>
 
 <link rel='canonical' href='https://blog.yorforger.cc/p/swift-functions/'>
 
 <link rel="stylesheet" href="/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css"><meta property='og:title' content="Swift Functions">
-<meta property='og:description' content="# 1. Optional Parameters Swift中可选参数的行为很容易误导人, 让人错误的以为可选参数在调用函数的时候可以不提供, 然而并不是这样, 可选参数只是允许该参数值为 nil, 即使该值是 nil, 也必须显示提供. 1 2 3 4 5 6 7 8 9 10 11 12 // withGreeting: external parameter name (or argument label) func greet(name: String, withGreeting greeting: String?) { if let greeting = greeting { print(&#34;\\(greeting), \\(name)!&#34;) } else { print(&#34;\\(name)!&#34;) } } // 即使 withGreeting 为 nil, 也必须提供 greet(name: &#34;Alice&#34;, withGreeting: nil) // No greeting: &#34;Alice!&#34; greet(name: &#34;Bob&#34;, withGreeting: &#34;Hi&#34;) // Uses the provided greeting: &#34;Hi, Bob!">
+<meta property='og:description' content=" # 1. Optional Parameters Swift中可选参数的行为很容易误导人, 让人错误的以为可选参数在调用函数的时候可以不提供, 然而并不是这样, 可选参数只是允许该参数值为 nil, 即使该值是 nil, 也必须显示提供.\n1 2 3 4 5 6 7 8 9 10 11 12 // withGreeting: external parameter name (or argument label) func greet(name: String, withGreeting greeting: String?) { if let greeting = greeting { print(&#34;\\(greeting), \\(name)!&#34;) } else { print(&#34;\\(name)!&#34;) } } // 即使 withGreeting 为 nil, 也必须提供 greet(name: &#34;Alice&#34;, withGreeting: nil) // No greeting: &#34;Alice!&#34; greet(name: &#34;Bob&#34;, withGreeting: &#34;Hi&#34;) // Uses the provided greeting: &#34;Hi, Bob!&#34; &ldquo;if let greeting = greeting&rdquo; 这不是这个赋值语句吗, 怎么能用来判断呢?\n">
 <meta property='og:url' content='https://blog.yorforger.cc/p/swift-functions/'>
 <meta property='og:site_name' content='David&#39;s Blogs'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-05-26T16:03:35&#43;00:00'/><meta property='article:modified_time' content='2024-05-26T16:03:35&#43;00:00'/>
 <meta name="twitter:title" content="Swift Functions">
-<meta name="twitter:description" content="# 1. Optional Parameters Swift中可选参数的行为很容易误导人, 让人错误的以为可选参数在调用函数的时候可以不提供, 然而并不是这样, 可选参数只是允许该参数值为 nil, 即使该值是 nil, 也必须显示提供. 1 2 3 4 5 6 7 8 9 10 11 12 // withGreeting: external parameter name (or argument label) func greet(name: String, withGreeting greeting: String?) { if let greeting = greeting { print(&#34;\\(greeting), \\(name)!&#34;) } else { print(&#34;\\(name)!&#34;) } } // 即使 withGreeting 为 nil, 也必须提供 greet(name: &#34;Alice&#34;, withGreeting: nil) // No greeting: &#34;Alice!&#34; greet(name: &#34;Bob&#34;, withGreeting: &#34;Hi&#34;) // Uses the provided greeting: &#34;Hi, Bob!">
+<meta name="twitter:description" content=" # 1. Optional Parameters Swift中可选参数的行为很容易误导人, 让人错误的以为可选参数在调用函数的时候可以不提供, 然而并不是这样, 可选参数只是允许该参数值为 nil, 即使该值是 nil, 也必须显示提供.\n1 2 3 4 5 6 7 8 9 10 11 12 // withGreeting: external parameter name (or argument label) func greet(name: String, withGreeting greeting: String?) { if let greeting = greeting { print(&#34;\\(greeting), \\(name)!&#34;) } else { print(&#34;\\(name)!&#34;) } } // 即使 withGreeting 为 nil, 也必须提供 greet(name: &#34;Alice&#34;, withGreeting: nil) // No greeting: &#34;Alice!&#34; greet(name: &#34;Bob&#34;, withGreeting: &#34;Hi&#34;) // Uses the provided greeting: &#34;Hi, Bob!&#34; &ldquo;if let greeting = greeting&rdquo; 这不是这个赋值语句吗, 怎么能用来判断呢?\n">
     <link rel="shortcut icon" href="/favicon.png" />
-
-  
-
 
     </head>
     <body class="
@@ -61,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_huc82d7b839fc53b7a5c86bd3cdfedcac6_167937_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu13008327664198534168.png" width="300"
                             height="274" class="site-logo" loading="lazy" alt="Avatar">
                     
                 

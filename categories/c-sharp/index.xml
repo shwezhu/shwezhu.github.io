@@ -50,17 +50,31 @@
 </description>
         </item>
         <item>
-        <title>Asp .Net Core Basics</title>
-        <link>https://blog.yorforger.cc/p/asp-.net-core-basics/</link>
+        <title>Asp .Net Core Model Binding</title>
+        <link>https://blog.yorforger.cc/p/asp-.net-core-model-binding/</link>
         <pubDate>Fri, 26 Jul 2024 19:42:36 +0000</pubDate>
         
-        <guid>https://blog.yorforger.cc/p/asp-.net-core-basics/</guid>
-        <description>&lt;h2 id=&#34;model-binding&#34;&gt;
-    &lt;a href=&#34;#model-binding&#34;&gt;#&lt;/a&gt;
-    Model Binding
-&lt;/h2&gt;&lt;h3 id=&#34;1-complex-type&#34;&gt;
-    &lt;a href=&#34;#1-complex-type&#34;&gt;#&lt;/a&gt;
-    1. Complex Type
+        <guid>https://blog.yorforger.cc/p/asp-.net-core-model-binding/</guid>
+        <description>&lt;h3 id=&#34;1-data-source&#34;&gt;
+    &lt;a href=&#34;#1-data-source&#34;&gt;#&lt;/a&gt;
+    1. Data Source
+&lt;/h3&gt;&lt;p&gt;By default, model binding gets data in the form of key-value pairs from the following sources in an HTTP request:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Form fields (case insensitive)&lt;/li&gt;
+&lt;li&gt;The request body (For [controllers that have the &lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-8.0#binding-source-parameter-inference&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;ApiController] attribute&lt;/a&gt;.)&lt;/li&gt;
+&lt;li&gt;Route data&lt;/li&gt;
+&lt;li&gt;Query string parameters&lt;/li&gt;
+&lt;li&gt;Uploaded files&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;2-simple-types&#34;&gt;
+    &lt;a href=&#34;#2-simple-types&#34;&gt;#&lt;/a&gt;
+    2. Simple types
+&lt;/h3&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-8.0#simple-types&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Model Binding in ASP.NET Core | Microsoft Learn&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3-complex-type&#34;&gt;
+    &lt;a href=&#34;#3-complex-type&#34;&gt;#&lt;/a&gt;
+    3. Complex Type
 &lt;/h3&gt;&lt;p&gt;A complex type must have a &lt;strong&gt;public default constructor&lt;/strong&gt; and &lt;strong&gt;public writable properties&lt;/strong&gt; to bind. When model binding occurs, the class is instantiated using the public default constructor.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt;  When you use the &lt;code&gt;[ApiController]&lt;/code&gt; attribute, ASP.NET Core automatically handles model validation for you. If the model state is invalid, it returns a 400 Bad Request response with validation errors before your action method is even executed. Therefore, &lt;code&gt;if (!ModelState.IsValid){...}&lt;/code&gt; is not needed in this case.&lt;/p&gt;
@@ -106,9 +120,9 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;h3 id=&#34;11-no-public-writable-properties&#34;&gt;
-    &lt;a href=&#34;#11-no-public-writable-properties&#34;&gt;#&lt;/a&gt;
-    1.1. No &lt;code&gt;public writable properties&lt;/code&gt;
+&lt;/div&gt;&lt;h3 id=&#34;31-no-public-writable-properties&#34;&gt;
+    &lt;a href=&#34;#31-no-public-writable-properties&#34;&gt;#&lt;/a&gt;
+    3.1. No &lt;code&gt;public writable properties&lt;/code&gt;
 &lt;/h3&gt;&lt;p&gt;We make a post request and get a empty json response:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
@@ -133,7 +147,8 @@
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-c#&#34; data-lang=&#34;c#&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;Cat&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Age&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;Why? Because class &lt;code&gt;Cat&lt;/code&gt; has two fields no &lt;strong&gt;public writable properties&lt;/strong&gt;. So if we change our code like this:&lt;/p&gt;
+&lt;/div&gt;&lt;p&gt;Why? Because class &lt;code&gt;Cat&lt;/code&gt; has two fields not &lt;strong&gt;public writable properties&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;If we change our code like this:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
@@ -185,9 +200,9 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;https://tools.ietf.org/html/rfc9110#section-15.5.1&amp;#34;&lt;/span&gt;,&lt;span class=&#34;s2&#34;&gt;&amp;#34;title&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;One or more validation errors occurred.&amp;#34;&lt;/span&gt;,&lt;span class=&#34;s2&#34;&gt;&amp;#34;status&amp;#34;&lt;/span&gt;:400,&lt;span class=&#34;s2&#34;&gt;&amp;#34;errors&amp;#34;&lt;/span&gt;:&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;The Name field is required.&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]}&lt;/span&gt;,&lt;span class=&#34;s2&#34;&gt;&amp;#34;traceId&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;00-8ac6e0182eaa34cbbfa93a2ea031d780-220d5f992ad3ab26-00&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;h3 id=&#34;12-no-public-default-constructor&#34;&gt;
-    &lt;a href=&#34;#12-no-public-default-constructor&#34;&gt;#&lt;/a&gt;
-    1.2. No &lt;code&gt;public default constructor&lt;/code&gt;
+&lt;/div&gt;&lt;h3 id=&#34;32-no-public-default-constructor&#34;&gt;
+    &lt;a href=&#34;#32-no-public-default-constructor&#34;&gt;#&lt;/a&gt;
+    3.2. No &lt;code&gt;public default constructor&lt;/code&gt;
 &lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
@@ -226,23 +241,6 @@
 &lt;li&gt;In addition to missing required properties causing serialization to fail, missing non-nullable properties will also cause serialization to fail. If fails, client will get error message for 500 bad request.&lt;/li&gt;
 &lt;li&gt;Furthermore, fields will be ignored.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;2-simple-types&#34;&gt;
-    &lt;a href=&#34;#2-simple-types&#34;&gt;#&lt;/a&gt;
-    2. Simple types
-&lt;/h3&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-8.0#simple-types&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;Model Binding in ASP.NET Core | Microsoft Learn&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&#34;3-data-source&#34;&gt;
-    &lt;a href=&#34;#3-data-source&#34;&gt;#&lt;/a&gt;
-    3. Data Source
-&lt;/h3&gt;&lt;p&gt;By default, model binding gets data in the form of key-value pairs from the following sources in an HTTP request:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Form fields&lt;/li&gt;
-&lt;li&gt;The request body (For [controllers that have the &lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-8.0#binding-source-parameter-inference&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;ApiController] attribute&lt;/a&gt;.)&lt;/li&gt;
-&lt;li&gt;Route data&lt;/li&gt;
-&lt;li&gt;Query string parameters&lt;/li&gt;
-&lt;li&gt;Uploaded files&lt;/li&gt;
-&lt;/ol&gt;
 </description>
         </item>
         <item>
