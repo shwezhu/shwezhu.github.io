@@ -10,6 +10,10 @@ typora-root-url: ../../../static
 
 ## 1. Main Axis vs Cross Axis - Flex
 
+> When elements are placed in a Flexbox container, they **lose** their original block and inline layout characteristics, with their sizing and positioning controlled by Flexbox properties. 
+>
+> flexbox 和 block container 是不同的概念, 即块级元素和inline元素重在强调 他们会占多大空间, 如何占 (一行还是可以并列) 而felx box在于强调它里面的元素是怎么安排的. (Flexbox and block containers are different concepts. Block and inline elements mainly **emphasize** the space they occupy and how they occupy it (whether they take up a full line or can be inline). Flexbox, on the other hand, focuses on how the elements inside are arranged.)
+
 ```jsx
 <div className="flex flex-col">
     ...
@@ -23,7 +27,7 @@ typora-root-url: ../../../static
 > 为什么使用 class="flex flex-row" 只是用 class="flex-row" 不行吗?
 > `flex` 确保元素变成一个 Flex 容器。`flex-row` 确保该容器内的项目沿着水平轴排列。
 
-另外注意, **flex items 会自动填充满其 flex container 的沿着交叉轴方向的空间**, 也就是说, flex items 的宽度或高度会等于交叉轴的长度, 具体是高度还是宽度, 取决于主轴方向, 因为交叉轴方向就是主轴方向的垂直方向. 
+另外注意, **flex items 会自动填充满其 flex container 的沿着交叉轴方向的空间**, 也就是说, flex items 的宽度或高度会等于交叉轴的长度, 具体是高度还是宽度, 取决于主轴方向, **交叉轴方向就是主轴方向的垂直方向**. 
 
 根据下面这个例子, 因为主轴方向是水平, 因此 flex items 的高度会等于 flex container 的高度, 至于宽度, 则是由其内容决定的 (flex-grow 默认值为 0).  
 

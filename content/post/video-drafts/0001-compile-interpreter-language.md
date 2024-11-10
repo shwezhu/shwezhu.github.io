@@ -11,9 +11,17 @@ tags:
 
 
 
+Familiarity with web technologies.
 
+Experience with full stack development through work or projects.
 
+Proficiency in a backend framework (e.g., Laravel, Ruby on Rails, Node.js).
 
+Proficiency in a frontend framework (e.g., Vue, React, Angular).
+
+Familiarity with writing unit tests and integration tests.
+
+Experience with database systems.
 
 
 
