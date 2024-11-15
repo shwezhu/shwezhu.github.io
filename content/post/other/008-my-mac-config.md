@@ -7,86 +7,67 @@ tags:
  - other
 ---
 
+**Transfer Arc Browser**
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/11/d8ebc97b5bb6c427f6b2ce9cca72947b.jpg)
+
+**Spotlight Settings**
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/11/334f19d638ada2230c0981846da8fd4d.jpg)
+
+**Shortcuts:**
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/11/23345ee633c3dd55af79b24fd1bf7bec.jpg)
+
 ## 1. iTerm2
 
-### 1.1. iTerm2 theme settings
+1. Setting themes: go to settings: `Appearance > General > Theme: Minimal`
 
-iTerm2 Preferences: `Appearance > General > Theme: Minimal`
+2. Remove annoying outlines on tabs, go to settings: `Advanced`
 
-iTerm2 Preferences: `Advanced`
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/11/060dccf96c2b61a6e4ceaf7ce3650931.png)
 
-![aa](/008-my-mac-config/aa.png)
-
-iTerm2 — Snazzy theme
+3. Setting color to Snazzy:
 
 ```shell
 $ curl -Ls https://raw.githubusercontent.com/sindresorhus/iterm2-snazzy/main/Snazzy.itermcolors > /tmp/Snazzy.itermcolors && open /tmp/Snazzy.itermcolors
 ```
 
-Configure iTerm2 color theme: iTerm2 Preferences:` Profiles > Colors > Color Presets: Snazzy`
+Then go to settings:` Profiles > Colors > Color Presets: Snazzy`
 
-### 1.2. Install Oh My Zsh and zplug
+4. Install Oh My Zsh
 
 ```shell
 # Oh My Zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-# zplug
-brew install zplug
 ```
 
-`.zshrc` file:
-
-```
-# ~.zshrc
-export ZSH=~/.oh-my-zsh
-# disable oh-my-zsh themes for pure prompt
-ZSH_THEME=""
-source $ZSH/oh-my-zsh.sh
-export ZPLUG_HOME=/opt/homebrew/opt/zplug
-source $ZPLUG_HOME/init.zsh
-zplug "mafredri/zsh-async", from:github
-zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
-zplug load
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-```
-
-## 1.3. syntax highlighting & auto suggestions
+5. syntax highlighting & auto suggestions
 
 ```shell
-zplug "zdharma/fast-syntax-highlighting", as:plugin, defer:2
+git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
-zplug "zsh-users/zsh-autosuggestions", as:plugin, defer:2
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 ```
 
-Then reload your iTerm2, you will see the change after download.
+Edit `.zshrc` file, find `plugins=(git)`, append two plugins:
 
-Reference: [Beautify your iTerm2 and prompt 💋 | by Steven Chim | airfrance-klm | Medium](https://medium.com/airfrance-klm/beautify-your-iterm2-and-prompt-40f148761a49)
+```bash
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+```
 
-## 2. Clean 
-
-[PrettyClean](https://www.prettyclean.cc/zh)
-
-[mac-cleanup-sh](https://github.com/mac-cleanup/mac-cleanup-sh) 
-
-## 3. Nvim
-
-### install
+## 2. Nvim
 
 ```shell
 brew install neovim
 echo "alias vim='nvim'" >> ~/.zshrc
-git clone -b v2.0 https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
-# for live grep search
-brew install ripgrep
+echo "alias vi='nvim'" >> ~/.zshrc
+
+# Install NvChad, it's a starter branch, only clone the latest commit
+git clone https://github.com/NvChad/starter ~/.config/nvim --depth 1 && nvim
 ```
 
-### font
+### Font
 
 Change font of iTerm2 otherwise you will see some weird characters in nvim.
 
@@ -99,21 +80,34 @@ Then set the font in iTerm2 Preferences: `Profiles > Text > Font: jetbrains-mono
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/91da077a280e806eb70e5fdc26b4a8ed.jpg)
 
-Learn more: [How to Install Nerd Fonts on mac](https://www.geekbits.io/how-to-install-nerd-fonts-on-mac/)
+### Theme
 
-### theme
+Chnage the theme of nvim, enter nvim and type `space` + `t` + `h`, choose ***onenord*** theme.
 
-Chnage the theme of nvim, enter nvim and type `space` + `t` + `h`, choose *onenord* theme.
+### Highlight & spell checking
 
-### Highlight
+In vim command, execute the following command(install once, no need to do this every time): 
 
 ```shell
 :TSInstall markdown
 :TSInstall markdown_inline
-:setlocal spell spelllang=en_us, cjk spellcapcheck=""
 ```
 
-### Plugins
+Go to `.config/nvim/init.lua`:
+
+```lua
+-- Spelling Checking
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.spell = true -- current buffer only
+    vim.opt_local.spelllang = "en_us,cjk" -- english, chinese
+    vim.opt_local.spellcapcheck = ""
+  end
+})
+```
+
+### Plugins AutoSave
 
 Edit `~/.config/nvim/lua/custom/chadrc.lua`:
 
@@ -130,66 +124,36 @@ return M
 Add new file `~/.config/nvim/lua/custom/plugins.lua`:
 
 ```lua
+-- 自定义插件列表
 local plugins = {
   {
+    -- 自动保存插件
     "Pocco81/auto-save.nvim",
+    -- lazy = false 表示立即加载插件,而不是懒加载
     lazy = false,
-	  config = function()
-		      require("auto-save").setup {
-			    -- your config goes here
-			    -- or just leave it empty :)
-		      }
-	  end,
-  }
-}
-
-return plugins
-```
-
-### Shortcuts
-
-https://docs.rockylinux.org/books/nvchad/nvchad_ui/nvchad_ui/
-
-### Final
-
-`custom/chadrc.lua`:
-```lua
----@type ChadrcConfig
-local M = {}
-
-M.ui = { theme = 'onenord' }
-
-M.plugins = 'custom.plugins'
-
-return M
-```
-
-`custom/plugins.lua`:
-```lua
-local plugins = {
-  {
-    "Pocco81/auto-save.nvim",
-    lazy = false,
+    -- 插件配置函数
     config = function()
+        -- 加载并设置 auto-save 插件
         require("auto-save").setup {
-			    -- your config goes here
-			    -- or just leave it empty :)
-		    }
-	  end,
-  },
-  {
-    "github/copilot.vim",
-    lazy = false,
-  },
-  {
-    'MeanderingProgrammer/markdown.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    ft = 'markdown',
-    config = function()
-        require('render-markdown').setup({})
+            -- 这里可以添加自定义配置
+            -- 或者保持空配置使用默认设置
+        }
     end,
   },
 }
-
 return plugins
 ```
+
+https://docs.rockylinux.org/books/nvchad/nvchad_ui/nvchad_ui/
+
+## 3. Softwares
+
+[PrettyClean](https://www.prettyclean.cc/zh)
+
+[mac-cleanup-sh](https://github.com/mac-cleanup/mac-cleanup-sh) 
+
+Snipaste ScreenShoot
+
+Raycast AI (Youtube Downloader, Twitter Downloader, Clipboard, Quick Emoij)
+
+Arc (UBlock Origin)
