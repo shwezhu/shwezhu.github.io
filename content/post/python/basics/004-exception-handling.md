@@ -1,5 +1,5 @@
 ---
-title: Exception Handling & Expensive or Not Python
+title: Exception Handling Python
 date: 2023-11-24 09:37:26
 categories:
   - python
@@ -7,6 +7,93 @@ tags:
   - python
 typora-root-url: ../../../../static
 ---
+
+两种编程异常处理风格:
+
+EAFP (Easier to Ask for Forgiveness than Permission):
+- 这是一种"先做后检查"的方式, 直接执行操作, 在出现异常时再处理
+- Python 特别推崇这种风格
+- 代码示例:
+```python
+# EAFP风格
+try:
+    value = my_dict['key']
+    process(value)
+except KeyError:
+    # 处理键不存在的情况
+    handle_missing_key()
+```
+
+LBYL (Look Before You Leap):
+- 这是一种"先检查后操作"的方式,在执行操作前先判断条件是否满足
+- 更常见于C或Java等语言
+- 代码示例:
+```python
+# LBYL风格
+if 'key' in my_dict:
+    value = my_dict['key']
+    process(value)
+else:
+    handle_missing_key()
+```
+
+两种风格的比较:
+1. EAFP
+   - 优点:代码更简洁,处理异常情况更统一
+   - 缺点:可能带来性能开销(异常处理的开销)
+   - The reason that Python is EAFP is that unlike other languages (Java for example) - in Python catching exceptions is relatively inexpensive operation, and that's why you're encouraged to use it. https://stackoverflow.com/a/32901991/16317008
+   
+2. LBYL
+   - 优点:逻辑清晰,容易理解
+   - 缺点:可能出现竞态条件,需要多次检查
+
+另外[有个帖子也提供了一个很好的观点](https://stackoverflow.com/a/32902114/16317008), 
+```python
+# LBYL
+if key in dic:
+    print(dic[key])
+else:
+    handleError()
+
+# EAFP
+try:
+    print(dic[key])
+except KeyError:
+    handleError()
+```
+
+> Now this looks very similar, although you should keep in mind that the LBYL solution checks the dictionary *twice*. As with all code that catches exceptions, you should only do it if the non-existance of a key is the *exceptional case*. So if usually, the supplied key is excepted to be in the dictionary, then it’s EAFP and you should just access it directly. If you don’t expect the key to be present in the dictionary, then you should probably check its existance first (while exceptions are cheaper in Python, they are still not free, so keep them for exceptional cases). https://stackoverflow.com/a/32902114/16317008
+
+```java
+// C++, Java...不建议 - 使用异常控制流程
+try {
+    for(int i = 0; i < 10000; i++) {
+        try {
+            if(i % 2 == 0) {
+                throw new Exception();  
+            }
+        } catch(Exception e) {
+            // 处理
+        }
+    }
+}
+
+// 建议的做法 - 使用正常的控制流程
+for(int i = 0; i < 10000; i++) {
+    if(i % 2 == 0) {
+        // ...
+    }
+}
+```
+
+----
+
+上面讨论了是该使用异常还是 if else 判断, 下面讨论关于异常的问题, 
+
+都知道尽早捕获业务异常, 可是捕获的异常是继续往上 throw 还是立即被处理呢, 判断条件是什么?
+都抛出到最外层, 固然好, 代码清晰明了, 可是这样对性能有没有影响呢
+
+比如应该结束程序的异常, 一直往上抛出到最外层终止程序还是输出log后立即终止呢?
 
 ## 1. Basics concepts
 
@@ -133,7 +220,7 @@ The guidelines in this second scenario are:
 
 Learn more, very good explanation: https://stackoverflow.com/a/59511485
 
-## 6. When to throw exceptions
+## 6. When to throw exceptions - Library
 
 Easier to explain in the context of developing a library. **You should throw when you reached an error and there's nothing more you can do** besides letting the consumer of your APIs know about it, and letting them decide.
 

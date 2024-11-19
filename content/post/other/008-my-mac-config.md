@@ -7,6 +7,13 @@ tags:
  - other
 ---
 
+**Chrome Extension**
+
+1. [bpc-clone/bypass-paywalls-chrome-clean](https://github.com/bpc-clone/bypass-paywalls-chrome-clean?tab=readme-ov-file#installation)
+
+2. Openai Translator
+3.  UBlock Origin
+
 **Transfer Arc Browser**
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/11/d8ebc97b5bb6c427f6b2ce9cca72947b.jpg)
@@ -42,21 +49,55 @@ Then go to settings:` Profiles > Colors > Color Presets: Snazzy`
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-5. syntax highlighting & auto suggestions
+5. auto suggestions
 
 ```shell
 git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
-
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 ```
 
 Edit `.zshrc` file, find `plugins=(git)`, append two plugins:
 
 ```bash
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions)
 ```
 
-## 2. Nvim
+Final Version `.zshrc`:
+
+```bash
+# ZSH 是个(全局)变量定义了 oh-my-zsh 的安装路径
+# 使用 export 是因为其他子进程(如插件脚本)也需要知道这个位置
+# 如果去掉 export，其他脚本可能访问不到这个变量
+export ZSH="$HOME/.oh-my-zsh"
+
+# ZSH_THEME 定义主题，这是个普通变量，不需要 export
+# 因为只有 oh-my-zsh.sh 主脚本需要读取它
+ZSH_THEME="robbyrussell"
+
+# plugins 定义需要加载哪些插件，也是个普通变量
+# 只在 source oh-my-zsh.sh 时被读取一次
+plugins=(
+    git 
+    zsh-autosuggestions
+)
+
+# 执行 oh-my-zsh 的主脚本，它会：
+# 1. 读取上面的配置变量
+# 2. 加载指定的主题
+# 3. 加载所有列出的插件
+source $ZSH/oh-my-zsh.sh% 
+```
+
+## 2. Softwares
+
+[PrettyClean](https://www.prettyclean.cc/zh)
+
+[mac-cleanup-sh](https://github.com/mac-cleanup/mac-cleanup-sh) 
+
+Snipaste ScreenShoot
+
+Raycast AI (Youtube Downloader, Twitter Downloader, Clipboard, Quick Emoij)
+
+## 3. Nvim
 
 ```shell
 brew install neovim
@@ -145,15 +186,3 @@ return plugins
 ```
 
 https://docs.rockylinux.org/books/nvchad/nvchad_ui/nvchad_ui/
-
-## 3. Softwares
-
-[PrettyClean](https://www.prettyclean.cc/zh)
-
-[mac-cleanup-sh](https://github.com/mac-cleanup/mac-cleanup-sh) 
-
-Snipaste ScreenShoot
-
-Raycast AI (Youtube Downloader, Twitter Downloader, Clipboard, Quick Emoij)
-
-Arc (UBlock Origin)
