@@ -17,10 +17,9 @@ Snipaste ScreenShoot
 
 Raycast AI (Youtube Downloader, Twitter Downloader, Clipboard, Quick Emoij)
 
-Arc (uBlock Origin Lite)
+Arc (uBlock Origin Lite, [bpc-clone/bypass-paywalls-chrome-clean](https://github.com/bpc-clone/bypass-paywalls-chrome-clean?tab=readme-ov-file#installation),  Openai Translator)
 
 ## Config
-
 **Transfer Arc Browser**
 
 This won't transfer the passwords, and your profiles, but your shortcuts will be transferred. Arc is a shit!
@@ -58,22 +57,45 @@ Then go to settings:` Profiles > Colors > Color Presets: Snazzy`
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-5. syntax highlighting & auto suggestions
+5. auto suggestions
 
 ```shell
 git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
-
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 ```
 
 Edit `.zshrc` file, find `plugins=(git)`, append two plugins:
 
 ```bash
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions)
 ```
 
-## 4. Neovim
+6. Final Version `.zshrc`:
 
+```bash
+# ZSH 是个(全局)变量定义了 oh-my-zsh 的安装路径
+# 使用 export 是因为其他子进程(如插件脚本)也需要知道这个位置
+# 如果去掉 export，其他脚本可能访问不到这个变量
+export ZSH="$HOME/.oh-my-zsh"
+
+# ZSH_THEME 定义主题，这是个普通变量，不需要 export
+# 因为只有 oh-my-zsh.sh 主脚本需要读取它
+ZSH_THEME="robbyrussell"
+
+# plugins 定义需要加载哪些插件，也是个普通变量
+# 只在 source oh-my-zsh.sh 时被读取一次
+plugins=(
+    git 
+    zsh-autosuggestions
+)
+
+# 执行 oh-my-zsh 的主脚本，它会：
+# 1. 读取上面的配置变量
+# 2. 加载指定的主题
+# 3. 加载所有列出的插件
+source $ZSH/oh-my-zsh.sh% 
+```
+
+## 3. Nvim
 ```shell
 brew install neovim
 echo "alias vim='nvim'" >> ~/.zshrc
@@ -161,6 +183,3 @@ return plugins
 ```
 
 https://docs.rockylinux.org/books/nvchad/nvchad_ui/nvchad_ui/
-
-
-
