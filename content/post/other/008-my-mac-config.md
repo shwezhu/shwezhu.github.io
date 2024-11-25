@@ -7,7 +7,23 @@ tags:
  - other
 ---
 
+## Softwares
+
+[PrettyClean](https://www.prettyclean.cc/zh)
+
+[mac-cleanup-sh](https://github.com/mac-cleanup/mac-cleanup-sh) 
+
+Snipaste ScreenShoot
+
+Raycast AI (Youtube Downloader, Twitter Downloader, Clipboard, Quick Emoij)
+
+Arc (uBlock Origin Lite)
+
+## Config
+
 **Transfer Arc Browser**
+
+This won't transfer the passwords, and your profiles, but your shortcuts will be transferred. Arc is a shit!
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/11/d8ebc97b5bb6c427f6b2ce9cca72947b.jpg)
 
@@ -19,7 +35,7 @@ tags:
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/11/23345ee633c3dd55af79b24fd1bf7bec.jpg)
 
-## 1. iTerm2
+## 3. iTerm2
 
 1. Setting themes: go to settings: `Appearance > General > Theme: Minimal`
 
@@ -56,7 +72,7 @@ Edit `.zshrc` file, find `plugins=(git)`, append two plugins:
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 ```
 
-## 2. Nvim
+## 4. Neovim
 
 ```shell
 brew install neovim
@@ -146,14 +162,5 @@ return plugins
 
 https://docs.rockylinux.org/books/nvchad/nvchad_ui/nvchad_ui/
 
-## 3. Softwares
 
-[PrettyClean](https://www.prettyclean.cc/zh)
 
-[mac-cleanup-sh](https://github.com/mac-cleanup/mac-cleanup-sh) 
-
-Snipaste ScreenShoot
-
-Raycast AI (Youtube Downloader, Twitter Downloader, Clipboard, Quick Emoij)
-
-Arc (UBlock Origin)
