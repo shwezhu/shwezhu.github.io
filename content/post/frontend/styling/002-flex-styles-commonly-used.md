@@ -1,6 +1,6 @@
 ---
-title: Tailwind CSS Flex
-date: 2024-01-06 20:46:20
+title: Commonly Used Flex Styles
+date: 2024-11-26 20:46:20
 categories:
  - front-end
 tags:
@@ -8,36 +8,42 @@ tags:
 typora-root-url: ../../../static
 ---
 
-## 1. Block vs Inline
+建议: css内容, 并列的东西放一块, 而不是分类放, 这样修改比较容易找位置看对比, 比如下面的内容, 最好是把 `course-details` 和 `course-title-description` 的 css 放一块, 这样我们想修改二者的css做对比的时候才比较好找他们对应的css, 而不是每次都得往下翻很久...
 
-- block 元素独占一行, 宽度默认是父元素的 100%, 高度由内容决定
-  - 特殊情况: button 默认是 inline-block, 支持设置宽高, **即使把 button 的 display 设置为 block, 其宽度依然不会是父元素的 100%, 而是由内容决定的.** 
-  - 其他的 inline 元素, 如 `<span>`, `<a>`, `<strong>`, 如果设置为 block, 则其宽度会自动变为父元素的 100%. 
+```html
+<article className="course-card">
+  <div className="course-title-description">
+    ...
+  </div>
+  <div className="course-details">
+    <div className="course-meta">
+      ...
+    </div>
+    <div className="course-stats">
+      ...
+    </div>
+  </div>
+</article>
+```
 
-- inline 元素不会独占一行, 宽高度由内容决定
-  - 不能设置宽高, 若要设置宽和高, 需要将其转换为块级元素. 如 `display: block` 或 `display: inline-block`. 
-  - 不可以设置上下 padding 和 margin, 可以设置左右 padding 和 margin.
-  - 特殊情况: `margin-left: auto`, `margin-right: auto` 无法适用 inline 元素. 这也是为什么 tailwind css 中 `mx-auto` 使 inline 元素水平居中的原因.
+-----
 
-- inline-block, 既可以设置宽高, 也可以设置所有 padding 和 margin, 其他与 inline 元素一样.
 
-> flex 子元素既不是块级元素, 也不是内联元素, 而是 flex 元素, 有自己的特性. 若同在 flex box内, 则 `<a>` 与 `<div>` 在显示上是完全一样的, 因为他们都是 flex items. 
-> 注意 flex 子元素的默认值是 `flex: 0 1 auto`, 即 `flex-grow: 0`, `flex-shrink: 1`, `flex-basis: auto`, 即默认情况下, flex 子元素是允许在必要情况下缩小的, 而不会增长, 从而导致 flex 子元素的宽度不是父元素的 100%, 而是由内容决定的.
 
-## 2. Flex - Layout
 
-Flex 有很多性质, 要区分哪些性质是用到 Flex Box 上的, 哪些是用到 Flex Items 上的. 可直接观看: https://youtu.be/fYq5PXgSsbE?si=yeeW9PDx-Als9CWX
 
-### 2.1. Flex Box
+一个盒子, 两端各放一个
 
-- `flex-direction`: row | row-reverse | column | column-reverse;
-  - Tailwind CSS: `flex-row`, `flex-col`
+```css
+<div class="flex-between">
+  <div>Left element</div>
+  <div>Right element</div>
+</div>
+```
 
-- `justify-content`: flex-start | flex-end | center | space-between | space-around | space-evenly;
-  - Tailwind CSS: `justify-start`, `justify-end`, `justify-center`, `justify-between`,
 
-- `align-items`: flex-start | flex-end | center 
-  - Tailwind CSS: `items-start`, `items-end`, `items-center`
+
+
 
 > **常用技巧:**
 >
@@ -65,6 +71,31 @@ export default function Message({role, text, time}) {
 }
 ```
 
+## 3. 水平和垂直居中 - Flex
+
+### 3.1 水平居中
+
+对于 `flex-row` 主轴就是水平方向, 简单使用 justify-center (沿主轴方向操作 flex items) 即可使 flex items 水平居中. 
+
+```jsx
+<div className="flex flex-row justify-center">
+    ...
+</div>
+```
+
+对于 `flex-col` 主轴就是垂直方向, 使用 items-center (沿交叉轴方向操作 flex items) 即可使 flex items 水平居中. 
+
+```jsx
+<div className="flex flex-col items-center h-64 border-2">
+    <button className={'border-2'}>hello</button>
+    <button className={'border-2'}>hello</button>
+</div>
+```
+
+> 你也可以使用 mx-auto, 但 mx-auto 只作用于块级元素, 因此你可能需要把 flex items 改为块级元素, 别忘了 flex items 既不是块级元素也不是行内元素, 你需要将其父的 display: flex 去掉. 
+
+
+
 ### 2.2. Flex Items
 
 - **flex-grow:** 用来指定一个 flex 子项（flex item）相对于其他子项在可用空间中的扩展比例, 沿主轴方向。
@@ -82,17 +113,3 @@ export default function Message({role, text, time}) {
 **易错点-1:** flex-grow 是 flex items 的属性, 用来控制 flex tiems 如何在**主轴方向**上增长, 不要简单的以为是用来控制在水平方向上增长的. 比如在 flex-col 的情况下，flex-grow 影响的是items的高度，而不是宽度，因为主轴是垂直的. 
 
 **易错点-2:** `justify-items` 和 `justify-self` 专门用于Grid布局, 不用于Flex布局, 了解更多: [Justify Items - Tailwind CSS](https://tailwindcss.com/docs/justify-items)
-
-## 3. Position Absolute
-
-最近写菜单栏的时候, 菜单栏展开后会将下面的内容挤下去, 像下面这样:
-
-![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/08/a199c94496cc4d1f2fbfdd7fd09478c4.jpg)
-
-基本上菜单栏都很窄, 所以当菜单栏展开时, 我希望的是不影响下面的内容, 但是正常情况下两个元素要么是 inline 那种可以在同一行, 要么是 block 那种独占一行, 无法实现我想要的效果. 此时就可以使用 absolute 来实现, 如下:
-
-![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/08/997c2961834e857ceb3fbc392b90cb56.jpg)
-
-> Absolute positioned elements are removed from the normal flow, and **can overlap elements**.
-
-此时也应该注意覆盖的问题, 若对话框宽度为 100vw, 可能会覆盖掉对话框, 因此要将 z-index 设置大一些.  

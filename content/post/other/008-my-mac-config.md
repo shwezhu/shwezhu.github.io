@@ -34,6 +34,10 @@ This won't transfer the passwords, and your profiles, but your shortcuts will be
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/11/23345ee633c3dd55af79b24fd1bf7bec.jpg)
 
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/11/a32f686f24dc8c72798dd3b6ff436f96.jpg)
+
+https://support.apple.com/en-in/102650
+
 ## 3. iTerm2
 
 1. Setting themes: go to settings: `Appearance > General > Theme: Minimal`
