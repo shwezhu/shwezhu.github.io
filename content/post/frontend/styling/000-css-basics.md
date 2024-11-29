@@ -6,6 +6,26 @@ categories:
  - html
 ---
 
+## 0. 小建议
+
+CSS 内容, 并列的element放一块, 而不是分类放, 这样修改比较容易找位置看对比, 比如下面的内容, 最好是把 `course-details` 和 `course-title-description` 的 css 放一块, 这样我们想修改二者的css做对比的时候才比较好找他们对应的css, 而不是每次都得往下翻很久...
+
+```html
+<article className="course-card">
+  <div className="course-title-description">
+    ...
+  </div>
+  <div className="course-details">
+    <div className="course-meta">
+      ...
+    </div>
+    <div className="course-stats">
+      ...
+    </div>
+  </div>
+</article>
+```
+
 ## 1. HTML Elements 
 
 `<span>` is very much like a `div` element, but `span` is a block-level element whereas a `<span>` is an **inline-level element**. `<a>` creates hyperlinks to connect to other content.
@@ -96,10 +116,6 @@ html {
 `svh` 使用视口的最小可能高度，也就是当移动浏览器的工具栏/地址栏完全展开时的高度, 使用 `svh` 的优势在于, 导航栏高度始终基于最小视口高度计算, 即使地址栏收起，导航栏的高度也不会改变
 
 `lvh` 使用视口的最大可能高度, 即当浏览器的工具栏/地址栏完全隐藏时的高度, 全屏背景图片或视频, 沉浸式体验的页面可以尝试, 
-
-
-
-
 
 ## 3. Position Absolute
 

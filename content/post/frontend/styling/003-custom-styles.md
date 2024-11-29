@@ -5,32 +5,7 @@ categories:
  - front-end
 tags:
  - front-end
-typora-root-url: ../../../static
 ---
-
-建议: css内容, 并列的东西放一块, 而不是分类放, 这样修改比较容易找位置看对比, 比如下面的内容, 最好是把 `course-details` 和 `course-title-description` 的 css 放一块, 这样我们想修改二者的css做对比的时候才比较好找他们对应的css, 而不是每次都得往下翻很久...
-
-```html
-<article className="course-card">
-  <div className="course-title-description">
-    ...
-  </div>
-  <div className="course-details">
-    <div className="course-meta">
-      ...
-    </div>
-    <div className="course-stats">
-      ...
-    </div>
-  </div>
-</article>
-```
-
------
-
-
-
-
 
 一个盒子, 两端各放一个
 
@@ -41,7 +16,7 @@ typora-root-url: ../../../static
 </div>
 ```
 
-
+----
 
 
 
