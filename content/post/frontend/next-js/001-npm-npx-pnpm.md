@@ -1,0 +1,85 @@
+---
+title: npm vs npx vs pnpm
+date: 2024-11-30 14:20:22
+tags:
+ - front-end
+---
+
+### **npm vs npx**
+
+`npm` comes with `Node.js`, and `npx` comes with `npm`.In order to use `npm` or `npx`, **you need install `node.js`.**   
+
+```
+Node.js installation
+└── includes npm (Node Package Manager)
+└── includes npx (Node Package Execute)
+```
+
+```bash
+npx create-react-app my-app
+npm install some-package
+```
+
+***npx*** is a npm package runner (x probably stands for execute). One common way to use *npx* is to download and run a package temporarily.
+
+***create-react-app*** is an npm package that is expected to be run only once in a project's lifecycle. Hence, it is preferred to use npx to install and run it in a single step.
+
+NPM is a package manager, you can install node.js packages using NPM.
+
+NPX is a tool to execute node.js packages.
+
+https://stackoverflow.com/a/52018825/16317008
+
+----
+
+### **pnpm use case in real world**
+
+```bash
+# 开发模式
+$ pnpm run dev    # 启动开发服务器，实时编译，方便开发
+
+# 生产模式
+$ pnpm run build  # 构建优化后的生产环境代码
+$ pnpm start      # 启动生产环境服务器
+```
+
+`pnpm run` is a command, and `dev`, `build`, and `start` are scripts/commands defined in your project's `package.json` file. 
+
+Here's how a typical package.json might look:
+
+```json
+{
+  "name": "your-project",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  }
+}
+```
+
+You can try add a custom scripts to package.json, like:
+
+```json
+"scripts": {
+  //...
+  "custom": "echo 'my custom script'"
+}
+```
+
+Then run: `pnpm run custom`
+
+---
+
+### folder structure of next.js project 
+
+```
+$ tree -a -L 1              
+├── .next     # Auto-generated build output directory, created after running next build
+├── next.config.ts       # Next.js configuration file in TypeScript
+├── node_modules         # Dependencies installed by package manager (pnpm in this case)
+├── package.json         # Project metadata and dependencies
+├── public              # Static files served at runtime (images, fonts, etc.)
+....
+```
+
