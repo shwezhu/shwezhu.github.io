@@ -9,9 +9,7 @@ tags:
 
 ## Softwares
 
-[PrettyClean](https://www.prettyclean.cc/zh)
-
-[mac-cleanup-sh](https://github.com/mac-cleanup/mac-cleanup-sh) 
+[AppCleaner](https://freemacsoft.net/appcleaner/)
 
 Snipaste ScreenShoot
 

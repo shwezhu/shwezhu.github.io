@@ -5,9 +5,21 @@ tags:
  - front-end
 ---
 
-### **npm vs npx**
+### **npm vs npx vs pnmp**
 
-`npm` comes with `Node.js`, and `npx` comes with `npm`.In order to use `npm` or `npx`, **you need install `node.js`.**   
+```bash
+# download and install Node.js
+# https://nodejs.org/en/download/package-manager
+brew install node@22
+node -v # should print `v22.12.0`
+npm -v # should print `10.9.0`
+
+# install pnpm
+# https://pnpm.io/installation
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+```
+
+`npm` comes with `Node.js`, and `npx` comes with `npm`. **In order to use `npm` or `npx`, you need install `node.js`.**   
 
 ```
 Node.js installation
@@ -24,7 +36,7 @@ npm install some-package
 
 ***create-react-app*** is an npm package that is expected to be run only once in a project's lifecycle. Hence, it is preferred to use npx to install and run it in a single step.
 
-NPM is a package manager, you can install node.js packages using NPM.
+NPM is a package manager for node.js, same as `pip` for python, `pnmp` is same as `npm`, but more efficient.
 
 NPX is a tool to execute node.js packages.
 
@@ -83,3 +95,19 @@ $ tree -a -L 1
 ....
 ```
 
+---
+
+### learn to understand warnings
+
+```bash
+$ pnpm i @vercel/postgres
+WARN Issues with peer dependencies found
+.
+└─┬ next 15.0.0
+  ├── ✕ unmet peer react@"^18.2.0 || 19.0.0-rc-65a56d0e-20241020": found 19.0.0-rc-cd22717c-20241013
+  └── ✕ unmet peer react-dom@"^18.2.0 || 19.0.0-rc-65a56d0e-20241020": found 19.0.0-rc-cd22717c-20241013
+Done in 1.2s
+```
+
+- "peer dependencies" 通常翻译为"同级依赖", 它表示一个包要求宿主环境中必须安装特定的其他包才能正常工作, 举个例子：如果你安装一个 React 组件库, 若它将 React 列为 peer dependency, 这意味着这个组件库期望你的项目中已经安装了 React, 而不是它自己携带一个 React 副本
+- `unmet peer react@"^18.2.0 || 19.0.0-rc-65a56d0e-20241020": found 19.0.0-rc-cd22717c-20241013`: 这个包（Next.js）要求项目使用的 React 版本必须是：应该为 18.2.0 或更高的 18.x 版本（ `^18.2.0` ）或者是特定的 RC 版本 `19.0.0-rc-65a56d0e-20241020`, 但是在项目中找到的是另一个 RC 版本：`19.0.0-rc-cd22717c-20241013`, 版本不匹配，所以系统发出警告
