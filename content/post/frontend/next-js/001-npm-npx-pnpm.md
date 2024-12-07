@@ -3,7 +3,7 @@ title: npm vs npx vs pnpm
 date: 2024-11-30 14:20:22
 tags:
  - front-end
----
+​--- 
 
 ### **npm vs npx vs pnmp**
 
@@ -42,7 +42,7 @@ NPX is a tool to execute node.js packages.
 
 https://stackoverflow.com/a/52018825/16317008
 
-----
+​----
 
 ### **pnpm use case in real world**
 
