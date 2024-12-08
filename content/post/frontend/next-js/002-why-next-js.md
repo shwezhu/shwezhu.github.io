@@ -143,4 +143,8 @@ If your app has unusual constraints not served well by these frameworks, or you 
 
 
 
-Source: https://react.dev/learn/start-a-new-react-project#can-i-use-react-without-a-framework
+Source: 
+
+https://react.dev/learn/start-a-new-react-project#can-i-use-react-without-a-framework
+
+https://www.reddit.com/r/nextjs/comments/17qbx9s/advice_on_choosing_nextjs_instead_of_plain_react/
