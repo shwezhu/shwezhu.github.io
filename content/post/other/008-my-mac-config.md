@@ -103,85 +103,73 @@ brew install neovim
 echo "alias vim='nvim'" >> ~/.zshrc
 echo "alias vi='nvim'" >> ~/.zshrc
 
-# Install NvChad, it's a starter branch, only clone the latest commit
-git clone https://github.com/NvChad/starter ~/.config/nvim --depth 1 && nvim
+# Install NvChad
+git clone https://github.com/NvChad/starter ~/.config/nvim && nvim
 ```
 
-### Font
+到 `~/.config/nvim/lua/plugins/init.lua`, 删除原内容, 直接拷贝, 
+
+```lua
+return {
+ {
+   -- 代码格式化插件 - 可以自动格式化各种语言的代码
+   -- 可以配置使用不同的格式化工具(例如 prettier, stylua, black 等)
+   "stevearc/conform.nvim",
+   -- event = 'BufWritePre', -- 取消注释这行会在保存时自动格式化
+   opts = require "configs.conform",
+ },
+ {
+   -- LSP(Language Server Protocol)配置插件
+   -- 提供代码补全、跳转到定义、查找引用、错误提示等功能
+   -- 支持多种编程语言，每种语言需要安装对应的 language server
+   "neovim/nvim-lspconfig",
+   config = function()
+     require "configs.lspconfig"
+   end,
+ },
+ {
+   -- GitHub Copilot 插件 - AI 代码助手
+   -- 可以根据上下文自动生成代码建议
+   -- 需要 GitHub 账号并订阅 Copilot 服务
+   "github/copilot.vim",
+   lazy = false,
+ },
+}
+```
+
+启动 neovim, 然后输入 `: Copilot setup`
+
+### 3.1. **Font**
 
 Change font of iTerm2 otherwise you will see some weird characters in nvim.
 
 ```shell
-❯ brew tap homebrew/cask-fonts
+# https://formulae.brew.sh/cask-font/
 ❯ brew install --cask font-jetbrains-mono-nerd-font
 ```
 
-Then set the font in iTerm2 Preferences: `Profiles > Text > Font: jetbrains-mono-nerd`
+Then set the font in iTerm2 Preferences: `Profiles > Text > Font: jetbrains-mono-nerd`, 注意选择 nerd font, 不要选择 jetbrains-mono-font: 
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/91da077a280e806eb70e5fdc26b4a8ed.jpg)
 
-### Theme
+### 3.2. **Theme**
 
 Chnage the theme of nvim, enter nvim and type `space` + `t` + `h`, choose ***onenord*** theme.
 
-### Highlight & spell checking
+### 3.3. **设置 cursor** 
 
-In vim command, execute the following command(install once, no need to do this every time): 
-
-```shell
-:TSInstall markdown
-:TSInstall markdown_inline
-```
-
-Go to `.config/nvim/init.lua`:
+Append to `.config/nvim/init.lua`:
 
 ```lua
--- Spelling Checking
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown",
-  callback = function()
-    vim.opt_local.spell = true -- current buffer only
-    vim.opt_local.spelllang = "en_us,cjk" -- english, chinese
-    vim.opt_local.spellcapcheck = ""
-  end
-})
+vim.opt.guicursor = "n-v-c-i:hor20"
 ```
 
-### Plugins AutoSave
+### 3.4. 快捷键
 
-Edit `~/.config/nvim/lua/custom/chadrc.lua`:
+显示文件树: 空格 + e
 
-```lua
-local M = {}
+全选: ggVG
 
-M.ui = { theme = 'onenord' }
+复制: 选择内容后 按 y
 
-M.plugins = 'custom.plugins'
-
-return M
-```
-
-Add new file `~/.config/nvim/lua/custom/plugins.lua`:
-
-```lua
--- 自定义插件列表
-local plugins = {
-  {
-    -- 自动保存插件
-    "Pocco81/auto-save.nvim",
-    -- lazy = false 表示立即加载插件,而不是懒加载
-    lazy = false,
-    -- 插件配置函数
-    config = function()
-        -- 加载并设置 auto-save 插件
-        require("auto-save").setup {
-            -- 这里可以添加自定义配置
-            -- 或者保持空配置使用默认设置
-        }
-    end,
-  },
-}
-return plugins
-```
-
-https://docs.rockylinux.org/books/nvchad/nvchad_ui/nvchad_ui/
+cut: 选择内容后 按 x
