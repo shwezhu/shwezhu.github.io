@@ -1,8 +1,8 @@
 ---
 title: Syntax Basics
 date: 2024-07-21 19:36:36
-categories:
- - c sharp
+tags:
+ - c#
 ---
 
 ## 1. Auto-implemented Properties

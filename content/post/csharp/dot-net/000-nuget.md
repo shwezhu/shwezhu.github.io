@@ -1,8 +1,8 @@
 ---
 title: NuGet Package Management
 date: 2024-12-03 19:42:36
-categories:
- - c sharp
+tags:
+ - c#
 ---
 
 Create new project with dotnet CLI
@@ -92,6 +92,4 @@ $dotnet nuget locals all --clear
 # Or manually delete packages from:
 ~/.nuget/packages/microsoft.cognitiveservices.speech
 ```
-
-----
 

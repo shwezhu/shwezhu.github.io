@@ -1,8 +1,8 @@
 ---
 title: Asp .Net Core Model Binding
 date: 2024-07-26 19:42:36
-categories:
- - c sharp
+tags:
+ - c#
 ---
 
 ### 1. Data Source
