@@ -32,15 +32,20 @@ npx create-react-app my-app
 npm install some-package
 ```
 
-***npx*** is a npm package runner (x probably stands for execute). One common way to use *npx* is to download and run a package temporarily.
+- NPM is a package manager for node.js, same as `pip` for python, `pnmp` is same as `npm`, but more efficient
+- npx 是 npm 的一个工具, 它允许我们直接运行 npm 包中的命令行工具, 而不需要全局安装这些工具
+- `create-next-app@latest`: 是 Next.js 官方提供的脚手架工具(scaffolding tool), create-next-app 是工具的名称, @latest 表示使用最新版本
 
-***create-react-app*** is an npm package that is expected to be run only once in a project's lifecycle. Hence, it is preferred to use npx to install and run it in a single step.
+举个例子来说明 npx 的作用:
 
-NPM is a package manager for node.js, same as `pip` for python, `pnmp` is same as `npm`, but more efficient.
+```bash
+# 不使用 npx 的话,我们需要先全局安装
+npm install -g create-next-app
+create-next-app my-project
 
-NPX is a tool to execute node.js packages.
-
-https://stackoverflow.com/a/52018825/16317008
+# 使用 npx,可以直接运行而不需要安装
+npx create-next-app@latest my-project
+```
 
 ----
 
