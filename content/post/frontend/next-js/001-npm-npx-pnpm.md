@@ -5,7 +5,7 @@ tags:
  - front-end
 ---
 
-### npm vs npx vs pnmp
+## npm vs npx vs pnmp
 
 ```bash
 # download and install Node.js
@@ -47,9 +47,18 @@ create-next-app my-project
 npx create-next-app@latest my-project
 ```
 
-----
+## pnpm
 
-### **pnpm use case in real world**
+- 自己的项目添加依赖, 运行 `pnpm add xxx`, 不要在项目外运行这个指令, 
+- 克隆的别人的项目, 进入项目后, 运行 `pnpm install` 安装所有依赖
+-  查看 pnpm store 路径 `pnpm store path`
+- 查看所在项目已安装的所有依赖 `pnpm list` 
+
+>  `pnpm add xxx` 虽然该命令会把依赖安装到 pnpm store 中, 但你仍应该在项目里运行这个指令, 而不是随意一个地方, 
+>
+> `pnpm add xxx`  会在运行该指令的地方 添加三个文件 `package.json`, `pnpm-lock.yaml`, `node_modules`, 其中 `node_modules` 包含了通过符号链接指向 pnpm store 中实际依赖包的链接, pnpm 使用符号链接来节省磁盘空间
+
+其它用法, 类似 npm:
 
 ```bash
 # 开发模式
@@ -86,9 +95,12 @@ You can try add a custom scripts to package.json, like:
 
 Then run: `pnpm run custom`
 
----
+了解更多:
 
-### folder structure of next.js project 
+-  [Why does my `node_modules` folder use disk space if packages are stored in a global store?](https://pnpm.io/faq) 
+- [How pnpm work](https://pnpm.io/motivation)
+
+## folder structure of next.js project 
 
 ```
 $ tree -a -L 1              
@@ -100,9 +112,7 @@ $ tree -a -L 1
 ....
 ```
 
----
-
-### learn to understand warnings
+## learn to understand warnings
 
 ```bash
 $ pnpm i @vercel/postgres
