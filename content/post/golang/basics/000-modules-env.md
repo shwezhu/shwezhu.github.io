@@ -85,7 +85,7 @@ go install golang.org/x/tools/gopls@latest
 golangci-lint run
 ```
 
-## 安装 清理包
+## 安装/清理依赖
 
 To add all dependencies for a package in your module, run a command like the one below ("." refers to the package in the current directory):
 ```shell
