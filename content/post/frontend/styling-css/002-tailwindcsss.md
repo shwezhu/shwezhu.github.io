@@ -26,9 +26,49 @@ module.exports = {
 
 ----
 
-断点（breakpoints）用于创建响应式设计，允许在不同屏幕尺寸下应用不同的样式规则：
+block 元素水平居中: `mx-auto`, 注意对 inline 无效, 原因: `margin-left: auto`, `margin-right: auto` 无法适用 inline 元素.
 
-`sm:` 前缀用于小屏幕设备。例如，`w-full md:w-1/2` : 小屏幕都会自动应用 w-full, 宽度大于 md 的, 宽度自动变为 w-1/2
+```
+<nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t dark:border-gray-800 safe-area-pb">
+            <div className="mx-auto px-4 max-w-lg">
+                <div className="flex justify-around items-center h-16">
+                	<Link>
+                		...
+                	</Link>
+                	<Link>
+                		...
+                	</Link>
+                	<Link>
+                		...
+                	</Link>
+                	....
+```
+
+
+
+## 响应式
+
+### 导航栏
+
+```html
+<div>
+    <div className="mx-auto px-4 w-full max-w-7xl border-2">
+        <div className="flex justify-around items-center">
+            <Link href="/" className="text-blue-600 dark:text-blue-400">首页</Link>
+            <Link href="/discuss" className="text-blue-600 dark:text-blue-400">讨论</Link>
+            <Link href="/search" className="text-blue-600 dark:text-blue-400">搜索</Link>
+        </div>
+    </div>
+</div>
+```
+
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/12/a3f08d9ac96f269da225d22fa7b5bda3.png)
+
+> `max-w-7xl` 限制最大宽度在 7xl 以内, 注意 `w-full` 并不多余, 因为盒子可能不会自动占满整个宽度, 它确保了容器行为的可预测性
+
+
+
+
 
 ----
 

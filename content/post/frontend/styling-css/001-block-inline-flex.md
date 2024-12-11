@@ -16,7 +16,7 @@ tags:
 - inline 元素不会独占一行, 宽高度由内容决定
   - 不能设置宽高, 若要设置宽和高, 需要将其转换为块级元素. 如 `display: block` 或 `display: inline-block`. 
   - 不可以设置上下 padding 和 margin, 可以设置左右 padding 和 margin.
-  - 特殊情况: `margin-left: auto`, `margin-right: auto` 无法适用 inline 元素. 这也是为什么 tailwind css 中 `mx-auto` 使 inline 元素水平居中的原因.
+  - 特殊情况: `margin-left: auto`, `margin-right: auto` 无法适用 inline 元素. 这也是为什么 tailwind css 中 `mx-auto` 无法使 inline 元素水平居中的原因.
 
 - inline-block, 既可以设置宽高, 也可以设置所有 padding 和 margin, 其他与 inline 元素一样.
 

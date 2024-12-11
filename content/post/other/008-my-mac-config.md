@@ -44,6 +44,8 @@ https://support.apple.com/en-in/102650
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/11/060dccf96c2b61a6e4ceaf7ce3650931.png)
 
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/12/763ffe39b9e497a940503faa215d6365.png)
+
 3. Setting color to Snazzy:
 
 ```shell

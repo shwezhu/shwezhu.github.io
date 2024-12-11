@@ -52,6 +52,7 @@ npx create-next-app@latest my-project
 - 自己的项目添加依赖, 运行 `pnpm add xxx`, 不要在项目外运行这个指令, 
 - 克隆的别人的项目, 进入项目后, 运行 `pnpm install` 安装所有依赖
 -  查看 pnpm store 路径 `pnpm store path`
+- 清除 pnpm stpre 缓存 [`pnpm store prune`](https://pnpm.io/cli/store#prune): removes *unreferenced packages* from the store. Unreferenced packages are packages that are not used by any projects on the system. Packages can become unreferenced after most installation operations, for instance when dependencies are made redundant.
 - 查看所在项目已安装的所有依赖 `pnpm list` 
 
 >  `pnpm add xxx` 虽然该命令会把依赖安装到 pnpm store 中, 但你仍应该在项目里运行这个指令, 而不是随意一个地方, 
