@@ -6,7 +6,6 @@ tags:
 ---
 
 ## useCallback & useMemo
-
 ```ts
 const cachedFn = useCallback(fn, dependencies)
 
