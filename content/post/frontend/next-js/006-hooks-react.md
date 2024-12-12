@@ -7,24 +7,6 @@ tags:
 
 
 
-
-
-
-
-
-
-
-
-**Keeping Components Pure**
-
-如果一个组件修改了外部变量, 那就是 impure
-
-Components should only *return* their JSX, and not *change* any objects or variables that existed before rendering—that would make them impure!
-
-
-
-
-
 ```ts
 const cachedFn = useCallback(fn, dependencies)
 
