@@ -5,33 +5,13 @@ tags:
  - front-end
 ---
 
-
-
-
-
-
-
-
-
-
-
-**Keeping Components Pure**
-
-如果一个组件修改了外部变量, 那就是 impure
-
-Components should only *return* their JSX, and not *change* any objects or variables that existed before rendering—that would make them impure!
-
-
-
-
+## useCallback & useMemo
 
 ```ts
 const cachedFn = useCallback(fn, dependencies)
 
 
 ```
-
-
 
 useCallback包裹的**函数**, 相当于对函数做了缓存, 当父组件重新渲染时, 函数不会重新定义==>子组件不会重新渲染
 
