@@ -5,7 +5,23 @@ tags:
  - front-end
 ---
 
-永恒不变的真理: **默认情况下，当一个组件重新渲染时， React 将递归渲染它的所有子组件**
+
+
+
+
+
+
+
+
+
+
+**Keeping Components Pure**
+
+如果一个组件修改了外部变量, 那就是 impure
+
+Components should only *return* their JSX, and not *change* any objects or variables that existed before rendering—that would make them impure!
+
+
 
 
 
@@ -35,30 +51,17 @@ const MemoizedComponent = memo(SomeComponent, arePropsEqual?)
 
 
 
-`memo` 允许你的组件在 props 没有改变的情况下跳过重新渲染, 注意 `momo` 是 API 不是 hook, 
-
-
-
 有一个父组件, 其中包含子组件, 子组件接收一个函数作为props, 通常而言, 如果父组件更新了, 子组件也会执行更新, 但是大多数场景下, 更新是没有必要的, 我们可以借助useCallback来返回函数, 然后把这个函数作为props传递给子组件, 这样, 子组件就能避免不必要的更新
 
 useCallback不能滥用, 否则只会消耗性能, 利用闭包缓存上次结果, 成本为额外的缓存, 与比较逻辑, 不是绝对的优化, 而是一种成本的交换，并非使用所有场景
 
 
 
-```ts
-const handleLike = React.useCallback((postId: string) => {
-        setPosts(prevPosts =>
-    }, []);
-```
+`memo` 允许你的组件在 props 没有改变的情况下跳过重新渲染, 注意 `momo` 是 API 不是 hook, 
 
 
 
 
 
-```ts
-const sortFunctions = React.useMemo(() => ({
-    latest: (a: Post, b: Post) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    mostLiked: (a: Post, b: Post) => b.likesCount - a.likesCount
-}), []);
-```
+
 
