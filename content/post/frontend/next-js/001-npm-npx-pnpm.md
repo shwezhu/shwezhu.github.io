@@ -5,6 +5,23 @@ tags:
  - front-end
 ---
 
+```bash
+$ npx create-next-app@latest learn-by-example --use-pnpm
+✔ Would you like to use TypeScript? … No / Yes
+✔ Would you like to use ESLint? … No / Yes
+✔ Would you like to use Tailwind CSS? … No / Yes
+✔ Would you like your code inside a `src/` directory? … No / Yes
+✔ Would you like to use App Router? (recommended) … No / Yes
+✔ Would you like to use Turbopack for `next dev`? … No / Yes
+✔ Would you like to customize the import alias (`@/*` by default)? … No / Yes
+
+$pnpm add date-fns lucide-react
+
+$ pnpm dlx shadcn@latest init
+
+$ pnpm dlx shadcn@latest add textarea
+```
+
 ## npm vs npx vs pnmp
 
 ```bash
@@ -49,7 +66,7 @@ npx create-next-app@latest my-project
 
 ## pnpm
 
-- 自己的项目添加依赖, 运行 `pnpm add xxx`, 不要在项目外运行这个指令, 
+- 自己的项目添加依赖, 运行 `pnpm add xxx`, 不要在项目外运行这个指令
 - 克隆的别人的项目, 进入项目后, 运行 `pnpm install` 安装所有依赖
 -  查看 pnpm store 路径 `pnpm store path`
 - 清除 pnpm stpre 缓存 [`pnpm store prune`](https://pnpm.io/cli/store#prune): removes *unreferenced packages* from the store. Unreferenced packages are packages that are not used by any projects on the system. Packages can become unreferenced after most installation operations, for instance when dependencies are made redundant.
