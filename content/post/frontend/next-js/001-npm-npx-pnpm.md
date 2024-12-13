@@ -15,8 +15,8 @@ $ npx create-next-app@latest learn-by-example --use-pnpm
 ✔ Would you like to use Turbopack for `next dev`? … No / Yes
 ✔ Would you like to customize the import alias (`@/*` by default)? … No / Yes
 
-$pnpm add date-fns lucide-react
-
+$ pnpm add date-fns lucide-react
+ 
 $ pnpm dlx shadcn@latest init
 
 $ pnpm dlx shadcn@latest add textarea

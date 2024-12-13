@@ -49,10 +49,10 @@ https://support.apple.com/en-in/102650
 3. Setting color to Snazzy:
 
 ```shell
-$ curl -Ls https://raw.githubusercontent.com/sindresorhus/iterm2-snazzy/main/Snazzy.itermcolors > /tmp/Snazzy.itermcolors && open /tmp/Snazzy.itermcolors
+$ curl -Ls https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/Github.itermcolors -o /tmp/Github.itermcolors && open /tmp/Github.itermcolors
 ```
 
-Then go to settings:` Profiles > Colors > Color Presets: Snazzy`
+Then go to settings:` Profiles > Colors > Color Presets: GitHub`
 
 4. Install Oh My Zsh
 
@@ -156,7 +156,7 @@ Then set the font in iTerm2 Preferences: `Profiles > Text > Font: jetbrains-mono
 
 ### 3.2. **Theme**
 
-Chnage the theme of nvim, enter nvim and type `space` + `t` + `h`, choose ***onenord*** theme.
+Chnage the theme of nvim, enter nvim and type `space` + `t` + `h`, choose ***onenord*** or **github** theme.
 
 ### 3.3. **设置 cursor** 
 
