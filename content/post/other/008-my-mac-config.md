@@ -46,7 +46,7 @@ https://support.apple.com/en-in/102650
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/12/763ffe39b9e497a940503faa215d6365.png)
 
-3. Setting color to Snazzy:
+3. Setting color to Github:
 
 ```shell
 $ curl -Ls https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/Github.itermcolors -o /tmp/Github.itermcolors && open /tmp/Github.itermcolors
@@ -134,6 +134,18 @@ return {
    -- 可以根据上下文自动生成代码建议
    -- 需要 GitHub 账号并订阅 Copilot 服务
    "github/copilot.vim",
+   lazy = false,
+ },
+ {
+   -- 自动保存
+   "okuuva/auto-save.nvim",
+   version = '^1.0.0',
+   cmd = "ASToggle", -- optional for lazy loading on command
+   event = { "InsertLeave", "TextChanged" }, -- optional for lazy loading on trigger events
+   opts = {
+     -- your config goes here
+     -- or just leave it empty :)
+   },
    lazy = false,
  },
 }

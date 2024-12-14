@@ -7,18 +7,34 @@ tags:
  - front-end
 ---
 
+响应式: 导航栏
 
+```html
+<div>
+    <div className="mx-auto px-4 w-full max-w-7xl border-2">
+        <div className="flex justify-around items-center">
+            <Link href="/" className="text-blue-600 dark:text-blue-400">首页</Link>
+            <Link href="/discuss" className="text-blue-600 dark:text-blue-400">讨论</Link>
+            <Link href="/search" className="text-blue-600 dark:text-blue-400">搜索</Link>
+        </div>
+    </div>
+</div>
+```
 
+![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/12/a3f08d9ac96f269da225d22fa7b5bda3.png)
 
+> `max-w-7xl` 限制最大宽度在 7xl 以内, 注意 `w-full` 并不多余, 因为盒子可能不会自动占满整个宽度, 它确保了容器行为的可预测性
+>
+> 水平方向: `justify-around` 控制 flex 子元素在主轴（默认是水平方向）上的分布, 子元素会平均分布，每个元素两侧有相等的空间, 与 `justify-between` 的区别是, `around` 在两端也会留有空间（约为中间空间的一半）
+>
+> 垂直方向居中: `items-center`: 控制 flex 子元素在交叉轴（默认是垂直方向）上的对齐方式
 
-
-
-
+--------
 
 一个盒子, 两端各放一个
 
 ```css
-<div class="flex-between">
+<div class="flex flex-between">
   <div>Left element</div>
   <div>Right element</div>
 </div>
