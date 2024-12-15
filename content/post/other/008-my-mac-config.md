@@ -7,6 +7,22 @@ tags:
  - other
 ---
 
+```bash
+# 查看什么影响休眠
+$ pmset -g log | grep PreventUserIdleSystemSleep
+
+# 睡眠 电脑总是发烫, sudo pmset -a tcpkeepalive 1 取消设置
+$ sudo pmset -a tcpkeepalive 0
+Warning: This option disables TCP Keep Alive mechanism when sytem is sleeping. This will result in some critical features like 'Find My Mac' not to function properly
+
+# 禁止 Mac 在睡眠时执行一些后台任务：检查邮件更新 同步 iCloud
+# https://support.apple.com/en-ca/guide/mac-help/mh40774/mac
+$ sudo pmset -a powernap 0
+
+# 查看SSD写入量
+$ smartctl -a disk0
+```
+
 ## Softwares
 
 [AppCleaner](https://freemacsoft.net/appcleaner/)
