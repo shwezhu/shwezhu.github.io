@@ -34,3 +34,44 @@ useMemo、useCallback 与 useEffect 类似, [] 内可以放入你改变数值就
 
 参考: https://juejin.cn/post/6997231767077781540
 
+## Custom hooks
+
+> A custom Hook is a JavaScript function whose name starts with ”`use`” and that may call other Hooks. [React docs](https://legacy.reactjs.org/docs/hooks-custom.html)
+
+所有 Hooks 必须以 use 开头, 这不是约定, 而是 React 规则要求, 自定义 hooks 和 普通函数的区别:
+
+- 自定义 hooks 可以使用其他 hooks, 而普通函数不能
+- 自定义 hooks 能保持状态 (可以使用 useState) , 普通函数每次调用都是独立的
+
+可以参考 [stack overflow](https://stackoverflow.com/a/64904812/16317008) 的一个回答: 
+
+> React Hooks are JS functions with the power of react, it means that you can add some logic that you could also add into a normal JS function, but also you will be able to use the native hooks like useState, useEffect, etc, to power up that logic, to add it state, or add it side effects, memoization or more. So I believe hooks are a really good thing to **manage the logic of the components in a isolated way**.
+
+这里有个例子可以帮助理解上面这段话, 尤其是最后一句:
+
+```jS
+// 组件变得非常简洁
+function UserList() {
+  const { data, loading, error } = useFetch('/api/users')
+
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>Error: {error.message}</div>
+  return <div>{data.map(user => <div>{user.name}</div>)}</div>
+}
+
+// 自定义 Hook, 保存状态, 独立组建逻辑
+function useFetch(url) {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    fetch(url)
+      .then(res => res.json())
+      ...
+  }, [url])
+
+  return { data, loading, error }
+}
+```
+
