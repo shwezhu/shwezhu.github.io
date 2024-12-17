@@ -141,9 +141,7 @@ Even if you don’t need routing or data fetching at first, you’ll likely want
 
 If your app has unusual constraints not served well by these frameworks, or you prefer to solve these problems yourself, you can roll your own custom setup with React. Grab `react` and `react-dom` from npm, set up your custom build process with a bundler like [Vite](https://vitejs.dev/) or [Parcel](https://parceljs.org/), and add other tools as you need them for routing, static generation or server-side rendering, and more.
 
-
-
-Source: 
+References: 
 
 https://react.dev/learn/start-a-new-react-project#can-i-use-react-without-a-framework
 
