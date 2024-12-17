@@ -7,6 +7,11 @@ tags:
  - other
 ---
 
+- 设置 git 邮箱, 需要与 GitHub 上的邮箱一样, 不然 提交 不会显示在主页的 overview, 
+- 
+
+---
+
 下面是睡眠之后的一些设置, 可是我的电脑总是休眠的时候发热, 而我正常使用(很轻量, 编辑代码), 反而电脑保持很凉的状态, 因此我觉得 让电脑一直不休眠, 偶尔半个月重启一次, 
 
 一直不休眠的原因是, 现代 SSD 的寿命其实和写入次数有关系, 因为 SSD 一般使用闪存(Flash)技术, 每个存储单元是通过向浮栅极注入或抽离电子来存储数据, 这个物理过程会导致绝缘层逐渐退化, 每次写入都需要高电压来迫使电子穿过绝缘层, 绝缘层会因此逐渐被损坏, 最终会影响单元保持电荷的能力, 频繁睡眠, 可能会把内存数据写到 SSD, 这样反而会影响 SSD 寿命, 
@@ -35,7 +40,9 @@ $ smartctl -a disk0
 
 [AppCleaner](https://freemacsoft.net/appcleaner/)
 
-Snipaste ScreenShoot
+截图: CleanShotX, Snipaste ScreenShoot
+
+视频播放器:  VLC , iina
 
 Raycast AI (Youtube Downloader, Twitter Downloader, Clipboard, Quick Emoij)
 

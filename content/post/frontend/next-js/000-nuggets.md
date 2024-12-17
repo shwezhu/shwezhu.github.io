@@ -41,3 +41,23 @@ const sortFunctions: Record<SortOption, (a: Post, b: Post) => number> = React.us
 
 ----
 
+```ts
+const wrapperRef = useRef<HTMLDivElement>(null);
+```
+
+`useRef<HTMLDivElement>(null)` 返回的类型是: `RefObject<HTMLElement | null>` 说明 `wrapperRef` 的类型是 `RefObject`, 注意 `HTMLElement | null` 不是指 `wrapperRef` 可能是 HTMLElement 或 null, 它们的类型没有半毛钱关系, 可以看一下  `RefObject` 的定义:
+
+```ts
+interface RefObject<T> {
+    /**
+     * The current value of the ref.
+     */
+    current: T;
+}
+```
+
+看到了吧, `<HTMLElement | null>` 指的是 其属性 `current` 的类型, 
+
+
+
+ 
