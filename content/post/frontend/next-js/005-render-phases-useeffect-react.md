@@ -22,26 +22,66 @@ tags:
 - *useEffect cleanup from previous render*
 - **[useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect)** is now called (asynchronously).
 
-注意, 每次在 useEffect 执行前, React 会先清理上次渲染时调用的 useEffect, 这非常有必要, 不要忘了, useEffect 是用来执行副作用的地方, 比如我们可能在 useEffect 中使用了定时器, 有可能发生的是, 上次渲染因调用 useEffect 启动的定时器还没结束, 又发生了一次新的渲染, 此时在调用 useEffect 之前, 清理掉之前的的定时器, 也是很有必要的, 或者另一个例子:
+注意这里的 `useEffect cleanup from previous render`, 可能会理解错, 清理实际上指的是 执行 useEffect 返回的函数,  即 useEffect 函数体会在 commit 阶段执行然后返回一个函数(可选), 在下次 commit 阶段时, React 会先调用上次 useEffect 返回的清理函数, 然后再调用 useEffect, 
+
+这非常有必要, 比如防止内存泄漏, 不要忘了, useEffect 是用来执行副作用的地方, 比如我们可能在 useEffect 中建立了 TCP 连接, 又或者是定时器, 有可能发生的是, 上次渲染因调用 useEffect 启动的定时器还没结束, 又发生了一次新的渲染, 此时在调用 useEffect 之前, 清理掉之前的的定时器:
 
 ```js
-function ChatRoom({ roomId }) {
+// 1. 数据获取 - 最常见的用例
+const UserProfile = () => {
+  ...
   useEffect(() => {
-    // 设置订阅
-    const connection = createConnection(roomId);
-    connection.connect();
-
-    // 清理函数
-    return () => {
-      connection.disconnect();
+    // 定义异步函数来获取用户数据
+    const fetchUser = async () => {
+      const response = await fetch('https://api.example.com/user');
+      ...
     };
-  }, [roomId]);
-}
+
+    fetchUser();
+    
+    // 清理函数 - 组件卸载时取消请求
+    return () => {
+      // 如果使用 axios，可以用 cancelToken
+      // 如果使用 AbortController，可以在这里 abort
+    };
+  }, []); // 空依赖数组意味着只在组件挂载时执行一次
+
+  return loading ? <div>Loading...</div> : <div>{user?.name}</div>;
+};
 ```
 
+```js
+// 2. 监听状态变化 - 响应特定状态的变化
+const SearchComponent = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [results, setResults] = useState([]);
 
+  useEffect(() => {
+    // 防抖处理，避免频繁请求
+    const debounceTimeout = setTimeout(async () => {
+      if (searchTerm.length >= 2) {
+        const response = await fetch(`/api/search?q=${searchTerm}`);
+        ...
+      }
+    }, 500);
 
+    // 清理函数 - 取消之前的延时操作
+    return () => clearTimeout(debounceTimeout);
+  }, [searchTerm]); // 依赖于 searchTerm，每次搜索词变化都会触发
 
+  return (
+    <input
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+  );
+};
+```
+
+1. 用户快速输入 abc
+2. SearchComponent 被渲染三次
+3. 输入b的时候, 组件被重新渲染( render 阶段), React 执行上次 useEffect 返回的清理函数(commit 阶段), 即 定时器被清理, 请求也不会发出
+4. 输出 c, 此时组件重新被渲染, 同理, 执行清理函数, 再次调用 useEffect, 即只会执行一次请求
 
 ---
 
