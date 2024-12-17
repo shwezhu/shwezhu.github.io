@@ -22,9 +22,9 @@ tags:
 - *useEffect cleanup from previous render*
 - **[useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect)** is now called (asynchronously).
 
-注意这里的 `useEffect cleanup from previous render`, 可能会理解错, 清理实际上指的是 执行 useEffect 返回的函数,  即 useEffect 函数体会在 commit 阶段执行然后返回一个函数(可选), 在下次 commit 阶段时, React 会先调用上次 useEffect 返回的清理函数, 然后再调用 useEffect, 
+注意这里的 `useEffect cleanup from previous render`, 清理实际上指的是 执行 useEffect 返回的函数,  即 useEffect 函数体会在 commit 阶段执行然后返回一个清理函数(可选), 在下次 commit 阶段时, React 会先调用上次 useEffect 返回的清理函数, 然后再执行 useEffect, 
 
-这非常有必要, 比如防止内存泄漏, 不要忘了, useEffect 是用来执行副作用的地方, 比如我们可能在 useEffect 中建立了 TCP 连接, 又或者是定时器, 有可能发生的是, 上次渲染因调用 useEffect 启动的定时器还没结束, 又发生了一次新的渲染, 此时在调用 useEffect 之前, 清理掉之前的的定时器:
+返回清理函数可以防止内存泄漏, 不要忘了, useEffect 是用来执行副作用的地方, 比如我们可能在 useEffect 中建立了 TCP 连接, 组件多次渲染, 我们建立多个TCP连接, 可是同时只保存一个连接才是合理的, 这时候清理之前的, 就显得很必要:
 
 ```js
 // 1. 数据获取 - 最常见的用例
@@ -49,6 +49,8 @@ const UserProfile = () => {
   return loading ? <div>Loading...</div> : <div>{user?.name}</div>;
 };
 ```
+
+又或者是定时器, 有可能发生的是, 上次渲染因调用 useEffect 启动的定时器还没结束, 又发生了一次新的渲染, 此时在调用 useEffect 之前, 清理掉之前的的定时器:
 
 ```js
 // 2. 监听状态变化 - 响应特定状态的变化
@@ -79,52 +81,15 @@ const SearchComponent = () => {
 ```
 
 1. 用户快速输入 abc
-2. SearchComponent 被渲染三次
+2. SearchComponent 被渲染三次, 因为 searchTerm 改变了三次, a -> ab -> abc
 3. 输入b的时候, 组件被重新渲染( render 阶段), React 执行上次 useEffect 返回的清理函数(commit 阶段), 即 定时器被清理, 请求也不会发出
 4. 输出 c, 此时组件重新被渲染, 同理, 执行清理函数, 再次调用 useEffect, 即只会执行一次请求
-
----
-
-React 调用组件函数时, 有两个阶段 render 和 commit. 
-
-```ts
-function ProfileCard() {
-  // 整个函数体的执行就是 render phase
-  const [user, setUser] = useState({ name: "Alice", age: 25 });
-  
-  // Render Phase 已经包含了完整的数据计算和 JSX 生成
-  // 这里的 JSX 已经包含了实际的数据
-  return (
-    <div>
-      <h1>{user.name}</h1>  {/* "Alice" 在 Render Phase 就确定了 */}
-      <p>{user.age}</p>     {/* 25 在 Render Phase 就确定了 */}
-    </div>
-  );
-}
-```
-
-当然在 render 阶段也不是所有的代码都会执行,  useEffect() 并不会被执行
-
-```ts
-function MyComponent() {
-  const [count, setCount] = useState(0);
-  
-  useEffect(() => {
-    // 这里的代码在 commit phase 执行, 也就是 render phase 之后
-    document.title = `Count is ${count}`;
-  }, [count]);
-
-  return <div>{count}</div>;
-}
-```
 
 -----
 
 都知道, 在 Render Phase 已经完成了所有数据的计算和完整的 Virtual DOM 的生成, Commit Phase 则负责把这些变更实际应用到浏览器的 DOM 中, 并处理副作用 useEffect, 
 
-可是有个问题, 已经渲染完了, 都更新到 DOM 了, 再执行 useEffect 还有什么意义呢, useEffect 不就是为了拉去数据 然后插入到视图中吗?
-
-useEffect 的真正作用
+可是有个问题, 组件已经渲染完了, 再执行 useEffect 还有什么意义呢, useEffect 不就是为了拉取数据 然后插入到组件吗? 看例子:
 
 ```ts
 function UserProfile() {
@@ -177,5 +142,5 @@ function UserProfile() {
 <div id="user">Welcome, Alice</div>
 ```
 
-若 useEffect 的依赖是空数组, 表示只在组件首次渲染后执行一次, 之后不会再执行, 
+useEffect 的依赖是空数组, 表示只在组件首次渲染后执行一次, 之后不会再执行, 
 
