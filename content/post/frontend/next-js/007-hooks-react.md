@@ -7,6 +7,10 @@ tags:
 
 > Always keep in mind: By default, React rerenders a component and all its children whenever the parent component rerenders - even if the props haven't changed.
 
+文章推荐:
+
+- [React Hooks 如何工作的](https://eliav2.github.io/how-react-hooks-work/)
+
 ## useCallback & useMemo
 
 React.memo 缓存了整个组件 (拿缓存换效率), 让一个组件只有在 props 改变的时候才会被重新渲染, 
