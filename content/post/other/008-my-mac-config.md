@@ -8,7 +8,6 @@ tags:
 ---
 
 - 设置 git 邮箱, 需要与 GitHub 上的邮箱一样, 不然 提交 不会显示在主页的 overview, 
-- 
 
 ---
 
@@ -67,7 +66,7 @@ This won't transfer the passwords, and your profiles, but your shortcuts will be
 
 https://support.apple.com/en-in/102650
 
-## 3. iTerm2
+## iTerm2
 
 1. Setting themes: go to settings: `Appearance > General > Theme: Minimal`
 
@@ -130,7 +129,7 @@ plugins=(
 source $ZSH/oh-my-zsh.sh% 
 ```
 
-## 3. Nvim
+## Nvim
 ```shell
 brew install neovim
 echo "alias vim='nvim'" >> ~/.zshrc
@@ -184,7 +183,7 @@ return {
 
 启动 neovim, 然后输入 `: Copilot setup`
 
-### 3.1. **Font**
+### **Font**
 
 Change font of iTerm2 otherwise you will see some weird characters in nvim.
 
@@ -197,11 +196,11 @@ Then set the font in iTerm2 Preferences: `Profiles > Text > Font: jetbrains-mono
 
 ![](https://pub-2a6758f3b2d64ef5bb71ba1601101d35.r2.dev/blogs/2024/04/91da077a280e806eb70e5fdc26b4a8ed.jpg)
 
-### 3.2. **Theme**
+### **Theme**
 
 Chnage the theme of nvim, enter nvim and type `space` + `t` + `h`, choose ***onenord*** or **github** theme.
 
-### 3.3. **设置 cursor** 
+### **设置 cursor** 
 
 Append to `.config/nvim/init.lua`:
 
@@ -209,7 +208,7 @@ Append to `.config/nvim/init.lua`:
 vim.opt.guicursor = "n-v-c-i:hor20"
 ```
 
-### 3.4. 快捷键
+### 快捷键
 
 显示文件树: 空格 + e
 
@@ -218,3 +217,55 @@ vim.opt.guicursor = "n-v-c-i:hor20"
 复制: 选择内容后 按 y
 
 cut: 选择内容后 按 x
+
+## VSCode
+
+### Prettier - Code formatter
+
+搜索: Change Tab Display Size, 设置 Prettier Tab Size 4 
+
+> 设置不对的话, 因为 tab size 不匹配, rainbow indent 可能回标红缩进: https://stackoverflow.com/q/70231635/16317008
+
+### Indent-Rainbow extension
+
+搜索: Change Tab Display Size, 设置 Tab Size: 2
+
+显示竖线而不是彩虹杠:
+
+```
+"indentRainbow.indicatorStyle": "light",
+```
+
+竖线的粗细:
+
+```
+"indentRainbow.lightIndicatorStyleLineWidth": 2,
+```
+
+there will still be the default vsc indent lines under these, but you can remove by adding this;
+
+```
+"editor.guides.indentation": false,
+```
+
+there is still some alpha to the indent lines, if you want to get rid of that you can change the colors to rgb from rgba (you can mess around with the alpha value if you would like to have slight transparency
+
+```
+"indentRainbow.colors": [
+  "rgba(255,255,64,0.6)",
+  "rgba(127,255,127, 0.6)",
+  "rgba(255,127,255, 0.6)",
+  "rgba(79,236,236, 0.6)",
+]
+```
+
+You can also toggle the indentation dots in case they went away
+
+```
+"editor.renderWhitespace": "all",
+```
+
+以上设置均可以通过 vscode 设置搜索找到, 
+
+来源: https://www.reddit.com/r/vscode/comments/11ohhiu/comment/jbt00qa/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+
